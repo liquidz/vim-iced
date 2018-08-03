@@ -16,7 +16,7 @@ Clojure Interactive Development Environment for Vim8.
  * Asynchronous evaluation
    * powered by `channel` in Vim8
  * Rich functions
-   * powered by `cider-nrepl`, `refactor-nrepl`
+   * powered by [cider-nrepl](https://github.com/clojure-emacs/cider-nrepl), [refactor-nrepl](https://github.com/clojure-emacs/refactor-nrepl)
  * ClojureScript support
    * `figwheel` and `nashorn` is supported currently
 
@@ -61,8 +61,6 @@ See [vim-iced.txt](./doc/vim-iced.txt) fot actual mappings.
 **WARN** `cider.nrepl/wrap-trace` will cause vim's freeze
 
 ## Usage
-
-Only 3 steps!!
 
   1. `lein repl`
   2. Open source file
