@@ -7,6 +7,14 @@ let s:S  = s:V.import('Data.String')
 let s:B  = s:V.import('Vim.Buffer')
 let s:BM = s:V.import('Vim.BufferManager')
 
+let s:default_init_text = join([
+    \ ';;',
+    \ ';; Iced Buffer',
+    \ ';;:',
+    \ '',
+    \ ], "\n")
+
+let g:iced#buffer#init_text = get(g:, 'iced#buffer#init_text', s:default_init_text)
 let g:iced#buffer#name = get(g:, 'iced#buffer#name', 'nrepl')
 let g:iced#buffer#max_line = get(g:, 'iced#buffer#max_line', 512)
 
@@ -38,6 +46,14 @@ function! iced#buffer#is_initialized() abort
   return (empty(s:info) ? v:false : v:true)
 endfunction
 
+function! s:set_init_text() abort
+  let lines = split(g:iced#buffer#init_text, '\r\?\n')
+  call reverse(lines)
+  for line in lines
+    call append(0, line)
+  endfor
+endfunction
+
 function! iced#buffer#init() abort
   if iced#buffer#is_initialized()
     return
@@ -46,6 +62,7 @@ function! iced#buffer#init() abort
   let s:manager = s:BM.new()
   let s:info = s:manager.open(g:iced#buffer#name)
 
+  call s:set_init_text()
   call s:apply_buffer_settings()
   silent execute ':q'
 endfunction
@@ -64,7 +81,6 @@ function! iced#buffer#open() abort
     call s:focus_window(s:repl_bufwinnr())
   else
     call s:B.open(n, {'opener': 'split'})
-    call iced#buffer#append(';; Iced Buffer')
   endif
 endfunction
 
@@ -102,6 +118,7 @@ function! iced#buffer#clear() abort
 
   setlocal modifiable
   silent normal! ggdG
+  call s:set_init_text()
   setlocal nomodifiable
 
   if visibled
