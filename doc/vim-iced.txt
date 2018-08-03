@@ -1,0 +1,329 @@
+*vim-iced.txt*            Clojunre interactive development environment for Vim8
+
+Version: 0.0.1
+Author : uochan <liquidz.uo+vim@gmail.com>
+License: MIT LICENSE
+
+==============================================================================
+CONTENTS                                                    *vim-iced-contents*
+
+Introduction         |vim-iced-introduction|
+Install              |vim-iced-install|
+nREPL Connection     |vim-iced-nrepl-connection|
+ClojureScript        |vim-iced-clojurescript|
+Evaluation           |vim-iced-evaluation|
+  Stdout Buffer      |vim-iced-stdout-buffer|
+Testing              |vim-iced-testing|
+Tag Jump             |vim-iced-tag-jump|
+Editing S-exp        |vim-iced-editing-s-exp|
+  Refactoring        |vim-iced-refactoring|
+Interface            |vim-iced-interface|
+  Commands           |vim-iced-command|
+  Key Mappings       |vim-iced-key-mappings|
+Customizing          |vim-iced-customizing|
+Changelog            |vim-iced-changelog|
+
+==============================================================================
+Introduction                                            *vim-iced-introduction*
+
+Clojure interactive development environment for Vim8.
+
+Requirement:
+ - Vim 8.1 or later
+
+Lateste Version:
+ - https://github.com/liquidz/vim-iced
+
+==============================================================================
+Install                                                      *vim-iced-install*
+
+Vim plugin dependencies:
+  - vim-sexp
+    https://github.com/guns/vim-sexp
+
+Clojure library dependencies:
+  - ~/.lein/profile.clj
+>
+  {:user
+   {:dependencies [[cider/cider-nrepl "0.17.0"]
+                   [cljfmt  "0.6.0"]]
+    :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
+                                      cider.nrepl/wrap-format
+                                      cider.nrepl/wrap-info
+                                      cider.nrepl/wrap-macroexpand
+                                      cider.nrepl/wrap-ns
+                                      cider.nrepl/wrap-out
+                                      cider.nrepl/wrap-spec
+                                      cider.nrepl/wrap-test
+                                      cider.nrepl/wrap-undef]}
+    :plugins [[refactor-nrepl "2.4.0-SNAPSHOT"]]}}
+<
+
+==============================================================================
+nREPL Connection                                    *vim-iced-nrepl-connection*
+
+  repl は事前に起動しておく必要あり
+
+  |:IcedConnect| で接続を確立, |:IcedDisconnect| で切断
+
+
+==============================================================================
+ClojureScript                                          *vim-iced-clojurescript*
+
+figwheel と nashorn のみサポート
+
+|IcedStartCljsRepl| で開始、 |IcedQuitCljsRepl| で停止
+
+==============================================================================
+Evaluating                                                *vim-iced-evaluating*
+
+------------------------------------------------------------------------------
+Stdout Buffer                                          *vim-iced-stdout-buffer*
+
+
+==============================================================================
+Testing                                                      *vim-iced-testing*
+
+==============================================================================
+Tag Jump                                                    *vim-iced-tag-jump*
+
+==============================================================================
+Editing S-exp                                          *vim-iced-editing-s-exp*
+
+
+------------------------------------------------------------------------------
+Refactoring                                              *vim-iced-refactoring*
+
+
+
+==============================================================================
+Interface                                                  *vim-iced-interface*
+
+------------------------------------------------------------------------------
+Commands                                                    *vim-iced-commands*
+
+                                                                 *:IcedConnect*
+:IcedConnect [{port}]
+  Connect to nREPL.
+  If <port> is not passed, <port> is detected by '.nrepl-port' automatically.
+  Key is mapped to |<Plug>(iced_connect)|.
+
+                                                               *:IcedDisconnect*
+:IcedDisconnect
+  Disconnect from nREPL.
+  Vim 終了時に自動的に呼び出される
+
+                                                                *:IcedInterrupt*
+:IcedInterrupt
+  Interrupt some code evaluation in current session.
+
+                                                            *:IcedStartCljsRepl*
+:IcedStartCljsRepl [{env}]
+
+
+                                                             *:IcedQuitCljsRepl*
+:IcedQuitCljsRepl
+
+*:IcedEval*
+:IcedEval
+
+*:IcedEvalRepl*
+:IcedEvalRepl
+
+*:IcedRequire*
+:IcedRequire
+
+*:IcedTestNs*
+:IcedTestNs
+
+*:IcedTestAll*
+:IcedTestAll
+
+*:IcedTestUnderCursor*
+:IcedTestUnderCursor
+
+*:IcedBufferOpen*
+:IcedBufferOpen
+
+*:IcedBufferClear*
+:IcedBufferClear
+
+*:IcedDefJump*
+:IcedDefJump
+
+*:IcedDefBack*
+:IcedDefBack
+
+*:IcedDocumentOpen*
+:IcedDocumentOpen
+
+*:IcedEchoFormDocument*
+:IcedEchoFormDocument
+
+*:IcedSlurp*
+:IcedSlurp
+*:IcedBarf*
+:IcedBarf
+*:IcedFormat*
+:IcedFormat
+*:IcedToggleSrcAndTest*
+:IcedToggleSrcAndTest
+
+
+------------------------------------------------------------------------------
+Key Mappings                                            *vim-iced-key-mappings*
+
+                                                         *<Plug>(iced_connect)*
+<Plug>(iced_connect)
+
+          *<Plug>(iced_disconnect)*
+<Plug>(iced_disconnect)
+
+          *<Plug>(iced_interrupt)*
+<Plug>(iced_interrupt)
+
+          *<Plug>(iced_start_cljs_repl)*
+<Plug>(iced_start_cljs_repl)
+
+          *<Plug>(iced_quit_cljs_repl)*
+<Plug>(iced_quit_cljs_repl)
+
+                                                             *<Plug>(iced_eval)*
+<Plug>(iced_eval)
+
+
+   <Plug>(iced_eval)<Plug>(sexp_inner_element)``                                                                                                                                              au FileType clojure nmap <buffer> <Leader>ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
+  au FileType clojure nmap <buffer> <Leader>et <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
+
+
+
+          *<Plug>(iced_macroexpand)*
+<Plug>(iced_macroexpand)
+
+          *<Plug>(iced_macroexpand_1)*
+<Plug>(iced_macroexpand_1)
+
+          *<Plug>(iced_require)*
+<Plug>(iced_require)
+
+          *<Plug>(iced_test_ns)*
+<Plug>(iced_test_ns)
+
+          *<Plug>(iced_test_all)*
+<Plug>(iced_test_all)
+
+          *<Plug>(iced_test_under_cursor)*
+<Plug>(iced_test_under_cursor)
+
+          *<Plug>(iced_buffer_open)*
+<Plug>(iced_buffer_open)
+
+          *<Plug>(iced_buffer_clear)*
+<Plug>(iced_buffer_clear)
+
+          *<Plug>(iced_def_jump)*
+<Plug>(iced_def_jump)
+
+          *<Plug>(iced_def_back)*
+<Plug>(iced_def_back)
+
+          *<Plug>(iced_document_open)*
+<Plug>(iced_document_open)
+
+          *<Plug>(iced_echo_form_document)*
+<Plug>(iced_echo_form_document)
+
+
+  カレントフォームのドキュメントをechoします
+>
+  aug vim_iced_setting
+    au!
+    au FileType clojure setl updatetime=1000
+    au CursorHoldI <buffer> execute "normal \<Plug>(iced_echo_form_document)"
+  aug END
+<
+
+          *<Plug>(iced_slurp)*
+<Plug>(iced_slurp)
+
+          *<Plug>(iced_barf)*
+<Plug>(iced_barf)
+
+          *<Plug>(iced_format)*
+<Plug>(iced_format)
+
+          *<Plug>(iced_toggle_src_and_test)*
+<Plug>(iced_toggle_src_and_test)
+
+          *<Plug>(iced_clean_ns)*
+<Plug>(iced_clean_ns)
+
+==============================================================================
+Customizing                                              *vim-iced-customizing*
+
+formating
+
+avoid conflict
+let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
+
+
+                                                            *g:iced#nrepl#host*
+g:iced#nrepl#host
+  default value is '127.0.0.1'
+
+                                                     *g:iced#nrepl#buffer_size*
+g:iced#nrepl#buffer_size
+  default value is 1048576
+
+
+
+                                               *g:iced#paredit#slurp_max_depth*
+g:iced#paredit#slurp_max_depth
+  5
+
+
+                                                     *g:iced#nrepl#format#rule*
+g:iced#nrepl#format#rule
+  See https://github.com/weavejester/cljfmt#indentation-rules
+>
+  let g:iced#nrepl#format#rule = {
+        \ 'merr.core/let': '[[:block 2] [:inner 1]]',
+        \ }
+<
+                                                *g:iced#nrepl#cljs#default_env*
+g:iced#nrepl#cljs#default_env
+  Default value is 'figwheel'.
+
+  vim-iced supports
+    * figwheel
+    * nashorn
+
+                                           *g:iced_enable_default_key_mappings*
+g:iced_enable_default_key_mappings
+
+{lhs}          {rhs}
+-----------    ---------------------------------------------------
+<Leader>'      <Plug>(iced_connect)
+<Leader>ei     <Plug>(iced_eval)<Plug>(sexp_inner_element)``
+<Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
+<Leader>et     <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
+<Leader>eb     <Plug>(iced_require)
+<Leader>ma     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
+<Leader>m1     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
+<Leader>tt     <Plug>(iced_test_under_cursor)
+<Leader>tn     <Plug>(iced_test_ns)
+<Leader>tp     <Plug>(iced_test_all)
+<Leader>ss     <Plug>(iced_buffer_open)
+<C-]>          <Plug>(iced_def_jump)
+<C-t>          <Plug>(iced_def_back)
+<Leader>rcn    <Plug>(iced_clean_ns)
+K              <Plug>(iced_document_open)
+==             <Plug>(iced_format)
+
+==============================================================================
+Changelog                                                  *vim-iced-changelog*
+
+See `git log`.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:
