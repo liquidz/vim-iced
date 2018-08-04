@@ -59,7 +59,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) fot actual mappings.
   :plugins [[refactor-nrepl "2.4.0-SNAPSHOT"]]}}
 ```
 
-**WARN** `cider.nrepl/wrap-trace` will cause vim's freeze
+**WARN** `cider.nrepl/wrap-trace` will cause vim's freezing.
 
 ## Usage
 
