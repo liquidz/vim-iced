@@ -16,6 +16,7 @@ Evaluation           |vim-iced-evaluation|
 Testing              |vim-iced-testing|
 Tag Jump             |vim-iced-tag-jump|
 Editing S-exp        |vim-iced-editing-s-exp|
+  Formatting         |vim-iced-formatting|
   Refactoring        |vim-iced-refactoring|
 Interface            |vim-iced-interface|
   Commands           |vim-iced-command|
@@ -62,39 +63,76 @@ Clojure library dependencies:
 ==============================================================================
 nREPL Connection                                    *vim-iced-nrepl-connection*
 
-  repl は事前に起動しておく必要あり
+  REPL needs to be activated beforehand.
+>
+  lein repl
+<
+  |:IcedConnect| to connect nREPL.
+  If not connected at the time of evaluation, vim-iced connect automatically.
 
-  |:IcedConnect| で接続を確立, |:IcedDisconnect| で切断
-
+  |:IcedDisconnect| to disconnect nREPL.
 
 ==============================================================================
 ClojureScript                                          *vim-iced-clojurescript*
 
-figwheel と nashorn のみサポート
+  Supports following environment currently.
+  - figwheel
+  - nashorn
 
-|IcedStartCljsRepl| で開始、 |IcedQuitCljsRepl| で停止
+  |IcedStartCljsRepl| to start cljs-repl.
+  |IcedQuitCljsRepl| to quit it.
 
 ==============================================================================
 Evaluating                                                *vim-iced-evaluating*
 
+  |:IcedEval| is the simplest way to evaluate forms.
+  But working with {vim-sexp} is the best.
+
+  See details: |<Plug>(iced_eval)|
+
 ------------------------------------------------------------------------------
 Stdout Buffer                                          *vim-iced-stdout-buffer*
 
+  Standard outputs will be outputted to dedicated buffer.
+  |:IcedBufferOpen| to open it.
+  |:IcedBufferClear| to clear all outputted lines.
 
 ==============================================================================
 Testing                                                      *vim-iced-testing*
 
+  vim-iced provides following test commands.
+  - |:IcedTestUnderCursor|
+  - |:IcedTestNs|
+  - |:IcedTestAll|
+
 ==============================================================================
 Tag Jump                                                    *vim-iced-tag-jump*
+
+  |:IcedDefJump| to jump to definition.
+  |:IcedDefBack| to jump back.
 
 ==============================================================================
 Editing S-exp                                          *vim-iced-editing-s-exp*
 
+  Provies slurp and barf function.
+  - |IcedSlurp|
+  - |IcedBarf|
+
+------------------------------------------------------------------------------
+Formatting                                                *vim-iced-formatting*
+
+  vim-sexp also provides formatting codes function.
+  If you want to use vim-iced's formatting function,
+  you should define {g;sexp_mappings} as follows.
+>
+  let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
+<
 
 ------------------------------------------------------------------------------
 Refactoring                                              *vim-iced-refactoring*
 
-
+  Provides following functions powered by refactor-nrepl.
+  - |IcedCleanNs| (|<Plug>(iced_clean_ns)|)
 
 ==============================================================================
 Interface                                                  *vim-iced-interface*
@@ -104,221 +142,289 @@ Commands                                                    *vim-iced-commands*
 
                                                                  *:IcedConnect*
 :IcedConnect [{port}]
-  Connect to nREPL.
-  If <port> is not passed, <port> is detected by '.nrepl-port' automatically.
+  Make connection to nREPL.
+  If {port} is not passed, {port} is detected by '.nrepl-port' automatically.
   Key is mapped to |<Plug>(iced_connect)|.
 
-                                                               *:IcedDisconnect*
+                                                              *:IcedDisconnect*
 :IcedDisconnect
   Disconnect from nREPL.
-  Vim 終了時に自動的に呼び出される
+  Automatically disconnected at leaving vim.
+  Key is mapped to |<Plug>(iced_disconnect)|.
 
-                                                                *:IcedInterrupt*
+                                                               *:IcedInterrupt*
 :IcedInterrupt
   Interrupt some code evaluation in current session.
+  Key is mapped to |<Plug>(iced_interrupt)|.
 
-                                                            *:IcedStartCljsRepl*
+                                                           *:IcedStartCljsRepl*
 :IcedStartCljsRepl [{env}]
+  Start CLJS REPL with specified environment.
+  REPL session changes to 'cljs.user' namespace.
+  If {env} is not passed, |g:iced#nrepl#cljs#default_env| is used.
 
+  Supports following envionment currently.
+  - figwheel
+  - nashorn
 
-                                                             *:IcedQuitCljsRepl*
+  Key is mapped to |<Plug>(iced_start_cljs_repl)|.
+
+                                                            *:IcedQuitCljsRepl*
 :IcedQuitCljsRepl
+  Quit CLJS REPL.
+  REPL session changes to 'user' namespace.
+  Key is mapped to |<Plug>(iced_quit_cljs_repl)|.
 
-*:IcedEval*
-:IcedEval
+                                                                    *:IcedEval*
+:IcedEval {form}
+  Evaluate {form} in current session.
 
-*:IcedEvalRepl*
-:IcedEvalRepl
+                                                                *:IcedEvalRepl*
+:IcedEvalRepl {form}
+  Evaluate {form} in REPL session.
 
-*:IcedRequire*
+                                                                 *:IcedRequire*
 :IcedRequire
+  Require and reload current file in current session.
+  Key is mapped to |<Plug>(iced_require)|.
 
-*:IcedTestNs*
-:IcedTestNs
-
-*:IcedTestAll*
-:IcedTestAll
-
-*:IcedTestUnderCursor*
+                                                         *:IcedTestUnderCursor*
 :IcedTestUnderCursor
+  Run test under cursor.
+  Key is mapped to |<Plug>(iced_test_under_cursor)|.
 
-*:IcedBufferOpen*
+                                                                  *:IcedTestNs*
+:IcedTestNs
+  Run tests in current namespace.
+  Key is mapped to |<Plug>(iced_test_ns)|.
+
+                                                                 *:IcedTestAll*
+:IcedTestAll
+  Run all tests in current project.
+  Key is mapped to |<Plug>(iced_test_all)|.
+
+                                                              *:IcedBufferOpen*
 :IcedBufferOpen
+  Open stdout buffer.
+  Key is mapped to |<Plug>(iced_buffer_open)|.
 
-*:IcedBufferClear*
+                                                             *:IcedBufferClear*
 :IcedBufferClear
+  Clear all lines in stdout buffer.
+  Key is mapped to |<Plug>(iced_buffer_clear)|.
 
-*:IcedDefJump*
+                                                                 *:IcedDefJump*
 :IcedDefJump
+  Jump cursor to definition of symbol under cursor.
+  Key is mapped to |<Plug>(iced_def_jump)|.
 
-*:IcedDefBack*
+                                                                 *:IcedDefBack*
 :IcedDefBack
+  Jump back cursor.
+  Key is mapped to |<Plug>(iced_def_back)|.
 
-*:IcedDocumentOpen*
+                                                            *:IcedDocumentOpen*
 :IcedDocumentOpen
+  Open preview window, and show documents for symbol under cursor.
+  Key is mapped to |<Plug>(iced_document_open)|.
 
-*:IcedEchoFormDocument*
+                                                        *:IcedEchoFormDocument*
 :IcedEchoFormDocument
+  Echo one-line document for form under cursor.
+  This is useful to show document while editing codes.
+  See details |<Plug>(iced_echo_form_document)|.
 
-*:IcedSlurp*
+                                                                   *:IcedSlurp*
 :IcedSlurp
-*:IcedBarf*
-:IcedBarf
-*:IcedFormat*
-:IcedFormat
-*:IcedToggleSrcAndTest*
-:IcedToggleSrcAndTest
+  Slurp next element.
+  If no elements in current form, search next form and slurp.
+  For searching next form, |g:iced#paredit#slurp_max_depth| is used.
+  Key is mapped to |<Plug>(iced_slurp)|.
 
+                                                                    *:IcedBarf*
+:IcedBarf
+  Barf last element in current form.
+  Key is mapped to |<Plug>(iced_barf)|.
+                                                                  *:IcedFormat*
+:IcedFormat
+  Reformat current form.
+  Key is mapped to |<Plug>(iced_format)|.
+                                                        *:IcedToggleSrcAndTest*
+:IcedToggleSrcAndTest
+  Switch between source file and test file.
+  Key is mapped to |<Plug>(iced_toggle_src_and_test)|.
+
+                                                                 *:IcedCleanNs*
+:IcedCleanNs
+  Cleanup ns form.
+  See https://github.com/clojure-emacs/refactor-nrepl#clean-ns
+  Key is mapped to |<Plug>(iced_clean_ns)|.
 
 ------------------------------------------------------------------------------
 Key Mappings                                            *vim-iced-key-mappings*
 
                                                          *<Plug>(iced_connect)*
 <Plug>(iced_connect)
+  Same as |:IcedConnect|.
 
-          *<Plug>(iced_disconnect)*
+                                                      *<Plug>(iced_disconnect)*
 <Plug>(iced_disconnect)
+  Same as |:IcedDisconnect|.
 
-          *<Plug>(iced_interrupt)*
+                                                       *<Plug>(iced_interrupt)*
 <Plug>(iced_interrupt)
+  Same as |:IcedInterrupt|.
 
-          *<Plug>(iced_start_cljs_repl)*
+                                                 *<Plug>(iced_start_cljs_repl)*
 <Plug>(iced_start_cljs_repl)
+  Same as |:IcedStartCljsRepl|.
 
-          *<Plug>(iced_quit_cljs_repl)*
+                                                  *<Plug>(iced_quit_cljs_repl)*
 <Plug>(iced_quit_cljs_repl)
+  Same as |:IcedQuitCljsRepl|.
 
-                                                             *<Plug>(iced_eval)*
+                                                            *<Plug>(iced_eval)*
 <Plug>(iced_eval)
-
-
-   <Plug>(iced_eval)<Plug>(sexp_inner_element)``                                                                                                                                              au FileType clojure nmap <buffer> <Leader>ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
-  au FileType clojure nmap <buffer> <Leader>et <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
-
-
-
-          *<Plug>(iced_macroexpand)*
-<Plug>(iced_macroexpand)
-
-          *<Plug>(iced_macroexpand_1)*
-<Plug>(iced_macroexpand_1)
-
-          *<Plug>(iced_require)*
-<Plug>(iced_require)
-
-          *<Plug>(iced_test_ns)*
-<Plug>(iced_test_ns)
-
-          *<Plug>(iced_test_all)*
-<Plug>(iced_test_all)
-
-          *<Plug>(iced_test_under_cursor)*
-<Plug>(iced_test_under_cursor)
-
-          *<Plug>(iced_buffer_open)*
-<Plug>(iced_buffer_open)
-
-          *<Plug>(iced_buffer_clear)*
-<Plug>(iced_buffer_clear)
-
-          *<Plug>(iced_def_jump)*
-<Plug>(iced_def_jump)
-
-          *<Plug>(iced_def_back)*
-<Plug>(iced_def_back)
-
-          *<Plug>(iced_document_open)*
-<Plug>(iced_document_open)
-
-          *<Plug>(iced_echo_form_document)*
-<Plug>(iced_echo_form_document)
-
-
-  カレントフォームのドキュメントをechoします
+  Evaluate codes.
+  Followings are examples for working with {vim-sexp}.
 >
-  aug vim_iced_setting
+  <Plug>(iced_eval)<Plug>(sexp_inner_element)``
+  <Plug>(iced_eval)<Plug>(sexp_outer_list)``
+  <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
+<
+
+                                                     *<Plug>(iced_macroexpand)*
+<Plug>(iced_macroexpand)
+  Evaluate {macroexpand}, and show result in preview window.
+>
+  <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
+<
+
+                                                   *<Plug>(iced_macroexpand_1)*
+<Plug>(iced_macroexpand_1)
+  Evaluate {macroexpand-1}, and show result in preview window.
+>
+  <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
+<
+
+                                                         *<Plug>(iced_require)*
+<Plug>(iced_require)
+  Same as |:IcedRequire|.
+
+                                                         *<Plug>(iced_test_ns)*
+<Plug>(iced_test_ns)
+  Same as |:IcedTestNs|.
+
+                                                        *<Plug>(iced_test_all)*
+<Plug>(iced_test_all)
+  Same as |:IcedTestAll|.
+
+                                               *<Plug>(iced_test_under_cursor)*
+<Plug>(iced_test_under_cursor)
+  Same as |:IcedTestUnderCursor|.
+
+                                                     *<Plug>(iced_buffer_open)*
+<Plug>(iced_buffer_open)
+  Same as |:IcedBufferOpen|.
+
+                                                    *<Plug>(iced_buffer_clear)*
+<Plug>(iced_buffer_clear)
+  Same as |:IcedBufferClear|.
+
+                                                        *<Plug>(iced_def_jump)*
+<Plug>(iced_def_jump)
+  Same as |:IcedDefJump|.
+
+                                                        *<Plug>(iced_def_back)*
+<Plug>(iced_def_back)
+  Same as |:IcedDefBack|.
+
+                                                   *<Plug>(iced_document_open)*
+<Plug>(iced_document_open)
+  Same as |:IcedDocumentOpen|.
+
+                                              *<Plug>(iced_echo_form_document)*
+<Plug>(iced_echo_form_document)
+  Same as |:IcedEchoFormDocument|.
+  This is convinient to display documents about the form you are editing.
+>
+  aug vim_iced_echo_document_setting
     au!
     au FileType clojure setl updatetime=1000
     au CursorHoldI <buffer> execute "normal \<Plug>(iced_echo_form_document)"
   aug END
 <
 
-          *<Plug>(iced_slurp)*
+                                                           *<Plug>(iced_slurp)*
 <Plug>(iced_slurp)
+  Same as |:IcedSlurp|.
 
-          *<Plug>(iced_barf)*
+                                                            *<Plug>(iced_barf)*
 <Plug>(iced_barf)
+  Same as |:IcedBarf|.
 
-          *<Plug>(iced_format)*
+                                                          *<Plug>(iced_format)*
 <Plug>(iced_format)
+  Same as |:IcedFormat|.
 
-          *<Plug>(iced_toggle_src_and_test)*
+                                             *<Plug>(iced_toggle_src_and_test)*
 <Plug>(iced_toggle_src_and_test)
+  Same as |:IcedToggleSrcAndTest|.
 
-          *<Plug>(iced_clean_ns)*
+                                                        *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
+  Same as |:IcedCleanNs|.
 
 ==============================================================================
 Customizing                                              *vim-iced-customizing*
 
-formating
-
-avoid conflict
-let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
-
-
                                                             *g:iced#nrepl#host*
 g:iced#nrepl#host
-  default value is '127.0.0.1'
-
-                                                     *g:iced#nrepl#buffer_size*
-g:iced#nrepl#buffer_size
-  default value is 1048576
-
-
+  Connection host name.
+  Default value is '127.0.0.1'.
 
                                                *g:iced#paredit#slurp_max_depth*
 g:iced#paredit#slurp_max_depth
-  5
-
+  Maximum depth for slurping.
+  Default value is 5.
 
                                                      *g:iced#nrepl#format#rule*
 g:iced#nrepl#format#rule
+  Cljfmt's formatting rule.
   See https://github.com/weavejester/cljfmt#indentation-rules
 >
   let g:iced#nrepl#format#rule = {
         \ 'merr.core/let': '[[:block 2] [:inner 1]]',
         \ }
 <
+
                                                 *g:iced#nrepl#cljs#default_env*
 g:iced#nrepl#cljs#default_env
+  Environment used when |:IcedStartCljsRepl| is called with no argument.
   Default value is 'figwheel'.
-
-  vim-iced supports
-    * figwheel
-    * nashorn
 
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
+  If {v:true}, apply following mappings.
 
-{lhs}          {rhs}
------------    ---------------------------------------------------
-<Leader>'      <Plug>(iced_connect)
-<Leader>ei     <Plug>(iced_eval)<Plug>(sexp_inner_element)``
-<Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
-<Leader>et     <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
-<Leader>eb     <Plug>(iced_require)
-<Leader>ma     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
-<Leader>m1     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
-<Leader>tt     <Plug>(iced_test_under_cursor)
-<Leader>tn     <Plug>(iced_test_ns)
-<Leader>tp     <Plug>(iced_test_all)
-<Leader>ss     <Plug>(iced_buffer_open)
-<C-]>          <Plug>(iced_def_jump)
-<C-t>          <Plug>(iced_def_back)
-<Leader>rcn    <Plug>(iced_clean_ns)
-K              <Plug>(iced_document_open)
-==             <Plug>(iced_format)
+  {lhs}          {rhs}
+  -----------    ---------------------------------------------------
+  <Leader>'      <Plug>(iced_connect)
+  <Leader>ei     <Plug>(iced_eval)<Plug>(sexp_inner_element)``
+  <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
+  <Leader>et     <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
+  <Leader>eb     <Plug>(iced_require)
+  <Leader>ma     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
+  <Leader>m1     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
+  <Leader>tt     <Plug>(iced_test_under_cursor)
+  <Leader>tn     <Plug>(iced_test_ns)
+  <Leader>tp     <Plug>(iced_test_all)
+  <Leader>ss     <Plug>(iced_buffer_open)
+  <C-]>          <Plug>(iced_def_jump)
+  <C-t>          <Plug>(iced_def_back)
+  <Leader>rcn    <Plug>(iced_clean_ns)
+  K              <Plug>(iced_document_open)
+  ==             <Plug>(iced_format)
 
 ==============================================================================
 Changelog                                                  *vim-iced-changelog*
