@@ -1,4 +1,5 @@
 # vim-iced
+[![CircleCI](https://circleci.com/gh/liquidz/vim-iced.svg?style=svg)](https://circleci.com/gh/liquidz/vim-iced)
 [![Powered by vital.vim](https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg)](https://github.com/vim-jp/vital.vim)
 
 Clojure Interactive Development Environment for Vim8.
