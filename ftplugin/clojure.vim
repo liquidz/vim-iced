@@ -145,7 +145,7 @@ endfunction
 if exists('g:iced_enable_default_key_mappings')
     \ && g:iced_enable_default_key_mappings
   silent! call s:default_key_mappings()
-  aug ViviDefaultKeyMappings
+  aug iced_default_key_mappings
     au!
     au FileType clojure call s:default_key_mappings()
   aug END

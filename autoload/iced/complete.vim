@@ -5,19 +5,19 @@ let s:V = vital#of('iced')
 let s:L = s:V.import('Data.List')
 
 let s:type_to_kind_dict = {
-      \ 'function':      'f',
-      \ 'macro':         'm',
-      \ 'var':           'v',
-      \ 'special-form':  's',
       \ 'class':         'c',
+      \ 'field':         'i',
+      \ 'function':      'f',
       \ 'keyword':       'k',
       \ 'local':         'l',
-      \ 'namespace':     'n',
-      \ 'field':         'i',
+      \ 'macro':         'm',
       \ 'method':        'f',
+      \ 'namespace':     'n',
+      \ 'resource':      'r',
+      \ 'special-form':  's',
       \ 'static-field':  'i',
       \ 'static-method': 'f',
-      \ 'resource':      'r',
+      \ 'var':           'v',
       \ }
 
 function! s:ns_candidate(ns_name) abort
