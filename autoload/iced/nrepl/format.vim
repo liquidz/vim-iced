@@ -1,26 +1,20 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let g:iced#nrepl#format#rule = get(g:, 'iced#nrepl#format#rule', {})
-
 function! s:escape(s) abort
   let s = a:s
   let s = substitute(s, '\\', '\\\\', 'g')
   return substitute(s, '"', '\\"', 'g')
 endfunction
 
-function! s:unescape(s) abort
-
-endfunction
-
 function! s:indents_setting() abort
-  if empty(g:iced#nrepl#format#rule)
+  if empty(g:iced#format#rule)
     return '{}'
   endif
 
   let rules = []
-  for name in keys(g:iced#nrepl#format#rule)
-    call add(rules, printf('''%s %s', name, g:iced#nrepl#format#rule[name]))
+  for name in keys(g:iced#format#rule)
+    call add(rules, printf('''%s %s', name, g:iced#format#rule[name]))
   endfor
   return printf('{:indents (merge cljfmt.core/default-indents {%s})}', join(rules, ' '))
 endfunction
@@ -43,7 +37,8 @@ function! iced#nrepl#format#code(code) abort
       \ 'code': code,
       \ 'session': iced#nrepl#current_session(),
       \ })
-  if has_key(resp, 'value')
+
+  if type(resp) == type({}) && has_key(resp, 'value')
     let val = resp['value']
     let val = val[1:len(val)-2]
     let val = substitute(val, '\\n', "\n", 'g')

@@ -388,12 +388,12 @@ g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
   Default value is 5.
 
-                                                     *g:iced#nrepl#format#rule*
-g:iced#nrepl#format#rule
+                                                           *g:iced#format#rule*
+g:iced#format#rule
   Cljfmt's formatting rule.
   See https://github.com/weavejester/cljfmt#indentation-rules
 >
-  let g:iced#nrepl#format#rule = {
+  let g:iced#format#rule = {
         \ 'merr.core/let': '[[:block 2] [:inner 1]]',
         \ }
 <

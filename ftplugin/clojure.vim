@@ -33,7 +33,7 @@ command!          IcedEchoFormDocument call iced#nrepl#document#echo_current_for
 
 command!          IcedSlurp            call iced#paredit#deep_slurp()
 command!          IcedBarf             call iced#paredit#barf()
-command!          IcedFormat           call iced#format()
+command!          IcedFormat           call iced#format#form()
 command!          IcedToggleSrcAndTest call iced#nrepl#ns#toggle#src_and_test()
 
 command!          IcedCleanNs          call iced#nrepl#refactor#clean_ns()
