@@ -117,7 +117,6 @@ function! s:dispatcher(ch, resp) abort
     let s:response_buffer = ''
     let id = s:get_message_id(resp)
 
-    "" FIXME quickfix
     for rsp in iced#util#ensure_array(resp)
       if type(rsp) == type({})
         for k in ['out', 'err']
@@ -231,17 +230,18 @@ function! iced#nrepl#connect(port) abort
         \ 'drop': 'never',
         \ 'timeout': 3000,
         \ })
+
+    if !iced#nrepl#is_connected()
+      let s:nrepl['channel'] = v:false
+      echom iced#message#get('connect_error')
+      return
+    endif
   endif
 
   call iced#nrepl#send({'op': 'clone', 'callback': funcref('s:connected')})
 endfunction
 
 function! iced#nrepl#is_connected() abort
-  " if s:status(s:nrepl['channel']) ==# 'open'
-  "     \ && !empty(s:nrepl['current_session_key'])
-  "   return v:true
-  " endif
-  " return v:false
   return (s:status(s:nrepl['channel']) ==# 'open')
 endfunction
 
