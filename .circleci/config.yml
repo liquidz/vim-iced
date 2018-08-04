@@ -1,0 +1,48 @@
+version: 2
+jobs:
+  lint:
+    docker:
+      - image: circleci/python:3.6.1
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - restore_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - run:
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      - save_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "venv"
+      - run:
+          command: |
+            . venv/bin/activate
+            find . -name "*.vim" | grep -v vital | xargs vint
+  test:
+    docker:
+      - image: ubuntu
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - run:
+          command: |
+            apt update
+            apt install -y software-properties-common
+            add-apt-repository -y ppa:git-core/ppa
+            add-apt-repository -y ppa:jonathonf/vim
+            apt update
+            apt install -y git vim
+      - run:
+          command: |
+            vim --version
+            git clone https://github.com/thinca/vim-themis
+            ./vim-themis/bin/themis
+workflows:
+  version: 2
+  all_test:
+    jobs:
+      - lint
+      - test

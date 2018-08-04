@@ -1,4 +1,4 @@
-.PHONY: vital test lint clean
+.PHONY: vital test themis lint clean
 
 PLUGIN_NAME = iced
 VITAL_MODULES = Data.List \
@@ -9,8 +9,13 @@ VITAL_MODULES = Data.List \
 vital:
 	vim -c "Vitalize . --name=$(PLUGIN_NAME) $(VITAL_MODULES)" -c q
 
-test:
-	themis
+test: themis lint
+
+.vim-themis:
+	git clone https://github.com/thinca/vim-themis .vim-themis
+
+themis: .vim-themis
+	./.vim-themis/bin/themis
 
 lint:
 	find . -name "*.vim" | grep -v vital | xargs vint
