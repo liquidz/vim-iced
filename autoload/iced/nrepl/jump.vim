@@ -5,8 +5,6 @@ let s:V = vital#of('iced')
 let s:L = s:V.import('Data.List')
 
 let s:tagstack = []
-" FIXME
-"let s:limit = 10
 
 function! s:jump(resp) abort
   let path = substitute(a:resp['file'], '^file:', '', '')
