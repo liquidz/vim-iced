@@ -1,13 +1,49 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:V = vital#of('iced')
+let s:L = s:V.import('Data.List')
+
+" 'spec': [
+"     'clojure.spec.alpha/fspec',
+"     ':args', ['clojure.spec.alpha/cat', ':x', ':foo.core/x'],
+"     ':ret', 'clojure.core/nil?', ':fn', ''
+"  ],
+
 function! s:generate_doc(resp) abort
-  if has_key(a:resp, 'ns') && has_key(a:resp, 'arglists-str')
-    let name = printf('%s/%s', a:resp['ns'], a:resp['name'])
-    let args = join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")
-    let doc  = get(a:resp, 'doc', '')
-    let text = printf("%s\n  %s\n\n  %s", name, args, doc)
-    return text
+  echom printf('FIXME; %s', a:resp)
+  if has_key(a:resp, 'status') && a:resp['status'] == ['done']
+    let doc = []
+    call add(doc, printf('%s/%s', a:resp['ns'], a:resp['name']))
+    if has_key(a:resp, 'arglists-str')
+      let args = join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")
+      call add(doc, '  ' . args)
+    endif
+
+    if has_key(a:resp, 'spec')
+      call add(doc, '')
+      call add(doc, a:resp['spec'][0])
+      let specs = a:resp['spec'][1:]
+      while !empty(specs)
+        let k = s:L.shift(specs)
+        let v = s:L.shift(specs)
+
+        if k ==# ':args'
+          call add(doc, k)
+          for x in v[1:]
+            call add(doc, '  ' . x)
+          endfor
+        elseif k ==# ':ret'
+          call add(doc, k)
+          call add(doc, '  ' . v)
+        endif
+      endwhile
+    endif
+
+    call add(doc, '')
+    call add(doc, 'doc')
+    call add(doc, '  ' . get(a:resp, 'doc', ''))
+    return join(doc, "\n")
   else
     echom iced#message#get('not_found')
   endif
