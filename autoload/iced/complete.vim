@@ -1,9 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V = vital#of('iced')
-let s:L = s:V.import('Data.List')
-
 let s:type_to_kind_dict = {
       \ 'class':         'c',
       \ 'field':         'i',
