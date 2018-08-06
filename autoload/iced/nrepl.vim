@@ -160,7 +160,6 @@ function! s:auto_connect() abort
     return v:false
   endif
 
-  " if !iced#util#wait({-> !iced#nrepl#is_connected()}, 500)
   if !iced#util#wait({-> empty(s:nrepl['current_session_key'])}, 500)
     echom iced#message#get('timeout')
     return v:false

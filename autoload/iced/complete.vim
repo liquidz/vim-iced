@@ -39,13 +39,16 @@ endfunction
 
 function! s:ns_var_candidates(ns_name, base, alias) abort
   let result = []
-  let resp = iced#nrepl#cider#sync#ns_vars(a:ns_name)
+  if a:ns_name =~# '^[A-Z]'
+    return result
+  endif
 
+  let resp = iced#nrepl#cider#sync#ns_vars(a:ns_name)
   if empty(resp) || resp['status'][0] !=# 'done'
     return []
   endif
 
-  let dict = resp['ns-vars-with-meta']
+  let dict = get(resp, 'ns-vars-with-meta', {})
   for k in keys(dict)
     if stridx(k, a:base) != -1
       call add(result, {
