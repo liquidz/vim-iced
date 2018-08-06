@@ -12,13 +12,13 @@ function! s:error_message(test) abort
 endfunction
 
 function! s:summary(resp) abort
-  for resp in (type(a:resp) == type([]) ? a:resp : [a:resp])
+  for resp in iced#util#ensure_array(a:resp)
     if has_key(resp, 'summary')
       let summary = resp['summary']
       let msg = [
           \ printf('Tested %d namespaces', summary['ns']),
           \ printf('Ran %d assertions, in %d test functions', summary['test'], summary['var']),
-          \ printf('%d failures', summary['fail']),
+          \ printf('%d failures', summary['fail'] + summary['error']),
           \ ]
       return join(msg, "\n")
     endif
@@ -27,11 +27,10 @@ function! s:summary(resp) abort
   return v:none
 endfunction
 
-function! s:out(resp) abort
-  let responses = (type(a:resp) == type([]) ? a:resp : [a:resp])
+function! s:collect_errors(resp) abort
   let errors  = []
 
-  for response in responses
+  for response in iced#util#ensure_array(a:resp)
     let results = get(response, 'results', {})
 
     for ns_name in keys(results)
@@ -42,20 +41,38 @@ function! s:out(resp) abort
 
         for test in test_results
           if test['type'] ==# 'fail'
+            let ns_path_resp = iced#nrepl#cider#sync#ns_path(ns_name)
+            if type(ns_path_resp) == type({}) && has_key(ns_path_resp, 'path')
+              call add(errors, {
+                  \ 'filename': ns_path_resp['path'],
+                  \ 'lnum': test['line'],
+                  \ 'text': s:error_message(test),
+                  \ })
+            endif
+          elseif test['type'] ==# 'error'
             let ns_path_resp =  iced#nrepl#cider#sync#ns_path(ns_name)
-            call add(errors, {
-                \ 'filename': ns_path_resp['path'],
-                \ 'lnum': test['line'],
-                \ 'text': s:error_message(test),
-                \ })
+            if type(ns_path_resp) == type({}) && has_key(ns_path_resp, 'path')
+              call add(errors, {
+                  \ 'filename': ns_path_resp['path'],
+                  \ 'lnum': test['line'],
+                  \ 'text': test['error'],
+                  \ })
+            endif
           endif
         endfor
       endfor
     endfor
   endfor
 
+  return errors
+endfunction
+
+function! s:out(resp) abort
   call iced#util#echo_messages(s:summary(a:resp))
+
+  let errors = s:collect_errors(a:resp)
   call setqflist(errors , 'r')
+
   if empty(errors)
     cclose
   else
