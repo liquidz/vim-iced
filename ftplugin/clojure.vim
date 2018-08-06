@@ -89,6 +89,10 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>' <Plug>(iced_connect)
   endif
 
+  if !hasmapto('<Plug>(iced_interrupt)')
+    silent! nmap <buffer> <Leader>eq <Plug>(iced_interrupt)
+  endif
+
   if !hasmapto('<Plug>(iced_eval)')
     silent! nmap <buffer> <Leader>ei <Plug>(iced_eval)<Plug>(sexp_inner_element)``
     silent! nmap <buffer> <Leader>ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
