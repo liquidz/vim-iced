@@ -16,6 +16,7 @@ let s:default_init_text = join([
 
 let g:iced#buffer#init_text = get(g:, 'iced#buffer#init_text', s:default_init_text)
 let g:iced#buffer#name = get(g:, 'iced#buffer#name', 'nrepl')
+let g:iced#buffer#mods = get(g:, 'iced#buffer#mods', '')
 let g:iced#buffer#max_line = get(g:, 'iced#buffer#max_line', 512)
 
 let s:manager = v:none
@@ -80,7 +81,10 @@ function! iced#buffer#open() abort
   if s:is_visible()
     call s:focus_window(s:repl_bufwinnr())
   else
-    call s:B.open(n, {'opener': 'split'})
+    call s:B.open(n, {
+        \ 'opener': 'split',
+        \ 'mods': g:iced#buffer#mods,
+        \ })
   endif
 endfunction
 

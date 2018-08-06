@@ -403,6 +403,18 @@ g:iced#nrepl#cljs#default_env
   Environment used when |:IcedStartCljsRepl| is called with no argument.
   Default value is 'figwheel'.
 
+                                                           *g:iced#buffer#mods*
+g:iced#buffer#mods
+  Buffer position definition.
+  Following values are supported.
+  - {vertical}
+  - {leftabove}
+  - {aboveleft}
+  - {rightbelow}
+  - {belowright}
+  - {topleft}
+  - {botright}
+
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
   If {v:true}, apply following mappings.
