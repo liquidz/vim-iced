@@ -1,9 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V = vital#of('iced')
-let s:L = s:V.import('Data.List')
-
 let s:type_to_kind_dict = {
       \ 'class':         'c',
       \ 'field':         'i',
@@ -42,13 +39,16 @@ endfunction
 
 function! s:ns_var_candidates(ns_name, base, alias) abort
   let result = []
-  let resp = iced#nrepl#cider#sync#ns_vars(a:ns_name)
+  if a:ns_name =~# '^[A-Z]'
+    return result
+  endif
 
+  let resp = iced#nrepl#cider#sync#ns_vars(a:ns_name)
   if empty(resp) || resp['status'][0] !=# 'done'
     return []
   endif
 
-  let dict = resp['ns-vars-with-meta']
+  let dict = get(resp, 'ns-vars-with-meta', {})
   for k in keys(dict)
     if stridx(k, a:base) != -1
       call add(result, {

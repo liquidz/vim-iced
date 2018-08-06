@@ -8,6 +8,7 @@ Clojure Interactive Development Environment for Vim8.
 
 ## Requirements
 
+ * Vim 8.1 or later
  * Clojure & Java
  * [vim-sexp](https://github.com/guns/vim-sexp)
  * No python!

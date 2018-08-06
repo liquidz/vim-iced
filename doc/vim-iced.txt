@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojunre interactive development environment for Vim8
 
-Version: 0.0.1
+Version: 0.0.2
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -20,6 +20,7 @@ Editing S-exp        |vim-iced-editing-s-exp|
   Refactoring        |vim-iced-refactoring|
 Interface            |vim-iced-interface|
   Commands           |vim-iced-command|
+  Functions          |vim-iced-functions|
   Key Mappings       |vim-iced-key-mappings|
 Customizing          |vim-iced-customizing|
 Changelog            |vim-iced-changelog|
@@ -261,6 +262,22 @@ Commands                                                    *vim-iced-commands*
   Key is mapped to |<Plug>(iced_clean_ns)|.
 
 ------------------------------------------------------------------------------
+Functions                                                  *vim-iced-functions*
+
+                                                                *iced#status()*
+iced#status()
+  Return vim-iced's status.
+  This is useful to show status in status line.
+
+  Ex. working with https://github.com/itchyny/lightline.vim
+>
+  let g:lightline = {
+      \ 'active': {'right': [['iced']]},
+      \ 'component_function': {'iced': 'iced#status'},
+      \ }
+<
+
+------------------------------------------------------------------------------
 Key Mappings                                            *vim-iced-key-mappings*
 
                                                          *<Plug>(iced_connect)*
@@ -402,6 +419,18 @@ g:iced#format#rule
 g:iced#nrepl#cljs#default_env
   Environment used when |:IcedStartCljsRepl| is called with no argument.
   Default value is 'figwheel'.
+
+                                                           *g:iced#buffer#mods*
+g:iced#buffer#mods
+  Buffer position definition.
+  Following values are supported.
+  - {vertical}
+  - {leftabove}
+  - {aboveleft}
+  - {rightbelow}
+  - {belowright}
+  - {topleft}
+  - {botright}
 
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings

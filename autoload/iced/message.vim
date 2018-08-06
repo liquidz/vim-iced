@@ -15,6 +15,7 @@ let s:messages = {
     \ 'invalid_cljs_env':  'Invalid CLJS environment.',
     \ 'started_cljs_repl': 'CLJS repl is started.',
     \ 'quitted_cljs_repl': 'CLJS repl is quitted.',
+    \ 'no_document':       'Not documented.',
     \ }
 
 function! iced#message#get(k) abort

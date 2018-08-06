@@ -160,7 +160,6 @@ function! s:auto_connect() abort
     return v:false
   endif
 
-  " if !iced#util#wait({-> !iced#nrepl#is_connected()}, 500)
   if !iced#util#wait({-> empty(s:nrepl['current_session_key'])}, 500)
     echom iced#message#get('timeout')
     return v:false
@@ -228,7 +227,6 @@ function! iced#nrepl#connect(port) abort
         \ 'mode': 'raw',
         \ 'callback': funcref('s:dispatcher'),
         \ 'drop': 'never',
-        \ 'timeout': 3000,
         \ })
 
     if !iced#nrepl#is_connected()
@@ -268,6 +266,10 @@ endfunction
 "" -----
 "" =EVAL
 "" -----
+
+function! iced#nrepl#is_evaluating() abort
+  return !empty(s:messages)
+endfunction
 
 function! iced#nrepl#eval(code, ...) abort
   if !iced#nrepl#is_connected() && !s:auto_connect()
