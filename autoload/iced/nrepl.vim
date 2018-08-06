@@ -268,6 +268,10 @@ endfunction
 "" =EVAL
 "" -----
 
+function! iced#nrepl#is_evaluating() abort
+  return !empty(s:messages)
+endfunction
+
 function! iced#nrepl#eval(code, ...) abort
   if !iced#nrepl#is_connected() && !s:auto_connect()
     return

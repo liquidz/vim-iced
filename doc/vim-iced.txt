@@ -20,6 +20,7 @@ Editing S-exp        |vim-iced-editing-s-exp|
   Refactoring        |vim-iced-refactoring|
 Interface            |vim-iced-interface|
   Commands           |vim-iced-command|
+  Functions          |vim-iced-functions|
   Key Mappings       |vim-iced-key-mappings|
 Customizing          |vim-iced-customizing|
 Changelog            |vim-iced-changelog|
@@ -259,6 +260,22 @@ Commands                                                    *vim-iced-commands*
   Cleanup ns form.
   See https://github.com/clojure-emacs/refactor-nrepl#clean-ns
   Key is mapped to |<Plug>(iced_clean_ns)|.
+
+------------------------------------------------------------------------------
+Functions                                                  *vim-iced-functions*
+
+                                                                *iced#status()*
+iced#status()
+  Return vim-iced's status.
+  This is useful to show status in status line.
+
+  Ex. working with https://github.com/itchyny/lightline.vim
+>
+  let g:lightline = {
+      \ 'active': {'right': [['iced']]},
+      \ 'component_function': {'iced': 'iced#status'},
+      \ }
+<
 
 ------------------------------------------------------------------------------
 Key Mappings                                            *vim-iced-key-mappings*
