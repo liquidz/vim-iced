@@ -18,7 +18,7 @@ themis: .vim-themis
 	./.vim-themis/bin/themis
 
 lint:
-	find . -name "*.vim" | grep -v vital | xargs vint
+	find . -name "*.vim" | grep -v vital | grep -v .vim-themis | xargs vint
 
 clean:
 	/bin/rm -rf autoload/vital*

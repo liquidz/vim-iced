@@ -12,7 +12,7 @@ function! s:format_spec(x) abort
     else
       let fn = s:S.replace_first(a:x[0], 'clojure.spec.alpha', 's')
       let args = join(map(a:x[1:], {_, v -> s:format_spec(v)}), ' ')
-      return printf("(%s %s)", fn, args)
+      return printf('(%s %s)', fn, args)
     endif
   else
     return printf('%s', a:x)
