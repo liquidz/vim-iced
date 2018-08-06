@@ -2,23 +2,31 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:V = vital#of('iced')
+let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
-" 'spec': [
-"     'clojure.spec.alpha/fspec',
-"     ':args', ['clojure.spec.alpha/cat', ':x', ':foo.core/x'],
-"     ':ret', 'clojure.core/nil?', ':fn', ''
-"  ],
+function! s:format_spec(x) abort
+  if type(a:x) == type([])
+    if a:x[0][0] ==# ':'
+      return printf('[%s]', join(map(a:x, {_, v -> s:format_spec(v)}), ' '))
+    else
+      let fn = s:S.replace_first(a:x[0], 'clojure.spec.alpha', 's')
+      let args = join(map(a:x[1:], {_, v -> s:format_spec(v)}), ' ')
+      return printf("(%s %s)", fn, args)
+    endif
+  else
+    return printf('%s', a:x)
+  endif
+endfunction
 
 function! s:generate_doc(resp) abort
-  echom printf('FIXME; %s', a:resp)
   if has_key(a:resp, 'status') && a:resp['status'] == ['done']
     let doc = []
     call add(doc, printf('%s/%s', a:resp['ns'], a:resp['name']))
     if has_key(a:resp, 'arglists-str')
-      let args = join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")
-      call add(doc, '  ' . args)
+      call add(doc, printf('  %s', join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")))
     endif
+    call add(doc, printf('  %s', get(a:resp, 'doc', iced#message#get('no_document'))))
 
     if has_key(a:resp, 'spec')
       call add(doc, '')
@@ -28,22 +36,13 @@ function! s:generate_doc(resp) abort
         let k = s:L.shift(specs)
         let v = s:L.shift(specs)
 
-        if k ==# ':args'
-          call add(doc, k)
-          for x in v[1:]
-            call add(doc, '  ' . x)
-          endfor
-        elseif k ==# ':ret'
-          call add(doc, k)
-          call add(doc, '  ' . v)
+        if k ==# ':args' || k ==# ':ret'
+          call add(doc, printf('%7s  %s', k, s:format_spec(v)))
         endif
       endwhile
     endif
 
-    call add(doc, '')
-    call add(doc, 'doc')
-    call add(doc, '  ' . get(a:resp, 'doc', ''))
-    return join(doc, "\n")
+    return (empty(doc) ? '' : join(doc, "\n"))
   else
     echom iced#message#get('not_found')
   endif
