@@ -227,7 +227,6 @@ function! iced#nrepl#connect(port) abort
         \ 'mode': 'raw',
         \ 'callback': funcref('s:dispatcher'),
         \ 'drop': 'never',
-        \ 'timeout': 3000,
         \ })
 
     if !iced#nrepl#is_connected()
