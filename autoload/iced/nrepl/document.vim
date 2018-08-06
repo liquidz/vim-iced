@@ -26,7 +26,11 @@ function! s:generate_doc(resp) abort
     if has_key(a:resp, 'arglists-str')
       call add(doc, printf('  %s', join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")))
     endif
-    call add(doc, printf('  %s', get(a:resp, 'doc', iced#message#get('no_document'))))
+    let docs = split(get(a:resp, 'doc', iced#message#get('no_document')), '\r\?\n')
+    call add(doc, printf('  %s', docs[0]))
+    for doc_line in docs[1:]
+      call add(doc, doc_line)
+    endfor
 
     if has_key(a:resp, 'spec')
       call add(doc, '')
