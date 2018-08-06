@@ -80,6 +80,7 @@ function! iced#nrepl#cider#test_var(test_var, callback) abort
   call iced#nrepl#send({
       \ 'op': 'test',
       \ 'session': iced#nrepl#current_session(),
+      \ 'id': iced#nrepl#eval#id(),
       \ 'ns': iced#nrepl#ns#name(),
       \ 'tests': [a:test_var],
       \ 'callback': {resp -> a:callback(s:tested(resp))},
@@ -91,6 +92,7 @@ function! iced#nrepl#cider#test_ns(test_ns, callback) abort
     call iced#nrepl#send({
         \ 'op': 'test',
         \ 'session': iced#nrepl#current_session(),
+        \ 'id': iced#nrepl#eval#id(),
         \ 'ns': a:test_ns,
         \ 'callback': {resp -> a:callback(s:tested(resp))},
         \ })
@@ -106,6 +108,7 @@ function! iced#nrepl#cider#test_all(callback) abort
   call iced#nrepl#send({
       \ 'op': 'test-all',
       \ 'session': iced#nrepl#current_session(),
+      \ 'id': iced#nrepl#eval#id(),
       \ 'callback': {resp -> a:callback(s:tested(resp))},
       \ })
 endfunction
