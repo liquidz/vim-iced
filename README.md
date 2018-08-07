@@ -46,7 +46,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) fot actual mappings.
 
 ```clj
 {:user
- {:dependencies [[cider/cider-nrepl "0.17.0"]
+ {:dependencies [[cider/cider-nrepl "0.18.0"]
                  [cljfmt  "0.6.0"]]
   :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                     cider.nrepl/wrap-format
