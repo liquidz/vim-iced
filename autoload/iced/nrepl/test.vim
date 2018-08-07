@@ -98,7 +98,7 @@ function! iced#nrepl#test#under_cursor() abort
   try
     silent normal! va(y
     let code = @@
-    call iced#nrepl#eval(code, {resp -> s:test(resp)})
+    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)})})
   finally
     let @@ = reg_save
     call cursor(current_pos[1], current_pos[2])
