@@ -4,7 +4,7 @@ set cpo&vim
 let g:iced#paredit#slurp_max_depth = get(g:, 'iced#paredit#slurp_max_depth', 5)
 
 function! s:slurp(cur_pos, depth) abort
-  if a:depth > g:cljstack#slurp#max_depth
+  if a:depth > g:iced#paredit#slurp_max_depth
     echo 'too deep'
   else
     let before = getcurpos()
