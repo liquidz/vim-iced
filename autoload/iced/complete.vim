@@ -92,6 +92,9 @@ function! s:context() abort
     let codes = split(@@, '\r\?\n')
     let codes[nrow] = printf('%s__prefix__%s', codes[nrow][0:ncol-2], codes[nrow][ncol-1:])
     return join(codes, "\n")
+  catch /E684:/
+    " index out of range
+    return v:none
   finally
     let @@ = reg_save
     call cursor(current_pos[1], current_pos[2])
@@ -115,26 +118,29 @@ function! iced#complete#omni(findstart, base) abort
     endif
 
     " namespace aliases
-    let alias_dict = iced#complete#alias#dict(ns)
-    if !empty(alias_dict)
-      let candidates = candidates + s:ns_alias_candidates(keys(alias_dict), a:base)
-    endif
+    if iced#nrepl#current_session_key() ==# 'clj'
+      let alias_dict = iced#complete#alias#dict(ns)
+      if !empty(alias_dict)
+        let candidates = candidates + s:ns_alias_candidates(keys(alias_dict), a:base)
+      endif
 
-    " vars in aliased namespace
-    let i = stridx(a:base, '/')
-    if i != -1
-      let org_base_ns = a:base[0:i-1]
-      let base_ns = get(alias_dict, org_base_ns, org_base_ns)
-      let base_sym = a:base[i+1:]
-      let tmp = s:ns_var_candidates(base_ns, base_sym, org_base_ns)
-      if !empty(tmp)
-        let candidates = candidates + tmp
+      " vars in aliased namespace
+      let i = stridx(a:base, '/')
+      if i != -1
+        let org_base_ns = a:base[0:i-1]
+        let base_ns = get(alias_dict, org_base_ns, org_base_ns)
+        let base_sym = a:base[i+1:]
+        let tmp = s:ns_var_candidates(base_ns, base_sym, org_base_ns)
+        if !empty(tmp)
+          let candidates = candidates + tmp
+        endif
       endif
     endif
 
     " cider completions
-    let resp = iced#nrepl#cider#sync#complete(a:base, s:context())
-    if has_key(resp, 'completions')
+    let ctx = s:context()
+    let resp = iced#nrepl#cider#sync#complete(a:base, ctx)
+    if type(resp) == type({}) && has_key(resp, 'completions')
       let candidates = candidates + resp['completions']
     endif
 

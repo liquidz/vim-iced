@@ -15,12 +15,10 @@ function! s:summary(resp) abort
   for resp in iced#util#ensure_array(a:resp)
     if has_key(resp, 'summary')
       let summary = resp['summary']
-      let msg = [
-          \ printf('Tested %d namespaces', summary['ns']),
-          \ printf('Ran %d assertions, in %d test functions', summary['test'], summary['var']),
-          \ printf('%d failures', summary['fail'] + summary['error']),
-          \ ]
-      return join(msg, "\n")
+      return printf('%s: Ran %d assertions, in %d test functions. %d failures, %d errors.',
+          \ get(resp, 'testing-ns', ''),
+          \ summary['test'], summary['var'],
+          \ summary['fail'], summary['error'])
     endif
   endfor
 
@@ -86,6 +84,7 @@ function! s:test(resp) abort
     let var = a:resp['value']
     let i = stridx(var, '/')
     let var = var[i+1:]
+    echom printf('Testing: %s', var)
     call iced#nrepl#cider#test_var(var, funcref('s:out'))
   endif
 endfunction
@@ -99,7 +98,7 @@ function! iced#nrepl#test#under_cursor() abort
   try
     silent normal! va(y
     let code = @@
-    call iced#nrepl#eval(code, {resp -> s:test(resp)})
+    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)})})
   finally
     let @@ = reg_save
     call cursor(current_pos[1], current_pos[2])

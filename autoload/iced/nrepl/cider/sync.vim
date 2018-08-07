@@ -7,13 +7,18 @@ function! iced#nrepl#cider#sync#complete(base, context) abort
     return v:none
   endif
 
-  return iced#nrepl#sync#send({
+  let msg = {
         \ 'op': 'complete',
         \ 'session': iced#nrepl#current_session(),
         \ 'symbol': a:base,
         \ 'extra-metadata': ['arglists', 'doc'],
-        \ 'context': a:context,
-        \ })
+        \ }
+
+  if !empty(a:context)
+    let msg['context'] = a:context
+  endif
+
+  return iced#nrepl#sync#send(msg)
 endfunction
 
 function! iced#nrepl#cider#sync#ns_list() abort

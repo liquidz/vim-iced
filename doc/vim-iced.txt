@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojunre interactive development environment for Vim8
 
-Version: 0.0.2
+Version: 0.0.3
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -11,7 +11,7 @@ Introduction         |vim-iced-introduction|
 Install              |vim-iced-install|
 nREPL Connection     |vim-iced-nrepl-connection|
 ClojureScript        |vim-iced-clojurescript|
-Evaluation           |vim-iced-evaluation|
+Evaluating           |vim-iced-evaluating|
   Stdout Buffer      |vim-iced-stdout-buffer|
 Testing              |vim-iced-testing|
 Tag Jump             |vim-iced-tag-jump|
@@ -19,7 +19,7 @@ Editing S-exp        |vim-iced-editing-s-exp|
   Formatting         |vim-iced-formatting|
   Refactoring        |vim-iced-refactoring|
 Interface            |vim-iced-interface|
-  Commands           |vim-iced-command|
+  Commands           |vim-iced-commands|
   Functions          |vim-iced-functions|
   Key Mappings       |vim-iced-key-mappings|
 Customizing          |vim-iced-customizing|
@@ -47,7 +47,7 @@ Clojure library dependencies:
   - ~/.lein/profile.clj
 >
   {:user
-   {:dependencies [[cider/cider-nrepl "0.17.0"]
+   {:dependencies [[cider/cider-nrepl "0.18.0"]
                    [cljfmt  "0.6.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-format
@@ -79,6 +79,11 @@ ClojureScript                                          *vim-iced-clojurescript*
   Supports following environment currently.
   - figwheel
   - nashorn
+  - custom
+
+  With {custom} environment, you can define start/stop code.
+  - |g:iced#nrepl#cljs#custom#start_code|
+  - |g:iced#nrepl#cljs#custom#stop_code|
 
   |IcedStartCljsRepl| to start cljs-repl.
   |IcedQuitCljsRepl| to quit it.
@@ -124,10 +129,13 @@ Formatting                                                *vim-iced-formatting*
 
   vim-sexp also provides formatting codes function.
   If you want to use vim-iced's formatting function,
-  you should define {g;sexp_mappings} as follows.
+  you should define {g:sexp_mappings} as follows.
 >
   let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
 <
+  WARNING
+    Currently vim-iced's formatting function is not support CLJS.
+    So, in CLJS, vim-sexp's formatting function is enabled automatically.
 
 ------------------------------------------------------------------------------
 Refactoring                                              *vim-iced-refactoring*
@@ -167,6 +175,9 @@ Commands                                                    *vim-iced-commands*
   Supports following envionment currently.
   - figwheel
   - nashorn
+  - custom
+    see |g:iced#nrepl#cljs#custom#start_code|
+        |g:iced#nrepl#cljs#custom#stop_code|
 
   Key is mapped to |<Plug>(iced_start_cljs_repl)|.
 
@@ -431,6 +442,14 @@ g:iced#buffer#mods
   - {belowright}
   - {topleft}
   - {botright}
+
+                                          *g:iced#nrepl#cljs#custom#start_code*
+g:iced#nrepl#cljs#custom#start_code
+  Code to start CLJS REPL in {custom} enviroment.
+
+                                           *g:iced#nrepl#cljs#custom#stop_code*
+g:iced#nrepl#cljs#custom#stop_code
+  Code to stop CLJS REPL in {custom} enviroment.
 
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings

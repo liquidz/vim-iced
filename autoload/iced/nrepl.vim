@@ -254,13 +254,22 @@ function! iced#nrepl#disconnect() abort
   call ch_close(s:nrepl['channel'])
 endfunction
 
+function! s:interrupted() abort
+  let s:messages = {}
+  echom iced#message#get('interrupted')
+endfunction
+
 function! iced#nrepl#interrupt() abort
   if ! iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
     return
   endif
   let session = iced#nrepl#current_session()
-  call iced#nrepl#send({'op': 'interrupt', 'session': session})
+  call iced#nrepl#send({
+      \ 'op': 'interrupt',
+      \ 'session': session,
+      \ 'callback': {_ -> s:interrupted()},
+      \ })
 endfunction
 
 "" -----
@@ -293,6 +302,7 @@ function! iced#nrepl#eval(code, ...) abort
 endfunction
 
 call iced#nrepl#register_handler('clone')
+call iced#nrepl#register_handler('interrupt')
 call iced#nrepl#register_handler('eval', funcref('s:eval_handler'))
 
 let &cpo = s:save_cpo
