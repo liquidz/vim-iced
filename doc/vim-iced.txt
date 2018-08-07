@@ -11,7 +11,7 @@ Introduction         |vim-iced-introduction|
 Install              |vim-iced-install|
 nREPL Connection     |vim-iced-nrepl-connection|
 ClojureScript        |vim-iced-clojurescript|
-Evaluation           |vim-iced-evaluation|
+Evaluating           |vim-iced-evaluating|
   Stdout Buffer      |vim-iced-stdout-buffer|
 Testing              |vim-iced-testing|
 Tag Jump             |vim-iced-tag-jump|
@@ -19,7 +19,7 @@ Editing S-exp        |vim-iced-editing-s-exp|
   Formatting         |vim-iced-formatting|
   Refactoring        |vim-iced-refactoring|
 Interface            |vim-iced-interface|
-  Commands           |vim-iced-command|
+  Commands           |vim-iced-commands|
   Functions          |vim-iced-functions|
   Key Mappings       |vim-iced-key-mappings|
 Customizing          |vim-iced-customizing|
