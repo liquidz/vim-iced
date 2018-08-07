@@ -67,14 +67,40 @@ function! s:load_file(callback) abort
       \ })
 endfunction
 
+function! s:cljs_load_file(callback) abort
+  if !iced#nrepl#is_connected()
+    echom iced#message#get('not_connected')
+    return
+  endif
+
+  call iced#nrepl#send({
+      \ 'op': 'eval',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'id': iced#nrepl#eval#id(),
+      \ 'code': printf('(load-file "%s")', expand('%:p')),
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
 function! iced#nrepl#ns#require() abort
-  call s:load_file({_ -> iced#nrepl#ns#eval({_ -> iced#util#echo_messages('Required')})})
+  let Cb = {_ -> iced#util#echo_messages('Required')}
+  if iced#nrepl#current_session_key() ==# 'clj'
+    call s:load_file({_ -> iced#nrepl#ns#eval(Cb)})
+  else
+    call s:cljs_load_file(Cb)
+  endif
 endfunction
 
 function! iced#nrepl#ns#require_all() abort
-  let ns = iced#nrepl#ns#name()
-  let code = printf('(clojure.core/require ''%s :reload-all)', ns)
-  call iced#nrepl#eval(code, {_ -> iced#util#echo_messages('All reloaded')})
+  let Cb = {_ -> iced#util#echo_messages('All reloaded')}
+
+  if iced#nrepl#current_session_key() ==# 'clj'
+    let ns = iced#nrepl#ns#name()
+    let code = printf('(clojure.core/require ''%s :reload-all)', ns)
+    call iced#nrepl#eval(code, Cb)
+  else
+    call s:cljs_load_file(Cb)
+  endif
 endfunction
 
 call iced#nrepl#register_handler('load-file')
