@@ -10,7 +10,7 @@ let s:BM = s:V.import('Vim.BufferManager')
 let s:default_init_text = join([
     \ ';;',
     \ ';; Iced Buffer',
-    \ ';;:',
+    \ ';;',
     \ '',
     \ ], "\n")
 
