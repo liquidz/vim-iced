@@ -8,6 +8,7 @@ let s:messages = {
     \ 'not_connected':     'Not connected.',
     \ 'try_connect':       'Not connected. Try `:IcedConnect <port>`',
     \ 'connected':         'Connected.',
+    \ 'interrupted':       'Interrupted.',
     \ 'reading':           'Still reading..',
     \ 'not_found':         'Not found.',
     \ 'required':          'Required.',
