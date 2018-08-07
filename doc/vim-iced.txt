@@ -79,6 +79,11 @@ ClojureScript                                          *vim-iced-clojurescript*
   Supports following environment currently.
   - figwheel
   - nashorn
+  - custom
+
+  With {custom} environment, you can define start/stop code.
+  - |g:iced#nrepl#cljs#custom#start_code|
+  - |g:iced#nrepl#cljs#custom#stop_code|
 
   |IcedStartCljsRepl| to start cljs-repl.
   |IcedQuitCljsRepl| to quit it.
@@ -167,6 +172,9 @@ Commands                                                    *vim-iced-commands*
   Supports following envionment currently.
   - figwheel
   - nashorn
+  - custom
+    see |g:iced#nrepl#cljs#custom#start_code|
+        |g:iced#nrepl#cljs#custom#stop_code|
 
   Key is mapped to |<Plug>(iced_start_cljs_repl)|.
 
@@ -431,6 +439,14 @@ g:iced#buffer#mods
   - {belowright}
   - {topleft}
   - {botright}
+
+                                          *g:iced#nrepl#cljs#custom#start_code*
+g:iced#nrepl#cljs#custom#start_code
+  Code to start CLJS REPL in {custom} enviroment.
+
+                                           *g:iced#nrepl#cljs#custom#stop_code*
+g:iced#nrepl#cljs#custom#stop_code
+  Code to stop CLJS REPL in {custom} enviroment.
 
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings

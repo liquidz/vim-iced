@@ -12,18 +12,15 @@ endfunction
 let g:iced#nrepl#cljs#default_env = get(g:, 'iced#nrepl#cljs#default_env', 'figwheel')
 let s:using_env_key = v:none
 
-function! s:valid_env(env) abort
-  return (a:env =~# '\(figwheel\|nashorn\)')
-endfunction
-
 let s:env = {
     \ 'figwheel': {-> iced#nrepl#cljs#figwheel#get_env()},
     \ 'nashorn': {-> iced#nrepl#cljs#nashorn#get_env()},
+    \ 'custom': {-> iced#nrepl#cljs#custom#get_env()},
     \ }
 
 function! iced#nrepl#cljs#repl(env_key) abort
-  let env_key = (empty(a:env_key) ? g:iced#nrepl#cljs#default_env : a:env_key)
-  if !s:valid_env(env_key)
+  let env_key = trim(empty(a:env_key) ? g:iced#nrepl#cljs#default_env : a:env_key)
+  if !has_key(s:env, env_key)
     echom iced#message#get('invalid_cljs_env')
     return
   endif
