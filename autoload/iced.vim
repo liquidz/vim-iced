@@ -9,7 +9,7 @@ function! iced#status() abort
   if iced#nrepl#is_evaluating()
     return 'evaluating'
   else
-    return 'connected'
+    return printf('%s repl', iced#nrepl#current_session_key())
   endif
 endfunction
 
