@@ -35,7 +35,9 @@ function! iced#nrepl#format#code(code) abort
   if type(resp) == type({}) && has_key(resp, 'value')
     let val = resp['value']
     let val = val[1:len(val)-2]
-    let val = substitute(val, '\\n', "\n", 'g')
+    " NOTE: ignore '\\n' or '\\r'
+    let val = substitute(val, '\%(\\\)\@<!\\n', "\n", 'g')
+    let val = substitute(val, '\%(\\\)\@<!\\r', "\r", 'g')
     let val = iced#util#unescape(val)
     return val
   endif
