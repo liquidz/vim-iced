@@ -90,7 +90,7 @@ function! s:test(resp) abort
 endfunction
 
 function! iced#nrepl#test#under_cursor() abort
-  let current_pos = getcurpos()
+  let view = winsaveview()
   " vim-sexp: move to top
   silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
 
@@ -101,7 +101,7 @@ function! iced#nrepl#test#under_cursor() abort
     call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)})})
   finally
     let @@ = reg_save
-    call cursor(current_pos[1], current_pos[2])
+    call winrestview(view)
   endtry
 endfunction
 

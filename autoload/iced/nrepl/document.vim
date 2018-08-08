@@ -76,7 +76,7 @@ function! iced#nrepl#document#echo_current_form() abort
     return
   endif
 
-  let current_pos = getcurpos()
+  let view = winsaveview()
   let reg_save = @@
 
   try
@@ -85,7 +85,7 @@ function! iced#nrepl#document#echo_current_form() abort
     call iced#nrepl#cider#info(symbol, funcref('s:one_line_doc'))
   finally
     let @@ = reg_save
-    call cursor(current_pos[1], current_pos[2])
+    call winrestview(view)
   endtry
 endfunction
 

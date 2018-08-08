@@ -9,7 +9,7 @@ function! s:search_ns() abort
 endfunction
 
 function! iced#nrepl#ns#replace(new_ns) abort
-  let current_pos = getcurpos()
+  let view = winsaveview()
   let reg_save = @@
 
   try
@@ -19,12 +19,12 @@ function! iced#nrepl#ns#replace(new_ns) abort
     call append(lnum, split(a:new_ns, '\n'))
   finally
     let @@ = reg_save
-    call cursor(current_pos[1], current_pos[2])
+    call winrestview(view)
   endtry
 endfunction
 
 function! iced#nrepl#ns#name() abort
-  let current_pos = getcurpos()
+  let view = winsaveview()
   let reg_save = @@
 
   try
@@ -35,12 +35,12 @@ function! iced#nrepl#ns#name() abort
     return matchstr(line, '[a-z0-9.\-]\+')
   finally
     let @@ = reg_save
-    call cursor(current_pos[1], current_pos[2])
+    call winrestview(view)
   endtry
 endfunction
 
 function! iced#nrepl#ns#eval(callback) abort
-  let current_pos = getcurpos()
+  let view = winsaveview()
   let reg_save = @@
 
   try
@@ -49,7 +49,7 @@ function! iced#nrepl#ns#eval(callback) abort
     call iced#nrepl#eval(@@, a:callback)
   finally
     let @@ = reg_save
-    call cursor(current_pos[1], current_pos[2])
+    call winrestview(view)
   endtry
 endfunction
 
