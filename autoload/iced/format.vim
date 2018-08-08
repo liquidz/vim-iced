@@ -13,7 +13,7 @@ function! iced#format#form() abort
   let view = winsaveview()
   let reg_save = @@
   try
-    silent exe "normal \<Plug>(sexp_move_to_prev_bracket)"
+    silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
     silent normal! va(y
     let code = @@
     if code[0] !=# '('
