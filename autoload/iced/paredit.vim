@@ -5,7 +5,7 @@ let g:iced#paredit#slurp_max_depth = get(g:, 'iced#paredit#slurp_max_depth', 5)
 
 function! s:slurp(current_view, depth) abort
   if a:depth > g:iced#paredit#slurp_max_depth
-    echo 'too deep'
+    echom iced#message#get('too_deep_to_slurp')
   else
     let before = getcurpos()
     call sexp#stackop('n', 1, 1)

@@ -17,6 +17,7 @@ let s:messages = {
     \ 'started_cljs_repl': 'CLJS repl is started.',
     \ 'quitted_cljs_repl': 'CLJS repl is quitted.',
     \ 'no_document':       'Not documented.',
+    \ 'too_deep_to_slurp': 'Too deep to slurp.',
     \ }
 
 function! iced#message#get(k) abort
