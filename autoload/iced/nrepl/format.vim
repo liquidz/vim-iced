@@ -1,12 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:escape(s) abort
-  let s = a:s
-  let s = substitute(s, '\\', '\\\\', 'g')
-  return substitute(s, '"', '\\"', 'g')
-endfunction
-
 function! s:indents_setting() abort
   if empty(g:iced#format#rule)
     return '{}'
