@@ -3,7 +3,7 @@ set cpo&vim
 
 let s:messages = {
     \ 'auto_connect':      'Auto connecting...',
-    \ 'no_port_file':      '.nrepl-poort is not found.',
+    \ 'no_port_file':      '.nrepl-port is not found.',
     \ 'connect_error':     'Failed to connect.',
     \ 'not_connected':     'Not connected.',
     \ 'try_connect':       'Not connected. Try `:IcedConnect <port>`',
