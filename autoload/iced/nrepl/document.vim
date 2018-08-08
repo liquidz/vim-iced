@@ -65,7 +65,8 @@ endfunction
 function! s:one_line_doc(resp) abort
   if has_key(a:resp, 'ns')
     let name = printf('%s/%s', a:resp['ns'], a:resp['name'])
-    let args = substitute(a:resp['arglists-str'], '\r\?\n', ' ', 'g')
+    let arglists = get(a:resp, 'arglists-str', '')
+    let args = substitute(arglists, '\r\?\n', ' ', 'g')
     echo printf('%s %s', name, args)
   endif
 endfunction
