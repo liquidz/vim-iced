@@ -78,15 +78,15 @@ endfunction
 
 " c.f. https://github.com/alexander-yakushev/compliment/wiki/Context
 function! s:context() abort
-  let current_pos = getcurpos()
+  let view = winsaveview()
   let reg_save = @@
 
   try
     " vim-sexp: move to top
     silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
 
-    let nrow = current_pos[1] - line('.')
-    let ncol = current_pos[2]
+    let nrow = view['lnum'] - line('.')
+    let ncol = view['col'] + 1
 
     silent exe 'normal! va(y'
     let codes = split(@@, '\r\?\n')
@@ -97,7 +97,7 @@ function! s:context() abort
     return v:none
   finally
     let @@ = reg_save
-    call cursor(current_pos[1], current_pos[2])
+    call winrestview(view)
   endtry
 endfunction
 

@@ -1,12 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:escape(s) abort
-  let s = a:s
-  let s = substitute(s, '\\', '\\\\', 'g')
-  return substitute(s, '"', '\\"', 'g')
-endfunction
-
 function! s:indents_setting() abort
   if empty(g:iced#format#rule)
     return '{}'
@@ -41,7 +35,9 @@ function! iced#nrepl#format#code(code) abort
   if type(resp) == type({}) && has_key(resp, 'value')
     let val = resp['value']
     let val = val[1:len(val)-2]
-    let val = substitute(val, '\\n', "\n", 'g')
+    " NOTE: ignore '\\n' or '\\r'
+    let val = substitute(val, '\%(\\\)\@<!\\n', "\n", 'g')
+    let val = substitute(val, '\%(\\\)\@<!\\r', "\r", 'g')
     let val = iced#util#unescape(val)
     return val
   endif

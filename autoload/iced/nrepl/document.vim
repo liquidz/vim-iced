@@ -65,7 +65,8 @@ endfunction
 function! s:one_line_doc(resp) abort
   if has_key(a:resp, 'ns')
     let name = printf('%s/%s', a:resp['ns'], a:resp['name'])
-    let args = substitute(a:resp['arglists-str'], '\r\?\n', ' ', 'g')
+    let arglists = get(a:resp, 'arglists-str', '')
+    let args = substitute(arglists, '\r\?\n', ' ', 'g')
     echo printf('%s %s', name, args)
   endif
 endfunction
@@ -76,7 +77,7 @@ function! iced#nrepl#document#echo_current_form() abort
     return
   endif
 
-  let current_pos = getcurpos()
+  let view = winsaveview()
   let reg_save = @@
 
   try
@@ -85,7 +86,7 @@ function! iced#nrepl#document#echo_current_form() abort
     call iced#nrepl#cider#info(symbol, funcref('s:one_line_doc'))
   finally
     let @@ = reg_save
-    call cursor(current_pos[1], current_pos[2])
+    call winrestview(view)
   endtry
 endfunction
 

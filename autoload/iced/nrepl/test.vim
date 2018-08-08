@@ -66,7 +66,8 @@ function! s:collect_errors(resp) abort
 endfunction
 
 function! s:out(resp) abort
-  call iced#util#echo_messages(s:summary(a:resp))
+  let summary = s:summary(a:resp)
+  call iced#util#echo_messages(summary)
 
   let errors = s:collect_errors(a:resp)
   call setqflist(errors , 'r')
@@ -90,19 +91,25 @@ function! s:test(resp) abort
 endfunction
 
 function! iced#nrepl#test#under_cursor() abort
-  let current_pos = getcurpos()
-  " vim-sexp: move to top
-  silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
-
+  let view = winsaveview()
+  let code = v:none
   let reg_save = @@
+
   try
+    " vim-sexp: move to top
+    silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
     silent normal! va(y
     let code = @@
-    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)})})
   finally
     let @@ = reg_save
-    call cursor(current_pos[1], current_pos[2])
+    call winrestview(view)
   endtry
+
+  if empty(code)
+    echom iced#message#get('finding_code_error')
+  else
+    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)})})
+  endif
 endfunction
 
 function! iced#nrepl#test#ns() abort

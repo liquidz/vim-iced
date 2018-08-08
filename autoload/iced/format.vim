@@ -10,10 +10,10 @@ function! iced#format#form() abort
     return
   endif
 
-  let current_pos = getcurpos()
+  let view = winsaveview()
   let reg_save = @@
   try
-    silent exe "normal \<Plug>(sexp_move_to_prev_bracket)"
+    silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
     silent normal! va(y
     let code = @@
     if code[0] !=# '('
@@ -28,7 +28,7 @@ function! iced#format#form() abort
     endif
   finally
     let @@ = reg_save
-    call cursor(current_pos[1], current_pos[2])
+    call winrestview(view)
   endtry
 endfunction
 
