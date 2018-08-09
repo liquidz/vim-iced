@@ -119,7 +119,7 @@ function! iced#complete#omni(findstart, base) abort
 
     " namespace aliases
     if iced#nrepl#current_session_key() ==# 'clj'
-      let alias_dict = iced#complete#alias#dict(ns)
+      let alias_dict = iced#nrepl#ns#alias#dict(ns)
       if !empty(alias_dict)
         let candidates = candidates + s:ns_alias_candidates(keys(alias_dict), a:base)
       endif

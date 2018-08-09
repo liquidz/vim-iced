@@ -27,9 +27,12 @@ Clojure Interactive Development Environment for Vim8.
 ### vim-plug
 
 ```
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'guns/vim-sexp',    {'for': 'clojure'}
 Plug 'liquidz/vim-iced', {'for': 'clojure'}
 ```
+
+[ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim) is required when selecting multiple candidates.
 
 ### key mappings
 
@@ -47,7 +50,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) fot actual mappings.
 ```clj
 {:user
  {:dependencies [[cider/cider-nrepl "0.18.0"]
-                 [cljfmt  "0.6.0"]]
+                 [cljfmt "0.6.0"]]
   :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                     cider.nrepl/wrap-format
                                     cider.nrepl/wrap-info

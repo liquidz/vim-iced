@@ -31,6 +31,7 @@ command!          IcedDefBack          call iced#nrepl#jump#back()
 
 command! -nargs=? IcedDocumentOpen     call iced#nrepl#document#open(<q-args>)
 command!          IcedEchoFormDocument call iced#nrepl#document#echo_current_form()
+command! -nargs=? IcedGrimoireOpen     call iced#grimoire#open(<q-args>)
 
 command!          IcedSlurp            call iced#paredit#deep_slurp()
 command!          IcedBarf             call iced#paredit#barf()
@@ -38,6 +39,7 @@ command!          IcedFormat           call iced#format#form()
 command!          IcedToggleSrcAndTest call iced#nrepl#ns#toggle#src_and_test()
 
 command!          IcedCleanNs          call iced#nrepl#refactor#clean_ns()
+command! -nargs=? IcedAddMissing       call iced#nrepl#refactor#add_missing(<q-args>)
 "" }}}
 
 "" Key mappings {{{
@@ -66,6 +68,7 @@ nnoremap <silent> <Plug>(iced_def_back)            :<C-u>IcedDefBack<CR>
 
 nnoremap <silent> <Plug>(iced_document_open)       :<C-u>IcedDocumentOpen<CR>
 nnoremap <silent> <Plug>(iced_echo_form_document)  :<C-u>IcedEchoFormDocument<CR>
+nnoremap <silent> <Plug>(iced_grimoire_open)       :<C-u>IcedGrimoireOpen<CR>
 
 nnoremap <silent> <Plug>(iced_slurp)               :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                :<C-u>IcedBarf<CR>
@@ -73,6 +76,7 @@ nnoremap <silent> <Plug>(iced_format)              :<C-u>IcedFormat<CR>
 nnoremap <silent> <Plug>(iced_toggle_src_and_test) :<C-u>IcedToggleSrcAndTest<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)            :<C-u>IcedCleanNs<CR>
+nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
 "" }}}
 
 "" Auto commands {{{
@@ -143,12 +147,20 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>rcn <Plug>(iced_clean_ns)
   endif
 
+  if !hasmapto('<Plug>(iced_add_missing)')
+    silent! nmap <buffer> <Leader>ram <Plug>(iced_add_missing)
+  endif
+
   if !hasmapto('<Plug>(iced_format)')
     silent! nmap <buffer> == <Plug>(iced_format)
   endif
 
   if !hasmapto('<Plug>(iced_document_open)')
     silent! nmap <buffer> K <Plug>(iced_document_open)
+  endif
+
+  if !hasmapto('<Plug>(iced_grimoire_open)')
+    silent! nmap <buffer> <Leader>hg <Plug>(iced_grimoire_open)
   endif
 endfunction
 

@@ -2,7 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:sync_resp = v:none
-let s:default_timeout_ms = 500
+let s:default_timeout_ms = 1500
 
 function! s:sync(resp) abort
   let s:sync_resp = a:resp

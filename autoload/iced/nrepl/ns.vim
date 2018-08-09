@@ -15,12 +15,42 @@ function! iced#nrepl#ns#replace(new_ns) abort
   try
     call s:search_ns()
     silent normal! dab
+
+    let new_ns = trim(a:new_ns)
+    let before_lnum = len(split(@@, '\r\?\n'))
+    let after_lnum = len(split(new_ns, '\r\?\n'))
+    let view['lnum'] = view['lnum'] + (after_lnum - before_lnum)
+
+    if before_lnum == 1
+      call deletebufline('.', line('.'), 1)
+    endif
+
     let lnum = line('.') - 1
-    call append(lnum, split(a:new_ns, '\n'))
+    call append(lnum, split(new_ns, '\r\?\n'))
+  finally
+    let @@ = reg_save
+    call s:search_ns()
+    call iced#format#form()
+    call iced#nrepl#ns#eval(v:none)
+    call winrestview(view)
+  endtry
+endfunction
+
+function! iced#nrepl#ns#get() abort
+  let view = winsaveview()
+  let reg_save = @@
+  let code = v:none
+
+  try
+    call s:search_ns()
+    silent normal! va(y
+    let code = @@
   finally
     let @@ = reg_save
     call winrestview(view)
   endtry
+
+  return code
 endfunction
 
 function! iced#nrepl#ns#name() abort
@@ -40,17 +70,8 @@ function! iced#nrepl#ns#name() abort
 endfunction
 
 function! iced#nrepl#ns#eval(callback) abort
-  let view = winsaveview()
-  let reg_save = @@
-
-  try
-    call s:search_ns()
-    silent normal! va(y
-    call iced#nrepl#eval(@@, a:callback)
-  finally
-    let @@ = reg_save
-    call winrestview(view)
-  endtry
+  let code = iced#nrepl#ns#get()
+  call iced#nrepl#eval(code, a:callback)
 endfunction
 
 function! s:load_file(callback) abort

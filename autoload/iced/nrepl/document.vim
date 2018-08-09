@@ -3,7 +3,7 @@ set cpo&vim
 
 let s:V = vital#of('iced')
 let s:S = s:V.import('Data.String')
-let s:L = s:V.import('Data.List')
+let s:D = s:V.import('Data.Dict')
 
 function! s:format_spec(x) abort
   if type(a:x) == type([])
@@ -35,15 +35,13 @@ function! s:generate_doc(resp) abort
     if has_key(a:resp, 'spec')
       call add(doc, '')
       call add(doc, a:resp['spec'][0])
-      let specs = a:resp['spec'][1:]
-      while !empty(specs)
-        let k = s:L.shift(specs)
-        let v = s:L.shift(specs)
-
+      let specs = s:D.from_list(a:resp['spec'][1:])
+      for k in keys(specs)
+        let v = specs[k]
         if k ==# ':args' || k ==# ':ret'
           call add(doc, printf('%7s  %s', k, s:format_spec(v)))
         endif
-      endwhile
+      endfor
     endif
 
     return (empty(doc) ? '' : join(doc, "\n"))

@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojunre interactive development environment for Vim8
 
-Version: 0.0.4
+Version: 0.0.5
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -42,13 +42,16 @@ Install                                                      *vim-iced-install*
 Vim plugin dependencies:
   - vim-sexp
     https://github.com/guns/vim-sexp
+  -ctrlp.vim
+    https://github.com/ctrlpvim/ctrlp.vim
+    Required when selecting multiple candidates
 
 Clojure library dependencies:
   - ~/.lein/profile.clj
 >
   {:user
    {:dependencies [[cider/cider-nrepl "0.18.0"]
-                   [cljfmt  "0.6.0"]]
+                   [cljfmt "0.6.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-format
                                       cider.nrepl/wrap-info
@@ -468,6 +471,9 @@ g:iced_enable_default_key_mappings
   <Leader>tn     <Plug>(iced_test_ns)
   <Leader>tp     <Plug>(iced_test_all)
   <Leader>ss     <Plug>(iced_buffer_open)
+  <Leader>rcn    <Plug>(iced_clean_ns)
+  <Leader>ram    <Plug>(iced_add_missing)
+  <Leader>hg     <Plug>(iced_grimoire_open)
   <C-]>          <Plug>(iced_def_jump)
   <C-t>          <Plug>(iced_def_back)
   <Leader>rcn    <Plug>(iced_clean_ns)

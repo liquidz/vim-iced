@@ -1,10 +1,12 @@
 .PHONY: vital test themis lint clean
 
 PLUGIN_NAME = iced
-VITAL_MODULES = Data.List \
-				Data.String \
-				Vim.Buffer \
-				Vim.BufferManager
+VITAL_MODULES = Data.Dict \
+								Data.List \
+								Data.String \
+								Vim.Buffer \
+								Vim.BufferManager \
+								Web.HTTP
 
 vital:
 	vim -c "Vitalize . --name=$(PLUGIN_NAME) $(VITAL_MODULES)" -c q
