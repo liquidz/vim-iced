@@ -15,6 +15,11 @@ function! iced#nrepl#ns#replace(new_ns) abort
   try
     call s:search_ns()
     silent normal! dab
+
+    let before_lnum = len(split(@@, '\r\?\n'))
+    let after_lnum = len(split(a:new_ns, '\r\?\n'))
+    let view['lnum'] = view['lnum'] + (after_lnum - before_lnum)
+
     let lnum = line('.') - 1
     call append(lnum, split(a:new_ns, '\n'))
   finally
