@@ -2,7 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:V = vital#of('iced')
-let s:L = s:V.import('Data.List')
+let s:D = s:V.import('Data.Dict')
 
 function! s:extract_ns(s) abort
   let start = stridx(a:s, '[')
@@ -18,15 +18,9 @@ function! s:parse_to_alias_dict(resp) abort
   let value = a:resp['value']
   let value = value[1:len(value)-2]
 
-  let result = {}
   let ls = split(value, ',\? ')
-  while !empty(ls)
-    let k = s:L.shift(ls)
-    let v = s:extract_ns(s:L.shift(ls))
-    let result[k] = v
-  endwhile
-
-  return result
+  let ls = map(ls, {i, v -> (i % 2) == 0 ? v : s:extract_ns(v)})
+  return s:D.from_list(ls)
 endfunction
 
 function! iced#complete#alias#dict(ns) abort
