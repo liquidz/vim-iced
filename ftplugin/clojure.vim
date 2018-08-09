@@ -39,6 +39,7 @@ command!          IcedFormat           call iced#format#form()
 command!          IcedToggleSrcAndTest call iced#nrepl#ns#toggle#src_and_test()
 
 command!          IcedCleanNs          call iced#nrepl#refactor#clean_ns()
+command! -nargs=? IcedAddMissing       call iced#nrepl#refactor#add_missing(<q-args>)
 "" }}}
 
 "" Key mappings {{{
@@ -75,6 +76,7 @@ nnoremap <silent> <Plug>(iced_format)              :<C-u>IcedFormat<CR>
 nnoremap <silent> <Plug>(iced_toggle_src_and_test) :<C-u>IcedToggleSrcAndTest<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)            :<C-u>IcedCleanNs<CR>
+nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
 "" }}}
 
 "" Auto commands {{{
@@ -143,6 +145,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_clean_ns)')
     silent! nmap <buffer> <Leader>rcn <Plug>(iced_clean_ns)
+  endif
+
+  if !hasmapto('<Plug>(iced_add_missing)')
+    silent! nmap <buffer> <Leader>ram <Plug>(iced_add_missing)
   endif
 
   if !hasmapto('<Plug>(iced_format)')
