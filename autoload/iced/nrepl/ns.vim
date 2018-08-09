@@ -16,12 +16,17 @@ function! iced#nrepl#ns#replace(new_ns) abort
     call s:search_ns()
     silent normal! dab
 
+    let new_ns = trim(a:new_ns)
     let before_lnum = len(split(@@, '\r\?\n'))
-    let after_lnum = len(split(a:new_ns, '\r\?\n'))
+    let after_lnum = len(split(new_ns, '\r\?\n'))
     let view['lnum'] = view['lnum'] + (after_lnum - before_lnum)
 
+    if before_lnum == 1
+      call deletebufline('.', line('.'), 1)
+    endif
+
     let lnum = line('.') - 1
-    call append(lnum, split(a:new_ns, '\n'))
+    call append(lnum, split(new_ns, '\r\?\n'))
   finally
     let @@ = reg_save
     call s:search_ns()
