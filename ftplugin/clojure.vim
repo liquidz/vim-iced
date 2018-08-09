@@ -31,6 +31,7 @@ command!          IcedDefBack          call iced#nrepl#jump#back()
 
 command! -nargs=? IcedDocumentOpen     call iced#nrepl#document#open(<q-args>)
 command!          IcedEchoFormDocument call iced#nrepl#document#echo_current_form()
+command! -nargs=? IcedGrimoireOpen     call iced#grimoire#open(<q-args>)
 
 command!          IcedSlurp            call iced#paredit#deep_slurp()
 command!          IcedBarf             call iced#paredit#barf()
@@ -66,6 +67,7 @@ nnoremap <silent> <Plug>(iced_def_back)            :<C-u>IcedDefBack<CR>
 
 nnoremap <silent> <Plug>(iced_document_open)       :<C-u>IcedDocumentOpen<CR>
 nnoremap <silent> <Plug>(iced_echo_form_document)  :<C-u>IcedEchoFormDocument<CR>
+nnoremap <silent> <Plug>(iced_grimoire_open)       :<C-u>IcedGrimoireOpen<CR>
 
 nnoremap <silent> <Plug>(iced_slurp)               :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                :<C-u>IcedBarf<CR>
@@ -149,6 +151,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_document_open)')
     silent! nmap <buffer> K <Plug>(iced_document_open)
+  endif
+
+  if !hasmapto('<Plug>(iced_grimoire_open)')
+    silent! nmap <buffer> <Leader>hg <Plug>(iced_grimoire_open)
   endif
 endfunction
 
