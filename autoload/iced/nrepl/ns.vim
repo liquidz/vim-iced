@@ -24,6 +24,9 @@ function! iced#nrepl#ns#replace(new_ns) abort
     call append(lnum, split(a:new_ns, '\n'))
   finally
     let @@ = reg_save
+    call s:search_ns()
+    call iced#format#form()
+    call iced#nrepl#ns#eval(v:none)
     call winrestview(view)
   endtry
 endfunction
