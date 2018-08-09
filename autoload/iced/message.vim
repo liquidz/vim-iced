@@ -19,6 +19,7 @@ let s:messages = {
     \ 'no_document':        'Not documented.',
     \ 'too_deep_to_slurp':  'Too deep to slurp.',
     \ 'finding_code_error': 'Failed to find code.',
+    \ 'no_ctrlp':           'CtrlP needed to select candidates is not installed.',
     \ }
 
 function! iced#message#get(k) abort
