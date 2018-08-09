@@ -31,6 +31,23 @@ function! iced#nrepl#ns#replace(new_ns) abort
   endtry
 endfunction
 
+function! iced#nrepl#ns#get() abort
+  let view = winsaveview()
+  let reg_save = @@
+  let code = v:none
+
+  try
+    call s:search_ns()
+    silent normal! va(y
+    let code = @@
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+  endtry
+
+  return code
+endfunction
+
 function! iced#nrepl#ns#name() abort
   let view = winsaveview()
   let reg_save = @@
@@ -48,17 +65,8 @@ function! iced#nrepl#ns#name() abort
 endfunction
 
 function! iced#nrepl#ns#eval(callback) abort
-  let view = winsaveview()
-  let reg_save = @@
-
-  try
-    call s:search_ns()
-    silent normal! va(y
-    call iced#nrepl#eval(@@, a:callback)
-  finally
-    let @@ = reg_save
-    call winrestview(view)
-  endtry
+  let code = iced#nrepl#ns#get()
+  call iced#nrepl#eval(code, a:callback)
 endfunction
 
 function! s:load_file(callback) abort
