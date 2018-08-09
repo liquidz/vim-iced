@@ -1,7 +1,8 @@
 iced
-a8773a35b8b122b59c956a23d1e686d595bca3b4
+ccfe1e17859e824f0f1a13440ca2020929d531fd
 
 Data.List
 Data.String
 Vim.Buffer
 Vim.BufferManager
+Web.HTTP

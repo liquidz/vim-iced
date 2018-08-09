@@ -4,7 +4,8 @@ PLUGIN_NAME = iced
 VITAL_MODULES = Data.List \
 				Data.String \
 				Vim.Buffer \
-				Vim.BufferManager
+				Vim.BufferManager \
+				Web.HTTP
 
 vital:
 	vim -c "Vitalize . --name=$(PLUGIN_NAME) $(VITAL_MODULES)" -c q
