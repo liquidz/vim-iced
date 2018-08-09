@@ -23,7 +23,7 @@ function! s:parse_to_alias_dict(resp) abort
   return s:D.from_list(ls)
 endfunction
 
-function! iced#complete#alias#dict(ns) abort
+function! iced#nrepl#ns#alias#dict(ns) abort
   let code = printf('(ns-aliases ''%s)', a:ns)
   let resp = iced#nrepl#sync#send({
       \ 'op': 'eval',
