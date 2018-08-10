@@ -6,6 +6,9 @@ let s:D = s:V.import('Data.Dict')
 let s:L = s:V.import('Data.List')
 
 function! s:replace_ns(resp) abort
+  if has_key(a:resp, 'error')
+    return iced#nrepl#eval#err(a:resp['error'])
+  endif
   if has_key(a:resp, 'ns') && !empty(a:resp['ns'])
     call iced#nrepl#ns#replace(a:resp['ns'])
   endif
