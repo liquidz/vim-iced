@@ -35,3 +35,13 @@ function! s:suite.add_namespace_to_require_append_test2() abort
   let res = iced#nrepl#ns#util#add_namespace_to_require(code, 'clojure.string', 'str')
   call s:assert.equals(res, "(ns foo.core (:require [clojure.set :as set]\n[clojure.string :as str]))")
 endfunction
+
+function! s:suite.add_namespace_to_require_ns_already_exists_test() abort
+  let code = '(ns foo.core (:require [clojure.string :as str]))'
+  let res = iced#nrepl#ns#util#add_namespace_to_require(code, 'clojure.string', '')
+  call s:assert.equals(res, code)
+
+  let res = iced#nrepl#ns#util#add_namespace_to_require(code, 'clojure.string', 'string')
+  call s:assert.equals(res, code)
+endfunction
+
