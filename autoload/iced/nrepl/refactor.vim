@@ -44,10 +44,10 @@ function! s:symbol_to_alias(symbol) abort
   return v:none
 endfunction
 
-function! s:add_ns(ns_name, symbol) abort
-  let ns_alias = s:symbol_to_alias(a:symbol)
-  if a:ns_name ==# ns_alias
-    let ns_alias = v:nonej
+function! s:add_ns(ns_name, symbol_alias) abort
+  let ns_alias = a:symbol_alias
+  if a:ns_name ==# a:symbol_alias
+    let ns_alias = v:none
   endif
 
   let code = iced#nrepl#ns#get()
@@ -57,25 +57,34 @@ function! s:add_ns(ns_name, symbol) abort
 endfunction
 
 function! s:resolve_missing(symbol, resp) abort
-  if has_key(a:resp, 'candidates')
-    let ns_name = iced#nrepl#ns#name()
-    let existing_ns = values(iced#nrepl#ns#alias#dict(ns_name)) + ['clojure.core']
-    let candidates = s:parse_candidates(a:resp['candidates'])
-    let ns_candidates = filter(candidates, {_, v -> v[':type'] ==# ':ns'})
-    let ns_candidates = filter(ns_candidates, {_, v -> !s:L.has(existing_ns, v[':name'])})
-    let ns_candidates = map(ns_candidates, {_, v -> v[':name']})
+  if !has_key(a:resp, 'candidates')
+    return
+  endif
 
-    let c = len(ns_candidates)
-    if c == 1
-      call s:add_ns(ns_candidates[0], a:symbol)
-    elseif c > 1
-      call ctrlp#iced#start({
-          \ 'candidates': ns_candidates,
-          \ 'accept': {ns_name -> s:add_ns(ns_name, a:symbol)}
-          \ })
-    else
-      echom iced#message#get('no_candidates')
-    endif
+  let ns_name = iced#nrepl#ns#name()
+  let symbol_alias = s:symbol_to_alias(a:symbol)
+  let alias_dict = iced#nrepl#ns#alias#dict(ns_name)
+  if has_key(alias_dict, symbol_alias)
+    echom printf(iced#message#get('alias_exists'), symbol_alias)
+    return
+  endif
+
+  let existing_ns = values(alias_dict) + ['clojure.core']
+  let candidates = s:parse_candidates(a:resp['candidates'])
+  let ns_candidates = filter(candidates, {_, v -> v[':type'] ==# ':ns'})
+  let ns_candidates = filter(ns_candidates, {_, v -> !s:L.has(existing_ns, v[':name'])})
+  let ns_candidates = map(ns_candidates, {_, v -> v[':name']})
+
+  let c = len(ns_candidates)
+  if c == 1
+    call s:add_ns(ns_candidates[0], symbol_alias)
+  elseif c > 1
+    call ctrlp#iced#start({
+        \ 'candidates': ns_candidates,
+        \ 'accept': {ns_name -> s:add_ns(ns_name, symbol_alias)}
+        \ })
+  else
+    echom iced#message#get('no_candidates')
   endif
 endfunction
 

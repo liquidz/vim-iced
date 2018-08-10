@@ -21,6 +21,7 @@ let s:messages = {
     \ 'finding_code_error': 'Failed to find code.',
     \ 'no_ctrlp':           'CtrlP needed to select candidates is not installed.',
     \ 'no_candidates':      'No candidates.',
+    \ 'alias_exists':       'Alias "%s" already exists.',
     \ }
 
 function! iced#message#get(k) abort
