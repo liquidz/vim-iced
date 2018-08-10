@@ -136,10 +136,6 @@ Formatting                                                *vim-iced-formatting*
 >
   let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
 <
-  WARNING
-    Currently vim-iced's formatting function is not support CLJS.
-    So, in CLJS, vim-sexp's formatting function is enabled automatically.
-
 ------------------------------------------------------------------------------
 Refactoring                                              *vim-iced-refactoring*
 

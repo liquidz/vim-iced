@@ -49,6 +49,10 @@ function! iced#nrepl#change_current_session(k) abort
   endif
 endfunction
 
+function! iced#nrepl#clj_session() abort
+  return s:nrepl['sessions']['clj']
+endfunction
+
 function! iced#nrepl#repl_session() abort
   return s:nrepl['sessions']['repl']
 endfunction

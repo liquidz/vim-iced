@@ -5,7 +5,7 @@ set cpo&vim
 let g:iced#format#rule = get(g:, 'iced#format#rule', {})
 
 function! iced#format#form() abort
-  if !iced#nrepl#is_connected() || iced#nrepl#current_session_key() !=# 'clj'
+  if !iced#nrepl#is_connected()
     silent exe "normal \<Plug>(sexp_indent)"
     return
   endif
