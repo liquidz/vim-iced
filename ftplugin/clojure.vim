@@ -11,7 +11,8 @@ command! -nargs=? IcedConnect          call iced#nrepl#connect(<q-args>)
 command!          IcedDisconnect       call iced#nrepl#disconnect()
 command!          IcedInterrupt        call iced#nrepl#interrupt()
 
-command! -nargs=? IcedStartCljsRepl    call iced#nrepl#cljs#repl(<q-args>)
+command! -nargs=? -complete=custom,iced#nrepl#cljs#env_complete
+    \ IcedStartCljsRepl    call iced#nrepl#cljs#repl(<q-args>)
 command!          IcedQuitCljsRepl     call iced#nrepl#cljs#quit()
 
 command! -nargs=1 IcedEval             call iced#nrepl#eval#code(<q-args>)
