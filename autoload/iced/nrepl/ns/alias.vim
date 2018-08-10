@@ -6,8 +6,12 @@ let s:D = s:V.import('Data.Dict')
 
 function! s:extract_ns(s) abort
   let start = stridx(a:s, '[')
-  let end = stridx(a:s, ']')
-  return a:s[start+1:end-1]
+  if start != -1
+    let end = stridx(a:s, ']')
+    return a:s[start+1:end-1]
+  else
+    return a:s
+  endif
 endfunction
 
 function! s:parse_to_alias_dict(resp) abort
@@ -30,6 +34,11 @@ function! iced#nrepl#ns#alias#dict(ns) abort
       \ 'code': code,
       \ 'session': iced#nrepl#current_session(),
       \ })
+  return s:parse_to_alias_dict(resp)
+endfunction
+
+function! iced#nrepl#ns#alias#dict_from_code(code) abort
+  let resp = iced#nrepl#refactor#ns_parser#aliases(a:code)
   return s:parse_to_alias_dict(resp)
 endfunction
 
