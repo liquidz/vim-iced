@@ -83,7 +83,7 @@ function! s:is_done(resp) abort
   return v:false
 endfunction
 
-function! s:eval_handler(resp) abort
+function! s:merge_response_handler(resp) abort
   let id = s:get_message_id(a:resp)
   let result = get(s:messages[id], 'result', {})
 
@@ -305,9 +305,26 @@ function! iced#nrepl#eval(code, ...) abort
       \ })
 endfunction
 
+function! iced#nrepl#load_file(callback) abort
+  if !iced#nrepl#is_connected() && !s:auto_connect()
+    return
+  endif
+
+  call iced#nrepl#send({
+      \ 'id': iced#nrepl#eval#id(),
+      \ 'op': 'load-file',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'file': join(getline(1, '$'), "\n"),
+      \ 'file-name': expand('%'),
+      \ 'file-path': expand('%:p'),
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
 call iced#nrepl#register_handler('clone')
 call iced#nrepl#register_handler('interrupt')
-call iced#nrepl#register_handler('eval', funcref('s:eval_handler'))
+call iced#nrepl#register_handler('eval', funcref('s:merge_response_handler'))
+call iced#nrepl#register_handler('load-file', funcref('s:merge_response_handler'))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
