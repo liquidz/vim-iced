@@ -29,7 +29,7 @@ function! iced#nrepl#format#code(code) abort
       \ 'id': iced#nrepl#eval#id(),
       \ 'op': 'eval',
       \ 'code': code,
-      \ 'session': iced#nrepl#current_session(),
+      \ 'session': iced#nrepl#clj_session(),
       \ })
 
   if type(resp) == type({}) && has_key(resp, 'value')

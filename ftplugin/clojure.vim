@@ -11,7 +11,8 @@ command! -nargs=? IcedConnect          call iced#nrepl#connect(<q-args>)
 command!          IcedDisconnect       call iced#nrepl#disconnect()
 command!          IcedInterrupt        call iced#nrepl#interrupt()
 
-command! -nargs=? IcedStartCljsRepl    call iced#nrepl#cljs#repl(<q-args>)
+command! -nargs=? -complete=custom,iced#nrepl#cljs#env_complete
+    \ IcedStartCljsRepl    call iced#nrepl#cljs#repl(<q-args>)
 command!          IcedQuitCljsRepl     call iced#nrepl#cljs#quit()
 
 command! -nargs=1 IcedEval             call iced#nrepl#eval#code(<q-args>)
@@ -21,6 +22,7 @@ command!          IcedRequireAll       call iced#nrepl#ns#require_all()
 
 command!          IcedTestNs           call iced#nrepl#test#ns()
 command!          IcedTestAll          call iced#nrepl#test#all()
+command!          IcedTestRedo         call iced#nrepl#test#redo()
 command!          IcedTestUnderCursor  call iced#nrepl#test#under_cursor()
 
 command!          IcedBufferOpen       call iced#buffer#open()
@@ -58,6 +60,7 @@ nnoremap <silent> <Plug>(iced_require_all)         :<C-u>IcedRequireAll<CR>
 
 nnoremap <silent> <Plug>(iced_test_ns)             :<C-u>IcedTestNs<CR>
 nnoremap <silent> <Plug>(iced_test_all)            :<C-u>IcedTestAll<CR>
+nnoremap <silent> <Plug>(iced_test_redo)           :<C-u>IcedTestRedo<CR>
 nnoremap <silent> <Plug>(iced_test_under_cursor)   :<C-u>IcedTestUnderCursor<CR>
 
 nnoremap <silent> <Plug>(iced_buffer_open)         :<C-u>IcedBufferOpen<CR>
@@ -129,6 +132,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_test_all)')
     silent! nmap <buffer> <Leader>tp <Plug>(iced_test_all)
+  endif
+
+  if !hasmapto('<Plug>(iced_test_redo)')
+    silent! nmap <buffer> <Leader>tr <Plug>(iced_test_redo)
   endif
 
   if !hasmapto('<Plug>(iced_buffer_open)')

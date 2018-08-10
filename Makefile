@@ -6,6 +6,7 @@ VITAL_MODULES = Data.Dict \
 								Data.String \
 								Vim.Buffer \
 								Vim.BufferManager \
+								Vim.Message \
 								Web.HTTP
 
 vital:

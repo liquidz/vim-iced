@@ -19,7 +19,7 @@ function! iced#nrepl#connect#auto() abort
     return v:true
   endif
 
-  echom iced#message#get('no_port_file')
+  call iced#message#error('no_port_file')
   return v:false
 endfunction
 

@@ -51,5 +51,10 @@ function! iced#nrepl#cljs#quit() abort
   endif
 endfunction
 
+" c.f. :h :command-completion-custom
+function! iced#nrepl#cljs#env_complete(arg_lead, cmd_line, cursor_pos) abort
+  return join(keys(s:env), "\n")
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

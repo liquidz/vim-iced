@@ -74,20 +74,6 @@ function! iced#nrepl#ns#eval(callback) abort
   call iced#nrepl#eval(code, a:callback)
 endfunction
 
-function! s:load_file(callback) abort
-  if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
-    return
-  endif
-
-  call iced#nrepl#send({
-      \ 'op': 'load-file',
-      \ 'session': iced#nrepl#current_session(),
-      \ 'file': join(getline(1, '$'), "\n"),
-      \ 'callback': a:callback,
-      \ })
-endfunction
-
 function! s:cljs_load_file(callback) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
@@ -103,10 +89,20 @@ function! s:cljs_load_file(callback) abort
       \ })
 endfunction
 
+function! s:required(resp, callback) abort
+  if has_key(a:resp, 'error')
+    return iced#nrepl#eval#err(a:resp['error'])
+  elseif has_key(a:resp, 'err')
+    return iced#nrepl#eval#err(a:resp['err'])
+  endif
+  call iced#nrepl#eval#clear_err()
+  call iced#nrepl#ns#eval(a:callback)
+endfunction
+
 function! iced#nrepl#ns#require() abort
   let Cb = {_ -> iced#util#echo_messages('Required')}
   if iced#nrepl#current_session_key() ==# 'clj'
-    call s:load_file({_ -> iced#nrepl#ns#eval(Cb)})
+    call iced#nrepl#load_file({resp -> s:required(resp, Cb)})
   else
     call s:cljs_load_file(Cb)
   endif
@@ -123,8 +119,6 @@ function! iced#nrepl#ns#require_all() abort
     call s:cljs_load_file(Cb)
   endif
 endfunction
-
-call iced#nrepl#register_handler('load-file')
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

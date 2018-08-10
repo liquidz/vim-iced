@@ -15,10 +15,13 @@ function! s:summary(resp) abort
   for resp in iced#util#ensure_array(a:resp)
     if has_key(resp, 'summary')
       let summary = resp['summary']
-      return printf('%s: Ran %d assertions, in %d test functions. %d failures, %d errors.',
-          \ get(resp, 'testing-ns', ''),
-          \ summary['test'], summary['var'],
-          \ summary['fail'], summary['error'])
+      return {
+          \ 'summary': printf('%s: Ran %d assertions, in %d test functions. %d failures, %d errors.',
+          \                   get(resp, 'testing-ns', ''),
+          \                   summary['test'], summary['var'],
+          \                   summary['fail'], summary['error']),
+          \ 'is_success': ((summary['fail'] + summary['error']) == 0),
+          \ }
     endif
   endfor
 
@@ -67,7 +70,11 @@ endfunction
 
 function! s:out(resp) abort
   let summary = s:summary(a:resp)
-  call iced#util#echo_messages(summary)
+  if summary['is_success']
+    call iced#message#info_str(summary['summary'])
+  else
+    call iced#message#error_str(summary['summary'])
+  endif
 
   let errors = s:collect_errors(a:resp)
   call setqflist(errors , 'r')
@@ -106,7 +113,7 @@ function! iced#nrepl#test#under_cursor() abort
   endtry
 
   if empty(code)
-    echom iced#message#get('finding_code_error')
+    call iced#message#error('finding_code_error')
   else
     call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)})})
   endif
@@ -119,6 +126,10 @@ endfunction
 
 function! iced#nrepl#test#all() abort
   call iced#nrepl#cider#test_all(funcref('s:out'))
+endfunction
+
+function! iced#nrepl#test#redo() abort
+  call iced#nrepl#cider#retest(funcref('s:out'))
 endfunction
 
 let &cpo = s:save_cpo

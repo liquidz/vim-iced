@@ -9,15 +9,20 @@ function! iced#nrepl#eval#id() abort
   return res
 endfunction
 
-function! s:clear_err() abort
+function! iced#nrepl#eval#clear_err() abort
   call setqflist([] , 'r')
   cclose
 endfunction
 
-function! s:err(err) abort
+function! iced#nrepl#eval#err(err) abort
+  if empty(a:err)
+    call iced#nrepl#eval#clear_err()
+    return
+  endif
+
   let err = matchstr(a:err, ':(.\+:\d\+:\d\+)')
   if empty(err)
-    call iced#util#echo_messages(a:err)
+    call iced#message#error_str(a:err)
   else
     let text = trim(substitute(a:err, err, '', ''))
     let err = err[2:len(err)-2]
@@ -40,11 +45,7 @@ function! s:out(resp) abort
     echo a:resp['value']
   endif
 
-  if has_key(a:resp, 'err')
-    call s:err(a:resp['err'])
-  else
-    call s:clear_err()
-  endif
+  call iced#nrepl#eval#err(get(a:resp, 'err', v:none))
 endfunction
 
 function! iced#nrepl#eval#code(code) abort

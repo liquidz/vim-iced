@@ -18,6 +18,10 @@ function! iced#nrepl#ns#util#add_namespace_to_require(ns_code, ns_name, ns_alias
   let i = stridx(a:ns_code, ')', i)
 
   let head = trim(a:ns_code[0:i-1])
+  if stridx(head, a:ns_name) != -1
+    return a:ns_code
+  endif
+
   let tail = trim(strpart(a:ns_code, i))
   let body = (empty(a:ns_alias) ? a:ns_name : printf('[%s :as %s]', a:ns_name, a:ns_alias))
   let head_len = len(head)

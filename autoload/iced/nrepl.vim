@@ -49,6 +49,10 @@ function! iced#nrepl#change_current_session(k) abort
   endif
 endfunction
 
+function! iced#nrepl#clj_session() abort
+  return s:nrepl['sessions']['clj']
+endfunction
+
 function! iced#nrepl#repl_session() abort
   return s:nrepl['sessions']['repl']
 endfunction
@@ -79,7 +83,7 @@ function! s:is_done(resp) abort
   return v:false
 endfunction
 
-function! s:eval_handler(resp) abort
+function! s:merge_response_handler(resp) abort
   let id = s:get_message_id(a:resp)
   let result = get(s:messages[id], 'result', {})
 
@@ -156,12 +160,12 @@ endfunction
 function! s:auto_connect() abort
   echom iced#message#get('auto_connect')
   if ! iced#nrepl#connect#auto()
-    echom iced#message#get('try_connect')
+    call iced#message#error('try_connect')
     return v:false
   endif
 
   if !iced#util#wait({-> empty(s:nrepl['current_session_key'])}, 500)
-    echom iced#message#get('timeout')
+    call iced#message#error('timeout')
     return v:false
   endif
   return v:true
@@ -169,7 +173,7 @@ endfunction
 
 function! iced#nrepl#send(data) abort
   if !empty(s:response_buffer)
-    echom iced#message#get('reading')
+    call iced#message#warning('reading')
     return
   endif
 
@@ -231,7 +235,7 @@ function! iced#nrepl#connect(port) abort
 
     if !iced#nrepl#is_connected()
       let s:nrepl['channel'] = v:false
-      echom iced#message#get('connect_error')
+      call iced#message#error('connect_error')
       return
     endif
   endif
@@ -261,7 +265,7 @@ endfunction
 
 function! iced#nrepl#interrupt() abort
   if ! iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
+    call iced#message#warning('not_connected')
     return
   endif
   let session = iced#nrepl#current_session()
@@ -301,9 +305,26 @@ function! iced#nrepl#eval(code, ...) abort
       \ })
 endfunction
 
+function! iced#nrepl#load_file(callback) abort
+  if !iced#nrepl#is_connected() && !s:auto_connect()
+    return
+  endif
+
+  call iced#nrepl#send({
+      \ 'id': iced#nrepl#eval#id(),
+      \ 'op': 'load-file',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'file': join(getline(1, '$'), "\n"),
+      \ 'file-name': expand('%'),
+      \ 'file-path': expand('%:p'),
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
 call iced#nrepl#register_handler('clone')
 call iced#nrepl#register_handler('interrupt')
-call iced#nrepl#register_handler('eval', funcref('s:eval_handler'))
+call iced#nrepl#register_handler('eval', funcref('s:merge_response_handler'))
+call iced#nrepl#register_handler('load-file', funcref('s:merge_response_handler'))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
