@@ -20,26 +20,17 @@ jobs:
       - run:
           command: |
             . venv/bin/activate
-            find . -name "*.vim" | grep -v vital | xargs vint
+            find . -name "*.vim" | grep -v vital | grep -v .vim-themis | xargs vint
   test:
     docker:
-      - image: ubuntu
+      - image: thinca/themis
     working_directory: /tmp/workspace
     steps:
       - checkout
       - run:
           command: |
-            apt update
-            apt install -y software-properties-common
-            add-apt-repository -y ppa:git-core/ppa
-            add-apt-repository -y ppa:jonathonf/vim
-            apt update
-            apt install -y git vim
-      - run:
-          command: |
             vim --version
-            git clone https://github.com/thinca/vim-themis
-            ./vim-themis/bin/themis
+            themis
 workflows:
   version: 2
   all_test:
