@@ -99,6 +99,21 @@ function! iced#nrepl#cider#test_ns(test_ns, callback) abort
   endif
 endfunction
 
+function! iced#nrepl#cider#retest(callback) abort
+  if !iced#nrepl#is_connected()
+    echom iced#message#get('not_connected')
+    return
+  endif
+
+  call iced#nrepl#send({
+      \ 'op': 'retest',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'id': iced#nrepl#eval#id(),
+      \ 'callback': {resp -> a:callback(s:tested(resp))},
+      \ })
+endfunction
+
+
 function! iced#nrepl#cider#test_all(callback) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
@@ -117,6 +132,7 @@ call iced#nrepl#register_handler('info')
 call iced#nrepl#register_handler('ns-path')
 call iced#nrepl#register_handler('format-code')
 call iced#nrepl#register_handler('test', funcref('s:test_handler'))
+call iced#nrepl#register_handler('retest', funcref('s:test_handler'))
 call iced#nrepl#register_handler('test-all', funcref('s:test_handler'))
 
 let &cpo = s:save_cpo

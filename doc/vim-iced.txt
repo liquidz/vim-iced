@@ -113,6 +113,7 @@ Testing                                                      *vim-iced-testing*
   - |:IcedTestUnderCursor|
   - |:IcedTestNs|
   - |:IcedTestAll|
+  - |:IcedTestRedo|
 
 ==============================================================================
 Tag Jump                                                    *vim-iced-tag-jump*
@@ -213,6 +214,11 @@ Commands                                                    *vim-iced-commands*
 :IcedTestAll
   Run all tests in current project.
   Key is mapped to |<Plug>(iced_test_all)|.
+
+                                                                *:IcedTestRedo*
+:IcedTestRedo
+  Re run failed tests.
+  Key is mapped to |<Plug>(iced_test_redo)|.
 
                                                               *:IcedBufferOpen*
 :IcedBufferOpen
@@ -346,6 +352,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_test_all)
   Same as |:IcedTestAll|.
 
+                                                       *<Plug>(iced_test_redo)*
+<Plug>(iced_test_redo)
+  Same as |:IcedTestRedo|.
+
                                                *<Plug>(iced_test_under_cursor)*
 <Plug>(iced_test_under_cursor)
   Same as |:IcedTestUnderCursor|.
@@ -466,6 +476,7 @@ g:iced_enable_default_key_mappings
   <Leader>tt     <Plug>(iced_test_under_cursor)
   <Leader>tn     <Plug>(iced_test_ns)
   <Leader>tp     <Plug>(iced_test_all)
+  <Leader>tr     <Plug>(iced_test_redo)
   <Leader>ss     <Plug>(iced_buffer_open)
   <Leader>rcn    <Plug>(iced_clean_ns)
   <Leader>ram    <Plug>(iced_add_missing)

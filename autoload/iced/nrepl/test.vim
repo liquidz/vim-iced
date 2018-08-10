@@ -128,5 +128,9 @@ function! iced#nrepl#test#all() abort
   call iced#nrepl#cider#test_all(funcref('s:out'))
 endfunction
 
+function! iced#nrepl#test#redo() abort
+  call iced#nrepl#cider#retest(funcref('s:out'))
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
