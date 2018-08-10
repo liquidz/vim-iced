@@ -1,6 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:V = vital#of('iced')
+let s:M = s:V.import('Vim.Message')
+
 let s:messages = {
     \ 'auto_connect':       'Auto connecting...',
     \ 'no_port_file':       '.nrepl-port is not found.',
@@ -30,6 +33,36 @@ function! iced#message#get(k) abort
   else
     return printf('Unknown message key: %s', a:k)
   endif
+endfunction
+
+function! s:echom(hl, s) abort
+  for line in split(a:s, '\r\?\n')
+    call s:M.echomsg(a:hl, line)
+  endfor
+endfunction
+
+function! iced#message#info_str(s) abort
+  call s:echom('MoreMsg', a:s)
+endfunction
+
+function! iced#message#warning_str(s) abort
+  call s:echom('WarningMsg', a:s)
+endfunction
+
+function! iced#message#error_str(s) abort
+  call s:echom('ErrorMsg', a:s)
+endfunction
+
+function! iced#message#info(k) abort
+  call iced#message#info_str(iced#message#get(a:k))
+endfunction
+
+function! iced#message#warning(k) abort
+  call iced#message#warning_str(iced#message#get(a:k))
+endfunction
+
+function! iced#message#error(k) abort
+  call iced#message#error_str(iced#message#get(a:k))
 endfunction
 
 let &cpo = s:save_cpo
