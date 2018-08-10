@@ -156,12 +156,12 @@ endfunction
 function! s:auto_connect() abort
   echom iced#message#get('auto_connect')
   if ! iced#nrepl#connect#auto()
-    echom iced#message#get('try_connect')
+    call iced#message#error('try_connect')
     return v:false
   endif
 
   if !iced#util#wait({-> empty(s:nrepl['current_session_key'])}, 500)
-    echom iced#message#get('timeout')
+    call iced#message#error('timeout')
     return v:false
   endif
   return v:true
@@ -169,7 +169,7 @@ endfunction
 
 function! iced#nrepl#send(data) abort
   if !empty(s:response_buffer)
-    echom iced#message#get('reading')
+    call iced#message#warning('reading')
     return
   endif
 
@@ -231,7 +231,7 @@ function! iced#nrepl#connect(port) abort
 
     if !iced#nrepl#is_connected()
       let s:nrepl['channel'] = v:false
-      echom iced#message#get('connect_error')
+      call iced#message#error('connect_error')
       return
     endif
   endif
@@ -261,7 +261,7 @@ endfunction
 
 function! iced#nrepl#interrupt() abort
   if ! iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
+    call iced#message#warning('not_connected')
     return
   endif
   let session = iced#nrepl#current_session()
