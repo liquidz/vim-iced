@@ -6,4 +6,5 @@ Data.List
 Data.String
 Vim.Buffer
 Vim.BufferManager
+Vim.Message
 Web.HTTP
