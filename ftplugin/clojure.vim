@@ -39,7 +39,7 @@ command! -nargs=? IcedGrimoireOpen     call iced#grimoire#open(<q-args>)
 command!          IcedSlurp            call iced#paredit#deep_slurp()
 command!          IcedBarf             call iced#paredit#barf()
 command!          IcedFormat           call iced#format#form()
-command!          IcedToggleSrcAndTest call iced#nrepl#ns#toggle#src_and_test()
+command!          IcedToggleSrcAndTest call iced#nrepl#ns#transition#toggle_src_and_test()
 
 command!          IcedCleanNs          call iced#nrepl#refactor#clean_ns()
 command! -nargs=? IcedAddMissing       call iced#nrepl#refactor#add_missing(<q-args>)
