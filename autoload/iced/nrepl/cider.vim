@@ -143,6 +143,19 @@ function! iced#nrepl#cider#undef(symbol, callback) abort
       \ })
 endfunction
 
+function! s:parse_project_namespaces_response(resp) abort
+  if !has_key(a:resp, 'value')
+    return []
+  endif
+  return split(substitute(a:resp['value'], '[()]', '', 'g'), ' \+')
+endfunction
+
+function! iced#nrepl#cider#project_namespaces(callback) abort
+  let code = '(do (require ''orchard.namespace)'
+      \ . '(sort (orchard.namespace/project-namespaces)))'
+  call iced#nrepl#eval(code, {resp -> a:callback(s:parse_project_namespaces_response(resp))})
+endfunction
+
 call iced#nrepl#register_handler('info')
 call iced#nrepl#register_handler('ns-path')
 call iced#nrepl#register_handler('format-code')
