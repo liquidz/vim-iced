@@ -91,24 +91,25 @@ endfunction
 
 function! iced#nrepl#test#under_cursor() abort
   let view = winsaveview()
-  let code = v:none
   let reg_save = @@
 
   try
     " vim-sexp: move to top
     silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
     silent normal! va(y
+
     let code = @@
+    if empty(code)
+      call iced#message#error('finding_code_error')
+    else
+      let pos = getcurpos()
+      let option = {'line': pos[1], 'column': pos[2]}
+      call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)}, option)})
+    endif
   finally
     let @@ = reg_save
     call winrestview(view)
   endtry
-
-  if empty(code)
-    call iced#message#error('finding_code_error')
-  else
-    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)})})
-  endif
 endfunction
 
 function! iced#nrepl#test#ns() abort
@@ -122,24 +123,25 @@ endfunction
 
 function! iced#nrepl#test#redo() abort
   let view = winsaveview()
-  let code = v:none
   let reg_save = @@
 
   try
     " vim-sexp: move to top
     silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
     silent normal! va(y
+
     let code = @@
+    if empty(code)
+      call iced#message#error('finding_code_error')
+    else
+      let pos = getcurpos()
+      let option = {'line': pos[1], 'column': pos[2]}
+      call iced#nrepl#eval(code, {_ -> iced#nrepl#cider#retest(funcref('s:out'))}, option)
+    endif
   finally
     let @@ = reg_save
     call winrestview(view)
   endtry
-
-  if empty(code)
-    call iced#message#error('finding_code_error')
-  else
-    call iced#nrepl#eval(code, {_ -> iced#nrepl#cider#retest(funcref('s:out'))})
-  endif
 endfunction
 
 let &cpo = s:save_cpo
