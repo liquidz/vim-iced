@@ -64,9 +64,9 @@ function! s:resolve_missing(symbol, resp) abort
     return
   endif
 
-  let ns_name = iced#nrepl#ns#name()
   let symbol_alias = s:symbol_to_alias(a:symbol)
-  let alias_dict = iced#nrepl#ns#alias#dict(ns_name)
+  let ns_form = iced#nrepl#ns#get()
+  let alias_dict = iced#nrepl#ns#alias#dict_from_code(ns_form)
   if has_key(alias_dict, symbol_alias)
     echom printf(iced#message#get('alias_exists'), symbol_alias)
     return
@@ -84,7 +84,7 @@ function! s:resolve_missing(symbol, resp) abort
   elseif c > 1
     call ctrlp#iced#start({
         \ 'candidates': ns_candidates,
-        \ 'accept': {ns_name -> s:add_ns(ns_name, symbol_alias)}
+        \ 'accept': {_, ns_name -> s:add_ns(ns_name, symbol_alias)}
         \ })
   else
     echom iced#message#get('no_candidates')

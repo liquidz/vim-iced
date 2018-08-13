@@ -12,7 +12,7 @@ function! iced#nrepl#cider#info(symbol, callback) abort
       \ 'session': iced#nrepl#current_session(),
       \ 'symbol': a:symbol,
       \ 'ns': iced#nrepl#ns#name(),
-      \ 'callback': {resp -> a:callback(resp)},
+      \ 'callback': a:callback,
       \ })
 endfunction
 
@@ -26,7 +26,7 @@ function! iced#nrepl#cider#ns_path(ns, callback) abort
       \ 'op': 'ns-path',
       \ 'session': iced#nrepl#current_session(),
       \ 'ns': a:ns,
-      \ 'callback': {resp -> a:callback(resp)},
+      \ 'callback': a:callback,
       \ })
 endfunction
 
@@ -40,7 +40,7 @@ function! iced#nrepl#cider#format_code(code, callback) abort
       \ 'op': 'format-code',
       \ 'session': iced#nrepl#current_session(),
       \ 'code': a:code,
-      \ 'callback': {resp -> a:callback(resp)},
+      \ 'callback': a:callback,
       \ })
 endfunction
 
@@ -54,7 +54,7 @@ function! iced#nrepl#cider#format_code(code, callback) abort
       \ 'op': 'format-code',
       \ 'session': iced#nrepl#current_session(),
       \ 'code': a:code,
-      \ 'callback': {resp -> a:callback(resp)},
+      \ 'callback': a:callback,
       \ })
 endfunction
 
@@ -113,7 +113,6 @@ function! iced#nrepl#cider#retest(callback) abort
       \ })
 endfunction
 
-
 function! iced#nrepl#cider#test_all(callback) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
@@ -128,12 +127,41 @@ function! iced#nrepl#cider#test_all(callback) abort
       \ })
 endfunction
 
+function! iced#nrepl#cider#undef(symbol, callback) abort
+  if !iced#nrepl#is_connected()
+    echom iced#message#get('not_connected')
+    return
+  endif
+
+  call iced#nrepl#send({
+      \ 'op': 'undef',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'ns': iced#nrepl#ns#name(),
+      \ 'symbol': a:symbol,
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
+function! s:parse_project_namespaces_response(resp) abort
+  if !has_key(a:resp, 'value')
+    return []
+  endif
+  return split(substitute(a:resp['value'], '[()]', '', 'g'), ' \+')
+endfunction
+
+function! iced#nrepl#cider#project_namespaces(callback) abort
+  let code = '(do (require ''orchard.namespace)'
+      \ . '(sort (orchard.namespace/project-namespaces)))'
+  call iced#nrepl#eval(code, {resp -> a:callback(s:parse_project_namespaces_response(resp))})
+endfunction
+
 call iced#nrepl#register_handler('info')
 call iced#nrepl#register_handler('ns-path')
 call iced#nrepl#register_handler('format-code')
 call iced#nrepl#register_handler('test', funcref('s:test_handler'))
 call iced#nrepl#register_handler('retest', funcref('s:test_handler'))
 call iced#nrepl#register_handler('test-all', funcref('s:test_handler'))
+call iced#nrepl#register_handler('undef')
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

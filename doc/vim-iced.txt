@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojunre interactive development environment for Vim8
 
-Version: 0.0.6
+Version: 0.0.7
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -51,6 +51,7 @@ Clojure library dependencies:
 >
   {:user
    {:dependencies [[cider/cider-nrepl "0.18.0"]
+                   [cider/orchard "0.3.0"]
                    [cljfmt "0.6.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-format
@@ -197,8 +198,19 @@ Commands                                                    *vim-iced-commands*
 
                                                                  *:IcedRequire*
 :IcedRequire
-  Require and reload current file in current session.
+  Load current file in current session.
   Key is mapped to |<Plug>(iced_require)|.
+
+                                                              *:IcedRequireAll*
+:IcedRequireAll
+  Require and reload current file in current session.
+  Key is mapped to |<Plug>(iced_require_all)|.
+
+                                                                   *:IcedUndef*
+:IcedUndef [{symbol}]
+  Undefine {symbol} in current namespace.
+  If {symbol} is not passed, symbol under cursor is used.
+  Key is mapped to |<Plug>(iced_undef)|.
 
                                                          *:IcedTestUnderCursor*
 :IcedTestUnderCursor
@@ -241,8 +253,9 @@ Commands                                                    *vim-iced-commands*
   Key is mapped to |<Plug>(iced_def_back)|.
 
                                                             *:IcedDocumentOpen*
-:IcedDocumentOpen
-  Open preview window, and show documents for symbol under cursor.
+:IcedDocumentOpen [{symbol}]
+  Open preview window, and show documents for {symbol}.
+  If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_document_open)|.
 
                                                         *:IcedEchoFormDocument*
@@ -262,14 +275,22 @@ Commands                                                    *vim-iced-commands*
 :IcedBarf
   Barf last element in current form.
   Key is mapped to |<Plug>(iced_barf)|.
+
                                                                   *:IcedFormat*
 :IcedFormat
   Reformat current form.
   Key is mapped to |<Plug>(iced_format)|.
+
                                                         *:IcedToggleSrcAndTest*
 :IcedToggleSrcAndTest
   Switch between source file and test file.
   Key is mapped to |<Plug>(iced_toggle_src_and_test)|.
+
+                                                         *:IcedBrowseNamespace*
+:IcedBrowseNamespace
+  Browse project namespaces, and open selected namespace.
+  `ctrlp.vim` is required to select namespace.
+  Key is mapped to |<Plug>(iced_browse_namespace)|.
 
                                                                  *:IcedCleanNs*
 :IcedCleanNs
@@ -344,6 +365,14 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_require)
   Same as |:IcedRequire|.
 
+                                                     *<Plug>(iced_require_all)*
+<Plug>(iced_require_all)
+  Same as |:IcedRequireAll|.
+
+                                                           *<Plug>(iced_undef)*
+<Plug>(iced_undef)
+  Same as |:IcedUndef|.
+
                                                          *<Plug>(iced_test_ns)*
 <Plug>(iced_test_ns)
   Same as |:IcedTestNs|.
@@ -408,6 +437,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_toggle_src_and_test)
   Same as |:IcedToggleSrcAndTest|.
 
+                                                *<Plug>(iced_browse_namespace)*
+<Plug>(iced_browse_namespace)
+  Same as |:IcedBrowseNamespace|.
+
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
@@ -418,12 +451,12 @@ Customizing                                              *vim-iced-customizing*
                                                             *g:iced#nrepl#host*
 g:iced#nrepl#host
   Connection host name.
-  Default value is '127.0.0.1'.
+  Default value is `'127.0.0.1'`.
 
                                                *g:iced#paredit#slurp_max_depth*
 g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
-  Default value is 5.
+  Default value is `5`.
 
                                                            *g:iced#format#rule*
 g:iced#format#rule
@@ -438,7 +471,7 @@ g:iced#format#rule
                                                 *g:iced#nrepl#cljs#default_env*
 g:iced#nrepl#cljs#default_env
   Environment used when |:IcedStartCljsRepl| is called with no argument.
-  Default value is 'figwheel'.
+  Default value is `'figwheel'`.
 
                                                            *g:iced#buffer#mods*
 g:iced#buffer#mods
@@ -460,6 +493,11 @@ g:iced#nrepl#cljs#custom#start_code
 g:iced#nrepl#cljs#custom#stop_code
   Code to stop CLJS REPL in {custom} enviroment.
 
+                                                 *g:iced#nrepl#sync#timeout_ms*
+g:iced#nrepl#sync#timeout_ms
+  Time to timeout (unit: milli sec).
+  Default value is `3000`.
+
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
   If {v:true}, apply following mappings.
@@ -471,6 +509,8 @@ g:iced_enable_default_key_mappings
   <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Leader>et     <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
   <Leader>eb     <Plug>(iced_require)
+  <Leader>eB     <Plug>(iced_require_all)
+  <Leader>eu     <Plug>(iced_undef)
   <Leader>ma     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
   <Leader>m1     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
   <Leader>tt     <Plug>(iced_test_under_cursor)
@@ -481,6 +521,7 @@ g:iced_enable_default_key_mappings
   <Leader>rcn    <Plug>(iced_clean_ns)
   <Leader>ram    <Plug>(iced_add_missing)
   <Leader>hg     <Plug>(iced_grimoire_open)
+  <Leader>gn     <Plug>(iced_browse_namespace)
   <C-]>          <Plug>(iced_def_jump)
   <C-t>          <Plug>(iced_def_back)
   <Leader>rcn    <Plug>(iced_clean_ns)

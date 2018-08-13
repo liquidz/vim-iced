@@ -19,6 +19,7 @@ command! -nargs=1 IcedEval             call iced#nrepl#eval#code(<q-args>)
 command! -nargs=1 IcedEvalRepl         call iced#nrepl#eval#repl(<q-args>)
 command!          IcedRequire          call iced#nrepl#ns#require()
 command!          IcedRequireAll       call iced#nrepl#ns#require_all()
+command! -nargs=? IcedUndef            call iced#nrepl#eval#undef(<q-args>)
 
 command!          IcedTestNs           call iced#nrepl#test#ns()
 command!          IcedTestAll          call iced#nrepl#test#all()
@@ -38,7 +39,9 @@ command! -nargs=? IcedGrimoireOpen     call iced#grimoire#open(<q-args>)
 command!          IcedSlurp            call iced#paredit#deep_slurp()
 command!          IcedBarf             call iced#paredit#barf()
 command!          IcedFormat           call iced#format#form()
-command!          IcedToggleSrcAndTest call iced#nrepl#ns#toggle#src_and_test()
+command!          IcedToggleSrcAndTest call iced#nrepl#ns#transition#toggle_src_and_test()
+
+command!          IcedBrowseNamespace  call iced#nrepl#ns#transition#list()
 
 command!          IcedCleanNs          call iced#nrepl#refactor#clean_ns()
 command! -nargs=? IcedAddMissing       call iced#nrepl#refactor#add_missing(<q-args>)
@@ -57,6 +60,7 @@ nnoremap <silent> <Plug>(iced_macroexpand)         :<C-u>set opfunc=iced#operati
 nnoremap <silent> <Plug>(iced_macroexpand_1)       :<C-u>set opfunc=iced#operation#macroexpand_1<CR>g@
 nnoremap <silent> <Plug>(iced_require)             :<C-u>IcedRequire<CR>
 nnoremap <silent> <Plug>(iced_require_all)         :<C-u>IcedRequireAll<CR>
+nnoremap <silent> <Plug>(iced_undef)               :<C-u>IcedUndef<CR>
 
 nnoremap <silent> <Plug>(iced_test_ns)             :<C-u>IcedTestNs<CR>
 nnoremap <silent> <Plug>(iced_test_all)            :<C-u>IcedTestAll<CR>
@@ -78,6 +82,8 @@ nnoremap <silent> <Plug>(iced_barf)                :<C-u>IcedBarf<CR>
 nnoremap <silent> <Plug>(iced_format)              :<C-u>IcedFormat<CR>
 nnoremap <silent> <Plug>(iced_toggle_src_and_test) :<C-u>IcedToggleSrcAndTest<CR>
 
+nnoremap <silent> <Plug>(iced_browse_namespace)    :<C-u>IcedBrowseNamespace<CR>
+
 nnoremap <silent> <Plug>(iced_clean_ns)            :<C-u>IcedCleanNs<CR>
 nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
 "" }}}
@@ -90,7 +96,7 @@ aug vim_iced_initial_setting
 aug END
 "" }}}
 
-"" Defaults {{{
+"" Default mappings {{{
 function! s:default_key_mappings() abort
   if !hasmapto('<Plug>(iced_connect)')
     silent! nmap <buffer> <Leader>' <Plug>(iced_connect)
@@ -112,6 +118,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_require_all)')
     silent! nmap <buffer> <Leader>eB <Plug>(iced_require_all)
+  endif
+
+  if !hasmapto('<Plug>(iced_undef)')
+    silent! nmap <buffer> <Leader>eu <Plug>(iced_undef)
   endif
 
   if !hasmapto('<Plug>(iced_macroexpand)')
@@ -169,6 +179,10 @@ function! s:default_key_mappings() abort
   if !hasmapto('<Plug>(iced_grimoire_open)')
     silent! nmap <buffer> <Leader>hg <Plug>(iced_grimoire_open)
   endif
+
+  if !hasmapto('<Plug>(iced_browse_namespace)')
+    silent! nmap <buffer> <Leader>gn <Plug>(iced_browse_namespace)
+  endif
 endfunction
 
 if exists('g:iced_enable_default_key_mappings')
@@ -179,6 +193,10 @@ if exists('g:iced_enable_default_key_mappings')
     au FileType clojure call s:default_key_mappings()
   aug END
 endif
+"" }}}
+
+"" Signs {{{
+sign define iced_err text=>> texthl=ErrorMsg
 "" }}}
 
 let &cpo = s:save_cpo

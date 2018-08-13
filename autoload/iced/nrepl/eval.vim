@@ -9,15 +9,9 @@ function! iced#nrepl#eval#id() abort
   return res
 endfunction
 
-function! iced#nrepl#eval#clear_err() abort
-  call setqflist([] , 'r')
-  cclose
-endfunction
-
 function! iced#nrepl#eval#err(err) abort
   if empty(a:err)
-    call iced#nrepl#eval#clear_err()
-    return
+    return iced#qf#clear()
   endif
 
   let err = matchstr(a:err, ':(.\+:\d\+:\d\+)')
@@ -34,9 +28,7 @@ function! iced#nrepl#eval#err(err) abort
         \ 'text': text,
         \ }
 
-    call setqflist([info] , 'r')
-    cwindow
-    silent! doautocmd QuickFixCmdPost make
+    call iced#qf#set([info])
   endif
 endfunction
 
@@ -53,7 +45,22 @@ function! iced#nrepl#eval#code(code) abort
 endfunction
 
 function! iced#nrepl#eval#repl(code) abort
-  call iced#nrepl#eval(a:code, funcref('s:out'), 'repl')
+  call iced#nrepl#eval(a:code, funcref('s:out'),
+      \ {'session': 'repl'})
+endfunction
+
+function! s:undefined(symbol) abort
+  call iced#message#info_str(printf(iced#message#get('undefined'), a:symbol))
+endfunction
+
+function! iced#nrepl#eval#undef(symbol) abort
+  if !iced#nrepl#is_connected()
+    echom iced#message#get('not_connected')
+    return
+  endif
+
+  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  call iced#nrepl#cider#undef(symbol, {_ -> s:undefined(symbol)})
 endfunction
 
 let &cpo = s:save_cpo

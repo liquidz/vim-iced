@@ -118,22 +118,22 @@ function! iced#complete#omni(findstart, base) abort
     endif
 
     " namespace aliases
-    if iced#nrepl#current_session_key() ==# 'clj'
-      let alias_dict = iced#nrepl#ns#alias#dict(ns)
-      if !empty(alias_dict)
-        let candidates = candidates + s:ns_alias_candidates(keys(alias_dict), a:base)
-      endif
+    let alias_dict = (iced#nrepl#current_session_key() ==# 'clj')
+        \ ? iced#nrepl#ns#alias#dict(ns)
+        \ : iced#nrepl#ns#alias#dict_from_code(iced#nrepl#ns#get())
+    if !empty(alias_dict)
+      let candidates = candidates + s:ns_alias_candidates(keys(alias_dict), a:base)
+    endif
 
-      " vars in aliased namespace
-      let i = stridx(a:base, '/')
-      if i != -1
-        let org_base_ns = a:base[0:i-1]
-        let base_ns = get(alias_dict, org_base_ns, org_base_ns)
-        let base_sym = a:base[i+1:]
-        let tmp = s:ns_var_candidates(base_ns, base_sym, org_base_ns)
-        if !empty(tmp)
-          let candidates = candidates + tmp
-        endif
+    " vars in aliased namespace
+    let i = stridx(a:base, '/')
+    if i != -1
+      let org_base_ns = a:base[0:i-1]
+      let base_ns = get(alias_dict, org_base_ns, org_base_ns)
+      let base_sym = a:base[i+1:]
+      let tmp = s:ns_var_candidates(base_ns, base_sym, org_base_ns)
+      if !empty(tmp)
+        let candidates = candidates + tmp
       endif
     endif
 

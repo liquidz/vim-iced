@@ -25,6 +25,7 @@ let s:messages = {
     \ 'no_ctrlp':           'CtrlP needed to select candidates is not installed.',
     \ 'no_candidates':      'No candidates.',
     \ 'alias_exists':       'Alias "%s" already exists.',
+    \ 'undefined':          'Undefined %s.',
     \ }
 
 function! iced#message#get(k) abort

@@ -263,12 +263,12 @@ function! s:interrupted() abort
   echom iced#message#get('interrupted')
 endfunction
 
-function! iced#nrepl#interrupt() abort
+function! iced#nrepl#interrupt(...) abort
   if ! iced#nrepl#is_connected()
     call iced#message#warning('not_connected')
     return
   endif
-  let session = iced#nrepl#current_session()
+  let session = get(a:, 1, iced#nrepl#current_session())
   call iced#nrepl#send({
       \ 'op': 'interrupt',
       \ 'session': session,
@@ -290,7 +290,8 @@ function! iced#nrepl#eval(code, ...) abort
   endif
 
   let Callback = get(a:, 1, v:none)
-  let session_key  = get(a:, 2, 'session')
+  let option = get(a:, 2, {})
+  let session_key  = get(option, 'session', 'clj')
   let session = get(s:nrepl['sessions'], session_key, iced#nrepl#current_session())
 
   let pos = getcurpos()
@@ -300,7 +301,8 @@ function! iced#nrepl#eval(code, ...) abort
       \ 'code': a:code,
       \ 'session': session,
       \ 'file': expand('%:p'),
-      \ 'line': pos[1], 'column': pos[2],
+      \ 'line': get(option, 'line', pos[1]),
+      \ 'column': get(option, 'column', pos[2]),
       \ 'callback': Callback,
       \ })
 endfunction

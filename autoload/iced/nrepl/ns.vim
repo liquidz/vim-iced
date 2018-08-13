@@ -95,7 +95,7 @@ function! s:required(resp, callback) abort
   elseif has_key(a:resp, 'err')
     return iced#nrepl#eval#err(a:resp['err'])
   endif
-  call iced#nrepl#eval#clear_err()
+  call iced#qf#clear()
   call iced#nrepl#ns#eval(a:callback)
 endfunction
 

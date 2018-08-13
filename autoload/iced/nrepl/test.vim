@@ -77,14 +77,10 @@ function! s:out(resp) abort
   endif
 
   let errors = s:collect_errors(a:resp)
-  call setqflist(errors , 'r')
-
-  if empty(errors)
-    cclose
-  else
-    cwindow
-    silent! doautocmd QuickFixCmdPost make
-  endif
+  for err in errors
+    call iced#sign#place_error(err['lnum'], err['filename'])
+  endfor
+  call iced#qf#set(errors)
 endfunction
 
 function! s:test(resp) abort
@@ -99,37 +95,61 @@ endfunction
 
 function! iced#nrepl#test#under_cursor() abort
   let view = winsaveview()
-  let code = v:none
   let reg_save = @@
 
   try
+    call iced#sign#unplace_all()
     " vim-sexp: move to top
     silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
     silent normal! va(y
+
     let code = @@
+    if empty(code)
+      call iced#message#error('finding_code_error')
+    else
+      let pos = getcurpos()
+      let option = {'line': pos[1], 'column': pos[2]}
+      call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)}, option)})
+    endif
   finally
     let @@ = reg_save
     call winrestview(view)
   endtry
-
-  if empty(code)
-    call iced#message#error('finding_code_error')
-  else
-    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)})})
-  endif
 endfunction
 
 function! iced#nrepl#test#ns() abort
   let ns = iced#nrepl#ns#name()
+  call iced#sign#unplace_all()
   call iced#nrepl#cider#test_ns(ns, funcref('s:out'))
 endfunction
 
 function! iced#nrepl#test#all() abort
+  call iced#sign#unplace_all()
   call iced#nrepl#cider#test_all(funcref('s:out'))
 endfunction
 
 function! iced#nrepl#test#redo() abort
-  call iced#nrepl#cider#retest(funcref('s:out'))
+  let view = winsaveview()
+  let reg_save = @@
+
+  try
+    call iced#sign#unplace_all()
+    " vim-sexp: move to top
+    silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
+    silent normal! va(y
+
+    let code = @@
+    if empty(code)
+      call iced#message#error('finding_code_error')
+    else
+      let pos = getcurpos()
+      let option = {'line': pos[1], 'column': pos[2]}
+      call iced#nrepl#eval(code, {_ -> iced#nrepl#cider#retest(funcref('s:out'))}, option)
+    endif
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+  endtry
 endfunction
 
 let &cpo = s:save_cpo
