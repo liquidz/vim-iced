@@ -90,7 +90,7 @@ aug vim_iced_initial_setting
 aug END
 "" }}}
 
-"" Defaults {{{
+"" Default mappings {{{
 function! s:default_key_mappings() abort
   if !hasmapto('<Plug>(iced_connect)')
     silent! nmap <buffer> <Leader>' <Plug>(iced_connect)
@@ -179,6 +179,10 @@ if exists('g:iced_enable_default_key_mappings')
     au FileType clojure call s:default_key_mappings()
   aug END
 endif
+"" }}}
+
+"" Signs {{{
+sign define iced_err text=>> texthl=ErrorMsg
 "" }}}
 
 let &cpo = s:save_cpo

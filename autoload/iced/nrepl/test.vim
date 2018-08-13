@@ -76,7 +76,11 @@ function! s:out(resp) abort
     call iced#message#error_str(summary['summary'])
   endif
 
-  call iced#qf#set(s:collect_errors(a:resp))
+  let errors = s:collect_errors(a:resp)
+  for err in errors
+    call iced#sign#place_error(err['lnum'], err['filename'])
+  endfor
+  call iced#qf#set(errors)
 endfunction
 
 function! s:test(resp) abort
@@ -94,6 +98,7 @@ function! iced#nrepl#test#under_cursor() abort
   let reg_save = @@
 
   try
+    call iced#sign#unplace_all()
     " vim-sexp: move to top
     silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
     silent normal! va(y
@@ -114,10 +119,12 @@ endfunction
 
 function! iced#nrepl#test#ns() abort
   let ns = iced#nrepl#ns#name()
+  call iced#sign#unplace_all()
   call iced#nrepl#cider#test_ns(ns, funcref('s:out'))
 endfunction
 
 function! iced#nrepl#test#all() abort
+  call iced#sign#unplace_all()
   call iced#nrepl#cider#test_all(funcref('s:out'))
 endfunction
 
@@ -126,6 +133,7 @@ function! iced#nrepl#test#redo() abort
   let reg_save = @@
 
   try
+    call iced#sign#unplace_all()
     " vim-sexp: move to top
     silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
     silent normal! va(y
