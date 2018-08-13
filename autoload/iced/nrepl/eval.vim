@@ -9,15 +9,9 @@ function! iced#nrepl#eval#id() abort
   return res
 endfunction
 
-function! iced#nrepl#eval#clear_err() abort
-  call setqflist([] , 'r')
-  cclose
-endfunction
-
 function! iced#nrepl#eval#err(err) abort
   if empty(a:err)
-    call iced#nrepl#eval#clear_err()
-    return
+    return iced#qf#clear()
   endif
 
   let err = matchstr(a:err, ':(.\+:\d\+:\d\+)')
@@ -34,9 +28,7 @@ function! iced#nrepl#eval#err(err) abort
         \ 'text': text,
         \ }
 
-    call setqflist([info] , 'r')
-    cwindow
-    silent! doautocmd QuickFixCmdPost make
+    call iced#qf#set([info])
   endif
 endfunction
 

@@ -76,15 +76,7 @@ function! s:out(resp) abort
     call iced#message#error_str(summary['summary'])
   endif
 
-  let errors = s:collect_errors(a:resp)
-  call setqflist(errors , 'r')
-
-  if empty(errors)
-    cclose
-  else
-    cwindow
-    silent! doautocmd QuickFixCmdPost make
-  endif
+  call iced#qf#set(s:collect_errors(a:resp))
 endfunction
 
 function! s:test(resp) abort
