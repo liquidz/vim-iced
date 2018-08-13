@@ -263,12 +263,12 @@ function! s:interrupted() abort
   echom iced#message#get('interrupted')
 endfunction
 
-function! iced#nrepl#interrupt() abort
+function! iced#nrepl#interrupt(...) abort
   if ! iced#nrepl#is_connected()
     call iced#message#warning('not_connected')
     return
   endif
-  let session = iced#nrepl#current_session()
+  let session = get(a:, 1, iced#nrepl#current_session())
   call iced#nrepl#send({
       \ 'op': 'interrupt',
       \ 'session': session,

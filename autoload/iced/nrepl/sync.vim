@@ -20,7 +20,13 @@ function! iced#nrepl#sync#send(data) abort
   endif
 
   call iced#nrepl#send(data)
-  call iced#util#wait({-> empty(s:sync_resp)}, timeout_ms)
+  if !iced#util#wait({-> empty(s:sync_resp)}, timeout_ms)
+    " timeout
+    if has_key(data, 'session')
+      call iced#nrepl#interrupt(data['session'])
+    endif
+    call iced#message#error('timeout')
+  endif
 
   return s:sync_resp
 endfunction
