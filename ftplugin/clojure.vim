@@ -41,6 +41,8 @@ command!          IcedBarf             call iced#paredit#barf()
 command!          IcedFormat           call iced#format#form()
 command!          IcedToggleSrcAndTest call iced#nrepl#ns#transition#toggle_src_and_test()
 
+command!          IcedBrowseNamespace  call iced#nrepl#ns#transition#list()
+
 command!          IcedCleanNs          call iced#nrepl#refactor#clean_ns()
 command! -nargs=? IcedAddMissing       call iced#nrepl#refactor#add_missing(<q-args>)
 "" }}}
@@ -79,6 +81,8 @@ nnoremap <silent> <Plug>(iced_slurp)               :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                :<C-u>IcedBarf<CR>
 nnoremap <silent> <Plug>(iced_format)              :<C-u>IcedFormat<CR>
 nnoremap <silent> <Plug>(iced_toggle_src_and_test) :<C-u>IcedToggleSrcAndTest<CR>
+
+nnoremap <silent> <Plug>(iced_browse_namespace)    :<C-u>IcedBrowseNamespace<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)            :<C-u>IcedCleanNs<CR>
 nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
@@ -174,6 +178,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_grimoire_open)')
     silent! nmap <buffer> <Leader>hg <Plug>(iced_grimoire_open)
+  endif
+
+  if !hasmapto('<Plug>(iced_browse_namespace)')
+    silent! nmap <buffer> <Leader>gn <Plug>(iced_browse_namespace)
   endif
 endfunction
 

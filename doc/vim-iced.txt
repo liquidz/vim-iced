@@ -284,6 +284,12 @@ Commands                                                    *vim-iced-commands*
   Switch between source file and test file.
   Key is mapped to |<Plug>(iced_toggle_src_and_test)|.
 
+                                                         *:IcedBrowseNamespace*
+:IcedBrowseNamespace
+  Browse project namespaces, and open selected namespace.
+  `ctrlp.vim` is required to select namespace.
+  Key is mapped to |<Plug>(iced_browse_namespace)|.
+
                                                                  *:IcedCleanNs*
 :IcedCleanNs
   Cleanup ns form.
@@ -429,6 +435,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_toggle_src_and_test)
   Same as |:IcedToggleSrcAndTest|.
 
+                                                *<Plug>(iced_browse_namespace)*
+<Plug>(iced_browse_namespace)
+  Same as |:IcedBrowseNamespace|.
+
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
@@ -504,6 +514,7 @@ g:iced_enable_default_key_mappings
   <Leader>rcn    <Plug>(iced_clean_ns)
   <Leader>ram    <Plug>(iced_add_missing)
   <Leader>hg     <Plug>(iced_grimoire_open)
+  <Leader>gn     <Plug>(iced_browse_namespace)
   <C-]>          <Plug>(iced_def_jump)
   <C-t>          <Plug>(iced_def_back)
   <Leader>rcn    <Plug>(iced_clean_ns)
