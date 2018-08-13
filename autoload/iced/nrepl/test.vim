@@ -121,7 +121,25 @@ function! iced#nrepl#test#all() abort
 endfunction
 
 function! iced#nrepl#test#redo() abort
-  call iced#nrepl#cider#retest(funcref('s:out'))
+  let view = winsaveview()
+  let code = v:none
+  let reg_save = @@
+
+  try
+    " vim-sexp: move to top
+    silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
+    silent normal! va(y
+    let code = @@
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+  endtry
+
+  if empty(code)
+    call iced#message#error('finding_code_error')
+  else
+    call iced#nrepl#eval(code, {_ -> iced#nrepl#cider#retest(funcref('s:out'))})
+  endif
 endfunction
 
 let &cpo = s:save_cpo
