@@ -32,7 +32,7 @@ function! ctrlp#iced#accept(mode, line) abort
 
   let Callback = get(config, 'accept', v:none)
   if iced#util#is_function(Callback)
-    call Callback(a:line)
+    call Callback(a:mode, a:line)
   endif
 endfunction
 

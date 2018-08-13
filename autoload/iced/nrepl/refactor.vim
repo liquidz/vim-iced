@@ -84,7 +84,7 @@ function! s:resolve_missing(symbol, resp) abort
   elseif c > 1
     call ctrlp#iced#start({
         \ 'candidates': ns_candidates,
-        \ 'accept': {ns_name -> s:add_ns(ns_name, symbol_alias)}
+        \ 'accept': {_, ns_name -> s:add_ns(ns_name, symbol_alias)}
         \ })
   else
     echom iced#message#get('no_candidates')
