@@ -128,12 +128,28 @@ function! iced#nrepl#cider#test_all(callback) abort
       \ })
 endfunction
 
+function! iced#nrepl#cider#undef(symbol, callback) abort
+  if !iced#nrepl#is_connected()
+    echom iced#message#get('not_connected')
+    return
+  endif
+
+  call iced#nrepl#send({
+      \ 'op': 'undef',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'ns': iced#nrepl#ns#name(),
+      \ 'symbol': a:symbol,
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
 call iced#nrepl#register_handler('info')
 call iced#nrepl#register_handler('ns-path')
 call iced#nrepl#register_handler('format-code')
 call iced#nrepl#register_handler('test', funcref('s:test_handler'))
 call iced#nrepl#register_handler('retest', funcref('s:test_handler'))
 call iced#nrepl#register_handler('test-all', funcref('s:test_handler'))
+call iced#nrepl#register_handler('undef')
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

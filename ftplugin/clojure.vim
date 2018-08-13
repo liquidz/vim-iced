@@ -19,6 +19,7 @@ command! -nargs=1 IcedEval             call iced#nrepl#eval#code(<q-args>)
 command! -nargs=1 IcedEvalRepl         call iced#nrepl#eval#repl(<q-args>)
 command!          IcedRequire          call iced#nrepl#ns#require()
 command!          IcedRequireAll       call iced#nrepl#ns#require_all()
+command! -nargs=? IcedUndef            call iced#nrepl#eval#undef(<q-args>)
 
 command!          IcedTestNs           call iced#nrepl#test#ns()
 command!          IcedTestAll          call iced#nrepl#test#all()
@@ -57,6 +58,7 @@ nnoremap <silent> <Plug>(iced_macroexpand)         :<C-u>set opfunc=iced#operati
 nnoremap <silent> <Plug>(iced_macroexpand_1)       :<C-u>set opfunc=iced#operation#macroexpand_1<CR>g@
 nnoremap <silent> <Plug>(iced_require)             :<C-u>IcedRequire<CR>
 nnoremap <silent> <Plug>(iced_require_all)         :<C-u>IcedRequireAll<CR>
+nnoremap <silent> <Plug>(iced_undef)               :<C-u>IcedUndef<CR>
 
 nnoremap <silent> <Plug>(iced_test_ns)             :<C-u>IcedTestNs<CR>
 nnoremap <silent> <Plug>(iced_test_all)            :<C-u>IcedTestAll<CR>
@@ -112,6 +114,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_require_all)')
     silent! nmap <buffer> <Leader>eB <Plug>(iced_require_all)
+  endif
+
+  if !hasmapto('<Plug>(iced_undef)')
+    silent! nmap <buffer> <Leader>eu <Plug>(iced_undef)
   endif
 
   if !hasmapto('<Plug>(iced_macroexpand)')

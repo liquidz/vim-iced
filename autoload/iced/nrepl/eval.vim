@@ -49,5 +49,19 @@ function! iced#nrepl#eval#repl(code) abort
       \ {'session': 'repl'})
 endfunction
 
+function! s:undefined(symbol) abort
+  call iced#message#info_str(printf(iced#message#get('undefined'), a:symbol))
+endfunction
+
+function! iced#nrepl#eval#undef(symbol) abort
+  if !iced#nrepl#is_connected()
+    echom iced#message#get('not_connected')
+    return
+  endif
+
+  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  call iced#nrepl#cider#undef(symbol, {_ -> s:undefined(symbol)})
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

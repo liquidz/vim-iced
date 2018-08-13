@@ -200,6 +200,12 @@ Commands                                                    *vim-iced-commands*
   Require and reload current file in current session.
   Key is mapped to |<Plug>(iced_require)|.
 
+                                                                   *:IcedUndef*
+:IcedUndef [{symbol}]
+  Undefine {symbol} in current namespace.
+  If {symbol} is not passed, symbol under cursor is used.
+  Key is mapped to |<Plug>(iced_undef)|.
+
                                                          *:IcedTestUnderCursor*
 :IcedTestUnderCursor
   Run test under cursor.
@@ -344,6 +350,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_require)
   Same as |:IcedRequire|.
 
+                                                           *<Plug>(iced_undef)*
+<Plug>(iced_undef)
+  Same as |:IcedUndef|.
+
                                                          *<Plug>(iced_test_ns)*
 <Plug>(iced_test_ns)
   Same as |:IcedTestNs|.
@@ -471,6 +481,7 @@ g:iced_enable_default_key_mappings
   <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Leader>et     <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
   <Leader>eb     <Plug>(iced_require)
+  <Leader>eu     <Plug>(iced_undef)
   <Leader>ma     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
   <Leader>m1     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
   <Leader>tt     <Plug>(iced_test_under_cursor)
