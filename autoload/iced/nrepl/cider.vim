@@ -12,7 +12,7 @@ function! iced#nrepl#cider#info(symbol, callback) abort
       \ 'session': iced#nrepl#current_session(),
       \ 'symbol': a:symbol,
       \ 'ns': iced#nrepl#ns#name(),
-      \ 'callback': {resp -> a:callback(resp)},
+      \ 'callback': a:callback,
       \ })
 endfunction
 
@@ -26,7 +26,7 @@ function! iced#nrepl#cider#ns_path(ns, callback) abort
       \ 'op': 'ns-path',
       \ 'session': iced#nrepl#current_session(),
       \ 'ns': a:ns,
-      \ 'callback': {resp -> a:callback(resp)},
+      \ 'callback': a:callback,
       \ })
 endfunction
 
@@ -40,7 +40,7 @@ function! iced#nrepl#cider#format_code(code, callback) abort
       \ 'op': 'format-code',
       \ 'session': iced#nrepl#current_session(),
       \ 'code': a:code,
-      \ 'callback': {resp -> a:callback(resp)},
+      \ 'callback': a:callback,
       \ })
 endfunction
 
@@ -54,7 +54,7 @@ function! iced#nrepl#cider#format_code(code, callback) abort
       \ 'op': 'format-code',
       \ 'session': iced#nrepl#current_session(),
       \ 'code': a:code,
-      \ 'callback': {resp -> a:callback(resp)},
+      \ 'callback': a:callback,
       \ })
 endfunction
 
@@ -112,7 +112,6 @@ function! iced#nrepl#cider#retest(callback) abort
       \ 'callback': {resp -> a:callback(s:tested(resp))},
       \ })
 endfunction
-
 
 function! iced#nrepl#cider#test_all(callback) abort
   if !iced#nrepl#is_connected()

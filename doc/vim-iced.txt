@@ -275,10 +275,12 @@ Commands                                                    *vim-iced-commands*
 :IcedBarf
   Barf last element in current form.
   Key is mapped to |<Plug>(iced_barf)|.
+
                                                                   *:IcedFormat*
 :IcedFormat
   Reformat current form.
   Key is mapped to |<Plug>(iced_format)|.
+
                                                         *:IcedToggleSrcAndTest*
 :IcedToggleSrcAndTest
   Switch between source file and test file.
@@ -449,12 +451,12 @@ Customizing                                              *vim-iced-customizing*
                                                             *g:iced#nrepl#host*
 g:iced#nrepl#host
   Connection host name.
-  Default value is '127.0.0.1'.
+  Default value is `'127.0.0.1'`.
 
                                                *g:iced#paredit#slurp_max_depth*
 g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
-  Default value is 5.
+  Default value is `5`.
 
                                                            *g:iced#format#rule*
 g:iced#format#rule
@@ -469,7 +471,7 @@ g:iced#format#rule
                                                 *g:iced#nrepl#cljs#default_env*
 g:iced#nrepl#cljs#default_env
   Environment used when |:IcedStartCljsRepl| is called with no argument.
-  Default value is 'figwheel'.
+  Default value is `'figwheel'`.
 
                                                            *g:iced#buffer#mods*
 g:iced#buffer#mods
