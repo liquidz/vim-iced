@@ -2,7 +2,9 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:sync_resp = v:none
-let s:default_timeout_ms = 1500
+let s:default_timeout_ms = 3000
+
+let g:iced#nrepl#sync#timeout_ms = get(g:, 'iced#nrepl#sync#timeout_ms', s:default_timeout_ms)
 
 function! s:sync(resp) abort
   let s:sync_resp = a:resp
@@ -13,14 +15,8 @@ function! iced#nrepl#sync#send(data) abort
   let data.callback = funcref('s:sync')
   let s:sync_resp = v:none
 
-  let timeout_ms = s:default_timeout_ms
-  if has_key(data, 'timeout')
-    let timeout_ms = data['timeout']
-    unlet data['timeout']
-  endif
-
   call iced#nrepl#send(data)
-  if !iced#util#wait({-> empty(s:sync_resp)}, timeout_ms)
+  if !iced#util#wait({-> empty(s:sync_resp)}, g:iced#nrepl#sync#timeout_ms)
     " timeout
     if has_key(data, 'session')
       call iced#nrepl#interrupt(data['session'])

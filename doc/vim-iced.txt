@@ -491,6 +491,11 @@ g:iced#nrepl#cljs#custom#start_code
 g:iced#nrepl#cljs#custom#stop_code
   Code to stop CLJS REPL in {custom} enviroment.
 
+                                                 *g:iced#nrepl#sync#timeout_ms*
+g:iced#nrepl#sync#timeout_ms
+  Time to timeout (unit: milli sec).
+  Default value is `3000`.
+
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
   If {v:true}, apply following mappings.
