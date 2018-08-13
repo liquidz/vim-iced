@@ -197,8 +197,13 @@ Commands                                                    *vim-iced-commands*
 
                                                                  *:IcedRequire*
 :IcedRequire
-  Require and reload current file in current session.
+  Load current file in current session.
   Key is mapped to |<Plug>(iced_require)|.
+
+                                                              *:IcedRequireAll*
+:IcedRequireAll
+  Require and reload current file in current session.
+  Key is mapped to |<Plug>(iced_require_all)|.
 
                                                                    *:IcedUndef*
 :IcedUndef [{symbol}]
@@ -247,8 +252,9 @@ Commands                                                    *vim-iced-commands*
   Key is mapped to |<Plug>(iced_def_back)|.
 
                                                             *:IcedDocumentOpen*
-:IcedDocumentOpen
-  Open preview window, and show documents for symbol under cursor.
+:IcedDocumentOpen [{symbol}]
+  Open preview window, and show documents for {symbol}.
+  If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_document_open)|.
 
                                                         *:IcedEchoFormDocument*
@@ -349,6 +355,10 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                          *<Plug>(iced_require)*
 <Plug>(iced_require)
   Same as |:IcedRequire|.
+
+                                                     *<Plug>(iced_require_all)*
+<Plug>(iced_require_all)
+  Same as |:IcedRequireAll|.
 
                                                            *<Plug>(iced_undef)*
 <Plug>(iced_undef)
@@ -481,6 +491,7 @@ g:iced_enable_default_key_mappings
   <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Leader>et     <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
   <Leader>eb     <Plug>(iced_require)
+  <Leader>eB     <Plug>(iced_require_all)
   <Leader>eu     <Plug>(iced_undef)
   <Leader>ma     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
   <Leader>m1     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
