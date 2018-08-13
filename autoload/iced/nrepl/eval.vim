@@ -45,7 +45,8 @@ function! iced#nrepl#eval#code(code) abort
 endfunction
 
 function! iced#nrepl#eval#repl(code) abort
-  call iced#nrepl#eval(a:code, funcref('s:out'), 'repl')
+  call iced#nrepl#eval(a:code, funcref('s:out'),
+      \ {'session': 'repl'})
 endfunction
 
 let &cpo = s:save_cpo
