@@ -13,8 +13,9 @@ function! iced#format#form() abort
   let view = winsaveview()
   let reg_save = @@
   try
-    silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
-    silent normal! va(y
+    " move to the start position of current paragraph
+    " and select
+    silent normal! {jva(y
     let code = @@
     if code[0] !=# '('
       exe "normal! \<Esc>"
