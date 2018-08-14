@@ -39,7 +39,6 @@ function! s:apply_buffer_settings() abort
   call setbufvar(n, '&buflisted', 0)
   call setbufvar(n, '&buftype', 'nofile')
   call setbufvar(n, '&filetype', 'clojure')
-  call setbufvar(n, '&modifiable', 0)
   call setbufvar(n, '&swapfile', 0)
 endfunction
 
@@ -98,12 +97,10 @@ function! iced#buffer#append(s) abort
     return
   endif
 
-  call setbufvar(n, '&modifiable', 1)
   for line in split(a:s, '\r\?\n')
     let line = s:delete_color_code(line)
-    call appendbufline(n, '$', line)
+    silent call appendbufline(n, '$', line)
   endfor
-  call setbufvar(n, '&modifiable', 0)
 
   " scroll to bottom
   if s:is_visible()
@@ -120,10 +117,8 @@ function! iced#buffer#clear() abort
 
   call iced#buffer#open()
 
-  setlocal modifiable
   silent normal! ggdG
   call s:set_init_text()
-  setlocal nomodifiable
 
   if visibled
     call s:focus_window(current_window)
