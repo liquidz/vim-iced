@@ -417,7 +417,7 @@ Key Mappings                                            *vim-iced-key-mappings*
   aug vim_iced_echo_document_setting
     au!
     au FileType clojure setl updatetime=1000
-    au CursorHoldI <buffer> execute "normal \<Plug>(iced_echo_form_document)"
+    au CursorHoldI <buffer> call iced#nrepl#document#echo_current_form()
   aug END
 <
 
