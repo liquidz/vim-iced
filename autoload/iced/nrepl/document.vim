@@ -71,7 +71,6 @@ endfunction
 
 function! iced#nrepl#document#echo_current_form() abort
   if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
     return
   endif
 
