@@ -258,11 +258,11 @@ Commands                                                    *vim-iced-commands*
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_document_open)|.
 
-                                                        *:IcedEchoFormDocument*
-:IcedEchoFormDocument
+                                                            *:IcedFormDocument*
+:IcedFormDocument
   Echo one-line document for form under cursor.
   This is useful to show document while editing codes.
-  See details |<Plug>(iced_echo_form_document)|.
+  See details |<Plug>(iced_form_document)|.
 
                                                                    *:IcedSlurp*
 :IcedSlurp
@@ -409,15 +409,15 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_document_open)
   Same as |:IcedDocumentOpen|.
 
-                                              *<Plug>(iced_echo_form_document)*
-<Plug>(iced_echo_form_document)
+                                                   *<Plug>(iced_form_document)*
+<Plug>(iced_form_document)
   Same as |:IcedEchoFormDocument|.
   This is convinient to display documents about the form you are editing.
 >
   aug vim_iced_echo_document_setting
     au!
     au FileType clojure setl updatetime=1000
-    au CursorHoldI <buffer> call iced#nrepl#document#echo_current_form()
+    au CursorHoldI <buffer> call iced#nrepl#document#current_form()
   aug END
 <
 

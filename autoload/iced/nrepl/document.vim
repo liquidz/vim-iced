@@ -72,15 +72,19 @@ function! iced#nrepl#document#open(symbol) abort
 endfunction
 
 function! s:one_line_doc(resp) abort
-  if has_key(a:resp, 'ns')
-    let name = printf('%s/%s', a:resp['ns'], a:resp['name'])
-    let arglists = get(a:resp, 'arglists-str', '')
-    let args = substitute(arglists, '\r\?\n', ' ', 'g')
-    echo printf('%s %s', name, args)
+  if iced#preview#type() ==# 'document'
+    call iced#preview#view(s:generate_doc(a:resp))
+  else
+    if has_key(a:resp, 'ns')
+      let name = printf('%s/%s', a:resp['ns'], a:resp['name'])
+      let arglists = get(a:resp, 'arglists-str', '')
+      let args = substitute(arglists, '\r\?\n', ' ', 'g')
+      echo printf('%s %s', name, args)
+    endif
   endif
 endfunction
 
-function! iced#nrepl#document#echo_current_form() abort
+function! iced#nrepl#document#current_form() abort
   if !iced#nrepl#is_connected()
     return
   endif
