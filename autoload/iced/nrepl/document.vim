@@ -94,8 +94,8 @@ function! iced#nrepl#document#open(symbol) abort
     return
   endif
 
-  let kw = empty(a:symbol) ? expand('<cword>') : a:symbol
-  call iced#nrepl#cider#info(kw, funcref('s:view_doc'))
+  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  call iced#nrepl#cider#info(symbol, funcref('s:view_doc'))
 endfunction
 
 function! s:one_line_doc(resp) abort
