@@ -120,16 +120,19 @@ function! s:dispatcher(ch, resp) abort
     let resp = iced#nrepl#bencode#decode(text)
     let s:response_buffer = ''
     let id = s:get_message_id(resp)
+    let is_verbose = get(get(s:messages, id, {}), 'verbose', v:true)
 
-    for rsp in iced#util#ensure_array(resp)
-      if type(rsp) == type({})
-        for k in ['out', 'err']
-          if has_key(rsp, k)
-            call iced#buffer#append(rsp[k])
-          endif
-        endfor
-      endif
-    endfor
+    if is_verbose
+      for rsp in iced#util#ensure_array(resp)
+        if type(rsp) == type({})
+          for k in ['out', 'err']
+            if has_key(rsp, k)
+              call iced#buffer#append(rsp[k])
+            endif
+          endfor
+        endif
+      endfor
+    endif
 
     if has_key(s:messages, id)
       let handler_result = v:none
@@ -181,6 +184,11 @@ function! iced#nrepl#send(data) abort
   let id = s:get_message_id(data)
 
   let message = {'op': data['op']}
+
+  if has_key(data, 'verbose')
+    let message['verbose'] = data['verbose']
+    unlet data['verbose']
+  endif
 
   if has_key(data, 'callback')
     if iced#util#is_function(data['callback'])
