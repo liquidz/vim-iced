@@ -120,5 +120,11 @@ function! iced#nrepl#ns#require_all() abort
   endif
 endfunction
 
+function! iced#nrepl#ns#repl() abort
+  return (iced#nrepl#current_session_key() ==# 'clj')
+      \ ? 'clojure.repl'
+      \ : 'cljs.repl'
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
