@@ -22,7 +22,12 @@ endfunction
 function! s:generate_doc(resp) abort
   if has_key(a:resp, 'status') && a:resp['status'] == ['done']
     let doc = []
-    call add(doc, printf('%s/%s', a:resp['ns'], a:resp['name']))
+    if has_key(a:resp, 'ns')
+      call add(doc, printf('%s/%s', a:resp['ns'], a:resp['name']))
+    else
+      call add(doc, a:resp['name'])
+    endif
+
     if has_key(a:resp, 'arglists-str')
       call add(doc, printf('  %s', join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")))
     endif
