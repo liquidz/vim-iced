@@ -19,36 +19,63 @@ function! s:format_spec(x) abort
   endif
 endfunction
 
+function! s:generate_javadoc(resp) abort
+  let doc = []
+  call add(doc, printf('%s/%s', a:resp['class'], a:resp['member']))
+
+  if has_key(a:resp, 'arglists-str')
+    call add(doc, printf('  %s', join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")))
+  endif
+
+  let docs = split(get(a:resp, 'doc', iced#message#get('no_document')), '\r\?\n')
+  call add(doc, printf('  %s', docs[0]))
+
+  if has_key(a:resp, 'returns')
+    call add(doc, '')
+    call add (doc, 'Returns:')
+    call add (doc, printf('  %s', a:resp['returns']))
+  endif
+
+  return doc
+endfunction
+
+function! s:generate_cljdoc(resp) abort
+  let doc = []
+  if has_key(a:resp, 'ns')
+    call add(doc, printf('%s/%s', a:resp['ns'], a:resp['name']))
+  else
+    call add(doc, a:resp['name'])
+  endif
+
+  if has_key(a:resp, 'arglists-str')
+    call add(doc, printf('  %s', join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")))
+  endif
+  let docs = split(get(a:resp, 'doc', iced#message#get('no_document')), '\r\?\n')
+  call add(doc, printf('  %s', docs[0]))
+  for doc_line in docs[1:]
+    call add(doc, doc_line)
+  endfor
+
+  if has_key(a:resp, 'spec')
+    call add(doc, '')
+    call add(doc, a:resp['spec'][0])
+    let specs = s:D.from_list(a:resp['spec'][1:])
+    for k in keys(specs)
+      let v = specs[k]
+      if k ==# ':args' || k ==# ':ret'
+        call add(doc, printf('%7s  %s', k, s:format_spec(v)))
+      endif
+    endfor
+  endif
+
+  return doc
+endfunction
+
 function! s:generate_doc(resp) abort
   if has_key(a:resp, 'status') && a:resp['status'] == ['done']
-    let doc = []
-    if has_key(a:resp, 'ns')
-      call add(doc, printf('%s/%s', a:resp['ns'], a:resp['name']))
-    else
-      call add(doc, a:resp['name'])
-    endif
-
-    if has_key(a:resp, 'arglists-str')
-      call add(doc, printf('  %s', join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")))
-    endif
-    let docs = split(get(a:resp, 'doc', iced#message#get('no_document')), '\r\?\n')
-    call add(doc, printf('  %s', docs[0]))
-    for doc_line in docs[1:]
-      call add(doc, doc_line)
-    endfor
-
-    if has_key(a:resp, 'spec')
-      call add(doc, '')
-      call add(doc, a:resp['spec'][0])
-      let specs = s:D.from_list(a:resp['spec'][1:])
-      for k in keys(specs)
-        let v = specs[k]
-        if k ==# ':args' || k ==# ':ret'
-          call add(doc, printf('%7s  %s', k, s:format_spec(v)))
-        endif
-      endfor
-    endif
-
+    let doc = (has_key(a:resp, 'javadoc')
+        \ ? s:generate_javadoc(a:resp)
+        \ : s:generate_cljdoc(a:resp))
     return (empty(doc) ? '' : join(doc, "\n"))
   else
     echom iced#message#get('not_found')
@@ -74,11 +101,15 @@ endfunction
 function! s:one_line_doc(resp) abort
   if iced#preview#type() ==# 'document'
     call iced#preview#view(s:generate_doc(a:resp))
+    call iced#preview#set_type('document')
   else
-    if has_key(a:resp, 'ns')
+    if has_key(a:resp, 'javadoc')
+      let name =  printf('%s/%s', a:resp['class'], a:resp['member'])
+      let args = substitute(get(a:resp, 'arglists-str', ''), '\r\?\n', ' ', 'g')
+      echo printf('%s %s %s', a:resp['returns'], name, args)
+    elseif has_key(a:resp, 'ns')
       let name = printf('%s/%s', a:resp['ns'], a:resp['name'])
-      let arglists = get(a:resp, 'arglists-str', '')
-      let args = substitute(arglists, '\r\?\n', ' ', 'g')
+      let args = substitute(get(a:resp, 'arglists-str', ''), '\r\?\n', ' ', 'g')
       echo printf('%s %s', name, args)
     endif
   endif
