@@ -264,6 +264,12 @@ Commands                                                    *vim-iced-commands*
   This is useful to show document while editing codes.
   See details |<Plug>(iced_form_document)|.
 
+                                                              *:IcedSourceShow*
+:IcedSourceShow [{symbol}]
+  Open preview window, and show source codes for {symbol}
+  If {symbol} is not passed, symbol under cursor is used.
+  Key is mapped to |<Plug>(iced_source_show)|.
+
                                                                    *:IcedSlurp*
 :IcedSlurp
   Slurp next element.
@@ -421,6 +427,10 @@ Key Mappings                                            *vim-iced-key-mappings*
   aug END
 <
 
+                                                     *<Plug>(iced_source_show)*
+<Plug>(iced_source_show)
+  Same as |:IcedSourceShow|.
+
                                                            *<Plug>(iced_slurp)*
 <Plug>(iced_slurp)
   Same as |:IcedSlurp|.
@@ -520,6 +530,7 @@ g:iced_enable_default_key_mappings
   <Leader>ss     <Plug>(iced_buffer_open)
   <Leader>rcn    <Plug>(iced_clean_ns)
   <Leader>ram    <Plug>(iced_add_missing)
+  <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>gn     <Plug>(iced_browse_namespace)
   <C-]>          <Plug>(iced_def_jump)
