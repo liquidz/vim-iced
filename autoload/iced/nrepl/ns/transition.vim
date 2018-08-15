@@ -23,18 +23,20 @@ function! s:open(mode, ns_name) abort
       \ {resp -> s:open_response(a:mode, resp)})
 endfunction
 
+function! iced#nrepl#ns#transition#cycle(ns) abort
+  return (s:S.ends_with(a:ns, '-test')
+      \ ? substitute(a:ns, '-test$', '', '')
+      \ : a:ns . '-test'
+      \ )
+endfunction
+
 function! iced#nrepl#ns#transition#toggle_src_and_test() abort
   if !iced#nrepl#is_connected()
     return iced#message#error('not_connected')
   endif
 
   let ns = iced#nrepl#ns#name()
-  if s:S.ends_with(ns, '-test')
-    let toggle_ns = substitute(ns, '-test$', '', '')
-  else
-    let toggle_ns = ns . '-test'
-  endif
-
+  let toggle_ns = iced#nrepl#ns#transition#cycle(ns)
   call s:open('e', toggle_ns)
 endfunction
 

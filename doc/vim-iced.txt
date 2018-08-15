@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojunre interactive development environment for Vim8
 
-Version: 0.0.7
+Version: 0.0.8
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -14,6 +14,7 @@ ClojureScript        |vim-iced-clojurescript|
 Evaluating           |vim-iced-evaluating|
   Stdout Buffer      |vim-iced-stdout-buffer|
 Testing              |vim-iced-testing|
+Skeleton             |vim-iced-skeleton|
 Tag Jump             |vim-iced-tag-jump|
 Editing S-exp        |vim-iced-editing-s-exp|
   Formatting         |vim-iced-formatting|
@@ -115,6 +116,15 @@ Testing                                                      *vim-iced-testing*
   - |:IcedTestNs|
   - |:IcedTestAll|
   - |:IcedTestRedo|
+
+==============================================================================
+Skeleton                                                    *vim-iced-skeleton*
+
+  vim-iced provides code skeleton when you open new clojure files.
+  Currently, these extensions are supported.
+  - `*.clj`
+  - `*.cljs`
+  - `*.cljc`
 
 ==============================================================================
 Tag Jump                                                    *vim-iced-tag-jump*
@@ -258,11 +268,17 @@ Commands                                                    *vim-iced-commands*
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_document_open)|.
 
-                                                        *:IcedEchoFormDocument*
-:IcedEchoFormDocument
+                                                            *:IcedFormDocument*
+:IcedFormDocument
   Echo one-line document for form under cursor.
   This is useful to show document while editing codes.
-  See details |<Plug>(iced_echo_form_document)|.
+  See details |<Plug>(iced_form_document)|.
+
+                                                              *:IcedSourceShow*
+:IcedSourceShow [{symbol}]
+  Open preview window, and show source codes for {symbol}
+  If {symbol} is not passed, symbol under cursor is used.
+  Key is mapped to |<Plug>(iced_source_show)|.
 
                                                                    *:IcedSlurp*
 :IcedSlurp
@@ -409,17 +425,21 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_document_open)
   Same as |:IcedDocumentOpen|.
 
-                                              *<Plug>(iced_echo_form_document)*
-<Plug>(iced_echo_form_document)
+                                                   *<Plug>(iced_form_document)*
+<Plug>(iced_form_document)
   Same as |:IcedEchoFormDocument|.
   This is convinient to display documents about the form you are editing.
 >
   aug vim_iced_echo_document_setting
     au!
     au FileType clojure setl updatetime=1000
-    au CursorHoldI <buffer> execute "normal \<Plug>(iced_echo_form_document)"
+    au CursorHoldI <buffer> call iced#nrepl#document#current_form()
   aug END
 <
+
+                                                     *<Plug>(iced_source_show)*
+<Plug>(iced_source_show)
+  Same as |:IcedSourceShow|.
 
                                                            *<Plug>(iced_slurp)*
 <Plug>(iced_slurp)
@@ -520,6 +540,7 @@ g:iced_enable_default_key_mappings
   <Leader>ss     <Plug>(iced_buffer_open)
   <Leader>rcn    <Plug>(iced_clean_ns)
   <Leader>ram    <Plug>(iced_add_missing)
+  <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>gn     <Plug>(iced_browse_namespace)
   <C-]>          <Plug>(iced_def_jump)
