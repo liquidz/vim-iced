@@ -104,7 +104,7 @@ function! iced#buffer#append(s) abort
 
   " scroll to bottom
   if s:is_visible()
-    let current_window = bufwinnr(bufnr('%'))
+    let current_window = winnr()
     call s:focus_window(s:repl_bufwinnr())
     silent normal! G
     call s:focus_window(current_window)
