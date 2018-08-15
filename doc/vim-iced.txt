@@ -14,6 +14,7 @@ ClojureScript        |vim-iced-clojurescript|
 Evaluating           |vim-iced-evaluating|
   Stdout Buffer      |vim-iced-stdout-buffer|
 Testing              |vim-iced-testing|
+Skeleton             |vim-iced-skeleton|
 Tag Jump             |vim-iced-tag-jump|
 Editing S-exp        |vim-iced-editing-s-exp|
   Formatting         |vim-iced-formatting|
@@ -115,6 +116,15 @@ Testing                                                      *vim-iced-testing*
   - |:IcedTestNs|
   - |:IcedTestAll|
   - |:IcedTestRedo|
+
+==============================================================================
+Skeleton                                                    *vim-iced-skeleton*
+
+  vim-iced provides code skeleton when you open new clojure files.
+  Currently, these extensions are supported.
+  - `*.clj`
+  - `*.cljs`
+  - `*.cljc`
 
 ==============================================================================
 Tag Jump                                                    *vim-iced-tag-jump*
