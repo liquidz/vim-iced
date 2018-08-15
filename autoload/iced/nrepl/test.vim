@@ -2,13 +2,11 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! s:error_message(test) abort
-  let msg = [
-      \ has_key(a:test, 'context') ? printf('%s <%s>', a:test['var'], a:test['context'])
-      \                            : a:test['var'],
-      \ printf('expected: %s', trim(a:test['expected'])),
-      \ printf('actual: %s', trim(a:test['actual'])),
-      \ ]
-  return join(msg, ', ')
+  if has_key(a:test, 'context')
+    return printf('%s: %s', a:test['var'], a:test['context'])
+  else
+    return a:test['var']
+  endif
 endfunction
 
 function! s:summary(resp) abort
@@ -48,6 +46,9 @@ function! s:collect_errors(resp) abort
                   \ 'filename': ns_path_resp['path'],
                   \ 'lnum': test['line'],
                   \ 'text': s:error_message(test),
+                  \ 'expected': trim(get(test, 'expected', '')),
+                  \ 'actual': trim(get(test, 'actual', '')),
+                  \ 'type': 'E',
                   \ })
             endif
           elseif test['type'] ==# 'error'
@@ -56,7 +57,10 @@ function! s:collect_errors(resp) abort
               call add(errors, {
                   \ 'filename': ns_path_resp['path'],
                   \ 'lnum': test['line'],
-                  \ 'text': test['error'],
+                  \ 'text': s:error_message(test),
+                  \ 'expected': trim(get(test, 'expected', '')),
+                  \ 'actual': test['error'],
+                  \ 'type': 'E',
                   \ })
             endif
           endif
@@ -77,9 +81,20 @@ function! s:out(resp) abort
   endif
 
   let errors = s:collect_errors(a:resp)
+  let expected_and_actuals = []
   for err in errors
     call iced#sign#place_error(err['lnum'], err['filename'])
+
+    if has_key(err, 'expected') && has_key(err, 'actual')
+      let expected_and_actuals = expected_and_actuals + [
+          \ printf(';; %s', err['text']),
+          \ printf('Expected: %s', join(split(err['expected'], '\r\?\n'), "\n          ")),
+          \ printf('Actual  : %s', join(split(err['actual'], '\r\?\n'), "\n          ")),
+          \ '']
+    endif
   endfor
+
+  call iced#preview#view(join(expected_and_actuals, "\n"), 'clojure')
   call iced#qf#set(errors)
 endfunction
 
