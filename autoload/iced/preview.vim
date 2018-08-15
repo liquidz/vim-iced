@@ -33,12 +33,14 @@ function! iced#preview#set_type(v) abort
 endfunction
 
 function! iced#preview#open() abort
-  execute printf(':pedit %s', s:temp_file_path)
+  silent execute printf(':pedit +set\ nomodifiable %s', s:temp_file_path)
   call iced#preview#set_type(v:none)
 endfunction
 
 function! iced#preview#view(text, ...) abort
-  if !empty(a:text)
+  if empty(a:text)
+    pclose
+  else
     let ft = get(a:, 1, 'text')
     call writefile(split(a:text, '\r\?\n'), s:temp_file_path)
     call writefile(['', printf('vim:ft=%s', ft)], s:temp_file_path, 'a')
