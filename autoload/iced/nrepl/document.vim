@@ -55,6 +55,12 @@ function! s:generate_doc(resp) abort
   endif
 endfunction
 
+function! s:view_doc(resp) abort
+  let doc = s:generate_doc(a:resp)
+  call iced#preview#view(doc)
+  call iced#preview#set_type('document')
+endfunction
+
 function! iced#nrepl#document#open(symbol) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
@@ -62,7 +68,7 @@ function! iced#nrepl#document#open(symbol) abort
   endif
 
   let kw = empty(a:symbol) ? expand('<cword>') : a:symbol
-  call iced#nrepl#cider#info(kw, {resp -> iced#preview#view(s:generate_doc(resp))})
+  call iced#nrepl#cider#info(kw, funcref('s:view_doc'))
 endfunction
 
 function! s:one_line_doc(resp) abort
