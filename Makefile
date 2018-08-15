@@ -1,4 +1,4 @@
-.PHONY: vital test themis lint clean
+.PHONY: all vital test themis lint clean
 
 PLUGIN_NAME = iced
 VITAL_MODULES = Data.Dict \
@@ -8,6 +8,8 @@ VITAL_MODULES = Data.Dict \
 								Vim.BufferManager \
 								Vim.Message \
 								Web.HTTP
+
+all: vital test
 
 vital:
 	vim -c "Vitalize . --name=$(PLUGIN_NAME) $(VITAL_MODULES)" -c q
