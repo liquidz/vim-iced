@@ -94,7 +94,8 @@ nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
 aug vim_iced_initial_setting
   au!
   au FileType clojure setl omnifunc=iced#complete#omni
-  au VimLeave *       call iced#nrepl#disconnect()
+  au BufNewFile *.clj,*.cljs,*.cljc call iced#skeleton#new()
+  au VimLeave * call iced#nrepl#disconnect()
 aug END
 "" }}}
 
