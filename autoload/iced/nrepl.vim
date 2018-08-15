@@ -124,12 +124,15 @@ function! s:dispatcher(ch, resp) abort
 
     if is_verbose
       for rsp in iced#util#ensure_array(resp)
-        if type(rsp) == type({})
-          for k in ['out', 'err']
-            if has_key(rsp, k)
-              call iced#buffer#append(rsp[k])
-            endif
-          endfor
+        if type(rsp) != type({})
+          break
+        endif
+
+        if has_key(rsp, 'out')
+          call iced#buffer#append(rsp['out'])
+        endif
+        if has_key(rsp, 'err')
+          call iced#buffer#append(rsp['err'])
         endif
       endfor
     endif
