@@ -80,10 +80,13 @@ function! iced#buffer#open() abort
   if s:is_visible()
     call s:focus_window(s:repl_bufwinnr())
   else
+    let current_window = winnr()
     call s:B.open(n, {
         \ 'opener': 'split',
         \ 'mods': g:iced#buffer#mods,
         \ })
+    silent normal! G
+    call s:focus_window(current_window)
   endif
 endfunction
 

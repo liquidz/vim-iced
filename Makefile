@@ -1,4 +1,4 @@
-.PHONY: all vital test themis lint clean
+.PHONY: all vital test themis lint clean repl doc
 
 PLUGIN_NAME = iced
 VITAL_MODULES = Data.Dict \
@@ -28,3 +28,8 @@ lint:
 clean:
 	/bin/rm -rf autoload/vital*
 
+repl:
+	clojure -A:dev -m iced-repl
+
+doc:
+	clojure -A:dev -m document

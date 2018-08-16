@@ -302,7 +302,7 @@ function! iced#nrepl#eval(code, ...) abort
 
   let Callback = get(a:, 1, v:none)
   let option = get(a:, 2, {})
-  let session_key  = get(option, 'session', 'clj')
+  let session_key  = get(option, 'session', iced#nrepl#current_session_key())
   let session = get(s:nrepl['sessions'], session_key, iced#nrepl#current_session())
 
   let pos = getcurpos()

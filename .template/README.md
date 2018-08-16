@@ -49,15 +49,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
 
 * ~/.lein/profile.clj
 ```clj
-  {:user {:dependencies [[nrepl "0.4.4"] [cider/cider-nrepl "0.18.0"]
-                         [cider/orchard "0.3.0"] [cljfmt "0.6.0"]]
-          :plugins [[refactor-nrepl "2.4.0-SNAPSHOT"]]
-          :repl-options {:nrepl-middleware
-                           [cider.nrepl/wrap-complete cider.nrepl/wrap-format
-                            cider.nrepl/wrap-info cider.nrepl/wrap-macroexpand
-                            cider.nrepl/wrap-ns cider.nrepl/wrap-out
-                            cider.nrepl/wrap-spec cider.nrepl/wrap-test
-                            cider.nrepl/wrap-undef]}}}
+{{{lein-profile}}}
 ```
 
 [Boot](https://github.com/boot-clj/boot) configuration is also described in [vim-iced.txt](./doc/vim-iced.txt).

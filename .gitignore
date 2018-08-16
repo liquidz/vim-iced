@@ -1,3 +1,5 @@
 VIM_AUTO_RTP
 doc/tags
 .vim-themis
+.cpcache
+.nrepl-port

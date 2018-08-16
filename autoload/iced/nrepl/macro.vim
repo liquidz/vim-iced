@@ -3,7 +3,7 @@ set cpo&vim
 
 function! s:view(result) abort
   if has_key(a:result, 'value')
-    call iced#preview#view(a:result.value)
+    call iced#preview#view(a:result.value, 'clojure')
   endif
 endfunction
 
