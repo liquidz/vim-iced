@@ -9,6 +9,8 @@ CONTENTS                                                    *vim-iced-contents*
 
 Introduction         |vim-iced-introduction|
 Install              |vim-iced-install|
+  Leiningen          |vim-iced-leiningen|
+  Boot               |vim-iced-boot|
 nREPL Connection     |vim-iced-nrepl-connection|
 ClojureScript        |vim-iced-clojurescript|
 Evaluating           |vim-iced-evaluating|
@@ -29,26 +31,33 @@ Changelog            |vim-iced-changelog|
 ==============================================================================
 Introduction                                            *vim-iced-introduction*
 
-Clojure interactive development environment for Vim8.
+  Clojure interactive development environment for Vim8.
 
-Requirement:
- - Vim 8.1 or later
+  Requirement:
+  - Vim 8.1 or later
 
-Lateste Version:
- - https://github.com/liquidz/vim-iced
+  Lateste Version:
+  - https://github.com/liquidz/vim-iced
 
 ==============================================================================
 Install                                                      *vim-iced-install*
 
-Vim plugin dependencies:
+  Vim plugin dependencies:
+
   - vim-sexp
     https://github.com/guns/vim-sexp
-  -ctrlp.vim
+  - ctrlp.vim
     https://github.com/ctrlpvim/ctrlp.vim
     Required when selecting multiple candidates
 
-Clojure library dependencies:
-  - ~/.lein/profile.clj
+  Clojure library dependencies:
+  - Leiningen user: |vim-iced-leiningen|
+  - Boot user: |vim-iced-boot|
+
+------------------------------------------------------------------------------
+Leiningen                                                  *vim-iced-leiningen*
+
+  $HOME/.lein/profile.clj
 >
   {:user
    {:dependencies [[cider/cider-nrepl "0.18.0"]
@@ -65,7 +74,31 @@ Clojure library dependencies:
                                       cider.nrepl/wrap-undef]}
     :plugins [[refactor-nrepl "2.4.0-SNAPSHOT"]]}}
 <
+------------------------------------------------------------------------------
+Boot                                                            *vim-iced-boot*
 
+  $HOME/.boot/profile.boot
+>
+  (require 'boot.repl)
+
+  (swap! boot.repl/*default-dependencies*
+         concat '[[cider/cider-nrepl "0.18.0"]
+                  [cider/orchard "0.3.0"]
+                  [cljfmt "0.6.0"]
+                  [refactor-nrepl "2.4.0-SNAPSHOT"]])
+
+  (swap! boot.repl/*default-middleware*
+         concat '[cider.nrepl/wrap-complete
+                  cider.nrepl/wrap-format
+                  cider.nrepl/wrap-info
+                  cider.nrepl/wrap-macroexpand
+                  cider.nrepl/wrap-ns
+                  cider.nrepl/wrap-out
+                  cider.nrepl/wrap-spec
+                  cider.nrepl/wrap-test
+                  cider.nrepl/wrap-undef
+                  refactor-nrepl.middleware/wrap-refactor])
+<
 ==============================================================================
 nREPL Connection                                    *vim-iced-nrepl-connection*
 
