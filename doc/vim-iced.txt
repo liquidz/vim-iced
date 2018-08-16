@@ -518,6 +518,11 @@ g:iced#nrepl#sync#timeout_ms
   Time to timeout (unit: milli sec).
   Default value is `3000`.
 
+                                                             *g:iced#qf#height*
+g:iced#qf#height
+  Quickfix window height.
+  Default value is `5`.
+
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
   If {v:true}, apply following mappings.
