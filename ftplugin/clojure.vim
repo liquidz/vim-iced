@@ -41,6 +41,7 @@ command!          IcedSlurp            call iced#paredit#deep_slurp()
 command!          IcedBarf             call iced#paredit#barf()
 command!          IcedFormat           call iced#format#form()
 command!          IcedToggleSrcAndTest call iced#nrepl#ns#transition#toggle_src_and_test()
+command! -nargs=? IcedGrep             call iced#grep#exe(<q-args>)
 
 command!          IcedBrowseNamespace  call iced#nrepl#ns#transition#list()
 
@@ -83,6 +84,7 @@ nnoremap <silent> <Plug>(iced_slurp)               :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                :<C-u>IcedBarf<CR>
 nnoremap <silent> <Plug>(iced_format)              :<C-u>IcedFormat<CR>
 nnoremap <silent> <Plug>(iced_toggle_src_and_test) :<C-u>IcedToggleSrcAndTest<CR>
+nnoremap <silent> <Plug>(iced_grep)                :<C-u>IcedGrep<CR>
 
 nnoremap <silent> <Plug>(iced_browse_namespace)    :<C-u>IcedBrowseNamespace<CR>
 
@@ -173,6 +175,11 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_format)')
     silent! nmap <buffer> == <Plug>(iced_format)
+  endif
+
+  if !hasmapto('<Plug>(iced_grep)')
+    silent! nmap <buffer> <Leader>* <Plug>(iced_grep)
+    silent! nmap <buffer> <Leader>/ :<C-u>IcedGrep<Space>
   endif
 
   if !hasmapto('<Plug>(iced_document_open)')

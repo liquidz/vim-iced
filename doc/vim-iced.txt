@@ -302,6 +302,12 @@ Commands                                                    *vim-iced-commands*
   Switch between source file and test file.
   Key is mapped to |<Plug>(iced_toggle_src_and_test)|.
 
+                                                                    *:IcedGrep*
+:IcedGrep [{keyword}]
+  Execute |:grep| command with |g:iced#grep#target|.
+  If {keyword} is not passed, keyword under cursor is used.
+  Key is mapped to |<Plug>(iced_grep)|.
+
                                                          *:IcedBrowseNamespace*
 :IcedBrowseNamespace
   Browse project namespaces, and open selected namespace.
@@ -457,6 +463,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_toggle_src_and_test)
   Same as |:IcedToggleSrcAndTest|.
 
+                                                           *<Plug>(iced_grep)*
+<Plug>(iced_grep)
+  Same as |:IcedGrep|.
+
                                                 *<Plug>(iced_browse_namespace)*
 <Plug>(iced_browse_namespace)
   Same as |:IcedBrowseNamespace|.
@@ -523,6 +533,18 @@ g:iced#qf#height
   Quickfix window height.
   Default value is `5`.
 
+                                                           *g:iced#grep#target*
+g:iced#grep#target
+  Grep path target.
+  Following keywords are replaced.
+  - `{{user.dir}}`
+    Project root directory.
+  - `{{separator}}`
+    File path separator.
+
+  Default value is
+    `'{{user.dir}}{{separator}}**{{separator}}*.{clj,cljs,cljc}'`.
+
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
   If {v:true}, apply following mappings.
@@ -548,9 +570,10 @@ g:iced_enable_default_key_mappings
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>gn     <Plug>(iced_browse_namespace)
+  <Leader>*      <Plug>(iced_iced)
+  <Leader>/      :<C-u>IcedGrep<Space>
   <C-]>          <Plug>(iced_def_jump)
   <C-t>          <Plug>(iced_def_back)
-  <Leader>rcn    <Plug>(iced_clean_ns)
   K              <Plug>(iced_document_open)
   ==             <Plug>(iced_format)
 
