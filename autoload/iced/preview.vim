@@ -33,7 +33,7 @@ function! iced#preview#set_type(v) abort
 endfunction
 
 function! iced#preview#open() abort
-  silent execute printf(':pedit +set\ nomodifiable %s', s:temp_file_path)
+  silent execute printf(':pedit %s', s:temp_file_path)
   call iced#preview#set_type(v:none)
 endfunction
 
