@@ -59,33 +59,14 @@ Leiningen                                                  *vim-iced-leiningen*
 
   $HOME/.lein/profile.clj
 >
-  {:user {:dependencies [[nrepl "0.4.4"] [cider/cider-nrepl "0.18.0"]
-                         [cider/orchard "0.3.0"] [cljfmt "0.6.0"]]
-          :plugins [[refactor-nrepl "2.4.0-SNAPSHOT"]]
-          :repl-options {:nrepl-middleware
-                           [cider.nrepl/wrap-complete cider.nrepl/wrap-format
-                            cider.nrepl/wrap-info cider.nrepl/wrap-macroexpand
-                            cider.nrepl/wrap-ns cider.nrepl/wrap-out
-                            cider.nrepl/wrap-spec cider.nrepl/wrap-test
-                            cider.nrepl/wrap-undef]}}}
+{{{lein-profile}}}
 <
 ------------------------------------------------------------------------------
 Boot                                                            *vim-iced-boot*
 
   $HOME/.boot/profile.boot
 >
-  (require (quote boot.repl))
-  
-  (swap! boot.repl/*default-dependencies* concat
-    (quote [[nrepl "0.4.4"] [refactor-nrepl "2.4.0-SNAPSHOT"]
-            [cider/cider-nrepl "0.18.0"] [cider/orchard "0.3.0"]
-            [cljfmt "0.6.0"]]))
-  
-  (swap! boot.repl/*default-middleware* concat
-    (quote [cider.nrepl/wrap-complete cider.nrepl/wrap-format
-            cider.nrepl/wrap-info cider.nrepl/wrap-macroexpand cider.nrepl/wrap-ns
-            cider.nrepl/wrap-out cider.nrepl/wrap-spec cider.nrepl/wrap-test
-            cider.nrepl/wrap-undef refactor-nrepl.middleware/wrap-refactor]))
+{{{boot-profile}}}
 <
 ==============================================================================
 nREPL Connection                                    *vim-iced-nrepl-connection*
