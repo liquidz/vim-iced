@@ -1,6 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:V = vital#of('iced')
+let s:L = s:V.import('Data.List')
+
 function! s:error_message(test) abort
   if has_key(a:test, 'context') && !empty(a:test['context'])
     return printf('%s: %s', a:test['var'], a:test['context'])
@@ -26,6 +29,18 @@ function! s:summary(resp) abort
   return v:none
 endfunction
 
+function! s:extract_actual_values(test) abort
+  if !has_key(a:test, 'diffs') || type(a:test['diffs']) != type([])
+    return {'actual': trim(get(a:test, 'actual', ''))}
+  endif
+
+  let diffs = a:test['diffs'][0]
+  return {
+      \ 'actual': trim(diffs[0]),
+      \ 'diffs': printf("- %s\n+ %s", trim(diffs[1][0]), trim(diffs[1][1])),
+      \ }
+endfunction
+
 function! s:collect_errors(resp) abort
   let errors  = []
 
@@ -39,30 +54,26 @@ function! s:collect_errors(resp) abort
         let test_results = ns_results[test_name]
 
         for test in test_results
+          if test['type'] !=# 'fail' && test['type'] !=# 'error'
+            continue
+          endif
+
+          let ns_path_resp = iced#nrepl#cider#sync#ns_path(ns_name)
+          if type(ns_path_resp) != type({}) || !has_key(ns_path_resp, 'path')
+            continue
+          endif
+
+          let err = {
+                  \ 'filename': ns_path_resp['path'],
+                  \ 'lnum': test['line'],
+                  \ 'text': s:error_message(test),
+                  \ 'expected': trim(get(test, 'expected', '')),
+                  \ 'type': 'E',
+                  \ }
           if test['type'] ==# 'fail'
-            let ns_path_resp = iced#nrepl#cider#sync#ns_path(ns_name)
-            if type(ns_path_resp) == type({}) && has_key(ns_path_resp, 'path')
-              call add(errors, {
-                  \ 'filename': ns_path_resp['path'],
-                  \ 'lnum': test['line'],
-                  \ 'text': s:error_message(test),
-                  \ 'expected': trim(get(test, 'expected', '')),
-                  \ 'actual': trim(get(test, 'actual', '')),
-                  \ 'type': 'E',
-                  \ })
-            endif
+            call add(errors, extend(copy(err), s:extract_actual_values(test)))
           elseif test['type'] ==# 'error'
-            let ns_path_resp =  iced#nrepl#cider#sync#ns_path(ns_name)
-            if type(ns_path_resp) == type({}) && has_key(ns_path_resp, 'path')
-              call add(errors, {
-                  \ 'filename': ns_path_resp['path'],
-                  \ 'lnum': test['line'],
-                  \ 'text': s:error_message(test),
-                  \ 'expected': trim(get(test, 'expected', '')),
-                  \ 'actual': test['error'],
-                  \ 'type': 'E',
-                  \ })
-            endif
+            call add(errors, extend(copy(err), {'actual': test['error']}))
           endif
         endfor
       endfor
@@ -70,6 +81,26 @@ function! s:collect_errors(resp) abort
   endfor
 
   return errors
+endfunction
+
+function! s:dict_to_str(d, ...) abort
+  let ks = get(a:, 1, keys(a:d))
+  let n = len(s:L.max_by(ks, function('len')))
+  let res = []
+
+  for k in ks
+    if !has_key(a:d, k) || empty(a:d[k])
+      continue
+    endif
+
+    let vs = split(a:d[k], '\r\?\n')
+    call add(res, printf('%' . n . 's: %s', k, vs[0]))
+    for v in vs[1:]
+      call add(res, printf('%' . n . 's  %s', ' ', v))
+    endfor
+  endfor
+
+  return join(res, "\n")
 endfunction
 
 function! s:out(resp) abort
@@ -88,8 +119,7 @@ function! s:out(resp) abort
     if has_key(err, 'expected') && has_key(err, 'actual')
       let expected_and_actuals = expected_and_actuals + [
           \ printf(';; %s', err['text']),
-          \ printf('Expected: %s', join(split(err['expected'], '\r\?\n'), "\n          ")),
-          \ printf('Actual  : %s', join(split(err['actual'], '\r\?\n'), "\n          ")),
+          \ s:dict_to_str(err, ['expected', 'actual', 'diffs']),
           \ '']
     endif
   endfor
