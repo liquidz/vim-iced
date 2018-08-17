@@ -57,6 +57,10 @@ function! iced#nrepl#clj_session() abort
   return s:nrepl['sessions']['clj']
 endfunction
 
+function! iced#nrepl#cljs_session() abort
+  return s:nrepl['sessions']['cljs']
+endfunction
+
 function! iced#nrepl#repl_session() abort
   return s:nrepl['sessions']['repl']
 endfunction

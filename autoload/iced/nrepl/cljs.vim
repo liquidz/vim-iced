@@ -1,12 +1,33 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:switch_session(resp) abort
-  let session = iced#nrepl#repl_session()
-  let cljs_session = iced#nrepl#sync#clone(session)
+function! s:switch_session_to_cljs() abort
+  let repl_session = iced#nrepl#repl_session()
+  let cljs_session = iced#nrepl#sync#clone(repl_session)
   call iced#nrepl#set_session('cljs', cljs_session)
   call iced#nrepl#change_current_session('cljs')
-  echom iced#message#get('started_cljs_repl')
+  call iced#message#info('started_cljs_repl')
+endfunction
+
+function! s:switch_session_to_clj() abort
+  call iced#nrepl#sync#close(iced#nrepl#cljs_session())
+  call iced#nrepl#set_session('cljs', v:none)
+  call iced#nrepl#change_current_session('clj')
+  call iced#message#info('quitted_cljs_repl')
+endfunction
+
+function! iced#nrepl#cljs#switch_session(resp) abort
+  if !has_key(a:resp, 'ns') || !has_key(a:resp, 'session') || a:resp['session'] !=# iced#nrepl#repl_session()
+    return
+  endif
+
+  let ns = a:resp['ns']
+  let session_key = iced#nrepl#current_session_key()
+  if session_key ==# 'clj' && ns ==# 'cljs.user'
+    call s:switch_session_to_cljs()
+  elseif session_key ==# 'cljs' && ns !=# 'cljs.user'
+    call s:switch_session_to_clj()
+  endif
 endfunction
 
 let g:iced#nrepl#cljs#default_env = get(g:, 'iced#nrepl#cljs#default_env', 'figwheel')

@@ -40,12 +40,17 @@ function! s:out(resp) abort
   call iced#nrepl#eval#err(get(a:resp, 'err', v:none))
 endfunction
 
+function! s:repl_out(resp) abort
+  call s:out(a:resp)
+  call iced#nrepl#cljs#switch_session(a:resp)
+endfunction
+
 function! iced#nrepl#eval#code(code) abort
   call iced#nrepl#eval(a:code, funcref('s:out'))
 endfunction
 
 function! iced#nrepl#eval#repl(code) abort
-  call iced#nrepl#eval(a:code, funcref('s:out'),
+  call iced#nrepl#eval(a:code, funcref('s:repl_out'),
       \ {'session': 'repl'})
 endfunction
 
