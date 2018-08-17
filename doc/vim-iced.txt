@@ -259,6 +259,12 @@ Commands                                                    *vim-iced-commands*
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_undef)|.
 
+                                                        *:IcedEvalOuterTopList*
+:IcedEvalOuterTopList
+  Work same as `<Plug>(iced_eval)<Plug>(sexp_outer_top_list)`,
+  without scrolling.
+  Key is mapped to |<Plug>(iced_eval_outer_top_list)|.
+
                                                          *:IcedTestUnderCursor*
 :IcedTestUnderCursor
   Run test under cursor.
@@ -432,6 +438,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_undef)
   Same as |:IcedUndef|.
 
+                                             *<Plug>(iced_eval_outer_top_list)*
+<Plug>(iced_eval_outer_top_list)
+  Same as |:IcedEvalOuterTopList|.
+
                                                          *<Plug>(iced_test_ns)*
 <Plug>(iced_test_ns)
   Same as |:IcedTestNs|.
@@ -591,7 +601,7 @@ g:iced_enable_default_key_mappings
   <Leader>'      <Plug>(iced_connect)
   <Leader>ei     <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
-  <Leader>et     <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
+  <Leader>et     <Plug>(iced_eval_outer_top_list)
   <Leader>eb     <Plug>(iced_require)
   <Leader>eB     <Plug>(iced_require_all)
   <Leader>eu     <Plug>(iced_undef)

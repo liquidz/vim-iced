@@ -63,5 +63,26 @@ function! iced#nrepl#eval#undef(symbol) abort
   call iced#nrepl#cider#undef(symbol, {_ -> s:undefined(symbol)})
 endfunction
 
+function! iced#nrepl#eval#outer_top_list() abort
+  let view = winsaveview()
+  let reg_save = @@
+
+  try
+    " select current top list
+    call sexp#select_current_top_list('n', 0)
+    silent normal! y
+
+    let code = @@
+    if empty(code)
+      echom iced#message#get('finding_code_error')
+    else
+      call iced#nrepl#ns#eval({_ -> iced#nrepl#eval#code(code)})
+    endif
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+  endtry
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

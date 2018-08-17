@@ -20,6 +20,7 @@ command! -nargs=1 IcedEvalRepl         call iced#nrepl#eval#repl(<q-args>)
 command!          IcedRequire          call iced#nrepl#ns#require()
 command!          IcedRequireAll       call iced#nrepl#ns#require_all()
 command! -nargs=? IcedUndef            call iced#nrepl#eval#undef(<q-args>)
+command!          IcedEvalOuterTopList call iced#nrepl#eval#outer_top_list()
 
 command!          IcedTestNs           call iced#nrepl#test#ns()
 command!          IcedTestAll          call iced#nrepl#test#all()
@@ -63,6 +64,7 @@ nnoremap <silent> <Plug>(iced_macroexpand_1)       :<C-u>set opfunc=iced#operati
 nnoremap <silent> <Plug>(iced_require)             :<C-u>IcedRequire<CR>
 nnoremap <silent> <Plug>(iced_require_all)         :<C-u>IcedRequireAll<CR>
 nnoremap <silent> <Plug>(iced_undef)               :<C-u>IcedUndef<CR>
+nnoremap <silent> <Plug>(iced_eval_outer_top_list) :<C-u>IcedEvalOuterTopList<CR>
 
 nnoremap <silent> <Plug>(iced_test_ns)             :<C-u>IcedTestNs<CR>
 nnoremap <silent> <Plug>(iced_test_all)            :<C-u>IcedTestAll<CR>
@@ -114,7 +116,7 @@ function! s:default_key_mappings() abort
   if !hasmapto('<Plug>(iced_eval)')
     silent! nmap <buffer> <Leader>ei <Plug>(iced_eval)<Plug>(sexp_inner_element)``
     silent! nmap <buffer> <Leader>ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
-    silent! nmap <buffer> <Leader>et <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
+    silent! nmap <buffer> <Leader>et <Plug>(iced_eval_outer_top_list)
   endif
 
   if !hasmapto('<Plug>(iced_require)')
