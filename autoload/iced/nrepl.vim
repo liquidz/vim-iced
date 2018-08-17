@@ -12,10 +12,10 @@ function! s:initialize_nrepl() abort
       \   'clj':  v:none,
       \   'cljs': v:none,
       \   },
-      \ 'handler': {},
       \ }
 endfunction
 let s:nrepl = s:initialize_nrepl()
+let s:handlers = {}
 
 let s:messages = {}
 let s:response_buffer = ''
@@ -111,7 +111,7 @@ function! iced#nrepl#register_handler(op, ...) abort
   if !iced#util#is_function(Handler)
     throw 'handler must be funcref'
   endif
-  let s:nrepl['handler'][a:op] = Handler
+  let s:handlers[a:op] = Handler
 endfunction
 
 "" -----------
@@ -143,7 +143,7 @@ function! s:dispatcher(ch, resp) abort
 
     if has_key(s:messages, id)
       let handler_result = v:none
-      let Handler = get(s:nrepl['handler'], s:messages[id]['op'], v:none)
+      let Handler = get(s:handlers, s:messages[id]['op'], v:none)
       if iced#util#is_function(Handler)
         let handler_result = Handler(resp)
       endif
