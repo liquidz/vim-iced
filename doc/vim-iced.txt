@@ -209,6 +209,12 @@ Commands                                                    *vim-iced-commands*
   Automatically disconnected at leaving vim.
   Key is mapped to |<Plug>(iced_disconnect)|.
 
+                                                               *:IcedReconnect*
+:IcedReconnect
+  Disconnect from nREPL, and make connection to nREPL again.
+  Previous sessions are closed.
+  Key is mapped to |<Plug>(iced_reconnect)|.
+
                                                                *:IcedInterrupt*
 :IcedInterrupt
   Interrupt some code evaluation in current session.
@@ -389,6 +395,10 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                       *<Plug>(iced_disconnect)*
 <Plug>(iced_disconnect)
   Same as |:IcedDisconnect|.
+
+                                                       *<Plug>(iced_reconnect)*
+<Plug>(iced_reconnect)
+  Same as |:IcedReconnect|.
 
                                                        *<Plug>(iced_interrupt)*
 <Plug>(iced_interrupt)

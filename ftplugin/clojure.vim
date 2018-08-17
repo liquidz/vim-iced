@@ -9,6 +9,7 @@ set cpo&vim
 "" Commands {{{
 command! -nargs=? IcedConnect          call iced#nrepl#connect(<q-args>)
 command!          IcedDisconnect       call iced#nrepl#disconnect()
+command!          IcedReconnect        call iced#nrepl#reconnect()
 command!          IcedInterrupt        call iced#nrepl#interrupt()
 
 command! -nargs=? -complete=custom,iced#nrepl#cljs#env_complete
@@ -53,6 +54,7 @@ command! -nargs=? IcedAddMissing       call iced#nrepl#refactor#add_missing(<q-a
 "" Key mappings {{{
 nnoremap <silent> <Plug>(iced_connect)             :<C-u>IcedConnect<CR>
 nnoremap <silent> <Plug>(iced_disconnect)          :<C-u>IcedDisconnect<CR>
+nnoremap <silent> <Plug>(iced_reconnect)           :<C-u>IcedReconnect<CR>
 nnoremap <silent> <Plug>(iced_interrupt)           :<C-u>IcedInterrupt<CR>
 
 nnoremap <silent> <Plug>(iced_start_cljs_repl)     :<C-u>IcedStartCljsRepl<CR>

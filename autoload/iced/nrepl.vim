@@ -2,16 +2,20 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " NOTE: `current_session_key` must be 'clj' or 'cljs'
-let s:nrepl = {
-    \ 'channel': v:false,
-    \ 'current_session_key': v:none,
-    \ 'sessions': {
-    \   'repl': v:none,
-    \   'clj':  v:none,
-    \   'cljs': v:none,
-    \   },
-    \ 'handler': {},
-    \ }
+function! s:initialize_nrepl() abort
+  return {
+      \ 'port': v:none,
+      \ 'channel': v:false,
+      \ 'current_session_key': v:none,
+      \ 'sessions': {
+      \   'repl': v:none,
+      \   'clj':  v:none,
+      \   'cljs': v:none,
+      \   },
+      \ 'handler': {},
+      \ }
+endfunction
+let s:nrepl = s:initialize_nrepl()
 
 let s:messages = {}
 let s:response_buffer = ''
@@ -238,6 +242,7 @@ function! iced#nrepl#connect(port) abort
 
   if ! iced#nrepl#is_connected()
     let address = printf('%s:%d', g:iced#nrepl#host, a:port)
+    let s:nrepl['port'] = a:port
     let s:nrepl['channel'] = ch_open(address, {
         \ 'mode': 'raw',
         \ 'callback': funcref('s:dispatcher'),
@@ -267,6 +272,18 @@ function! iced#nrepl#disconnect() abort
     call iced#nrepl#sync#close(id)
   endfor
   call ch_close(s:nrepl['channel'])
+  call s:initialize_nrepl()
+endfunction
+
+function! iced#nrepl#reconnect() abort
+  if !iced#nrepl#is_connected()
+    return
+  endif
+
+  let port = s:nrepl['port']
+  call iced#nrepl#disconnect()
+  sleep 500m
+  call iced#nrepl#connect(port)
 endfunction
 
 function! s:interrupted() abort
