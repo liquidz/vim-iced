@@ -5,33 +5,16 @@ function! s:code(code) abort
   return printf('(do (require ''figwheel-sidecar.repl-api) %s)', a:code)
 endfunction
 
-function! s:start_repl(callback) abort
-  call iced#nrepl#send({
-      \ 'id': iced#nrepl#eval#id(),
-      \ 'op': 'eval',
-      \ 'code': s:code('(cider.piggieback/cljs-repl (figwheel-sidecar.repl-api/repl-env))'),
-      \ 'session': iced#nrepl#repl_session(),
-      \ 'callback': a:callback,
-      \ })
-endfunction
-
-function! s:start_figwheel(callback) abort
-  call iced#nrepl#send({
-      \ 'id': iced#nrepl#eval#id(),
-      \ 'op': 'eval',
-      \ 'code': s:code('(figwheel-sidecar.repl-api/start-figwheel!)'),
-      \ 'session': iced#nrepl#repl_session(),
-      \ 'callback': {_ -> s:start_repl(a:callback)},
-      \ })
+function! s:start_figwheel() abort
+  let code = printf('(do %s %s)',
+      \ s:code('(figwheel-sidecar.repl-api/start-figwheel!)'),
+      \ s:code('(cider.piggieback/cljs-repl (figwheel-sidecar.repl-api/repl-env))'),
+      \ )
+  call iced#nrepl#eval#repl(code)
 endfunction
 
 function! s:stop_figwheel() abort
-  call iced#nrepl#sync#send({
-      \ 'id': iced#nrepl#eval#id(),
-      \ 'op': 'eval',
-      \ 'code': s:code('(figwheel-sidecar.repl-api/stop-figwheel!)'),
-      \ 'session': iced#nrepl#repl_session(),
-      \ })
+  call iced#nrepl#eval#repl(s:code('(figwheel-sidecar.repl-api/stop-figwheel!)'))
 endfunction
 
 function! iced#nrepl#cljs#figwheel#get_env() abort
