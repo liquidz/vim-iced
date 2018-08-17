@@ -129,7 +129,9 @@ function! s:out(resp) abort
 endfunction
 
 function! s:test(resp) abort
-  if has_key(a:resp, 'value')
+  if has_key(a:resp, 'err')
+    call iced#nrepl#eval#err(a:resp['err'])
+  elseif has_key(a:resp, 'value')
     let var = a:resp['value']
     let i = stridx(var, '/')
     let var = var[i+1:]

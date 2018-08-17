@@ -1,12 +1,33 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:switch_session(resp) abort
-  let session = iced#nrepl#repl_session()
-  let cljs_session = iced#nrepl#sync#clone(session)
+function! s:switch_session_to_cljs() abort
+  let repl_session = iced#nrepl#repl_session()
+  let cljs_session = iced#nrepl#sync#clone(repl_session)
   call iced#nrepl#set_session('cljs', cljs_session)
   call iced#nrepl#change_current_session('cljs')
-  echom iced#message#get('started_cljs_repl')
+  call iced#message#info('started_cljs_repl')
+endfunction
+
+function! s:switch_session_to_clj() abort
+  call iced#nrepl#sync#close(iced#nrepl#cljs_session())
+  call iced#nrepl#set_session('cljs', v:none)
+  call iced#nrepl#change_current_session('clj')
+  call iced#message#info('quitted_cljs_repl')
+endfunction
+
+function! iced#nrepl#cljs#switch_session(resp) abort
+  if !has_key(a:resp, 'ns') || !has_key(a:resp, 'session') || a:resp['session'] !=# iced#nrepl#repl_session()
+    return
+  endif
+
+  let ns = a:resp['ns']
+  let session_key = iced#nrepl#current_session_key()
+  if session_key ==# 'clj' && ns ==# 'cljs.user'
+    call s:switch_session_to_cljs()
+  elseif session_key ==# 'cljs' && ns !=# 'cljs.user'
+    call s:switch_session_to_clj()
+  endif
 endfunction
 
 let g:iced#nrepl#cljs#default_env = get(g:, 'iced#nrepl#cljs#default_env', 'figwheel')
@@ -28,26 +49,19 @@ function! iced#nrepl#cljs#repl(env_key) abort
   if iced#nrepl#current_session_key() ==# 'clj' && empty(s:using_env_key)
     let s:using_env_key = env_key
     let env = s:env[s:using_env_key]()
-    call env['start'](funcref('s:switch_session'))
+    call env['start']()
   endif
 endfunction
 
 function! iced#nrepl#cljs#quit() abort
-  if iced#nrepl#current_session_key() ==# 'cljs' && !empty(s:using_env_key)
-    call iced#nrepl#sync#send({
-        \ 'id': iced#nrepl#eval#id(),
-        \ 'op': 'eval',
-        \ 'code': ':cljs/quit',
-        \ 'session': iced#nrepl#repl_session(),
-        \ })
+  if iced#nrepl#current_session_key() ==# 'cljs'
+    call iced#nrepl#eval#repl(':cljs/quit')
 
-    let env = s:env[s:using_env_key]()
-    call env['stop']()
-    let s:using_env_key = v:none
-
-    call iced#nrepl#sync#close(iced#nrepl#current_session())
-    call iced#nrepl#change_current_session('clj')
-    echom iced#message#get('quitted_cljs_repl')
+    if !empty(s:using_env_key)
+      let env = s:env[s:using_env_key]()
+      call env['stop']()
+      let s:using_env_key = v:none
+    endif
   endif
 endfunction
 

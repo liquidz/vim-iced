@@ -5,8 +5,4 @@
         cider/cider-nrepl {:mvn/version "0.18.0"}
         cider/orchard {:mvn/version "0.3.0"}
         cljfmt {:mvn/version "0.6.0"}}
-
- :aliases
- {:dev
-  {:extra-deps {zprint {:mvn/version "0.4.10"}}}}
 }

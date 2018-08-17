@@ -40,12 +40,17 @@ function! s:out(resp) abort
   call iced#nrepl#eval#err(get(a:resp, 'err', v:none))
 endfunction
 
+function! s:repl_out(resp) abort
+  call s:out(a:resp)
+  call iced#nrepl#cljs#switch_session(a:resp)
+endfunction
+
 function! iced#nrepl#eval#code(code) abort
   call iced#nrepl#eval(a:code, funcref('s:out'))
 endfunction
 
 function! iced#nrepl#eval#repl(code) abort
-  call iced#nrepl#eval(a:code, funcref('s:out'),
+  call iced#nrepl#eval(a:code, funcref('s:repl_out'),
       \ {'session': 'repl'})
 endfunction
 
@@ -61,6 +66,27 @@ function! iced#nrepl#eval#undef(symbol) abort
 
   let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
   call iced#nrepl#cider#undef(symbol, {_ -> s:undefined(symbol)})
+endfunction
+
+function! iced#nrepl#eval#outer_top_list() abort
+  let view = winsaveview()
+  let reg_save = @@
+
+  try
+    " select current top list
+    call sexp#select_current_top_list('n', 0)
+    silent normal! y
+
+    let code = @@
+    if empty(code)
+      echom iced#message#get('finding_code_error')
+    else
+      call iced#nrepl#ns#eval({_ -> iced#nrepl#eval#code(code)})
+    endif
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+  endtry
 endfunction
 
 let &cpo = s:save_cpo

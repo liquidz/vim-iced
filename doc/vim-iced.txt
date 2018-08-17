@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojunre interactive development environment for Vim8
 
-Version: 0.0.9
+Version: 0.0.10
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -59,14 +59,20 @@ Leiningen                                                  *vim-iced-leiningen*
 
   $HOME/.lein/profile.clj
 >
-  {:user {:dependencies [[nrepl "0.4.4"] [cider/cider-nrepl "0.18.0"]
-                         [cider/orchard "0.3.0"] [cljfmt "0.6.0"]]
+  {:user {:dependencies [[nrepl "0.4.4"]
+                         [cider/cider-nrepl "0.18.0"]
+                         [cider/orchard "0.3.0"]
+                         [cljfmt "0.6.0"]]
           :plugins [[refactor-nrepl "2.4.0-SNAPSHOT"]]
           :repl-options {:nrepl-middleware
-                           [cider.nrepl/wrap-complete cider.nrepl/wrap-format
-                            cider.nrepl/wrap-info cider.nrepl/wrap-macroexpand
-                            cider.nrepl/wrap-ns cider.nrepl/wrap-out
-                            cider.nrepl/wrap-spec cider.nrepl/wrap-test
+                           [cider.nrepl/wrap-complete
+                           cider.nrepl/wrap-format
+                            cider.nrepl/wrap-info
+                            cider.nrepl/wrap-macroexpand
+                            cider.nrepl/wrap-ns
+                            cider.nrepl/wrap-out
+                            cider.nrepl/wrap-spec
+                            cider.nrepl/wrap-test
                             cider.nrepl/wrap-undef]}}}
 <
 ------------------------------------------------------------------------------
@@ -75,17 +81,25 @@ Boot                                                            *vim-iced-boot*
   $HOME/.boot/profile.boot
 >
   (require (quote boot.repl))
-  
+
   (swap! boot.repl/*default-dependencies* concat
-    (quote [[nrepl "0.4.4"] [refactor-nrepl "2.4.0-SNAPSHOT"]
-            [cider/cider-nrepl "0.18.0"] [cider/orchard "0.3.0"]
-            [cljfmt "0.6.0"]]))
-  
+    '[[nrepl "0.4.4"]
+      [refactor-nrepl "2.4.0-SNAPSHOT"]
+      [cider/cider-nrepl "0.18.0"]
+      [cider/orchard "0.3.0"]
+      [cljfmt "0.6.0"]])
+
   (swap! boot.repl/*default-middleware* concat
-    (quote [cider.nrepl/wrap-complete cider.nrepl/wrap-format
-            cider.nrepl/wrap-info cider.nrepl/wrap-macroexpand cider.nrepl/wrap-ns
-            cider.nrepl/wrap-out cider.nrepl/wrap-spec cider.nrepl/wrap-test
-            cider.nrepl/wrap-undef refactor-nrepl.middleware/wrap-refactor]))
+    '[cider.nrepl/wrap-complete
+      cider.nrepl/wrap-format
+      cider.nrepl/wrap-info
+      cider.nrepl/wrap-macroexpand
+      cider.nrepl/wrap-ns
+      cider.nrepl/wrap-out
+      cider.nrepl/wrap-spec
+      cider.nrepl/wrap-test
+      cider.nrepl/wrap-undef
+      refactor-nrepl.middleware/wrap-refactor])
 <
 ==============================================================================
 nREPL Connection                                    *vim-iced-nrepl-connection*
@@ -195,6 +209,12 @@ Commands                                                    *vim-iced-commands*
   Automatically disconnected at leaving vim.
   Key is mapped to |<Plug>(iced_disconnect)|.
 
+                                                               *:IcedReconnect*
+:IcedReconnect
+  Disconnect from nREPL, and make connection to nREPL again.
+  Previous sessions are closed.
+  Key is mapped to |<Plug>(iced_reconnect)|.
+
                                                                *:IcedInterrupt*
 :IcedInterrupt
   Interrupt some code evaluation in current session.
@@ -244,6 +264,12 @@ Commands                                                    *vim-iced-commands*
   Undefine {symbol} in current namespace.
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_undef)|.
+
+                                                        *:IcedEvalOuterTopList*
+:IcedEvalOuterTopList
+  Work same as `<Plug>(iced_eval)<Plug>(sexp_outer_top_list)`,
+  without scrolling.
+  Key is mapped to |<Plug>(iced_eval_outer_top_list)|.
 
                                                          *:IcedTestUnderCursor*
 :IcedTestUnderCursor
@@ -370,6 +396,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_disconnect)
   Same as |:IcedDisconnect|.
 
+                                                       *<Plug>(iced_reconnect)*
+<Plug>(iced_reconnect)
+  Same as |:IcedReconnect|.
+
                                                        *<Plug>(iced_interrupt)*
 <Plug>(iced_interrupt)
   Same as |:IcedInterrupt|.
@@ -417,6 +447,10 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                            *<Plug>(iced_undef)*
 <Plug>(iced_undef)
   Same as |:IcedUndef|.
+
+                                             *<Plug>(iced_eval_outer_top_list)*
+<Plug>(iced_eval_outer_top_list)
+  Same as |:IcedEvalOuterTopList|.
 
                                                          *<Plug>(iced_test_ns)*
 <Plug>(iced_test_ns)
@@ -577,7 +611,7 @@ g:iced_enable_default_key_mappings
   <Leader>'      <Plug>(iced_connect)
   <Leader>ei     <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
-  <Leader>et     <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
+  <Leader>et     <Plug>(iced_eval_outer_top_list)
   <Leader>eb     <Plug>(iced_require)
   <Leader>eB     <Plug>(iced_require_all)
   <Leader>eu     <Plug>(iced_undef)
