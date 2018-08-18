@@ -44,7 +44,6 @@ function! iced#nrepl#current_session() abort
   return get(s:nrepl['sessions'], k, v:none)
 endfunction
 
-
 function! iced#nrepl#change_current_session(k) abort
   if a:k =~# 'cljs\?'
     let s:nrepl['current_session_key'] = a:k
@@ -268,21 +267,18 @@ function! iced#nrepl#is_connected() abort
 endfunction
 
 function! iced#nrepl#disconnect() abort
-  if !iced#nrepl#is_connected()
-    return
-  endif
+  if !iced#nrepl#is_connected() | return | endif
 
   for id in iced#nrepl#sync#session_list()
     call iced#nrepl#sync#close(id)
   endfor
   call ch_close(s:nrepl['channel'])
   call s:initialize_nrepl()
+  call iced#cache#clear()
 endfunction
 
 function! iced#nrepl#reconnect() abort
-  if !iced#nrepl#is_connected()
-    return
-  endif
+  if !iced#nrepl#is_connected() | return | endif
 
   let port = s:nrepl['port']
   call iced#nrepl#disconnect()
