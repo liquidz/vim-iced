@@ -2,7 +2,7 @@ scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V  = vital#of('iced')
+let s:V  = vital#iced#new()
 let s:S  = s:V.import('Data.String')
 let s:B  = s:V.import('Vim.Buffer')
 let s:BM = s:V.import('Vim.BufferManager')
