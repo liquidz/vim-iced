@@ -22,7 +22,7 @@ function! iced#nrepl#ns#replace(new_ns) abort
     let view['lnum'] = view['lnum'] + (after_lnum - before_lnum)
 
     if before_lnum == 1
-      call deletebufline('.', line('.'), 1)
+      call deletebufline('%', line('.'), 1)
     endif
 
     let lnum = line('.') - 1
