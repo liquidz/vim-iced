@@ -10,15 +10,14 @@ function! iced#grep#exe(kw) abort
     return
   endif
 
-  let info = iced#nrepl#system#info()
-  if !has_key(info, 'user_dir')
-    return
-  endif
+  let user_dir = iced#nrepl#system#user_dir()
+  let separator = iced#nrepl#system#separator()
+  if user_dir == v:none || separator == v:none | return | endif
 
   let kw = empty(a:kw) ? expand('<cword>') : a:kw
   let target = g:iced#grep#target
-  let target = substitute(target, '{{user\.dir}}', info['user_dir'], 'g')
-  let target = substitute(target, '{{separator}}', info['separator'], 'g')
+  let target = substitute(target, '{{user\.dir}}', user_dir, 'g')
+  let target = substitute(target, '{{separator}}', separator, 'g')
 
   silent exe printf(':grep %s %s', kw, target)
   redraw!

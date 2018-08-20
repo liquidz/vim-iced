@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V = vital#of('iced')
+let s:V = vital#iced#new()
 let s:Http = s:V.import('Web.HTTP')
 
 let s:grimoire_url = 'https://conj.io'

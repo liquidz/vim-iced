@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! iced#nrepl#cider#sync#complete(base, context) abort
+function! iced#nrepl#cider#sync#complete(base, ns_name, context) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
     return v:none
@@ -10,6 +10,7 @@ function! iced#nrepl#cider#sync#complete(base, context) abort
   let msg = {
         \ 'op': 'complete',
         \ 'session': iced#nrepl#current_session(),
+        \ 'ns': a:ns_name,
         \ 'symbol': a:base,
         \ 'extra-metadata': ['arglists', 'doc'],
         \ }

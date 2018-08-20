@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V = vital#of('iced')
+let s:V = vital#iced#new()
 let s:L = s:V.import('Data.List')
 
 function! s:error_message(test) abort

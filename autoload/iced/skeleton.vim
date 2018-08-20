@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V = vital#of('iced')
+let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 
 function! s:src_skeleton_list(ns) abort
@@ -43,14 +43,15 @@ function! iced#skeleton#new() abort
   endif
 
   let path = expand('%:p:r')
-  let info = iced#nrepl#system#info()
+  let user_dir = iced#nrepl#system#user_dir()
+  let separator = iced#nrepl#system#separator()
 
-  if type(info) != type({}) || stridx(path, info['user_dir']) != 0
+  if user_dir == v:none || stridx(path, user_dir) != 0
     return
   endif
 
-  let path = strpart(path, len(info['user_dir'])+1)
-  let ns = substitute(join(split(path, info['separator'])[1:], '.'), '_', '-', 'g')
+  let path = strpart(path, len(user_dir)+1)
+  let ns = substitute(join(split(path, separator)[1:], '.'), '_', '-', 'g')
 
   let lines = []
   let ext = expand('%:e')

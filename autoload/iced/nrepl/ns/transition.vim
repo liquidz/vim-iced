@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V = vital#of('iced')
+let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 
 function! s:open_response(mode, resp) abort

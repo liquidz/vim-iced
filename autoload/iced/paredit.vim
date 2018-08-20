@@ -13,10 +13,9 @@ function! s:slurp(current_view, depth) abort
 
     if before == after
       call sexp#move_to_nearest_bracket('n', 0)
-      call sexp#move_to_nearest_bracket('n', 0)
       call s:slurp(a:current_view, a:depth + 1)
     else
-      execute ':normal =='
+      silent call iced#format#minimal()
       call winrestview(a:current_view)
     endif
   endif

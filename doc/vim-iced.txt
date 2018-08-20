@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojunre interactive development environment for Vim8
 
-Version: 0.0.10
+Version: 0.0.11
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
