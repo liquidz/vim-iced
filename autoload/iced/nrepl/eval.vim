@@ -37,6 +37,10 @@ function! s:out(resp) abort
     echo a:resp['value']
   endif
 
+  if has_key(a:resp, 'ex') && !empty(a:resp['ex'])
+    call iced#message#error_str(a:resp['ex'])
+  endif
+
   call iced#nrepl#eval#err(get(a:resp, 'err', v:none))
 endfunction
 
