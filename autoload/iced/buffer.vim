@@ -1,4 +1,3 @@
-scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -27,7 +26,7 @@ function! iced#buffer#is_initialized(bufname) abort
 endfunction
 
 function! s:buffer_manager() abort
-  if s:manager == v:none
+  if type(s:manager) != type({})
     let s:manager = s:BM.new()
   endif
 
