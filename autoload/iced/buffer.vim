@@ -58,6 +58,10 @@ function! s:apply_option(opt) abort
   elseif get(a:opt, 'scroll_to_bottom', v:false)
     silent normal! G
   endif
+
+  if has_key(a:opt, 'filetype')
+    silent exe printf(':setl filetype=%s', a:opt['filetype'])
+  endif
 endfunction
 
 function! iced#buffer#open(bufname, ...) abort
