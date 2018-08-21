@@ -52,40 +52,43 @@ function! iced#buffer#is_visible(bufname) abort
   return (s:bufwinnr(a:bufname) != -1)
 endfunction
 
+function! s:apply_option(opt) abort
+  if get(a:opt, 'scroll_to_top', v:false)
+    silent normal! gg
+  elseif get(a:opt, 'scroll_to_bottom', v:false)
+    silent normal! G
+  endif
+endfunction
+
 function! iced#buffer#open(bufname, ...) abort
   let nr = s:bufnr(a:bufname)
   if nr < 0 | return | endif
+  let current_window = winnr()
   let opt = get(a:, 1, {})
 
   if iced#buffer#is_visible(a:bufname)
     call s:focus_window(s:bufwinnr(a:bufname))
   else
-    let current_window = winnr()
     call s:B.open(nr, {
         \ 'opener': get(opt, 'opener', 'split'),
         \ 'mods': get(opt, 'mods', ''),
         \ })
 
-    if get(opt, 'scroll_to_bottom', v:false)
-      silent normal! G
+    if has_key(opt, 'height')
+      silent exec printf(':resize %d', opt['height'])
     endif
-
-    call s:focus_window(current_window)
   endif
-endfunction
 
-function! s:delete_color_code(s) abort
-  return substitute(a:s, '\[[0-9;]*m', '', 'g')
+  call s:apply_option(opt)
+  call s:focus_window(current_window)
 endfunction
 
 function! iced#buffer#append(bufname, s, ...) abort
   let nr = s:bufnr(a:bufname)
   if nr < 0 | return | endif
-
   let opt = get(a:, 1, {})
 
   for line in split(a:s, '\r\?\n')
-    let line = s:delete_color_code(line)
     silent call appendbufline(nr, '$', line)
   endfor
 
@@ -95,6 +98,17 @@ function! iced#buffer#append(bufname, s, ...) abort
     silent normal! G
     call s:focus_window(current_window)
   endif
+endfunction
+
+function! iced#buffer#set_contents(bufname, s) abort
+  let nr = s:bufnr(a:bufname)
+  let lines = split(a:s, '\r\?\n')
+  call reverse(lines)
+
+  call deletebufline(nr, 1, '$')
+  for line in lines
+    call appendbufline(nr, '0', line)
+  endfor
 endfunction
 
 function! iced#buffer#clear(bufname, ...) abort
@@ -114,6 +128,17 @@ function! iced#buffer#clear(bufname, ...) abort
   else
     silent execute ':q'
   endif
+endfunction
+
+function! iced#buffer#close(bufname) abort
+  if !iced#buffer#is_visible(a:bufname)
+    return
+  endif
+
+  let current_window = winnr()
+  call s:focus_window(s:bufwinnr(a:bufname))
+  silent execute ':q'
+  call s:focus_window(current_window)
 endfunction
 
 let &cpo = s:save_cpo
