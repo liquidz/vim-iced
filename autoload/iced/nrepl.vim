@@ -234,6 +234,9 @@ function! s:connected(resp) abort
     call iced#nrepl#change_current_session('clj')
 
     call iced#buffer#stdout#init()
+    call iced#buffer#document#init()
+    call iced#buffer#error#init()
+
     echom iced#message#get('connected')
   endif
 endfunction
