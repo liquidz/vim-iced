@@ -11,17 +11,14 @@ function! iced#qf#is_opened() abort
 endfunction
 
 function! iced#qf#set(ls) abort
-  call setqflist(a:ls , 'r')
+  silent call setqflist(a:ls , 'r')
 
   if empty(a:ls)
     cclose
     return
   endif
 
-  if !iced#qf#is_opened()
-    silent exe printf(':cwindow %d', g:iced#qf#height)
-  endif
-  silent! doautocmd QuickFixCmdPost make
+  silent! doautocmd QuickFixCmdPost vim-iced
 endfunction
 
 function! iced#qf#clear() abort

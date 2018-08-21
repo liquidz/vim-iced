@@ -154,6 +154,16 @@ Testing                                                      *vim-iced-testing*
   - |:IcedTestAll|
   - |:IcedTestRedo|
 
+  When tests are failed, vim-iced sets error positions to |quickfix|.
+  |:cwindow| command enables you to show this information.
+
+  To show quickfix automatically, following autocmd is useful.
+>
+  aug VimIcedAutoOpenQuickfix
+    au!
+    au QuickFixCmdPost vim-iced cwindow
+  aug END
+<
 ==============================================================================
 Skeleton                                                    *vim-iced-skeleton*
 
