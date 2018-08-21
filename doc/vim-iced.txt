@@ -323,7 +323,7 @@ Commands                                                    *vim-iced-commands*
 
                                                             *:IcedDocumentOpen*
 :IcedDocumentOpen [{symbol}]
-  Open preview window, and show documents for {symbol}.
+  Open a window, and show documents for {symbol}.
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_document_open)|.
 
@@ -340,7 +340,7 @@ Commands                                                    *vim-iced-commands*
 
                                                               *:IcedSourceShow*
 :IcedSourceShow [{symbol}]
-  Open preview window, and show source codes for {symbol}
+  Open a window, and show source codes for {symbol}
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_source_show)|.
 
@@ -439,14 +439,14 @@ Key Mappings                                            *vim-iced-key-mappings*
 
                                                      *<Plug>(iced_macroexpand)*
 <Plug>(iced_macroexpand)
-  Evaluate {macroexpand}, and show result in preview window.
+  Evaluate {macroexpand}, and show result in a window.
 >
   <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
 <
 
                                                    *<Plug>(iced_macroexpand_1)*
 <Plug>(iced_macroexpand_1)
-  Evaluate {macroexpand-1}, and show result in preview window.
+  Evaluate {macroexpand-1}, and show result in a window.
 >
   <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
 <
