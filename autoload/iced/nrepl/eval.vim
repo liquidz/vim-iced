@@ -15,9 +15,7 @@ function! iced#nrepl#eval#err(err) abort
   endif
 
   let err = matchstr(a:err, ':(.\+:\d\+:\d\+)')
-  if empty(err)
-    call iced#message#error_str(a:err)
-  else
+  if !empty(err)
     let text = trim(substitute(a:err, err, '', ''))
     let err = err[2:len(err)-2]
     let arr = split(err, ':')
@@ -30,6 +28,8 @@ function! iced#nrepl#eval#err(err) abort
 
     call iced#qf#set([info])
   endif
+
+  call iced#message#error_str(a:err)
 endfunction
 
 function! s:out(resp) abort
