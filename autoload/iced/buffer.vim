@@ -116,21 +116,11 @@ function! iced#buffer#set_contents(bufname, s) abort
 endfunction
 
 function! iced#buffer#clear(bufname, ...) abort
-  let visibled = iced#buffer#is_visible(a:bufname)
-  let current_window = winnr()
-
-  call iced#buffer#open(a:bufname)
-  silent normal! ggdG
-
+  let nr = s:bufnr(a:bufname)
+  silent call deletebufline(nr, 1, '$')
   let InitFn = get(a:, 1, v:none)
   if iced#util#is_function(InitFn)
-    call InitFn(s:bufnr(a:bufname))
-  endif
-
-  if visibled
-    call s:focus_window(current_window)
-  else
-    silent execute ':q'
+    call InitFn(nr)
   endif
 endfunction
 
