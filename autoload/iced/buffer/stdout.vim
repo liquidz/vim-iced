@@ -20,11 +20,10 @@ function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&filetype', 'clojure')
   call setbufvar(a:bufnr, '&swapfile', 0)
 
-  let lines = split(g:iced#buffer#stdout#init_text, '\r\?\n')
-  call reverse(lines)
-  for line in lines
-    call appendbufline(a:bufnr, 0, line)
+  for line in split(g:iced#buffer#stdout#init_text, '\r\?\n')
+    silent call appendbufline(a:bufnr, '$', line)
   endfor
+  silent call deletebufline(a:bufnr, 1)
 endfunction
 
 function! s:delete_color_code(s) abort

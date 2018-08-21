@@ -106,13 +106,12 @@ endfunction
 
 function! iced#buffer#set_contents(bufname, s) abort
   let nr = s:bufnr(a:bufname)
-  let lines = split(a:s, '\r\?\n')
-  call reverse(lines)
 
-  call deletebufline(nr, 1, '$')
-  for line in lines
-    call appendbufline(nr, '0', line)
+  silent call deletebufline(nr, 1, '$')
+  for line in split(a:s, '\r\?\n')
+    silent call appendbufline(nr, '$', line)
   endfor
+  silent call deletebufline(nr, 1)
 endfunction
 
 function! iced#buffer#clear(bufname, ...) abort
