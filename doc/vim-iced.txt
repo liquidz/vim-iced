@@ -323,6 +323,11 @@ Commands                                                    *vim-iced-commands*
   This is useful to show document while editing codes.
   See details |<Plug>(iced_form_document)|.
 
+                                                           *:IcedDocumentClose*
+:IcedDocumentClose
+  Close document window.
+  Key is mapped to |<Plug>(iced_document_close)|.
+
                                                               *:IcedSourceShow*
 :IcedSourceShow [{symbol}]
   Open preview window, and show source codes for {symbol}
@@ -499,6 +504,9 @@ Key Mappings                                            *vim-iced-key-mappings*
     au CursorHoldI <buffer> call iced#nrepl#document#current_form()
   aug END
 <
+                                                  *<Plug>(iced_document_close)*
+<Plug>(iced_document_close)
+  Same as |:IcedDocumentClose|.
 
                                                      *<Plug>(iced_source_show)*
 <Plug>(iced_source_show)
@@ -571,6 +579,11 @@ g:iced#buffer#stdout#mods
   - {belowright}
   - {topleft}
   - {botright}
+
+                                                *g:iced#buffer#document#height*
+g:iced#buffer#document#height
+  Document window height.
+  Default value is |'previewheight'|.
 
                                           *g:iced#nrepl#cljs#custom#start_code*
 g:iced#nrepl#cljs#custom#start_code
