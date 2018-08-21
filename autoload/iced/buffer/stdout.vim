@@ -14,14 +14,6 @@ let g:iced#buffer#stdout#init_text = get(g:, 'iced#buffer#stdout#init_text', s:d
 let g:iced#buffer#stdout#mods = get(g:, 'iced#buffer#stdout#mods', '')
 let g:iced#buffer#stdout#max_line = get(g:, 'iced#buffer#stdout#max_line', 512)
 
-function! s:set_init_text() abort
-  let lines = split(g:iced#buffer#init_text, '\r\?\n')
-  call reverse(lines)
-  for line in lines
-    call append(0, line)
-  endfor
-endfunction
-
 function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&buftype', 'nofile')
