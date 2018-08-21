@@ -24,7 +24,7 @@ function! s:search(resp) abort
 
     let resp = s:Http.get(url, {}, {'Content-Type': 'text/plain'})
     if resp['status'] == 200
-      call iced#preview#view(resp['content'], 'markdown')
+      call iced#buffer#document#open(resp['content'])
     elseif resp['status'] == 404
       echom printf('Not found.')
     else

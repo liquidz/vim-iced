@@ -83,9 +83,7 @@ function! s:generate_doc(resp) abort
 endfunction
 
 function! s:view_doc(resp) abort
-  let doc = s:generate_doc(a:resp)
-  call iced#preview#view(doc, 'markdown')
-  call iced#preview#set_type('document')
+  call iced#buffer#document#open(s:generate_doc(a:resp))
 endfunction
 
 function! iced#nrepl#document#open(symbol) abort
@@ -99,9 +97,8 @@ function! iced#nrepl#document#open(symbol) abort
 endfunction
 
 function! s:one_line_doc(resp) abort
-  if iced#preview#type() ==# 'document'
-    call iced#preview#view(s:generate_doc(a:resp))
-    call iced#preview#set_type('document')
+  if iced#buffer#document#is_visible()
+    call iced#buffer#document#open(s:generate_doc(a:resp))
   else
     if has_key(a:resp, 'javadoc')
       let name =  printf('%s/%s', a:resp['class'], a:resp['member'])
