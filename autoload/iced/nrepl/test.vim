@@ -104,13 +104,6 @@ function! s:dict_to_str(d, ...) abort
 endfunction
 
 function! s:out(resp) abort
-  let summary = s:summary(a:resp)
-  if summary['is_success']
-    call iced#message#info_str(summary['summary'])
-  else
-    call iced#message#error_str(summary['summary'])
-  endif
-
   let errors = s:collect_errors(a:resp)
   let expected_and_actuals = []
   for err in errors
@@ -124,8 +117,15 @@ function! s:out(resp) abort
     endif
   endfor
 
-  call iced#preview#view(join(expected_and_actuals, "\n"), 'clojure')
+  call iced#buffer#error#open(join(expected_and_actuals, "\n"))
   call iced#qf#set(errors)
+
+  let summary = s:summary(a:resp)
+  if summary['is_success']
+    call iced#message#info_str(summary['summary'])
+  else
+    call iced#message#error_str(summary['summary'])
+  endif
 endfunction
 
 function! s:test(resp) abort

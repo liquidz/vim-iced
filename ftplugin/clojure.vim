@@ -7,48 +7,49 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 "" Commands {{{
-command! -nargs=? IcedConnect          call iced#nrepl#connect(<q-args>)
-command!          IcedDisconnect       call iced#nrepl#disconnect()
-command!          IcedReconnect        call iced#nrepl#reconnect()
-command!          IcedInterrupt        call iced#nrepl#interrupt()
+command! -nargs=? IcedConnect           call iced#nrepl#connect(<q-args>)
+command!          IcedDisconnect        call iced#nrepl#disconnect()
+command!          IcedReconnect         call iced#nrepl#reconnect()
+command!          IcedInterrupt         call iced#nrepl#interrupt()
 
 command! -nargs=? -complete=custom,iced#nrepl#cljs#env_complete
     \ IcedStartCljsRepl    call iced#nrepl#cljs#repl(<q-args>)
-command!          IcedQuitCljsRepl     call iced#nrepl#cljs#quit()
+command!          IcedQuitCljsRepl      call iced#nrepl#cljs#quit()
 
-command! -nargs=1 IcedEval             call iced#nrepl#eval#code(<q-args>)
-command! -nargs=1 IcedEvalRepl         call iced#nrepl#eval#repl(<q-args>)
-command!          IcedRequire          call iced#nrepl#ns#require()
-command!          IcedRequireAll       call iced#nrepl#ns#require_all()
-command! -nargs=? IcedUndef            call iced#nrepl#eval#undef(<q-args>)
-command!          IcedEvalOuterTopList call iced#nrepl#eval#outer_top_list()
+command! -nargs=1 IcedEval              call iced#nrepl#eval#code(<q-args>)
+command! -nargs=1 IcedEvalRepl          call iced#nrepl#eval#repl(<q-args>)
+command!          IcedRequire           call iced#nrepl#ns#require()
+command!          IcedRequireAll        call iced#nrepl#ns#require_all()
+command! -nargs=? IcedUndef             call iced#nrepl#eval#undef(<q-args>)
+command!          IcedEvalOuterTopList  call iced#nrepl#eval#outer_top_list()
 
-command!          IcedTestNs           call iced#nrepl#test#ns()
-command!          IcedTestAll          call iced#nrepl#test#all()
-command!          IcedTestRedo         call iced#nrepl#test#redo()
-command!          IcedTestUnderCursor  call iced#nrepl#test#under_cursor()
+command!          IcedTestNs            call iced#nrepl#test#ns()
+command!          IcedTestAll           call iced#nrepl#test#all()
+command!          IcedTestRedo          call iced#nrepl#test#redo()
+command!          IcedTestUnderCursor   call iced#nrepl#test#under_cursor()
 
-command!          IcedBufferOpen       call iced#buffer#open()
-command!          IcedBufferClear      call iced#buffer#clear()
+command!          IcedStdoutBufferOpen  call iced#buffer#stdout#open()
+command!          IcedStdoutBufferClear call iced#buffer#stdout#clear()
 
-command! -nargs=? IcedDefJump          call iced#nrepl#jump#jump(<q-args>)
-command!          IcedDefBack          call iced#nrepl#jump#back()
+command! -nargs=? IcedDefJump           call iced#nrepl#jump#jump(<q-args>)
+command!          IcedDefBack           call iced#nrepl#jump#back()
 
-command! -nargs=? IcedDocumentOpen     call iced#nrepl#document#open(<q-args>)
-command!          IcedFormDocument     call iced#nrepl#document#current_form()
-command! -nargs=? IcedSourceShow       call iced#nrepl#source#show(<q-args>)
-command! -nargs=? IcedGrimoireOpen     call iced#grimoire#open(<q-args>)
+command! -nargs=? IcedDocumentOpen      call iced#nrepl#document#open(<q-args>)
+command!          IcedFormDocument      call iced#nrepl#document#current_form()
+command!          IcedDocumentClose     call iced#buffer#document#close()
+command! -nargs=? IcedSourceShow        call iced#nrepl#source#show(<q-args>)
+command! -nargs=? IcedGrimoireOpen      call iced#grimoire#open(<q-args>)
 
-command!          IcedSlurp            call iced#paredit#deep_slurp()
-command!          IcedBarf             call iced#paredit#barf()
-command!          IcedFormat           call iced#format#form()
-command!          IcedToggleSrcAndTest call iced#nrepl#ns#transition#toggle_src_and_test()
-command! -nargs=? IcedGrep             call iced#grep#exe(<q-args>)
+command!          IcedSlurp             call iced#paredit#deep_slurp()
+command!          IcedBarf              call iced#paredit#barf()
+command!          IcedFormat            call iced#format#form()
+command!          IcedToggleSrcAndTest  call iced#nrepl#ns#transition#toggle_src_and_test()
+command! -nargs=? IcedGrep              call iced#grep#exe(<q-args>)
 
-command!          IcedBrowseNamespace  call iced#nrepl#ns#transition#list()
+command!          IcedBrowseNamespace   call iced#nrepl#ns#transition#list()
 
-command!          IcedCleanNs          call iced#nrepl#refactor#clean_ns()
-command! -nargs=? IcedAddMissing       call iced#nrepl#refactor#add_missing(<q-args>)
+command!          IcedCleanNs           call iced#nrepl#refactor#clean_ns()
+command! -nargs=? IcedAddMissing        call iced#nrepl#refactor#add_missing(<q-args>)
 "" }}}
 
 "" Key mappings {{{
@@ -73,14 +74,15 @@ nnoremap <silent> <Plug>(iced_test_all)            :<C-u>IcedTestAll<CR>
 nnoremap <silent> <Plug>(iced_test_redo)           :<C-u>IcedTestRedo<CR>
 nnoremap <silent> <Plug>(iced_test_under_cursor)   :<C-u>IcedTestUnderCursor<CR>
 
-nnoremap <silent> <Plug>(iced_buffer_open)         :<C-u>IcedBufferOpen<CR>
-nnoremap <silent> <Plug>(iced_buffer_clear)        :<C-u>IcedBufferClear<CR>
+nnoremap <silent> <Plug>(iced_stdout_buffer_open)  :<C-u>IcedStdoutBufferOpen<CR>
+nnoremap <silent> <Plug>(iced_stdout_buffer_clear) :<C-u>IcedStdoutBufferClear<CR>
 
 nnoremap <silent> <Plug>(iced_def_jump)            :<C-u>IcedDefJump<CR>
 nnoremap <silent> <Plug>(iced_def_back)            :<C-u>IcedDefBack<CR>
 
 nnoremap <silent> <Plug>(iced_document_open)       :<C-u>IcedDocumentOpen<CR>
 nnoremap <silent> <Plug>(iced_form_document)       :<C-u>IcedFormDocument<CR>
+nnoremap <silent> <Plug>(iced_document_close)      :<C-u>IcedDocumentClose<CR>
 nnoremap <silent> <Plug>(iced_source_show)         :<C-u>IcedSourceShow<CR>
 nnoremap <silent> <Plug>(iced_grimoire_open)       :<C-u>IcedGrimoireOpen<CR>
 
@@ -157,8 +159,8 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>tr <Plug>(iced_test_redo)
   endif
 
-  if !hasmapto('<Plug>(iced_buffer_open)')
-    silent! nmap <buffer> <Leader>ss <Plug>(iced_buffer_open)
+  if !hasmapto('<Plug>(iced_stdout_buffer_open)')
+    silent! nmap <buffer> <Leader>ss <Plug>(iced_stdout_buffer_open)
   endif
 
   if !hasmapto('<Plug>(iced_def_jump)')

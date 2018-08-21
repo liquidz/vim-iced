@@ -136,10 +136,10 @@ function! s:dispatcher(ch, resp) abort
         endif
 
         if has_key(rsp, 'out')
-          call iced#buffer#append(rsp['out'])
+          call iced#buffer#stdout#append(rsp['out'])
         endif
         if has_key(rsp, 'err')
-          call iced#buffer#append(rsp['err'])
+          call iced#buffer#stdout#append(rsp['err'])
         endif
       endfor
     endif
@@ -233,7 +233,10 @@ function! s:connected(resp) abort
     call iced#nrepl#set_session('clj', new_session)
     call iced#nrepl#change_current_session('clj')
 
-    call iced#buffer#init()
+    call iced#buffer#stdout#init()
+    call iced#buffer#document#init()
+    call iced#buffer#error#init()
+
     echom iced#message#get('connected')
   endif
 endfunction

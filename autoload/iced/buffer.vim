@@ -1,23 +1,9 @@
-scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
 let s:V  = vital#iced#new()
-let s:S  = s:V.import('Data.String')
 let s:B  = s:V.import('Vim.Buffer')
 let s:BM = s:V.import('Vim.BufferManager')
-
-let s:default_init_text = join([
-    \ ';;',
-    \ ';; Iced Buffer',
-    \ ';;',
-    \ '',
-    \ ], "\n")
-
-let g:iced#buffer#init_text = get(g:, 'iced#buffer#init_text', s:default_init_text)
-let g:iced#buffer#name = get(g:, 'iced#buffer#name', 'nrepl')
-let g:iced#buffer#mods = get(g:, 'iced#buffer#mods', '')
-let g:iced#buffer#max_line = get(g:, 'iced#buffer#max_line', 512)
 
 let s:manager = v:none
 let s:info = {}
@@ -26,108 +12,126 @@ function! s:focus_window(bufwin_num) abort
   execute a:bufwin_num . 'wincmd w'
 endfunction
 
-function! s:repl_bufwinnr() abort
-  return bufwinnr(get(s:info, 'bufnr', -1))
+function! s:bufnr(bufname) abort
+  let info = get(s:info, a:bufname, {})
+  return get(info, 'bufnr', -1)
 endfunction
 
-function! s:apply_buffer_settings() abort
-  let n = get(s:info, 'bufnr', -1)
-  if n < 0
+function! s:bufwinnr(bufname) abort
+  return bufwinnr(s:bufnr(a:bufname))
+endfunction
+
+function! iced#buffer#is_initialized(bufname) abort
+  return (empty(get(s:info, a:bufname, {})) ? v:false : v:true)
+endfunction
+
+function! s:buffer_manager() abort
+  if type(s:manager) != type({})
+    let s:manager = s:BM.new()
+  endif
+
+  return s:manager
+endfunction
+
+function! iced#buffer#init(bufname, ...) abort
+  if iced#buffer#is_initialized(a:bufname)
     return
   endif
 
-  call setbufvar(n, '&buflisted', 0)
-  call setbufvar(n, '&buftype', 'nofile')
-  call setbufvar(n, '&filetype', 'clojure')
-  call setbufvar(n, '&swapfile', 0)
-endfunction
+  let manager = s:buffer_manager()
+  let s:info[a:bufname] = manager.open(a:bufname)
 
-function! iced#buffer#is_initialized() abort
-  return (empty(s:info) ? v:false : v:true)
-endfunction
-
-function! s:set_init_text() abort
-  let lines = split(g:iced#buffer#init_text, '\r\?\n')
-  call reverse(lines)
-  for line in lines
-    call append(0, line)
-  endfor
-endfunction
-
-function! iced#buffer#init() abort
-  if iced#buffer#is_initialized()
-    return
+  let InitFn = get(a:, 1, v:none)
+  if iced#util#is_function(InitFn)
+    call InitFn(s:bufnr(a:bufname))
   endif
-
-  let s:manager = s:BM.new()
-  let s:info = s:manager.open(g:iced#buffer#name)
-
-  call s:set_init_text()
-  call s:apply_buffer_settings()
   silent execute ':q'
 endfunction
 
-function! s:is_visible() abort
-  return (s:repl_bufwinnr() != -1)
+function! iced#buffer#is_visible(bufname) abort
+  return (s:bufwinnr(a:bufname) != -1)
 endfunction
 
-function! iced#buffer#open() abort
-  let n = get(s:info, 'bufnr', -1)
-  if n < 0
-    return
-  endif
-
-  if s:is_visible()
-    call s:focus_window(s:repl_bufwinnr())
-  else
-    let current_window = winnr()
-    call s:B.open(n, {
-        \ 'opener': 'split',
-        \ 'mods': g:iced#buffer#mods,
-        \ })
+function! s:apply_option(opt) abort
+  if get(a:opt, 'scroll_to_top', v:false)
+    silent normal! gg
+  elseif get(a:opt, 'scroll_to_bottom', v:false)
     silent normal! G
-    call s:focus_window(current_window)
+  endif
+
+  if has_key(a:opt, 'filetype')
+    silent exe printf(':setl filetype=%s', a:opt['filetype'])
   endif
 endfunction
 
-function! s:delete_color_code(s) abort
-  return substitute(a:s, '\[[0-9;]*m', '', 'g')
+function! iced#buffer#open(bufname, ...) abort
+  let nr = s:bufnr(a:bufname)
+  if nr < 0 | return | endif
+  let current_window = winnr()
+  let opt = get(a:, 1, {})
+
+  if iced#buffer#is_visible(a:bufname)
+    call s:focus_window(s:bufwinnr(a:bufname))
+  else
+    call s:B.open(nr, {
+        \ 'opener': get(opt, 'opener', 'split'),
+        \ 'mods': get(opt, 'mods', ''),
+        \ })
+
+    if has_key(opt, 'height')
+      silent exec printf(':resize %d', opt['height'])
+    endif
+  endif
+
+  call s:apply_option(opt)
+  call s:focus_window(current_window)
 endfunction
 
-function! iced#buffer#append(s) abort
-  let n = get(s:info, 'bufnr', -1)
-  if n < 0
-    return
-  endif
+function! iced#buffer#append(bufname, s, ...) abort
+  let nr = s:bufnr(a:bufname)
+  if nr < 0 | return | endif
+  let opt = get(a:, 1, {})
 
   for line in split(a:s, '\r\?\n')
-    let line = s:delete_color_code(line)
-    silent call appendbufline(n, '$', line)
+    silent call appendbufline(nr, '$', line)
   endfor
 
-  " scroll to bottom
-  if s:is_visible()
+  if get(opt, 'scroll_to_bottom', v:false) && iced#buffer#is_visible(a:bufname)
     let current_window = winnr()
-    call s:focus_window(s:repl_bufwinnr())
+    call s:focus_window(bufwinnr(nr))
     silent normal! G
     call s:focus_window(current_window)
   endif
 endfunction
 
-function! iced#buffer#clear() abort
-  let visibled = s:is_visible()
-  let current_window = bufwinnr(bufnr('%'))
+function! iced#buffer#set_contents(bufname, s) abort
+  let nr = s:bufnr(a:bufname)
 
-  call iced#buffer#open()
+  silent call deletebufline(nr, 1, '$')
+  for line in split(a:s, '\r\?\n')
+    silent call appendbufline(nr, '$', line)
+  endfor
+  silent call deletebufline(nr, 1)
+endfunction
 
-  silent normal! ggdG
-  call s:set_init_text()
-
-  if visibled
-    call s:focus_window(current_window)
-  else
-    silent execute ':q'
+function! iced#buffer#clear(bufname, ...) abort
+  let nr = s:bufnr(a:bufname)
+  silent call deletebufline(nr, 1, '$')
+  let InitFn = get(a:, 1, v:none)
+  if iced#util#is_function(InitFn)
+    call InitFn(nr)
   endif
+endfunction
+
+function! iced#buffer#close(bufname) abort
+  if !iced#buffer#is_visible(a:bufname)
+    return
+  endif
+
+  let current_window = winnr()
+  call s:focus_window(s:bufwinnr(a:bufname))
+  silent execute ':q'
+  call s:focus_window(current_window)
 endfunction
 
 let &cpo = s:save_cpo

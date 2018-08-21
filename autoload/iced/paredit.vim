@@ -15,7 +15,7 @@ function! s:slurp(current_view, depth) abort
       call sexp#move_to_nearest_bracket('n', 0)
       call s:slurp(a:current_view, a:depth + 1)
     else
-      silent call iced#format#minimal()
+      silent exe "normal \<Plug>(sexp_indent)"
       call winrestview(a:current_view)
     endif
   endif
