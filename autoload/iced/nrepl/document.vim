@@ -121,9 +121,15 @@ function! iced#nrepl#document#current_form() abort
   let reg_save = @@
 
   try
+    let @@ = ''
     silent normal! vi(y
-    let symbol = trim(split(@@, ' ')[0])
-    call iced#nrepl#cider#info(symbol, funcref('s:one_line_doc'))
+    let code = trim(@@)
+    if empty(code)
+      exe "normal! \<Esc>"
+    else
+      let symbol = trim(split(code, ' ')[0])
+      call iced#nrepl#cider#info(symbol, funcref('s:one_line_doc'))
+    endif
   finally
     let @@ = reg_save
     call winrestview(view)
