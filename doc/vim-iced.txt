@@ -585,6 +585,11 @@ g:iced#buffer#document#height
   Document window height.
   Default value is |'previewheight'|.
 
+                                                   *g:iced#buffer#error#height*
+g:iced#buffer#error#height
+  Error window height.
+  Default value is |'previewheight'|.
+
                                           *g:iced#nrepl#cljs#custom#start_code*
 g:iced#nrepl#cljs#custom#start_code
   Code to start CLJS REPL in {custom} enviroment.
