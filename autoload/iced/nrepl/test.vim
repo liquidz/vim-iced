@@ -141,27 +141,16 @@ function! s:test(resp) abort
 endfunction
 
 function! iced#nrepl#test#under_cursor() abort
-  let view = winsaveview()
-  let reg_save = @@
-
-  try
+  let ret = iced#paredit#get_current_top_list()
+  let code = ret['code']
+  if empty(code)
+    call iced#message#error('finding_code_error')
+  else
+    let pos = ret['curpos']
+    let option = {'line': pos[1], 'column': pos[2]}
     call iced#sign#unplace_all()
-    " vim-sexp: move to top
-    silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
-    silent normal! va(y
-
-    let code = @@
-    if empty(code)
-      call iced#message#error('finding_code_error')
-    else
-      let pos = getcurpos()
-      let option = {'line': pos[1], 'column': pos[2]}
-      call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)}, option)})
-    endif
-  finally
-    let @@ = reg_save
-    call winrestview(view)
-  endtry
+    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)}, option)})
+  endif
 endfunction
 
 function! iced#nrepl#test#ns() abort

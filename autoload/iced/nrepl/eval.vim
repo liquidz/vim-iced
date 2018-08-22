@@ -49,8 +49,9 @@ function! s:repl_out(resp) abort
   call iced#nrepl#cljs#switch_session(a:resp)
 endfunction
 
-function! iced#nrepl#eval#code(code) abort
-  call iced#nrepl#eval(a:code, funcref('s:out'))
+function! iced#nrepl#eval#code(code, ...) abort
+  let opt = get(a:, 1, {})
+  call iced#nrepl#eval(a:code, funcref('s:out'), opt)
 endfunction
 
 function! iced#nrepl#eval#repl(code) abort
@@ -73,24 +74,15 @@ function! iced#nrepl#eval#undef(symbol) abort
 endfunction
 
 function! iced#nrepl#eval#outer_top_list() abort
-  let view = winsaveview()
-  let reg_save = @@
-
-  try
-    " select current top list
-    call sexp#select_current_top_list('n', 0)
-    silent normal! y
-
-    let code = @@
-    if empty(code)
-      echom iced#message#get('finding_code_error')
-    else
-      call iced#nrepl#ns#eval({_ -> iced#nrepl#eval#code(code)})
-    endif
-  finally
-    let @@ = reg_save
-    call winrestview(view)
-  endtry
+  let ret = iced#paredit#get_current_top_list()
+  let code = ret['code']
+  if empty(code)
+    echom iced#message#get('finding_code_error')
+  else
+    let pos = ret['curpos']
+    let opt = {'line': pos[1], 'column': pos[2]}
+    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval#code(code, opt)})
+  endif
 endfunction
 
 let &cpo = s:save_cpo

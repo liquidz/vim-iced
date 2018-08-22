@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojunre interactive development environment for Vim8
 
-Version: 0.1.0
+Version: 0.1.1
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -511,7 +511,7 @@ Key Mappings                                            *vim-iced-key-mappings*
   aug vim_iced_echo_document_setting
     au!
     au FileType clojure setl updatetime=1000
-    au CursorHoldI <buffer> call iced#nrepl#document#current_form()
+    au CursorHoldI *.clj,*.cljs,*.cljc call iced#nrepl#document#current_form()
   aug END
 <
                                                   *<Plug>(iced_document_close)*

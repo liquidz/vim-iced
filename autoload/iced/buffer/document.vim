@@ -23,6 +23,7 @@ endfunction
 
 function! iced#buffer#document#open(text, ...) abort
   let ft = get(a:, 1, s:default_filetype)
+  call iced#buffer#set_var(s:bufname, '&filetype', ft)
   call iced#buffer#set_contents(s:bufname, a:text)
   call iced#buffer#open(
       \ s:bufname,
@@ -30,7 +31,13 @@ function! iced#buffer#document#open(text, ...) abort
       \  'mods': 'belowright',
       \  'scroll_to_top': v:true,
       \  'height': g:iced#buffer#document#height,
-      \  'filetype': ft})
+      \ })
+endfunction
+
+function! iced#buffer#document#update(text) abort
+  let ft = get(a:, 1, s:default_filetype)
+  call iced#buffer#set_var(s:bufname, '&filetype', ft)
+  call iced#buffer#set_contents(s:bufname, a:text)
 endfunction
 
 function! iced#buffer#document#close() abort

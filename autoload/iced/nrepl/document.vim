@@ -41,6 +41,8 @@ endfunction
 
 function! s:generate_cljdoc(resp) abort
   let doc = []
+  if !has_key(a:resp, 'name') | return doc | endif
+
   if has_key(a:resp, 'ns')
     call add(doc, printf('# %s/%s', a:resp['ns'], a:resp['name']))
   else
@@ -72,14 +74,15 @@ function! s:generate_cljdoc(resp) abort
 endfunction
 
 function! s:generate_doc(resp) abort
-  if has_key(a:resp, 'status') && a:resp['status'] == ['done']
-    let doc = (has_key(a:resp, 'javadoc')
-        \ ? s:generate_javadoc(a:resp)
-        \ : s:generate_cljdoc(a:resp))
-    return (empty(doc) ? '' : join(doc, "\n"))
-  else
+  if !has_key(a:resp, 'status') || a:resp['status'] != ['done']
     echom iced#message#get('not_found')
+    return
   endif
+
+  let doc = (has_key(a:resp, 'javadoc')
+      \ ? s:generate_javadoc(a:resp)
+      \ : s:generate_cljdoc(a:resp))
+  return (empty(doc) ? '' : join(doc, "\n"))
 endfunction
 
 function! s:view_doc(resp) abort
@@ -98,13 +101,13 @@ endfunction
 
 function! s:one_line_doc(resp) abort
   if iced#buffer#document#is_visible()
-    call iced#buffer#document#open(s:generate_doc(a:resp))
+    call iced#buffer#document#update(s:generate_doc(a:resp))
   else
     if has_key(a:resp, 'javadoc')
       let name =  printf('%s/%s', a:resp['class'], a:resp['member'])
       let args = substitute(get(a:resp, 'arglists-str', ''), '\r\?\n', ' ', 'g')
       echo printf('%s %s %s', a:resp['returns'], name, args)
-    elseif has_key(a:resp, 'ns')
+    elseif has_key(a:resp, 'ns') && has_key(a:resp, 'name')
       let name = printf('%s/%s', a:resp['ns'], a:resp['name'])
       let args = substitute(get(a:resp, 'arglists-str', ''), '\r\?\n', ' ', 'g')
       echo printf('%s %s', name, args)

@@ -58,7 +58,7 @@ function! iced#format#minimal() abort
   let view = winsaveview()
   let reg_save = @@
   try
-    call sexp#move_to_nearest_bracket('n', 0)
+    call search('(', 'b')
     let ncol = getcurpos()[2]
     silent normal! va(y
     let code = @@
