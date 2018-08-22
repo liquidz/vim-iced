@@ -34,6 +34,12 @@ function! iced#buffer#document#open(text, ...) abort
       \ })
 endfunction
 
+function! iced#buffer#document#update(text) abort
+  let ft = get(a:, 1, s:default_filetype)
+  call iced#buffer#set_var(s:bufname, '&filetype', ft)
+  call iced#buffer#set_contents(s:bufname, a:text)
+endfunction
+
 function! iced#buffer#document#close() abort
   call iced#buffer#close(s:bufname)
 endfunction
