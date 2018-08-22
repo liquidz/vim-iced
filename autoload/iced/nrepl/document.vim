@@ -101,7 +101,7 @@ endfunction
 
 function! s:one_line_doc(resp) abort
   if iced#buffer#document#is_visible()
-    call iced#buffer#document#open(s:generate_doc(a:resp))
+    call iced#buffer#document#update(s:generate_doc(a:resp))
   else
     if has_key(a:resp, 'javadoc')
       let name =  printf('%s/%s', a:resp['class'], a:resp['member'])
