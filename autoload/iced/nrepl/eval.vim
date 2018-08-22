@@ -49,8 +49,9 @@ function! s:repl_out(resp) abort
   call iced#nrepl#cljs#switch_session(a:resp)
 endfunction
 
-function! iced#nrepl#eval#code(code) abort
-  call iced#nrepl#eval(a:code, funcref('s:out'))
+function! iced#nrepl#eval#code(code, ...) abort
+  let opt = get(a:, 1, {})
+  call iced#nrepl#eval(a:code, funcref('s:out'), opt)
 endfunction
 
 function! iced#nrepl#eval#repl(code) abort
