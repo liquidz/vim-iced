@@ -123,6 +123,8 @@ endfunction
 
 function! s:dispatcher(ch, resp) abort
   let text = printf('%s%s', s:response_buffer, a:resp)
+  call iced#util#debug(text)
+
   try
     let resp = iced#nrepl#bencode#decode(text)
     let s:response_buffer = ''

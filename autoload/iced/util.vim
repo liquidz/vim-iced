@@ -39,5 +39,11 @@ function! iced#util#ensure_array(x) abort
   return (type(a:x) == type([]) ? a:x : [a:x])
 endfunction
 
+function! iced#util#debug(x) abort
+  if g:iced#debug
+    echom printf('DEBUG: %s', a:x)
+  endif
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
