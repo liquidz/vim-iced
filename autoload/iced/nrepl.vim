@@ -218,6 +218,11 @@ endfunction
 "" =CONNECT
 "" --------
 
+function! s:warm_up() abort
+  let code = '(require ''cljfmt.core)'
+  call iced#nrepl#eval(code, {'session': 'clj'})
+endfunction
+
 function! s:status(ch) abort
   try
     return ch_status(a:ch)
@@ -238,6 +243,7 @@ function! s:connected(resp) abort
     call iced#buffer#stdout#init()
     call iced#buffer#document#init()
     call iced#buffer#error#init()
+    silent call s:warm_up()
 
     echom iced#message#get('connected')
   endif
