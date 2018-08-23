@@ -73,6 +73,16 @@ function! iced#nrepl#eval#undef(symbol) abort
   call iced#nrepl#cider#undef(symbol, {_ -> s:undefined(symbol)})
 endfunction
 
+function! s:print_last(resp) abort
+  if has_key(a:resp, 'pprint-out')
+    call iced#buffer#document#open(a:resp['pprint-out'], 'clojure')
+  endif
+endfunction
+
+function! iced#nrepl#eval#print_last() abort
+  call iced#nrepl#cider#pprint_eval('*1', funcref('s:print_last'))
+endfunction
+
 function! iced#nrepl#eval#outer_top_list() abort
   let ret = iced#paredit#get_current_top_list()
   let code = ret['code']

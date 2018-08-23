@@ -285,6 +285,11 @@ Commands                                                    *vim-iced-commands*
   without scrolling.
   Key is mapped to |<Plug>(iced_eval_outer_top_list)|.
 
+                                                               *:IcedPrintLast*
+:IcedPrintLast
+  Open a window, and show last evaluated value.
+  Key is mapped to |<Plug>(iced_print_last)|.
+
                                                          *:IcedTestUnderCursor*
 :IcedTestUnderCursor
   Run test under cursor.
@@ -471,6 +476,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_eval_outer_top_list)
   Same as |:IcedEvalOuterTopList|.
 
+                                                      *<Plug>(iced_print_last)*
+<Plug>(iced_print_last)
+  Same as |:IcedPrintLast|.
+
                                                          *<Plug>(iced_test_ns)*
 <Plug>(iced_test_ns)
   Same as |:IcedTestNs|.
@@ -644,6 +653,7 @@ g:iced_enable_default_key_mappings
   <Leader>ei     <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Leader>et     <Plug>(iced_eval_outer_top_list)
+  <Leader>ep     <Plug>(iced_print_last)
   <Leader>eb     <Plug>(iced_require)
   <Leader>eB     <Plug>(iced_require_all)
   <Leader>eu     <Plug>(iced_undef)
