@@ -127,7 +127,7 @@ function! iced#complete#omni(findstart, base) abort
 
     " vars in aliased namespace
     let i = stridx(a:base, '/')
-    if i != -1
+    if i != -1 && a:base[0] !=# ':'
       let org_base_ns = a:base[0:i-1]
       let base_ns = get(alias_dict, org_base_ns, org_base_ns)
       let base_sym = a:base[i+1:]
