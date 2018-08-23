@@ -58,7 +58,8 @@ function! iced#format#minimal() abort
   let view = winsaveview()
   let reg_save = @@
   try
-    call search('(', 'b')
+    " NOTE: vim-sexp's slurp move cursor to tail of form
+    normal! %
     let ncol = getcurpos()[2]
     silent normal! va(y
     let code = @@
