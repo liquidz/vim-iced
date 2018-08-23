@@ -1,20 +1,18 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:view(result) abort
-  if has_key(a:result, 'value')
-    call iced#buffer#document#open(a:result['value'], 'clojure')
+function! s:view(resp) abort
+  if has_key(a:resp, 'expansion')
+    call iced#buffer#document#open(a:resp['expansion'], 'clojure')
   endif
 endfunction
 
 function! iced#nrepl#macro#expand(code) abort
-  let code = printf('(macroexpand ''%s)', a:code)
-  call iced#nrepl#eval(code, function('s:view'))
+  call iced#nrepl#cider#macroexpand_all(a:code, funcref('s:view'))
 endfunction
 
 function! iced#nrepl#macro#expand_1(code) abort
-  let code = printf('(macroexpand-1 ''%s)', a:code)
-  call iced#nrepl#eval(code, function('s:view'))
+  call iced#nrepl#cider#macroexpand_1(a:code, funcref('s:view'))
 endfunction
 
 let &cpo = s:save_cpo
