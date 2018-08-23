@@ -183,6 +183,19 @@ function! iced#nrepl#cider#macroexpand_all(code, callback) abort
       \ })
 endfunction
 
+function! iced#nrepl#cider#pprint_eval(code, callback) abort
+  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+
+  call iced#nrepl#send({
+      \ 'id': iced#nrepl#eval#id(),
+      \ 'op': 'eval',
+      \ 'code': a:code,
+      \ 'pprint': 'true',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
 call iced#nrepl#register_handler('info')
 call iced#nrepl#register_handler('ns-path')
 call iced#nrepl#register_handler('format-code')
