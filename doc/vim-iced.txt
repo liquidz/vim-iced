@@ -111,7 +111,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   REPL needs to be activated beforehand.
   - `lein repl`
   - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "0a9503a072cb5e56d4d74a513e3a5a468a471b54"}}}' -m iced-repl`
+  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "9a45ddd2a3ea1e042540652870bd606207732dc0"}}}' -m iced-repl`
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
