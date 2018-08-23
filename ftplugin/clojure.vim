@@ -136,11 +136,11 @@ function! s:default_key_mappings() abort
   endif
 
   if !hasmapto('<Plug>(iced_macroexpand)')
-    silent! nmap <buffer> <Leader>ma <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
+    silent! nmap <buffer> <Leader>eM <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
   endif
 
   if !hasmapto('<Plug>(iced_macroexpand_1)')
-    silent! nmap <buffer> <Leader>m1 <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
+    silent! nmap <buffer> <Leader>em <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
   endif
 
   if !hasmapto('<Plug>(iced_test_under_cursor)')

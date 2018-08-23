@@ -643,8 +643,8 @@ g:iced_enable_default_key_mappings
   <Leader>eb     <Plug>(iced_require)
   <Leader>eB     <Plug>(iced_require_all)
   <Leader>eu     <Plug>(iced_undef)
-  <Leader>ma     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
-  <Leader>m1     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
+  <Leader>eM     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
+  <Leader>em     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
   <Leader>tt     <Plug>(iced_test_under_cursor)
   <Leader>tn     <Plug>(iced_test_ns)
   <Leader>tp     <Plug>(iced_test_all)
