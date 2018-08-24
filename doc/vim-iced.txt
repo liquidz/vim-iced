@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojunre interactive development environment for Vim8
 
-Version: 0.1.1
+Version: 0.1.2
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -71,6 +71,8 @@ Leiningen                                                  *vim-iced-leiningen*
                             cider.nrepl/wrap-macroexpand
                             cider.nrepl/wrap-ns
                             cider.nrepl/wrap-out
+                            cider.nrepl/wrap-pprint
+                            cider.nrepl/wrap-pprint-fn
                             cider.nrepl/wrap-spec
                             cider.nrepl/wrap-test
                             cider.nrepl/wrap-undef]}}}
@@ -96,6 +98,8 @@ Boot                                                            *vim-iced-boot*
       cider.nrepl/wrap-macroexpand
       cider.nrepl/wrap-ns
       cider.nrepl/wrap-out
+      cider.nrepl/wrap-pprint
+      cider.nrepl/wrap-pprint-fn
       cider.nrepl/wrap-spec
       cider.nrepl/wrap-test
       cider.nrepl/wrap-undef
@@ -107,7 +111,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   REPL needs to be activated beforehand.
   - `lein repl`
   - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "3dadf3c32473cdf9419dbbe10764b6d5c4fbcecc"}}}' -m iced-repl`
+  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "9a45ddd2a3ea1e042540652870bd606207732dc0"}}}' -m iced-repl`
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
@@ -280,6 +284,11 @@ Commands                                                    *vim-iced-commands*
   Work same as `<Plug>(iced_eval)<Plug>(sexp_outer_top_list)`,
   without scrolling.
   Key is mapped to |<Plug>(iced_eval_outer_top_list)|.
+
+                                                               *:IcedPrintLast*
+:IcedPrintLast
+  Open a window, and show last evaluated value.
+  Key is mapped to |<Plug>(iced_print_last)|.
 
                                                          *:IcedTestUnderCursor*
 :IcedTestUnderCursor
@@ -467,6 +476,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_eval_outer_top_list)
   Same as |:IcedEvalOuterTopList|.
 
+                                                      *<Plug>(iced_print_last)*
+<Plug>(iced_print_last)
+  Same as |:IcedPrintLast|.
+
                                                          *<Plug>(iced_test_ns)*
 <Plug>(iced_test_ns)
   Same as |:IcedTestNs|.
@@ -640,11 +653,12 @@ g:iced_enable_default_key_mappings
   <Leader>ei     <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Leader>et     <Plug>(iced_eval_outer_top_list)
+  <Leader>ep     <Plug>(iced_print_last)
   <Leader>eb     <Plug>(iced_require)
   <Leader>eB     <Plug>(iced_require_all)
   <Leader>eu     <Plug>(iced_undef)
-  <Leader>ma     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
-  <Leader>m1     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
+  <Leader>eM     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
+  <Leader>em     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
   <Leader>tt     <Plug>(iced_test_under_cursor)
   <Leader>tn     <Plug>(iced_test_ns)
   <Leader>tp     <Plug>(iced_test_all)

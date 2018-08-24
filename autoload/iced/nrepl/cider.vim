@@ -155,6 +155,47 @@ function! iced#nrepl#cider#project_namespaces(callback) abort
   call iced#nrepl#eval(code, {resp -> a:callback(s:parse_project_namespaces_response(resp))})
 endfunction
 
+function! iced#nrepl#cider#macroexpand_1(code, callback) abort
+  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+
+  call iced#nrepl#send({
+      \ 'id': iced#nrepl#eval#id(),
+      \ 'op': 'macroexpand',
+      \ 'ns': iced#nrepl#ns#name(),
+      \ 'code': a:code,
+      \ 'session': iced#nrepl#current_session(),
+      \ 'expander': 'macroexpand-1',
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
+function! iced#nrepl#cider#macroexpand_all(code, callback) abort
+  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+
+  call iced#nrepl#send({
+      \ 'id': iced#nrepl#eval#id(),
+      \ 'op': 'macroexpand',
+      \ 'ns': iced#nrepl#ns#name(),
+      \ 'code': a:code,
+      \ 'session': iced#nrepl#current_session(),
+      \ 'expander': 'macroexpand-all',
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
+function! iced#nrepl#cider#pprint_eval(code, callback) abort
+  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+
+  call iced#nrepl#send({
+      \ 'id': iced#nrepl#eval#id(),
+      \ 'op': 'eval',
+      \ 'code': a:code,
+      \ 'pprint': 'true',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
 call iced#nrepl#register_handler('info')
 call iced#nrepl#register_handler('ns-path')
 call iced#nrepl#register_handler('format-code')
@@ -162,6 +203,7 @@ call iced#nrepl#register_handler('test', funcref('s:test_handler'))
 call iced#nrepl#register_handler('retest', funcref('s:test_handler'))
 call iced#nrepl#register_handler('test-all', funcref('s:test_handler'))
 call iced#nrepl#register_handler('undef')
+call iced#nrepl#register_handler('macroexpand')
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

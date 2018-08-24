@@ -1,6 +1,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let g:iced#debug = v:false
+
 function! iced#status() abort
   if !iced#nrepl#is_connected()
     return 'not connected'
