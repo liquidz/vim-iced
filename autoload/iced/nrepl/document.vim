@@ -89,6 +89,19 @@ function! s:view_doc(resp) abort
   call iced#buffer#document#open(s:generate_doc(a:resp))
 endfunction
 
+function! s:expand_ns_alias(symbol) abort
+  let i = stridx(a:symbol, '/')
+  if i == -1 || a:symbol[0] ==# ':'
+    return a:symbol
+  endif
+
+  let alias_dict = iced#nrepl#ns#alias#dict_from_code(iced#nrepl#ns#get())
+  let ns = a:symbol[0:i-1]
+  let ns = get(alias_dict, ns, ns)
+
+  return printf('%s/%s', ns, strpart(a:symbol, i+1))
+endfunction
+
 function! iced#nrepl#document#open(symbol) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
@@ -96,6 +109,10 @@ function! iced#nrepl#document#open(symbol) abort
   endif
 
   let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  if iced#nrepl#current_session_key() ==# 'cljs'
+    let symbol = s:expand_ns_alias(symbol)
+  endif
+
   call iced#nrepl#cider#info(symbol, funcref('s:view_doc'))
 endfunction
 
@@ -131,6 +148,9 @@ function! iced#nrepl#document#current_form() abort
       exe "normal! \<Esc>"
     else
       let symbol = trim(split(code, ' ')[0])
+      if iced#nrepl#current_session_key() ==# 'cljs'
+        let symbol = s:expand_ns_alias(symbol)
+      endif
       call iced#nrepl#cider#info(symbol, funcref('s:one_line_doc'))
     endif
   finally
