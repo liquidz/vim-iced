@@ -395,6 +395,18 @@ Commands                                                    *vim-iced-commands*
   See https://github.com/clojure-emacs/refactor-nrepl#clean-ns
   Key is mapped to |<Plug>(iced_clean_ns)|.
 
+                                                          *:IcedToggleTraceVar*
+:IcedToggleTraceVar [{symbol}]
+  Toggle tracing {symbol} in current namespace.
+  If {symbol} is not passed, symbol under cursor is used.
+  Key is mapped to |<Plug>(iced_toggle_trace_var)|.
+
+                                                           *:IcedToggleTraceNs*
+:IcedToggleTraceNs [{ns}]
+  Toggle tracing {ns}.
+  If {ns} is not passed, current buffer's ns name is used.
+  Key is mapped to |<Plug>(iced_toggle_trace_ns)|.
+
 ------------------------------------------------------------------------------
 Functions                                                  *vim-iced-functions*
 
@@ -564,6 +576,14 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
+
+                                                *<Plug>(iced_toggle_trace_var)*
+<Plug>(iced_toggle_trace_var)
+  Same as |:IcedToggleTraceVar|.
+
+                                                 *<Plug>(iced_toggle_trace_ns)*
+<Plug>(iced_toggle_trace_ns)
+  Same as |:IcedToggleTraceNs|.
 
 ==============================================================================
 Customizing                                              *vim-iced-customizing*
