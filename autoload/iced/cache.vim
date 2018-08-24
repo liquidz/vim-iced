@@ -12,6 +12,10 @@ function! iced#cache#get(k, ...) abort
   return get(s:cache, a:k, default)
 endfunction
 
+function! iced#cache#delete(k) abort
+  unlet s:cache[a:k]
+endfunction
+
 function! iced#cache#merge(dict) abort
   call extend(s:cache, a:dict)
 endfunction
