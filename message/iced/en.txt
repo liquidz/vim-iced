@@ -23,5 +23,8 @@
   'cleaned':            'Cleaned.',
   'ns_added':           'Added %s.',
   'resolving_missing':  'Resolving...',
+  'start_to_trace':     'Start to trace: %s.',
+  'stop_to_trace':      'Stop to trace: %s.',
+  'untraced':           'Untraced.',
 }
 #vim:ft=ruby
