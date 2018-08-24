@@ -75,6 +75,7 @@ Leiningen                                                  *vim-iced-leiningen*
                             cider.nrepl/wrap-pprint-fn
                             cider.nrepl/wrap-spec
                             cider.nrepl/wrap-test
+                            cider.nrepl/wrap-trace
                             cider.nrepl/wrap-undef]}}}
 <
 ------------------------------------------------------------------------------
@@ -102,6 +103,7 @@ Boot                                                            *vim-iced-boot*
       cider.nrepl/wrap-pprint-fn
       cider.nrepl/wrap-spec
       cider.nrepl/wrap-test
+      cider.nrepl/wrap-trace
       cider.nrepl/wrap-undef
       refactor-nrepl.middleware/wrap-refactor])
 <
@@ -111,7 +113,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   REPL needs to be activated beforehand.
   - `lein repl`
   - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "9a45ddd2a3ea1e042540652870bd606207732dc0"}}}' -m iced-repl`
+  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "8184136b8b6ecbeb4e104c8cef4b099a301a80ec"}}}' -m iced-repl`
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
