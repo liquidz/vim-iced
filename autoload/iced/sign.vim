@@ -10,8 +10,14 @@ function! s:next_id() abort
 endfunction
 
 function! iced#sign#place(name, lnum, file) abort
+  let id = s:next_id()
   exe printf(':sign place %d line=%d name=%s file=%s',
-      \ s:next_id(), a:lnum, a:name, a:file)
+      \ id, a:lnum, a:name, a:file)
+  return id
+endfunction
+
+function! iced#sign#unplace(id) abort
+  exe printf(':sign unplace %d', a:id)
 endfunction
 
 function! iced#sign#unplace_all() abort
