@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojunre interactive development environment for Vim8
 
-Version: 0.1.2
+Version: 0.1.3
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -75,6 +75,7 @@ Leiningen                                                  *vim-iced-leiningen*
                             cider.nrepl/wrap-pprint-fn
                             cider.nrepl/wrap-spec
                             cider.nrepl/wrap-test
+                            cider.nrepl/wrap-trace
                             cider.nrepl/wrap-undef]}}}
 <
 ------------------------------------------------------------------------------
@@ -102,6 +103,7 @@ Boot                                                            *vim-iced-boot*
       cider.nrepl/wrap-pprint-fn
       cider.nrepl/wrap-spec
       cider.nrepl/wrap-test
+      cider.nrepl/wrap-trace
       cider.nrepl/wrap-undef
       refactor-nrepl.middleware/wrap-refactor])
 <
@@ -111,7 +113,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   REPL needs to be activated beforehand.
   - `lein repl`
   - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "9a45ddd2a3ea1e042540652870bd606207732dc0"}}}' -m iced-repl`
+  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "8184136b8b6ecbeb4e104c8cef4b099a301a80ec"}}}' -m iced-repl`
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
@@ -393,6 +395,18 @@ Commands                                                    *vim-iced-commands*
   See https://github.com/clojure-emacs/refactor-nrepl#clean-ns
   Key is mapped to |<Plug>(iced_clean_ns)|.
 
+                                                          *:IcedToggleTraceVar*
+:IcedToggleTraceVar [{symbol}]
+  Toggle tracing {symbol} in current namespace.
+  If {symbol} is not passed, symbol under cursor is used.
+  Key is mapped to |<Plug>(iced_toggle_trace_var)|.
+
+                                                           *:IcedToggleTraceNs*
+:IcedToggleTraceNs [{ns}]
+  Toggle tracing {ns}.
+  If {ns} is not passed, current buffer's ns name is used.
+  Key is mapped to |<Plug>(iced_toggle_trace_ns)|.
+
 ------------------------------------------------------------------------------
 Functions                                                  *vim-iced-functions*
 
@@ -562,6 +576,14 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
+
+                                                *<Plug>(iced_toggle_trace_var)*
+<Plug>(iced_toggle_trace_var)
+  Same as |:IcedToggleTraceVar|.
+
+                                                 *<Plug>(iced_toggle_trace_ns)*
+<Plug>(iced_toggle_trace_ns)
+  Same as |:IcedToggleTraceNs|.
 
 ==============================================================================
 Customizing                                              *vim-iced-customizing*

@@ -2,12 +2,13 @@
 
 PLUGIN_NAME = iced
 VITAL_MODULES = Data.Dict \
-								Data.List \
-								Data.String \
-								Vim.Buffer \
-								Vim.BufferManager \
-								Vim.Message \
-								Web.HTTP
+		Data.List \
+		Data.String \
+		Locale.Message \
+		Vim.Buffer \
+		Vim.BufferManager \
+		Vim.Message \
+		Web.HTTP
 
 all: vital test
 

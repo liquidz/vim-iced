@@ -4,6 +4,7 @@ ccfe1e17859e824f0f1a13440ca2020929d531fd
 Data.Dict
 Data.List
 Data.String
+Locale.Message
 Vim.Buffer
 Vim.BufferManager
 Vim.Message

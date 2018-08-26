@@ -25,8 +25,17 @@ function! s:ns_candidate(ns_name) abort
       \}
 endfunction
 
+function! s:format_arglist(arglist) abort
+  if stridx(a:arglist, '(quote ') == -1
+    return a:arglist
+  endif
+
+  return strpart(a:arglist, 7, len(a:arglist)-8)
+endfunction
+
 function! s:candidate(c) abort
-  let arglists = get(a:c, 'arglists', '')
+  let arglists = get(a:c, 'arglists', [])
+  let arglists = map(arglists, {_, v -> s:format_arglist(v)})
   let doc = get(a:c, 'doc', '')
   return {
       \ 'word': a:c['candidate'],

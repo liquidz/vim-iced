@@ -51,6 +51,9 @@ command!          IcedBrowseNamespace   call iced#nrepl#ns#transition#list()
 
 command!          IcedCleanNs           call iced#nrepl#refactor#clean_ns()
 command! -nargs=? IcedAddMissing        call iced#nrepl#refactor#add_missing(<q-args>)
+
+command! -nargs=? IcedToggleTraceVar    call iced#nrepl#trace#toggle_var(<q-args>)
+command! -nargs=? IcedToggleTraceNs     call iced#nrepl#trace#toggle_ns(<q-args>)
 "" }}}
 
 "" Key mappings {{{
@@ -98,6 +101,9 @@ nnoremap <silent> <Plug>(iced_browse_namespace)    :<C-u>IcedBrowseNamespace<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)            :<C-u>IcedCleanNs<CR>
 nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
+
+nnoremap <silent> <Plug>(iced_toggle_trace_ns)     :<C-u>IcedToggleTraceNs<CR>
+nnoremap <silent> <Plug>(iced_toggle_trace_var)    :<C-u>IcedToggleTraceVar<CR>
 "" }}}
 
 "" Auto commands {{{
@@ -223,6 +229,7 @@ endif
 
 "" Signs {{{
 sign define iced_err text=>> texthl=ErrorMsg
+sign define iced_trace text=t> texthl=Search
 "" }}}
 
 let &cpo = s:save_cpo

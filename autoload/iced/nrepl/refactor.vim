@@ -11,6 +11,7 @@ function! s:replace_ns(resp) abort
   endif
   if has_key(a:resp, 'ns') && !empty(a:resp['ns'])
     call iced#nrepl#ns#replace(a:resp['ns'])
+    call iced#message#info('clearned')
   endif
 endfunction
 
@@ -57,6 +58,7 @@ function! s:add_ns(ns_name, symbol_alias) abort
   let code = iced#nrepl#ns#util#add_require_form(code)
   let code = iced#nrepl#ns#util#add_namespace_to_require(code, a:ns_name, ns_alias)
   call iced#nrepl#ns#replace(code)
+  call iced#message#info_str(printf(iced#message#get('ns_added'), a:ns_name))
 endfunction
 
 function! s:resolve_missing(symbol, resp) abort
@@ -97,6 +99,7 @@ function! iced#nrepl#refactor#add_missing(symbol) abort
     return
   else
     let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+    call iced#message#echom('resolving_missing')
     call iced#nrepl#send({
         \ 'op': 'resolve-missing',
         \ 'symbol': symbol,

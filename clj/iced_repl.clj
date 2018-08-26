@@ -14,6 +14,7 @@
    "cider.nrepl/wrap-pprint-fn"
    "cider.nrepl/wrap-spec"
    "cider.nrepl/wrap-test"
+   "cider.nrepl/wrap-trace"
    "cider.nrepl/wrap-undef"
    "refactor-nrepl.middleware/wrap-refactor"])
 

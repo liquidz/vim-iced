@@ -65,6 +65,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
                           cider.nrepl/wrap-pprint-fn
                           cider.nrepl/wrap-spec
                           cider.nrepl/wrap-test
+                          cider.nrepl/wrap-trace
                           cider.nrepl/wrap-undef]}}}
 ```
 
@@ -77,7 +78,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
   1. Start repl
      - `lein repl`
      - `boot repl`
-     - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "9a45ddd2a3ea1e042540652870bd606207732dc0"}}}' -m iced-repl`
+     - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "8184136b8b6ecbeb4e104c8cef4b099a301a80ec"}}}' -m iced-repl`
   2. Open source file
   3. Evaluate forms (If not connected, vim-iced will connect automatically)
 
