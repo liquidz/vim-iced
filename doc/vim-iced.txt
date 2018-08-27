@@ -141,8 +141,10 @@ Evaluating                                                *vim-iced-evaluating*
 
   |:IcedEval| is the simplest way to evaluate forms.
   But working with {vim-sexp} is the best.
-
   See details: |<Plug>(iced_eval)|
+
+  |:IcedEvalRepl| will evaluate form in REPL session.
+  See details: |<Plug>(iced_eval_repl)|
 
 ------------------------------------------------------------------------------
 Stdout Buffer                                          *vim-iced-stdout-buffer*
@@ -260,10 +262,12 @@ Commands                                                    *vim-iced-commands*
                                                                     *:IcedEval*
 :IcedEval {form}
   Evaluate {form} in current session.
+  See details: |<Plug>(iced_eval)|
 
                                                                 *:IcedEvalRepl*
 :IcedEvalRepl {form}
   Evaluate {form} in REPL session.
+  See details: |<Plug>(iced_eval_repl)|
 
                                                                  *:IcedRequire*
 :IcedRequire
@@ -464,7 +468,15 @@ Key Mappings                                            *vim-iced-key-mappings*
   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
 <
-
+                                                       *<Plug>(iced_eval_repl)*
+<Plug>(iced_eval_repl)
+  Evaluate codes in REPL session.
+  Followings are examples for working with {vim-sexp}.
+>
+  <Plug>(iced_eval_repl)<Plug>(sexp_inner_element)``
+  <Plug>(iced_eval_repl)<Plug>(sexp_outer_list)``
+  <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
+<
                                                      *<Plug>(iced_macroexpand)*
 <Plug>(iced_macroexpand)
   Evaluate {macroexpand}, and show result in a window.
@@ -684,6 +696,7 @@ g:iced_enable_default_key_mappings
   <Leader>ei     <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Leader>et     <Plug>(iced_eval_outer_top_list)
+  <Leader>er     <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
   <Leader>ep     <Plug>(iced_print_last)
   <Leader>eb     <Plug>(iced_require)
   <Leader>eB     <Plug>(iced_require_all)
