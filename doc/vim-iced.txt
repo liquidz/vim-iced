@@ -709,6 +709,7 @@ g:iced_enable_default_key_mappings
   <Leader>tp     <Plug>(iced_test_all)
   <Leader>tr     <Plug>(iced_test_redo)
   <Leader>ss     <Plug>(iced_stdout_buffer_open)
+  <Leader>sl     <Plug>(iced_stdout_buffer_clear)
   <Leader>rcn    <Plug>(iced_clean_ns)
   <Leader>ram    <Plug>(iced_add_missing)
   <Leader>hs     <Plug>(iced_source_show)

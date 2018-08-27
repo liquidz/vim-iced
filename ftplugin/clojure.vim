@@ -192,6 +192,10 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>ss <Plug>(iced_stdout_buffer_open)
   endif
 
+  if !hasmapto('<Plug>(iced_stdout_buffer_clear)')
+    silent! nmap <buffer> <Leader>sl <Plug>(iced_stdout_buffer_clear)
+  endif
+
   if !hasmapto('<Plug>(iced_def_jump)')
     silent! nmap <buffer> <C-]> <Plug>(iced_def_jump)
   endif
