@@ -19,6 +19,24 @@ function! iced#operation#eval(type) abort
   endtry
 endfunction
 
+function! iced#operation#eval_repl(type) abort
+  let view = winsaveview()
+  let reg_save = @@
+
+  try
+    silent exe 'normal! `[v`]y'
+    let code = @@
+    if empty(code)
+      echom iced#message#get('finding_code_error')
+    else
+      call iced#nrepl#ns#eval({_ -> iced#nrepl#eval#repl(code)})
+    endif
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+  endtry
+endfunction
+
 function! iced#operation#macroexpand(type) abort
   let view = winsaveview()
   let reg_save = @@
