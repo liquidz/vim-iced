@@ -63,7 +63,7 @@ Leiningen                                                  *vim-iced-leiningen*
                          [cider/cider-nrepl "0.18.0"]
                          [cider/orchard "0.3.0"]
                          [cljfmt "0.6.0"]]
-          :plugins [[refactor-nrepl "2.4.0-SNAPSHOT"]]
+          :plugins [[refactor-nrepl "2.4.0"]]
           :repl-options {:nrepl-middleware
                            [cider.nrepl/wrap-complete
                            cider.nrepl/wrap-format
@@ -87,7 +87,7 @@ Boot                                                            *vim-iced-boot*
 
   (swap! boot.repl/*default-dependencies* concat
     '[[nrepl "0.4.4"]
-      [refactor-nrepl "2.4.0-SNAPSHOT"]
+      [refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
       [cider/orchard "0.3.0"]
       [cljfmt "0.6.0"]])
