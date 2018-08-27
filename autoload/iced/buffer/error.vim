@@ -16,19 +16,23 @@ function! iced#buffer#error#init() abort
   call iced#buffer#init(s:bufname, funcref('s:initialize'))
 endfunction
 
-function! iced#buffer#error#open(text) abort
-  if empty(a:text)
-    call iced#buffer#close(s:bufname)
-    return
-  endif
-
-  call iced#buffer#set_contents(s:bufname, a:text)
+function! iced#buffer#error#open() abort
   call iced#buffer#open(
       \ s:bufname,
       \ {'opener': 'split',
       \  'mods': 'belowright',
       \  'scroll_to_top': v:true,
       \  'height': g:iced#buffer#error#height})
+endfunction
+
+function! iced#buffer#error#show(text) abort
+  if empty(a:text)
+    call iced#buffer#close(s:bufname)
+    return
+  endif
+
+  call iced#buffer#set_contents(s:bufname, a:text)
+  call iced#buffer#error#open()
 endfunction
 
 let &cpo = s:save_cpo
