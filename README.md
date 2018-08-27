@@ -78,7 +78,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
   1. Start repl
      - `lein repl`
      - `boot repl`
-     - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "8184136b8b6ecbeb4e104c8cef4b099a301a80ec"}}}' -m iced-repl`
+     - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "3a69cf7592685c96574e75fc600a6779c20232ff"}}}' -m iced-repl`
   2. Open source file
   3. Evaluate forms (If not connected, vim-iced will connect automatically)
 
