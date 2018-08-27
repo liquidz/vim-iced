@@ -74,16 +74,16 @@ function! s:get_message_id(x) abort
     let x = x[0]
   endif
   if type(x) == type({})
-    return get(x, 'id', -1)
+    return get(x, 'id', get(x, 'original-id', -1))
   else
     return -1
   endif
 endfunction
 
-function! s:is_done(resp) abort
+function! s:has_status(resp, status) abort
   for resp in iced#util#ensure_array(a:resp)
     let status = get(resp, 'status', [v:none])[0]
-    if status ==# 'done'
+    if status ==# a:status
       return v:true
     endif
   endfor
@@ -153,9 +153,10 @@ function! s:dispatcher(ch, resp) abort
         let handler_result = Handler(resp)
       endif
 
-      if s:is_done(resp)
+      if s:has_status(resp, 'done')
         let Callback = get(s:messages[id], 'callback')
         unlet s:messages[id]
+        call iced#nrepl#debug#quit()
 
         if !empty(handler_result) && iced#util#is_function(Callback)
           call Callback(handler_result)
@@ -163,6 +164,10 @@ function! s:dispatcher(ch, resp) abort
       endif
     endif
 
+    if s:has_status(resp, 'need-debug-input')
+      call iced#buffer#stdout#open()
+      call iced#nrepl#debug#start(resp)
+    endif
   catch /Failed to parse bencode/
     let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
   endtry
@@ -209,7 +214,9 @@ function! iced#nrepl#send(data) abort
     unlet data['callback']
   endif
 
-  let s:messages[id] = message
+  if data['op'] !=# 'debug-input'
+    let s:messages[id] = message
+  endif
 
   call ch_sendraw(s:nrepl['channel'], iced#nrepl#bencode#encode(data))
 endfunction
@@ -219,8 +226,12 @@ endfunction
 "" --------
 
 function! s:warm_up() abort
-  let code = '(require ''cljfmt.core)'
-  call iced#nrepl#eval(code, {'session': 'clj'})
+  call iced#nrepl#eval('(require ''cljfmt.core)', {'session': 'clj'})
+
+  " FIXME init-debugger does not return response immediately
+  call iced#nrepl#cider#debug#init()
+  sleep 100m
+  call iced#nrepl#cider#debug#init()
 endfunction
 
 function! s:status(ch) abort

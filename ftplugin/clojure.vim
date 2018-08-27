@@ -55,6 +55,12 @@ command! -nargs=? IcedAddMissing        call iced#nrepl#refactor#add_missing(<q-
 
 command! -nargs=? IcedToggleTraceVar    call iced#nrepl#trace#toggle_var(<q-args>)
 command! -nargs=? IcedToggleTraceNs     call iced#nrepl#trace#toggle_ns(<q-args>)
+
+" FIXME
+command!          IcedDebugContinue     call iced#nrepl#debug#input(':continue')
+command!          IcedDebugNext         call iced#nrepl#debug#input(':next')
+command!          IcedDebugQuit         call iced#nrepl#debug#input(':quit')
+command!          IcedDebugLocals       call iced#nrepl#debug#input(':locals')
 "" }}}
 
 "" Key mappings {{{
