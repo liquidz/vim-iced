@@ -4,8 +4,9 @@ set cpo&vim
 function! s:search_ns() abort
   call cursor(1, 1)
   if trim(getline('.'))[0:3] !=# '(ns '
-    call search('(ns ')
+    return search('(ns ')
   endif
+  return 1
 endfunction
 
 function! iced#nrepl#ns#replace(new_ns) abort
@@ -13,7 +14,10 @@ function! iced#nrepl#ns#replace(new_ns) abort
   let reg_save = @@
 
   try
-    call s:search_ns()
+    if s:search_ns() == 0
+      call iced#message#error('ns_not_found')
+      return
+    endif
     silent normal! dab
 
     let new_ns = trim(a:new_ns)
@@ -29,9 +33,10 @@ function! iced#nrepl#ns#replace(new_ns) abort
     call append(lnum, split(new_ns, '\r\?\n'))
   finally
     let @@ = reg_save
-    call s:search_ns()
-    call iced#format#form()
-    call iced#nrepl#ns#eval(v:none)
+    if s:search_ns() != 0
+      call iced#format#form()
+      call iced#nrepl#ns#eval(v:none)
+    endif
     call winrestview(view)
   endtry
 endfunction
@@ -42,7 +47,9 @@ function! iced#nrepl#ns#get() abort
   let code = v:none
 
   try
-    call s:search_ns()
+    if s:search_ns() == 0
+      return v:none
+    endif
     silent normal! va(y
     let code = @@
   finally
@@ -58,7 +65,10 @@ function! iced#nrepl#ns#name() abort
   let reg_save = @@
 
   try
-    call s:search_ns()
+    if s:search_ns() == 0
+      call iced#message#error('ns_not_found')
+      return
+    endif
     let start = line('.')
     let line = trim(join(getline(start, start+1), ' '))
     let line = substitute(line, '(ns ', '', '')
@@ -71,7 +81,11 @@ endfunction
 
 function! iced#nrepl#ns#eval(callback) abort
   let code = iced#nrepl#ns#get()
-  call iced#nrepl#eval(code, a:callback)
+  if empty(code)
+    call a:callback(v:none)
+  else
+    call iced#nrepl#eval(code, a:callback)
+  endif
 endfunction
 
 function! s:cljs_load_file(callback) abort
