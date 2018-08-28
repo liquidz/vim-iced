@@ -56,6 +56,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
         :plugins [[refactor-nrepl "2.4.0-SNAPSHOT"]]
         :repl-options {:nrepl-middleware
                          [cider.nrepl/wrap-complete
+                          cider.nrepl/wrap-debug
                           cider.nrepl/wrap-format
                           cider.nrepl/wrap-info
                           cider.nrepl/wrap-macroexpand
