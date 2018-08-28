@@ -45,5 +45,17 @@ function! iced#util#debug(x) abort
   endif
 endfunction
 
+function! iced#util#save_cursor_position() abort
+  return {
+      \ 'bufnr': bufnr('%'),
+      \ 'view': winsaveview(),
+      \ }
+endfunction
+
+function! iced#util#restore_cursor_position(pos) abort
+  silent exe printf('b %d', a:pos['bufnr'])
+  silent call winrestview(a:pos['view'])
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
