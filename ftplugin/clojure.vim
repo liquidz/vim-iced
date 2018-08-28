@@ -28,6 +28,7 @@ command!          IcedTestNs            call iced#nrepl#test#ns()
 command!          IcedTestAll           call iced#nrepl#test#all()
 command!          IcedTestRedo          call iced#nrepl#test#redo()
 command!          IcedTestUnderCursor   call iced#nrepl#test#under_cursor()
+command!          IcedTestBufferOpen    call iced#buffer#error#open()
 
 command!          IcedStdoutBufferOpen  call iced#buffer#stdout#open()
 command!          IcedStdoutBufferClear call iced#buffer#stdout#clear()
@@ -66,6 +67,7 @@ nnoremap <silent> <Plug>(iced_start_cljs_repl)     :<C-u>IcedStartCljsRepl<CR>
 nnoremap <silent> <Plug>(iced_quit_cljs_repl)      :<C-u>IcedQuitCljsRepl<CR>
 
 nnoremap <silent> <Plug>(iced_eval)                :<C-u>set opfunc=iced#operation#eval<CR>g@
+nnoremap <silent> <Plug>(iced_eval_repl)           :<C-u>set opfunc=iced#operation#eval_repl<CR>g@
 nnoremap <silent> <Plug>(iced_macroexpand)         :<C-u>set opfunc=iced#operation#macroexpand<CR>g@
 nnoremap <silent> <Plug>(iced_macroexpand_1)       :<C-u>set opfunc=iced#operation#macroexpand_1<CR>g@
 nnoremap <silent> <Plug>(iced_require)             :<C-u>IcedRequire<CR>
@@ -78,6 +80,7 @@ nnoremap <silent> <Plug>(iced_test_ns)             :<C-u>IcedTestNs<CR>
 nnoremap <silent> <Plug>(iced_test_all)            :<C-u>IcedTestAll<CR>
 nnoremap <silent> <Plug>(iced_test_redo)           :<C-u>IcedTestRedo<CR>
 nnoremap <silent> <Plug>(iced_test_under_cursor)   :<C-u>IcedTestUnderCursor<CR>
+nnoremap <silent> <Plug>(iced_test_buffer_open)    :<C-u>IcedTestBufferOpen<CR>
 
 nnoremap <silent> <Plug>(iced_stdout_buffer_open)  :<C-u>IcedStdoutBufferOpen<CR>
 nnoremap <silent> <Plug>(iced_stdout_buffer_clear) :<C-u>IcedStdoutBufferClear<CR>
@@ -131,6 +134,10 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>et <Plug>(iced_eval_outer_top_list)
   endif
 
+  if !hasmapto('<Plug>(iced_eval_repl)')
+    silent! nmap <buffer> <Leader>er <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
+  endif
+
   if !hasmapto('<Plug>(iced_print_last)')
     silent! nmap <buffer> <Leader>ep <Plug>(iced_print_last)
   endif
@@ -159,6 +166,10 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>tt <Plug>(iced_test_under_cursor)
   endif
 
+  if !hasmapto('<Plug>(iced_test_buffer_open)')
+    silent! nmap <buffer> <Leader>to <Plug>(iced_test_buffer_open)
+  endif
+
   if !hasmapto('<Plug>(iced_test_ns)')
     silent! nmap <buffer> <Leader>tn <Plug>(iced_test_ns)
   endif
@@ -173,6 +184,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_stdout_buffer_open)')
     silent! nmap <buffer> <Leader>ss <Plug>(iced_stdout_buffer_open)
+  endif
+
+  if !hasmapto('<Plug>(iced_stdout_buffer_clear)')
+    silent! nmap <buffer> <Leader>sl <Plug>(iced_stdout_buffer_clear)
   endif
 
   if !hasmapto('<Plug>(iced_def_jump)')

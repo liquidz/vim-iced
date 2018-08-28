@@ -5,6 +5,7 @@
 
 (def middlewares
   ["cider.nrepl/wrap-complete"
+   "cider.nrepl/wrap-debug"
    "cider.nrepl/wrap-format"
    "cider.nrepl/wrap-info"
    "cider.nrepl/wrap-macroexpand"

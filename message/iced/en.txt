@@ -8,6 +8,7 @@
   'interrupted':        'Interrupted.',
   'reading':            'Still reading..',
   'not_found':          'Not found.',
+  'ns_not_found':       '(ns ..) form is not found.',
   'required':           'Required.',
   'timeout':            'Timed out.',
   'invalid_cljs_env':   'Invalid CLJS environment.',

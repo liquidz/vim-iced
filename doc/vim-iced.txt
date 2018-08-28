@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojunre interactive development environment for Vim8
 
-Version: 0.1.3
+Version: 0.2.0
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -16,6 +16,7 @@ ClojureScript        |vim-iced-clojurescript|
 Evaluating           |vim-iced-evaluating|
   Stdout Buffer      |vim-iced-stdout-buffer|
 Testing              |vim-iced-testing|
+Debugging            |vim-iced-debugging|
 Skeleton             |vim-iced-skeleton|
 Tag Jump             |vim-iced-tag-jump|
 Editing S-exp        |vim-iced-editing-s-exp|
@@ -63,10 +64,11 @@ Leiningen                                                  *vim-iced-leiningen*
                          [cider/cider-nrepl "0.18.0"]
                          [cider/orchard "0.3.0"]
                          [cljfmt "0.6.0"]]
-          :plugins [[refactor-nrepl "2.4.0-SNAPSHOT"]]
+          :plugins [[refactor-nrepl "2.4.0"]]
           :repl-options {:nrepl-middleware
                            [cider.nrepl/wrap-complete
-                           cider.nrepl/wrap-format
+                            cider.nrepl/wrap-debug
+                            cider.nrepl/wrap-format
                             cider.nrepl/wrap-info
                             cider.nrepl/wrap-macroexpand
                             cider.nrepl/wrap-ns
@@ -87,13 +89,14 @@ Boot                                                            *vim-iced-boot*
 
   (swap! boot.repl/*default-dependencies* concat
     '[[nrepl "0.4.4"]
-      [refactor-nrepl "2.4.0-SNAPSHOT"]
+      [refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
       [cider/orchard "0.3.0"]
       [cljfmt "0.6.0"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
+      cider.nrepl/wrap-debug
       cider.nrepl/wrap-format
       cider.nrepl/wrap-info
       cider.nrepl/wrap-macroexpand
@@ -113,7 +116,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   REPL needs to be activated beforehand.
   - `lein repl`
   - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "8184136b8b6ecbeb4e104c8cef4b099a301a80ec"}}}' -m iced-repl`
+  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "952792820e32e29571bb7ce04048d21185782820"}}}' -m iced-repl`
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
@@ -141,8 +144,10 @@ Evaluating                                                *vim-iced-evaluating*
 
   |:IcedEval| is the simplest way to evaluate forms.
   But working with {vim-sexp} is the best.
-
   See details: |<Plug>(iced_eval)|
+
+  |:IcedEvalRepl| will evaluate form in REPL session.
+  See details: |<Plug>(iced_eval_repl)|
 
 ------------------------------------------------------------------------------
 Stdout Buffer                                          *vim-iced-stdout-buffer*
@@ -169,6 +174,19 @@ Testing                                                      *vim-iced-testing*
     au!
     au QuickFixCmdPost vim-iced cwindow
   aug END
+<
+==============================================================================
+Debugging                                                  *vim-iced-debugging*
+
+  vim-iced suports cider's `#dbg` and `#break` reader literals.
+  Easiest way is to put `#dbg` to your code, and evaluate it.
+>
+  (defn fib
+    ([n] (fib 0 1 n))
+    ([a b n]
+      (if (<= n 0)
+       a
+       #dbg (recur b (+ a b) (dec n)))))
 <
 ==============================================================================
 Skeleton                                                    *vim-iced-skeleton*
@@ -260,10 +278,12 @@ Commands                                                    *vim-iced-commands*
                                                                     *:IcedEval*
 :IcedEval {form}
   Evaluate {form} in current session.
+  See details: |<Plug>(iced_eval)|
 
                                                                 *:IcedEvalRepl*
 :IcedEvalRepl {form}
   Evaluate {form} in REPL session.
+  See details: |<Plug>(iced_eval_repl)|
 
                                                                  *:IcedRequire*
 :IcedRequire
@@ -296,6 +316,11 @@ Commands                                                    *vim-iced-commands*
 :IcedTestUnderCursor
   Run test under cursor.
   Key is mapped to |<Plug>(iced_test_under_cursor)|.
+
+                                                          *:IcedTestBufferOpen*
+:IcedTestBufferOpen
+  Open test result buffer.
+  Key is mapped to |<Plug>(iced_test_buffer_open)|.
 
                                                                   *:IcedTestNs*
 :IcedTestNs
@@ -459,7 +484,15 @@ Key Mappings                                            *vim-iced-key-mappings*
   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
 <
-
+                                                       *<Plug>(iced_eval_repl)*
+<Plug>(iced_eval_repl)
+  Evaluate codes in REPL session.
+  Followings are examples for working with {vim-sexp}.
+>
+  <Plug>(iced_eval_repl)<Plug>(sexp_inner_element)``
+  <Plug>(iced_eval_repl)<Plug>(sexp_outer_list)``
+  <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
+<
                                                      *<Plug>(iced_macroexpand)*
 <Plug>(iced_macroexpand)
   Evaluate {macroexpand}, and show result in a window.
@@ -509,6 +542,10 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                *<Plug>(iced_test_under_cursor)*
 <Plug>(iced_test_under_cursor)
   Same as |:IcedTestUnderCursor|.
+
+                                                *<Plug>(iced_test_buffer_open)*
+<Plug>(iced_test_buffer_open)
+  Same as |:IcedTestBufferOpen|.
 
                                               *<Plug>(iced_stdout_buffer_open)*
 <Plug>(iced_stdout_buffer_open)
@@ -565,7 +602,7 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_toggle_src_and_test)
   Same as |:IcedToggleSrcAndTest|.
 
-                                                           *<Plug>(iced_grep)*
+                                                            *<Plug>(iced_grep)*
 <Plug>(iced_grep)
   Same as |:IcedGrep|.
 
@@ -675,6 +712,7 @@ g:iced_enable_default_key_mappings
   <Leader>ei     <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Leader>et     <Plug>(iced_eval_outer_top_list)
+  <Leader>er     <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
   <Leader>ep     <Plug>(iced_print_last)
   <Leader>eb     <Plug>(iced_require)
   <Leader>eB     <Plug>(iced_require_all)
@@ -682,10 +720,12 @@ g:iced_enable_default_key_mappings
   <Leader>eM     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
   <Leader>em     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
   <Leader>tt     <Plug>(iced_test_under_cursor)
+  <Leader>to     <Plug>(iced_test_buffer_open)
   <Leader>tn     <Plug>(iced_test_ns)
   <Leader>tp     <Plug>(iced_test_all)
   <Leader>tr     <Plug>(iced_test_redo)
   <Leader>ss     <Plug>(iced_stdout_buffer_open)
+  <Leader>sl     <Plug>(iced_stdout_buffer_clear)
   <Leader>rcn    <Plug>(iced_clean_ns)
   <Leader>ram    <Plug>(iced_add_missing)
   <Leader>hs     <Plug>(iced_source_show)
