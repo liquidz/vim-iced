@@ -16,6 +16,7 @@ ClojureScript        |vim-iced-clojurescript|
 Evaluating           |vim-iced-evaluating|
   Stdout Buffer      |vim-iced-stdout-buffer|
 Testing              |vim-iced-testing|
+Debugging            |vim-iced-debugging|
 Skeleton             |vim-iced-skeleton|
 Tag Jump             |vim-iced-tag-jump|
 Editing S-exp        |vim-iced-editing-s-exp|
@@ -173,6 +174,19 @@ Testing                                                      *vim-iced-testing*
     au!
     au QuickFixCmdPost vim-iced cwindow
   aug END
+<
+==============================================================================
+Debugging                                                  *vim-iced-debugging*
+
+  vim-iced suports cider's `#dbg` and `#break` reader literals.
+  Easiest way is to put `#dbg` to your code, and evaluate it.
+>
+  (defn fib
+    ([n] (fib 0 1 n))
+    ([a b n]
+      (if (<= n 0)
+       a
+       #dbg (recur b (+ a b) (dec n)))))
 <
 ==============================================================================
 Skeleton                                                    *vim-iced-skeleton*
