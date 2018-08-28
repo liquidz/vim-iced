@@ -55,7 +55,7 @@ endfunction
 
 function! iced#nrepl#debug#start(resp) abort
   if type(s:saved_view) != type({})
-    let s:saved_view = winsaveview()
+    let s:saved_view = iced#util#save_cursor_position()
   endif
 
   call s:move_cursor_and_set_highlight(a:resp)
@@ -93,7 +93,7 @@ function! iced#nrepl#debug#quit() abort
     let s:debug_key = v:none
     call iced#buffer#stdout#append(';; Quit')
     call iced#highlight#clear()
-    call winrestview(s:saved_view)
+    call iced#util#restore_cursor_position(s:saved_view)
     let s:saved_view = v:none
   endif
 endfunction
