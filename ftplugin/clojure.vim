@@ -55,6 +55,8 @@ command! -nargs=? IcedAddMissing        call iced#nrepl#refactor#add_missing(<q-
 
 command! -nargs=? IcedToggleTraceVar    call iced#nrepl#trace#toggle_var(<q-args>)
 command! -nargs=? IcedToggleTraceNs     call iced#nrepl#trace#toggle_ns(<q-args>)
+
+command!          IcedInReplNs          call iced#nrepl#ns#in_repl_session_ns()
 "" }}}
 
 "" Key mappings {{{
@@ -107,6 +109,8 @@ nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
 
 nnoremap <silent> <Plug>(iced_toggle_trace_ns)     :<C-u>IcedToggleTraceNs<CR>
 nnoremap <silent> <Plug>(iced_toggle_trace_var)    :<C-u>IcedToggleTraceVar<CR>
+
+nnoremap <silent> <Plug>(iced_in_repl_ns)          :<C-u>IcedInReplNs<CR>
 "" }}}
 
 "" Auto commands {{{

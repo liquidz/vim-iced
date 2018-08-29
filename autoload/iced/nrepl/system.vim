@@ -34,7 +34,6 @@ endfunction
 function! iced#nrepl#system#user_dir() abort
   let dir = iced#cache#get('user_dir')
   if dir != v:none | return dir | endif
-  echo 'oo'
   return get(s:update_cache(), 'user_dir')
 endfunction
 
