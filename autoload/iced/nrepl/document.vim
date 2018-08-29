@@ -76,7 +76,7 @@ endfunction
 function! s:generate_doc(resp) abort
   if !has_key(a:resp, 'status') || a:resp['status'] != ['done']
     echom iced#message#get('not_found')
-    return
+    return ''
   endif
 
   let doc = (has_key(a:resp, 'javadoc')
@@ -118,7 +118,10 @@ endfunction
 
 function! s:one_line_doc(resp) abort
   if iced#buffer#document#is_visible()
-    call iced#buffer#document#update(s:generate_doc(a:resp))
+    let doc = s:generate_doc(a:resp)
+    if !empty(doc)
+      call iced#buffer#document#update(doc)
+    endif
   else
     if has_key(a:resp, 'javadoc')
       let name =  printf('%s/%s', a:resp['class'], a:resp['member'])
@@ -148,10 +151,12 @@ function! iced#nrepl#document#current_form() abort
       exe "normal! \<Esc>"
     else
       let symbol = trim(split(code, ' ')[0])
-      if iced#nrepl#current_session_key() ==# 'cljs'
-        let symbol = s:expand_ns_alias(symbol)
+      if stridx(symbol, ':') != 0
+        if iced#nrepl#current_session_key() ==# 'cljs'
+          let symbol = s:expand_ns_alias(symbol)
+        endif
+        call iced#nrepl#cider#info(symbol, funcref('s:one_line_doc'))
       endif
-      call iced#nrepl#cider#info(symbol, funcref('s:one_line_doc'))
     endif
   finally
     let @@ = reg_save
