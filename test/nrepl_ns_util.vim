@@ -45,3 +45,8 @@ function! s:suite.add_namespace_to_require_ns_already_exists_test() abort
   call s:assert.equals(res, code)
 endfunction
 
+function! s:suite.add_namespace_to_require_sub_ns_test() abort
+  let code = '(ns foo.bar.baz (:require))'
+  let res = iced#nrepl#ns#util#add_namespace_to_require(code, 'foo.bar', 'bar')
+  call s:assert.equals(res, '(ns foo.bar.baz (:require [foo.bar :as bar]))')
+endfunction
