@@ -32,5 +32,15 @@ function! iced#nrepl#ns#util#add_namespace_to_require(ns_code, ns_name, ns_alias
   endif
 endfunction
 
+function! iced#nrepl#ns#util#extract_ns(s) abort
+  let start = stridx(a:s, '[')
+  if start != -1
+    let end = stridx(a:s, ']')
+    return a:s[start+1:end-1]
+  else
+    return a:s
+  endif
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

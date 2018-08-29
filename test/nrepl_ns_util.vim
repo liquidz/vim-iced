@@ -50,3 +50,12 @@ function! s:suite.add_namespace_to_require_sub_ns_test() abort
   let res = iced#nrepl#ns#util#add_namespace_to_require(code, 'foo.bar', 'bar')
   call s:assert.equals(res, '(ns foo.bar.baz (:require [foo.bar :as bar]))')
 endfunction
+
+function! s:suite.extract_ns_test() abort
+  call s:assert.equals(
+      \ iced#nrepl#ns#util#extract_ns('#namespace[foo.bar]'),
+      \ 'foo.bar')
+  call s:assert.equals(
+      \ iced#nrepl#ns#util#extract_ns('foo.bar'),
+      \ 'foo.bar')
+endfunction
