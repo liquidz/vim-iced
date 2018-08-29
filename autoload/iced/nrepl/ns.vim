@@ -60,14 +60,32 @@ function! iced#nrepl#ns#get() abort
   return code
 endfunction
 
+function! s:ns_name_by_var(...) abort
+  let session = get(a:, 1, iced#nrepl#current_session())
+  let resp = iced#nrepl#sync#send({
+      \ 'id': iced#nrepl#eval#id(),
+      \ 'op': 'eval',
+      \ 'code': '*ns*',
+      \ 'session': session,
+      \ })
+  if !has_key(resp, 'value')
+    return v:none
+  endif
+  return iced#nrepl#ns#util#extract_ns(resp['value'])
+endfunction
+
 function! iced#nrepl#ns#name() abort
   let view = winsaveview()
   let reg_save = @@
 
   try
     if s:search_ns() == 0
-      call iced#message#error('ns_not_found')
-      return
+      let ns_name = s:ns_name_by_var()
+      if empty(ns_name)
+        call iced#message#error('ns_not_found')
+        return
+      endif
+      return ns_name
     endif
     let start = line('.')
     let line = trim(join(getline(start, start+1), ' '))
