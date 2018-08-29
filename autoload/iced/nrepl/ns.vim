@@ -158,5 +158,16 @@ function! iced#nrepl#ns#repl() abort
       \ : 'cljs.repl'
 endfunction
 
+function! iced#nrepl#ns#in_repl_session_ns() abort
+  let ns_name = s:ns_name_by_var(iced#nrepl#repl_session())
+  if empty(ns_name)
+    call iced#message#warn('not_found')
+    return
+  endif
+
+  let code = printf('(in-ns ''%s)', ns_name)
+  call iced#nrepl#eval#code(code)
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

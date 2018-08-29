@@ -432,6 +432,11 @@ Commands                                                    *vim-iced-commands*
   If {ns} is not passed, current buffer's ns name is used.
   Key is mapped to |<Plug>(iced_toggle_trace_ns)|.
 
+                                                                *:IcedInReplNs*
+:IcedInReplNs
+  Sets `*ns*` to the REPL session's namespace name.
+  Key is mapped to |<Plug>(iced_in_repl_ns)|.
+
 ------------------------------------------------------------------------------
 Functions                                                  *vim-iced-functions*
 
@@ -621,6 +626,10 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                  *<Plug>(iced_toggle_trace_ns)*
 <Plug>(iced_toggle_trace_ns)
   Same as |:IcedToggleTraceNs|.
+
+                                                      *<Plug>(iced_in_repl_ns)*
+<Plug>(iced_in_repl_ns)
+  Same as |:IcedInReplNs|.
 
 ==============================================================================
 Customizing                                              *vim-iced-customizing*
