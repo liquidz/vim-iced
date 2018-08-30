@@ -11,7 +11,7 @@ function! s:replace_ns(resp) abort
   endif
   if has_key(a:resp, 'ns') && !empty(a:resp['ns'])
     call iced#nrepl#ns#replace(a:resp['ns'])
-    call iced#message#info('clearned')
+    call iced#message#info('cleaned')
   endif
 endfunction
 
