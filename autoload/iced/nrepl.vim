@@ -24,6 +24,10 @@ let s:response_buffer = ''
 let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 
+function! iced#nrepl#inject_channel(ch) abort
+  let s:ch = a:ch
+endfunction
+
 "" ---------
 "" =SESSIONS
 "" ---------
@@ -278,11 +282,12 @@ function! iced#nrepl#connect(port) abort
     if !iced#nrepl#is_connected()
       let s:nrepl['channel'] = v:false
       call iced#message#error('connect_error')
-      return
+      return v:false
     endif
   endif
 
   call iced#nrepl#send({'op': 'clone', 'callback': funcref('s:connected')})
+  return v:true
 endfunction
 
 function! iced#nrepl#is_connected() abort
