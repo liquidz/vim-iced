@@ -16,18 +16,15 @@ function! s:replace_ns(resp) abort
 endfunction
 
 function! iced#nrepl#refactor#clean_ns() abort
-  if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
-    return
-  else
-    let path = expand('%:p')
-    call iced#nrepl#send({
-        \ 'op': 'clean-ns',
-        \ 'path': path,
-        \ 'sesion': iced#nrepl#current_session(),
-        \ 'callback': funcref('s:replace_ns'),
-        \ })
-  endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  let path = expand('%:p')
+  call iced#nrepl#send({
+      \ 'op': 'clean-ns',
+      \ 'path': path,
+      \ 'sesion': iced#nrepl#current_session(),
+      \ 'callback': funcref('s:replace_ns'),
+      \ })
 endfunction
 
 function! s:parse_candidates(candidates) abort
