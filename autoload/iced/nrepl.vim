@@ -17,6 +17,7 @@ endfunction
 let s:nrepl = s:initialize_nrepl()
 let s:handlers = {}
 
+let s:ch = iced#channel#new()
 let s:messages = {}
 let s:response_buffer = ''
 
@@ -218,7 +219,7 @@ function! iced#nrepl#send(data) abort
     let s:messages[id] = message
   endif
 
-  call ch_sendraw(s:nrepl['channel'], iced#nrepl#bencode#encode(data))
+  call s:ch.sendraw(s:nrepl['channel'], iced#nrepl#bencode#encode(data))
 endfunction
 
 "" --------
@@ -236,7 +237,7 @@ endfunction
 
 function! s:status(ch) abort
   try
-    return ch_status(a:ch)
+    return s:ch.status(a:ch)
   catch
     return 'fail'
   endtry
@@ -268,7 +269,7 @@ function! iced#nrepl#connect(port) abort
   if ! iced#nrepl#is_connected()
     let address = printf('%s:%d', g:iced#nrepl#host, a:port)
     let s:nrepl['port'] = a:port
-    let s:nrepl['channel'] = ch_open(address, {
+    let s:nrepl['channel'] = s:ch.open(address, {
         \ 'mode': 'raw',
         \ 'callback': funcref('s:dispatcher'),
         \ 'drop': 'never',
@@ -294,7 +295,7 @@ function! iced#nrepl#disconnect() abort
   for id in iced#nrepl#sync#session_list()
     call iced#nrepl#sync#close(id)
   endfor
-  call ch_close(s:nrepl['channel'])
+  call s:ch.close(s:nrepl['channel'])
   call s:initialize_nrepl()
   call iced#cache#clear()
 endfunction
