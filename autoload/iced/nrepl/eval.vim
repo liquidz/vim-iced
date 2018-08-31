@@ -50,8 +50,16 @@ function! s:repl_out(resp) abort
 endfunction
 
 function! iced#nrepl#eval#code(code, ...) abort
+  let view = winsaveview()
+  let reg_save = @@
   let opt = get(a:, 1, {})
-  call iced#nrepl#eval(a:code, funcref('s:out'), opt)
+
+  try
+    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(a:code, funcref('s:out'), opt)})
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+  endtry
 endfunction
 
 function! iced#nrepl#eval#repl(code) abort
