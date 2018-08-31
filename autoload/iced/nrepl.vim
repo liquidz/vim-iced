@@ -352,7 +352,7 @@ function! iced#nrepl#eval(code, ...) abort
 
   let pos = getcurpos()
   call iced#nrepl#send({
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': get(option, 'id', iced#nrepl#eval#id()),
       \ 'op': 'eval',
       \ 'code': a:code,
       \ 'session': session,
