@@ -45,8 +45,10 @@ function! iced#paredit#get_current_top_list() abort
     let code = trim(@@)
     let pos = getcurpos()
     if empty(code)
-      call sexp#select_current_list('n', 0, 1)
-      silent normal! y
+      if search('(', 'b') != 0
+        call sexp#select_current_top_list('n', 0)
+        silent normal! y
+      endif
       let code = trim(@@)
       let pos = getcurpos()
     endif

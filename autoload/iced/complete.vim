@@ -116,7 +116,7 @@ function! iced#complete#omni(findstart, base) abort
     let ncol = col('.')
     let s = line[0:ncol-2]
     return ncol - strlen(matchstr(s, '\k\+$')) - 1
-  elseif len(a:base) > 1
+  elseif len(a:base) > 1 && iced#nrepl#is_connected()
     let ns = iced#nrepl#ns#name()
     let candidates = []
 

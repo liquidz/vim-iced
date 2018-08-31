@@ -11,23 +11,20 @@ function! s:replace_ns(resp) abort
   endif
   if has_key(a:resp, 'ns') && !empty(a:resp['ns'])
     call iced#nrepl#ns#replace(a:resp['ns'])
-    call iced#message#info('clearned')
+    call iced#message#info('cleaned')
   endif
 endfunction
 
 function! iced#nrepl#refactor#clean_ns() abort
-  if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
-    return
-  else
-    let path = expand('%:p')
-    call iced#nrepl#send({
-        \ 'op': 'clean-ns',
-        \ 'path': path,
-        \ 'sesion': iced#nrepl#current_session(),
-        \ 'callback': funcref('s:replace_ns'),
-        \ })
-  endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  let path = expand('%:p')
+  call iced#nrepl#send({
+      \ 'op': 'clean-ns',
+      \ 'path': path,
+      \ 'sesion': iced#nrepl#current_session(),
+      \ 'callback': funcref('s:replace_ns'),
+      \ })
 endfunction
 
 function! s:parse_candidates(candidates) abort
@@ -42,7 +39,7 @@ endfunction
 
 function! s:symbol_to_alias(symbol) abort
   let arr = split(a:symbol, '/')
-  if len(arr) == 2
+  if len(arr) == 2 || stridx(a:symbol, '/') != -1
     return arr[0]
   endif
   return v:none
@@ -61,24 +58,46 @@ function! s:add_ns(ns_name, symbol_alias) abort
   call iced#message#info_str(printf(iced#message#get('ns_added'), a:ns_name))
 endfunction
 
+function! s:add_all_ns_alias_candidates(candidates, symbol_alias) abort
+  if empty(a:symbol_alias) | return a:candidates | endif
+
+  let alias_dict = iced#nrepl#refactor#sync#all_ns_aliases()
+  let k = iced#nrepl#current_session_key()
+  if !has_key(alias_dict, k)
+    return []
+  endif
+
+  let aliases = alias_dict[k]
+  let names = []
+  for k in filter(keys(aliases), {_, v -> stridx(v, a:symbol_alias) == 0})
+    let names = names + aliases[k]
+  endfor
+  let names = filter(names, {_, v -> !s:L.has(a:candidates, v)})
+  return a:candidates + names
+endfunction
+
 function! s:resolve_missing(symbol, resp) abort
-  if !has_key(a:resp, 'candidates')
-    return
-  endif
-
+  if !has_key(a:resp, 'candidates') | return | endif
   let symbol_alias = s:symbol_to_alias(a:symbol)
-  let ns_form = iced#nrepl#ns#get()
-  let alias_dict = iced#nrepl#ns#alias#dict_from_code(ns_form)
-  if has_key(alias_dict, symbol_alias)
-    echom printf(iced#message#get('alias_exists'), symbol_alias)
-    return
+
+  if empty(a:resp['candidates'])
+    let ns_candidates = []
+  else
+    let ns_form = iced#nrepl#ns#get()
+    let alias_dict = iced#nrepl#ns#alias#dict_from_code(ns_form)
+    if has_key(alias_dict, symbol_alias)
+      echom printf(iced#message#get('alias_exists'), symbol_alias)
+      return
+    endif
+
+    let existing_ns = values(alias_dict) + ['clojure.core']
+    let candidates = s:parse_candidates(a:resp['candidates'])
+    let ns_candidates = filter(candidates, {_, v -> v[':type'] ==# ':ns'})
+    let ns_candidates = filter(ns_candidates, {_, v -> !s:L.has(existing_ns, v[':name'])})
+    let ns_candidates = map(ns_candidates, {_, v -> v[':name']})
   endif
 
-  let existing_ns = values(alias_dict) + ['clojure.core']
-  let candidates = s:parse_candidates(a:resp['candidates'])
-  let ns_candidates = filter(candidates, {_, v -> v[':type'] ==# ':ns'})
-  let ns_candidates = filter(ns_candidates, {_, v -> !s:L.has(existing_ns, v[':name'])})
-  let ns_candidates = map(ns_candidates, {_, v -> v[':name']})
+  let ns_candidates = s:add_all_ns_alias_candidates(ns_candidates, symbol_alias)
 
   let c = len(ns_candidates)
   if c == 1
