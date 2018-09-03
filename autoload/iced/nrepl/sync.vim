@@ -47,6 +47,16 @@ function! iced#nrepl#sync#session_list() abort
   return get(resp, 'sessions', [])
 endfunction
 
+function! iced#nrepl#sync#pprint(code) abort
+  let code = printf('(with-out-str (clojure.pprint/write ''%s :dispatch clojure.pprint/code-dispatch))', a:code)
+  return iced#nrepl#sync#send({
+        \ 'id': iced#nrepl#eval#id(),
+        \ 'op': 'eval',
+        \ 'code': code,
+        \ 'session': iced#nrepl#clj_session(),
+        \ })
+endfunction
+
 call iced#nrepl#register_handler('ls-sessions')
 call iced#nrepl#register_handler('close')
 
