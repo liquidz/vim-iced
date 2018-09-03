@@ -223,6 +223,10 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> K <Plug>(iced_document_open)
   endif
 
+  if !hasmapto('<Plug>(iced_document_close)')
+    silent! nmap <buffer> <Leader>hq <Plug>(iced_document_close)
+  endif
+
   if !hasmapto('<Plug>(iced_source_show)')
     silent! nmap <buffer> <Leader>hs <Plug>(iced_source_show)
   endif
