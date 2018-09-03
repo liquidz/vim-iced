@@ -414,6 +414,12 @@ Commands                                                    *vim-iced-commands*
   `ctrlp.vim` is required to select namespace.
   Key is mapped to |<Plug>(iced_browse_namespace)|.
 
+                                                              *:IcedBrowseSpec*
+:IcedBrowseSpec
+  Browse specs, and show spec form in document buffer.
+  `ctrlp.vim` is required to select spec.
+  Key is mapped to |<Plug>(iced_browse_spec)|.
+
                                                                  *:IcedCleanNs*
 :IcedCleanNs
   Cleanup ns form.
@@ -615,6 +621,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_browse_namespace)
   Same as |:IcedBrowseNamespace|.
 
+                                                     *<Plug>(iced_browse_spec)*
+<Plug>(iced_browse_spec)
+  Same as |:IcedBrowseSpec|.
+
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
@@ -745,6 +755,7 @@ g:iced_enable_default_key_mappings
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>gn     <Plug>(iced_browse_namespace)
+  <Leader>bs     <Plug>(iced_browse_spec)
   <Leader>*      <Plug>(iced_iced)
   <Leader>/      :<C-u>IcedGrep<Space>
   <C-]>          <Plug>(iced_def_jump)
