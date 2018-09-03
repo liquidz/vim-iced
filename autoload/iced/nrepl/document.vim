@@ -5,20 +5,6 @@ let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 let s:D = s:V.import('Data.Dict')
 
-function! s:format_spec(x) abort
-  if type(a:x) == type([])
-    if a:x[0][0] ==# ':'
-      return printf('[%s]', join(map(a:x, {_, v -> s:format_spec(v)}), ' '))
-    else
-      let fn = s:S.replace_first(a:x[0], 'clojure.spec.alpha', 's')
-      let args = join(map(a:x[1:], {_, v -> s:format_spec(v)}), ' ')
-      return printf('(%s %s)', fn, args)
-    endif
-  else
-    return printf('%s', a:x)
-  endif
-endfunction
-
 function! s:generate_javadoc(resp) abort
   let doc = []
   call add(doc, printf('# %s/%s', a:resp['class'], a:resp['member']))
@@ -37,6 +23,12 @@ function! s:generate_javadoc(resp) abort
   endif
 
   return doc
+endfunction
+
+function! s:add_indent(n, s) abort
+  let spc = ''
+  for _ in range(a:n) | let spc = spc . ' ' | endfor
+  return substitute(a:s, '\r\?\n', "\n".spc, 'g')
 endfunction
 
 function! s:generate_cljdoc(resp) abort
@@ -65,7 +57,9 @@ function! s:generate_cljdoc(resp) abort
     for k in keys(specs)
       let v = specs[k]
       if k ==# ':args' || k ==# ':ret'
-        call add(doc, printf('%7s  %s', k, s:format_spec(v)))
+        let formatted = iced#nrepl#spec#format(v)
+        let formatted = s:add_indent(9, formatted)
+        call add(doc, printf('%7s  %s', k, formatted))
       endif
     endfor
   endif
