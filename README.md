@@ -49,11 +49,11 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
 
 * ~/.lein/profile.clj
 ```clj
-{:user {:dependencies [[nrepl "0.4.4"]
+{:user {:dependencies [[nrepl "0.4.5"]
                        [cider/cider-nrepl "0.18.0"]
                        [cider/orchard "0.3.0"]
                        [cljfmt "0.6.0"]]
-        :plugins [[refactor-nrepl "2.4.0-SNAPSHOT"]]
+        :plugins [[refactor-nrepl "2.4.0"]]
         :repl-options {:nrepl-middleware
                          [cider.nrepl/wrap-complete
                           cider.nrepl/wrap-debug
