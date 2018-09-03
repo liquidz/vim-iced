@@ -60,7 +60,7 @@ Leiningen                                                  *vim-iced-leiningen*
 
   $HOME/.lein/profile.clj
 >
-  {:user {:dependencies [[nrepl "0.4.4"]
+  {:user {:dependencies [[nrepl "0.4.5"]
                          [cider/cider-nrepl "0.18.0"]
                          [cider/orchard "0.3.0"]
                          [cljfmt "0.6.0"]]
@@ -88,7 +88,7 @@ Boot                                                            *vim-iced-boot*
   (require (quote boot.repl))
 
   (swap! boot.repl/*default-dependencies* concat
-    '[[nrepl "0.4.4"]
+    '[[nrepl "0.4.5"]
       [refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
       [cider/orchard "0.3.0"]
