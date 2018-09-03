@@ -186,6 +186,25 @@ function! iced#nrepl#cider#toggle_trace_var(ns_name, symbol, callback) abort
       \ })
 endfunction
 
+function! iced#nrepl#cider#spec_list(callback) abort
+  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  call iced#nrepl#send({
+      \ 'op': 'spec-list',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
+function! iced#nrepl#cider#spec_form(spec_name, callback) abort
+  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  call iced#nrepl#send({
+      \ 'op': 'spec-form',
+      \ 'spec-name': a:spec_name,
+      \ 'session': iced#nrepl#current_session(),
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
 call iced#nrepl#register_handler('info')
 call iced#nrepl#register_handler('ns-path')
 call iced#nrepl#register_handler('format-code')
@@ -196,6 +215,8 @@ call iced#nrepl#register_handler('undef')
 call iced#nrepl#register_handler('macroexpand')
 call iced#nrepl#register_handler('toggle-trace-ns')
 call iced#nrepl#register_handler('toggle-trace-var')
+call iced#nrepl#register_handler('spec-list')
+call iced#nrepl#register_handler('spec-form')
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
