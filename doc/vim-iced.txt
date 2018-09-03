@@ -754,7 +754,7 @@ g:iced_enable_default_key_mappings
   <Leader>ram    <Plug>(iced_add_missing)
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
-  <Leader>gn     <Plug>(iced_browse_namespace)
+  <Leader>bn     <Plug>(iced_browse_namespace)
   <Leader>bs     <Plug>(iced_browse_spec)
   <Leader>*      <Plug>(iced_iced)
   <Leader>/      :<C-u>IcedGrep<Space>

@@ -238,7 +238,7 @@ function! s:default_key_mappings() abort
   endif
 
   if !hasmapto('<Plug>(iced_browse_namespace)')
-    silent! nmap <buffer> <Leader>gn <Plug>(iced_browse_namespace)
+    silent! nmap <buffer> <Leader>bn <Plug>(iced_browse_namespace)
   endif
 
   if !hasmapto('<Plug>(iced_browse_spec)')
