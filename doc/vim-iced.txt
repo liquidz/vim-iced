@@ -659,6 +659,11 @@ g:iced#nrepl#cljs#default_env
   Environment used when |:IcedStartCljsRepl| is called with no argument.
   Default value is `'figwheel'`.
 
+                                             *g:iced#nrepl#eval#inside_comment*
+g:iced#nrepl#eval#inside_comment
+  If {v:true}, evaluate inside comment form.
+  Default value is `v:true`.
+
                                                     *g:iced#buffer#stdout#mods*
 g:iced#buffer#stdout#mods
   Buffer position definition.

@@ -1,6 +1,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let g:iced#nrepl#eval#inside_comment = get(g:, 'iced#nrepl#eval#inside_comment', v:true)
+
 let s:id_counter = 1
 
 function! iced#nrepl#eval#id() abort
@@ -49,13 +51,31 @@ function! s:repl_out(resp) abort
   call iced#nrepl#cljs#switch_session(a:resp)
 endfunction
 
+function! s:is_comment_form(code) abort
+  return (stridx(a:code, '(comment') == 0)
+endfunction
+
+function! s:extract_inside_form(code) abort
+  let i = strridx(a:code, ')')
+  if i != -1
+    " NOTE: 8 = len('(comment')
+    return trim(a:code[8:i-1])
+  endif
+  return a:code
+endfunction
+
 function! iced#nrepl#eval#code(code, ...) abort
   let view = winsaveview()
   let reg_save = @@
   let opt = get(a:, 1, {})
 
+  let code = a:code
+  if g:iced#nrepl#eval#inside_comment && s:is_comment_form(code)
+    let code = s:extract_inside_form(code)
+  endif
+
   try
-    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(a:code, funcref('s:out'), opt)})
+    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, funcref('s:out'), opt)})
   finally
     let @@ = reg_save
     call winrestview(view)
