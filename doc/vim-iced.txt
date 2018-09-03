@@ -1,4 +1,4 @@
-*vim-iced.txt*            Clojunre interactive development environment for Vim8
+*vim-iced.txt*            Clojure interactive development environment for Vim8
 
 Version: 0.2.2
 Author : uochan <liquidz.uo+vim@gmail.com>
@@ -37,7 +37,7 @@ Introduction                                            *vim-iced-introduction*
   Requirement:
   - Vim 8.1 or later
 
-  Lateste Version:
+  Latest Version:
   - https://github.com/liquidz/vim-iced
 
 ==============================================================================
@@ -178,7 +178,7 @@ Testing                                                      *vim-iced-testing*
 ==============================================================================
 Debugging                                                  *vim-iced-debugging*
 
-  vim-iced suports cider's `#dbg` and `#break` reader literals.
+  vim-iced supports cider's `#dbg` and `#break` reader literals.
   Easiest way is to put `#dbg` to your code, and evaluate it.
 >
   (defn fib
@@ -206,7 +206,7 @@ Tag Jump                                                    *vim-iced-tag-jump*
 ==============================================================================
 Editing S-exp                                          *vim-iced-editing-s-exp*
 
-  Provies slurp and barf function.
+  Provides slurp and barf function.
   - |IcedSlurp|
   - |IcedBarf|
 
@@ -260,7 +260,7 @@ Commands                                                    *vim-iced-commands*
   REPL session changes to 'cljs.user' namespace.
   If {env} is not passed, |g:iced#nrepl#cljs#default_env| is used.
 
-  Supports following envionment currently.
+  Supports following environment currently.
   - figwheel
   - nashorn
   - custom
@@ -575,7 +575,7 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                    *<Plug>(iced_form_document)*
 <Plug>(iced_form_document)
   Same as |:IcedEchoFormDocument|.
-  This is convinient to display documents about the form you are editing.
+  This is convenient to display documents about the form you are editing.
 >
   aug vim_iced_echo_document_setting
     au!
@@ -683,11 +683,11 @@ g:iced#buffer#error#height
 
                                           *g:iced#nrepl#cljs#custom#start_code*
 g:iced#nrepl#cljs#custom#start_code
-  Code to start CLJS REPL in {custom} enviroment.
+  Code to start CLJS REPL in {custom} environment.
 
                                            *g:iced#nrepl#cljs#custom#stop_code*
 g:iced#nrepl#cljs#custom#stop_code
-  Code to stop CLJS REPL in {custom} enviroment.
+  Code to stop CLJS REPL in {custom} environment.
 
                                                  *g:iced#nrepl#sync#timeout_ms*
 g:iced#nrepl#sync#timeout_ms
