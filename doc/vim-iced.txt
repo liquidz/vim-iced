@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojure interactive development environment for Vim8
 
-Version: 0.2.2
+Version: 0.2.3
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -60,7 +60,7 @@ Leiningen                                                  *vim-iced-leiningen*
 
   $HOME/.lein/profile.clj
 >
-  {:user {:dependencies [[nrepl "0.4.4"]
+  {:user {:dependencies [[nrepl "0.4.5"]
                          [cider/cider-nrepl "0.18.0"]
                          [cider/orchard "0.3.0"]
                          [cljfmt "0.6.0"]]
@@ -88,7 +88,7 @@ Boot                                                            *vim-iced-boot*
   (require (quote boot.repl))
 
   (swap! boot.repl/*default-dependencies* concat
-    '[[nrepl "0.4.4"]
+    '[[nrepl "0.4.5"]
       [refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
       [cider/orchard "0.3.0"]
@@ -116,7 +116,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   REPL needs to be activated beforehand.
   - `lein repl`
   - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "952792820e32e29571bb7ce04048d21185782820"}}}' -m iced-repl`
+  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "0e200849606b086f1ed841568fb0da02a4ba9c3a"}}}' -m iced-repl`
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
@@ -414,6 +414,12 @@ Commands                                                    *vim-iced-commands*
   `ctrlp.vim` is required to select namespace.
   Key is mapped to |<Plug>(iced_browse_namespace)|.
 
+                                                              *:IcedBrowseSpec*
+:IcedBrowseSpec
+  Browse specs, and show spec form in document buffer.
+  `ctrlp.vim` is required to select spec.
+  Key is mapped to |<Plug>(iced_browse_spec)|.
+
                                                                  *:IcedCleanNs*
 :IcedCleanNs
   Cleanup ns form.
@@ -615,6 +621,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_browse_namespace)
   Same as |:IcedBrowseNamespace|.
 
+                                                     *<Plug>(iced_browse_spec)*
+<Plug>(iced_browse_spec)
+  Same as |:IcedBrowseSpec|.
+
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
@@ -658,6 +668,11 @@ g:iced#format#rule
 g:iced#nrepl#cljs#default_env
   Environment used when |:IcedStartCljsRepl| is called with no argument.
   Default value is `'figwheel'`.
+
+                                             *g:iced#nrepl#eval#inside_comment*
+g:iced#nrepl#eval#inside_comment
+  If {v:true}, evaluate inside comment form.
+  Default value is `v:true`.
 
                                                     *g:iced#buffer#stdout#mods*
 g:iced#buffer#stdout#mods
@@ -739,7 +754,8 @@ g:iced_enable_default_key_mappings
   <Leader>ram    <Plug>(iced_add_missing)
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
-  <Leader>gn     <Plug>(iced_browse_namespace)
+  <Leader>bn     <Plug>(iced_browse_namespace)
+  <Leader>bs     <Plug>(iced_browse_spec)
   <Leader>*      <Plug>(iced_iced)
   <Leader>/      :<C-u>IcedGrep<Space>
   <C-]>          <Plug>(iced_def_jump)

@@ -49,6 +49,7 @@ command!          IcedToggleSrcAndTest  call iced#nrepl#ns#transition#toggle_src
 command! -nargs=? IcedGrep              call iced#grep#exe(<q-args>)
 
 command!          IcedBrowseNamespace   call iced#nrepl#ns#transition#list()
+command!          IcedBrowseSpec        call iced#nrepl#spec#list()
 
 command!          IcedCleanNs           call iced#nrepl#refactor#clean_ns()
 command! -nargs=? IcedAddMissing        call iced#nrepl#refactor#add_missing(<q-args>)
@@ -103,6 +104,7 @@ nnoremap <silent> <Plug>(iced_toggle_src_and_test) :<C-u>IcedToggleSrcAndTest<CR
 nnoremap <silent> <Plug>(iced_grep)                :<C-u>IcedGrep<CR>
 
 nnoremap <silent> <Plug>(iced_browse_namespace)    :<C-u>IcedBrowseNamespace<CR>
+nnoremap <silent> <Plug>(iced_browse_spec)         :<C-u>IcedBrowseSpec<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)            :<C-u>IcedCleanNs<CR>
 nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
@@ -223,6 +225,10 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> K <Plug>(iced_document_open)
   endif
 
+  if !hasmapto('<Plug>(iced_document_close)')
+    silent! nmap <buffer> <Leader>hq <Plug>(iced_document_close)
+  endif
+
   if !hasmapto('<Plug>(iced_source_show)')
     silent! nmap <buffer> <Leader>hs <Plug>(iced_source_show)
   endif
@@ -232,7 +238,11 @@ function! s:default_key_mappings() abort
   endif
 
   if !hasmapto('<Plug>(iced_browse_namespace)')
-    silent! nmap <buffer> <Leader>gn <Plug>(iced_browse_namespace)
+    silent! nmap <buffer> <Leader>bn <Plug>(iced_browse_namespace)
+  endif
+
+  if !hasmapto('<Plug>(iced_browse_spec)')
+    silent! nmap <buffer> <Leader>bs <Plug>(iced_browse_spec)
   endif
 endfunction
 

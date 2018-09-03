@@ -11,7 +11,7 @@ function! iced#operation#eval(type) abort
     if empty(code)
       echom iced#message#get('finding_code_error')
     else
-      call iced#nrepl#ns#eval({_ -> iced#nrepl#eval#code(code)})
+      call iced#nrepl#eval#code(code)
     endif
   finally
     let @@ = reg_save
@@ -29,7 +29,7 @@ function! iced#operation#eval_repl(type) abort
     if empty(code)
       echom iced#message#get('finding_code_error')
     else
-      call iced#nrepl#ns#eval({_ -> iced#nrepl#eval#repl(code)})
+      call iced#nrepl#eval#repl(code)
     endif
   finally
     let @@ = reg_save

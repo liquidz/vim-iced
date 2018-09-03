@@ -33,6 +33,21 @@ function! s:apply_coordination(coordination) abort
   endfor
 endfunction
 
+function! s:ensure_dict(x) abort
+  let t = type(a:x)
+  if t == type({})
+    return a:x
+  elseif t == type([])
+    let result = {}
+    for x in a:x
+      call extend(result, s:ensure_dict(x))
+    endfor
+    return result
+  else
+    return {}
+  endif
+endfunction
+
 function! s:move_cursor_and_set_highlight(resp) abort
   let nrow = max([a:resp['line'], 1])
   let ncol = max([a:resp['column'], 1])
@@ -58,13 +73,14 @@ function! iced#nrepl#debug#start(resp) abort
     let s:saved_view = iced#util#save_cursor_position()
   endif
 
-  call s:move_cursor_and_set_highlight(a:resp)
+  let resp = s:ensure_dict(a:resp)
+  call s:move_cursor_and_set_highlight(resp)
 
   call iced#buffer#stdout#append(" \n;; Debugging")
-  call iced#buffer#stdout#append(printf('::value %s', a:resp['debug-value']))
+  call iced#buffer#stdout#append(printf('::value %s', resp['debug-value']))
   call iced#buffer#stdout#append('::locals')
 
-  let locals = a:resp['locals']
+  let locals = resp['locals']
   let ks = map(copy(locals), {_, v -> v[0]})
   let max_key_len = max(map(ks, {_, v -> len(v)})) + 2
   for kv in locals
@@ -72,12 +88,12 @@ function! iced#nrepl#debug#start(resp) abort
     call iced#buffer#stdout#append(printf('%' . max_key_len . 's: %s', k, v))
   endfor
 
-  let input_type = a:resp['input-type']
+  let input_type = resp['input-type']
   if type(input_type) == type({})
     let ks = filter(sort(keys(input_type)), {_, v -> has_key(s:supported_types, v)})
     let prompt = join(map(ks, {_, k -> printf('(%s)%s', k, input_type[k])}), ', ')
-  elseif has_key(a:resp, 'prompt')
-    let prompt = a:resp['prompt']
+  elseif has_key(resp, 'prompt')
+    let prompt = resp['prompt']
   endif
 
   redraw
@@ -85,7 +101,7 @@ function! iced#nrepl#debug#start(resp) abort
   if type(input_type) == type({})
     let in = ':'.get(input_type, in, 'quit')
   endif
-  call iced#nrepl#cider#debug#input(a:resp['key'], in)
+  call iced#nrepl#cider#debug#input(resp['key'], in)
 endfunction
 
 function! iced#nrepl#debug#quit() abort

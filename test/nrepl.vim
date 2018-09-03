@@ -28,6 +28,16 @@ function! s:test_channel(opt) abort
       let Cb = (has_key(self, 'callback') && type(self.callback) == 2)
           \ ? self.callback : s:funcs.dispatcher
       call Cb(self, resp_data)
+    elseif has_key(self, 'relay_raw') && type(self.relay_raw) == 2
+      let sent_data = iced#nrepl#bencode#decode(a:string)
+      let resp_data = self.relay_raw(sent_data)
+      let Cb = (has_key(self, 'callback') && type(self.callback) == 2)
+          \ ? self.callback : s:funcs.dispatcher
+
+      for resp_string in ((type(resp_data) == type([])) ? resp_data : [resp_data])
+        call Cb(self, resp_string)
+        sleep 10m
+      endfor
     else
       return
     endif
@@ -128,4 +138,37 @@ function! s:suite.disconnect_test() abort
 
   call iced#nrepl#disconnect()
   call s:assert.equals(test.closed_sessions, ['foo-session', 'bar-session'])
+endfunction
+
+function! s:split_half(s) abort
+  let l = len(a:s)
+  let i = l / 2
+  return [a:s[0:i], strpart(a:s, i+1)]
+endfunction
+
+function! s:suite.eval_test() abort
+  let test = {}
+  function! test.relay_raw(msg) abort
+    if a:msg['op'] !=# 'eval' | return '' | endif
+
+    let resp1 = iced#nrepl#bencode#encode({'id': 123, 'ns': 'foo.core', 'value': 6})
+    let resp2 = iced#nrepl#bencode#encode({'id': 123, 'status': ['done']})
+    return (s:split_half(resp1) + s:split_half(resp2))
+  endfunction
+
+  function! test.result_callback(result) abort
+    let self['result'] = a:result
+  endfunction
+
+  call iced#nrepl#inject_channel(s:test_channel({
+      \ 'status_value': 'open',
+      \ 'relay_raw': {msg -> test.relay_raw(msg)},
+      \ }))
+
+  call iced#nrepl#eval(
+      \ '(+ 1 2 3)',
+      \ {result -> test.result_callback(result)},
+      \ {'id': 123},
+      \ )
+  call s:assert.equals(test.result, {'status': ['done'], 'id': 123, 'ns': 'foo.core', 'value': 6})
 endfunction
