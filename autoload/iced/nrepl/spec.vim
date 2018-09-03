@@ -6,14 +6,27 @@ function! s:common_replace(s) abort
   return substitute(s, 'clojure.core/', '', 'g')
 endfunction
 
-function! iced#nrepl#spec#format(spec) abort
+function! s:spec_format(spec) abort
   if type(a:spec) != type([])
     return empty(a:spec) ? 'nil' : s:common_replace(a:spec)
   endif
 
   let fn = s:common_replace(a:spec[0])
-  let args = join(map(a:spec[1:], {_, v -> iced#nrepl#spec#format(v)}), ' ')
+  let args = join(map(a:spec[1:], {_, v -> s:spec_format(v)}), ' ')
   return printf('(%s %s)', fn, args)
+endfunction
+
+function! iced#nrepl#spec#format(spec) abort
+  let code = s:spec_format(a:spec)
+  if !empty(code)
+    let resp = iced#nrepl#sync#pprint(code)
+    if has_key(resp, 'value')
+      let code = substitute(resp['value'], '\(^"\|"$\)', '', 'g')
+      " NOTE: ignore '\\n'
+      let code = substitute(code, '\%(\\\)\@<!\\n', "\n", 'g')
+    endif
+  endif
+  return trim(code)
 endfunction
 
 function! s:spec_form(resp) abort
@@ -21,7 +34,7 @@ function! s:spec_form(resp) abort
     return iced#message#error('spec_form_error')
   endif
 
-  let formatted = trim(iced#nrepl#spec#format(a:resp['spec-form']))
+  let formatted = iced#nrepl#spec#format(a:resp['spec-form'])
   if empty(formatted)
     return iced#message#warn('no_spec')
   endif
