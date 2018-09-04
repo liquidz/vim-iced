@@ -37,7 +37,7 @@ Plug 'liquidz/vim-iced', {'for': 'clojure'}
 ### key mappings
 
 vim-iced is providing default key mappings.
-To enable default key mappings, add folow line to your `.vimrc`.
+To enable default key mappings, add following line to your `.vimrc`.
 
 ```
 let g:iced_enable_default_key_mappings = v:true
