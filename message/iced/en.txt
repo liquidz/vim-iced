@@ -30,5 +30,6 @@
   'spec_list_error':    'Failed to fetch spec list.',
   'spec_form_error':    'Failed to fetch spec form.',
   'no_spec':            'No spec form is found.',
+  'testing':            'Testing...',
 }
 #vim:ft=ruby
