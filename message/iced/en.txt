@@ -22,6 +22,7 @@
   'alias_exists':       'Alias "%s" already exists.',
   'undefined':          'Undefined %s.',
   'cleaned':            'Cleaned.',
+  'already_clean':      'Already clean.',
   'ns_added':           'Added %s.',
   'resolving_missing':  'Resolving...',
   'start_to_trace':     'Start to trace: %s.',

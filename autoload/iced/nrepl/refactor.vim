@@ -9,7 +9,11 @@ function! s:replace_ns(resp) abort
   if has_key(a:resp, 'error')
     return iced#nrepl#eval#err(a:resp['error'])
   endif
-  if has_key(a:resp, 'ns') && !empty(a:resp['ns'])
+  if has_key(a:resp, 'ns')
+    if empty(a:resp['ns'])
+      return iced#message#info('already_clean')
+    endif
+
     call iced#nrepl#ns#replace(a:resp['ns'])
     call iced#message#info('cleaned')
   endif
