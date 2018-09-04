@@ -102,8 +102,8 @@ function! iced#nrepl#eval#undef(symbol) abort
 endfunction
 
 function! s:print_last(resp) abort
-  if has_key(a:resp, 'pprint-out')
-    call iced#buffer#document#open(a:resp['pprint-out'], 'clojure')
+  if has_key(a:resp, 'pprint-out') && !empty(a:resp['pprint-out'])
+    call iced#buffer#stdout#append(a:resp['pprint-out'])
   endif
 endfunction
 

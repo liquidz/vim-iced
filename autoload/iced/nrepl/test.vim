@@ -156,11 +156,13 @@ endfunction
 function! iced#nrepl#test#ns() abort
   let ns = iced#nrepl#ns#name()
   call iced#sign#unplace_all()
+  call iced#message#info('testing')
   call iced#nrepl#cider#test_ns(ns, funcref('s:out'))
 endfunction
 
 function! iced#nrepl#test#all() abort
   call iced#sign#unplace_all()
+  call iced#message#info('testing')
   call iced#nrepl#cider#test_all(funcref('s:out'))
 endfunction
 

@@ -22,6 +22,7 @@
   'alias_exists':       'Alias "%s" already exists.',
   'undefined':          'Undefined %s.',
   'cleaned':            'Cleaned.',
+  'already_clean':      'Already clean.',
   'ns_added':           'Added %s.',
   'resolving_missing':  'Resolving...',
   'start_to_trace':     'Start to trace: %s.',
@@ -30,5 +31,6 @@
   'spec_list_error':    'Failed to fetch spec list.',
   'spec_form_error':    'Failed to fetch spec form.',
   'no_spec':            'No spec form is found.',
+  'testing':            'Testing...',
 }
 #vim:ft=ruby

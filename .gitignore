@@ -3,3 +3,4 @@ doc/tags
 .vim-themis
 .cpcache
 .nrepl-port
+*.bak

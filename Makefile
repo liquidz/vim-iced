@@ -1,4 +1,4 @@
-.PHONY: all vital test themis lint clean ancient
+.PHONY: all vital test themis lint clean ancient aspell circleci
 
 PLUGIN_NAME = iced
 VITAL_MODULES = Data.Dict \
@@ -32,3 +32,12 @@ clean:
 ancient:
 	clojure -A:ancient
 
+aspell:
+	aspell -d en -W 3 -p ./.aspell.en.pws check README.md
+	aspell -d en -W 3 -p ./.aspell.en.pws check doc/vim-iced.txt
+
+circleci: _circleci-lint _circleci-test
+_circleci-lint:
+	circleci build --job lint
+_circleci-test:
+	circleci build --job test

@@ -45,7 +45,7 @@ endfunction
 let s:test_buffer = []
 
 function! s:test_handler(resp) abort
-  call extend(s:test_buffer, (type(a:resp) == type([]) ? a:resp : [a:resp]))
+  call extend(s:test_buffer, iced#util#ensure_array(a:resp))
   return s:test_buffer
 endfunction
 
