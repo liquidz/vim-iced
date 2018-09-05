@@ -19,12 +19,14 @@ test: themis lint
 
 .vim-themis:
 	git clone https://github.com/thinca/vim-themis .vim-themis
+.vim-sexp:
+	git clone https://github.com/guns/vim-sexp .vim-sexp
 
-themis: .vim-themis
-	./.vim-themis/bin/themis
+themis: .vim-themis .vim-sexp
+	./.vim-themis/bin/themis --runtimepath ./.vim-sexp
 
 lint:
-	find . -name "*.vim" | grep -v vital | grep -v .vim-themis | xargs vint
+	find . -name "*.vim" | grep -v vital | grep -v .vim-themis | grep -v .vim-sexp | xargs vint
 
 clean:
 	/bin/rm -rf autoload/vital*
@@ -40,4 +42,5 @@ circleci: _circleci-lint _circleci-test
 _circleci-lint:
 	circleci build --job lint
 _circleci-test:
+	\rm -rf .vim-sexp
 	circleci build --job test
