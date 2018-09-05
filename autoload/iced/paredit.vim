@@ -38,21 +38,25 @@ function! iced#paredit#get_current_top_list() abort
   let pos = v:none
 
   try
-    " select current top list
-    call sexp#select_current_top_list('n', 0)
-    silent normal! y
-
-    let code = trim(@@)
-    let pos = getcurpos()
-    if empty(code)
-      if search('(', 'b') != 0
-        call sexp#select_current_top_list('n', 0)
-        silent normal! y
+    while v:true
+      " move to start position of current outer list
+      silent exe 'normal! vaby'
+      " no matched parenthesis
+      if empty(@@)
+        break
       endif
-      let code = trim(@@)
-      let pos = getcurpos()
-    endif
+
+      if col('.') == 1 || stridx(getline('.'), '#') == 0
+        silent normal! vabo0y
+        let code = @@
+        let pos = getcurpos()
+        break
+      else
+        silent normal! h
+      endif
+    endwhile
   finally
+    silent exe "normal! \<Esc>"
     let @@ = reg_save
     call winrestview(view)
   endtry
