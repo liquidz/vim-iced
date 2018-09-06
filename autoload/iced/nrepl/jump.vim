@@ -16,6 +16,7 @@ function! s:jump(resp) abort
   endif
 
   call cursor(line, column)
+  normal! zz
   redraw!
 endfunction
 
@@ -35,6 +36,7 @@ function! iced#nrepl#jump#back() abort
     let last_position = s:L.pop(s:tagstack)
     execute printf(':buffer %d', last_position[0])
     call cursor(last_position[1], last_position[2])
+    normal! zz
     redraw!
   endif
 endfunction

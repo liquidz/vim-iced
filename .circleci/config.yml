@@ -20,7 +20,7 @@ jobs:
       - run:
           command: |
             . venv/bin/activate
-            find . -name "*.vim" | grep -v vital | grep -v .vim-themis | xargs vint
+            find . -name "*.vim" | grep -v vital | grep -v .vim-themis | grep -v .vim-sexp | xargs vint
   test:
     docker:
       - image: thinca/themis
@@ -29,8 +29,9 @@ jobs:
       - checkout
       - run:
           command: |
+            git clone https://github.com/guns/vim-sexp .vim-sexp
             vim --version
-            themis
+            themis --runtimepath ./.vim-sexp
 workflows:
   version: 2
   all_test:
