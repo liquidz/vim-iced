@@ -1,4 +1,4 @@
-personal_ws-1.1 en 111 
+personal_ws-1.1 en 114 
 grimoire
 IcedGrep
 IcedDocumentOpen
@@ -15,6 +15,7 @@ CursorHoldI
 IcedEval
 autocmd
 au
+IcedMacroExpandOuterList
 setl
 aug
 norl
@@ -74,6 +75,7 @@ IcedDocumentClose
 IcedTestNs
 lightline
 uochan
+OuterList
 nREPL
 nrepl
 concat
@@ -107,6 +109,7 @@ IcedInterrupt
 IcedUndef
 IcedStartCljsRepl
 VimIcedAutoOpenQuickfix
+IcedMacroExpand
 IcedTestUnderCursor
 IcedTestBufferOpen
 IcedSourceShow

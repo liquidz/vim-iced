@@ -1,6 +1,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let g:iced#debug = v:false
+
 function! iced#util#is_function(v) abort
   return type(a:v) == 2
 endfunction

@@ -23,6 +23,8 @@ command!          IcedRequireAll        call iced#nrepl#ns#require_all()
 command! -nargs=? IcedUndef             call iced#nrepl#eval#undef(<q-args>)
 command!          IcedEvalOuterTopList  call iced#nrepl#eval#outer_top_list()
 command!          IcedPrintLast         call iced#nrepl#eval#print_last()
+command!          IcedMacroExpandOuterList  call iced#nrepl#macro#expand_outer_list()
+command!          IcedMacroExpand1OuterList call iced#nrepl#macro#expand_1_outer_list()
 
 command!          IcedTestNs            call iced#nrepl#test#ns()
 command!          IcedTestAll           call iced#nrepl#test#all()
@@ -78,6 +80,8 @@ nnoremap <silent> <Plug>(iced_require_all)         :<C-u>IcedRequireAll<CR>
 nnoremap <silent> <Plug>(iced_undef)               :<C-u>IcedUndef<CR>
 nnoremap <silent> <Plug>(iced_eval_outer_top_list) :<C-u>IcedEvalOuterTopList<CR>
 nnoremap <silent> <Plug>(iced_print_last)          :<C-u>IcedPrintLast<CR>
+nnoremap <silent> <Plug>(iced_macroexpand_outer_list)   :<C-u>IcedMacroExpandOuterList<CR>
+nnoremap <silent> <Plug>(iced_macroexpand_1_outer_list) :<C-u>IcedMacroExpand1OuterList<CR>
 
 nnoremap <silent> <Plug>(iced_test_ns)             :<C-u>IcedTestNs<CR>
 nnoremap <silent> <Plug>(iced_test_all)            :<C-u>IcedTestAll<CR>
@@ -160,12 +164,12 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>eu <Plug>(iced_undef)
   endif
 
-  if !hasmapto('<Plug>(iced_macroexpand)')
-    silent! nmap <buffer> <Leader>eM <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
+  if !hasmapto('<Plug>(iced_macroexpand_outer_list)')
+    silent! nmap <buffer> <Leader>eM <Plug>(iced_macroexpand_outer_list)
   endif
 
-  if !hasmapto('<Plug>(iced_macroexpand_1)')
-    silent! nmap <buffer> <Leader>em <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
+  if !hasmapto('<Plug>(iced_macroexpand_1_outer_list)')
+    silent! nmap <buffer> <Leader>em <Plug>(iced_macroexpand_1_outer_list)
   endif
 
   if !hasmapto('<Plug>(iced_test_under_cursor)')

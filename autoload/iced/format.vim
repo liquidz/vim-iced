@@ -13,29 +13,14 @@ function! iced#format#form() abort
   let view = winsaveview()
   let reg_save = @@
   try
-    " move to the start position of current paragraph
-    silent normal! {j
-    if line('.') >= view['lnum']
-      let tmp = copy(view)
-      let tmp['lnum'] = view['lnum'] - 1
-      let tmp['col'] = 0
-      silent call winrestview(tmp)
-    endif
-
-    " select current top list
-    call sexp#select_current_top_list('n', 0)
-    " yank
-    silent normal! y
-    let code = @@
-    if code[0] !=# '('
-      exe "normal! \<Esc>"
-      return
-    endif
-
-    let formatted = iced#nrepl#format#code(code)
-    if !empty(formatted)
-      let @@ = formatted
-      silent normal! gvp
+    let res = iced#paredit#get_current_top_list_raw()
+    let code = res['code']
+    if !empty(code)
+      let formatted = iced#nrepl#format#code(code)
+      if !empty(formatted)
+        let @@ = formatted
+        silent normal! gvp
+      endif
     endif
   finally
     let @@ = reg_save
