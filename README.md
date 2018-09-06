@@ -72,7 +72,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
 
 [Boot](https://github.com/boot-clj/boot) configuration is also described in [vim-iced.txt](./doc/vim-iced.txt).
 
-**WARN** `cider.nrepl/wrap-trace` will cause vim's freezing.
+**WARN** `cider.nrepl/wrap-tracker` will cause vim's freezing.
 
 ## Usage
 
