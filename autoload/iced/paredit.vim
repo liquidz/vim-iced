@@ -31,9 +31,7 @@ function! iced#paredit#barf() abort
   call winrestview(view)
 endfunction
 
-function! iced#paredit#get_current_top_list() abort
-  let view = winsaveview()
-  let reg_save = @@
+function! iced#paredit#get_current_top_list_raw() abort
   let code = v:none
   let pos = v:none
 
@@ -57,11 +55,24 @@ function! iced#paredit#get_current_top_list() abort
     endwhile
   finally
     silent exe "normal! \<Esc>"
+  endtry
+
+  return {'code': code, 'curpos': pos}
+endfunction
+
+function! iced#paredit#get_current_top_list() abort
+  let view = winsaveview()
+  let reg_save = @@
+  let res = v:none
+  
+  try
+    let res = iced#paredit#get_current_top_list_raw()
+  finally
     let @@ = reg_save
     call winrestview(view)
   endtry
 
-  return {'code': code, 'curpos': pos}
+  return res
 endfunction
 
 let &cpo = s:save_cpo
