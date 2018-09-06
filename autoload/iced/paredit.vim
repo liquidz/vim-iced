@@ -75,5 +75,21 @@ function! iced#paredit#get_current_top_list() abort
   return res
 endfunction
 
+function! iced#paredit#get_outer_list() abort
+  let view = winsaveview()
+  let reg_save = @@
+  let code = v:none
+
+  try
+    silent normal! va(y
+    let code = @@
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+  endtry
+
+  return code
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
