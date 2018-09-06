@@ -312,6 +312,18 @@ Commands                                                    *vim-iced-commands*
   Open a window, and show last evaluated value.
   Key is mapped to |<Plug>(iced_print_last)|.
 
+                                                    *:IcedMacroExpandOuterList*
+:IcedMacroExpandOuterList
+  Work same as `<Plug>(iced_macroexpand)<Plug>(sexp_outer_list)`,
+  without scrolling.
+  Key is mapped to |<Plug>(iced_macroexpand_outer_list)|.
+
+                                                   *:IcedMacroExpand1OuterList*
+:IcedMacroExpand1OuterList
+  Work same as `<Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)`,
+  without scrolling.
+  Key is mapped to |<Plug>(iced_macroexpand_1_outer_list)|.
+
                                                          *:IcedTestUnderCursor*
 :IcedTestUnderCursor
   Run test under cursor.
@@ -538,6 +550,14 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_print_last)
   Same as |:IcedPrintLast|.
 
+                                          *<Plug>(iced_macroexpand_outer_list)*
+<Plug>(iced_macroexpand_outer_list)
+  Same as |:IcedMacroExpandOuterList|.
+
+                                        *<Plug>(iced_macroexpand_1_outer_list)*
+<Plug>(iced_macroexpand_1_outer_list)
+  Same as |:IcedMacroExpand1OuterList|.
+
                                                          *<Plug>(iced_test_ns)*
 <Plug>(iced_test_ns)
   Same as |:IcedTestNs|.
@@ -741,8 +761,8 @@ g:iced_enable_default_key_mappings
   <Leader>eb     <Plug>(iced_require)
   <Leader>eB     <Plug>(iced_require_all)
   <Leader>eu     <Plug>(iced_undef)
-  <Leader>eM     <Plug>(iced_macroexpand)<Plug>(sexp_outer_list)``
-  <Leader>em     <Plug>(iced_macroexpand_1)<Plug>(sexp_outer_list)``
+  <Leader>eM     <Plug>(iced_macroexpand_outer_list)
+  <Leader>em     <Plug>(iced_macroexpand_1_outer_list)
   <Leader>tt     <Plug>(iced_test_under_cursor)
   <Leader>to     <Plug>(iced_test_buffer_open)
   <Leader>tn     <Plug>(iced_test_ns)
