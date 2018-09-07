@@ -60,6 +60,8 @@ command! -nargs=? IcedToggleTraceVar    call iced#nrepl#trace#toggle_var(<q-args
 command! -nargs=? IcedToggleTraceNs     call iced#nrepl#trace#toggle_ns(<q-args>)
 
 command!          IcedInReplNs          call iced#nrepl#ns#in_repl_session_ns()
+
+command! -nargs=? IcedLintNs            call iced#lint#ns(<q-args>)
 "" }}}
 
 "" Key mappings {{{
@@ -117,6 +119,8 @@ nnoremap <silent> <Plug>(iced_toggle_trace_ns)     :<C-u>IcedToggleTraceNs<CR>
 nnoremap <silent> <Plug>(iced_toggle_trace_var)    :<C-u>IcedToggleTraceVar<CR>
 
 nnoremap <silent> <Plug>(iced_in_repl_ns)          :<C-u>IcedInReplNs<CR>
+
+nnoremap <silent> <Plug>(iced_lint_ns)             :<C-u>IcedLintNs<CR>
 "" }}}
 
 "" Auto commands {{{
@@ -261,8 +265,9 @@ endif
 "" }}}
 
 "" Signs {{{
-sign define iced_err text=>> texthl=ErrorMsg
-sign define iced_trace text=t> texthl=Search
+sign define iced_err text=🔥 texthl=ErrorMsg
+sign define iced_trace text=👁 texthl=Search
+sign define iced_lint text=💔 texthl=WarningMsg
 "" }}}
 
 let &cpo = s:save_cpo

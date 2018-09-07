@@ -22,6 +22,7 @@ Tag Jump             |vim-iced-tag-jump|
 Editing S-exp        |vim-iced-editing-s-exp|
   Formatting         |vim-iced-formatting|
   Refactoring        |vim-iced-refactoring|
+  Linting            |vim-iced-linting|
 Interface            |vim-iced-interface|
   Commands           |vim-iced-commands|
   Functions          |vim-iced-functions|
@@ -227,7 +228,27 @@ Formatting                                                *vim-iced-formatting*
 Refactoring                                              *vim-iced-refactoring*
 
   Provides following functions powered by refactor-nrepl.
-  - |IcedCleanNs| (|<Plug>(iced_clean_ns)|)
+  - |:IcedCleanNs| (|<Plug>(iced_clean_ns)|)
+
+------------------------------------------------------------------------------
+Linting                                                      *vim-iced-linting*
+
+  vim-iced can collaborate with `jonase/eastwood`.
+  - https://github.com/jonase/eastwood
+  - Command
+    - |:IcedLintNs| (|<Plug>(iced_lint_ns)|)
+
+  WARN: Only supports Clojure on Java because of `eastwood`
+  
+  To run linter automatically, following autcmd is useful.
+>
+  aug vim_iced_lint_setting
+    au!
+    au BufWritePost *.clj call iced#lint#ns()
+    au CursorMoved  *.clj call iced#lint#echo_message()
+  aug END
+<
+  To define which linters to use, see |g:iced#lint#linters|.
 
 ==============================================================================
 Interface                                                  *vim-iced-interface*
@@ -459,6 +480,12 @@ Commands                                                    *vim-iced-commands*
   Sets `*ns*` to the REPL session's namespace name.
   Key is mapped to |<Plug>(iced_in_repl_ns)|.
 
+                                                                  *:IcedLintNs*
+:IcedLintNs [{ns}]
+  Lint {ns} codes.
+  If {ns} is not passed, current buffer's ns name is used.
+  Key is mapped to |<Plug>(iced_lint_ns)|.
+
 ------------------------------------------------------------------------------
 Functions                                                  *vim-iced-functions*
 
@@ -665,6 +692,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_in_repl_ns)
   Same as |:IcedInReplNs|.
 
+                                                         *<Plug>(iced_lint_ns)*
+<Plug>(iced_lint_ns)
+  Same as |:IcedLintNs|.
+
 ==============================================================================
 Customizing                                              *vim-iced-customizing*
 
@@ -749,6 +780,19 @@ g:iced#grep#target
 
   Default value is
     `'{{user.dir}}{{separator}}**{{separator}}*.{clj,cljs,cljc}'`.
+
+                                                          *g:iced#lint#linters*
+g:iced#lint#linters
+  Linter definition which is used by `jonase/eastwood`.
+  See details: |vim-iced-linting|
+
+  Specific linter names are shown at:
+  - https://github.com/jonase/eastwood#whats-there
+
+  Ex. enable all linters
+>
+  let g:iced#lint#linters = ['all']
+<
 
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
