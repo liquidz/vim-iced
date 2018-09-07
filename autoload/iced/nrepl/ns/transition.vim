@@ -40,19 +40,19 @@ function! iced#nrepl#ns#transition#toggle_src_and_test() abort
   call s:open('e', toggle_ns)
 endfunction
 
-function! s:select_ns_from_list(list) abort
-  if empty(a:list)
+function! s:select_ns_from_list(resp) abort
+  if !has_key(a:resp, 'namespaces') || empty(a:resp['namespaces'])
     return iced#message#error('not_found')
   endif
 
   call ctrlp#iced#start({
-      \ 'candidates': a:list,
+      \ 'candidates': a:resp['namespaces'],
       \ 'accept': funcref('s:open'),
       \ })
 endfunction
 
 function! iced#nrepl#ns#transition#list() abort
-  call iced#nrepl#cider#project_namespaces(funcref('s:select_ns_from_list'))
+  call iced#nrepl#iced#project_namespaces(funcref('s:select_ns_from_list'))
 endfunction
 
 let &cpo = s:save_cpo
