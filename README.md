@@ -51,8 +51,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
 ```clj
 {:user {:dependencies [[nrepl "0.4.5"]
                        [cider/cider-nrepl "0.18.0"]
-                       [cider/orchard "0.3.0"]
-                       [cljfmt "0.6.0"]]
+                       [iced-nrepl "0.1.0-SNAPSHOT"]]
         :plugins [[refactor-nrepl "2.4.0"]]
         :repl-options {:nrepl-middleware
                          [cider.nrepl/wrap-complete
@@ -67,7 +66,8 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
                           cider.nrepl/wrap-spec
                           cider.nrepl/wrap-test
                           cider.nrepl/wrap-trace
-                          cider.nrepl/wrap-undef]}}}
+                          cider.nrepl/wrap-undef
+                          iced.nrepl/wrap-iced]}}}
 ```
 
 [Boot](https://github.com/boot-clj/boot) configuration is also described in [vim-iced.txt](./doc/vim-iced.txt).
