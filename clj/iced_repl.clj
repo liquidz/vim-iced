@@ -17,7 +17,8 @@
    "cider.nrepl/wrap-test"
    "cider.nrepl/wrap-trace"
    "cider.nrepl/wrap-undef"
-   "refactor-nrepl.middleware/wrap-refactor"])
+   "refactor-nrepl.middleware/wrap-refactor"
+   "iced.nrepl/wrap-iced"])
 
 (defn -main []
   (main/init middlewares))

@@ -63,7 +63,8 @@ Leiningen                                                  *vim-iced-leiningen*
   {:user {:dependencies [[nrepl "0.4.5"]
                          [cider/cider-nrepl "0.18.0"]
                          [cider/orchard "0.3.0"]
-                         [cljfmt "0.6.0"]]
+                         [cljfmt "0.6.0"]
+                         [iced-nrepl "0.1.0-SNAPSHOT"]]
           :plugins [[refactor-nrepl "2.4.0"]]
           :repl-options {:nrepl-middleware
                            [cider.nrepl/wrap-complete
@@ -78,7 +79,8 @@ Leiningen                                                  *vim-iced-leiningen*
                             cider.nrepl/wrap-spec
                             cider.nrepl/wrap-test
                             cider.nrepl/wrap-trace
-                            cider.nrepl/wrap-undef]}}}
+                            cider.nrepl/wrap-undef
+                            iced.nrepl/wrap-iced]}}}
 <
 ------------------------------------------------------------------------------
 Boot                                                            *vim-iced-boot*
@@ -92,7 +94,8 @@ Boot                                                            *vim-iced-boot*
       [refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
       [cider/orchard "0.3.0"]
-      [cljfmt "0.6.0"]])
+      [cljfmt "0.6.0"]
+      [iced-nrepl "0.1.0-SNAPSHOT"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -108,7 +111,8 @@ Boot                                                            *vim-iced-boot*
       cider.nrepl/wrap-test
       cider.nrepl/wrap-trace
       cider.nrepl/wrap-undef
-      refactor-nrepl.middleware/wrap-refactor])
+      refactor-nrepl.middleware/wrap-refactor
+      iced.nrepl/wrap-iced])
 <
 ==============================================================================
 nREPL Connection                                    *vim-iced-nrepl-connection*
