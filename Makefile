@@ -7,8 +7,7 @@ VITAL_MODULES = Data.Dict \
 		Locale.Message \
 		Vim.Buffer \
 		Vim.BufferManager \
-		Vim.Message \
-		Web.HTTP
+		Vim.Message
 
 all: vital test
 
