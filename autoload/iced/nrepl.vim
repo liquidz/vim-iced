@@ -231,8 +231,6 @@ endfunction
 "" --------
 
 function! s:warm_up() abort
-  call iced#nrepl#eval('(require ''cljfmt.core)', {'session': 'clj'})
-
   " FIXME init-debugger does not return response immediately
   call iced#nrepl#cider#debug#init()
   sleep 100m

@@ -19,9 +19,13 @@ function! s:lint_ns(resp) abort
 endfunction
 
 function! iced#lint#ns(...) abort
+  if !iced#nrepl#is_connected() | return | endif
   let ns_name = get(a:, 1, iced#nrepl#ns#name())
   let ns_name = (empty(ns_name) ? iced#nrepl#ns#name() : ns_name)
-  call iced#nrepl#iced#lint_ns(ns_name, g:iced#lint#linters, funcref('s:lint_ns'))
+
+  if !empty(ns_name)
+    call iced#nrepl#iced#lint_ns(ns_name, g:iced#lint#linters, funcref('s:lint_ns'))
+  endif
 endfunction
 
 function! iced#lint#echo_message() abort
