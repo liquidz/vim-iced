@@ -1,4 +1,4 @@
-personal_ws-1.1 en 114 
+personal_ws-1.1 en 123 
 grimoire
 IcedGrep
 IcedDocumentOpen
@@ -10,12 +10,13 @@ rhs
 defn
 dec
 IcedReconnect
+jonase
 sha
 CursorHoldI
 IcedEval
 autocmd
-au
 IcedMacroExpandOuterList
+au
 setl
 aug
 norl
@@ -28,6 +29,7 @@ liquidz
 macroexpand
 IcedDefJump
 belowright
+linter
 undef
 figwheel
 sexp
@@ -55,6 +57,7 @@ repl
 ctrlpvim
 IcedRequireAll
 iced's
+IcedLintToggle
 cwindow
 topleft
 IcedStdoutBufferOpen
@@ -76,10 +79,15 @@ IcedTestNs
 lightline
 uochan
 OuterList
+eastwood
+CursorMoved
 nREPL
 nrepl
 concat
 IcedToggleSrcAndTest
+BufWritePost
+IcedLintCurrentFile
+linters
 IcedFormDocument
 IcedCleanNs
 Cljfmt's
@@ -96,6 +104,7 @@ txt
 IcedBrowseSpec
 Sdeps
 eval
+autcmd
 IcedTestRedo
 paredit
 IcedInReplNs
