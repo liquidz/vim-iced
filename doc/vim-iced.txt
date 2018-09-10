@@ -216,12 +216,16 @@ Linting                                                      *vim-iced-linting*
     - |:IcedLintCurrentFile| (|<Plug>(iced_lint_current_file)|)
 
   WARN: Only supports Clojure on Java because of `eastwood`
-  
-  To run linter automatically, following autcmd is useful.
+
+  To run linter automatically, set |g:iced_enable_auto_linting| to `v:true`.
+>
+  let g:iced_enable_auto_linting = v:true
+<
+  If you would like to set manually, following autcmd is useful.
 >
   aug vim_iced_lint_setting
     au!
-    au BufWritePost *.clj call iced#lint#ns()
+    au BufWritePost *.clj call iced#lint#current_file()
     au CursorMoved  *.clj call iced#lint#echo_message()
   aug END
 <
@@ -778,6 +782,11 @@ g:iced#lint#linters
 >
   let g:iced#lint#linters = ['all']
 <
+                                                   *g:iced_enable_auto_linting*
+g:iced_enable_auto_linting
+  If {v:true}, enable linting automatically.
+  Linting is worked when |BufWritePost|.
+  See details: |vim-iced-linting|
 
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings

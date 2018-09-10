@@ -132,6 +132,15 @@ aug vim_iced_initial_setting
   au BufNewFile *.clj,*.cljs,*.cljc call iced#skeleton#new()
   au VimLeave * call iced#nrepl#disconnect()
 aug END
+
+if exists('g:iced_enable_auto_linting')
+    \ && g:iced_enable_auto_linting
+  aug iced_auto_linting
+    au!
+    au BufWritePost *.clj call iced#lint#current_file()
+    au CursorMoved *.clj call iced#lint#echo_message()
+  aug END
+endif
 "" }}}
 
 "" Default mappings {{{
