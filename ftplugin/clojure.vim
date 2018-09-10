@@ -61,7 +61,7 @@ command! -nargs=? IcedToggleTraceNs     call iced#nrepl#trace#toggle_ns(<q-args>
 
 command!          IcedInReplNs          call iced#nrepl#ns#in_repl_session_ns()
 
-command! -nargs=? IcedLintNs            call iced#lint#ns(<q-args>)
+command!          IcedLintCurrentFile   call iced#lint#current_file()
 "" }}}
 
 "" Key mappings {{{
@@ -120,7 +120,7 @@ nnoremap <silent> <Plug>(iced_toggle_trace_var)    :<C-u>IcedToggleTraceVar<CR>
 
 nnoremap <silent> <Plug>(iced_in_repl_ns)          :<C-u>IcedInReplNs<CR>
 
-nnoremap <silent> <Plug>(iced_lint_ns)             :<C-u>IcedLintNs<CR>
+nnoremap <silent> <Plug>(iced_lint_current_file)   :<C-u>IcedLintCurrentFile<CR>
 "" }}}
 
 "" Auto commands {{{

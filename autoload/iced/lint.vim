@@ -5,10 +5,14 @@ let s:V = vital#iced#new()
 let s:M = s:V.import('Vim.Message')
 let s:last_warnings = []
 
+let s:enabled = v:true
 let g:iced#lint#linters = get(g:, 'iced#lint#linters', [])
 
-function! s:lint_ns(resp) abort
+function! s:lint(resp) abort
   if !has_key(a:resp, 'lint-warnings') | return | endif
+  if has_key(a:resp, 'error')
+    return iced#message#error_str(a:resp['error'])
+  endif
 
   call iced#sign#unplace_all()
   let s:last_warnings = a:resp['lint-warnings']
@@ -18,17 +22,20 @@ function! s:lint_ns(resp) abort
   endfor
 endfunction
 
-function! iced#lint#ns(...) abort
-  if !iced#nrepl#is_connected() | return | endif
-  let ns_name = get(a:, 1, iced#nrepl#ns#name())
-  let ns_name = (empty(ns_name) ? iced#nrepl#ns#name() : ns_name)
-
-  if !empty(ns_name)
-    call iced#nrepl#iced#lint_ns(ns_name, g:iced#lint#linters, funcref('s:lint_ns'))
+function! iced#lint#current_file() abort
+  if !iced#nrepl#is_connected() || !s:enabled
+    return
   endif
+
+  let file = expand('%:p')
+  call iced#nrepl#iced#lint_file(file, g:iced#lint#linters, funcref('s:lint'))
 endfunction
 
 function! iced#lint#echo_message() abort
+  if !s:enabled
+    return
+  endif
+
   let lnum = line('.')
   let path = expand('%:p')
   for warn in s:last_warnings

@@ -213,7 +213,7 @@ Linting                                                      *vim-iced-linting*
   vim-iced can collaborate with `jonase/eastwood`.
   - https://github.com/jonase/eastwood
   - Command
-    - |:IcedLintNs| (|<Plug>(iced_lint_ns)|)
+    - |:IcedLintCurrentFile| (|<Plug>(iced_lint_current_file)|)
 
   WARN: Only supports Clojure on Java because of `eastwood`
   
@@ -457,11 +457,10 @@ Commands                                                    *vim-iced-commands*
   Sets `*ns*` to the REPL session's namespace name.
   Key is mapped to |<Plug>(iced_in_repl_ns)|.
 
-                                                                  *:IcedLintNs*
-:IcedLintNs [{ns}]
-  Lint {ns} codes.
-  If {ns} is not passed, current buffer's ns name is used.
-  Key is mapped to |<Plug>(iced_lint_ns)|.
+                                                         *:IcedLintCurrentFile*
+:IcedLintCurrentFile
+  Lint codes in current file.
+  Key is mapped to |<Plug>(iced_lint_current_file)|.
 
 ------------------------------------------------------------------------------
 Functions                                                  *vim-iced-functions*
@@ -669,9 +668,9 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_in_repl_ns)
   Same as |:IcedInReplNs|.
 
-                                                         *<Plug>(iced_lint_ns)*
-<Plug>(iced_lint_ns)
-  Same as |:IcedLintNs|.
+                                               *<Plug>(iced_lint_current_file)*
+<Plug>(iced_lint_current_file)
+  Same as |:IcedLintCurrentFile|.
 
 ==============================================================================
 Customizing                                              *vim-iced-customizing*
