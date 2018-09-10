@@ -10,8 +10,9 @@ let g:iced#lint#linters = get(g:, 'iced#lint#linters', [])
 
 function! s:lint(resp) abort
   if !has_key(a:resp, 'lint-warnings') | return | endif
+
   if has_key(a:resp, 'error')
-    return iced#message#error_str(a:resp['error'])
+    call iced#message#error_str(a:resp['error'])
   endif
 
   call iced#sign#unplace_all()
@@ -23,7 +24,7 @@ function! s:lint(resp) abort
 endfunction
 
 function! iced#lint#current_file() abort
-  if !iced#nrepl#is_connected() || !s:enabled
+  if !iced#nrepl#is_connected() || !s:enabled || iced#nrepl#current_session_key() !=# 'clj'
     return
   endif
 
