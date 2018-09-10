@@ -1,14 +1,14 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! iced#nrepl#iced#lint_ns(ns_name, linters, callback) abort
+function! iced#nrepl#iced#lint_file(file, linters, callback) abort
   if !iced#nrepl#is_connected() | return | endif
 
   let msg = {
       \ 'id': iced#nrepl#eval#id(),
-      \ 'op': 'lint-ns',
+      \ 'op': 'lint-file',
       \ 'sesion': iced#nrepl#current_session(),
-      \ 'ns': a:ns_name,
+      \ 'file': a:file,
       \ 'callback': a:callback,
       \ }
 
@@ -42,7 +42,7 @@ function! iced#nrepl#iced#project_namespaces(callback) abort
         \ })
 endfunction
 
-call iced#nrepl#register_handler('lint-ns')
+call iced#nrepl#register_handler('lint-file')
 call iced#nrepl#register_handler('grimoire')
 call iced#nrepl#register_handler('project-namespaces')
 
