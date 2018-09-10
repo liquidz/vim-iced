@@ -6,6 +6,8 @@ let g:loaded_vim_iced = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+scriptencoding utf-8
+
 "" Commands {{{
 command! -nargs=? IcedConnect           call iced#nrepl#connect(<q-args>)
 command!          IcedDisconnect        call iced#nrepl#disconnect()
