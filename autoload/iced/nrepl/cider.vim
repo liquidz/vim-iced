@@ -114,19 +114,6 @@ function! iced#nrepl#cider#undef(symbol, callback) abort
       \ })
 endfunction
 
-function! s:parse_project_namespaces_response(resp) abort
-  if !has_key(a:resp, 'value')
-    return []
-  endif
-  return split(substitute(a:resp['value'], '[()]', '', 'g'), ' \+')
-endfunction
-
-function! iced#nrepl#cider#project_namespaces(callback) abort
-  let code = '(do (require ''orchard.namespace)'
-      \ . '(sort (orchard.namespace/project-namespaces)))'
-  call iced#nrepl#eval(code, {resp -> a:callback(s:parse_project_namespaces_response(resp))})
-endfunction
-
 function! iced#nrepl#cider#macroexpand_1(code, callback) abort
   if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
   call iced#nrepl#send({

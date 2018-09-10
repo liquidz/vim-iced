@@ -31,7 +31,7 @@ jobs:
           command: |
             git clone https://github.com/guns/vim-sexp .vim-sexp
             vim --version
-            themis --runtimepath ./.vim-sexp
+            themis --runtimepath ./.vim-sexp --runtimepath ./test/helper
 workflows:
   version: 2
   all_test:

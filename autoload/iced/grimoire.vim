@@ -1,15 +1,12 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V = vital#iced#new()
-let s:Http = s:V.import('Web.HTTP')
+function! s:grimoire(resp) abort
+  if !has_key(a:resp, 'content') || empty(a:resp['content'])
+    return iced#message#error('not_found')
+  endif
 
-let s:grimoire_url = 'https://conj.io'
-
-function! s:build_url(platform, ns_name, symbol) abort
-  " ex. https://conj.io/search/v1/clj/clojure.core/defrecord/
-  return printf('%s/search/v1/%s/%s/%s/',
-      \ s:grimoire_url, a:platform, a:ns_name, a:symbol)
+  call iced#buffer#document#open(a:resp['content'])
 endfunction
 
 function! s:search(resp) abort
@@ -18,18 +15,9 @@ function! s:search(resp) abort
     let platform = iced#nrepl#current_session_key()
     let ns_name = a:resp['ns']
     let symbol = a:resp['name']
-    let url = s:build_url(platform, ns_name, symbol)
 
-    echom printf('Connecting to %s ...', s:grimoire_url)
-
-    let resp = s:Http.get(url, {}, {'Content-Type': 'text/plain'})
-    if resp['status'] == 200
-      call iced#buffer#document#open(resp['content'])
-    elseif resp['status'] == 404
-      echom printf('Not found.')
-    else
-      echom printf('Invalid status: %d', resp['status'])
-    endif
+    echom printf('Connecting to grimoire ...')
+    call iced#nrepl#iced#grimoire(platform, ns_name, symbol, funcref('s:grimoire'))
   else
     echom printf('Invalid response from Grimoire.')
   endif

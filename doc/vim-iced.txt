@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojure interactive development environment for Vim8
 
-Version: 0.2.6
+Version: 0.3.0
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -22,6 +22,7 @@ Tag Jump             |vim-iced-tag-jump|
 Editing S-exp        |vim-iced-editing-s-exp|
   Formatting         |vim-iced-formatting|
   Refactoring        |vim-iced-refactoring|
+  Linting            |vim-iced-linting|
 Interface            |vim-iced-interface|
   Commands           |vim-iced-commands|
   Functions          |vim-iced-functions|
@@ -60,25 +61,25 @@ Leiningen                                                  *vim-iced-leiningen*
 
   $HOME/.lein/profile.clj
 >
-  {:user {:dependencies [[nrepl "0.4.5"]
-                         [cider/cider-nrepl "0.18.0"]
-                         [cider/orchard "0.3.0"]
-                         [cljfmt "0.6.0"]]
-          :plugins [[refactor-nrepl "2.4.0"]]
-          :repl-options {:nrepl-middleware
-                           [cider.nrepl/wrap-complete
-                            cider.nrepl/wrap-debug
-                            cider.nrepl/wrap-format
-                            cider.nrepl/wrap-info
-                            cider.nrepl/wrap-macroexpand
-                            cider.nrepl/wrap-ns
-                            cider.nrepl/wrap-out
-                            cider.nrepl/wrap-pprint
-                            cider.nrepl/wrap-pprint-fn
-                            cider.nrepl/wrap-spec
-                            cider.nrepl/wrap-test
-                            cider.nrepl/wrap-trace
-                            cider.nrepl/wrap-undef]}}}
+  {:user
+   {:dependencies [[nrepl "0.4.5"]
+                   [iced-nrepl "0.1.0"]
+                   [cider/cider-nrepl "0.18.0"]]
+    :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
+                                      cider.nrepl/wrap-debug
+                                      cider.nrepl/wrap-format
+                                      cider.nrepl/wrap-info
+                                      cider.nrepl/wrap-macroexpand
+                                      cider.nrepl/wrap-ns
+                                      cider.nrepl/wrap-out
+                                      cider.nrepl/wrap-pprint
+                                      cider.nrepl/wrap-pprint-fn
+                                      cider.nrepl/wrap-spec
+                                      cider.nrepl/wrap-test
+                                      cider.nrepl/wrap-trace
+                                      cider.nrepl/wrap-undef
+                                      iced.nrepl/wrap-iced]}
+    :plugins [[refactor-nrepl "2.4.0"]]}}
 <
 ------------------------------------------------------------------------------
 Boot                                                            *vim-iced-boot*
@@ -88,11 +89,9 @@ Boot                                                            *vim-iced-boot*
   (require (quote boot.repl))
 
   (swap! boot.repl/*default-dependencies* concat
-    '[[nrepl "0.4.5"]
-      [refactor-nrepl "2.4.0"]
+    '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
-      [cider/orchard "0.3.0"]
-      [cljfmt "0.6.0"]])
+      [iced-nrepl "0.1.0"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -108,7 +107,8 @@ Boot                                                            *vim-iced-boot*
       cider.nrepl/wrap-test
       cider.nrepl/wrap-trace
       cider.nrepl/wrap-undef
-      refactor-nrepl.middleware/wrap-refactor])
+      refactor-nrepl.middleware/wrap-refactor
+      iced.nrepl/wrap-iced])
 <
 ==============================================================================
 nREPL Connection                                    *vim-iced-nrepl-connection*
@@ -116,7 +116,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   REPL needs to be activated beforehand.
   - `lein repl`
   - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "0e200849606b086f1ed841568fb0da02a4ba9c3a"}}}' -m iced-repl`
+  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "5e56f4a33c9d87e494b67e174c7d6a3f39f2e101"}}}' -m iced-repl`
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
@@ -223,7 +223,31 @@ Formatting                                                *vim-iced-formatting*
 Refactoring                                              *vim-iced-refactoring*
 
   Provides following functions powered by refactor-nrepl.
-  - |IcedCleanNs| (|<Plug>(iced_clean_ns)|)
+  - |:IcedCleanNs| (|<Plug>(iced_clean_ns)|)
+
+------------------------------------------------------------------------------
+Linting                                                      *vim-iced-linting*
+
+  vim-iced can collaborate with `jonase/eastwood`.
+  - https://github.com/jonase/eastwood
+  - Command
+    - |:IcedLintCurrentFile| (|<Plug>(iced_lint_current_file)|)
+
+  WARN: Only supports Clojure on Java because of `eastwood`
+
+  To run linter automatically, set |g:iced_enable_auto_linting| to `v:true`.
+>
+  let g:iced_enable_auto_linting = v:true
+<
+  If you would like to set manually, following autcmd is useful.
+>
+  aug vim_iced_lint_setting
+    au!
+    au BufWritePost *.clj call iced#lint#current_file()
+    au CursorMoved  *.clj call iced#lint#echo_message()
+  aug END
+<
+  To define which linters to use, see |g:iced#lint#linters|.
 
 ==============================================================================
 Interface                                                  *vim-iced-interface*
@@ -455,6 +479,16 @@ Commands                                                    *vim-iced-commands*
   Sets `*ns*` to the REPL session's namespace name.
   Key is mapped to |<Plug>(iced_in_repl_ns)|.
 
+                                                         *:IcedLintCurrentFile*
+:IcedLintCurrentFile
+  Lint codes in current file.
+  Key is mapped to |<Plug>(iced_lint_current_file)|.
+  
+                                                              *:IcedLintToggle*
+:IcedLintToggle
+  Toggle linting.
+  Key is mapped to |<Plug>(iced_lint_toggle)|.
+
 ------------------------------------------------------------------------------
 Functions                                                  *vim-iced-functions*
 
@@ -661,6 +695,14 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_in_repl_ns)
   Same as |:IcedInReplNs|.
 
+                                               *<Plug>(iced_lint_current_file)*
+<Plug>(iced_lint_current_file)
+  Same as |:IcedLintCurrentFile|.
+  
+                                                     *<Plug>(iced_lint_toggle)*
+<Plug>(iced_lint_toggle)
+  Same as |:IcedLintToggle|.
+
 ==============================================================================
 Customizing                                              *vim-iced-customizing*
 
@@ -745,6 +787,24 @@ g:iced#grep#target
 
   Default value is
     `'{{user.dir}}{{separator}}**{{separator}}*.{clj,cljs,cljc}'`.
+
+                                                          *g:iced#lint#linters*
+g:iced#lint#linters
+  Linter definition which is used by `jonase/eastwood`.
+  See details: |vim-iced-linting|
+
+  Specific linter names are shown at:
+  - https://github.com/jonase/eastwood#whats-there
+
+  Ex. enable all linters
+>
+  let g:iced#lint#linters = ['all']
+<
+                                                   *g:iced_enable_auto_linting*
+g:iced_enable_auto_linting
+  If {v:true}, enable linting automatically.
+  Linting is worked when |BufWritePost|.
+  See details: |vim-iced-linting|
 
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings

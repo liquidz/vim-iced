@@ -3,8 +3,7 @@
  :deps {nrepl {:mvn/version "0.4.5"}
         refactor-nrepl {:mvn/version "2.4.0"}
         cider/cider-nrepl {:mvn/version "0.18.0"}
-        cider/orchard {:mvn/version "0.3.0"}
-        cljfmt {:mvn/version "0.6.0"}}
+        iced-nrepl {:mvn/version "0.1.0"}}
 
  :aliases
  {:ancient {:extra-deps {olical/depot {:mvn/version "1.2.0"}}

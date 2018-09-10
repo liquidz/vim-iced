@@ -16,10 +16,10 @@ function! iced#format#form() abort
     let res = iced#paredit#get_current_top_list_raw()
     let code = res['code']
     if !empty(code)
-      let formatted = iced#nrepl#format#code(code)
-      if !empty(formatted)
-        let @@ = formatted
-        silent normal! gvp
+      let resp = iced#nrepl#iced#sync#format_code(code, g:iced#format#rule)
+      if has_key(resp, 'formatted') && !empty(resp['formatted'])
+         let @@ = resp['formatted']
+         silent normal! gvp
       endif
     endif
   finally
@@ -48,9 +48,10 @@ function! iced#format#minimal() abort
     let ncol = getcurpos()[2]
     silent normal! va(y
     let code = @@
-    let formatted = iced#nrepl#format#code(code)
-    if !empty(formatted)
-      let @@ = s:add_indent(ncol-1, formatted)
+
+    let resp = iced#nrepl#iced#sync#format_code(code, g:iced#format#rule)
+    if has_key(resp, 'formatted') && !empty(resp['formatted'])
+      let @@ = s:add_indent(ncol-1, resp['formatted'])
       silent normal! gvp
     endif
   finally

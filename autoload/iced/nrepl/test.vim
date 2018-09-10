@@ -104,6 +104,10 @@ function! s:dict_to_str(d, ...) abort
 endfunction
 
 function! s:out(resp) abort
+  if iced#util#has_status(a:resp, 'namespace-not-found')
+    return iced#message#error('not_found')
+  endif
+  
   let errors = s:collect_errors(a:resp)
   let expected_and_actuals = []
   for err in errors

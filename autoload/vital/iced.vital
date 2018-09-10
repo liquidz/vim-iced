@@ -8,4 +8,3 @@ Locale.Message
 Vim.Buffer
 Vim.BufferManager
 Vim.Message
-Web.HTTP

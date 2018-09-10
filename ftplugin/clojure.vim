@@ -6,6 +6,8 @@ let g:loaded_vim_iced = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+scriptencoding utf-8
+
 "" Commands {{{
 command! -nargs=? IcedConnect           call iced#nrepl#connect(<q-args>)
 command!          IcedDisconnect        call iced#nrepl#disconnect()
@@ -60,6 +62,9 @@ command! -nargs=? IcedToggleTraceVar    call iced#nrepl#trace#toggle_var(<q-args
 command! -nargs=? IcedToggleTraceNs     call iced#nrepl#trace#toggle_ns(<q-args>)
 
 command!          IcedInReplNs          call iced#nrepl#ns#in_repl_session_ns()
+
+command!          IcedLintCurrentFile   call iced#lint#current_file()
+command!          IcedLintToggle        call iced#lint#toggle()
 "" }}}
 
 "" Key mappings {{{
@@ -117,6 +122,9 @@ nnoremap <silent> <Plug>(iced_toggle_trace_ns)     :<C-u>IcedToggleTraceNs<CR>
 nnoremap <silent> <Plug>(iced_toggle_trace_var)    :<C-u>IcedToggleTraceVar<CR>
 
 nnoremap <silent> <Plug>(iced_in_repl_ns)          :<C-u>IcedInReplNs<CR>
+
+nnoremap <silent> <Plug>(iced_lint_current_file)   :<C-u>IcedLintCurrentFile<CR>
+nnoremap <silent> <Plug>(iced_lint_toggle)         :<C-u>IcedLintToggle<CR>
 "" }}}
 
 "" Auto commands {{{
@@ -126,6 +134,15 @@ aug vim_iced_initial_setting
   au BufNewFile *.clj,*.cljs,*.cljc call iced#skeleton#new()
   au VimLeave * call iced#nrepl#disconnect()
 aug END
+
+if exists('g:iced_enable_auto_linting')
+    \ && g:iced_enable_auto_linting
+  aug iced_auto_linting
+    au!
+    au BufWritePost *.clj,*.cljc call iced#lint#current_file()
+    au CursorMoved *.clj,*.cljc call iced#lint#echo_message()
+  aug END
+endif
 "" }}}
 
 "" Default mappings {{{
@@ -261,8 +278,9 @@ endif
 "" }}}
 
 "" Signs {{{
-sign define iced_err text=>> texthl=ErrorMsg
-sign define iced_trace text=t> texthl=Search
+sign define iced_err text=🔥 texthl=ErrorMsg
+sign define iced_trace text=👁 texthl=Search
+sign define iced_lint text=💔 texthl=WarningMsg
 "" }}}
 
 let &cpo = s:save_cpo

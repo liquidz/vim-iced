@@ -18,7 +18,7 @@ Clojure Interactive Development Environment for Vim8.
  * Asynchronous evaluation
    * powered by `channel` in Vim8
  * Rich functions
-   * powered by [cider-nrepl](https://github.com/clojure-emacs/cider-nrepl), [refactor-nrepl](https://github.com/clojure-emacs/refactor-nrepl)
+   * powered by [cider-nrepl](https://github.com/clojure-emacs/cider-nrepl), [refactor-nrepl](https://github.com/clojure-emacs/refactor-nrepl), and [iced-nrepl](https://github.com/liquidz/iced-nrepl)
  * ClojureScript support
    * `figwheel` and `nashorn` is supported currently
 
@@ -49,25 +49,25 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
 
 * ~/.lein/profile.clj
 ```clj
-{:user {:dependencies [[nrepl "0.4.5"]
-                       [cider/cider-nrepl "0.18.0"]
-                       [cider/orchard "0.3.0"]
-                       [cljfmt "0.6.0"]]
-        :plugins [[refactor-nrepl "2.4.0"]]
-        :repl-options {:nrepl-middleware
-                         [cider.nrepl/wrap-complete
-                          cider.nrepl/wrap-debug
-                          cider.nrepl/wrap-format
-                          cider.nrepl/wrap-info
-                          cider.nrepl/wrap-macroexpand
-                          cider.nrepl/wrap-ns
-                          cider.nrepl/wrap-out
-                          cider.nrepl/wrap-pprint
-                          cider.nrepl/wrap-pprint-fn
-                          cider.nrepl/wrap-spec
-                          cider.nrepl/wrap-test
-                          cider.nrepl/wrap-trace
-                          cider.nrepl/wrap-undef]}}}
+{:user
+ {:dependencies [[nrepl "0.4.5"]
+                 [iced-nrepl "0.1.0"]
+                 [cider/cider-nrepl "0.18.0"]]
+  :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
+                                    cider.nrepl/wrap-debug
+                                    cider.nrepl/wrap-format
+                                    cider.nrepl/wrap-info
+                                    cider.nrepl/wrap-macroexpand
+                                    cider.nrepl/wrap-ns
+                                    cider.nrepl/wrap-out
+                                    cider.nrepl/wrap-pprint
+                                    cider.nrepl/wrap-pprint-fn
+                                    cider.nrepl/wrap-spec
+                                    cider.nrepl/wrap-test
+                                    cider.nrepl/wrap-trace
+                                    cider.nrepl/wrap-undef
+                                    iced.nrepl/wrap-iced]}
+  :plugins [[refactor-nrepl "2.4.0"]]}}
 ```
 
 [Boot](https://github.com/boot-clj/boot) configuration is also described in [vim-iced.txt](./doc/vim-iced.txt).
@@ -79,7 +79,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
   1. Start repl
      - `lein repl`
      - `boot repl`
-     - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "0e200849606b086f1ed841568fb0da02a4ba9c3a"}}}' -m iced-repl`
+     - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "5e56f4a33c9d87e494b67e174c7d6a3f39f2e101"}}}' -m iced-repl`
   2. Open source file
   3. Evaluate forms (If not connected, vim-iced will connect automatically)
 

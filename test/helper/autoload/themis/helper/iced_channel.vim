@@ -1,0 +1,65 @@
+let s:save_cpo = &cpoptions
+set cpoptions&vim
+
+let s:helper = {}
+let s:Local = g:themis#vital.import('Vim.ScriptLocal')
+let s:funcs = s:Local.sfuncs('autoload/iced/nrepl.vim')
+
+function! s:test_channel(opt) abort
+  let dummy = {'env': 'test', 'status_value': 'fail'}
+  call extend(dummy, a:opt)
+
+  function! dummy.open(address, options) abort
+    let self['address'] = a:address
+    let self['options'] = a:options
+    return self
+  endfunction
+
+  function! dummy.close(handle) abort
+    return
+  endfunction
+
+  function! dummy.status(handle) abort
+    return self.status_value
+  endfunction
+
+  function! dummy.sendraw(handle, string) abort
+    if has_key(self, 'relay') && type(self.relay) == 2
+      let sent_data = iced#nrepl#bencode#decode(a:string)
+      let resp_data = self.relay(sent_data)
+      if has_key(sent_data, 'id') && !has_key(resp_data, 'id')
+        let resp_data['id'] = sent_data['id']
+      endif
+
+      let resp_data = iced#nrepl#bencode#encode(resp_data)
+      let Cb = (has_key(self, 'callback') && type(self.callback) == 2)
+          \ ? self.callback : s:funcs.dispatcher
+      call Cb(self, resp_data)
+    elseif has_key(self, 'relay_raw') && type(self.relay_raw) == 2
+      let sent_data = iced#nrepl#bencode#decode(a:string)
+      let resp_data = self.relay_raw(sent_data)
+      let Cb = (has_key(self, 'callback') && type(self.callback) == 2)
+          \ ? self.callback : s:funcs.dispatcher
+
+      for resp_string in ((type(resp_data) == type([])) ? resp_data : [resp_data])
+        call Cb(self, resp_string)
+        sleep 10m
+      endfor
+    else
+      return
+    endif
+  endfunction
+
+  return dummy
+endfunction
+
+function! s:helper.inject_dummy(opt) abort
+  call iced#nrepl#inject_channel(s:test_channel(a:opt))
+endfunction
+
+function! themis#helper#iced_channel#new(runner) abort
+  return  deepcopy(s:helper)
+endfunction
+
+let &cpoptions = s:save_cpo
+unlet s:save_cpo

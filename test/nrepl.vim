@@ -2,49 +2,7 @@ let s:suite  = themis#suite('iced.nrepl')
 let s:assert = themis#helper('assert')
 let s:scope = themis#helper('scope')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl.vim')
-
-function! s:test_channel(opt) abort
-  let dummy = {'env': 'test', 'status_value': 'fail'}
-  call extend(dummy, a:opt)
-
-  function! dummy.open(address, options) abort
-    let self['address'] = a:address
-    let self['options'] = a:options
-    return self
-  endfunction
-
-  function! dummy.close(handle) abort
-    return
-  endfunction
-
-  function! dummy.status(handle) abort
-    return self.status_value
-  endfunction
-
-  function! dummy.sendraw(handle, string) abort
-    if has_key(self, 'relay') && type(self.relay) == 2
-      let sent_data = iced#nrepl#bencode#decode(a:string)
-      let resp_data = iced#nrepl#bencode#encode(self.relay(sent_data))
-      let Cb = (has_key(self, 'callback') && type(self.callback) == 2)
-          \ ? self.callback : s:funcs.dispatcher
-      call Cb(self, resp_data)
-    elseif has_key(self, 'relay_raw') && type(self.relay_raw) == 2
-      let sent_data = iced#nrepl#bencode#decode(a:string)
-      let resp_data = self.relay_raw(sent_data)
-      let Cb = (has_key(self, 'callback') && type(self.callback) == 2)
-          \ ? self.callback : s:funcs.dispatcher
-
-      for resp_string in ((type(resp_data) == type([])) ? resp_data : [resp_data])
-        call Cb(self, resp_string)
-        sleep 10m
-      endfor
-    else
-      return
-    endif
-  endfunction
-
-  return dummy
-endfunction
+let s:ch = themis#helper('iced_channel')
 
 function! s:fixture() abort
   call iced#nrepl#set_session('clj',  'clj-session')
@@ -87,10 +45,10 @@ function! s:suite.change_to_invalid_session_test() abort
 endfunction
 
 function! s:suite.is_connected_test() abort
-  call iced#nrepl#inject_channel(s:test_channel({'status_value': 'open'}))
+  call s:ch.inject_dummy({'status_value': 'open'})
   call s:assert.true(iced#nrepl#is_connected())
 
-  call iced#nrepl#inject_channel(s:test_channel({'status_value': 'fail'}))
+  call s:ch.inject_dummy({'status_value': 'fail'})
   call s:assert.false(iced#nrepl#is_connected())
 endfunction
 
@@ -103,10 +61,10 @@ function! s:suite.connect_test() abort
     return {}
   endfunction
 
-  call iced#nrepl#inject_channel(s:test_channel({
+  call s:ch.inject_dummy({
       \ 'status_value': 'open',
       \ 'relay': {msg -> test.relay(msg)},
-      \ }))
+      \ })
   call s:assert.equals(iced#nrepl#connect(1234), v:true)
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
   call s:assert.equals(iced#nrepl#repl_session(), 'foo-session')
@@ -114,7 +72,7 @@ function! s:suite.connect_test() abort
 endfunction
 
 function! s:suite.connect_failure_test() abort
-  call iced#nrepl#inject_channel(s:test_channel({'status_value': 'fail'}))
+  call s:ch.inject_dummy({'status_value': 'fail'})
   call s:assert.equals(iced#nrepl#connect(1234), v:false)
 endfunction
 
@@ -131,10 +89,10 @@ function! s:suite.disconnect_test() abort
     return {}
   endfunction
 
-  call iced#nrepl#inject_channel(s:test_channel({
+  call s:ch.inject_dummy({
       \ 'status_value': 'open',
       \ 'relay': {msg -> test.relay(msg)},
-      \ }))
+      \ })
 
   call iced#nrepl#disconnect()
   call s:assert.equals(test.closed_sessions, ['foo-session', 'bar-session'])
@@ -160,10 +118,10 @@ function! s:suite.eval_test() abort
     let self['result'] = a:result
   endfunction
 
-  call iced#nrepl#inject_channel(s:test_channel({
+  call s:ch.inject_dummy({
       \ 'status_value': 'open',
       \ 'relay_raw': {msg -> test.relay_raw(msg)},
-      \ }))
+      \ })
 
   call iced#nrepl#eval(
       \ '(+ 1 2 3)',

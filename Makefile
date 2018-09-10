@@ -7,8 +7,7 @@ VITAL_MODULES = Data.Dict \
 		Locale.Message \
 		Vim.Buffer \
 		Vim.BufferManager \
-		Vim.Message \
-		Web.HTTP
+		Vim.Message
 
 all: vital test
 
@@ -23,7 +22,7 @@ test: themis lint
 	git clone https://github.com/guns/vim-sexp .vim-sexp
 
 themis: .vim-themis .vim-sexp
-	./.vim-themis/bin/themis --runtimepath ./.vim-sexp
+	./.vim-themis/bin/themis --runtimepath ./.vim-sexp --runtimepath ./test/helper
 
 lint:
 	find . -name "*.vim" | grep -v vital | grep -v .vim-themis | grep -v .vim-sexp | xargs vint
