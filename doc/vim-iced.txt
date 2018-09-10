@@ -461,6 +461,11 @@ Commands                                                    *vim-iced-commands*
 :IcedLintCurrentFile
   Lint codes in current file.
   Key is mapped to |<Plug>(iced_lint_current_file)|.
+  
+                                                              *:IcedLintToggle*
+:IcedLintToggle
+  Toggle linting.
+  Key is mapped to |<Plug>(iced_lint_toggle)|.
 
 ------------------------------------------------------------------------------
 Functions                                                  *vim-iced-functions*
@@ -671,6 +676,10 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                *<Plug>(iced_lint_current_file)*
 <Plug>(iced_lint_current_file)
   Same as |:IcedLintCurrentFile|.
+  
+                                                     *<Plug>(iced_lint_toggle)*
+<Plug>(iced_lint_toggle)
+  Same as |:IcedLintToggle|.
 
 ==============================================================================
 Customizing                                              *vim-iced-customizing*

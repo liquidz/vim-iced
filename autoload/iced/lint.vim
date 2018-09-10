@@ -46,5 +46,14 @@ function! iced#lint#echo_message() abort
   endfor
 endfunction
 
+function! iced#lint#toggle() abort
+  let s:enabled = !s:enabled
+
+  if s:enabled
+    return iced#message#info('lint_enabled')
+  endif
+  return iced#message#info('lint_disabled')
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
