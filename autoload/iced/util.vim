@@ -59,5 +59,15 @@ function! iced#util#restore_cursor_position(pos) abort
   silent call winrestview(a:pos['view'])
 endfunction
 
+function! iced#util#has_status(resp, status) abort
+  for resp in iced#util#ensure_array(a:resp)
+    let status = get(resp, 'status', [v:none])[0]
+    if status ==# a:status
+      return v:true
+    endif
+  endfor
+  return v:false
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

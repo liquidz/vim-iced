@@ -85,16 +85,6 @@ function! s:get_message_id(x) abort
   endif
 endfunction
 
-function! s:has_status(resp, status) abort
-  for resp in iced#util#ensure_array(a:resp)
-    let status = get(resp, 'status', [v:none])[0]
-    if status ==# a:status
-      return v:true
-    endif
-  endfor
-  return v:false
-endfunction
-
 function! s:merge_response_handler(resp) abort
   let id = s:get_message_id(a:resp)
   let result = get(s:messages[id], 'result', {})
@@ -158,7 +148,7 @@ function! s:dispatcher(ch, resp) abort
         let handler_result = Handler(resp)
       endif
 
-      if s:has_status(resp, 'done')
+      if iced#util#has_status(resp, 'done')
         let Callback = get(s:messages[id], 'callback')
         unlet s:messages[id]
         call iced#nrepl#debug#quit()
@@ -169,7 +159,7 @@ function! s:dispatcher(ch, resp) abort
       endif
     endif
 
-    if s:has_status(resp, 'need-debug-input')
+    if iced#util#has_status(resp, 'need-debug-input')
       call iced#buffer#stdout#open()
       call iced#nrepl#debug#start(resp)
     endif
