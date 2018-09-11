@@ -1,8 +1,19 @@
 # vim-iced
-[![CircleCI](https://circleci.com/gh/liquidz/vim-iced.svg?style=svg)](https://circleci.com/gh/liquidz/vim-iced)
-[![Powered by vital.vim](https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg)](https://github.com/vim-jp/vital.vim)
 
-Clojure Interactive Development Environment for Vim8.
+<h4 align="center">Clojure Interactive Development Environment for Vim8.</h4>
+<p align="center">
+  <a href="https://circleci.com/gh/liquidz/vim-iced">
+    <img src="https://circleci.com/gh/liquidz/vim-iced.svg?style=svg" alt="CircleCI" />
+  </a>
+
+  <a href="https://github.com/liquidz/vim-iced/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/liquidz/vim-iced.svg" alt="GitHub license" />
+  </a>
+
+  <a href="https://github.com/vim-jp/vital.vim">
+    <img src="https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg" alt="Powered by vital.vim" />
+  </a>
+</p>
 
 **WARN**: This project is work in progress.
 
