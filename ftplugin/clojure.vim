@@ -36,6 +36,7 @@ command!          IcedTestBufferOpen    call iced#buffer#error#open()
 
 command!          IcedStdoutBufferOpen  call iced#buffer#stdout#open()
 command!          IcedStdoutBufferClear call iced#buffer#stdout#clear()
+command!          IcedStdoutBufferClose call iced#buffer#stdout#close()
 
 command! -nargs=? IcedDefJump           call iced#nrepl#jump#jump(<q-args>)
 command!          IcedDefBack           call iced#nrepl#jump#back()
@@ -96,6 +97,7 @@ nnoremap <silent> <Plug>(iced_test_buffer_open)    :<C-u>IcedTestBufferOpen<CR>
 
 nnoremap <silent> <Plug>(iced_stdout_buffer_open)  :<C-u>IcedStdoutBufferOpen<CR>
 nnoremap <silent> <Plug>(iced_stdout_buffer_clear) :<C-u>IcedStdoutBufferClear<CR>
+nnoremap <silent> <Plug>(iced_stdout_buffer_close) :<C-u>IcedStdoutBufferClose<CR>
 
 nnoremap <silent> <Plug>(iced_def_jump)            :<C-u>IcedDefJump<CR>
 nnoremap <silent> <Plug>(iced_def_back)            :<C-u>IcedDefBack<CR>
@@ -215,6 +217,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_stdout_buffer_clear)')
     silent! nmap <buffer> <Leader>sl <Plug>(iced_stdout_buffer_clear)
+  endif
+
+  if !hasmapto('<Plug>(iced_stdout_buffer_close)')
+    silent! nmap <buffer> <Leader>sq <Plug>(iced_stdout_buffer_close)
   endif
 
   if !hasmapto('<Plug>(iced_def_jump)')

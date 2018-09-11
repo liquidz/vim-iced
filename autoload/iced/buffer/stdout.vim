@@ -52,5 +52,9 @@ function! iced#buffer#stdout#clear() abort
   call iced#buffer#clear(s:bufname, funcref('s:initialize'))
 endfunction
 
+function! iced#buffer#stdout#close() abort
+  call iced#buffer#close(s:bufname)
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
