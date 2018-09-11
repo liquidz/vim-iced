@@ -186,6 +186,7 @@ function! iced#nrepl#test#redo() abort
     else
       let pos = getcurpos()
       let option = {'line': pos[1], 'column': pos[2]}
+      call iced#message#info('retesting')
       call iced#nrepl#eval(code, {_ -> iced#nrepl#cider#retest(funcref('s:out'))}, option)
     endif
   finally
