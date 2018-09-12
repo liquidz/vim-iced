@@ -21,7 +21,21 @@ if exists('g:loaded_ctrlp')
   let s:id = g:ctrlp_builtins + len(g:ctrlp_ext_vars)
 endif
 
+function! s:link_highlight(from, to) abort
+  if !hlexists(a:from)
+    exe 'highlight link' a:from a:to
+  endif
+endfunction
+
+function! s:set_syntax() abort
+  call s:link_highlight('IcedCtrlpTitle', 'Identifier')
+  call s:link_highlight('IcedCtrlpOptions', 'Comment')
+  syntax match IcedCtrlpTitle '^> [^\t]\+'
+  syntax match IcedCtrlpOptions '\zs\t.*\ze$'
+endfunction
+
 function! ctrlp#iced#init() abort
+  call s:set_syntax()
   return get(s:config, 'candidates', [])
 endfunction
 
