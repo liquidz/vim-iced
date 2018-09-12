@@ -398,6 +398,12 @@ Commands                                                    *vim-iced-commands*
   Jump back cursor.
   Key is mapped to |<Plug>(iced_def_back)|.
 
+                                                        *:IcedSearchEverywhere*
+:IcedSearchEverywhere
+  Browse project namespaces/functions, and open selected element.
+  `ctrlp.vim` is required to browse.
+  Key is mapped to |<Plug>(iced_search_everywhere)|.
+
                                                             *:IcedDocumentOpen*
 :IcedDocumentOpen [{symbol}]
   Open a window, and show documents for {symbol}.
@@ -637,6 +643,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_def_back)
   Same as |:IcedDefBack|.
 
+                                               *<Plug>(iced_search_everywhere)*
+<Plug>(iced_search_everywhere)
+  Same as |:IcedSearchEverywhere|.
+
                                                    *<Plug>(iced_document_open)*
 <Plug>(iced_document_open)
   Same as |:IcedDocumentOpen|.
@@ -852,6 +862,7 @@ g:iced_enable_default_key_mappings
   <C-t>          <Plug>(iced_def_back)
   K              <Plug>(iced_document_open)
   ==             <Plug>(iced_format)
+  P              <Plug>(iced_search_everywhere)
 
 ==============================================================================
 Changelog                                                  *vim-iced-changelog*
