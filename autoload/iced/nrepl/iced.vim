@@ -42,9 +42,31 @@ function! iced#nrepl#iced#project_namespaces(callback) abort
         \ })
 endfunction
 
+let s:candidates = []
+function! s:concat_candidates_handler(resp) abort
+  if has_key(a:resp, 'candidates')
+    call extend(s:candidates, a:resp['candidates'])
+  endif
+  return s:candidates
+endfunction
+
+function! iced#nrepl#iced#everywhere(callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  let s:candidates = []
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#eval#id(),
+        \ 'op': 'everywhere',
+        \ 'sesion': iced#nrepl#current_session(),
+        \ 'file': expand('%:p'),
+        \ 'callback': a:callback,
+        \ })
+endfunction
+
 call iced#nrepl#register_handler('lint-file')
 call iced#nrepl#register_handler('grimoire')
 call iced#nrepl#register_handler('project-namespaces')
+call iced#nrepl#register_handler('everywhere', funcref('s:concat_candidates_handler'))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
