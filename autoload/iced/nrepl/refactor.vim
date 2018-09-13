@@ -132,8 +132,5 @@ function! iced#nrepl#refactor#add_missing(symbol) abort
   endif
 endfunction
 
-call iced#nrepl#register_handler('clean-ns')
-call iced#nrepl#register_handler('resolve-missing')
-
 let &cpo = s:save_cpo
 unlet s:save_cpo

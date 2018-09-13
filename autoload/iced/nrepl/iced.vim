@@ -63,9 +63,6 @@ function! iced#nrepl#iced#everywhere(callback) abort
         \ })
 endfunction
 
-call iced#nrepl#register_handler('lint-file')
-call iced#nrepl#register_handler('grimoire')
-call iced#nrepl#register_handler('project-namespaces')
 call iced#nrepl#register_handler('everywhere', funcref('s:concat_candidates_handler'))
 
 let &cpo = s:save_cpo

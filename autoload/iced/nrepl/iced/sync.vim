@@ -13,7 +13,5 @@ function! iced#nrepl#iced#sync#format_code(code, indents) abort
         \ })
 endfunction
 
-call iced#nrepl#register_handler('format-code-with-indents')
-
 let &cpo = s:save_cpo
 unlet s:save_cpo

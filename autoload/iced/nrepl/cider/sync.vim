@@ -60,10 +60,5 @@ function! iced#nrepl#cider#sync#ns_path(ns) abort
       \ })
 endfunction
 
-call iced#nrepl#register_handler('complete')
-call iced#nrepl#register_handler('ns-list')
-call iced#nrepl#register_handler('ns-vars-with-meta')
-call iced#nrepl#register_handler('ns-path')
-
 let &cpo = s:save_cpo
 unlet s:save_cpo

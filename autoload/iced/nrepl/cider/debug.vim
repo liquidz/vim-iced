@@ -25,8 +25,5 @@ function! iced#nrepl#cider#debug#input(key, in) abort
       \ })
 endfunction
 
-call iced#nrepl#register_handler('init-debugger')
-call iced#nrepl#register_handler('debug-input')
-
 let &cpo = s:save_cpo
 unlet s:save_cpo

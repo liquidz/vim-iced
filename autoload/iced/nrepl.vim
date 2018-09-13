@@ -99,17 +99,15 @@ function! s:merge_response_handler(resp) abort
   return result
 endfunction
 
-function! s:identity_handler(resp) abort
+function! s:default_handler(resp) abort
   return a:resp
 endfunction
 
-function! iced#nrepl#register_handler(op, ...) abort
-  let Handler = get(a:, 1, funcref('s:identity_handler'))
-
-  if !iced#util#is_function(Handler)
+function! iced#nrepl#register_handler(op, handler) abort
+  if !iced#util#is_function(a:handler)
     throw 'handler must be funcref'
   endif
-  let s:handlers[a:op] = Handler
+  let s:handlers[a:op] = a:handler
 endfunction
 
 "" -----------
@@ -143,7 +141,7 @@ function! s:dispatcher(ch, resp) abort
 
     if has_key(s:messages, id)
       let handler_result = v:none
-      let Handler = get(s:handlers, s:messages[id]['op'], v:none)
+      let Handler = get(s:handlers, s:messages[id]['op'], funcref('s:default_handler'))
       if iced#util#is_function(Handler)
         let handler_result = Handler(resp)
       endif
@@ -367,8 +365,6 @@ function! iced#nrepl#load_file(callback) abort
       \ })
 endfunction
 
-call iced#nrepl#register_handler('clone')
-call iced#nrepl#register_handler('interrupt')
 call iced#nrepl#register_handler('eval', funcref('s:merge_response_handler'))
 call iced#nrepl#register_handler('load-file', funcref('s:merge_response_handler'))
 

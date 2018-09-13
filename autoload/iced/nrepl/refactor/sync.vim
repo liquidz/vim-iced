@@ -44,7 +44,5 @@ function! iced#nrepl#refactor#sync#all_ns_aliases() abort
   return s:namespace_aliases(resp)
 endfunction
 
-call iced#nrepl#register_handler('namespace-aliases')
-
 let &cpo = s:save_cpo
 unlet s:save_cpo
