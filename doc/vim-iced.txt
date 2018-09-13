@@ -398,12 +398,6 @@ Commands                                                    *vim-iced-commands*
   Jump back cursor.
   Key is mapped to |<Plug>(iced_def_back)|.
 
-                                                        *:IcedSearchEverywhere*
-:IcedSearchEverywhere
-  Browse project namespaces/functions, and open selected element.
-  `ctrlp.vim` is required to browse.
-  Key is mapped to |<Plug>(iced_search_everywhere)|.
-
                                                             *:IcedDocumentOpen*
 :IcedDocumentOpen [{symbol}]
   Open a window, and show documents for {symbol}.
@@ -461,11 +455,23 @@ Commands                                                    *vim-iced-commands*
   `ctrlp.vim` is required to select namespace.
   Key is mapped to |<Plug>(iced_browse_namespace)|.
 
+                                                          *:IcedBrowseFunction*
+:IcedBrowseFunction
+  Browse project functions, and open selected function.
+  `ctrlp.vim` is required to select function.
+  Key is mapped to |<Plug>(iced_browse_function)|.
+
                                                               *:IcedBrowseSpec*
 :IcedBrowseSpec
   Browse specs, and show spec form in document buffer.
   `ctrlp.vim` is required to select spec.
   Key is mapped to |<Plug>(iced_browse_spec)|.
+
+                                                         *:IcedClearCtrlpCache*
+:IcedClearCtrlpCache
+  Clear ctrlp cache used by vim-iced.
+  `ctrlp.vim` is required.
+  Key is mapped to |<Plug>(iced_clear_ctrlp_cache)|.
 
                                                                  *:IcedCleanNs*
 :IcedCleanNs
@@ -643,10 +649,6 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_def_back)
   Same as |:IcedDefBack|.
 
-                                               *<Plug>(iced_search_everywhere)*
-<Plug>(iced_search_everywhere)
-  Same as |:IcedSearchEverywhere|.
-
                                                    *<Plug>(iced_document_open)*
 <Plug>(iced_document_open)
   Same as |:IcedDocumentOpen|.
@@ -694,9 +696,17 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_browse_namespace)
   Same as |:IcedBrowseNamespace|.
 
+                                                 *<Plug>(iced_browse_function)*
+<Plug>(iced_browse_function)
+  Same as |:IcedBrowseFunction|.
+
                                                      *<Plug>(iced_browse_spec)*
 <Plug>(iced_browse_spec)
   Same as |:IcedBrowseSpec|.
+
+                                               *<Plug>(iced_clear_ctrlp_cache)*
+<Plug>(iced_clear_ctrlp_cache)
+  Same as |:IcedClearCtrlpCache|.
 
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
@@ -855,6 +865,7 @@ g:iced_enable_default_key_mappings
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>bn     <Plug>(iced_browse_namespace)
+  <Leader>bf     <Plug>(iced_browse_function)
   <Leader>bs     <Plug>(iced_browse_spec)
   <Leader>*      <Plug>(iced_iced)
   <Leader>/      :<C-u>IcedGrep<Space>
@@ -862,7 +873,6 @@ g:iced_enable_default_key_mappings
   <C-t>          <Plug>(iced_def_back)
   K              <Plug>(iced_document_open)
   ==             <Plug>(iced_format)
-  P              <Plug>(iced_search_everywhere)
 
 ==============================================================================
 Changelog                                                  *vim-iced-changelog*

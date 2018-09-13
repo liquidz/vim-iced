@@ -40,7 +40,6 @@ command!          IcedStdoutBufferClose call iced#buffer#stdout#close()
 
 command! -nargs=? IcedDefJump           call iced#nrepl#jump#jump(<q-args>)
 command!          IcedDefBack           call iced#nrepl#jump#back()
-command!          IcedSearchEverywhere  call iced#nrepl#everywhere#search()
 
 command! -nargs=? IcedDocumentOpen      call iced#nrepl#document#open(<q-args>)
 command!          IcedFormDocument      call iced#nrepl#document#current_form()
@@ -104,7 +103,6 @@ nnoremap <silent> <Plug>(iced_stdout_buffer_close) :<C-u>IcedStdoutBufferClose<C
 
 nnoremap <silent> <Plug>(iced_def_jump)            :<C-u>IcedDefJump<CR>
 nnoremap <silent> <Plug>(iced_def_back)            :<C-u>IcedDefBack<CR>
-nnoremap <silent> <Plug>(iced_search_everywhere)   :<C-u>IcedSearchEverywhere<CR>
 
 nnoremap <silent> <Plug>(iced_document_open)       :<C-u>IcedDocumentOpen<CR>
 nnoremap <silent> <Plug>(iced_form_document)       :<C-u>IcedFormDocument<CR>
@@ -235,10 +233,6 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_def_back)')
     silent! nmap <buffer> <C-t> <Plug>(iced_def_back)
-  endif
-
-  if !hasmapto('<Plug>(iced_search_everywhere)')
-    silent! nmap <buffer> P <Plug>(iced_search_everywhere)
   endif
 
   if !hasmapto('<Plug>(iced_clean_ns)')
