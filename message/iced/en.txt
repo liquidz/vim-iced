@@ -35,5 +35,7 @@
   'retesting':          'Re-testing...',
   'lint_enabled':       'Lint enabled.',
   'lint_disabled':      'Lint disabled.',
+  'fetching':           'Fetching...',
+  'cache_cleared':      'Cache cleared.',
 }
 #vim:ft=ruby
