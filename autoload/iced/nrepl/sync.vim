@@ -57,8 +57,5 @@ function! iced#nrepl#sync#pprint(code) abort
         \ })
 endfunction
 
-call iced#nrepl#register_handler('ls-sessions')
-call iced#nrepl#register_handler('close')
-
 let &cpo = s:save_cpo
 unlet s:save_cpo

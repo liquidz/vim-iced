@@ -1,8 +1,19 @@
 # vim-iced
-[![CircleCI](https://circleci.com/gh/liquidz/vim-iced.svg?style=svg)](https://circleci.com/gh/liquidz/vim-iced)
-[![Powered by vital.vim](https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg)](https://github.com/vim-jp/vital.vim)
 
-Clojure Interactive Development Environment for Vim8.
+<h4 align="center">Clojure Interactive Development Environment for Vim8.</h4>
+<p align="center">
+  <a href="https://circleci.com/gh/liquidz/vim-iced">
+    <img src="https://circleci.com/gh/liquidz/vim-iced.svg?style=svg" alt="CircleCI" />
+  </a>
+
+  <a href="https://github.com/liquidz/vim-iced/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/liquidz/vim-iced.svg" alt="GitHub license" />
+  </a>
+
+  <a href="https://github.com/vim-jp/vital.vim">
+    <img src="https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg" alt="Powered by vital.vim" />
+  </a>
+</p>
 
 **WARN**: This project is work in progress.
 
@@ -79,7 +90,7 @@ See [vim-iced.txt](./doc/vim-iced.txt) for actual mappings.
   1. Start repl
      - `lein repl`
      - `boot repl`
-     - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "5e56f4a33c9d87e494b67e174c7d6a3f39f2e101"}}}' -m iced-repl`
+     - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "ac7affd6ab4b9e28f917a8900bd19465c8a08b7b"}}}' -m iced-repl`
   2. Open source file
   3. Evaluate forms (If not connected, vim-iced will connect automatically)
 

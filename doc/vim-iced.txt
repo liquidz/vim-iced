@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojure interactive development environment for Vim8
 
-Version: 0.3.0
+Version: 0.3.1
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -63,7 +63,7 @@ Leiningen                                                  *vim-iced-leiningen*
 >
   {:user
    {:dependencies [[nrepl "0.4.5"]
-                   [iced-nrepl "0.1.0"]
+                   [iced-nrepl "0.1.1"]
                    [cider/cider-nrepl "0.18.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
@@ -91,7 +91,7 @@ Boot                                                            *vim-iced-boot*
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
-      [iced-nrepl "0.1.0"]])
+      [iced-nrepl "0.1.1"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -116,7 +116,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   REPL needs to be activated beforehand.
   - `lein repl`
   - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "5e56f4a33c9d87e494b67e174c7d6a3f39f2e101"}}}' -m iced-repl`
+  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "ac7affd6ab4b9e28f917a8900bd19465c8a08b7b"}}}' -m iced-repl`
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
@@ -376,12 +376,17 @@ Commands                                                    *vim-iced-commands*
                                                         *:IcedStdoutBufferOpen*
 :IcedStdoutBufferOpen
   Open stdout buffer.
-  Key is mapped to |<Plug>(iced_buffer_open)|.
+  Key is mapped to |<Plug>(iced_stdout_buffer_open)|.
 
                                                        *:IcedStdoutBufferClear*
 :IcedStdoutBufferClear
   Clear all lines in stdout buffer.
-  Key is mapped to |<Plug>(iced_buffer_clear)|.
+  Key is mapped to |<Plug>(iced_stdout_buffer_clear)|.
+
+                                                       *:IcedStdoutBufferClose*
+:IcedStdoutBufferClose
+  Close stdout buffer window.
+  Key is mapped to |<Plug>(iced_stdout_buffer_close)|.
 
                                                                  *:IcedDefJump*
 :IcedDefJump
@@ -450,11 +455,23 @@ Commands                                                    *vim-iced-commands*
   `ctrlp.vim` is required to select namespace.
   Key is mapped to |<Plug>(iced_browse_namespace)|.
 
+                                                          *:IcedBrowseFunction*
+:IcedBrowseFunction
+  Browse project functions, and open selected function.
+  `ctrlp.vim` is required to select function.
+  Key is mapped to |<Plug>(iced_browse_function)|.
+
                                                               *:IcedBrowseSpec*
 :IcedBrowseSpec
   Browse specs, and show spec form in document buffer.
   `ctrlp.vim` is required to select spec.
   Key is mapped to |<Plug>(iced_browse_spec)|.
+
+                                                         *:IcedClearCtrlpCache*
+:IcedClearCtrlpCache
+  Clear ctrlp cache used by vim-iced.
+  `ctrlp.vim` is required.
+  Key is mapped to |<Plug>(iced_clear_ctrlp_cache)|.
 
                                                                  *:IcedCleanNs*
 :IcedCleanNs
@@ -620,6 +637,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_stdout_buffer_clear)
   Same as |:IcedStdoutBufferClear|.
 
+                                             *<Plug>(iced_stdout_buffer_close)*
+<Plug>(iced_stdout_buffer_close)
+  Same as |:IcedStdoutBufferClose|.
+
                                                         *<Plug>(iced_def_jump)*
 <Plug>(iced_def_jump)
   Same as |:IcedDefJump|.
@@ -675,9 +696,17 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_browse_namespace)
   Same as |:IcedBrowseNamespace|.
 
+                                                 *<Plug>(iced_browse_function)*
+<Plug>(iced_browse_function)
+  Same as |:IcedBrowseFunction|.
+
                                                      *<Plug>(iced_browse_spec)*
 <Plug>(iced_browse_spec)
   Same as |:IcedBrowseSpec|.
+
+                                               *<Plug>(iced_clear_ctrlp_cache)*
+<Plug>(iced_clear_ctrlp_cache)
+  Same as |:IcedClearCtrlpCache|.
 
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
@@ -830,11 +859,13 @@ g:iced_enable_default_key_mappings
   <Leader>tr     <Plug>(iced_test_redo)
   <Leader>ss     <Plug>(iced_stdout_buffer_open)
   <Leader>sl     <Plug>(iced_stdout_buffer_clear)
+  <Leader>sq     <Plug>(iced_stdout_buffer_close)
   <Leader>rcn    <Plug>(iced_clean_ns)
   <Leader>ram    <Plug>(iced_add_missing)
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>bn     <Plug>(iced_browse_namespace)
+  <Leader>bf     <Plug>(iced_browse_function)
   <Leader>bs     <Plug>(iced_browse_spec)
   <Leader>*      <Plug>(iced_iced)
   <Leader>/      :<C-u>IcedGrep<Space>

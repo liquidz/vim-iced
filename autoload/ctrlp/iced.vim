@@ -22,7 +22,12 @@ if exists('g:loaded_ctrlp')
 endif
 
 function! ctrlp#iced#init() abort
-  return get(s:config, 'candidates', [])
+  if has_key(s:config, 'init')
+    let Init = s:config['init']
+    return Init()
+  else
+    return get(s:config, 'candidates', [])
+  endif
 endfunction
 
 function! ctrlp#iced#accept(mode, line) abort

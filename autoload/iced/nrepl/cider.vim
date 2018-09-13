@@ -192,18 +192,9 @@ function! iced#nrepl#cider#spec_form(spec_name, callback) abort
       \ })
 endfunction
 
-call iced#nrepl#register_handler('info')
-call iced#nrepl#register_handler('ns-path')
-call iced#nrepl#register_handler('format-code')
 call iced#nrepl#register_handler('test', funcref('s:test_handler'))
 call iced#nrepl#register_handler('retest', funcref('s:test_handler'))
 call iced#nrepl#register_handler('test-all', funcref('s:test_handler'))
-call iced#nrepl#register_handler('undef')
-call iced#nrepl#register_handler('macroexpand')
-call iced#nrepl#register_handler('toggle-trace-ns')
-call iced#nrepl#register_handler('toggle-trace-var')
-call iced#nrepl#register_handler('spec-list')
-call iced#nrepl#register_handler('spec-form')
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

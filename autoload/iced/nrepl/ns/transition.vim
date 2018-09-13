@@ -4,8 +4,9 @@ set cpo&vim
 let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 
-function! s:open_response(mode, resp) abort
-  if !has_key(a:resp, 'path') || empty(a:resp['path'])
+function! s:open(mode, ns_name) abort
+  let resp = iced#nrepl#cider#sync#ns_path(a:ns_name)
+  if !has_key(resp, 'path') || empty(resp['path']) || !filereadable(resp['path'])
     return iced#message#error('not_found')
   endif
 
@@ -15,12 +16,7 @@ function! s:open_response(mode, resp) abort
   elseif a:mode ==# 't'
     let cmd = ':tabedit'
   endif
-  exe printf('%s %s', cmd, a:resp['path'])
-endfunction
-
-function! s:open(mode, ns_name) abort
-  call iced#nrepl#cider#ns_path(a:ns_name,
-      \ {resp -> s:open_response(a:mode, resp)})
+  exe printf('%s %s', cmd, resp['path'])
 endfunction
 
 function! iced#nrepl#ns#transition#cycle(ns) abort
@@ -40,19 +36,22 @@ function! iced#nrepl#ns#transition#toggle_src_and_test() abort
   call s:open('e', toggle_ns)
 endfunction
 
-function! s:select_ns_from_list(resp) abort
-  if !has_key(a:resp, 'namespaces') || empty(a:resp['namespaces'])
-    return iced#message#error('not_found')
-  endif
+let s:cache_name = 'namespaces'
 
-  call ctrlp#iced#start({
-      \ 'candidates': a:resp['namespaces'],
-      \ 'accept': funcref('s:open'),
-      \ })
+function! s:select_ns_from_list(namespaces) abort
+  if empty(a:namespaces) | return iced#message#error('not_found') | endif
+  call ctrlp#iced#cache#write(s:cache_name, a:namespaces)
+  call ctrlp#iced#start({'candidates': a:namespaces, 'accept': funcref('s:open')})
 endfunction
 
 function! iced#nrepl#ns#transition#list() abort
-  call iced#nrepl#iced#project_namespaces(funcref('s:select_ns_from_list'))
+  if ctrlp#iced#cache#exists(s:cache_name)
+    let lines = ctrlp#iced#cache#read(s:cache_name)
+    call ctrlp#iced#start({'candidates': lines, 'accept': funcref('s:open')})
+  else
+    call iced#message#info('fetching')
+    call iced#nrepl#iced#project_namespaces(funcref('s:select_ns_from_list'))
+  endif
 endfunction
 
 let &cpo = s:save_cpo

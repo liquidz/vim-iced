@@ -36,6 +36,7 @@ command!          IcedTestBufferOpen    call iced#buffer#error#open()
 
 command!          IcedStdoutBufferOpen  call iced#buffer#stdout#open()
 command!          IcedStdoutBufferClear call iced#buffer#stdout#clear()
+command!          IcedStdoutBufferClose call iced#buffer#stdout#close()
 
 command! -nargs=? IcedDefJump           call iced#nrepl#jump#jump(<q-args>)
 command!          IcedDefBack           call iced#nrepl#jump#back()
@@ -53,7 +54,9 @@ command!          IcedToggleSrcAndTest  call iced#nrepl#ns#transition#toggle_src
 command! -nargs=? IcedGrep              call iced#grep#exe(<q-args>)
 
 command!          IcedBrowseNamespace   call iced#nrepl#ns#transition#list()
+command!          IcedBrowseFunction    call iced#nrepl#function#list()
 command!          IcedBrowseSpec        call iced#nrepl#spec#list()
+command!          IcedClearCtrlpCache   call ctrlp#iced#cache#clear()
 
 command!          IcedCleanNs           call iced#nrepl#refactor#clean_ns()
 command! -nargs=? IcedAddMissing        call iced#nrepl#refactor#add_missing(<q-args>)
@@ -96,6 +99,7 @@ nnoremap <silent> <Plug>(iced_test_buffer_open)    :<C-u>IcedTestBufferOpen<CR>
 
 nnoremap <silent> <Plug>(iced_stdout_buffer_open)  :<C-u>IcedStdoutBufferOpen<CR>
 nnoremap <silent> <Plug>(iced_stdout_buffer_clear) :<C-u>IcedStdoutBufferClear<CR>
+nnoremap <silent> <Plug>(iced_stdout_buffer_close) :<C-u>IcedStdoutBufferClose<CR>
 
 nnoremap <silent> <Plug>(iced_def_jump)            :<C-u>IcedDefJump<CR>
 nnoremap <silent> <Plug>(iced_def_back)            :<C-u>IcedDefBack<CR>
@@ -113,7 +117,9 @@ nnoremap <silent> <Plug>(iced_toggle_src_and_test) :<C-u>IcedToggleSrcAndTest<CR
 nnoremap <silent> <Plug>(iced_grep)                :<C-u>IcedGrep<CR>
 
 nnoremap <silent> <Plug>(iced_browse_namespace)    :<C-u>IcedBrowseNamespace<CR>
+nnoremap <silent> <Plug>(iced_browse_function)     :<C-u>IcedBrowseFunction<CR>
 nnoremap <silent> <Plug>(iced_browse_spec)         :<C-u>IcedBrowseSpec<CR>
+nnoremap <silent> <Plug>(iced_clear_ctrlp_cache)   :<C-u>IcedClearCtrlpCache<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)            :<C-u>IcedCleanNs<CR>
 nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
@@ -217,6 +223,10 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>sl <Plug>(iced_stdout_buffer_clear)
   endif
 
+  if !hasmapto('<Plug>(iced_stdout_buffer_close)')
+    silent! nmap <buffer> <Leader>sq <Plug>(iced_stdout_buffer_close)
+  endif
+
   if !hasmapto('<Plug>(iced_def_jump)')
     silent! nmap <buffer> <C-]> <Plug>(iced_def_jump)
   endif
@@ -260,6 +270,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_browse_namespace)')
     silent! nmap <buffer> <Leader>bn <Plug>(iced_browse_namespace)
+  endif
+
+  if !hasmapto('<Plug>(iced_browse_function)')
+    silent! nmap <buffer> <Leader>bf <Plug>(iced_browse_function)
   endif
 
   if !hasmapto('<Plug>(iced_browse_spec)')

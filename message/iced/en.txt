@@ -32,7 +32,10 @@
   'spec_form_error':    'Failed to fetch spec form.',
   'no_spec':            'No spec form is found.',
   'testing':            'Testing...',
+  'retesting':          'Re-testing...',
   'lint_enabled':       'Lint enabled.',
   'lint_disabled':      'Lint disabled.',
+  'fetching':           'Fetching...',
+  'cache_cleared':      'Cache cleared.',
 }
 #vim:ft=ruby
