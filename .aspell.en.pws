@@ -1,4 +1,4 @@
-personal_ws-1.1 en 123 
+personal_ws-1.1 en 129 
 grimoire
 IcedGrep
 IcedDocumentOpen
@@ -9,8 +9,8 @@ IcedPrintLast
 rhs
 defn
 dec
-IcedReconnect
 jonase
+IcedReconnect
 sha
 CursorHoldI
 IcedEval
@@ -28,12 +28,14 @@ clj
 liquidz
 macroexpand
 IcedDefJump
+affd
 belowright
 linter
 undef
 figwheel
 sexp
 dir
+href
 IcedEvalOuterTopList
 lhs
 changelog
@@ -70,6 +72,7 @@ IcedDisconnect
 IcedTestAll
 Undefine
 stdout
+IcedBrowseFunction
 IcedToggleTraceNs
 FileType
 aboveleft
@@ -86,11 +89,12 @@ nrepl
 concat
 IcedToggleSrcAndTest
 BufWritePost
-IcedLintCurrentFile
 linters
+IcedLintCurrentFile
 IcedFormDocument
 IcedCleanNs
 Cljfmt's
+IcedClearCtrlpCache
 url
 IcedEchoFormDocument
 leiningen
@@ -99,7 +103,9 @@ nashorn
 IcedSlurp
 leftabove
 vimrc
+CircleCI
 IcedToggleTraceVar
+IcedStdoutBufferClose
 txt
 IcedBrowseSpec
 Sdeps

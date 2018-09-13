@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojure interactive development environment for Vim8
 
-Version: 0.3.0
+Version: 0.3.1
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -116,7 +116,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   REPL needs to be activated beforehand.
   - `lein repl`
   - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "5e56f4a33c9d87e494b67e174c7d6a3f39f2e101"}}}' -m iced-repl`
+  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "ac7affd6ab4b9e28f917a8900bd19465c8a08b7b"}}}' -m iced-repl`
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
