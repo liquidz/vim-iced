@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:cache_name = 'functions'
+"let s:cache_name = 'functions'
 
 function! s:open(mode, resp) abort
   if !has_key(a:resp, 'file') || empty(a:resp['file'])
@@ -31,18 +31,18 @@ endfunction
 
 function! s:select(functions) abort
   if empty(a:functions) | return iced#message#error('not_found') | endif
-  call ctrlp#iced#cache#write(s:cache_name, a:functions)
+  "call ctrlp#iced#cache#write(s:cache_name, a:functions)
   call ctrlp#iced#start({'candidates': a:functions, 'accept': funcref('s:resolve')})
 endfunction
 
 function! iced#nrepl#function#list() abort
-  if ctrlp#iced#cache#exists(s:cache_name)
-    let lines = ctrlp#iced#cache#read(s:cache_name)
-    call ctrlp#iced#start({'candidates': lines, 'accept': funcref('s:resolve')})
-  else
+  " if ctrlp#iced#cache#exists(s:cache_name)
+  "   let lines = ctrlp#iced#cache#read(s:cache_name)
+  "   call ctrlp#iced#start({'candidates': lines, 'accept': funcref('s:resolve')})
+  " else
     call iced#message#info('fetching')
     call iced#nrepl#iced#project_functions(funcref('s:select'))
-  endif
+  " endif
 endfunction
 
 let &cpo = s:save_cpo

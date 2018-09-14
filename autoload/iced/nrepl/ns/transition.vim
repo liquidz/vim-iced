@@ -36,22 +36,22 @@ function! iced#nrepl#ns#transition#toggle_src_and_test() abort
   call s:open('e', toggle_ns)
 endfunction
 
-let s:cache_name = 'namespaces'
+"let s:cache_name = 'namespaces'
 
 function! s:select_ns_from_list(namespaces) abort
   if empty(a:namespaces) | return iced#message#error('not_found') | endif
-  call ctrlp#iced#cache#write(s:cache_name, a:namespaces)
+  "call ctrlp#iced#cache#write(s:cache_name, a:namespaces)
   call ctrlp#iced#start({'candidates': a:namespaces, 'accept': funcref('s:open')})
 endfunction
 
 function! iced#nrepl#ns#transition#list() abort
-  if ctrlp#iced#cache#exists(s:cache_name)
-    let lines = ctrlp#iced#cache#read(s:cache_name)
-    call ctrlp#iced#start({'candidates': lines, 'accept': funcref('s:open')})
-  else
+  " if ctrlp#iced#cache#exists(s:cache_name)
+  "   let lines = ctrlp#iced#cache#read(s:cache_name)
+  "   call ctrlp#iced#start({'candidates': lines, 'accept': funcref('s:open')})
+  " else
     call iced#message#info('fetching')
     call iced#nrepl#iced#project_namespaces(funcref('s:select_ns_from_list'))
-  endif
+  " endif
 endfunction
 
 let &cpo = s:save_cpo
