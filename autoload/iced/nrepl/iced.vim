@@ -32,19 +32,19 @@ function! iced#nrepl#iced#grimoire(platform, ns_name, symbol, callback) abort
         \ })
 endfunction
 
-let s:concat_results = []
+let s:concat_results = {}
 function! s:concat_handler(key, resp) abort
   for resp in iced#util#ensure_array(a:resp)
     if has_key(resp, a:key)
-      call extend(s:concat_results, resp[a:key])
+      call extend(s:concat_results[a:key], resp[a:key])
     endif
   endfor
-  return s:concat_results
+  return s:concat_results[a:key]
 endfunction
 
 function! iced#nrepl#iced#project_namespaces(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  let s:concat_results = []
+  let s:concat_results['namespaces'] = []
   call iced#nrepl#send({
         \ 'id': iced#nrepl#eval#id(),
         \ 'op': 'project-namespaces',
@@ -55,7 +55,7 @@ endfunction
 
 function! iced#nrepl#iced#project_functions(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  let s:concat_results = []
+  let s:concat_results['functions'] = []
   call iced#nrepl#send({
         \ 'id': iced#nrepl#eval#id(),
         \ 'op': 'project-functions',
