@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojure interactive development environment for Vim8
 
-Version: 0.3.1
+Version: 0.3.2
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -63,7 +63,7 @@ Leiningen                                                  *vim-iced-leiningen*
 >
   {:user
    {:dependencies [[nrepl "0.4.5"]
-                   [iced-nrepl "0.1.1"]
+                   [iced-nrepl "0.1.2"]
                    [cider/cider-nrepl "0.18.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
@@ -91,7 +91,7 @@ Boot                                                            *vim-iced-boot*
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
-      [iced-nrepl "0.1.1"]])
+      [iced-nrepl "0.1.2"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -116,7 +116,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   REPL needs to be activated beforehand.
   - `lein repl`
   - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "ac7affd6ab4b9e28f917a8900bd19465c8a08b7b"}}}' -m iced-repl`
+  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "bc160eb6794ce3d73d67dadaf5387a1bc64cd8a3"}}}' -m iced-repl`
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
