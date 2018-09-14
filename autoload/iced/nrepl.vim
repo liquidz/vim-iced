@@ -311,6 +311,8 @@ function! iced#nrepl#interrupt(...) abort
     return
   endif
   let session = get(a:, 1, iced#nrepl#current_session())
+  " NOTE: ignore reading error
+  let s:response_buffer = ''
   call iced#nrepl#send({
       \ 'op': 'interrupt',
       \ 'session': session,
