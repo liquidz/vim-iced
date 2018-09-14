@@ -20,10 +20,10 @@ function! iced#format#form() abort
     else
       let resp = iced#nrepl#iced#sync#format_code(code, g:iced#format#rule)
       if has_key(resp, 'formatted') && !empty(resp['formatted'])
-         let @@ = resp['formatted']
-         silent normal! gvp
-       elseif has_key(resp, 'error')
-         call iced#message#error_str(resp['error'])
+        let @@ = resp['formatted']
+        silent normal! gvp
+      elseif has_key(resp, 'error')
+        call iced#message#error_str(resp['error'])
       endif
     endif
   finally
