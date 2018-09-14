@@ -59,7 +59,7 @@ function! s:ns_var_candidates(ns_name, base, alias) abort
 
   let dict = get(resp, 'ns-vars-with-meta', {})
   for k in keys(dict)
-    if stridx(k, a:base) != -1
+    if stridx(k, a:base) == 0
       call add(result, {
           \ 'candidate': (empty(a:alias) ? k : printf('%s/%s', a:alias, k)),
           \ 'arglists': [get(dict[k], 'arglists', '')],
@@ -75,7 +75,7 @@ endfunction
 function! s:ns_alias_candidates(aliases, base) abort
   let result = []
   for alias in a:aliases
-    if stridx(alias, a:base) != -1
+    if stridx(alias, a:base) == 0
       call add(result, {
           \ 'candidate': alias,
           \ 'type': 'namespace',
