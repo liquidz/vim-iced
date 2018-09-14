@@ -38,6 +38,7 @@ function! iced#paredit#get_current_top_list_raw() abort
   try
     while v:true
       " move to start position of current outer list
+      let @@ = ''
       silent exe 'normal! vaby'
       " no matched parenthesis
       if empty(@@)
@@ -64,7 +65,7 @@ function! iced#paredit#get_current_top_list() abort
   let view = winsaveview()
   let reg_save = @@
   let res = v:none
-  
+
   try
     let res = iced#paredit#get_current_top_list_raw()
   finally

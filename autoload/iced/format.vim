@@ -15,11 +15,15 @@ function! iced#format#form() abort
   try
     let res = iced#paredit#get_current_top_list_raw()
     let code = res['code']
-    if !empty(code)
+    if empty(code)
+      call iced#message#warning('finding_code_error')
+    else
       let resp = iced#nrepl#iced#sync#format_code(code, g:iced#format#rule)
       if has_key(resp, 'formatted') && !empty(resp['formatted'])
-         let @@ = resp['formatted']
-         silent normal! gvp
+        let @@ = resp['formatted']
+        silent normal! gvp
+      elseif has_key(resp, 'error')
+        call iced#message#error_str(resp['error'])
       endif
     endif
   finally
