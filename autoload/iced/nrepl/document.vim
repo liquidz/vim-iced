@@ -80,7 +80,10 @@ function! s:generate_doc(resp) abort
 endfunction
 
 function! s:view_doc(resp) abort
-  call iced#buffer#document#open(s:generate_doc(a:resp))
+  let doc = s:generate_doc(a:resp)
+  if !empty(doc)
+    call iced#buffer#document#open(s:generate_doc(a:resp))
+  endif
 endfunction
 
 function! s:expand_ns_alias(symbol) abort
