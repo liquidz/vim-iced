@@ -13,6 +13,7 @@ let s:default_init_text = join([
 let g:iced#buffer#stdout#init_text = get(g:, 'iced#buffer#stdout#init_text', s:default_init_text)
 let g:iced#buffer#stdout#mods = get(g:, 'iced#buffer#stdout#mods', '')
 let g:iced#buffer#stdout#max_line = get(g:, 'iced#buffer#stdout#max_line', 512)
+let g:iced#buffer#stdout#file = get(g:, 'iced#buffer#stdout#file', v:none)
 
 function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
@@ -24,6 +25,10 @@ function! s:initialize(bufnr) abort
     silent call appendbufline(a:bufnr, '$', line)
   endfor
   silent call deletebufline(a:bufnr, 1)
+
+  if !empty(g:iced#buffer#stdout#file)
+    call writefile(getbufline(a:bufnr, 1, '$'), g:iced#buffer#stdout#file)
+  endif
 endfunction
 
 function! s:delete_color_code(s) abort
@@ -42,9 +47,14 @@ function! iced#buffer#stdout#open() abort
 endfunction
 
 function! iced#buffer#stdout#append(s) abort
+  let s = s:delete_color_code(a:s)
+  if !empty(g:iced#buffer#stdout#file)
+    call writefile(split(s, '\r\?\n'), g:iced#buffer#stdout#file, 'a')
+  endif
+
   call iced#buffer#append(
       \ s:bufname,
-      \ s:delete_color_code(a:s),
+      \ s,
       \ {'scroll_to_bottom': v:true})
 endfunction
 
