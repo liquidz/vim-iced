@@ -87,18 +87,24 @@ function! iced#nrepl#eval#repl(code) abort
       \ {'session': 'repl'})
 endfunction
 
-function! s:undefined(symbol) abort
-  call iced#message#info_str(printf(iced#message#get('undefined'), a:symbol))
+function! s:undefined(resp, symbol) abort
+  if iced#util#has_status(a:resp, 'undef-error')
+    if has_key(a:resp, 'pp-stacktrace')
+      let first_stacktrace = a:resp['pp-stacktrace'][0]
+      call iced#message#error_str(get(first_stacktrace, 'message', 'undef-error'))
+    else
+      call iced#message#error_str(get(a:resp, 'ex', 'undef-error'))
+    endif
+  else
+    call iced#message#info_str(printf(iced#message#get('undefined'), a:symbol))
+  endif
 endfunction
 
 function! iced#nrepl#eval#undef(symbol) abort
-  if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
-    return
-  endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
-  call iced#nrepl#cider#undef(symbol, {_ -> s:undefined(symbol)})
+  call iced#nrepl#cider#undef(symbol, {resp -> s:undefined(resp, symbol)})
 endfunction
 
 function! s:print_last(resp) abort
