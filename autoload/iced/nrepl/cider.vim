@@ -110,6 +110,7 @@ function! iced#nrepl#cider#undef(symbol, callback) abort
       \ 'session': iced#nrepl#current_session(),
       \ 'ns': iced#nrepl#ns#name(),
       \ 'symbol': a:symbol,
+      \ 'verbose': v:false,
       \ 'callback': a:callback,
       \ })
 endfunction
