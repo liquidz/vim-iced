@@ -61,10 +61,11 @@ endfunction
 
 function! iced#util#has_status(resp, status) abort
   for resp in iced#util#ensure_array(a:resp)
-    let status = get(resp, 'status', [v:none])[0]
-    if status ==# a:status
-      return v:true
-    endif
+    for status in get(resp, 'status', [v:none])
+      if status ==# a:status
+        return v:true
+      endif
+    endfor
   endfor
   return v:false
 endfunction
