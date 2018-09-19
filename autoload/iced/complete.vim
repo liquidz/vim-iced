@@ -153,7 +153,8 @@ function! iced#complete#omni(findstart, base) abort
       let candidates = candidates + resp['completions']
     endif
 
-    return map(candidates, {_, v -> s:candidate(v)})
+    return sort(map(candidates, {_, v -> s:candidate(v)}),
+          \ {a, b -> a['word'] > b['word']})
   endif
 
   return []
