@@ -25,6 +25,10 @@ function! s:initialize(bufnr) abort
     silent call appendbufline(a:bufnr, '$', line)
   endfor
   silent call deletebufline(a:bufnr, 1)
+
+  if !empty(g:iced#buffer#stdout#file)
+    call writefile(getbufline(a:bufnr, 1, '$'), g:iced#buffer#stdout#file)
+  endif
 endfunction
 
 function! s:delete_color_code(s) abort
@@ -55,10 +59,6 @@ function! iced#buffer#stdout#append(s) abort
 endfunction
 
 function! iced#buffer#stdout#clear() abort
-  if !empty(g:iced#buffer#stdout#file)
-    call writefile([''], g:iced#buffer#stdout#file)
-  endif
-
   call iced#buffer#clear(s:bufname, funcref('s:initialize'))
 endfunction
 
