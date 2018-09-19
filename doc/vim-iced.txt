@@ -156,6 +156,9 @@ Stdout Buffer                                          *vim-iced-stdout-buffer*
   |:IcedStdoutBufferOpen| to open it.
   |:IcedStdoutBufferClear| to clear all outputted lines.
 
+  If you show buffer content in another application or display,
+  |g:iced#buffer#stdout#file| option is available for writing file.
+
 ==============================================================================
 Testing                                                      *vim-iced-testing*
 
@@ -776,6 +779,11 @@ g:iced#buffer#stdout#mods
   - {belowright}
   - {topleft}
   - {botright}
+
+                                                    *g:iced#buffer#stdout#file*
+g:iced#buffer#stdout#file
+  If not empty, vim-iced write stdout buffer content to the filepath.
+  Default value is `v:none`.
 
                                                 *g:iced#buffer#document#height*
 g:iced#buffer#document#height
