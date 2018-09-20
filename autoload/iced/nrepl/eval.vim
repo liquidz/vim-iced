@@ -129,5 +129,10 @@ function! iced#nrepl#eval#outer_top_list() abort
   endif
 endfunction
 
+function! iced#nrepl#eval#ns() abort
+  let ns_code = iced#nrepl#ns#get()
+  call iced#nrepl#eval#code(ns_code)
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

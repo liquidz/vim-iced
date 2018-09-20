@@ -312,6 +312,11 @@ Commands                                                    *vim-iced-commands*
   Evaluate {form} in REPL session.
   See details: |<Plug>(iced_eval_repl)|
 
+                                                                  *:IcedEvalNs*
+:IcedEvalNs
+  Evaluate `ns` form in current session.
+  Key is mapped to |<Plug>(iced_eval_ns)|
+
                                                                  *:IcedRequire*
 :IcedRequire
   Load current file in current session.
@@ -570,6 +575,10 @@ Key Mappings                                            *vim-iced-key-mappings*
   <Plug>(iced_eval_repl)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
 <
+                                                         *<Plug>(iced_eval_ns)*
+<Plug>(iced_eval_ns)
+  Same as |:IcedEvalNs|
+
                                                      *<Plug>(iced_macroexpand)*
 <Plug>(iced_macroexpand)
   Evaluate {macroexpand}, and show result in a window.
@@ -854,6 +863,7 @@ g:iced_enable_default_key_mappings
   <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Leader>et     <Plug>(iced_eval_outer_top_list)
   <Leader>er     <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
+  <Leader>en     <Plug>(iced_eval_ns)
   <Leader>ep     <Plug>(iced_print_last)
   <Leader>eb     <Plug>(iced_require)
   <Leader>eB     <Plug>(iced_require_all)

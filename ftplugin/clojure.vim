@@ -20,6 +20,7 @@ command!          IcedQuitCljsRepl      call iced#nrepl#cljs#quit()
 
 command! -nargs=1 IcedEval              call iced#nrepl#eval#code(<q-args>)
 command! -nargs=1 IcedEvalRepl          call iced#nrepl#eval#repl(<q-args>)
+command!          IcedEvalNs            call iced#nrepl#eval#ns()
 command!          IcedRequire           call iced#nrepl#ns#require()
 command!          IcedRequireAll        call iced#nrepl#ns#require_all()
 command! -nargs=? IcedUndef             call iced#nrepl#eval#undef(<q-args>)
@@ -81,6 +82,7 @@ nnoremap <silent> <Plug>(iced_quit_cljs_repl)      :<C-u>IcedQuitCljsRepl<CR>
 
 nnoremap <silent> <Plug>(iced_eval)                :<C-u>set opfunc=iced#operation#eval<CR>g@
 nnoremap <silent> <Plug>(iced_eval_repl)           :<C-u>set opfunc=iced#operation#eval_repl<CR>g@
+nnoremap <silent> <Plug>(iced_eval_ns)             :<C-u>IcedEvalNs<CR>
 nnoremap <silent> <Plug>(iced_macroexpand)         :<C-u>set opfunc=iced#operation#macroexpand<CR>g@
 nnoremap <silent> <Plug>(iced_macroexpand_1)       :<C-u>set opfunc=iced#operation#macroexpand_1<CR>g@
 nnoremap <silent> <Plug>(iced_require)             :<C-u>IcedRequire<CR>
@@ -169,6 +171,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_eval_repl)')
     silent! nmap <buffer> <Leader>er <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
+  endif
+
+  if !hasmapto('<Plug>(iced_eval_ns)')
+    silent! nmap <buffer> <Leader>en <Plug>(iced_eval_ns)
   endif
 
   if !hasmapto('<Plug>(iced_print_last)')
