@@ -23,6 +23,7 @@ function! iced#nrepl#ns#alias#dict(ns) abort
       \ 'op': 'eval',
       \ 'code': code,
       \ 'session': iced#nrepl#current_session(),
+      \ 'verbose': v:false,
       \ })
   return s:parse_to_alias_dict(resp)
 endfunction

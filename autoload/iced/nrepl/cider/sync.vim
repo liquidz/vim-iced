@@ -44,6 +44,7 @@ function! iced#nrepl#cider#sync#ns_vars(ns) abort
       \ 'op': 'ns-vars-with-meta',
       \ 'session': iced#nrepl#current_session(),
       \ 'ns': a:ns,
+      \ 'verbose': v:false,
       \ })
 endfunction
 
