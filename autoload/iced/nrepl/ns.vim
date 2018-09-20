@@ -3,8 +3,9 @@ set cpo&vim
 
 function! s:search_ns() abort
   call cursor(1, 1)
-  if trim(getline('.'))[0:3] !=# '(ns '
-    return search('(ns ')
+  let line = trim(getline('.'))
+  if line !=# '(ns' && line[0:3] !=# '(ns '
+    return search('(ns[ \r\n]')
   endif
   return 1
 endfunction
