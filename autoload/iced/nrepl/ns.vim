@@ -91,7 +91,8 @@ function! iced#nrepl#ns#name() abort
     let start = line('.')
     let line = trim(join(getline(start, start+1), ' '))
     let line = substitute(line, '(ns ', '', '')
-    return matchstr(line, '[a-z0-9.\-]\+')
+    return matchstr(line, '[a-z0-9.\-]\+',
+          \ (stridx(line, '^') == 0 ? stridx(line, ' ') : 0))
   finally
     let @@ = reg_save
     call winrestview(view)
