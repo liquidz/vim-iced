@@ -34,7 +34,6 @@ ancient:
 	clojure -A:ancient
 
 aspell:
-	aspell -d en -W 3 -p ./.aspell.en.pws check README.md
 	aspell -d en -W 3 -p ./.aspell.en.pws check README.adoc
 	aspell -d en -W 3 -p ./.aspell.en.pws check doc/vim-iced.txt
 
