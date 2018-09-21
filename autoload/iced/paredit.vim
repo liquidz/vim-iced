@@ -76,14 +76,18 @@ function! iced#paredit#get_current_top_list() abort
   return res
 endfunction
 
+function! iced#paredit#get_outer_list_raw() abort
+  silent normal! va(y
+  return @@
+endfunction
+
 function! iced#paredit#get_outer_list() abort
   let view = winsaveview()
   let reg_save = @@
   let code = v:none
 
   try
-    silent normal! va(y
-    let code = @@
+    let code = iced#paredit#get_outer_list_raw()
   finally
     let @@ = reg_save
     call winrestview(view)
