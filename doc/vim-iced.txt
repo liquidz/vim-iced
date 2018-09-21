@@ -227,6 +227,7 @@ Refactoring                                              *vim-iced-refactoring*
 
   Provides following functions powered by refactor-nrepl.
   - |:IcedCleanNs| (|<Plug>(iced_clean_ns)|)
+  - |:IcedAddMissing| (|<Plug>(iced_add_missing)|)
   - |:IcedThreadFirst| (|<Plug>(iced_thread_first)|)
   - |:IcedThreadLast| (|<Plug>(iced_thread_last)|)
 
@@ -489,6 +490,11 @@ Commands                                                    *vim-iced-commands*
   See https://github.com/clojure-emacs/refactor-nrepl#clean-ns
   Key is mapped to |<Plug>(iced_clean_ns)|.
 
+                                                              *:IcedAddMissing*
+:IcedAddMissing [{symbol}]
+  Add missing libspec.
+  If {symbol} is not passed, symbol under cursor is used.
+
                                                                    *:IcedAddNs*
 :IcedAddNs [{ns}]
   Add require to `ns` form.
@@ -749,6 +755,10 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
+
+                                                     *<Plug>(iced_add_missing)*
+<Plug>(iced_add_missing)
+  Same as |:IcedAddMissing|.
 
                                                           *<Plug>(iced_add_ns)*
 <Plug>(iced_add_ns)
