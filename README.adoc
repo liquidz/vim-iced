@@ -122,7 +122,7 @@ WARNING: `cider.nrepl/wrap-tracker` will cause vim's freezing.
 . Start repl
 ** `lein repl`
 ** `boot repl`
-** `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "6dd058f6015e29a4f1866fa52873f72917914122"}}}' -m iced-repl`
+** `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "5825fe678fc33b31de21b439adff1c5390ac1bf5"}}}' -m iced-repl`
 . Open source file
 . Evaluate forms (If not connected, vim-iced will connect automatically)
 
