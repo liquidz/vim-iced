@@ -94,7 +94,7 @@ NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim] is required when selectin
 ----
 {:user
  {:dependencies [[nrepl "0.4.5"]
-                 [iced-nrepl "0.1.3"]
+                 [iced-nrepl "0.1.4"]
                  [cider/cider-nrepl "0.18.0"]]
   :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                     cider.nrepl/wrap-debug
