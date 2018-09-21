@@ -1,0 +1,151 @@
+= vim-iced
+
++++
+<h4 align="center">Clojure Interactive Development Environment for Vim8.</h4>
+<p align="center">
+  <a href="https://circleci.com/gh/liquidz/vim-iced">
+    <img src="https://circleci.com/gh/liquidz/vim-iced.svg?style=svg" alt="CircleCI" />
+  </a>
+  <a href="https://github.com/liquidz/vim-iced/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/liquidz/vim-iced.svg" alt="GitHub license" />
+  </a>
+  <a href="https://github.com/vim-jp/vital.vim">
+    <img src="https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg" alt="Powered by vital.vim" />
+  </a>
+  <img src="https://img.shields.io/badge/status-WORK%20IN%20PROGRESS-red.svg" alt="Work in progress" />
+</p>
++++
+
+== Requirements
+
+ * Vim 8.1 or later
+ * Clojure & Java
+ * https://github.com/guns/vim-sexp[vim-sexp]
+ * No python!
+
+== Features
+
+[cols="2*,a"]
+|===
+
+|:sparkles:
+|Asynchronous evaluation
+|powered by `channel` in Vim8
+
+|:fire:
+|Testing
+|[%hardbreaks]
+run test under cursor
+run tests in namespace
+re run failed test
+
+|:rocket:
+|Refactoring
+|[%hardbreaks]
+clean namespace
+add missing
+thread first/last
+
+|:mag:
+|Reference
+|Docs, Javadoc, and https://www.conj.io[Grimoire]
+
+|:ant:
+|Debugging
+|supports cider-nrepl's debugger
+https://twitter.com/uochan/status/1034404572368842752[:movie_camera:]
+
+|:eyes:
+|Linting
+|powered by https://github.com/jonase/eastwood[jonase/eastwood]
+https://twitter.com/uochan/status/1038050122062413824[:movie_camera:]
+
+|:notebook:
+|Skeleton
+|provides code skeleton when you open new file
+
+|:tophat:
+|ClojureScript support
+|`figwheel` and `nashorn` is supported currently
+
+|===
+
+NOTE: vim-iced is heavily powered by https://github.com/clojure-emacs/cider-nrepl[cider-nrepl],
+https://github.com/clojure-emacs/refactor-nrepl[refactor-nrepl],
+and https://github.com/liquidz/iced-nrepl[iced-nrepl].
+
+== Installation
+
+=== vim-plug
+
+[source,vim]
+----
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'guns/vim-sexp',    {'for': 'clojure'}
+Plug 'liquidz/vim-iced', {'for': 'clojure'}
+----
+
+NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim] is required when selecting multiple candidates.
+
+=== Leiningen
+
+.~/.lein/profile.clj
+[source,clj]
+----
+{:user
+ {:dependencies [[nrepl "0.4.5"]
+                 [iced-nrepl "0.1.4"]
+                 [cider/cider-nrepl "0.18.0"]]
+  :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
+                                    cider.nrepl/wrap-debug
+                                    cider.nrepl/wrap-format
+                                    cider.nrepl/wrap-info
+                                    cider.nrepl/wrap-macroexpand
+                                    cider.nrepl/wrap-ns
+                                    cider.nrepl/wrap-out
+                                    cider.nrepl/wrap-pprint
+                                    cider.nrepl/wrap-pprint-fn
+                                    cider.nrepl/wrap-spec
+                                    cider.nrepl/wrap-test
+                                    cider.nrepl/wrap-trace
+                                    cider.nrepl/wrap-undef
+                                    iced.nrepl/wrap-iced]}
+  :plugins [[refactor-nrepl "2.4.0"]]}}
+----
+
+https://github.com/boot-clj/boot[Boot] configuration is also described in link:./doc/vim-iced.txt[vim-iced.txt].
+
+WARNING: `cider.nrepl/wrap-tracker` will cause vim's freezing.
+
+== Usage
+
+. Start repl
+** `lein repl`
+** `boot repl`
+** `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "5825fe678fc33b31de21b439adff1c5390ac1bf5"}}}' -m iced-repl`
+. Open source file
+. Evaluate forms (If not connected, vim-iced will connect automatically)
+
+== Configuration
+
+=== key mappings
+
+vim-iced is providing default key mappings.
+To enable default key mappings, add following line to your `.vimrc`.
+
+[source,vim]
+----
+let g:iced_enable_default_key_mappings = v:true
+----
+
+See link:./doc/vim-iced.txt[vim-iced.txt] for actual mappings.
+
+== Document
+
+  * See link:./doc/vim-iced.txt[vim-iced.txt].
+
+== License
+
+Copyright (c) 2018 http://twitter.com/uochan[Masashi Iizuka]
+
+Distributed under the MIT License.

@@ -23,6 +23,7 @@ function! iced#nrepl#ns#alias#dict(ns) abort
       \ 'op': 'eval',
       \ 'code': code,
       \ 'session': iced#nrepl#current_session(),
+      \ 'verbose': v:false,
       \ })
   return s:parse_to_alias_dict(resp)
 endfunction
@@ -30,6 +31,21 @@ endfunction
 function! iced#nrepl#ns#alias#dict_from_code(code) abort
   let resp = iced#nrepl#refactor#ns_parser#aliases(a:code)
   return s:parse_to_alias_dict(resp)
+endfunction
+
+function! iced#nrepl#ns#alias#find_existing_alias(ns_name) abort
+  let aliases = iced#nrepl#refactor#sync#all_ns_aliases()
+  let aliases = get(aliases, iced#nrepl#current_session_key(), {})
+
+  for k in keys(aliases)
+    if k ==# 'sut' | continue | endif
+    for ns in aliases[k]
+      if ns ==# a:ns_name
+        return k
+      endif
+    endfor
+  endfor
+  return v:none
 endfunction
 
 let &cpo = s:save_cpo

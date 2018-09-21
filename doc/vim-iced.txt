@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojure interactive development environment for Vim8
 
-Version: 0.3.3
+Version: 0.3.4
 Author : uochan <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -63,7 +63,7 @@ Leiningen                                                  *vim-iced-leiningen*
 >
   {:user
    {:dependencies [[nrepl "0.4.5"]
-                   [iced-nrepl "0.1.3"]
+                   [iced-nrepl "0.1.4"]
                    [cider/cider-nrepl "0.18.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
@@ -91,7 +91,7 @@ Boot                                                            *vim-iced-boot*
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
-      [iced-nrepl "0.1.3"]])
+      [iced-nrepl "0.1.4"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -116,7 +116,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   REPL needs to be activated beforehand.
   - `lein repl`
   - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "6dd058f6015e29a4f1866fa52873f72917914122"}}}' -m iced-repl`
+  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "5825fe678fc33b31de21b439adff1c5390ac1bf5"}}}' -m iced-repl`
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
@@ -227,6 +227,9 @@ Refactoring                                              *vim-iced-refactoring*
 
   Provides following functions powered by refactor-nrepl.
   - |:IcedCleanNs| (|<Plug>(iced_clean_ns)|)
+  - |:IcedAddMissing| (|<Plug>(iced_add_missing)|)
+  - |:IcedThreadFirst| (|<Plug>(iced_thread_first)|)
+  - |:IcedThreadLast| (|<Plug>(iced_thread_last)|)
 
 ------------------------------------------------------------------------------
 Linting                                                      *vim-iced-linting*
@@ -311,6 +314,11 @@ Commands                                                    *vim-iced-commands*
 :IcedEvalRepl {form}
   Evaluate {form} in REPL session.
   See details: |<Plug>(iced_eval_repl)|
+
+                                                                  *:IcedEvalNs*
+:IcedEvalNs
+  Evaluate `ns` form in current session.
+  Key is mapped to |<Plug>(iced_eval_ns)|
 
                                                                  *:IcedRequire*
 :IcedRequire
@@ -482,6 +490,35 @@ Commands                                                    *vim-iced-commands*
   See https://github.com/clojure-emacs/refactor-nrepl#clean-ns
   Key is mapped to |<Plug>(iced_clean_ns)|.
 
+                                                              *:IcedAddMissing*
+:IcedAddMissing [{symbol}]
+  Add missing libspec.
+  If {symbol} is not passed, symbol under cursor is used.
+
+                                                                   *:IcedAddNs*
+:IcedAddNs [{ns}]
+  Add require to `ns` form.
+  If {ns} is not passed, select namespaces in your project
+  via `ctrlp.vim` interface.
+
+                                                             *:IcedThreadFirst*
+:IcedThreadFirst
+  Convert current outer form to use `->` threading macro.
+  Ex. >
+  ;; before
+  (foo (bar (baz "hello")))
+  ;; after
+  (-> "hello" baz bar foo)
+<
+                                                              *:IcedThreadLast*
+:IcedThreadLast
+  Convert current outer form to use `->>` threading macro.
+  Ex. >
+  ;; before
+  (foo yy (bar xx "hello"))
+  ;; after
+  (->> "hello" (bar xx) (foo yy))
+<
                                                           *:IcedToggleTraceVar*
 :IcedToggleTraceVar [{symbol}]
   Toggle tracing {symbol} in current namespace.
@@ -503,7 +540,7 @@ Commands                                                    *vim-iced-commands*
 :IcedLintCurrentFile
   Lint codes in current file.
   Key is mapped to |<Plug>(iced_lint_current_file)|.
-  
+
                                                               *:IcedLintToggle*
 :IcedLintToggle
   Toggle linting.
@@ -570,6 +607,10 @@ Key Mappings                                            *vim-iced-key-mappings*
   <Plug>(iced_eval_repl)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
 <
+                                                         *<Plug>(iced_eval_ns)*
+<Plug>(iced_eval_ns)
+  Same as |:IcedEvalNs|
+
                                                      *<Plug>(iced_macroexpand)*
 <Plug>(iced_macroexpand)
   Evaluate {macroexpand}, and show result in a window.
@@ -715,6 +756,22 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
 
+                                                     *<Plug>(iced_add_missing)*
+<Plug>(iced_add_missing)
+  Same as |:IcedAddMissing|.
+
+                                                          *<Plug>(iced_add_ns)*
+<Plug>(iced_add_ns)
+  Same as |:IcedAddNs|.
+
+                                                    *<Plug>(iced_thread_first)*
+<Plug>(iced_thread_first)
+  Same as |:IcedThreadFirst|.
+
+                                                     *<Plug>(iced_thread_last)*
+<Plug>(iced_thread_last)
+  Same as |:IcedThreadLast|.
+
                                                 *<Plug>(iced_toggle_trace_var)*
 <Plug>(iced_toggle_trace_var)
   Same as |:IcedToggleTraceVar|.
@@ -730,7 +787,7 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                *<Plug>(iced_lint_current_file)*
 <Plug>(iced_lint_current_file)
   Same as |:IcedLintCurrentFile|.
-  
+
                                                      *<Plug>(iced_lint_toggle)*
 <Plug>(iced_lint_toggle)
   Same as |:IcedLintToggle|.
@@ -782,7 +839,7 @@ g:iced#buffer#stdout#mods
 
                                                     *g:iced#buffer#stdout#file*
 g:iced#buffer#stdout#file
-  If not empty, vim-iced write stdout buffer content to the filepath.
+  If not empty, vim-iced write stdout buffer content to the file path.
   Default value is `v:none`.
 
                                                 *g:iced#buffer#document#height*
@@ -854,6 +911,7 @@ g:iced_enable_default_key_mappings
   <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Leader>et     <Plug>(iced_eval_outer_top_list)
   <Leader>er     <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
+  <Leader>en     <Plug>(iced_eval_ns)
   <Leader>ep     <Plug>(iced_print_last)
   <Leader>eb     <Plug>(iced_require)
   <Leader>eB     <Plug>(iced_require_all)
@@ -870,6 +928,9 @@ g:iced_enable_default_key_mappings
   <Leader>sq     <Plug>(iced_stdout_buffer_close)
   <Leader>rcn    <Plug>(iced_clean_ns)
   <Leader>ram    <Plug>(iced_add_missing)
+  <Leader>ran    <Plug>(iced_add_ns)
+  <Leader>rtf    <Plug>(iced_thread_first)
+  <Leader>rtl    <Plug>(iced_thread_last)
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>bn     <Plug>(iced_browse_namespace)

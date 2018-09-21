@@ -20,6 +20,7 @@ command!          IcedQuitCljsRepl      call iced#nrepl#cljs#quit()
 
 command! -nargs=1 IcedEval              call iced#nrepl#eval#code(<q-args>)
 command! -nargs=1 IcedEvalRepl          call iced#nrepl#eval#repl(<q-args>)
+command!          IcedEvalNs            call iced#nrepl#eval#ns()
 command!          IcedRequire           call iced#nrepl#ns#require()
 command!          IcedRequireAll        call iced#nrepl#ns#require_all()
 command! -nargs=? IcedUndef             call iced#nrepl#eval#undef(<q-args>)
@@ -60,6 +61,9 @@ command!          IcedClearCtrlpCache   call ctrlp#iced#cache#clear()
 
 command!          IcedCleanNs           call iced#nrepl#refactor#clean_ns()
 command! -nargs=? IcedAddMissing        call iced#nrepl#refactor#add_missing(<q-args>)
+command! -nargs=? IcedAddNs             call iced#nrepl#ns#add(<q-args>)
+command!          IcedThreadFirst       call iced#nrepl#thread#first()
+command!          IcedThreadLast        call iced#nrepl#thread#last()
 
 command! -nargs=? IcedToggleTraceVar    call iced#nrepl#trace#toggle_var(<q-args>)
 command! -nargs=? IcedToggleTraceNs     call iced#nrepl#trace#toggle_ns(<q-args>)
@@ -81,6 +85,7 @@ nnoremap <silent> <Plug>(iced_quit_cljs_repl)      :<C-u>IcedQuitCljsRepl<CR>
 
 nnoremap <silent> <Plug>(iced_eval)                :<C-u>set opfunc=iced#operation#eval<CR>g@
 nnoremap <silent> <Plug>(iced_eval_repl)           :<C-u>set opfunc=iced#operation#eval_repl<CR>g@
+nnoremap <silent> <Plug>(iced_eval_ns)             :<C-u>IcedEvalNs<CR>
 nnoremap <silent> <Plug>(iced_macroexpand)         :<C-u>set opfunc=iced#operation#macroexpand<CR>g@
 nnoremap <silent> <Plug>(iced_macroexpand_1)       :<C-u>set opfunc=iced#operation#macroexpand_1<CR>g@
 nnoremap <silent> <Plug>(iced_require)             :<C-u>IcedRequire<CR>
@@ -123,6 +128,9 @@ nnoremap <silent> <Plug>(iced_clear_ctrlp_cache)   :<C-u>IcedClearCtrlpCache<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)            :<C-u>IcedCleanNs<CR>
 nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
+nnoremap <silent> <Plug>(iced_add_ns)              :<C-u>IcedAddNs<CR>
+nnoremap <silent> <Plug>(iced_thread_first)        :<C-u>IcedThreadFirst<CR>
+nnoremap <silent> <Plug>(iced_thread_last)         :<C-u>IcedThreadLast<CR>
 
 nnoremap <silent> <Plug>(iced_toggle_trace_ns)     :<C-u>IcedToggleTraceNs<CR>
 nnoremap <silent> <Plug>(iced_toggle_trace_var)    :<C-u>IcedToggleTraceVar<CR>
@@ -137,6 +145,7 @@ nnoremap <silent> <Plug>(iced_lint_toggle)         :<C-u>IcedLintToggle<CR>
 aug vim_iced_initial_setting
   au!
   au FileType clojure setl omnifunc=iced#complete#omni
+  au BufRead *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufread()
   au BufNewFile *.clj,*.cljs,*.cljc call iced#skeleton#new()
   au VimLeave * call iced#nrepl#disconnect()
 aug END
@@ -169,6 +178,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_eval_repl)')
     silent! nmap <buffer> <Leader>er <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
+  endif
+
+  if !hasmapto('<Plug>(iced_eval_ns)')
+    silent! nmap <buffer> <Leader>en <Plug>(iced_eval_ns)
   endif
 
   if !hasmapto('<Plug>(iced_print_last)')
@@ -241,6 +254,18 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_add_missing)')
     silent! nmap <buffer> <Leader>ram <Plug>(iced_add_missing)
+  endif
+
+  if !hasmapto('<Plug>(iced_add_ns)')
+    silent! nmap <buffer> <Leader>ran <Plug>(iced_add_ns)
+  endif
+
+  if !hasmapto('<Plug>(iced_thread_first)')
+    silent! nmap <buffer> <Leader>rtf <Plug>(iced_thread_first)
+  endif
+
+  if !hasmapto('<Plug>(iced_thread_last)')
+    silent! nmap <buffer> <Leader>rtl <Plug>(iced_thread_last)
   endif
 
   if !hasmapto('<Plug>(iced_format)')

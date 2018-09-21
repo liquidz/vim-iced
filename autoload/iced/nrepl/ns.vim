@@ -1,10 +1,34 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:default_ns_favorites = {
+      \ 'clj': {
+      \   'clojure.edn': 'edn',
+      \   'clojure.java.io': 'io',
+      \   'clojure.set': 'set',
+      \   'clojure.spec.alpha': 's',
+      \   'clojure.spec.gen.alpha': 'sgen',
+      \   'clojure.string': 'str',
+      \   'clojure.walk': 'walk',
+      \   'clojure.zip': 'zip',
+      \   },
+      \ 'cljs': {
+      \   'cljs.reader': 'reader',
+      \   'cljs.spec.alpha': 's',
+      \   'cljs.spec.gen.alpha': 'sgen',
+      \   'clojure.set': 'set',
+      \   'clojure.string': 'str',
+      \   'clojure.walk': 'walk',
+      \   'clojure.zip': 'zip',
+      \   },
+      \ }
+let g:iced#nrepl#ns#favorites = get(g:, 'iced#nrepl#ns#favorites', s:default_ns_favorites)
+
 function! s:search_ns() abort
   call cursor(1, 1)
-  if trim(getline('.'))[0:3] !=# '(ns '
-    return search('(ns ')
+  let line = trim(getline('.'))
+  if line !=# '(ns' && line[0:3] !=# '(ns '
+    return search('(ns[ \r\n]')
   endif
   return 1
 endfunction
@@ -90,7 +114,8 @@ function! iced#nrepl#ns#name() abort
     let start = line('.')
     let line = trim(join(getline(start, start+1), ' '))
     let line = substitute(line, '(ns ', '', '')
-    return matchstr(line, '[a-z0-9.\-]\+')
+    return matchstr(line, '[a-z0-9.\-]\+',
+          \ (stridx(line, '^') == 0 ? stridx(line, ' ') : 0))
   finally
     let @@ = reg_save
     call winrestview(view)
@@ -167,6 +192,51 @@ function! iced#nrepl#ns#in_repl_session_ns() abort
 
   let code = printf('(in-ns ''%s)', ns_name)
   call iced#nrepl#eval#code(code)
+endfunction
+
+function! s:add_ns(ns_name) abort
+  let favorites = get(g:iced#nrepl#ns#favorites, iced#nrepl#current_session_key(), {})
+  if has_key(favorites, a:ns_name)
+    let ns_alias = favorites[a:ns_name]
+  else
+    let candidate = iced#nrepl#ns#alias#find_existing_alias(a:ns_name)
+    if empty(candidate)
+      let candidate = ''
+    endif
+    let ns_alias = trim(input('Alias: ', candidate))
+  endif
+
+  let code = iced#nrepl#ns#get()
+  let code = iced#nrepl#ns#util#add_require_form(code)
+  let code = iced#nrepl#ns#util#add_namespace_to_require(code, a:ns_name, ns_alias)
+  call iced#nrepl#ns#replace(code)
+
+  let msg = ''
+  if empty(ns_alias)
+    let msg = printf(iced#message#get('ns_added'), a:ns_name)
+  else
+    let msg = printf(iced#message#get('ns_added_as'), a:ns_name, ns_alias)
+  endif
+  call iced#message#info_str(msg)
+endfunction
+
+function! s:project_namespaces(namespaces) abort
+  let namespaces = (empty(a:namespaces) ? [] : a:namespaces)
+  let favorites = get(g:iced#nrepl#ns#favorites, iced#nrepl#current_session_key(), {})
+  call extend(namespaces, keys(favorites))
+
+  call ctrlp#iced#start({
+        \ 'candidates': namespaces,
+        \ 'accept': {_, ns_name -> s:add_ns(ns_name)}
+        \ })
+endfunction
+
+function! iced#nrepl#ns#add(ns_name) abort
+  if empty(a:ns_name)
+    call iced#nrepl#iced#project_namespaces(funcref('s:project_namespaces'))
+  else
+    call s:add_ns(a:ns_name)
+  endif
 endfunction
 
 let &cpo = s:save_cpo
