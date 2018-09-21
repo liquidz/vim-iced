@@ -24,6 +24,7 @@
   'cleaned':            'Cleaned.',
   'already_clean':      'Already clean.',
   'ns_added':           'Added %s.',
+  'ns_added_as':        'Added %s as ''%s''.',
   'resolving_missing':  'Resolving...',
   'start_to_trace':     'Start to trace: %s.',
   'stop_to_trace':      'Stop to trace: %s.',

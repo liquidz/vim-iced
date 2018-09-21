@@ -489,6 +489,12 @@ Commands                                                    *vim-iced-commands*
   See https://github.com/clojure-emacs/refactor-nrepl#clean-ns
   Key is mapped to |<Plug>(iced_clean_ns)|.
 
+                                                                   *:IcedAddNs*
+:IcedAddNs [{ns}]
+  Add require to `ns` form.
+  If {ns} is not passed, select namespaces in your project
+  via `ctrlp.vim` interface.
+
                                                              *:IcedThreadFirst*
 :IcedThreadFirst
   Convert current outer form to use `->` threading macro.
@@ -744,6 +750,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
 
+                                                          *<Plug>(iced_add_ns)*
+<Plug>(iced_add_ns)
+  Same as |:IcedAddNs|.
+
                                                     *<Plug>(iced_thread_first)*
 <Plug>(iced_thread_first)
   Same as |:IcedThreadFirst|.
@@ -908,6 +918,7 @@ g:iced_enable_default_key_mappings
   <Leader>sq     <Plug>(iced_stdout_buffer_close)
   <Leader>rcn    <Plug>(iced_clean_ns)
   <Leader>ram    <Plug>(iced_add_missing)
+  <Leader>ran    <Plug>(iced_add_ns)
   <Leader>rtf    <Plug>(iced_thread_first)
   <Leader>rtl    <Plug>(iced_thread_last)
   <Leader>hs     <Plug>(iced_source_show)

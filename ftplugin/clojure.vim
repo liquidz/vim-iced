@@ -61,6 +61,7 @@ command!          IcedClearCtrlpCache   call ctrlp#iced#cache#clear()
 
 command!          IcedCleanNs           call iced#nrepl#refactor#clean_ns()
 command! -nargs=? IcedAddMissing        call iced#nrepl#refactor#add_missing(<q-args>)
+command! -nargs=? IcedAddNs             call iced#nrepl#ns#add(<q-args>)
 command!          IcedThreadFirst       call iced#nrepl#thread#first()
 command!          IcedThreadLast        call iced#nrepl#thread#last()
 
@@ -127,6 +128,7 @@ nnoremap <silent> <Plug>(iced_clear_ctrlp_cache)   :<C-u>IcedClearCtrlpCache<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)            :<C-u>IcedCleanNs<CR>
 nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
+nnoremap <silent> <Plug>(iced_add_ns)              :<C-u>IcedAddNs<CR>
 nnoremap <silent> <Plug>(iced_thread_first)        :<C-u>IcedThreadFirst<CR>
 nnoremap <silent> <Plug>(iced_thread_last)         :<C-u>IcedThreadLast<CR>
 
@@ -252,6 +254,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_add_missing)')
     silent! nmap <buffer> <Leader>ram <Plug>(iced_add_missing)
+  endif
+
+  if !hasmapto('<Plug>(iced_add_ns)')
+    silent! nmap <buffer> <Leader>ran <Plug>(iced_add_ns)
   endif
 
   if !hasmapto('<Plug>(iced_thread_first)')
