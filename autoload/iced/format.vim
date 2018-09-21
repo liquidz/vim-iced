@@ -49,13 +49,21 @@ function! iced#format#minimal() abort
   try
     " NOTE: vim-sexp's slurp move cursor to tail of form
     normal! %
-    let ncol = getcurpos()[2]
-    silent normal! va(y
+    let ncol = max([col('.')-1, 1])
+
+    let char = getline('.')[ncol]
+    if char ==# '['
+      silent normal! va[y
+    elseif char ==# '{'
+      silent normal! va{y
+    else
+      silent normal! va(y
+    endif
     let code = @@
 
     let resp = iced#nrepl#iced#sync#format_code(code, g:iced#format#rule)
     if has_key(resp, 'formatted') && !empty(resp['formatted'])
-      let @@ = s:add_indent(ncol-1, resp['formatted'])
+      let @@ = s:add_indent(ncol, resp['formatted'])
       silent normal! gvp
     endif
   finally
