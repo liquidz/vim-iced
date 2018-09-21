@@ -1,10 +1,11 @@
-personal_ws-1.1 en 129 
+personal_ws-1.1 en 140 
 grimoire
 IcedGrep
 IcedDocumentOpen
 cljfmt
 dbg
 IcedStdoutBufferClear
+IcedEvalNs
 IcedPrintLast
 rhs
 defn
@@ -17,6 +18,7 @@ IcedEval
 autocmd
 IcedMacroExpandOuterList
 au
+libspec
 setl
 aug
 norl
@@ -24,6 +26,7 @@ IcedDefBack
 botright
 IcedEvalRepl
 IcedQuitCljsRepl
+hardbreaks
 clj
 liquidz
 macroexpand
@@ -33,6 +36,7 @@ belowright
 linter
 undef
 figwheel
+IcedThreadLast
 sexp
 dir
 href
@@ -62,6 +66,7 @@ iced's
 IcedLintToggle
 cwindow
 topleft
+IcedThreadFirst
 IcedStdoutBufferOpen
 ns
 middleware
@@ -71,8 +76,9 @@ qf
 IcedDisconnect
 IcedTestAll
 Undefine
-stdout
 IcedBrowseFunction
+stdout
+Javadoc
 IcedToggleTraceNs
 FileType
 aboveleft
@@ -81,11 +87,13 @@ IcedDocumentClose
 IcedTestNs
 lightline
 uochan
+nrepl's
 OuterList
 eastwood
 CursorMoved
 nREPL
 nrepl
+Iizuka
 concat
 IcedToggleSrcAndTest
 BufWritePost
@@ -113,18 +121,21 @@ eval
 autcmd
 IcedTestRedo
 paredit
+tophat
 IcedInReplNs
 noet
-ClojureScript
 clojurescript
+ClojureScript
 IcedBarf
 ctrlp
 IcedRequire
 IcedInterrupt
 IcedUndef
+IcedAddMissing
 IcedStartCljsRepl
 VimIcedAutoOpenQuickfix
 IcedMacroExpand
 IcedTestUnderCursor
+IcedAddNs
 IcedTestBufferOpen
 IcedSourceShow
