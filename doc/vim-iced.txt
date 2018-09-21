@@ -227,6 +227,8 @@ Refactoring                                              *vim-iced-refactoring*
 
   Provides following functions powered by refactor-nrepl.
   - |:IcedCleanNs| (|<Plug>(iced_clean_ns)|)
+  - |:IcedThreadFirst| (|<Plug>(iced_thread_first)|)
+  - |:IcedThreadLast| (|<Plug>(iced_thread_last)|)
 
 ------------------------------------------------------------------------------
 Linting                                                      *vim-iced-linting*
@@ -487,6 +489,24 @@ Commands                                                    *vim-iced-commands*
   See https://github.com/clojure-emacs/refactor-nrepl#clean-ns
   Key is mapped to |<Plug>(iced_clean_ns)|.
 
+                                                             *:IcedThreadFirst*
+:IcedThreadFirst
+  Convert current outer form to use `->` threading macro.
+  Ex. >
+  ;; before
+  (foo (bar (baz "hello")))
+  ;; after
+  (-> "hello" baz bar foo)
+<
+                                                              *:IcedThreadLast*
+:IcedThreadLast
+  Convert current outer form to use `->>` threading macro.
+  Ex. >
+  ;; before
+  (foo yy (bar xx "hello"))
+  ;; after
+  (->> "hello" (bar xx) (foo yy))
+<
                                                           *:IcedToggleTraceVar*
 :IcedToggleTraceVar [{symbol}]
   Toggle tracing {symbol} in current namespace.
@@ -508,7 +528,7 @@ Commands                                                    *vim-iced-commands*
 :IcedLintCurrentFile
   Lint codes in current file.
   Key is mapped to |<Plug>(iced_lint_current_file)|.
-  
+
                                                               *:IcedLintToggle*
 :IcedLintToggle
   Toggle linting.
@@ -724,6 +744,14 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
 
+                                                    *<Plug>(iced_thread_first)*
+<Plug>(iced_thread_first)
+  Same as |:IcedThreadFirst|.
+
+                                                     *<Plug>(iced_thread_last)*
+<Plug>(iced_thread_last)
+  Same as |:IcedThreadLast|.
+
                                                 *<Plug>(iced_toggle_trace_var)*
 <Plug>(iced_toggle_trace_var)
   Same as |:IcedToggleTraceVar|.
@@ -739,7 +767,7 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                *<Plug>(iced_lint_current_file)*
 <Plug>(iced_lint_current_file)
   Same as |:IcedLintCurrentFile|.
-  
+
                                                      *<Plug>(iced_lint_toggle)*
 <Plug>(iced_lint_toggle)
   Same as |:IcedLintToggle|.
@@ -880,6 +908,8 @@ g:iced_enable_default_key_mappings
   <Leader>sq     <Plug>(iced_stdout_buffer_close)
   <Leader>rcn    <Plug>(iced_clean_ns)
   <Leader>ram    <Plug>(iced_add_missing)
+  <Leader>rtf    <Plug>(iced_thread_first)
+  <Leader>rtl    <Plug>(iced_thread_last)
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>bn     <Plug>(iced_browse_namespace)
