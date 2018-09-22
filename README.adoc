@@ -1,7 +1,10 @@
 = vim-iced
 
 +++
-<h4 align="center">Clojure Interactive Development Environment for Vim8.</h4>
+<h4 align="center">
+  <img src="logo.svg" alt="logo" /><br />
+  Clojure Interactive Development Environment for Vim8.
+</h4>
 <p align="center">
   <a href="https://circleci.com/gh/liquidz/vim-iced">
     <img src="https://circleci.com/gh/liquidz/vim-iced.svg?style=svg" alt="CircleCI" />
