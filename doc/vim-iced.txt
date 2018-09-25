@@ -9,8 +9,10 @@ CONTENTS                                                    *vim-iced-contents*
 
 Introduction         |vim-iced-introduction|
 Install              |vim-iced-install|
-  Leiningen          |vim-iced-leiningen|
-  Boot               |vim-iced-boot|
+  Iced command       |vim-iced-install-command|
+  Manual Install     |vim-iced-install-manually|
+    Leiningen        |vim-iced-manual-leiningen|
+    Boot             |vim-iced-manual-boot|
 nREPL Connection     |vim-iced-nrepl-connection|
 ClojureScript        |vim-iced-clojurescript|
 Evaluating           |vim-iced-evaluating|
@@ -57,13 +59,23 @@ Install                                                      *vim-iced-install*
   - Boot user: |vim-iced-boot|
 
 ------------------------------------------------------------------------------
-Leiningen                                                  *vim-iced-leiningen*
+Iced command                                         *vim-iced-install-command*
+
+  vim-iced provides `iced` command to use vim-iced easily.
+
+  Add `$PATH` environment variable to `/path/to/vim-iced/bin`.
+
+------------------------------------------------------------------------------
+Manual Install                                      *vim-iced-install-manually*
+
+..............................................................................
+Leiningen                                           *vim-iced-manual-leiningen*
 
   $HOME/.lein/profile.clj
 >
   {:user
    {:dependencies [[nrepl "0.4.5"]
-                   [iced-nrepl "0.1.4"]
+                   [iced-nrepl "0.1.5"]
                    [cider/cider-nrepl "0.18.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
@@ -81,8 +93,8 @@ Leiningen                                                  *vim-iced-leiningen*
                                       iced.nrepl/wrap-iced]}
     :plugins [[refactor-nrepl "2.4.0"]]}}
 <
-------------------------------------------------------------------------------
-Boot                                                            *vim-iced-boot*
+..............................................................................
+Boot                                                     *vim-iced-manual-boot*
 
   $HOME/.boot/profile.boot
 >
@@ -91,7 +103,7 @@ Boot                                                            *vim-iced-boot*
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
-      [iced-nrepl "0.1.4"]])
+      [iced-nrepl "0.1.5"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -114,9 +126,9 @@ Boot                                                            *vim-iced-boot*
 nREPL Connection                                    *vim-iced-nrepl-connection*
 
   REPL needs to be activated beforehand.
-  - `lein repl`
-  - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "5825fe678fc33b31de21b439adff1c5390ac1bf5"}}}' -m iced-repl`
+  - `iced repl` to start REPL
+    `iced` command must be installed.
+    See |vim-iced-install-command|.
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
