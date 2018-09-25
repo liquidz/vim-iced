@@ -1,4 +1,4 @@
-.PHONY: all vital test themis lint clean ancient aspell circleci
+.PHONY: all vital test themis lint clean bin ancient aspell repl circleci
 
 PLUGIN_NAME = iced
 VITAL_MODULES = Data.Dict \
@@ -9,7 +9,7 @@ VITAL_MODULES = Data.Dict \
 		Vim.BufferManager \
 		Vim.Message
 
-all: vital test
+all: vital bin test
 
 vital:
 	vim -c "Vitalize . --name=$(PLUGIN_NAME) $(VITAL_MODULES)" -c q
@@ -29,6 +29,10 @@ lint:
 
 clean:
 	/bin/rm -rf autoload/vital*
+	/bin/rm -f bin/iced
+
+bin:
+	clojure -A:jackin -m iced-jackin
 
 ancient:
 	clojure -A:ancient
@@ -36,6 +40,9 @@ ancient:
 aspell:
 	aspell -d en -W 3 -p ./.aspell.en.pws check README.adoc
 	aspell -d en -W 3 -p ./.aspell.en.pws check doc/vim-iced.txt
+
+repl:
+	clojure -Adev -m iced-repl
 
 circleci: _circleci-lint _circleci-test
 _circleci-lint:
