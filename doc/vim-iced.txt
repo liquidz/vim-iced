@@ -246,12 +246,14 @@ Refactoring                                              *vim-iced-refactoring*
 ------------------------------------------------------------------------------
 Linting                                                      *vim-iced-linting*
 
-  vim-iced can collaborate with `jonase/eastwood`.
+  vim-iced can collaborate with `jonase/eastwood` and `joker`.
   - https://github.com/jonase/eastwood
+    - works for Clojure
+  - https://github.com/candid82/joker
+    - works for ClojureScript
+    - needs to be installed separately from vim-iced
   - Command
     - |:IcedLintCurrentFile| (|<Plug>(iced_lint_current_file)|)
-
-  WARN: Only supports Clojure on Java because of `eastwood`
 
   To run linter automatically, set |g:iced_enable_auto_linting| to `v:true`.
 >
@@ -261,8 +263,8 @@ Linting                                                      *vim-iced-linting*
 >
   aug vim_iced_lint_setting
     au!
-    au BufWritePost *.clj call iced#lint#current_file()
-    au CursorMoved  *.clj call iced#lint#echo_message()
+    au BufWritePost *.clj,*.cljs,*.cljc call iced#lint#current_file()
+    au CursorMoved  *.clj,*.cljs,*.cljc call iced#lint#echo_message()
   aug END
 <
   To define which linters to use, see |g:iced#lint#linters|.
