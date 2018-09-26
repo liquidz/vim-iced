@@ -103,7 +103,7 @@ NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim] is required when selectin
 
 === Manual setting (not recommended)
 
-* See `Manual Install` secion in link:./doc/vim-iced.txt[vim-iced.txt].
+* See `Manual Install` section in link:./doc/vim-iced.txt[vim-iced.txt].
 
 == Usage
 
