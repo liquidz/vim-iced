@@ -31,7 +31,7 @@
 [cols="2*,a"]
 |===
 
-|:sparkles:
+|:zap:
 |Asynchronous evaluation
 |powered by `channel` in Vim8
 
