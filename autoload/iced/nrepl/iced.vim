@@ -1,6 +1,16 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:concat_results = {}
+function! s:concat_handler(key, resp) abort
+  for resp in iced#util#ensure_array(a:resp)
+    if has_key(resp, a:key)
+      call extend(s:concat_results[a:key], resp[a:key])
+    endif
+  endfor
+  return s:concat_results[a:key]
+endfunction
+
 function! iced#nrepl#iced#lint_file(file, linters, callback) abort
   if !iced#nrepl#is_connected() | return | endif
 
@@ -8,6 +18,7 @@ function! iced#nrepl#iced#lint_file(file, linters, callback) abort
       \ 'id': iced#nrepl#eval#id(),
       \ 'op': 'lint-file',
       \ 'sesion': iced#nrepl#current_session(),
+      \ 'env': iced#nrepl#current_session_key(),
       \ 'file': a:file,
       \ 'callback': a:callback,
       \ }
@@ -16,6 +27,7 @@ function! iced#nrepl#iced#lint_file(file, linters, callback) abort
     let msg['linters'] = a:linters
   endif
 
+  let s:concat_results['lint-warnings'] = []
   call iced#nrepl#send(msg)
 endfunction
 
@@ -30,16 +42,6 @@ function! iced#nrepl#iced#grimoire(platform, ns_name, symbol, callback) abort
         \ 'symbol': a:symbol,
         \ 'callback': a:callback,
         \ })
-endfunction
-
-let s:concat_results = {}
-function! s:concat_handler(key, resp) abort
-  for resp in iced#util#ensure_array(a:resp)
-    if has_key(resp, a:key)
-      call extend(s:concat_results[a:key], resp[a:key])
-    endif
-  endfor
-  return s:concat_results[a:key]
 endfunction
 
 function! iced#nrepl#iced#project_namespaces(callback) abort
@@ -64,6 +66,7 @@ function! iced#nrepl#iced#project_functions(callback) abort
         \ })
 endfunction
 
+call iced#nrepl#register_handler('lint-file', {resp -> s:concat_handler('lint-warnings', resp)})
 call iced#nrepl#register_handler('project-namespaces', {resp -> s:concat_handler('namespaces', resp)})
 call iced#nrepl#register_handler('project-functions', {resp -> s:concat_handler('functions', resp)})
 
