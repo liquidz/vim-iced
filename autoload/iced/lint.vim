@@ -18,7 +18,7 @@ function! s:lint(warnings) abort
 endfunction
 
 function! iced#lint#current_file() abort
-  if !iced#nrepl#is_connected() || !s:enabled || iced#nrepl#current_session_key() !=# 'clj'
+  if !iced#nrepl#is_connected() || !s:enabled
     return
   endif
 

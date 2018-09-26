@@ -154,8 +154,8 @@ if exists('g:iced_enable_auto_linting')
     \ && g:iced_enable_auto_linting
   aug iced_auto_linting
     au!
-    au BufWritePost *.clj,*.cljc call iced#lint#current_file()
-    au CursorMoved *.clj,*.cljc call iced#lint#echo_message()
+    au BufWritePost *.clj,*.cljs,*.cljc call iced#lint#current_file()
+    au CursorMoved *.clj,*.cljs,*.cljc call iced#lint#echo_message()
   aug END
 endif
 "" }}}
