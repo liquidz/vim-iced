@@ -31,7 +31,7 @@
 [cols="2*,a"]
 |===
 
-|:sparkles:
+|:zap:
 |Asynchronous evaluation
 |powered by `channel` in Vim8
 
@@ -62,6 +62,7 @@ https://twitter.com/uochan/status/1034404572368842752[:movie_camera:]
 |Linting
 |powered by https://github.com/jonase/eastwood[jonase/eastwood]
 https://twitter.com/uochan/status/1038050122062413824[:movie_camera:]
+and https://github.com/candid82/joker[joker]
 
 |:notebook:
 |Skeleton
@@ -90,42 +91,24 @@ Plug 'liquidz/vim-iced', {'for': 'clojure'}
 
 NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim] is required when selecting multiple candidates.
 
-=== Leiningen
+=== iced command (recommended)
 
-.~/.lein/profile.clj
-[source,clj]
-----
-{:user
- {:dependencies [[nrepl "0.4.5"]
-                 [iced-nrepl "0.1.4"]
-                 [cider/cider-nrepl "0.18.0"]]
-  :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
-                                    cider.nrepl/wrap-debug
-                                    cider.nrepl/wrap-format
-                                    cider.nrepl/wrap-info
-                                    cider.nrepl/wrap-macroexpand
-                                    cider.nrepl/wrap-ns
-                                    cider.nrepl/wrap-out
-                                    cider.nrepl/wrap-pprint
-                                    cider.nrepl/wrap-pprint-fn
-                                    cider.nrepl/wrap-spec
-                                    cider.nrepl/wrap-test
-                                    cider.nrepl/wrap-trace
-                                    cider.nrepl/wrap-undef
-                                    iced.nrepl/wrap-iced]}
-  :plugins [[refactor-nrepl "2.4.0"]]}}
-----
+* Add `$PATH` environment variable to link:./bin/iced[`/path/to/vim-iced/bin`].
 
-https://github.com/boot-clj/boot[Boot] configuration is also described in link:./doc/vim-iced.txt[vim-iced.txt].
+`iced` command currently supports:
 
-WARNING: `cider.nrepl/wrap-tracker` will cause vim's freezing.
+* Leiningen
+* Boot
+* Clojure CLI
+
+=== Manual setting (not recommended)
+
+* See `Manual Install` section in link:./doc/vim-iced.txt[vim-iced.txt].
 
 == Usage
 
-. Start repl
-** `lein repl`
-** `boot repl`
-** `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "5825fe678fc33b31de21b439adff1c5390ac1bf5"}}}' -m iced-repl`
+. Start repl via `iced` command
+** `iced repl`
 . Open source file
 . Evaluate forms (If not connected, vim-iced will connect automatically)
 
@@ -141,7 +124,7 @@ To enable default key mappings, add following line to your `.vimrc`.
 let g:iced_enable_default_key_mappings = v:true
 ----
 
-See link:./doc/vim-iced.txt[vim-iced.txt] for actual mappings.
+See `Customizing` section in link:./doc/vim-iced.txt[vim-iced.txt] for actual mappings.
 
 == Document
 

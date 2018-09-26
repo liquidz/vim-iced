@@ -1,4 +1,4 @@
-personal_ws-1.1 en 140 
+personal_ws-1.1 en 143 
 grimoire
 IcedGrep
 IcedDocumentOpen
@@ -43,6 +43,7 @@ href
 IcedEvalOuterTopList
 lhs
 changelog
+wrapscan
 previewheight
 quickfix
 milli
@@ -94,6 +95,7 @@ CursorMoved
 nREPL
 nrepl
 Iizuka
+IcedJumpToPrevSign
 concat
 IcedToggleSrcAndTest
 BufWritePost
@@ -112,6 +114,7 @@ IcedSlurp
 leftabove
 vimrc
 CircleCI
+IcedJumpToNextSign
 IcedToggleTraceVar
 IcedStdoutBufferClose
 txt

@@ -1,7 +1,7 @@
 *vim-iced.txt*            Clojure interactive development environment for Vim8
 
-Version: 0.3.4
-Author : uochan <liquidz.uo+vim@gmail.com>
+Version: 0.4.0
+Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
 ==============================================================================
@@ -9,8 +9,10 @@ CONTENTS                                                    *vim-iced-contents*
 
 Introduction         |vim-iced-introduction|
 Install              |vim-iced-install|
-  Leiningen          |vim-iced-leiningen|
-  Boot               |vim-iced-boot|
+  Iced command       |vim-iced-install-command|
+  Manual Install     |vim-iced-install-manually|
+    Leiningen        |vim-iced-manual-leiningen|
+    Boot             |vim-iced-manual-boot|
 nREPL Connection     |vim-iced-nrepl-connection|
 ClojureScript        |vim-iced-clojurescript|
 Evaluating           |vim-iced-evaluating|
@@ -57,13 +59,23 @@ Install                                                      *vim-iced-install*
   - Boot user: |vim-iced-boot|
 
 ------------------------------------------------------------------------------
-Leiningen                                                  *vim-iced-leiningen*
+Iced command                                         *vim-iced-install-command*
+
+  vim-iced provides `iced` command to use vim-iced easily.
+
+  Add `$PATH` environment variable to `/path/to/vim-iced/bin`.
+
+------------------------------------------------------------------------------
+Manual Install                                      *vim-iced-install-manually*
+
+..............................................................................
+Leiningen                                           *vim-iced-manual-leiningen*
 
   $HOME/.lein/profile.clj
 >
   {:user
    {:dependencies [[nrepl "0.4.5"]
-                   [iced-nrepl "0.1.4"]
+                   [iced-nrepl "0.1.6"]
                    [cider/cider-nrepl "0.18.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
@@ -81,8 +93,8 @@ Leiningen                                                  *vim-iced-leiningen*
                                       iced.nrepl/wrap-iced]}
     :plugins [[refactor-nrepl "2.4.0"]]}}
 <
-------------------------------------------------------------------------------
-Boot                                                            *vim-iced-boot*
+..............................................................................
+Boot                                                     *vim-iced-manual-boot*
 
   $HOME/.boot/profile.boot
 >
@@ -91,7 +103,7 @@ Boot                                                            *vim-iced-boot*
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
-      [iced-nrepl "0.1.4"]])
+      [iced-nrepl "0.1.6"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -114,9 +126,9 @@ Boot                                                            *vim-iced-boot*
 nREPL Connection                                    *vim-iced-nrepl-connection*
 
   REPL needs to be activated beforehand.
-  - `lein repl`
-  - `boot repl`
-  - `clojure -Sdeps '{:deps {iced-repl {:git/url "https://github.com/liquidz/vim-iced" :sha "5825fe678fc33b31de21b439adff1c5390ac1bf5"}}}' -m iced-repl`
+  - `iced repl` to start REPL
+    `iced` command must be installed.
+    See |vim-iced-install-command|.
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
@@ -234,12 +246,14 @@ Refactoring                                              *vim-iced-refactoring*
 ------------------------------------------------------------------------------
 Linting                                                      *vim-iced-linting*
 
-  vim-iced can collaborate with `jonase/eastwood`.
+  vim-iced can collaborate with `jonase/eastwood` and `joker`.
   - https://github.com/jonase/eastwood
+    - works for Clojure
+  - https://github.com/candid82/joker
+    - works for ClojureScript
+    - needs to be installed separately from vim-iced
   - Command
     - |:IcedLintCurrentFile| (|<Plug>(iced_lint_current_file)|)
-
-  WARN: Only supports Clojure on Java because of `eastwood`
 
   To run linter automatically, set |g:iced_enable_auto_linting| to `v:true`.
 >
@@ -249,8 +263,8 @@ Linting                                                      *vim-iced-linting*
 >
   aug vim_iced_lint_setting
     au!
-    au BufWritePost *.clj call iced#lint#current_file()
-    au CursorMoved  *.clj call iced#lint#echo_message()
+    au BufWritePost *.clj,*.cljs,*.cljc call iced#lint#current_file()
+    au CursorMoved  *.clj,*.cljs,*.cljc call iced#lint#echo_message()
   aug END
 <
   To define which linters to use, see |g:iced#lint#linters|.
@@ -546,6 +560,20 @@ Commands                                                    *vim-iced-commands*
   Toggle linting.
   Key is mapped to |<Plug>(iced_lint_toggle)|.
 
+                                                          *:IcedJumpToNextSign*
+:IcedJumpToNextSign
+  Jump cursor to next sign in current buffer.
+  If search hit BOTTOM and |'wrapscan'| is enabled,
+  searching sign continues at TOP.
+  Key is mapped to |<Plug>(iced_jump_to_next_sign)|.
+
+                                                          *:IcedJumpToPrevSign*
+:IcedJumpToPrevSign
+  Jump cursor to previous sign in current buffer.
+  If search hit TOP and |'wrapscan'| is enabled,
+  searching sign continues at BOTTOM.
+  Key is mapped to |<Plug>(iced_jump_to_prev_sign)|.
+
 ------------------------------------------------------------------------------
 Functions                                                  *vim-iced-functions*
 
@@ -792,6 +820,14 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_lint_toggle)
   Same as |:IcedLintToggle|.
 
+                                               *<Plug>(iced_jump_to_next_sign)*
+<Plug>(iced_jump_to_next_sign)
+  Same as |:IcedJumpToNextSign|.
+
+                                               *<Plug>(iced_jump_to_prev_sign)*
+<Plug>(iced_jump_to_prev_sign)
+  Same as |:IcedJumpToPrevSign|.
+
 ==============================================================================
 Customizing                                              *vim-iced-customizing*
 
@@ -936,6 +972,8 @@ g:iced_enable_default_key_mappings
   <Leader>bn     <Plug>(iced_browse_namespace)
   <Leader>bf     <Plug>(iced_browse_function)
   <Leader>bs     <Plug>(iced_browse_spec)
+  <Leader>jn     <Plug>(iced_jump_to_next_sign)
+  <Leader>jN     <Plug>(iced_jump_to_prev_sign)
   <Leader>*      <Plug>(iced_iced)
   <Leader>/      :<C-u>IcedGrep<Space>
   <C-]>          <Plug>(iced_def_jump)

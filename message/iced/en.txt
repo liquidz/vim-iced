@@ -9,6 +9,7 @@
   'reading':            'Still reading..',
   'not_found':          'Not found.',
   'ns_not_found':       '(ns ..) form is not found.',
+  'sign_not_found':     'Sign is not found.',
   'required':           'Required.',
   'timeout':            'Timed out.',
   'invalid_cljs_env':   'Invalid CLJS environment.',
@@ -38,5 +39,7 @@
   'lint_disabled':      'Lint disabled.',
   'fetching':           'Fetching...',
   'cache_cleared':      'Cache cleared.',
+  'search_hit_top':     'search hit TOP, continuing at BOTTOM...',
+  'search_hit_bottom':  'search hit BOTTOM, continuing at TOP...'
 }
 #vim:ft=ruby
