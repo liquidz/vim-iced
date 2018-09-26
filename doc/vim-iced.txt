@@ -1,7 +1,7 @@
 *vim-iced.txt*            Clojure interactive development environment for Vim8
 
-Version: 0.3.4
-Author : uochan <liquidz.uo+vim@gmail.com>
+Version: 0.4.0
+Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
 ==============================================================================
