@@ -560,6 +560,20 @@ Commands                                                    *vim-iced-commands*
   Toggle linting.
   Key is mapped to |<Plug>(iced_lint_toggle)|.
 
+                                                          *:IcedJumpToNextSign*
+:IcedJumpToNextSign
+  Jump cursor to next sign in current buffer.
+  If search hit BOTTOM and |'wrapscan'| is enabled,
+  searching sign continues at TOP.
+  Key is mapped to |<Plug>(iced_jump_to_next_sign)|.
+
+                                                          *:IcedJumpToPrevSign*
+:IcedJumpToPrevSign
+  Jump cursor to previous sign in current buffer.
+  If search hit TOP and |'wrapscan'| is enabled,
+  searching sign continues at BOTTOM.
+  Key is mapped to |<Plug>(iced_jump_to_prev_sign)|.
+
 ------------------------------------------------------------------------------
 Functions                                                  *vim-iced-functions*
 
@@ -806,6 +820,14 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_lint_toggle)
   Same as |:IcedLintToggle|.
 
+                                               *<Plug>(iced_jump_to_next_sign)*
+<Plug>(iced_jump_to_next_sign)
+  Same as |:IcedJumpToNextSign|.
+
+                                               *<Plug>(iced_jump_to_prev_sign)*
+<Plug>(iced_jump_to_prev_sign)
+  Same as |:IcedJumpToPrevSign|.
+
 ==============================================================================
 Customizing                                              *vim-iced-customizing*
 
@@ -950,6 +972,8 @@ g:iced_enable_default_key_mappings
   <Leader>bn     <Plug>(iced_browse_namespace)
   <Leader>bf     <Plug>(iced_browse_function)
   <Leader>bs     <Plug>(iced_browse_spec)
+  <Leader>jn     <Plug>(iced_jump_to_next_sign)
+  <Leader>jN     <Plug>(iced_jump_to_prev_sign)
   <Leader>*      <Plug>(iced_iced)
   <Leader>/      :<C-u>IcedGrep<Space>
   <C-]>          <Plug>(iced_def_jump)

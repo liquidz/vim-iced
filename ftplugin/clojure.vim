@@ -72,6 +72,9 @@ command!          IcedInReplNs          call iced#nrepl#ns#in_repl_session_ns()
 
 command!          IcedLintCurrentFile   call iced#lint#current_file()
 command!          IcedLintToggle        call iced#lint#toggle()
+
+command!          IcedJumpToNextSign    call iced#sign#jump_to_next()
+command!          IcedJumpToPrevSign    call iced#sign#jump_to_prev()
 "" }}}
 
 "" Key mappings {{{
@@ -139,6 +142,9 @@ nnoremap <silent> <Plug>(iced_in_repl_ns)          :<C-u>IcedInReplNs<CR>
 
 nnoremap <silent> <Plug>(iced_lint_current_file)   :<C-u>IcedLintCurrentFile<CR>
 nnoremap <silent> <Plug>(iced_lint_toggle)         :<C-u>IcedLintToggle<CR>
+
+nnoremap <silent> <Plug>(iced_jump_to_next_sign)   :<C-u>IcedJumpToNextSign<CR>
+nnoremap <silent> <Plug>(iced_jump_to_prev_sign)   :<C-u>IcedJumpToPrevSign<CR>
 "" }}}
 
 "" Auto commands {{{
@@ -303,6 +309,14 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_browse_spec)')
     silent! nmap <buffer> <Leader>bs <Plug>(iced_browse_spec)
+  endif
+
+  if !hasmapto('<Plug>(iced_jump_to_next_sign)')
+    silent! nmap <buffer> <Leader>jn <Plug>(iced_jump_to_next_sign)
+  endif
+
+  if !hasmapto('<Plug>(iced_jump_to_prev_sign)')
+    silent! nmap <buffer> <Leader>jN <Plug>(iced_jump_to_prev_sign)
   endif
 endfunction
 
