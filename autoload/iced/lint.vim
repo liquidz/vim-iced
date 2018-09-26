@@ -8,15 +8,9 @@ let s:last_warnings = []
 let s:enabled = v:true
 let g:iced#lint#linters = get(g:, 'iced#lint#linters', [])
 
-function! s:lint(resp) abort
-  if !has_key(a:resp, 'lint-warnings') | return | endif
-
-  if has_key(a:resp, 'error')
-    call iced#message#error_str(a:resp['error'])
-  endif
-
+function! s:lint(warnings) abort
   call iced#sign#unplace_all()
-  let s:last_warnings = a:resp['lint-warnings']
+  let s:last_warnings = a:warnings
   for warn in s:last_warnings
     if !has_key(warn, 'line') || !has_key(warn, 'path') | continue | endif
     call iced#sign#place('iced_lint', warn['line'], warn['path'])
