@@ -101,8 +101,7 @@ function! s:resolve_missing(symbol, resp) abort
   if empty(a:resp['candidates'])
     let ns_candidates = []
   else
-    let ns_form = iced#nrepl#ns#get()
-    let alias_dict = iced#nrepl#ns#alias#dict_from_code(ns_form)
+    let alias_dict = iced#nrepl#ns#alias#dict(iced#nrepl#ns#get())
     if has_key(alias_dict, symbol_alias)
       echom printf(iced#message#get('alias_exists'), symbol_alias)
       return
