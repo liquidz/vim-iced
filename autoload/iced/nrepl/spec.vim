@@ -42,7 +42,7 @@ function! s:spec_form(resp) abort
 endfunction
 
 function! s:browse_spec(spec_name) abort
-  call iced#nrepl#cider#spec_form(a:spec_name, funcref('s:spec_form'))
+  call iced#nrepl#op#cider#spec_form(a:spec_name, funcref('s:spec_form'))
 endfunction
 
 function! s:spec_list(resp) abort
@@ -62,7 +62,7 @@ function! s:spec_list(resp) abort
 endfunction
 
 function! iced#nrepl#spec#list() abort
-  call iced#nrepl#cider#spec_list(funcref('s:spec_list'))
+  call iced#nrepl#op#cider#spec_list(funcref('s:spec_list'))
 endfunction
 
 let &cpo = s:save_cpo

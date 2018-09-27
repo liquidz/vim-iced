@@ -26,7 +26,7 @@ function! iced#nrepl#jump#jump(symbol) abort
   call s:L.push(s:tagstack, pos)
 
   let kw = empty(a:symbol) ? expand('<cword>') : a:symbol
-  call iced#nrepl#cider#info(kw, function('s:jump'))
+  call iced#nrepl#op#cider#info(kw, function('s:jump'))
 endfunction
 
 function! iced#nrepl#jump#back() abort

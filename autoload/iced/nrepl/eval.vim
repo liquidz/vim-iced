@@ -104,7 +104,7 @@ function! iced#nrepl#eval#undef(symbol) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
-  call iced#nrepl#cider#undef(symbol, {resp -> s:undefined(resp, symbol)})
+  call iced#nrepl#op#cider#undef(symbol, {resp -> s:undefined(resp, symbol)})
 endfunction
 
 function! s:print_last(resp) abort
@@ -114,7 +114,7 @@ function! s:print_last(resp) abort
 endfunction
 
 function! iced#nrepl#eval#print_last() abort
-  call iced#nrepl#cider#pprint_eval('*1', funcref('s:print_last'))
+  call iced#nrepl#op#cider#pprint_eval('*1', funcref('s:print_last'))
 endfunction
 
 function! iced#nrepl#eval#outer_top_list() abort

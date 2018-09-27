@@ -23,11 +23,11 @@ function! s:threading(fn) abort
 endfunction
 
 function! iced#nrepl#thread#first() abort
-  call s:threading({code -> iced#nrepl#iced#sync#refactor_thread_first(code)})
+  call s:threading({code -> iced#nrepl#op#iced#sync#refactor_thread_first(code)})
 endfunction
 
 function! iced#nrepl#thread#last() abort
-  call s:threading({code -> iced#nrepl#iced#sync#refactor_thread_last(code)})
+  call s:threading({code -> iced#nrepl#op#iced#sync#refactor_thread_last(code)})
 endfunction
 
 let &cpo = s:save_cpo

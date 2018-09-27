@@ -58,7 +58,7 @@ function! s:collect_errors(resp) abort
             continue
           endif
 
-          let ns_path_resp = iced#nrepl#cider#sync#ns_path(ns_name)
+          let ns_path_resp = iced#nrepl#op#cider#sync#ns_path(ns_name)
           if type(ns_path_resp) != type({}) || !has_key(ns_path_resp, 'path')
             continue
           endif
@@ -140,7 +140,7 @@ function! s:test(resp) abort
     let i = stridx(var, '/')
     let var = var[i+1:]
     echom printf('Testing: %s', var)
-    call iced#nrepl#cider#test_var(var, funcref('s:out'))
+    call iced#nrepl#op#cider#test_var(var, funcref('s:out'))
   endif
 endfunction
 
@@ -161,13 +161,13 @@ function! iced#nrepl#test#ns() abort
   let ns = iced#nrepl#ns#name()
   call iced#sign#unplace_all()
   call iced#message#info('testing')
-  call iced#nrepl#cider#test_ns(ns, funcref('s:out'))
+  call iced#nrepl#op#cider#test_ns(ns, funcref('s:out'))
 endfunction
 
 function! iced#nrepl#test#all() abort
   call iced#sign#unplace_all()
   call iced#message#info('testing')
-  call iced#nrepl#cider#test_all(funcref('s:out'))
+  call iced#nrepl#op#cider#test_all(funcref('s:out'))
 endfunction
 
 function! iced#nrepl#test#redo() abort
@@ -187,7 +187,7 @@ function! iced#nrepl#test#redo() abort
       let pos = getcurpos()
       let option = {'line': pos[1], 'column': pos[2]}
       call iced#message#info('retesting')
-      call iced#nrepl#eval(code, {_ -> iced#nrepl#cider#retest(funcref('s:out'))}, option)
+      call iced#nrepl#eval(code, {_ -> iced#nrepl#op#cider#retest(funcref('s:out'))}, option)
     endif
   finally
     let @@ = reg_save

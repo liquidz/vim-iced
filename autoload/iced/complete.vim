@@ -52,7 +52,7 @@ function! s:ns_var_candidates(ns_name, base, alias) abort
     return result
   endif
 
-  let resp = iced#nrepl#cider#sync#ns_vars(a:ns_name)
+  let resp = iced#nrepl#op#cider#sync#ns_vars(a:ns_name)
   if empty(resp) || resp['status'][0] !=# 'done'
     return []
   endif
@@ -148,7 +148,7 @@ function! iced#complete#omni(findstart, base) abort
 
     " cider completions
     let ctx = s:context()
-    let resp = iced#nrepl#cider#sync#complete(a:base, ns, ctx)
+    let resp = iced#nrepl#op#cider#sync#complete(a:base, ns, ctx)
     if type(resp) == type({}) && has_key(resp, 'completions')
       let candidates = candidates + resp['completions']
     endif

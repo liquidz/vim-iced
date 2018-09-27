@@ -24,7 +24,7 @@ function! iced#lint#current_file() abort
   let s:last_warnings = []
   call iced#sign#unplace_all()
   let file = expand('%:p')
-  call iced#nrepl#iced#lint_file(file, g:iced#lint#linters, funcref('s:lint'))
+  call iced#nrepl#op#iced#lint_file(file, g:iced#lint#linters, funcref('s:lint'))
 endfunction
 
 function! iced#lint#echo_message() abort

@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! iced#nrepl#iced#sync#system_info() abort
+function! iced#nrepl#op#iced#sync#system_info() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   return iced#nrepl#sync#send({
         \ 'op': 'system-info',
@@ -9,7 +9,7 @@ function! iced#nrepl#iced#sync#system_info() abort
         \ })
 endfunction
 
-function! iced#nrepl#iced#sync#format_code(code, indents) abort
+function! iced#nrepl#op#iced#sync#format_code(code, indents) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   return iced#nrepl#sync#send({
@@ -21,7 +21,7 @@ function! iced#nrepl#iced#sync#format_code(code, indents) abort
         \ })
 endfunction
 
-function! iced#nrepl#iced#sync#refactor_thread_first(code) abort
+function! iced#nrepl#op#iced#sync#refactor_thread_first(code) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   return iced#nrepl#sync#send({
@@ -32,7 +32,7 @@ function! iced#nrepl#iced#sync#refactor_thread_first(code) abort
         \ })
 endfunction
 
-function! iced#nrepl#iced#sync#refactor_thread_last(code) abort
+function! iced#nrepl#op#iced#sync#refactor_thread_last(code) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   return iced#nrepl#sync#send({

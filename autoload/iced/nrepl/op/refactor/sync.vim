@@ -34,7 +34,7 @@ function! s:namespace_aliases(resp) abort
   return result
 endfunction
 
-function! iced#nrepl#refactor#sync#all_ns_aliases() abort
+function! iced#nrepl#op#refactor#sync#all_ns_aliases() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   let resp = iced#nrepl#sync#send({

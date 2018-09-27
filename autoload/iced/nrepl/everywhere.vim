@@ -38,7 +38,7 @@ function! s:everywhere(candidates) abort
 endfunction
 
 function! iced#nrepl#everywhere#search() abort
-  call iced#nrepl#iced#everywhere(funcref('s:everywhere'))
+  call iced#nrepl#op#iced#everywhere(funcref('s:everywhere'))
 endfunction
 
 let &cpo = s:save_cpo

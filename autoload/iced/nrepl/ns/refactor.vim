@@ -5,7 +5,34 @@ let s:V = vital#iced#new()
 let s:D = s:V.import('Data.Dict')
 let s:L = s:V.import('Data.List')
 
-function! s:replace_ns(resp) abort
+let s:default_ns_favorites = {
+      \ 'clj': {
+      \   'clojure.edn': 'edn',
+      \   'clojure.java.io': 'io',
+      \   'clojure.set': 'set',
+      \   'clojure.spec.alpha': 's',
+      \   'clojure.spec.gen.alpha': 'sgen',
+      \   'clojure.string': 'str',
+      \   'clojure.walk': 'walk',
+      \   'clojure.zip': 'zip',
+      \   },
+      \ 'cljs': {
+      \   'cljs.reader': 'reader',
+      \   'cljs.spec.alpha': 's',
+      \   'cljs.spec.gen.alpha': 'sgen',
+      \   'clojure.set': 'set',
+      \   'clojure.string': 'str',
+      \   'clojure.walk': 'walk',
+      \   'clojure.zip': 'zip',
+      \   },
+      \ }
+let g:iced#nrepl#ns#refactor#favorites
+      \ = get(g:, 'iced#nrepl#ns#refactor#favorites', s:default_ns_favorites)
+
+""" iced#nrepl#ns#refactor#clean
+""" ----------------------------------------------------------------
+
+function! s:clean_ns(resp) abort
   if has_key(a:resp, 'error')
     return iced#nrepl#eval#err(a:resp['error'])
   endif
@@ -14,22 +41,17 @@ function! s:replace_ns(resp) abort
       return iced#message#info('already_clean')
     endif
 
-    call iced#nrepl#ns#replace(a:resp['ns'])
+    call iced#nrepl#ns#util#replace(a:resp['ns'])
     call iced#message#info('cleaned')
   endif
 endfunction
 
-function! iced#nrepl#refactor#clean_ns() abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-
-  let path = expand('%:p')
-  call iced#nrepl#send({
-      \ 'op': 'clean-ns',
-      \ 'path': path,
-      \ 'sesion': iced#nrepl#current_session(),
-      \ 'callback': funcref('s:replace_ns'),
-      \ })
+function! iced#nrepl#ns#refactor#clean() abort
+  call iced#nrepl#op#refactor#clean_ns(funcref('s:clean_ns'))
 endfunction
+
+""" iced#nrepl#ns#refactor#add_missing
+""" ----------------------------------------------------------------
 
 function! s:parse_candidates(candidates) abort
   let res = []
@@ -50,22 +72,14 @@ function! s:symbol_to_alias(symbol) abort
 endfunction
 
 function! s:add_ns(ns_name, symbol_alias) abort
-  let ns_alias = a:symbol_alias
-  if a:ns_name ==# a:symbol_alias
-    let ns_alias = v:none
-  endif
-
-  let code = iced#nrepl#ns#get()
-  let code = iced#nrepl#ns#util#add_require_form(code)
-  let code = iced#nrepl#ns#util#add_namespace_to_require(code, a:ns_name, ns_alias)
-  call iced#nrepl#ns#replace(code)
+  call iced#nrepl#ns#util#add(a:ns_name, a:symbol_alias)
   call iced#message#info_str(printf(iced#message#get('ns_added'), a:ns_name))
 endfunction
 
 function! s:add_all_ns_alias_candidates(candidates, symbol_alias) abort
   if empty(a:symbol_alias) | return a:candidates | endif
 
-  let alias_dict = iced#nrepl#refactor#sync#all_ns_aliases()
+  let alias_dict = iced#nrepl#op#refactor#sync#all_ns_aliases()
   let k = iced#nrepl#current_session_key()
   if !has_key(alias_dict, k)
     return []
@@ -116,19 +130,53 @@ function! s:resolve_missing(symbol, resp) abort
   endif
 endfunction
 
-function! iced#nrepl#refactor#add_missing(symbol) abort
-  if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
-    return
+function! iced#nrepl#ns#refactor#add_missing(symbol) abort
+  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  call iced#nrepl#op#refactor#add_missing(symbol, {resp -> s:resolve_missing(symbol, resp)})
+endfunction
+
+""" iced#nrepl#ns#refactor#add
+""" ----------------------------------------------------------------
+
+function! s:add(ns_name) abort
+  let favorites = get(g:iced#nrepl#ns#refactor#favorites, iced#nrepl#current_session_key(), {})
+  if has_key(favorites, a:ns_name)
+    let ns_alias = favorites[a:ns_name]
   else
-    let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
-    call iced#message#echom('resolving_missing')
-    call iced#nrepl#send({
-        \ 'op': 'resolve-missing',
-        \ 'symbol': symbol,
-        \ 'sesion': iced#nrepl#current_session(),
-        \ 'callback': {resp -> s:resolve_missing(symbol, resp)},
+    let candidate = iced#nrepl#ns#alias#find_existing_alias(a:ns_name)
+    if empty(candidate)
+      let candidate = ''
+    endif
+    let ns_alias = trim(input('Alias: ', candidate))
+  endif
+
+  call iced#nrepl#ns#util#add(a:ns_name, ns_alias)
+
+  let msg = ''
+  if empty(ns_alias)
+    let msg = printf(iced#message#get('ns_added'), a:ns_name)
+  else
+    let msg = printf(iced#message#get('ns_added_as'), a:ns_name, ns_alias)
+  endif
+  call iced#message#info_str(msg)
+endfunction
+
+function! s:project_namespaces(namespaces) abort
+  let namespaces = (empty(a:namespaces) ? [] : a:namespaces)
+  let favorites = get(g:iced#nrepl#ns#refactor#favorites, iced#nrepl#current_session_key(), {})
+  call extend(namespaces, keys(favorites))
+
+  call ctrlp#iced#start({
+        \ 'candidates': namespaces,
+        \ 'accept': {_, ns_name -> s:add(ns_name)}
         \ })
+endfunction
+
+function! iced#nrepl#ns#refactor#add(ns_name) abort
+  if empty(a:ns_name)
+    call iced#nrepl#op#iced#project_namespaces(funcref('s:project_namespaces'))
+  else
+    call s:add(a:ns_name)
   endif
 endfunction
 

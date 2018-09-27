@@ -8,11 +8,11 @@ function! s:view(resp) abort
 endfunction
 
 function! iced#nrepl#macro#expand(code) abort
-  call iced#nrepl#cider#macroexpand_all(a:code, funcref('s:view'))
+  call iced#nrepl#op#cider#macroexpand_all(a:code, funcref('s:view'))
 endfunction
 
 function! iced#nrepl#macro#expand_1(code) abort
-  call iced#nrepl#cider#macroexpand_1(a:code, funcref('s:view'))
+  call iced#nrepl#op#cider#macroexpand_1(a:code, funcref('s:view'))
 endfunction
 
 function! iced#nrepl#macro#expand_outer_list() abort

@@ -11,7 +11,7 @@ function! s:concat_handler(key, resp) abort
   return s:concat_results[a:key]
 endfunction
 
-function! iced#nrepl#iced#lint_file(file, linters, callback) abort
+function! iced#nrepl#op#iced#lint_file(file, linters, callback) abort
   if !iced#nrepl#is_connected() | return | endif
 
   let msg = {
@@ -31,7 +31,7 @@ function! iced#nrepl#iced#lint_file(file, linters, callback) abort
   call iced#nrepl#send(msg)
 endfunction
 
-function! iced#nrepl#iced#grimoire(platform, ns_name, symbol, callback) abort
+function! iced#nrepl#op#iced#grimoire(platform, ns_name, symbol, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   call iced#nrepl#send({
@@ -44,7 +44,7 @@ function! iced#nrepl#iced#grimoire(platform, ns_name, symbol, callback) abort
         \ })
 endfunction
 
-function! iced#nrepl#iced#project_namespaces(callback) abort
+function! iced#nrepl#op#iced#project_namespaces(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let s:concat_results['namespaces'] = []
   call iced#nrepl#send({
@@ -55,7 +55,7 @@ function! iced#nrepl#iced#project_namespaces(callback) abort
         \ })
 endfunction
 
-function! iced#nrepl#iced#project_functions(callback) abort
+function! iced#nrepl#op#iced#project_functions(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let s:concat_results['functions'] = []
   call iced#nrepl#send({
