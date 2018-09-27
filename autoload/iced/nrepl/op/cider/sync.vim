@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! iced#nrepl#cider#sync#complete(base, ns_name, context) abort
+function! iced#nrepl#op#cider#sync#complete(base, ns_name, context) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
     return v:none
@@ -22,7 +22,7 @@ function! iced#nrepl#cider#sync#complete(base, ns_name, context) abort
   return iced#nrepl#sync#send(msg)
 endfunction
 
-function! iced#nrepl#cider#sync#ns_list() abort
+function! iced#nrepl#op#cider#sync#ns_list() abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
     return v:none
@@ -34,7 +34,7 @@ function! iced#nrepl#cider#sync#ns_list() abort
       \ })
 endfunction
 
-function! iced#nrepl#cider#sync#ns_vars(ns) abort
+function! iced#nrepl#op#cider#sync#ns_vars(ns) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
     return v:none
@@ -48,7 +48,7 @@ function! iced#nrepl#cider#sync#ns_vars(ns) abort
       \ })
 endfunction
 
-function! iced#nrepl#cider#sync#ns_path(ns) abort
+function! iced#nrepl#op#cider#sync#ns_path(ns) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
     return v:none

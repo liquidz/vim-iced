@@ -220,9 +220,9 @@ endfunction
 
 function! s:warm_up() abort
   " FIXME init-debugger does not return response immediately
-  call iced#nrepl#cider#debug#init()
+  call iced#nrepl#op#cider#debug#init()
   sleep 100m
-  call iced#nrepl#cider#debug#init()
+  call iced#nrepl#op#cider#debug#init()
 endfunction
 
 function! s:status(ch) abort

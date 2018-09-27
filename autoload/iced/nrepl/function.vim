@@ -26,7 +26,7 @@ function! s:open(mode, resp) abort
 endfunction
 
 function! s:resolve(mode, func_name) abort
-  call iced#nrepl#cider#info(a:func_name, {resp -> s:open(a:mode, resp)})
+  call iced#nrepl#op#cider#info(a:func_name, {resp -> s:open(a:mode, resp)})
 endfunction
 
 function! s:select(functions) abort
@@ -41,7 +41,7 @@ function! iced#nrepl#function#list() abort
   "   call ctrlp#iced#start({'candidates': lines, 'accept': funcref('s:resolve')})
   " else
     call iced#message#info('fetching')
-    call iced#nrepl#iced#project_functions(funcref('s:select'))
+    call iced#nrepl#op#iced#project_functions(funcref('s:select'))
   " endif
 endfunction
 

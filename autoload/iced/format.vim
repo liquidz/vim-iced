@@ -18,7 +18,7 @@ function! iced#format#form() abort
     if empty(code)
       call iced#message#warning('finding_code_error')
     else
-      let resp = iced#nrepl#iced#sync#format_code(code, g:iced#format#rule)
+      let resp = iced#nrepl#op#iced#sync#format_code(code, g:iced#format#rule)
       if has_key(resp, 'formatted') && !empty(resp['formatted'])
         let @@ = resp['formatted']
         silent normal! gvp
@@ -61,7 +61,7 @@ function! iced#format#minimal() abort
     endif
     let code = @@
 
-    let resp = iced#nrepl#iced#sync#format_code(code, g:iced#format#rule)
+    let resp = iced#nrepl#op#iced#sync#format_code(code, g:iced#format#rule)
     if has_key(resp, 'formatted') && !empty(resp['formatted'])
       let @@ = s:add_indent(ncol, resp['formatted'])
       silent normal! gvp

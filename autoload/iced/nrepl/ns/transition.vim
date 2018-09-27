@@ -5,7 +5,7 @@ let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 
 function! s:open(mode, ns_name) abort
-  let resp = iced#nrepl#cider#sync#ns_path(a:ns_name)
+  let resp = iced#nrepl#op#cider#sync#ns_path(a:ns_name)
   if !has_key(resp, 'path') || empty(resp['path']) || !filereadable(resp['path'])
     return iced#message#error('not_found')
   endif
@@ -50,7 +50,7 @@ function! iced#nrepl#ns#transition#list() abort
   "   call ctrlp#iced#start({'candidates': lines, 'accept': funcref('s:open')})
   " else
     call iced#message#info('fetching')
-    call iced#nrepl#iced#project_namespaces(funcref('s:select_ns_from_list'))
+    call iced#nrepl#op#iced#project_namespaces(funcref('s:select_ns_from_list'))
   " endif
 endfunction
 

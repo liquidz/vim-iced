@@ -11,7 +11,7 @@ endfunction
 
 function! iced#nrepl#system#info() abort
   if !iced#nrepl#is_connected() | return {} | endif
-  let resp = iced#nrepl#iced#sync#system_info()
+  let resp = iced#nrepl#op#iced#sync#system_info()
 
   if !has_key(resp, 'user-dir')
     return {}

@@ -52,7 +52,7 @@ function! s:ns_var_candidates(ns_name, base, alias) abort
     return result
   endif
 
-  let resp = iced#nrepl#cider#sync#ns_vars(a:ns_name)
+  let resp = iced#nrepl#op#cider#sync#ns_vars(a:ns_name)
   if empty(resp) || resp['status'][0] !=# 'done'
     return []
   endif
@@ -127,9 +127,7 @@ function! iced#complete#omni(findstart, base) abort
     endif
 
     " namespace aliases
-    let alias_dict = (iced#nrepl#current_session_key() ==# 'clj')
-        \ ? iced#nrepl#ns#alias#dict(ns)
-        \ : iced#nrepl#ns#alias#dict_from_code(iced#nrepl#ns#get())
+    let alias_dict = iced#nrepl#ns#alias#dict(iced#nrepl#ns#get())
     if !empty(alias_dict)
       let candidates = candidates + s:ns_alias_candidates(keys(alias_dict), a:base)
     endif
@@ -148,7 +146,7 @@ function! iced#complete#omni(findstart, base) abort
 
     " cider completions
     let ctx = s:context()
-    let resp = iced#nrepl#cider#sync#complete(a:base, ns, ctx)
+    let resp = iced#nrepl#op#cider#sync#complete(a:base, ns, ctx)
     if type(resp) == type({}) && has_key(resp, 'completions')
       let candidates = candidates + resp['completions']
     endif

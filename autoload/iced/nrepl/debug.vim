@@ -101,7 +101,7 @@ function! iced#nrepl#debug#start(resp) abort
   if type(input_type) == type({})
     let in = ':'.get(input_type, in, 'quit')
   endif
-  call iced#nrepl#cider#debug#input(resp['key'], in)
+  call iced#nrepl#op#cider#debug#input(resp['key'], in)
 endfunction
 
 function! iced#nrepl#debug#quit() abort

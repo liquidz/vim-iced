@@ -9,7 +9,6 @@ let s:enabled = v:true
 let g:iced#lint#linters = get(g:, 'iced#lint#linters', [])
 
 function! s:lint(warnings) abort
-  call iced#sign#unplace_all()
   let s:last_warnings = a:warnings
   for warn in s:last_warnings
     if !has_key(warn, 'line') || !has_key(warn, 'path') | continue | endif
@@ -22,8 +21,10 @@ function! iced#lint#current_file() abort
     return
   endif
 
+  let s:last_warnings = []
+  call iced#sign#unplace_all()
   let file = expand('%:p')
-  call iced#nrepl#iced#lint_file(file, g:iced#lint#linters, funcref('s:lint'))
+  call iced#nrepl#op#iced#lint_file(file, g:iced#lint#linters, funcref('s:lint'))
 endfunction
 
 function! iced#lint#echo_message() abort

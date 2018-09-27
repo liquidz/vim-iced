@@ -92,7 +92,7 @@ function! s:expand_ns_alias(symbol) abort
     return a:symbol
   endif
 
-  let alias_dict = iced#nrepl#ns#alias#dict_from_code(iced#nrepl#ns#get())
+  let alias_dict = iced#nrepl#ns#alias#dict(iced#nrepl#ns#get())
   let ns = a:symbol[0:i-1]
   let ns = get(alias_dict, ns, ns)
 
@@ -110,7 +110,7 @@ function! iced#nrepl#document#open(symbol) abort
     let symbol = s:expand_ns_alias(symbol)
   endif
 
-  call iced#nrepl#cider#info(symbol, funcref('s:view_doc'))
+  call iced#nrepl#op#cider#info(symbol, funcref('s:view_doc'))
 endfunction
 
 function! s:one_line_doc(resp) abort
@@ -152,7 +152,7 @@ function! iced#nrepl#document#current_form() abort
         if iced#nrepl#current_session_key() ==# 'cljs'
           let symbol = s:expand_ns_alias(symbol)
         endif
-        call iced#nrepl#cider#info(symbol, funcref('s:one_line_doc'))
+        call iced#nrepl#op#cider#info(symbol, funcref('s:one_line_doc'))
       endif
     endif
   finally

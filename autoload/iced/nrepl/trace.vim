@@ -44,7 +44,7 @@ function! iced#nrepl#trace#toggle_var(symbol) abort
     let opts['lnum'] = getcurpos()[1]
     let opts['file'] = expand('%:p')
   endif
-  call iced#nrepl#cider#toggle_trace_var(ns_name, symbol, {resp -> s:toggle_trace_var(resp, opts)})
+  call iced#nrepl#op#cider#toggle_trace_var(ns_name, symbol, {resp -> s:toggle_trace_var(resp, opts)})
 endfunction
 
 function! s:toggle_trace_ns(resp, ns_name) abort
@@ -58,7 +58,7 @@ endfunction
 
 function! iced#nrepl#trace#toggle_ns(ns_name) abort
   let ns_name = empty(a:ns_name) ? iced#nrepl#ns#name() : a:ns_name
-  call iced#nrepl#cider#toggle_trace_ns(ns_name, {resp -> s:toggle_trace_ns(resp, ns_name)})
+  call iced#nrepl#op#cider#toggle_trace_ns(ns_name, {resp -> s:toggle_trace_ns(resp, ns_name)})
 endfunction
 
 let &cpo = s:save_cpo

@@ -59,9 +59,9 @@ command!          IcedBrowseFunction    call iced#nrepl#function#list()
 command!          IcedBrowseSpec        call iced#nrepl#spec#list()
 command!          IcedClearCtrlpCache   call ctrlp#iced#cache#clear()
 
-command!          IcedCleanNs           call iced#nrepl#refactor#clean_ns()
-command! -nargs=? IcedAddMissing        call iced#nrepl#refactor#add_missing(<q-args>)
-command! -nargs=? IcedAddNs             call iced#nrepl#ns#add(<q-args>)
+command!          IcedCleanNs           call iced#nrepl#ns#refactor#clean()
+command! -nargs=? IcedAddMissing        call iced#nrepl#ns#refactor#add_missing(<q-args>)
+command! -nargs=? IcedAddNs             call iced#nrepl#ns#refactor#add(<q-args>)
 command!          IcedThreadFirst       call iced#nrepl#thread#first()
 command!          IcedThreadLast        call iced#nrepl#thread#last()
 
