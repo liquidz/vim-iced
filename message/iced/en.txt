@@ -40,6 +40,7 @@
   'fetching':           'Fetching...',
   'cache_cleared':      'Cache cleared.',
   'search_hit_top':     'search hit TOP, continuing at BOTTOM...',
-  'search_hit_bottom':  'search hit BOTTOM, continuing at TOP...'
+  'search_hit_bottom':  'search hit BOTTOM, continuing at TOP...',
+  'used_locals_error':  'Failed to fetch used-locals.',
 }
 #vim:ft=ruby
