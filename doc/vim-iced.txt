@@ -537,7 +537,7 @@ Commands                                                    *vim-iced-commands*
 <
                                                          *:IcedExtractFunction*
 :IcedExtractFunction
-  Extract thr form under cursor as a function.
+  Extract the form under cursor as a function.
 
                                                                *:IcedMoveToLet*
 :IcedMoveToLet
