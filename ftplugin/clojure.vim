@@ -39,8 +39,8 @@ command!          IcedStdoutBufferOpen  call iced#buffer#stdout#open()
 command!          IcedStdoutBufferClear call iced#buffer#stdout#clear()
 command!          IcedStdoutBufferClose call iced#buffer#stdout#close()
 
-command! -nargs=? IcedDefJump           call iced#nrepl#jump#jump(<q-args>)
-command!          IcedDefBack           call iced#nrepl#jump#back()
+command! -nargs=? IcedDefJump           call iced#nrepl#definition#jump_to(<q-args>)
+command!          IcedDefBack           call iced#nrepl#definition#jump_back()
 
 command! -nargs=? IcedDocumentOpen      call iced#nrepl#document#open(<q-args>)
 command!          IcedFormDocument      call iced#nrepl#document#current_form()

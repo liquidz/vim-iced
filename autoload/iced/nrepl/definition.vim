@@ -20,7 +20,7 @@ function! s:jump(resp) abort
   redraw!
 endfunction
 
-function! iced#nrepl#jump#jump(symbol) abort
+function! iced#nrepl#definition#jump_to(symbol) abort
   let pos = getcurpos()
   let pos[0] = bufnr('%')
   call s:L.push(s:tagstack, pos)
@@ -29,7 +29,7 @@ function! iced#nrepl#jump#jump(symbol) abort
   call iced#nrepl#op#cider#info(kw, function('s:jump'))
 endfunction
 
-function! iced#nrepl#jump#back() abort
+function! iced#nrepl#definition#jump_back() abort
   if empty(s:tagstack)
     echo 'Local tag stack is empty'
   else
