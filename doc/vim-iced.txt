@@ -579,6 +579,12 @@ Commands                                                    *vim-iced-commands*
   searching sign continues at BOTTOM.
   Key is mapped to |<Plug>(iced_jump_to_prev_sign)|.
 
+                                                                 *:IcedGotoLet*
+:IcedGotoLet
+  Move cursor to nearest `let` form.
+  If `let` form is not found in current top list, cursor is not moved.
+  Key is mapped to |<Plug>(iced_goto_let)|.
+
 ------------------------------------------------------------------------------
 Functions                                                  *vim-iced-functions*
 
@@ -837,6 +843,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_jump_to_prev_sign)
   Same as |:IcedJumpToPrevSign|.
 
+                                                        *<Plug>(iced_goto_let)*
+<Plug>(iced_goto_let)
+  Same as |:IcedGotoLet|.
+
 ==============================================================================
 Customizing                                              *vim-iced-customizing*
 
@@ -984,6 +994,7 @@ g:iced_enable_default_key_mappings
   <Leader>bs     <Plug>(iced_browse_spec)
   <Leader>jn     <Plug>(iced_jump_to_next_sign)
   <Leader>jN     <Plug>(iced_jump_to_prev_sign)
+  <Leader>gl     <Plug>(iced_goto_let)
   <Leader>*      <Plug>(iced_iced)
   <Leader>/      :<C-u>IcedGrep<Space>
   <C-]>          <Plug>(iced_def_jump)

@@ -76,6 +76,8 @@ command!          IcedLintToggle        call iced#lint#toggle()
 
 command!          IcedJumpToNextSign    call iced#sign#jump_to_next()
 command!          IcedJumpToPrevSign    call iced#sign#jump_to_prev()
+
+command!          IcedGotoLet           call iced#let#goto()
 "" }}}
 
 "" Key mappings {{{
@@ -147,6 +149,7 @@ nnoremap <silent> <Plug>(iced_lint_toggle)         :<C-u>IcedLintToggle<CR>
 
 nnoremap <silent> <Plug>(iced_jump_to_next_sign)   :<C-u>IcedJumpToNextSign<CR>
 nnoremap <silent> <Plug>(iced_jump_to_prev_sign)   :<C-u>IcedJumpToPrevSign<CR>
+nnoremap <silent> <Plug>(iced_goto_let)            :<C-u>IcedGotoLet<CR>
 "" }}}
 
 "" Auto commands {{{
@@ -323,6 +326,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_jump_to_prev_sign)')
     silent! nmap <buffer> <Leader>jN <Plug>(iced_jump_to_prev_sign)
+  endif
+
+  if !hasmapto('<Plug>(iced_goto_let)')
+    silent! nmap <buffer> <Leader>gl <Plug>(iced_goto_let)
   endif
 endfunction
 
