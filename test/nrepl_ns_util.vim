@@ -21,7 +21,7 @@ function! s:suite.replace_ns_not_found_test() abort
   let org_text = s:buf.get_texts()
   
   call s:assert.equals(line('.'), 2)
-  call s:assert.equals(iced#nrepl#ns#util#replace("(ns bar.core)"), v:none)
+  call s:assert.equals(iced#nrepl#ns#util#replace('(ns bar.core)'), v:none)
   call s:assert.equals(s:buf.get_texts(), org_text)
   call s:assert.equals(line('.'), 2)
 

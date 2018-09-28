@@ -40,7 +40,8 @@ function! s:suite.add_indent_test() abort
         \ iced#util#add_indent(2, "foo\nbar\n  baz"),
         \ "foo\n  bar\n    baz")
 
-  call s:assert.equals(iced#util#add_indent(10, "foo"), "foo")
+  call s:assert.equals(iced#util#add_indent(10, 'foo'), 'foo')
+endfunction
 
 function! s:suite.del_indent_test() abort
   call s:assert.equals(
