@@ -48,6 +48,7 @@ re run failed test
 clean namespace
 add missing
 thread first/last
+extract function
 
 |:mag:
 |Reference

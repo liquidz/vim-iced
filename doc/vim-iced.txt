@@ -242,6 +242,7 @@ Refactoring                                              *vim-iced-refactoring*
   - |:IcedAddMissing| (|<Plug>(iced_add_missing)|)
   - |:IcedThreadFirst| (|<Plug>(iced_thread_first)|)
   - |:IcedThreadLast| (|<Plug>(iced_thread_last)|)
+  - |:IcedExtractFunction| (|<Plug>(iced_extract_function)|)
 
 ------------------------------------------------------------------------------
 Linting                                                      *vim-iced-linting*
@@ -533,6 +534,10 @@ Commands                                                    *vim-iced-commands*
   ;; after
   (->> "hello" (bar xx) (foo yy))
 <
+                                                         *:IcedExtractFunction*
+:IcedExtractFunction
+  Extract thr form under cursor as a function.
+
                                                           *:IcedToggleTraceVar*
 :IcedToggleTraceVar [{symbol}]
   Toggle tracing {symbol} in current namespace.
@@ -800,6 +805,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_thread_last)
   Same as |:IcedThreadLast|.
 
+                                                *<Plug>(iced_extract_function)*
+<Plug>(iced_extract_function)
+  Same as |:IcedExtractFunction|.
+
                                                 *<Plug>(iced_toggle_trace_var)*
 <Plug>(iced_toggle_trace_var)
   Same as |:IcedToggleTraceVar|.
@@ -967,6 +976,7 @@ g:iced_enable_default_key_mappings
   <Leader>ran    <Plug>(iced_add_ns)
   <Leader>rtf    <Plug>(iced_thread_first)
   <Leader>rtl    <Plug>(iced_thread_last)
+  <Leader>ref    <Plug>(iced_extract_function)
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>bn     <Plug>(iced_browse_namespace)
