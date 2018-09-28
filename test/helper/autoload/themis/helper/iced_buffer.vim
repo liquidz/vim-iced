@@ -23,7 +23,7 @@ function! s:helper.start_dummy(lines) abort
 endfunction
 
 function! s:helper.get_texts() abort
-  return trim(join(getline(line('^'), line('$')), ''))
+  return trim(join(getline(line('^'), line('$')), "\n"))
 endfunction
 
 function! s:helper.stop_dummy() abort
