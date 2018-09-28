@@ -70,5 +70,11 @@ function! iced#util#has_status(resp, status) abort
   return v:false
 endfunction
 
+function! iced#util#add_indent(n, s) abort
+  let spc = ''
+  for _ in range(a:n) | let spc = spc . ' ' | endfor
+  return substitute(a:s, '\r\?\n', "\n".spc, 'g')
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
