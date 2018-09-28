@@ -64,6 +64,7 @@ command! -nargs=? IcedAddMissing        call iced#nrepl#ns#refactor#add_missing(
 command! -nargs=? IcedAddNs             call iced#nrepl#ns#refactor#add(<q-args>)
 command!          IcedThreadFirst       call iced#nrepl#thread#first()
 command!          IcedThreadLast        call iced#nrepl#thread#last()
+command!          IcedExtractFunction   call iced#nrepl#refactor#extract_function()
 
 command! -nargs=? IcedToggleTraceVar    call iced#nrepl#trace#toggle_var(<q-args>)
 command! -nargs=? IcedToggleTraceNs     call iced#nrepl#trace#toggle_ns(<q-args>)
@@ -134,6 +135,7 @@ nnoremap <silent> <Plug>(iced_add_missing)         :<C-u>IcedAddMissing<CR>
 nnoremap <silent> <Plug>(iced_add_ns)              :<C-u>IcedAddNs<CR>
 nnoremap <silent> <Plug>(iced_thread_first)        :<C-u>IcedThreadFirst<CR>
 nnoremap <silent> <Plug>(iced_thread_last)         :<C-u>IcedThreadLast<CR>
+nnoremap <silent> <Plug>(iced_extract_function)    :<C-u>IcedExtractFunction<CR>
 
 nnoremap <silent> <Plug>(iced_toggle_trace_ns)     :<C-u>IcedToggleTraceNs<CR>
 nnoremap <silent> <Plug>(iced_toggle_trace_var)    :<C-u>IcedToggleTraceVar<CR>
@@ -272,6 +274,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_thread_last)')
     silent! nmap <buffer> <Leader>rtl <Plug>(iced_thread_last)
+  endif
+
+  if !hasmapto('<Plug>(iced_extract_function)')
+    silent! nmap <buffer> <Leader>ref <Plug>(iced_extract_function)
   endif
 
   if !hasmapto('<Plug>(iced_format)')
