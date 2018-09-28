@@ -1,5 +1,32 @@
 let s:suite  = themis#suite('iced.nrepl.ns.util')
 let s:assert = themis#helper('assert')
+let s:buf = themis#helper('iced_buffer')
+
+function! s:suite.replace_test() abort
+  call s:buf.start_dummy([
+        \ '(ns foo.core)',
+        \ 'nil|'])
+
+  call s:assert.equals(line('.'), 2)
+  call iced#nrepl#ns#util#replace("(ns bar.core\n  (:require clojure.string))")
+  call s:assert.equals(s:buf.get_texts(),
+        \ "(ns bar.core\n  (:require clojure.string))\nnil")
+  call s:assert.equals(line('.'), 3)
+
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:suite.replace_ns_not_found_test() abort
+  call s:buf.start_dummy(['(list :hello)', 'nil|'])
+  let org_text = s:buf.get_texts()
+  
+  call s:assert.equals(line('.'), 2)
+  call s:assert.equals(iced#nrepl#ns#util#replace("(ns bar.core)"), v:none)
+  call s:assert.equals(s:buf.get_texts(), org_text)
+  call s:assert.equals(line('.'), 2)
+
+  call s:buf.stop_dummy()
+endfunction
 
 function! s:suite.add_require_form_test() abort
   let res = iced#nrepl#ns#util#add_require_form('(ns foo.core)')
