@@ -78,6 +78,31 @@ function! s:suite.add_namespace_to_require_sub_ns_test() abort
   call s:assert.equals(res, '(ns foo.bar.baz (:require [foo.bar :as bar]))')
 endfunction
 
+function! s:suite.add_test() abort
+  call s:buf.start_dummy([
+        \ '(ns foo.core)',
+        \ 'nil|'])
+
+  call s:assert.equals(line('.'), 2)
+
+  call iced#nrepl#ns#util#add('bar', v:none)
+  call s:assert.equals(s:buf.get_texts(),
+        \ "(ns foo.core\n(:require bar))\nnil")
+  call s:assert.equals(line('.'), 3)
+
+  call iced#nrepl#ns#util#add('baz', 'baz')
+  call s:assert.equals(s:buf.get_texts(),
+        \ "(ns foo.core\n(:require bar\nbaz))\nnil")
+  call s:assert.equals(line('.'), 4)
+
+  call iced#nrepl#ns#util#add('hello', 'world')
+  call s:assert.equals(s:buf.get_texts(),
+        \ "(ns foo.core\n(:require bar\nbaz\n[hello :as world]))\nnil")
+  call s:assert.equals(line('.'), 5)
+
+  call s:buf.stop_dummy()
+endfunction
+
 function! s:suite.extract_ns_test() abort
   call s:assert.equals(
       \ iced#nrepl#ns#util#extract_ns('#namespace[foo.bar]'),
