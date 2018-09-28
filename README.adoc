@@ -6,8 +6,11 @@
   Clojure Interactive Development Environment for Vim8.
 </h4>
 <p align="center">
+  <a href="releases">
+    <img src="https://img.shields.io/github/release/liquidz/vim-iced.svg" alt="GitHub release" />
+  </a>
   <a href="https://circleci.com/gh/liquidz/vim-iced">
-    <img src="https://circleci.com/gh/liquidz/vim-iced.svg?style=svg" alt="CircleCI" />
+    <img src="https://img.shields.io/circleci/project/github/liquidz/vim-iced/master.svg" alt="CircleCI" />
   </a>
   <a href="https://github.com/liquidz/vim-iced/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/liquidz/vim-iced.svg" alt="GitHub license" />
@@ -15,6 +18,8 @@
   <a href="https://github.com/vim-jp/vital.vim">
     <img src="https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg" alt="Powered by vital.vim" />
   </a>
+</p>
+<p align="center">
   <img src="https://img.shields.io/badge/status-WORK%20IN%20PROGRESS-red.svg" alt="Work in progress" />
 </p>
 +++
