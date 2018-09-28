@@ -31,6 +31,10 @@ function! iced#paredit#barf() abort
   call winrestview(view)
 endfunction
 
+function! iced#paredit#move_to_prev_top_element() abort
+  call sexp#move_to_adjacent_element('n', 0, 0, 0, 1)
+endfunction
+
 function! iced#paredit#get_current_top_list_raw() abort
   let code = v:none
   let pos = v:none

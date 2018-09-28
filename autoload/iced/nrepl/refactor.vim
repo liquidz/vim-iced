@@ -23,8 +23,7 @@ function! iced#nrepl#refactor#extract_function() abort
             \ iced#util#add_indent(2, func_body))
       let codes = split(code, '\r\?\n')
 
-      " move to prev top element
-      call sexp#move_to_adjacent_element('n', 0, 0, 0, 1)
+      call iced#paredit#move_to_prev_top_element()
       call append(line('.')-1, codes)
       let view['lnum'] = view['lnum'] + len(codes)
     finally
