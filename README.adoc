@@ -54,6 +54,7 @@ clean namespace
 add missing
 thread first/last
 extract function
+move to let
 
 |:mag:
 |Reference

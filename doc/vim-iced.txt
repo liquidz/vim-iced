@@ -243,6 +243,7 @@ Refactoring                                              *vim-iced-refactoring*
   - |:IcedThreadFirst| (|<Plug>(iced_thread_first)|)
   - |:IcedThreadLast| (|<Plug>(iced_thread_last)|)
   - |:IcedExtractFunction| (|<Plug>(iced_extract_function)|)
+  - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
 
 ------------------------------------------------------------------------------
 Linting                                                      *vim-iced-linting*
@@ -538,6 +539,12 @@ Commands                                                    *vim-iced-commands*
 :IcedExtractFunction
   Extract thr form under cursor as a function.
 
+                                                               *:IcedMoveToLet*
+:IcedMoveToLet
+  Move the form under cursor to nearest `let` binding.
+  If there is no `let` form in current top list,
+  wrap the form with `let`.
+
                                                           *:IcedToggleTraceVar*
 :IcedToggleTraceVar [{symbol}]
   Toggle tracing {symbol} in current namespace.
@@ -815,6 +822,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_extract_function)
   Same as |:IcedExtractFunction|.
 
+                                                     *<Plug>(iced_move_to_let)*
+<Plug>(iced_move_to_let)
+  Same as |:IcedMoveToLet|.
+
                                                 *<Plug>(iced_toggle_trace_var)*
 <Plug>(iced_toggle_trace_var)
   Same as |:IcedToggleTraceVar|.
@@ -987,6 +998,7 @@ g:iced_enable_default_key_mappings
   <Leader>rtf    <Plug>(iced_thread_first)
   <Leader>rtl    <Plug>(iced_thread_last)
   <Leader>ref    <Plug>(iced_extract_function)
+  <Leader>rml    <Plug>(iced_move_to_let)
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>bn     <Plug>(iced_browse_namespace)
