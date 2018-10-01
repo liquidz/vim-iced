@@ -1,11 +1,21 @@
 let s:suite  = themis#suite('iced.nrepl.ns.util')
 let s:assert = themis#helper('assert')
 let s:buf = themis#helper('iced_buffer')
+let s:ch = themis#helper('iced_channel')
+
+function! s:format_relay(msg) abort
+  if a:msg['op'] ==# 'format-code-with-indents'
+    return {'status': ['done'], 'formatted': a:msg['code']}
+  elseif a:msg['op'] ==# 'eval'
+    return {'status': ['done'], 'value': 'nil'}
+  endif
+endfunction
 
 function! s:suite.replace_test() abort
   call s:buf.start_dummy([
         \ '(ns foo.core)',
         \ 'nil|'])
+  call s:ch.inject_dummy({'status_value': 'open', 'relay': funcref('s:format_relay')})
 
   call s:assert.equals(line('.'), 2)
   call iced#nrepl#ns#util#replace("(ns bar.core\n  (:require clojure.string))")
@@ -82,6 +92,7 @@ function! s:suite.add_test() abort
   call s:buf.start_dummy([
         \ '(ns foo.core)',
         \ 'nil|'])
+  call s:ch.inject_dummy({'status_value': 'open', 'relay': funcref('s:format_relay')})
 
   call s:assert.equals(line('.'), 2)
 
