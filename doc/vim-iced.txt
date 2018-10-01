@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojure interactive development environment for Vim8
 
-Version: 0.4.1
+Version: 0.4.2
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -242,6 +242,8 @@ Refactoring                                              *vim-iced-refactoring*
   - |:IcedAddMissing| (|<Plug>(iced_add_missing)|)
   - |:IcedThreadFirst| (|<Plug>(iced_thread_first)|)
   - |:IcedThreadLast| (|<Plug>(iced_thread_last)|)
+  - |:IcedExtractFunction| (|<Plug>(iced_extract_function)|)
+  - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
 
 ------------------------------------------------------------------------------
 Linting                                                      *vim-iced-linting*
@@ -533,6 +535,16 @@ Commands                                                    *vim-iced-commands*
   ;; after
   (->> "hello" (bar xx) (foo yy))
 <
+                                                         *:IcedExtractFunction*
+:IcedExtractFunction
+  Extract the form under cursor as a function.
+
+                                                               *:IcedMoveToLet*
+:IcedMoveToLet
+  Move the form under cursor to nearest `let` binding.
+  If there is no `let` form in current top list,
+  wrap the form with `let`.
+
                                                           *:IcedToggleTraceVar*
 :IcedToggleTraceVar [{symbol}]
   Toggle tracing {symbol} in current namespace.
@@ -573,6 +585,12 @@ Commands                                                    *vim-iced-commands*
   If search hit TOP and |'wrapscan'| is enabled,
   searching sign continues at BOTTOM.
   Key is mapped to |<Plug>(iced_jump_to_prev_sign)|.
+
+                                                                 *:IcedGotoLet*
+:IcedGotoLet
+  Move cursor to nearest `let` form.
+  If `let` form is not found in current top list, cursor is not moved.
+  Key is mapped to |<Plug>(iced_goto_let)|.
 
 ------------------------------------------------------------------------------
 Functions                                                  *vim-iced-functions*
@@ -800,6 +818,14 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_thread_last)
   Same as |:IcedThreadLast|.
 
+                                                *<Plug>(iced_extract_function)*
+<Plug>(iced_extract_function)
+  Same as |:IcedExtractFunction|.
+
+                                                     *<Plug>(iced_move_to_let)*
+<Plug>(iced_move_to_let)
+  Same as |:IcedMoveToLet|.
+
                                                 *<Plug>(iced_toggle_trace_var)*
 <Plug>(iced_toggle_trace_var)
   Same as |:IcedToggleTraceVar|.
@@ -827,6 +853,10 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                *<Plug>(iced_jump_to_prev_sign)*
 <Plug>(iced_jump_to_prev_sign)
   Same as |:IcedJumpToPrevSign|.
+
+                                                        *<Plug>(iced_goto_let)*
+<Plug>(iced_goto_let)
+  Same as |:IcedGotoLet|.
 
 ==============================================================================
 Customizing                                              *vim-iced-customizing*
@@ -967,6 +997,8 @@ g:iced_enable_default_key_mappings
   <Leader>ran    <Plug>(iced_add_ns)
   <Leader>rtf    <Plug>(iced_thread_first)
   <Leader>rtl    <Plug>(iced_thread_last)
+  <Leader>ref    <Plug>(iced_extract_function)
+  <Leader>rml    <Plug>(iced_move_to_let)
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>bn     <Plug>(iced_browse_namespace)
@@ -974,6 +1006,7 @@ g:iced_enable_default_key_mappings
   <Leader>bs     <Plug>(iced_browse_spec)
   <Leader>jn     <Plug>(iced_jump_to_next_sign)
   <Leader>jN     <Plug>(iced_jump_to_prev_sign)
+  <Leader>gl     <Plug>(iced_goto_let)
   <Leader>*      <Plug>(iced_iced)
   <Leader>/      :<C-u>IcedGrep<Space>
   <C-]>          <Plug>(iced_def_jump)

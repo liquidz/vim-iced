@@ -1,5 +1,42 @@
 let s:suite  = themis#suite('iced.nrepl.ns.util')
 let s:assert = themis#helper('assert')
+let s:buf = themis#helper('iced_buffer')
+let s:ch = themis#helper('iced_channel')
+
+function! s:format_relay(msg) abort
+  if a:msg['op'] ==# 'format-code-with-indents'
+    return {'status': ['done'], 'formatted': a:msg['code']}
+  elseif a:msg['op'] ==# 'eval'
+    return {'status': ['done'], 'value': 'nil'}
+  endif
+endfunction
+
+function! s:suite.replace_test() abort
+  call s:buf.start_dummy([
+        \ '(ns foo.core)',
+        \ 'nil|'])
+  call s:ch.inject_dummy({'status_value': 'open', 'relay': funcref('s:format_relay')})
+
+  call s:assert.equals(line('.'), 2)
+  call iced#nrepl#ns#util#replace("(ns bar.core\n  (:require clojure.string))")
+  call s:assert.equals(s:buf.get_texts(),
+        \ "(ns bar.core\n  (:require clojure.string))\nnil")
+  call s:assert.equals(line('.'), 3)
+
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:suite.replace_ns_not_found_test() abort
+  call s:buf.start_dummy(['(list :hello)', 'nil|'])
+  let org_text = s:buf.get_texts()
+  
+  call s:assert.equals(line('.'), 2)
+  call s:assert.equals(iced#nrepl#ns#util#replace('(ns bar.core)'), v:none)
+  call s:assert.equals(s:buf.get_texts(), org_text)
+  call s:assert.equals(line('.'), 2)
+
+  call s:buf.stop_dummy()
+endfunction
 
 function! s:suite.add_require_form_test() abort
   let res = iced#nrepl#ns#util#add_require_form('(ns foo.core)')
@@ -49,6 +86,32 @@ function! s:suite.add_namespace_to_require_sub_ns_test() abort
   let code = '(ns foo.bar.baz (:require))'
   let res = iced#nrepl#ns#util#add_namespace_to_require(code, 'foo.bar', 'bar')
   call s:assert.equals(res, '(ns foo.bar.baz (:require [foo.bar :as bar]))')
+endfunction
+
+function! s:suite.add_test() abort
+  call s:buf.start_dummy([
+        \ '(ns foo.core)',
+        \ 'nil|'])
+  call s:ch.inject_dummy({'status_value': 'open', 'relay': funcref('s:format_relay')})
+
+  call s:assert.equals(line('.'), 2)
+
+  call iced#nrepl#ns#util#add('bar', v:none)
+  call s:assert.equals(s:buf.get_texts(),
+        \ "(ns foo.core\n(:require bar))\nnil")
+  call s:assert.equals(line('.'), 3)
+
+  call iced#nrepl#ns#util#add('baz', 'baz')
+  call s:assert.equals(s:buf.get_texts(),
+        \ "(ns foo.core\n(:require bar\nbaz))\nnil")
+  call s:assert.equals(line('.'), 4)
+
+  call iced#nrepl#ns#util#add('hello', 'world')
+  call s:assert.equals(s:buf.get_texts(),
+        \ "(ns foo.core\n(:require bar\nbaz\n[hello :as world]))\nnil")
+  call s:assert.equals(line('.'), 5)
+
+  call s:buf.stop_dummy()
 endfunction
 
 function! s:suite.extract_ns_test() abort

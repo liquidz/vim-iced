@@ -32,12 +32,6 @@ function! iced#format#form() abort
   endtry
 endfunction
 
-function! s:add_indent(n, s) abort
-  let spc = ''
-  for _ in range(a:n) | let spc = spc . ' ' | endfor
-  return substitute(a:s, '\r\?\n', "\n".spc, 'g')
-endfunction
-
 function! iced#format#minimal() abort
   if !iced#nrepl#is_connected()
     silent exe "normal \<Plug>(sexp_indent)"
@@ -63,7 +57,7 @@ function! iced#format#minimal() abort
 
     let resp = iced#nrepl#op#iced#sync#format_code(code, g:iced#format#rule)
     if has_key(resp, 'formatted') && !empty(resp['formatted'])
-      let @@ = s:add_indent(ncol, resp['formatted'])
+      let @@ = iced#util#add_indent(ncol, resp['formatted'])
       silent normal! gvp
     endif
   finally

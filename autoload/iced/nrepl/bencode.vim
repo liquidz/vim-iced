@@ -36,6 +36,8 @@ function! s:encode(v) abort
     return s:encode_list(a:v)
   elseif t == 4
     return s:encode_dict(a:v)
+  elseif t == 7
+    return s:encode_string('')
   endif
 endfunction
 

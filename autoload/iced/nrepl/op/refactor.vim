@@ -26,5 +26,19 @@ function! iced#nrepl#op#refactor#add_missing(symbol, callback) abort
         \ })
 endfunction
 
+function! iced#nrepl#op#refactor#find_used_locals(filepath, line, column, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  call iced#nrepl#send({
+        \ 'op': 'find-used-locals',
+        \ 'id': iced#nrepl#eval#id(),
+        \ 'sesion': iced#nrepl#current_session(),
+        \ 'file': a:filepath,
+        \ 'line': a:line,
+        \ 'column': a:column,
+        \ 'callback': a:callback,
+        \ })
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

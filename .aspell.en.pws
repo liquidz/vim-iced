@@ -1,4 +1,4 @@
-personal_ws-1.1 en 143 
+personal_ws-1.1 en 147 
 grimoire
 IcedGrep
 IcedDocumentOpen
@@ -34,6 +34,7 @@ IcedDefJump
 affd
 belowright
 linter
+IcedGotoLet
 undef
 figwheel
 IcedThreadLast
@@ -80,8 +81,10 @@ Undefine
 IcedBrowseFunction
 stdout
 Javadoc
+IcedExtractFunction
 IcedToggleTraceNs
 FileType
+IcedMoveToLet
 aboveleft
 env
 IcedDocumentClose
@@ -106,6 +109,7 @@ IcedCleanNs
 Cljfmt's
 IcedClearCtrlpCache
 url
+goto
 IcedEchoFormDocument
 leiningen
 QuickFixCmdPost
