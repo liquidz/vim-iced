@@ -35,6 +35,31 @@ function! iced#paredit#move_to_prev_top_element() abort
   call sexp#move_to_adjacent_element('n', 0, 0, 0, 1)
 endfunction
 
+function! iced#paredit#move_to_current_element_head() abort
+  if iced#util#char() ==# '('
+    return col('.')
+  else
+    let pos = getcurpos()
+    silent normal! va(o
+    silent exe "normal! \<Esc>"
+    return (pos == getcurpos() ? 0 : col('.'))
+  endif
+endfunction
+
+function! iced#paredit#move_to_parent_element() abort
+  let view = winsaveview()
+  let ret = iced#paredit#move_to_current_element_head()
+  if ret == 0 || col('.') == 1
+    call winrestview(view)
+    return 0
+  endif
+
+  " move to parent form head
+  silent normal! hva(o
+  silent exe "normal! \<Esc>"
+  return col('.')
+endfunction
+
 function! iced#paredit#get_current_top_list_raw() abort
   let code = v:none
   let pos = v:none
@@ -81,7 +106,11 @@ function! iced#paredit#get_current_top_list() abort
 endfunction
 
 function! iced#paredit#get_outer_list_raw() abort
-  silent normal! va(y
+  try
+    silent normal! va(y
+  finally
+    silent exe "normal! \<Esc>"
+  endtry
   return @@
 endfunction
 

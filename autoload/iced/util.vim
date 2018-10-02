@@ -86,5 +86,9 @@ function! iced#util#del_indent(n, s) abort
   return substitute(a:s, '\r\?\n'.spc, "\n", 'g')
 endfunction
 
+function! iced#util#char() abort
+  return getline('.')[max([col('.')-1, 0])]
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

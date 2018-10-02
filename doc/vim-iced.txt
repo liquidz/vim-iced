@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojure interactive development environment for Vim8
 
-Version: 0.4.2
+Version: 0.4.3
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -448,6 +448,18 @@ Commands                                                    *vim-iced-commands*
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_source_show)|.
 
+                                                            *:IcedGrimoireOpen*
+:IcedGrimoireOpen [{symbol}]
+  Open a window, and show grimoire for {symbol}
+  If {symbol} is not passed, symbol under cursor is used.
+  Key is mapped to |<Plug>(iced_grimoire_open)|.
+
+                                                          *:IcedCommandPalette*
+:IcedCommandPalette
+  Select command from palette.
+  `ctrlp.vim` is required to select namespace.
+  Key is mapped to |<Plug>(iced_command_palette)|.
+
                                                                    *:IcedSlurp*
 :IcedSlurp
   Slurp next element.
@@ -762,6 +774,14 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_source_show)
   Same as |:IcedSourceShow|.
 
+                                                   *<Plug>(iced_grimoire_open)*
+<Plug>(iced_grimoire_open)
+  Same as |:IcedGrimoireOpen|.
+
+                                                 *<Plug>(iced_command_palette)*
+<Plug>(iced_command_palette)
+  Same as |:IcedCommandPalette|.
+
                                                            *<Plug>(iced_slurp)*
 <Plug>(iced_slurp)
   Same as |:IcedSlurp|.
@@ -1001,6 +1021,7 @@ g:iced_enable_default_key_mappings
   <Leader>rml    <Plug>(iced_move_to_let)
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
+  <Leader>hh     <Plug>(iced_command_palette)
   <Leader>bn     <Plug>(iced_browse_namespace)
   <Leader>bf     <Plug>(iced_browse_function)
   <Leader>bs     <Plug>(iced_browse_spec)

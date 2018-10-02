@@ -25,7 +25,7 @@ function! s:apply_coordination(coordination) abort
     let i = c
     while i > 0
       call sexp#move_to_adjacent_element('n', 1, 1, 0, 0)
-      let x = strpart(getline('.'), max([col('.')-1, 1]), 6)
+      let x = strpart(getline('.'), max([col('.')-1, 0]), 6)
       if stridx(x, '#dbg') != 0 && stridx(x, '#break') != 0
         let i = i - 1
       endif
@@ -57,8 +57,7 @@ function! s:move_cursor_and_set_highlight(resp) abort
   call s:apply_coordination(a:resp['coor'])
 
   let pos = getcurpos()
-  let char = getline('.')[max([col('.')-1, 1])]
-  if char ==# '('
+  if iced#util#char() ==# '('
     normal! l
     let l = max([len(expand('<cword>')), 1])
   else

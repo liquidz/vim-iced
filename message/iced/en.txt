@@ -30,6 +30,7 @@
   'start_to_trace':     'Start to trace: %s.',
   'stop_to_trace':      'Stop to trace: %s.',
   'untraced':           'Untraced.',
+  'ns_list_error':      'Failed to fetch ns list.',
   'spec_list_error':    'Failed to fetch spec list.',
   'spec_form_error':    'Failed to fetch spec form.',
   'no_spec':            'No spec form is found.',
@@ -42,5 +43,6 @@
   'search_hit_top':     'search hit TOP, continuing at BOTTOM...',
   'search_hit_bottom':  'search hit BOTTOM, continuing at TOP...',
   'used_locals_error':  'Failed to fetch used-locals.',
+  'canceled':           'Canceled.',
 }
 #vim:ft=ruby

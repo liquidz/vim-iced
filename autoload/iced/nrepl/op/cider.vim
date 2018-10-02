@@ -22,6 +22,15 @@ function! iced#nrepl#op#cider#ns_path(ns, callback) abort
       \ })
 endfunction
 
+function! iced#nrepl#op#cider#ns_list(callback) abort
+  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  call iced#nrepl#send({
+      \ 'op': 'ns-list',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
 function! iced#nrepl#op#cider#format_code(code, callback) abort
   if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
   call iced#nrepl#send({

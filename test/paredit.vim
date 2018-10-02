@@ -60,3 +60,52 @@ function! s:suite.get_current_top_list_with_tag_test() abort
   call s:assert.equals(res['code'], "#?(:clj\n   (foo (bar)))")
   call s:buf.stop_dummy()
 endfunction
+
+function! s:suite.move_to_current_element_head_test() abort
+  call s:buf.start_dummy(['(foo (bar (baz|)))'])
+  call s:assert.equals(col('.'), 15)
+  call s:assert.not_equals(iced#paredit#move_to_current_element_head(), 0)
+  call s:assert.equals(col('.'), 11)
+  call s:buf.stop_dummy()
+
+  call s:buf.start_dummy(['(foo (bar |(baz)))'])
+  call s:assert.equals(col('.'), 11)
+  call s:assert.not_equals(iced#paredit#move_to_current_element_head(), 0)
+  call s:assert.equals(col('.'), 11)
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:suite.move_to_current_element_head_not_form_test() abort
+  call s:buf.start_dummy(['(foo (bar (baz)))', '|'])
+  let pos = getcurpos()
+  call s:assert.equals(iced#paredit#move_to_current_element_head(), 0)
+  call s:assert.equals(getcurpos(), pos)
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:suite.move_to_parent_element_test() abort
+  call s:buf.start_dummy([
+        \ '(foo (bar (baz|))',
+        \ ])
+  call s:assert.equals(col('.'), 15)
+  call iced#paredit#move_to_parent_element()
+  call s:assert.equals(col('.'), 6)
+  call s:buf.stop_dummy()
+
+  call s:buf.start_dummy([
+        \ '(do (foo bar) (baz|))',
+        \ ])
+  call iced#paredit#move_to_parent_element()
+  call s:assert.equals(col('.'), 1)
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:suite.move_to_parent_element_no_parent_test() abort
+  call s:buf.start_dummy([
+        \ '(foo| (bar (baz))',
+        \ ])
+  let pos = getcurpos()
+  call iced#paredit#move_to_parent_element()
+  call s:assert.equals(getcurpos(), pos)
+  call s:buf.stop_dummy()
+endfunction

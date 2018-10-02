@@ -6,20 +6,31 @@ function! iced#let#goto() abort
   let reg_save = @@
 
   try
-    call iced#paredit#move_to_prev_top_element()
-    let stopline = line('.')
-    call winrestview(view)
-    let ret = search('(let[ \r\n]', 'b', stopline)
-    if ret != 0
-      call search('\[')
+    if iced#paredit#move_to_current_element_head() == 0
+      call winrestview(view)
+      return 0
     endif
-    return ret
+
+    while v:true
+      let head = strpart(getline('.'), col('.'), 4)
+      if head ==# 'let' || head ==# 'let '
+        call search('\[')
+        break
+      endif
+
+      if iced#paredit#move_to_parent_element() == 0
+        call winrestview(view)
+        return 0
+      endif
+    endwhile
+
+    return col('.')
   finally
     let @@ = reg_save
   endtry
 endfunction
 
-function! iced#let#move_to_let() abort
+function! iced#let#move_to_let(...) abort
   let view = winsaveview()
   let reg_save = @@
 
@@ -29,15 +40,30 @@ function! iced#let#move_to_let() abort
 
     let indent = col('.')-1
     let form = iced#util#del_indent(indent, form)
-    let name = trim(input('Name: '))
+    let name = get(a:, 1, '')
+    if empty(name)
+      let name = trim(input('Name: '))
+    endif
+    if empty(name)
+      return iced#message#echom('canceled')
+    endif
 
     if iced#let#goto() == 0
+      " re-select form
+      call iced#paredit#get_outer_list_raw()
       " 6 means `len('(let [')`
       let form = iced#util#add_indent(len(name)+1+6, form)
       let @@ = iced#util#add_indent(
             \ indent, printf("(let [%s %s]\n  %s)", name, form, name))
       silent normal! gvp
     else
+      " re-select form
+      " FIXME too redundant!!
+      let tmp = winsaveview()
+      call winrestview(view)
+      call iced#paredit#get_outer_list_raw()
+      call winrestview(tmp)
+
       let pos = getcurpos()
       let @@ = name
       silent normal! gvp
