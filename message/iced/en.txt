@@ -42,5 +42,6 @@
   'search_hit_top':     'search hit TOP, continuing at BOTTOM...',
   'search_hit_bottom':  'search hit BOTTOM, continuing at TOP...',
   'used_locals_error':  'Failed to fetch used-locals.',
+  'canceled':           'Canceled.',
 }
 #vim:ft=ruby

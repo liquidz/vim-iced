@@ -13,6 +13,10 @@ function! iced#nrepl#refactor#extract_function() abort
     try
       let locals = a:resp['used-locals']
       let func_name = trim(input('Function name: '))
+      if empty(func_name)
+        return iced#message#echom('canceled')
+      endif
+
       let func_body = iced#paredit#get_outer_list_raw()
 
       let @@ = printf('(%s %s)', func_name, join(locals, ' '))
