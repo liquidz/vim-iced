@@ -25,7 +25,7 @@ function! s:apply_coordination(coordination) abort
     let i = c
     while i > 0
       call sexp#move_to_adjacent_element('n', 1, 1, 0, 0)
-      let x = strpart(getline('.'), max([col('.')-1, 1]), 6)
+      let x = strpart(getline('.'), max([col('.')-1, 0]), 6)
       if stridx(x, '#dbg') != 0 && stridx(x, '#break') != 0
         let i = i - 1
       endif
