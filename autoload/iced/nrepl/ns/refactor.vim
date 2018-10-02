@@ -160,10 +160,11 @@ function! s:add(ns_name) abort
   call iced#message#info_str(msg)
 endfunction
 
-function! s:project_namespaces(namespaces) abort
-  let namespaces = (empty(a:namespaces) ? [] : a:namespaces)
+function! s:ns_list(resp) abort
+  if !has_key(a:resp, 'ns-list') | return iced#message#error('ns_list_error') | endif
+  let namespaces = get(a:resp, 'ns-list', [])
   let favorites = get(g:iced#nrepl#ns#refactor#favorites, iced#nrepl#current_session_key(), {})
-  call extend(namespaces, keys(favorites))
+  let namespaces = s:L.uniq(s:L.concat([namespaces, keys(favorites)]))
 
   call ctrlp#iced#start({
         \ 'candidates': namespaces,
@@ -173,7 +174,7 @@ endfunction
 
 function! iced#nrepl#ns#refactor#add(ns_name) abort
   if empty(a:ns_name)
-    call iced#nrepl#op#iced#project_namespaces(funcref('s:project_namespaces'))
+    call iced#nrepl#op#cider#ns_list(funcref('s:ns_list'))
   else
     call s:add(a:ns_name)
   endif
