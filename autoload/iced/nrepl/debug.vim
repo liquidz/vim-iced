@@ -57,8 +57,7 @@ function! s:move_cursor_and_set_highlight(resp) abort
   call s:apply_coordination(a:resp['coor'])
 
   let pos = getcurpos()
-  let char = getline('.')[max([col('.')-1, 1])]
-  if char ==# '('
+  if iced#util#char() ==# '('
     normal! l
     let l = max([len(expand('<cword>')), 1])
   else
