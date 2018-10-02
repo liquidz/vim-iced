@@ -448,6 +448,12 @@ Commands                                                    *vim-iced-commands*
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_source_show)|.
 
+                                                            *:IcedGrimoireOpen*
+:IcedGrimoireOpen [{symbol}]
+  Open a window, and show grimoire for {symbol}
+  If {symbol} is not passed, symbol under cursor is used.
+  Key is mapped to |<Plug>(iced_grimoire_open)|.
+
                                                                    *:IcedSlurp*
 :IcedSlurp
   Slurp next element.
@@ -761,6 +767,10 @@ Key Mappings                                            *vim-iced-key-mappings*
                                                      *<Plug>(iced_source_show)*
 <Plug>(iced_source_show)
   Same as |:IcedSourceShow|.
+
+                                                   *<Plug>(iced_grimoire_open)*
+<Plug>(iced_grimoire_open)
+  Same as |:IcedGrimoireOpen|.
 
                                                            *<Plug>(iced_slurp)*
 <Plug>(iced_slurp)
