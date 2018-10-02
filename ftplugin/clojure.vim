@@ -47,6 +47,7 @@ command!          IcedFormDocument      call iced#nrepl#document#current_form()
 command!          IcedDocumentClose     call iced#buffer#document#close()
 command! -nargs=? IcedSourceShow        call iced#nrepl#source#show(<q-args>)
 command! -nargs=? IcedGrimoireOpen      call iced#grimoire#open(<q-args>)
+command!          IcedCommandPalette    call iced#palette#show()
 
 command!          IcedSlurp             call iced#paredit#deep_slurp()
 command!          IcedBarf              call iced#paredit#barf()
@@ -121,6 +122,7 @@ nnoremap <silent> <Plug>(iced_form_document)       :<C-u>IcedFormDocument<CR>
 nnoremap <silent> <Plug>(iced_document_close)      :<C-u>IcedDocumentClose<CR>
 nnoremap <silent> <Plug>(iced_source_show)         :<C-u>IcedSourceShow<CR>
 nnoremap <silent> <Plug>(iced_grimoire_open)       :<C-u>IcedGrimoireOpen<CR>
+nnoremap <silent> <Plug>(iced_command_palette)     :<C-u>IcedCommandPalette<CR>
 
 nnoremap <silent> <Plug>(iced_slurp)               :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                :<C-u>IcedBarf<CR>
@@ -312,6 +314,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_grimoire_open)')
     silent! nmap <buffer> <Leader>hg <Plug>(iced_grimoire_open)
+  endif
+
+  if !hasmapto('<Plug>(iced_command_palette)')
+    silent! nmap <buffer> <Leader>hh <Plug>(iced_command_palette)
   endif
 
   if !hasmapto('<Plug>(iced_browse_namespace)')
