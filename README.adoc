@@ -3,7 +3,7 @@
 +++
 <h4 align="center">
   <img src="logo.svg" alt="logo" /><br />
-  Clojure Interactive Development Environment for Vim8.
+  Clojure Interactive Development Environment for Vim8/Neovim.
 </h4>
 <p align="center">
   <a href="https://github.com/liquidz/vim-iced/releases">
@@ -26,9 +26,11 @@
 
 == Requirements
 
- * Vim 8.1 or later
+ * Vim 8.1 or later, Neovim 0.3.1 or later
+ ** Neovim support is *VERY EXPERIMENTAL*
  * Clojure & Java
  * https://github.com/guns/vim-sexp[vim-sexp]
+ * https://nmap.org/ncat/[ncat] command (only for Neovim user)
  * No python!
 
 == Features
@@ -111,6 +113,11 @@ NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim] is required when selectin
 === Manual setting (not recommended)
 
 * See `Manual Install` section in link:./doc/vim-iced.txt[vim-iced.txt].
+
+=== Neovim
+
+* To imitate Vim8's `channel` feature, vim-iced uses https://nmap.org/ncat/[ncat] command like https://github.com/l04m33/vlime[l04m33/vlime].
+* Install https://nmap.org/ncat/[ncat] command to use vim-iced in neovim at first.
 
 == Usage
 

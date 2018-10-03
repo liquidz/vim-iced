@@ -13,6 +13,7 @@ Install              |vim-iced-install|
   Manual Install     |vim-iced-install-manually|
     Leiningen        |vim-iced-manual-leiningen|
     Boot             |vim-iced-manual-boot|
+  Neovim             |vim-iced-install-neovim|
 nREPL Connection     |vim-iced-nrepl-connection|
 ClojureScript        |vim-iced-clojurescript|
 Evaluating           |vim-iced-evaluating|
@@ -35,10 +36,13 @@ Changelog            |vim-iced-changelog|
 ==============================================================================
 Introduction                                            *vim-iced-introduction*
 
-  Clojure interactive development environment for Vim8.
+  Clojure interactive development environment for Vim8/Neovim.
 
   Requirement:
-  - Vim 8.1 or later
+  - Vim 8.1 or later, Neovim 0.3.1 or later
+    Neovim support is VERY EXPERIMENTAL
+  - `ncat` command (only for Neovim user)
+    https://nmap.org/ncat/
 
   Latest Version:
   - https://github.com/liquidz/vim-iced
@@ -57,6 +61,8 @@ Install                                                      *vim-iced-install*
   Clojure library dependencies:
   - Leiningen user: |vim-iced-leiningen|
   - Boot user: |vim-iced-boot|
+
+  For neovim user, see |vim-iced-install-neovim|.
 
 ------------------------------------------------------------------------------
 Iced command                                         *vim-iced-install-command*
@@ -122,6 +128,21 @@ Boot                                                     *vim-iced-manual-boot*
       refactor-nrepl.middleware/wrap-refactor
       iced.nrepl/wrap-iced])
 <
+------------------------------------------------------------------------------
+Neovim                                                *vim-iced-install-neovim*
+
+  +-----------------------------------------+
+  | WARNING: Neovim support is EXPERIMENTAL |
+  +-----------------------------------------+
+
+  To imitate Vim8's |channel| feature, vim-iced uses `ncat` command like `vlime`.
+  So you must install `ncat` command to use vim-iced in neovim.
+
+  - ncat
+    https://nmap.org/ncat/
+  - l04m33/vlime
+    https://github.com/l04m33/vlime
+
 ==============================================================================
 nREPL Connection                                    *vim-iced-nrepl-connection*
 
