@@ -45,7 +45,7 @@
 |[%hardbreaks]
 run test under cursor
 run tests in namespace
-re run failed test
+re run failed/last test
 
 |:rocket:
 |Refactoring

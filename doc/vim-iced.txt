@@ -179,6 +179,7 @@ Testing                                                      *vim-iced-testing*
   - |:IcedTestNs|
   - |:IcedTestAll|
   - |:IcedTestRedo|
+  - |:IcedTestRerunLast|
 
   When tests are failed, vim-iced sets error positions to |quickfix|.
   |:cwindow| command enables you to show this information.
@@ -379,6 +380,11 @@ Commands                                                    *vim-iced-commands*
 :IcedTestUnderCursor
   Run test under cursor.
   Key is mapped to |<Plug>(iced_test_under_cursor)|.
+
+                                                           *:IcedTestRerunLast*
+:IcedTestRerunLast
+  Run last test again.
+  Key is mapped to |<Plug>(iced_test_rerun_last)|.
 
                                                           *:IcedTestBufferOpen*
 :IcedTestBufferOpen
@@ -727,6 +733,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_test_under_cursor)
   Same as |:IcedTestUnderCursor|.
 
+                                                 *<Plug>(iced_test_rerun_last)*
+<Plug>(iced_test_rerun_last)
+  Same as |:IcedTestRerunLast|.
+
                                                 *<Plug>(iced_test_buffer_open)*
 <Plug>(iced_test_buffer_open)
   Same as |:IcedTestBufferOpen|.
@@ -1005,6 +1015,7 @@ g:iced_enable_default_key_mappings
   <Leader>eM     <Plug>(iced_macroexpand_outer_list)
   <Leader>em     <Plug>(iced_macroexpand_1_outer_list)
   <Leader>tt     <Plug>(iced_test_under_cursor)
+  <Leader>tl     <Plug>(iced_test_rerun_last)
   <Leader>to     <Plug>(iced_test_buffer_open)
   <Leader>tn     <Plug>(iced_test_ns)
   <Leader>tp     <Plug>(iced_test_all)
