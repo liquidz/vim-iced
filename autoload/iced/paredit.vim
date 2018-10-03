@@ -3,6 +3,24 @@ set cpo&vim
 
 let g:iced#paredit#slurp_max_depth = get(g:, 'iced#paredit#slurp_max_depth', 5)
 
+function! s:search_pos(pattern, flags) abort
+  let view = winsaveview()
+  try
+    return searchpos(a:pattern, a:flags)
+  finally
+    call winrestview(view)
+  endtry
+endfunction
+
+function! s:is_pos_before(pos1, pos2) abort
+  if a:pos1[0] < a:pos2[0]
+    return v:true
+  elseif a:pos1[0] == a:pos2[0] && a:pos1[1] < a:pos2[1]
+    return v:true
+  endif
+  return v:false
+endfunction
+
 function! s:slurp(current_view, depth) abort
   if a:depth > g:iced#paredit#slurp_max_depth
     echom iced#message#get('too_deep_to_slurp')
@@ -39,24 +57,45 @@ function! iced#paredit#move_to_current_element_head() abort
   if iced#util#char() ==# '('
     return col('.')
   else
-    let pos = getcurpos()
-    silent normal! va(o
-    silent exe "normal! \<Esc>"
-    return (pos == getcurpos() ? 0 : col('.'))
+    let view = winsaveview()
+    while v:true
+      let start = s:search_pos('(', 'bW')
+      let end = s:search_pos(')', 'bW')
+
+      if start == [0, 0] && end == [0, 0]
+        call winrestview(view)
+        return 0
+      elseif start == [0, 0] && end != [0, 0]
+        call winrestview(view)
+        return 0
+      elseif start != [0, 0] && end == [0, 0]
+        call cursor(start[0], start[1])
+        return col('.')
+      elseif start != [0, 0] && end != [0, 0]
+        if s:is_pos_before(start, end)
+          call cursor(end[0], end[1])
+          silent normal! %
+        else
+          call cursor(start[0], start[1])
+          return col('.')
+        endif
+      endif
+    endwhile
   endif
 endfunction
 
 function! iced#paredit#move_to_parent_element() abort
   let view = winsaveview()
-  let ret = iced#paredit#move_to_current_element_head()
-  if ret == 0 || col('.') == 1
+  if iced#paredit#move_to_current_element_head() == 0 || col('.') == 1
     call winrestview(view)
     return 0
   endif
 
-  " move to parent form head
-  silent normal! hva(o
-  silent exe "normal! \<Esc>"
+  silent normal! h
+  if iced#paredit#move_to_current_element_head() == 0
+    call winrestview(view)
+    return 0
+  endif
   return col('.')
 endfunction
 
