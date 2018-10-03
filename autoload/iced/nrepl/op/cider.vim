@@ -64,13 +64,15 @@ function! s:tested(resp) abort
   return result
 endfunction
 
-function! iced#nrepl#op#cider#test_var(test_var, callback) abort
+function! iced#nrepl#op#cider#test_var(test_ns, test_var, callback) abort
   if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  let test_ns = (empty(a:test_ns) ? iced#nrepl#ns#name() : a:test_ns)
+
   call iced#nrepl#send({
       \ 'op': 'test',
       \ 'session': iced#nrepl#current_session(),
       \ 'id': iced#nrepl#eval#id(),
-      \ 'ns': iced#nrepl#ns#name(),
+      \ 'ns': test_ns,
       \ 'tests': [a:test_var],
       \ 'callback': {resp -> a:callback(s:tested(resp))},
       \ })
