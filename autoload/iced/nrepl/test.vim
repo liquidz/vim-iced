@@ -2,7 +2,10 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:V = vital#iced#new()
+let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
+
+let s:last_test_var = v:none
 
 function! s:error_message(test) abort
   if has_key(a:test, 'context') && !empty(a:test['context'])
@@ -137,10 +140,15 @@ function! s:test(resp) abort
     call iced#nrepl#eval#err(a:resp['err'])
   elseif has_key(a:resp, 'value')
     let var = a:resp['value']
+    let s:last_test_var = var
+
+    let var = substitute(var, '^#''', '', '')
     let i = stridx(var, '/')
+    let ns = var[0:i-1]
+    echom printf('FIXME ns <%s>', ns)
     let var = var[i+1:]
     echom printf('Testing: %s', var)
-    call iced#nrepl#op#cider#test_var(var, funcref('s:out'))
+    call iced#nrepl#op#cider#test_var(ns, var, funcref('s:out'))
   endif
 endfunction
 
@@ -157,8 +165,19 @@ function! iced#nrepl#test#under_cursor() abort
   endif
 endfunction
 
+function! iced#nrepl#test#rerun_last() abort
+  if empty(s:last_test_var)
+    return
+  endif
+  call s:test({'value': s:last_test_var})
+endfunction
+
 function! iced#nrepl#test#ns() abort
   let ns = iced#nrepl#ns#name()
+  if !s:S.ends_with(ns, '-test')
+    let ns = iced#nrepl#ns#transition#cycle(ns)
+  endif
+
   call iced#sign#unplace_all()
   call iced#message#info('testing')
   call iced#nrepl#op#cider#test_ns(ns, funcref('s:out'))
