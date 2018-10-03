@@ -95,7 +95,7 @@ function! iced#buffer#append(bufname, s, ...) abort
   let opt = get(a:, 1, {})
 
   for line in split(a:s, '\r\?\n')
-    silent call appendbufline(nr, '$', line)
+    silent call iced#compat#appendbufline(nr, '$', line)
   endfor
 
   if get(opt, 'scroll_to_bottom', v:false) && iced#buffer#is_visible(a:bufname)
@@ -109,16 +109,16 @@ endfunction
 function! iced#buffer#set_contents(bufname, s) abort
   let nr = s:bufnr(a:bufname)
 
-  silent call deletebufline(nr, 1, '$')
+  silent call iced#compat#deletebufline(nr, 1, '$')
   for line in split(a:s, '\r\?\n')
-    silent call appendbufline(nr, '$', line)
+    silent call iced#compat#appendbufline(nr, '$', line)
   endfor
-  silent call deletebufline(nr, 1)
+  silent call iced#compat#deletebufline(nr, 1)
 endfunction
 
 function! iced#buffer#clear(bufname, ...) abort
   let nr = s:bufnr(a:bufname)
-  silent call deletebufline(nr, 1, '$')
+  silent call iced#compat#deletebufline(nr, 1, '$')
   let InitFn = get(a:, 1, '')
   if iced#util#is_function(InitFn)
     call InitFn(nr)

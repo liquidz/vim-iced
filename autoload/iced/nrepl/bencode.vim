@@ -63,7 +63,7 @@ function! s:decode_list(s) abort
   while s[0] !=# 'e'
     let decoded = s:decode(s)
     call add(list, decoded.value)
-    let s = trim(decoded.rest)
+    let s = iced#compat#trim(decoded.rest)
   endwhile
 
   return {'value': list, 'rest': s[1:]}
@@ -75,9 +75,9 @@ function! s:decode_dict(s) abort
 
   while s[0] !=# 'e'
     let k = s:decode(s)
-    let v = s:decode(trim(k.rest))
+    let v = s:decode(iced#compat#trim(k.rest))
     let dict[k.value] = v.value
-    let s = trim(v.rest)
+    let s = iced#compat#trim(v.rest)
   endwhile
 
   return {'value': dict, 'rest': s[1:]}
@@ -108,7 +108,7 @@ function! iced#nrepl#bencode#decode(s) abort
       let decoding = v:false
     else
       call add(result, decoded.value)
-      let s = trim(decoded.rest)
+      let s = iced#compat#trim(decoded.rest)
 
       if s ==# ''
         let decoding = v:false

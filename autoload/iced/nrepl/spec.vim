@@ -26,7 +26,7 @@ function! iced#nrepl#spec#format(spec) abort
       let code = substitute(code, '\%(\\\)\@<!\\n', "\n", 'g')
     endif
   endif
-  return trim(code)
+  return iced#compat#trim(code)
 endfunction
 
 function! s:spec_form(resp) abort

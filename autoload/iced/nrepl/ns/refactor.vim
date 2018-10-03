@@ -146,7 +146,7 @@ function! s:add(ns_name) abort
     if empty(candidate)
       let candidate = ''
     endif
-    let ns_alias = trim(input('Alias: ', candidate))
+    let ns_alias = iced#compat#trim(input('Alias: ', candidate))
   endif
 
   call iced#nrepl#ns#util#add(a:ns_name, ns_alias)

@@ -34,13 +34,13 @@ endfunction
 
 function! s:extract_actual_values(test) abort
   if !has_key(a:test, 'diffs') || type(a:test['diffs']) != type([])
-    return {'actual': trim(get(a:test, 'actual', ''))}
+    return {'actual': iced#compat#trim(get(a:test, 'actual', ''))}
   endif
 
   let diffs = a:test['diffs'][0]
   return {
-      \ 'actual': trim(diffs[0]),
-      \ 'diffs': printf("- %s\n+ %s", trim(diffs[1][0]), trim(diffs[1][1])),
+      \ 'actual': iced#compat#trim(diffs[0]),
+      \ 'diffs': printf("- %s\n+ %s", iced#compat#trim(diffs[1][0]), iced#compat#trim(diffs[1][1])),
       \ }
 endfunction
 
@@ -70,7 +70,7 @@ function! s:collect_errors(resp) abort
                   \ 'filename': ns_path_resp['path'],
                   \ 'lnum': test['line'],
                   \ 'text': s:error_message(test),
-                  \ 'expected': trim(get(test, 'expected', '')),
+                  \ 'expected': iced#compat#trim(get(test, 'expected', '')),
                   \ 'type': 'E',
                   \ }
           if test['type'] ==# 'fail'

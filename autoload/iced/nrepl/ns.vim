@@ -48,7 +48,7 @@ function! iced#nrepl#ns#name() abort
       return ns_name
     endif
     let start = line('.')
-    let line = trim(join(getline(start, start+1), ' '))
+    let line = iced#compat#trim(join(getline(start, start+1), ' '))
     let line = substitute(line, '(ns ', '', '')
     return matchstr(line, '[a-z0-9.\-]\+',
           \ (stridx(line, '^') == 0 ? stridx(line, ' ') : 0))

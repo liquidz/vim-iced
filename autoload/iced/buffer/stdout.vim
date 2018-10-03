@@ -22,9 +22,9 @@ function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&swapfile', 0)
 
   for line in split(g:iced#buffer#stdout#init_text, '\r\?\n')
-    silent call appendbufline(a:bufnr, '$', line)
+    silent call iced#compat#appendbufline(a:bufnr, '$', line)
   endfor
-  silent call deletebufline(a:bufnr, 1)
+  silent call iced#compat#deletebufline(a:bufnr, 1)
 
   if !empty(g:iced#buffer#stdout#file)
     call writefile(getbufline(a:bufnr, 1, '$'), g:iced#buffer#stdout#file)

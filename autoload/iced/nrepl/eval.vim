@@ -18,7 +18,7 @@ function! iced#nrepl#eval#err(err) abort
 
   let err = matchstr(a:err, ':(.\+:\d\+:\d\+)')
   if !empty(err)
-    let text = trim(substitute(a:err, err, '', ''))
+    let text = iced#compat#trim(substitute(a:err, err, '', ''))
     let err = err[2:len(err)-2]
     let arr = split(err, ':')
 
@@ -59,7 +59,7 @@ function! s:extract_inside_form(code) abort
   let i = strridx(a:code, ')')
   if i != -1
     " NOTE: 8 = len('(comment')
-    return trim(a:code[8:i-1])
+    return iced#compat#trim(a:code[8:i-1])
   endif
   return a:code
 endfunction
