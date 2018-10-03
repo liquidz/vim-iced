@@ -61,7 +61,7 @@ endfunction
 
 function! iced#util#has_status(resp, status) abort
   for resp in iced#util#ensure_array(a:resp)
-    for status in get(resp, 'status', [v:none])
+    for status in get(resp, 'status', [''])
       if status ==# a:status
         return v:true
       endif

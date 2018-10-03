@@ -1,6 +1,6 @@
 *vim-iced.txt*            Clojure interactive development environment for Vim8
 
-Version: 0.4.3
+Version: 0.5.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -13,6 +13,7 @@ Install              |vim-iced-install|
   Manual Install     |vim-iced-install-manually|
     Leiningen        |vim-iced-manual-leiningen|
     Boot             |vim-iced-manual-boot|
+  Neovim             |vim-iced-install-neovim|
 nREPL Connection     |vim-iced-nrepl-connection|
 ClojureScript        |vim-iced-clojurescript|
 Evaluating           |vim-iced-evaluating|
@@ -35,10 +36,13 @@ Changelog            |vim-iced-changelog|
 ==============================================================================
 Introduction                                            *vim-iced-introduction*
 
-  Clojure interactive development environment for Vim8.
+  Clojure interactive development environment for Vim8/Neovim.
 
   Requirement:
-  - Vim 8.1 or later
+  - Vim 8.1 or later, Neovim 0.3.1 or later
+    Neovim support is VERY EXPERIMENTAL
+  - `ncat` command (only for Neovim user)
+    https://nmap.org/ncat/
 
   Latest Version:
   - https://github.com/liquidz/vim-iced
@@ -58,6 +62,8 @@ Install                                                      *vim-iced-install*
   - Leiningen user: |vim-iced-leiningen|
   - Boot user: |vim-iced-boot|
 
+  For neovim user, see |vim-iced-install-neovim|.
+
 ------------------------------------------------------------------------------
 Iced command                                         *vim-iced-install-command*
 
@@ -75,7 +81,7 @@ Leiningen                                           *vim-iced-manual-leiningen*
 >
   {:user
    {:dependencies [[nrepl "0.4.5"]
-                   [iced-nrepl "0.1.7"]
+                   [iced-nrepl "0.1.8"]
                    [cider/cider-nrepl "0.18.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
@@ -103,7 +109,7 @@ Boot                                                     *vim-iced-manual-boot*
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
-      [iced-nrepl "0.1.7"]])
+      [iced-nrepl "0.1.8"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -122,6 +128,21 @@ Boot                                                     *vim-iced-manual-boot*
       refactor-nrepl.middleware/wrap-refactor
       iced.nrepl/wrap-iced])
 <
+------------------------------------------------------------------------------
+Neovim                                                *vim-iced-install-neovim*
+
+  +-----------------------------------------+
+  | WARNING: Neovim support is EXPERIMENTAL |
+  +-----------------------------------------+
+
+  To imitate Vim8's |channel| feature, vim-iced uses `ncat` command like `vlime`.
+  So you must install `ncat` command to use vim-iced in neovim.
+
+  - ncat
+    https://nmap.org/ncat/
+  - l04m33/vlime
+    https://github.com/l04m33/vlime
+
 ==============================================================================
 nREPL Connection                                    *vim-iced-nrepl-connection*
 
@@ -179,6 +200,7 @@ Testing                                                      *vim-iced-testing*
   - |:IcedTestNs|
   - |:IcedTestAll|
   - |:IcedTestRedo|
+  - |:IcedTestRerunLast|
 
   When tests are failed, vim-iced sets error positions to |quickfix|.
   |:cwindow| command enables you to show this information.
@@ -379,6 +401,11 @@ Commands                                                    *vim-iced-commands*
 :IcedTestUnderCursor
   Run test under cursor.
   Key is mapped to |<Plug>(iced_test_under_cursor)|.
+
+                                                           *:IcedTestRerunLast*
+:IcedTestRerunLast
+  Run last test again.
+  Key is mapped to |<Plug>(iced_test_rerun_last)|.
 
                                                           *:IcedTestBufferOpen*
 :IcedTestBufferOpen
@@ -727,6 +754,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_test_under_cursor)
   Same as |:IcedTestUnderCursor|.
 
+                                                 *<Plug>(iced_test_rerun_last)*
+<Plug>(iced_test_rerun_last)
+  Same as |:IcedTestRerunLast|.
+
                                                 *<Plug>(iced_test_buffer_open)*
 <Plug>(iced_test_buffer_open)
   Same as |:IcedTestBufferOpen|.
@@ -926,7 +957,7 @@ g:iced#buffer#stdout#mods
                                                     *g:iced#buffer#stdout#file*
 g:iced#buffer#stdout#file
   If not empty, vim-iced write stdout buffer content to the file path.
-  Default value is `v:none`.
+  Default value is `''`.
 
                                                 *g:iced#buffer#document#height*
 g:iced#buffer#document#height
@@ -1005,6 +1036,7 @@ g:iced_enable_default_key_mappings
   <Leader>eM     <Plug>(iced_macroexpand_outer_list)
   <Leader>em     <Plug>(iced_macroexpand_1_outer_list)
   <Leader>tt     <Plug>(iced_test_under_cursor)
+  <Leader>tl     <Plug>(iced_test_rerun_last)
   <Leader>to     <Plug>(iced_test_buffer_open)
   <Leader>tn     <Plug>(iced_test_ns)
   <Leader>tp     <Plug>(iced_test_all)

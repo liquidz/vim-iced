@@ -103,7 +103,7 @@ function! s:context() abort
     return join(codes, "\n")
   catch /E684:/
     " index out of range
-    return v:none
+    return ''
   finally
     let @@ = reg_save
     call winrestview(view)
@@ -121,7 +121,7 @@ function! iced#complete#omni(findstart, base) abort
     let candidates = []
 
     " vars in current namespace
-    let tmp = s:ns_var_candidates(ns, a:base, v:none)
+    let tmp = s:ns_var_candidates(ns, a:base, '')
     if !empty(tmp)
       let candidates = candidates + tmp
     endif

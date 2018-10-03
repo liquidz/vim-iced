@@ -46,7 +46,7 @@ function! iced#skeleton#new() abort
   let user_dir = iced#nrepl#system#user_dir()
   let separator = iced#nrepl#system#separator()
 
-  if user_dir == v:none || stridx(path, user_dir) != 0
+  if empty(user_dir) || stridx(path, user_dir) != 0
     return
   endif
 

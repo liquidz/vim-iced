@@ -2,7 +2,10 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:V = vital#iced#new()
+let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
+
+let s:last_test_var = ''
 
 function! s:error_message(test) abort
   if has_key(a:test, 'context') && !empty(a:test['context'])
@@ -26,18 +29,18 @@ function! s:summary(resp) abort
     endif
   endfor
 
-  return v:none
+  return ''
 endfunction
 
 function! s:extract_actual_values(test) abort
   if !has_key(a:test, 'diffs') || type(a:test['diffs']) != type([])
-    return {'actual': trim(get(a:test, 'actual', ''))}
+    return {'actual': iced#compat#trim(get(a:test, 'actual', ''))}
   endif
 
   let diffs = a:test['diffs'][0]
   return {
-      \ 'actual': trim(diffs[0]),
-      \ 'diffs': printf("- %s\n+ %s", trim(diffs[1][0]), trim(diffs[1][1])),
+      \ 'actual': iced#compat#trim(diffs[0]),
+      \ 'diffs': printf("- %s\n+ %s", iced#compat#trim(diffs[1][0]), iced#compat#trim(diffs[1][1])),
       \ }
 endfunction
 
@@ -67,7 +70,7 @@ function! s:collect_errors(resp) abort
                   \ 'filename': ns_path_resp['path'],
                   \ 'lnum': test['line'],
                   \ 'text': s:error_message(test),
-                  \ 'expected': trim(get(test, 'expected', '')),
+                  \ 'expected': iced#compat#trim(get(test, 'expected', '')),
                   \ 'type': 'E',
                   \ }
           if test['type'] ==# 'fail'
@@ -137,10 +140,15 @@ function! s:test(resp) abort
     call iced#nrepl#eval#err(a:resp['err'])
   elseif has_key(a:resp, 'value')
     let var = a:resp['value']
+    let s:last_test_var = var
+
+    let var = substitute(var, '^#''', '', '')
     let i = stridx(var, '/')
+    let ns = var[0:i-1]
+    echom printf('FIXME ns <%s>', ns)
     let var = var[i+1:]
     echom printf('Testing: %s', var)
-    call iced#nrepl#op#cider#test_var(var, funcref('s:out'))
+    call iced#nrepl#op#cider#test_var(ns, var, funcref('s:out'))
   endif
 endfunction
 
@@ -157,8 +165,19 @@ function! iced#nrepl#test#under_cursor() abort
   endif
 endfunction
 
+function! iced#nrepl#test#rerun_last() abort
+  if empty(s:last_test_var)
+    return
+  endif
+  call s:test({'value': s:last_test_var})
+endfunction
+
 function! iced#nrepl#test#ns() abort
   let ns = iced#nrepl#ns#name()
+  if !s:S.ends_with(ns, '-test')
+    let ns = iced#nrepl#ns#transition#cycle(ns)
+  endif
+
   call iced#sign#unplace_all()
   call iced#message#info('testing')
   call iced#nrepl#op#cider#test_ns(ns, funcref('s:out'))

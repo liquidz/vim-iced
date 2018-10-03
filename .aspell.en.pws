@@ -1,8 +1,9 @@
-personal_ws-1.1 en 149 
+personal_ws-1.1 en 153 
 grimoire
 IcedGrep
 IcedDocumentOpen
 cljfmt
+vlime
 dbg
 IcedStdoutBufferClear
 IcedEvalNs
@@ -28,6 +29,7 @@ IcedEvalRepl
 IcedQuitCljsRepl
 hardbreaks
 clj
+ncat
 liquidz
 macroexpand
 IcedDefJump
@@ -99,10 +101,12 @@ eastwood
 CursorMoved
 nREPL
 nrepl
+IcedTestRerunLast
 Iizuka
 IcedJumpToPrevSign
 concat
 IcedToggleSrcAndTest
+neovim
 BufWritePost
 linters
 IcedLintCurrentFile

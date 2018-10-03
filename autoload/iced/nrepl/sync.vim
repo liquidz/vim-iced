@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:sync_resp = v:none
+let s:sync_resp = ''
 let s:default_timeout_ms = 3000
 
 let g:iced#nrepl#sync#timeout_ms = get(g:, 'iced#nrepl#sync#timeout_ms', s:default_timeout_ms)
@@ -13,7 +13,7 @@ endfunction
 function! iced#nrepl#sync#send(data) abort
   let data = copy(a:data)
   let data.callback = funcref('s:sync')
-  let s:sync_resp = v:none
+  let s:sync_resp = ''
 
   call iced#nrepl#send(data)
   if !iced#util#wait({-> empty(s:sync_resp)}, g:iced#nrepl#sync#timeout_ms)
@@ -32,7 +32,7 @@ function! iced#nrepl#sync#clone(session) abort
       \ 'op': 'clone',
       \ 'session': a:session
       \ })
-  return get(resp, 'new-session', v:none)
+  return get(resp, 'new-session', '')
 endfunction
 
 function! iced#nrepl#sync#close(session) abort

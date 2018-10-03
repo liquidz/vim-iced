@@ -42,28 +42,19 @@ function! iced#let#move_to_let(...) abort
     let form = iced#util#del_indent(indent, form)
     let name = get(a:, 1, '')
     if empty(name)
-      let name = trim(input('Name: '))
+      let name = iced#compat#trim(input('Name: '))
     endif
     if empty(name)
       return iced#message#echom('canceled')
     endif
 
     if iced#let#goto() == 0
-      " re-select form
-      call iced#paredit#get_outer_list_raw()
       " 6 means `len('(let [')`
       let form = iced#util#add_indent(len(name)+1+6, form)
       let @@ = iced#util#add_indent(
             \ indent, printf("(let [%s %s]\n  %s)", name, form, name))
       silent normal! gvp
     else
-      " re-select form
-      " FIXME too redundant!!
-      let tmp = winsaveview()
-      call winrestview(view)
-      call iced#paredit#get_outer_list_raw()
-      call winrestview(tmp)
-
       let pos = getcurpos()
       let @@ = name
       silent normal! gvp

@@ -68,7 +68,7 @@ function! s:symbol_to_alias(symbol) abort
   if len(arr) == 2 || stridx(a:symbol, '/') != -1
     return arr[0]
   endif
-  return v:none
+  return ''
 endfunction
 
 function! s:add_ns(ns_name, symbol_alias) abort
@@ -146,7 +146,7 @@ function! s:add(ns_name) abort
     if empty(candidate)
       let candidate = ''
     endif
-    let ns_alias = trim(input('Alias: ', candidate))
+    let ns_alias = iced#compat#trim(input('Alias: ', candidate))
   endif
 
   call iced#nrepl#ns#util#add(a:ns_name, ns_alias)

@@ -13,7 +13,7 @@ let s:default_init_text = join([
 let g:iced#buffer#stdout#init_text = get(g:, 'iced#buffer#stdout#init_text', s:default_init_text)
 let g:iced#buffer#stdout#mods = get(g:, 'iced#buffer#stdout#mods', '')
 let g:iced#buffer#stdout#max_line = get(g:, 'iced#buffer#stdout#max_line', 512)
-let g:iced#buffer#stdout#file = get(g:, 'iced#buffer#stdout#file', v:none)
+let g:iced#buffer#stdout#file = get(g:, 'iced#buffer#stdout#file', '')
 
 function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
@@ -22,9 +22,9 @@ function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&swapfile', 0)
 
   for line in split(g:iced#buffer#stdout#init_text, '\r\?\n')
-    silent call appendbufline(a:bufnr, '$', line)
+    silent call iced#compat#appendbufline(a:bufnr, '$', line)
   endfor
-  silent call deletebufline(a:bufnr, 1)
+  silent call iced#compat#deletebufline(a:bufnr, 1)
 
   if !empty(g:iced#buffer#stdout#file)
     call writefile(getbufline(a:bufnr, 1, '$'), g:iced#buffer#stdout#file)

@@ -5,7 +5,7 @@ let g:loaded_ctrlp_iced = 1
 
 let s:config = {
     \ 'candidates': [],
-    \ 'accept': v:none,
+    \ 'accept': '',
     \ }
 
 if exists('g:loaded_ctrlp')
@@ -35,7 +35,7 @@ function! ctrlp#iced#accept(mode, line) abort
   let config = copy(s:config)
   let s:config = {}
 
-  let Callback = get(config, 'accept', v:none)
+  let Callback = get(config, 'accept', '')
   if iced#util#is_function(Callback)
     call Callback(a:mode, a:line)
   endif

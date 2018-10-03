@@ -12,7 +12,7 @@ function! iced#grep#exe(kw) abort
 
   let user_dir = iced#nrepl#system#user_dir()
   let separator = iced#nrepl#system#separator()
-  if user_dir == v:none || separator == v:none | return | endif
+  if empty(user_dir) || empty(separator) | return | endif
 
   let kw = empty(a:kw) ? expand('<cword>') : a:kw
   let target = g:iced#grep#target

@@ -26,7 +26,7 @@ endfunction
 
 function! iced#sign#jump_to_next() abort
   let lnum = line('.')
-  let target = v:none
+  let target = ''
   let sign_list = iced#sign#list_in_current_buffer()
 
   for sign in sign_list
@@ -50,8 +50,8 @@ endfunction
 
 function! iced#sign#jump_to_prev() abort
   let lnum = line('.')
-  let tmp = v:none
-  let target = v:none
+  let tmp = ''
+  let target = ''
   let sign_list = iced#sign#list_in_current_buffer()
 
   for sign in sign_list
