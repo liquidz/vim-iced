@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:saved_view = v:none
+let s:saved_view = ''
 
 " p: inspect
 " q: quit
@@ -105,11 +105,11 @@ endfunction
 
 function! iced#nrepl#debug#quit() abort
   if type(s:saved_view) == type({})
-    let s:debug_key = v:none
+    let s:debug_key = ''
     call iced#buffer#stdout#append(';; Quit')
     call iced#highlight#clear()
     call iced#util#restore_cursor_position(s:saved_view)
-    let s:saved_view = v:none
+    let s:saved_view = ''
   endif
 endfunction
 

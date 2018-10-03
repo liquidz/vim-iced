@@ -4,13 +4,13 @@ set cpo&vim
 " NOTE: `current_session_key` must be 'clj' or 'cljs'
 function! s:initialize_nrepl() abort
   return {
-      \ 'port': v:none,
+      \ 'port': '',
       \ 'channel': v:false,
-      \ 'current_session_key': v:none,
+      \ 'current_session_key': '',
       \ 'sessions': {
-      \   'repl': v:none,
-      \   'clj':  v:none,
-      \   'cljs': v:none,
+      \   'repl': '',
+      \   'clj':  '',
+      \   'cljs': '',
       \   },
       \ }
 endfunction
@@ -41,12 +41,12 @@ function! iced#nrepl#set_session(k, v) abort
 endfunction
 
 function! iced#nrepl#current_session_key() abort
-  return get(s:nrepl, 'current_session_key', v:none)
+  return get(s:nrepl, 'current_session_key', '')
 endfunction
 
 function! iced#nrepl#current_session() abort
   let k = iced#nrepl#current_session_key()
-  return get(s:nrepl['sessions'], k, v:none)
+  return get(s:nrepl['sessions'], k, '')
 endfunction
 
 function! iced#nrepl#change_current_session(k) abort
@@ -140,7 +140,7 @@ function! s:dispatcher(ch, resp) abort
     endif
 
     if has_key(s:messages, id)
-      let handler_result = v:none
+      let handler_result = ''
       let Handler = get(s:handlers, s:messages[id]['op'], funcref('s:default_handler'))
       if iced#util#is_function(Handler)
         let handler_result = Handler(resp)
@@ -333,7 +333,7 @@ function! iced#nrepl#eval(code, ...) abort
     return
   endif
 
-  let Callback = get(a:, 1, v:none)
+  let Callback = get(a:, 1, '')
   let option = get(a:, 2, {})
   let session_key  = get(option, 'session', iced#nrepl#current_session_key())
   let session = get(s:nrepl['sessions'], session_key, iced#nrepl#current_session())

@@ -100,8 +100,8 @@ function! iced#paredit#move_to_parent_element() abort
 endfunction
 
 function! iced#paredit#get_current_top_list_raw() abort
-  let code = v:none
-  let pos = v:none
+  let code = ''
+  let pos = ''
 
   try
     while v:true
@@ -132,7 +132,7 @@ endfunction
 function! iced#paredit#get_current_top_list() abort
   let view = winsaveview()
   let reg_save = @@
-  let res = v:none
+  let res = ''
 
   try
     let res = iced#paredit#get_current_top_list_raw()
@@ -156,7 +156,7 @@ endfunction
 function! iced#paredit#get_outer_list() abort
   let view = winsaveview()
   let reg_save = @@
-  let code = v:none
+  let code = ''
 
   try
     let code = iced#paredit#get_outer_list_raw()

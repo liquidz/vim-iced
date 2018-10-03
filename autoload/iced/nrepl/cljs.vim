@@ -11,7 +11,7 @@ endfunction
 
 function! s:switch_session_to_clj() abort
   call iced#nrepl#sync#close(iced#nrepl#cljs_session())
-  call iced#nrepl#set_session('cljs', v:none)
+  call iced#nrepl#set_session('cljs', '')
   call iced#nrepl#change_current_session('clj')
   call iced#message#info('quitted_cljs_repl')
 endfunction
@@ -31,7 +31,7 @@ function! iced#nrepl#cljs#switch_session(resp) abort
 endfunction
 
 let g:iced#nrepl#cljs#default_env = get(g:, 'iced#nrepl#cljs#default_env', 'figwheel')
-let s:using_env_key = v:none
+let s:using_env_key = ''
 
 let s:env = {
     \ 'figwheel': {-> iced#nrepl#cljs#figwheel#get_env()},
@@ -60,7 +60,7 @@ function! iced#nrepl#cljs#quit() abort
     if !empty(s:using_env_key)
       let env = s:env[s:using_env_key]()
       call env['stop']()
-      let s:using_env_key = v:none
+      let s:using_env_key = ''
     endif
   endif
 endfunction

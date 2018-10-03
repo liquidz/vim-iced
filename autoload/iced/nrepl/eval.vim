@@ -43,7 +43,7 @@ function! s:out(resp) abort
     call iced#message#error_str(a:resp['ex'])
   endif
 
-  call iced#nrepl#eval#err(get(a:resp, 'err', v:none))
+  call iced#nrepl#eval#err(get(a:resp, 'err', ''))
 endfunction
 
 function! s:repl_out(resp) abort

@@ -5,7 +5,7 @@ let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
-let s:last_test_var = v:none
+let s:last_test_var = ''
 
 function! s:error_message(test) abort
   if has_key(a:test, 'context') && !empty(a:test['context'])
@@ -29,7 +29,7 @@ function! s:summary(resp) abort
     endif
   endfor
 
-  return v:none
+  return ''
 endfunction
 
 function! s:extract_actual_values(test) abort

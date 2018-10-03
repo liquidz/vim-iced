@@ -8,7 +8,7 @@ function! iced#cache#set(k, v) abort
 endfunction
 
 function! iced#cache#get(k, ...) abort
-  let default = get(a:, 1, v:none)
+  let default = get(a:, 1, '')
   return get(s:cache, a:k, default)
 endfunction
 

@@ -4,11 +4,11 @@ set cpo&vim
 function! iced#nrepl#ns#get() abort
   let view = winsaveview()
   let reg_save = @@
-  let code = v:none
+  let code = ''
 
   try
     if iced#nrepl#ns#util#search() == 0
-      return v:none
+      return ''
     endif
     silent normal! va(y
     let code = @@
@@ -29,7 +29,7 @@ function! s:ns_name_by_var(...) abort
       \ 'session': session,
       \ })
   if !has_key(resp, 'value')
-    return v:none
+    return ''
   endif
   return iced#nrepl#ns#util#extract_ns(resp['value'])
 endfunction
@@ -61,7 +61,7 @@ endfunction
 function! iced#nrepl#ns#eval(callback) abort
   let code = iced#nrepl#ns#get()
   if empty(code)
-    call a:callback(v:none)
+    call a:callback('')
   else
     call iced#nrepl#eval(code, a:callback)
   endif

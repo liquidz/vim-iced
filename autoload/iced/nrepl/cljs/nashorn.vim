@@ -13,7 +13,7 @@ endfunction
 function! iced#nrepl#cljs#nashorn#get_env() abort
   return {
       \ 'start': funcref('s:start_repl'),
-      \ 'stop': {-> v:none},
+      \ 'stop': {-> ''},
       \ }
 endfunction
 

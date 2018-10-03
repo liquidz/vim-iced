@@ -17,9 +17,9 @@ function! s:ensure_tuple(ls) abort
   if l == 2
     return a:ls
   elseif l > 0
-    return [a:ls[0], v:none]
+    return [a:ls[0], '']
   endif
-  return [v:none, v:none]
+  return ['', '']
 endfunction
 
 function! s:namespace_aliases(resp) abort

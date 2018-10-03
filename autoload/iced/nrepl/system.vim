@@ -30,7 +30,7 @@ endfunction
 
 function! s:get(key) abort
   let val = iced#cache#get(a:key)
-  if val != v:none | return val | endif
+  if val != '' | return val | endif
   return get(s:update_cache(), a:key)
 endfunction
 

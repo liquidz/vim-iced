@@ -21,7 +21,7 @@ function! iced#nrepl#ns#alias#find_existing_alias(ns_name) abort
       endif
     endfor
   endfor
-  return v:none
+  return ''
 endfunction
 
 let &cpo = s:save_cpo

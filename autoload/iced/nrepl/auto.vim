@@ -3,7 +3,7 @@ set cpo&vim
 
 function! iced#nrepl#auto#bufread() abort
   if !iced#nrepl#is_connected() | return | endif
-  call iced#nrepl#ns#eval({_ -> v:none})
+  call iced#nrepl#ns#eval({_ -> ''})
 endfunction
 
 let &cpo = s:save_cpo

@@ -936,7 +936,7 @@ g:iced#buffer#stdout#mods
                                                     *g:iced#buffer#stdout#file*
 g:iced#buffer#stdout#file
   If not empty, vim-iced write stdout buffer content to the file path.
-  Default value is `v:none`.
+  Default value is `''`.
 
                                                 *g:iced#buffer#document#height*
 g:iced#buffer#document#height

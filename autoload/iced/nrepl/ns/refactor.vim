@@ -68,7 +68,7 @@ function! s:symbol_to_alias(symbol) abort
   if len(arr) == 2 || stridx(a:symbol, '/') != -1
     return arr[0]
   endif
-  return v:none
+  return ''
 endfunction
 
 function! s:add_ns(ns_name, symbol_alias) abort

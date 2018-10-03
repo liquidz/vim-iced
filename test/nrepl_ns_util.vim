@@ -31,7 +31,7 @@ function! s:suite.replace_ns_not_found_test() abort
   let org_text = s:buf.get_texts()
   
   call s:assert.equals(line('.'), 2)
-  call s:assert.equals(iced#nrepl#ns#util#replace('(ns bar.core)'), v:none)
+  call iced#nrepl#ns#util#replace('(ns bar.core)')
   call s:assert.equals(s:buf.get_texts(), org_text)
   call s:assert.equals(line('.'), 2)
 
@@ -96,7 +96,7 @@ function! s:suite.add_test() abort
 
   call s:assert.equals(line('.'), 2)
 
-  call iced#nrepl#ns#util#add('bar', v:none)
+  call iced#nrepl#ns#util#add('bar', '')
   call s:assert.equals(s:buf.get_texts(),
         \ "(ns foo.core\n(:require bar))\nnil")
   call s:assert.equals(line('.'), 3)

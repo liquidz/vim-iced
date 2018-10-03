@@ -36,7 +36,7 @@ function! iced#nrepl#ns#util#replace(new_ns) abort
     let @@ = reg_save
     if iced#nrepl#ns#util#search() != 0
       call iced#format#form()
-      call iced#nrepl#ns#eval(v:none)
+      call iced#nrepl#ns#eval('')
     endif
     call winrestview(view)
   endtry
@@ -76,7 +76,7 @@ endfunction
 function! iced#nrepl#ns#util#add(ns_name, symbol_alias) abort
   let ns_alias = a:symbol_alias
   if a:ns_name ==# a:symbol_alias
-    let ns_alias = v:none
+    let ns_alias = ''
   endif
 
   let code = iced#nrepl#ns#get()

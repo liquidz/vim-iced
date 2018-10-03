@@ -4,7 +4,7 @@ set cpo&vim
 function! iced#nrepl#op#cider#sync#complete(base, ns_name, context) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
-    return v:none
+    return ''
   endif
 
   let msg = {
@@ -25,7 +25,7 @@ endfunction
 function! iced#nrepl#op#cider#sync#ns_list() abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
-    return v:none
+    return ''
   endif
 
   return iced#nrepl#sync#send({
@@ -37,7 +37,7 @@ endfunction
 function! iced#nrepl#op#cider#sync#ns_vars(ns) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
-    return v:none
+    return ''
   endif
 
   return iced#nrepl#sync#send({
@@ -51,7 +51,7 @@ endfunction
 function! iced#nrepl#op#cider#sync#ns_path(ns) abort
   if !iced#nrepl#is_connected()
     echom iced#message#get('not_connected')
-    return v:none
+    return ''
   endif
 
   return iced#nrepl#sync#send({
