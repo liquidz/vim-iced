@@ -31,6 +31,7 @@ Interface            |vim-iced-interface|
   Functions          |vim-iced-functions|
   Key Mappings       |vim-iced-key-mappings|
 Customizing          |vim-iced-customizing|
+  Command palettes   |vim-iced-customizing-palette|
 Changelog            |vim-iced-changelog|
 
 ==============================================================================
@@ -1017,6 +1018,18 @@ g:iced_enable_auto_linting
   Linting is worked when |BufWritePost|.
   See details: |vim-iced-linting|
 
+------------------------------------------------------------------------------
+Command palettes                                 *vim-iced-customizing-palette*
+
+                                                       *g:iced#palette#palette*
+g:iced#palette#palette
+  User custom commands.
+  Ex. define command palette to start cljs REPL
+>
+  let g:iced#palette#palette = {
+        \ 'foo bar': ':IcedEvalRepl (cljs-repl)'
+        \ }
+<
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
   If {v:true}, apply following mappings.
