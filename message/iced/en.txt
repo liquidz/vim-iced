@@ -44,5 +44,6 @@
   'search_hit_bottom':  'search hit BOTTOM, continuing at TOP...',
   'used_locals_error':  'Failed to fetch used-locals.',
   'canceled':           'Canceled.',
+  'invalid_session':    'Session error. You should be in %s session.',
 }
 #vim:ft=ruby

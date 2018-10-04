@@ -65,6 +65,7 @@ function! s:extract_inside_form(code) abort
 endfunction
 
 function! iced#nrepl#eval#code(code, ...) abort
+  if ! iced#nrepl#check_session_validity() | return | endif
   let view = winsaveview()
   let reg_save = @@
   let opt = get(a:, 1, {})
@@ -118,6 +119,7 @@ function! iced#nrepl#eval#print_last() abort
 endfunction
 
 function! iced#nrepl#eval#outer_top_list() abort
+  if ! iced#nrepl#check_session_validity() | return | endif
   let ret = iced#paredit#get_current_top_list()
   let code = ret['code']
   if empty(code)
