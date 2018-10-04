@@ -31,7 +31,10 @@ Interface            |vim-iced-interface|
   Functions          |vim-iced-functions|
   Key Mappings       |vim-iced-key-mappings|
 Customizing          |vim-iced-customizing|
+  Indent rules       |vim-iced-customizing-indents|
+  Linters            |vim-iced-customizing-linters|
   Command palettes   |vim-iced-customizing-palette|
+  Default keys       |vim-iced-customizing-default-keys|
 Changelog            |vim-iced-changelog|
 
 ==============================================================================
@@ -923,16 +926,6 @@ g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
   Default value is `5`.
 
-                                                           *g:iced#format#rule*
-g:iced#format#rule
-  Cljfmt's formatting rule.
-  See https://github.com/weavejester/cljfmt#indentation-rules
->
-  let g:iced#format#rule = {
-        \ 'merr.core/let': '[[:block 2] [:inner 1]]',
-        \ }
-<
-
                                                 *g:iced#nrepl#cljs#default_env*
 g:iced#nrepl#cljs#default_env
   Environment used when |:IcedStartCljsRepl| is called with no argument.
@@ -1000,6 +993,21 @@ g:iced#grep#target
   Default value is
     `'{{user.dir}}{{separator}}**{{separator}}*.{clj,cljs,cljc}'`.
 
+------------------------------------------------------------------------------
+Indent rules                                     *vim-iced-customizing-indents*
+
+                                                           *g:iced#format#rule*
+g:iced#format#rule
+  Cljfmt's formatting rule.
+  See https://github.com/weavejester/cljfmt#indentation-rules
+>
+  let g:iced#format#rule = {
+        \ 'merr.core/let': '[[:block 2] [:inner 1]]',
+        \ }
+<
+------------------------------------------------------------------------------
+Linters                                          *vim-iced-customizing-linters*
+
                                                           *g:iced#lint#linters*
 g:iced#lint#linters
   Linter definition which is used by `jonase/eastwood`.
@@ -1030,6 +1038,9 @@ g:iced#palette#palette
         \ 'foo bar': ':IcedEvalRepl (cljs-repl)'
         \ }
 <
+------------------------------------------------------------------------------
+Default keys                                *vim-iced-customizing-default-keys*
+
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
   If {v:true}, apply following mappings.
