@@ -94,6 +94,8 @@ endfunction
 
 function! iced#nrepl#ns#require() abort
   let Cb = {_ -> iced#util#echo_messages('Required')}
+  if ! iced#nrepl#check_session_validity() | return | endif
+
   if iced#nrepl#current_session_key() ==# 'clj'
     call iced#nrepl#load_file({resp -> s:required(resp, Cb)})
   else
@@ -103,6 +105,7 @@ endfunction
 
 function! iced#nrepl#ns#require_all() abort
   let Cb = {_ -> iced#util#echo_messages('All reloaded')}
+  if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#current_session_key() ==# 'clj'
     let ns = iced#nrepl#ns#name()
