@@ -81,6 +81,10 @@ and https://github.com/candid82/joker[joker]
 |ClojureScript support
 |`figwheel` and `nashorn` is supported currently
 
+|:art:
+|Command palette
+|access commands smoothly and define user custom commands
+
 |===
 
 NOTE: vim-iced is heavily powered by https://github.com/clojure-emacs/cider-nrepl[cider-nrepl],
