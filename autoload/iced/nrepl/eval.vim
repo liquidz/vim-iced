@@ -123,12 +123,12 @@ function! iced#nrepl#eval#outer_top_list() abort
   let ret = iced#paredit#get_current_top_list()
   let code = ret['code']
   if empty(code)
-    echom iced#message#get('finding_code_error')
-  else
-    let pos = ret['curpos']
-    let opt = {'line': pos[1], 'column': pos[2]}
-    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval#code(code, opt)})
+    return iced#message#error('finding_code_error')
   endif
+
+  let pos = ret['curpos']
+  let opt = {'line': pos[1], 'column': pos[2]}
+  call iced#nrepl#ns#eval({_ -> iced#nrepl#eval#code(code, opt)})
 endfunction
 
 function! iced#nrepl#eval#ns() abort

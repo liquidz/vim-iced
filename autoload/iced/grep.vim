@@ -6,8 +6,7 @@ let g:iced#grep#target = get(g:, 'iced#grep#target', s:default_target)
 
 function! iced#grep#exe(kw) abort
   if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
-    return
+    return iced#message#error('not_connected')
   endif
 
   let user_dir = iced#nrepl#system#user_dir()

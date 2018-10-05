@@ -184,7 +184,7 @@ endfunction
 "" -----
 
 function! s:auto_connect() abort
-  echom iced#message#get('auto_connect')
+  call iced#message#echom('auto_connect')
   if ! iced#nrepl#connect#auto()
     call iced#message#error('try_connect')
     return v:false
@@ -260,7 +260,7 @@ function! s:connected(resp) abort
     call iced#buffer#error#init()
     silent call s:warm_up()
 
-    echom iced#message#get('connected')
+    call iced#message#info('connected')
   endif
 endfunction
 
@@ -315,7 +315,7 @@ endfunction
 
 function! s:interrupted() abort
   let s:messages = {}
-  echom iced#message#get('interrupted')
+  call iced#message#info('interrupted')
 endfunction
 
 function! iced#nrepl#interrupt(...) abort

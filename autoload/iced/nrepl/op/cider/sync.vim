@@ -3,7 +3,7 @@ set cpo&vim
 
 function! iced#nrepl#op#cider#sync#complete(base, ns_name, context) abort
   if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
+    call iced#message#error('not_connected')
     return ''
   endif
 
@@ -24,7 +24,7 @@ endfunction
 
 function! iced#nrepl#op#cider#sync#ns_list() abort
   if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
+    call iced#message#error('not_connected')
     return ''
   endif
 
@@ -36,7 +36,7 @@ endfunction
 
 function! iced#nrepl#op#cider#sync#ns_vars(ns) abort
   if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
+    call iced#message#error('not_connected')
     return ''
   endif
 
@@ -50,7 +50,7 @@ endfunction
 
 function! iced#nrepl#op#cider#sync#ns_path(ns) abort
   if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
+    call iced#message#error('not_connected')
     return ''
   endif
 

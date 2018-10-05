@@ -5,7 +5,7 @@ let g:iced#nrepl#op#cider#debug#print_length = get(g:, 'iced#nrepl#op#cider#debu
 let g:iced#nrepl#op#cider#debug#print_level = get(g:, 'iced#nrepl#op#cider#debug#print_level', 10)
 
 function! iced#nrepl#op#cider#debug#init() abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   call iced#nrepl#send({
       \ 'op': 'init-debugger',
@@ -16,7 +16,7 @@ function! iced#nrepl#op#cider#debug#init() abort
 endfunction
 
 function! iced#nrepl#op#cider#debug#input(key, in) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'debug-input',
       \ 'session': iced#nrepl#current_session(),

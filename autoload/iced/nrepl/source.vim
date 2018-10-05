@@ -11,10 +11,7 @@ function! s:show_source(resp) abort
 endfunction
 
 function! iced#nrepl#source#show(symbol) abort
-  if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
-    return
-  endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
   let code = printf('(%s/source %s)', iced#nrepl#ns#repl(), symbol)

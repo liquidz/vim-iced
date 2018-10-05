@@ -103,8 +103,7 @@ function! s:resolve_missing(symbol, resp) abort
   else
     let alias_dict = iced#nrepl#ns#alias#dict(iced#nrepl#ns#get())
     if has_key(alias_dict, symbol_alias)
-      echom printf(iced#message#get('alias_exists'), symbol_alias)
-      return
+      return iced#message#error_str(printf(iced#message#get('alias_exists'), symbol_alias))
     endif
 
     let existing_ns = values(alias_dict) + ['clojure.core']
@@ -125,7 +124,7 @@ function! s:resolve_missing(symbol, resp) abort
         \ 'accept': {_, ns_name -> s:add_ns(ns_name, symbol_alias)}
         \ })
   else
-    echom iced#message#get('no_candidates')
+    return iced#message#echom('no_candidates')
   endif
 endfunction
 
