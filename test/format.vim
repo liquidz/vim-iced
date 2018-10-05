@@ -6,6 +6,10 @@ let s:buf = themis#helper('iced_buffer')
 function! s:format_code_relay(msg, formatted) abort
   if a:msg['op'] ==# 'format-code-with-indents'
     return {'status': ['done'], 'formatted': a:formatted}
+  elseif a:msg['op'] ==# 'set-indentation-rules'
+    return {'status': ['done']}
+  elseif a:msg['op'] ==# 'ns-aliases'
+    return {'status': ['done'], 'aliases': {}}
   else
     return {}
   endif

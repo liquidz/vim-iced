@@ -5,10 +5,23 @@ let s:buf = themis#helper('iced_buffer')
 let s:ch = themis#helper('iced_channel')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl.vim')
 
+
+function! s:format_code_relay(msg) abort
+  if a:msg['op'] ==# 'format-code-with-indents'
+    return {'status': ['done'], 'formatted': a:msg['code']}
+  elseif a:msg['op'] ==# 'set-indentation-rules'
+    return {'status': ['done']}
+  elseif a:msg['op'] ==# 'ns-aliases'
+    return {'status': ['done'], 'aliases': {}}
+  else
+    return {}
+  endif
+endfunction
+
 function! s:suite.deep_slurp_test() abort
   call s:ch.inject_dummy({
       \ 'status_value': 'open',
-      \ 'relay': {msg -> (msg['op'] ==# 'format-code-with-indents' ?{'status': ['done'], 'formatted': msg['code']} : {})},
+      \ 'relay': funcref('s:format_code_relay'),
       \ })
 
   call s:buf.start_dummy(['(foo (|bar)) baz'])
