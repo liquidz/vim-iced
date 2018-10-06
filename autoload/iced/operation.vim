@@ -9,10 +9,9 @@ function! iced#operation#eval(type) abort
     silent exe 'normal! `[v`]y'
     let code = @@
     if empty(code)
-      echom iced#message#get('finding_code_error')
-    else
-      call iced#nrepl#eval#code(code)
+      return iced#message#error('finding_code_error')
     endif
+    call iced#nrepl#eval#code(code)
   finally
     let @@ = reg_save
     call winrestview(view)
@@ -27,10 +26,9 @@ function! iced#operation#eval_repl(type) abort
     silent exe 'normal! `[v`]y'
     let code = @@
     if empty(code)
-      echom iced#message#get('finding_code_error')
-    else
-      call iced#nrepl#eval#repl(code)
+      return iced#message#error('finding_code_error')
     endif
+    call iced#nrepl#eval#repl(code)
   finally
     let @@ = reg_save
     call winrestview(view)
@@ -45,10 +43,9 @@ function! iced#operation#macroexpand(type) abort
     silent exe 'normal! `[v`]y'
     let code = @@
     if empty(code)
-      echom iced#message#get('finding_code_error')
-    else
-      call iced#nrepl#macro#expand(code)
+      return iced#message#error('finding_code_error')
     endif
+    call iced#nrepl#macro#expand(code)
   finally
     let @@ = reg_save
     call winrestview(view)
@@ -63,10 +60,9 @@ function! iced#operation#macroexpand_1(type) abort
     silent exe 'normal! `[v`]y'
     let code = @@
     if empty(code)
-      echom iced#message#get('finding_code_error')
-    else
-      call iced#nrepl#macro#expand_1(code)
+      return iced#message#error('finding_code_error')
     endif
+    call iced#nrepl#macro#expand_1(code)
   finally
     let @@ = reg_save
     call winrestview(view)

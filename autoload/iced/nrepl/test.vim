@@ -145,7 +145,6 @@ function! s:test(resp) abort
     let var = substitute(var, '^#''', '', '')
     let i = stridx(var, '/')
     let ns = var[0:i-1]
-    echom printf('FIXME ns <%s>', ns)
     let var = var[i+1:]
     echom printf('Testing: %s', var)
     call iced#nrepl#op#cider#test_var(ns, var, funcref('s:out'))

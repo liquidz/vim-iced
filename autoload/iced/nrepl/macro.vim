@@ -18,19 +18,17 @@ endfunction
 function! iced#nrepl#macro#expand_outer_list() abort
   let code = iced#paredit#get_outer_list()
   if empty(code)
-    echom iced#message#get('finding_code_error')
-  else
-    call iced#nrepl#macro#expand(code)
+    return iced#message#error('finding_code_error')
   endif
+  call iced#nrepl#macro#expand(code)
 endfunction
 
 function! iced#nrepl#macro#expand_1_outer_list() abort
   let code = iced#paredit#get_outer_list()
   if empty(code)
-    echom iced#message#get('finding_code_error')
-  else
-    call iced#nrepl#macro#expand_1(code)
+    return iced#message#error('finding_code_error')
   endif
+  call iced#nrepl#macro#expand_1(code)
 endfunction
 
 let &cpo = s:save_cpo

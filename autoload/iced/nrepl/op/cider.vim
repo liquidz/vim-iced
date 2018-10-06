@@ -2,7 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! iced#nrepl#op#cider#info(symbol, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'info',
       \ 'session': iced#nrepl#current_session(),
@@ -13,7 +13,7 @@ function! iced#nrepl#op#cider#info(symbol, callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#ns_path(ns, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'ns-path',
       \ 'session': iced#nrepl#current_session(),
@@ -23,7 +23,7 @@ function! iced#nrepl#op#cider#ns_path(ns, callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#ns_list(callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'ns-list',
       \ 'session': iced#nrepl#current_session(),
@@ -32,7 +32,7 @@ function! iced#nrepl#op#cider#ns_list(callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#format_code(code, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'format-code',
       \ 'session': iced#nrepl#current_session(),
@@ -42,7 +42,7 @@ function! iced#nrepl#op#cider#format_code(code, callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#format_code(code, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'format-code',
       \ 'session': iced#nrepl#current_session(),
@@ -65,7 +65,7 @@ function! s:tested(resp) abort
 endfunction
 
 function! iced#nrepl#op#cider#test_var(test_ns, test_var, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let test_ns = (empty(a:test_ns) ? iced#nrepl#ns#name() : a:test_ns)
 
   call iced#nrepl#send({
@@ -91,11 +91,7 @@ function! iced#nrepl#op#cider#test_ns(test_ns, callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#retest(callback) abort
-  if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
-    return
-  endif
-
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'retest',
       \ 'session': iced#nrepl#current_session(),
@@ -105,7 +101,7 @@ function! iced#nrepl#op#cider#retest(callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#test_all(callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'test-all',
       \ 'session': iced#nrepl#current_session(),
@@ -115,7 +111,7 @@ function! iced#nrepl#op#cider#test_all(callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#undef(symbol, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'undef',
       \ 'session': iced#nrepl#current_session(),
@@ -127,7 +123,7 @@ function! iced#nrepl#op#cider#undef(symbol, callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#macroexpand_1(code, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'id': iced#nrepl#eval#id(),
       \ 'op': 'macroexpand',
@@ -140,7 +136,7 @@ function! iced#nrepl#op#cider#macroexpand_1(code, callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#macroexpand_all(code, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'id': iced#nrepl#eval#id(),
       \ 'op': 'macroexpand',
@@ -153,7 +149,7 @@ function! iced#nrepl#op#cider#macroexpand_all(code, callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#pprint_eval(code, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'id': iced#nrepl#eval#id(),
       \ 'op': 'eval',
@@ -165,7 +161,7 @@ function! iced#nrepl#op#cider#pprint_eval(code, callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#toggle_trace_ns(ns_name, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'toggle-trace-ns',
       \ 'ns': a:ns_name,
@@ -175,7 +171,7 @@ function! iced#nrepl#op#cider#toggle_trace_ns(ns_name, callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#toggle_trace_var(ns_name, symbol, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'toggle-trace-var',
       \ 'ns': a:ns_name,
@@ -186,7 +182,7 @@ function! iced#nrepl#op#cider#toggle_trace_var(ns_name, symbol, callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#spec_list(callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'spec-list',
       \ 'session': iced#nrepl#current_session(),
@@ -195,7 +191,7 @@ function! iced#nrepl#op#cider#spec_list(callback) abort
 endfunction
 
 function! iced#nrepl#op#cider#spec_form(spec_name, callback) abort
-  if !iced#nrepl#is_connected() | echom iced#message#get('not_connected') | return | endif
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'spec-form',
       \ 'spec-name': a:spec_name,

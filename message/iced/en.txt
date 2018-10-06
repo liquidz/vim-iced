@@ -1,4 +1,5 @@
 {
+  'connecting':         'Connecting...',
   'auto_connect':       'Auto connecting...',
   'no_port_file':       '.nrepl-port is not found.',
   'connect_error':      'Failed to connect.',
@@ -11,6 +12,7 @@
   'ns_not_found':       '(ns ..) form is not found.',
   'sign_not_found':     'Sign is not found.',
   'required':           'Required.',
+  'all_reloaded':       'All reloaded.',
   'timeout':            'Timed out.',
   'invalid_cljs_env':   'Invalid CLJS environment.',
   'started_cljs_repl':  'CLJS repl is started.',
@@ -45,5 +47,6 @@
   'used_locals_error':  'Failed to fetch used-locals.',
   'canceled':           'Canceled.',
   'invalid_session':    'Session error. You should be in %s session.',
+  'grimoire_error':     'Invalid response from Grimoire.',
 }
 #vim:ft=ruby

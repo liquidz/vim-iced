@@ -9,7 +9,18 @@ function! iced#nrepl#op#iced#sync#system_info() abort
         \ })
 endfunction
 
-function! iced#nrepl#op#iced#sync#format_code(code, indents) abort
+function! iced#nrepl#op#iced#sync#set_indentation_rules(rules) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  return iced#nrepl#sync#send({
+        \ 'id': iced#nrepl#eval#id(),
+        \ 'op': 'set-indentation-rules',
+        \ 'sesion': iced#nrepl#current_session(),
+        \ 'rules': a:rules,
+        \ })
+endfunction
+
+function! iced#nrepl#op#iced#sync#format_code(code, alias_map) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   return iced#nrepl#sync#send({
@@ -17,7 +28,7 @@ function! iced#nrepl#op#iced#sync#format_code(code, indents) abort
         \ 'op': 'format-code-with-indents',
         \ 'sesion': iced#nrepl#current_session(),
         \ 'code': a:code,
-        \ 'indents': a:indents,
+        \ 'alias-map': a:alias_map,
         \ })
 endfunction
 

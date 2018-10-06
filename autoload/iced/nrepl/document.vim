@@ -69,7 +69,7 @@ endfunction
 
 function! s:generate_doc(resp) abort
   if !has_key(a:resp, 'status') || a:resp['status'] != ['done']
-    echom iced#message#get('not_found')
+    call iced#message#error('not_found')
     return ''
   endif
 
@@ -101,8 +101,7 @@ endfunction
 
 function! iced#nrepl#document#open(symbol) abort
   if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
-    return
+    return iced#message#error('not_connected')
   endif
 
   let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol

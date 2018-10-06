@@ -47,8 +47,7 @@ endfunction
 
 function! ctrlp#iced#start(config) abort
   if !exists('g:loaded_ctrlp')
-    echom iced#message#get('no_ctrlp')
-    return
+    return iced#message#error('no_ctrlp')
   endif
 
   let s:config = copy(a:config)

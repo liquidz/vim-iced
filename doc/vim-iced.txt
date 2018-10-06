@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.5.1
+Version: 0.5.2
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -85,7 +85,7 @@ Leiningen                                           *vim-iced-manual-leiningen*
 >
   {:user
    {:dependencies [[nrepl "0.4.5"]
-                   [iced-nrepl "0.1.8"]
+                   [iced-nrepl "0.1.9"]
                    [cider/cider-nrepl "0.18.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
@@ -113,7 +113,7 @@ Boot                                                     *vim-iced-manual-boot*
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
-      [iced-nrepl "0.1.8"]])
+      [iced-nrepl "0.1.9"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete

@@ -42,8 +42,7 @@ let s:env = {
 function! iced#nrepl#cljs#repl(env_key) abort
   let env_key = iced#compat#trim(empty(a:env_key) ? g:iced#nrepl#cljs#default_env : a:env_key)
   if !has_key(s:env, env_key)
-    echom iced#message#get('invalid_cljs_env')
-    return
+    return iced#message#error('invalid_cljs_env')
   endif
 
   if iced#nrepl#current_session_key() ==# 'clj' && empty(s:using_env_key)

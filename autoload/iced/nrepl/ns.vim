@@ -69,8 +69,7 @@ endfunction
 
 function! s:cljs_load_file(callback) abort
   if !iced#nrepl#is_connected()
-    echom iced#message#get('not_connected')
-    return
+    return iced#message#error('not_connected')
   endif
 
   call iced#nrepl#send({
@@ -93,7 +92,7 @@ function! s:required(resp, callback) abort
 endfunction
 
 function! iced#nrepl#ns#require() abort
-  let Cb = {_ -> iced#util#echo_messages('Required')}
+  let Cb = {_ -> iced#message#info('required')}
   if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#current_session_key() ==# 'clj'
@@ -104,7 +103,7 @@ function! iced#nrepl#ns#require() abort
 endfunction
 
 function! iced#nrepl#ns#require_all() abort
-  let Cb = {_ -> iced#util#echo_messages('All reloaded')}
+  let Cb = {_ -> iced#message#info('all_reloaded')}
   if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#current_session_key() ==# 'clj'

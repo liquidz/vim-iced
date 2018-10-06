@@ -16,10 +16,10 @@ function! s:search(resp) abort
     let ns_name = a:resp['ns']
     let symbol = a:resp['name']
 
-    echom printf('Connecting to grimoire ...')
+    call iced#message#echom('connecting')
     call iced#nrepl#op#iced#grimoire(platform, ns_name, symbol, funcref('s:grimoire'))
   else
-    echom printf('Invalid response from Grimoire.')
+    return iced#message#error('grimoire_error')
   endif
 endfunction
 
