@@ -1,4 +1,4 @@
-personal_ws-1.1 en 153 
+personal_ws-1.1 en 154 
 grimoire
 IcedGrep
 IcedDocumentOpen
@@ -143,6 +143,7 @@ IcedBarf
 ctrlp
 IcedRequire
 IcedInterrupt
+IcedRelatedNamespace
 IcedUndef
 IcedAddMissing
 IcedStartCljsRepl
