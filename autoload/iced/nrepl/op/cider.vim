@@ -1,6 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+""" info {{{
 function! iced#nrepl#op#cider#info(symbol, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
@@ -10,8 +11,9 @@ function! iced#nrepl#op#cider#info(symbol, callback) abort
       \ 'ns': iced#nrepl#ns#name(),
       \ 'callback': a:callback,
       \ })
-endfunction
+endfunction " }}}
 
+""" ns-path {{{
 function! iced#nrepl#op#cider#ns_path(ns, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
@@ -20,8 +22,9 @@ function! iced#nrepl#op#cider#ns_path(ns, callback) abort
       \ 'ns': a:ns,
       \ 'callback': a:callback,
       \ })
-endfunction
+endfunction " }}}
 
+""" ns-list {{{
 function! iced#nrepl#op#cider#ns_list(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
@@ -29,28 +32,19 @@ function! iced#nrepl#op#cider#ns_list(callback) abort
       \ 'session': iced#nrepl#current_session(),
       \ 'callback': a:callback,
       \ })
-endfunction
+endfunction " }}}
 
-function! iced#nrepl#op#cider#format_code(code, callback) abort
+""" ns-load-all {{{
+function! iced#nrepl#op#cider#ns_load_all(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
-      \ 'op': 'format-code',
+      \ 'op': 'ns-load-all',
       \ 'session': iced#nrepl#current_session(),
-      \ 'code': a:code,
       \ 'callback': a:callback,
       \ })
-endfunction
+endfunction " }}}
 
-function! iced#nrepl#op#cider#format_code(code, callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#nrepl#send({
-      \ 'op': 'format-code',
-      \ 'session': iced#nrepl#current_session(),
-      \ 'code': a:code,
-      \ 'callback': a:callback,
-      \ })
-endfunction
-
+""" test {{{
 let s:test_buffer = []
 
 function! s:test_handler(resp) abort
@@ -88,8 +82,9 @@ function! iced#nrepl#op#cider#test_ns(test_ns, callback) abort
         \ 'callback': {resp -> a:callback(s:tested(resp))},
         \ })
   endif
-endfunction
+endfunction " }}}
 
+""" retest {{{
 function! iced#nrepl#op#cider#retest(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
@@ -98,8 +93,9 @@ function! iced#nrepl#op#cider#retest(callback) abort
       \ 'id': iced#nrepl#eval#id(),
       \ 'callback': {resp -> a:callback(s:tested(resp))},
       \ })
-endfunction
+endfunction " }}}
 
+""" test-all {{{
 function! iced#nrepl#op#cider#test_all(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
@@ -108,8 +104,9 @@ function! iced#nrepl#op#cider#test_all(callback) abort
       \ 'id': iced#nrepl#eval#id(),
       \ 'callback': {resp -> a:callback(s:tested(resp))},
       \ })
-endfunction
+endfunction " }}}
 
+""" undef {{{
 function! iced#nrepl#op#cider#undef(symbol, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
@@ -120,8 +117,9 @@ function! iced#nrepl#op#cider#undef(symbol, callback) abort
       \ 'verbose': v:false,
       \ 'callback': a:callback,
       \ })
-endfunction
+endfunction " }}}
 
+""" macroexpand {{{
 function! iced#nrepl#op#cider#macroexpand_1(code, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
@@ -146,8 +144,53 @@ function! iced#nrepl#op#cider#macroexpand_all(code, callback) abort
       \ 'expander': 'macroexpand-all',
       \ 'callback': a:callback,
       \ })
-endfunction
+endfunction " }}}
 
+""" toggle-trace-ns {{{
+function! iced#nrepl#op#cider#toggle_trace_ns(ns_name, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+      \ 'op': 'toggle-trace-ns',
+      \ 'ns': a:ns_name,
+      \ 'session': iced#nrepl#current_session(),
+      \ 'callback': a:callback,
+      \ })
+endfunction " }}}
+
+""" toggle-trace-var {{{
+function! iced#nrepl#op#cider#toggle_trace_var(ns_name, symbol, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+      \ 'op': 'toggle-trace-var',
+      \ 'ns': a:ns_name,
+      \ 'sym': a:symbol,
+      \ 'session': iced#nrepl#current_session(),
+      \ 'callback': a:callback,
+      \ })
+endfunction " }}}
+
+""" spec-list {{{
+function! iced#nrepl#op#cider#spec_list(callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+      \ 'op': 'spec-list',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'callback': a:callback,
+      \ })
+endfunction " }}}
+
+""" spec-form {{{
+function! iced#nrepl#op#cider#spec_form(spec_name, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+      \ 'op': 'spec-form',
+      \ 'spec-name': a:spec_name,
+      \ 'session': iced#nrepl#current_session(),
+      \ 'callback': a:callback,
+      \ })
+endfunction " }}}
+
+""" pprint {{{
 function! iced#nrepl#op#cider#pprint_eval(code, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
@@ -158,47 +201,7 @@ function! iced#nrepl#op#cider#pprint_eval(code, callback) abort
       \ 'session': iced#nrepl#current_session(),
       \ 'callback': a:callback,
       \ })
-endfunction
-
-function! iced#nrepl#op#cider#toggle_trace_ns(ns_name, callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#nrepl#send({
-      \ 'op': 'toggle-trace-ns',
-      \ 'ns': a:ns_name,
-      \ 'session': iced#nrepl#current_session(),
-      \ 'callback': a:callback,
-      \ })
-endfunction
-
-function! iced#nrepl#op#cider#toggle_trace_var(ns_name, symbol, callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#nrepl#send({
-      \ 'op': 'toggle-trace-var',
-      \ 'ns': a:ns_name,
-      \ 'sym': a:symbol,
-      \ 'session': iced#nrepl#current_session(),
-      \ 'callback': a:callback,
-      \ })
-endfunction
-
-function! iced#nrepl#op#cider#spec_list(callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#nrepl#send({
-      \ 'op': 'spec-list',
-      \ 'session': iced#nrepl#current_session(),
-      \ 'callback': a:callback,
-      \ })
-endfunction
-
-function! iced#nrepl#op#cider#spec_form(spec_name, callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#nrepl#send({
-      \ 'op': 'spec-form',
-      \ 'spec-name': a:spec_name,
-      \ 'session': iced#nrepl#current_session(),
-      \ 'callback': a:callback,
-      \ })
-endfunction
+endfunction " }}}
 
 call iced#nrepl#register_handler('test', funcref('s:test_handler'))
 call iced#nrepl#register_handler('retest', funcref('s:test_handler'))
