@@ -2,6 +2,8 @@ VIM_AUTO_RTP
 doc/tags
 .vim-themis
 .vim-sexp
+.vimdoc
 .cpcache
 .nrepl-port
 *.bak
+target
