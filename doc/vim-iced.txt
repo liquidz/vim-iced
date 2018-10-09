@@ -505,6 +505,12 @@ Commands                                                    *vim-iced-commands*
   `ctrlp.vim` is required to select namespace.
   Key is mapped to |<Plug>(iced_browse_namespace)|.
 
+                                                        *:IcedRelatedNamespace*
+:IcedRelatedNamespace
+  Browse namespaces relating to current namespace, and open selected one.
+  `ctrlp.vim` is required to select namespace.
+  Key is mapped to |<Plug>(iced_related_namespace)|.
+
                                                           *:IcedBrowseFunction*
 :IcedBrowseFunction
   Browse project functions, and open selected function.
@@ -821,6 +827,10 @@ Key Mappings                                            *vim-iced-key-mappings*
 <Plug>(iced_browse_namespace)
   Same as |:IcedBrowseNamespace|.
 
+                                               *<Plug>(iced_related_namespace)*
+<Plug>(iced_related_namespace)
+  Same as |:IcedRelatedNamespace|.
+
                                                  *<Plug>(iced_browse_function)*
 <Plug>(iced_browse_function)
   Same as |:IcedBrowseFunction|.
@@ -1059,6 +1069,7 @@ g:iced_enable_default_key_mappings
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>hh     <Plug>(iced_command_palette)
   <Leader>bn     <Plug>(iced_browse_namespace)
+  <Leader>br     <Plug>(iced_related_namespace)
   <Leader>bf     <Plug>(iced_browse_function)
   <Leader>bs     <Plug>(iced_browse_spec)
   <Leader>jn     <Plug>(iced_jump_to_next_sign)
