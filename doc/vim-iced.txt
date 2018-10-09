@@ -7,37 +7,37 @@ License: MIT LICENSE
 ==============================================================================
 CONTENTS                                                    *vim-iced-contents*
 
-Introduction         |vim-iced-introduction|
-Install              |vim-iced-install|
-  Iced command       |vim-iced-install-command|
-  Manual Install     |vim-iced-install-manually|
-    Leiningen        |vim-iced-manual-leiningen|
-    Boot             |vim-iced-manual-boot|
-nREPL Connection     |vim-iced-nrepl-connection|
-ClojureScript        |vim-iced-clojurescript|
-Evaluating           |vim-iced-evaluating|
-  Stdout Buffer      |vim-iced-stdout-buffer|
-Testing              |vim-iced-testing|
-Debugging            |vim-iced-debugging|
-Skeleton             |vim-iced-skeleton|
-Tag Jump             |vim-iced-tag-jump|
-Editing S-exp        |vim-iced-editing-s-exp|
-  Formatting         |vim-iced-formatting|
-  Refactoring        |vim-iced-refactoring|
-  Linting            |vim-iced-linting|
-Interface            |vim-iced-interface|
-  Commands           |vim-iced-commands|
-  Functions          |vim-iced-functions|
-  Key Mappings       |vim-iced-key-mappings|
-Customizing          |vim-iced-customizing|
-  Indent rules       |vim-iced-customizing-indents|
-  Linters            |vim-iced-customizing-linters|
-  Command palettes   |vim-iced-customizing-palette|
-  Default keys       |vim-iced-customizing-default-keys|
-Changelog            |vim-iced-changelog|
+  Introduction                 |vim-iced-introduction|
+  Install                      |vim-iced-install|
+    Iced command               |vim-iced-install-command|
+    Manual Install             |vim-iced-install-manually|
+      Leiningen                |vim-iced-manual-leiningen|
+      Boot                     |vim-iced-manual-boot|
+  nREPL Connection             |vim-iced-nrepl-connection|
+  ClojureScript                |vim-iced-clojurescript|
+  Evaluating                   |vim-iced-evaluating|
+    Stdout Buffer              |vim-iced-stdout-buffer|
+  Testing                      |vim-iced-testing|
+  Debugging                    |vim-iced-debugging|
+  Skeleton                     |vim-iced-skeleton|
+  Tag Jump                     |vim-iced-tag-jump|
+  Editing S-exp                |vim-iced-editing-s-exp|
+    Formatting                 |vim-iced-formatting|
+    Refactoring                |vim-iced-refactoring|
+    Linting                    |vim-iced-linting|
+  Interface                    |vim-iced-interface|
+    Commands                   |vim-iced-commands|
+    Functions                  |vim-iced-functions|
+    Key Mappings               |vim-iced-key-mappings|
+  Customizing                  |vim-iced-customizing|
+    Indent rules               |vim-iced-customizing-indents|
+    Linters                    |vim-iced-customizing-linters|
+    Command palettes           |vim-iced-customizing-palette|
+    Default keys               |vim-iced-customizing-default-keys|
+  Changelog                    |vim-iced-changelog|
 
 ==============================================================================
-Introduction                                            *vim-iced-introduction*
+INTRODUCTION                                            *vim-iced-introduction*
 
   Clojure interactive development environment for Vim8/Neovim.
 
@@ -49,7 +49,7 @@ Introduction                                            *vim-iced-introduction*
   - https://github.com/liquidz/vim-iced
 
 ==============================================================================
-Install                                                      *vim-iced-install*
+INSTALL                                                      *vim-iced-install*
 
   Vim plugin dependencies:
 
@@ -64,17 +64,18 @@ Install                                                      *vim-iced-install*
   - Boot user: |vim-iced-boot|
 
 ------------------------------------------------------------------------------
-Iced command                                         *vim-iced-install-command*
+ICED COMMAND                                         *vim-iced-install-command*
 
   vim-iced provides `iced` command to use vim-iced easily.
 
   Add `$PATH` environment variable to `/path/to/vim-iced/bin`.
 
 ------------------------------------------------------------------------------
-Manual Install                                      *vim-iced-install-manually*
+MANUAL INSTALL                                      *vim-iced-install-manually*
 
-..............................................................................
-Leiningen                                           *vim-iced-manual-leiningen*
+
+                                                    *vim-iced-manual-leiningen*
+LEININGEN~
 
   $HOME/.lein/profile.clj
 >
@@ -98,8 +99,9 @@ Leiningen                                           *vim-iced-manual-leiningen*
                                       iced.nrepl/wrap-iced]}
     :plugins [[refactor-nrepl "2.4.0"]]}}
 <
-..............................................................................
-Boot                                                     *vim-iced-manual-boot*
+
+                                                         *vim-iced-manual-boot*
+BOOT~
 
   $HOME/.boot/profile.boot
 >
@@ -128,7 +130,7 @@ Boot                                                     *vim-iced-manual-boot*
       iced.nrepl/wrap-iced])
 <
 ==============================================================================
-nREPL Connection                                    *vim-iced-nrepl-connection*
+NREPL CONNECTION                                    *vim-iced-nrepl-connection*
 
   REPL needs to be activated beforehand.
   - `iced repl` to start REPL
@@ -142,7 +144,7 @@ nREPL Connection                                    *vim-iced-nrepl-connection*
   |:IcedDisconnect| to disconnect nREPL.
 
 ==============================================================================
-ClojureScript                                          *vim-iced-clojurescript*
+CLOJURE SCRIPT                                         *vim-iced-clojurescript*
 
   Supports following environment currently.
   - figwheel
@@ -157,7 +159,7 @@ ClojureScript                                          *vim-iced-clojurescript*
   |IcedQuitCljsRepl| to quit it.
 
 ==============================================================================
-Evaluating                                                *vim-iced-evaluating*
+EVALUATING                                                *vim-iced-evaluating*
 
   |:IcedEval| is the simplest way to evaluate forms.
   But working with {vim-sexp} is the best.
@@ -167,7 +169,7 @@ Evaluating                                                *vim-iced-evaluating*
   See details: |<Plug>(iced_eval_repl)|
 
 ------------------------------------------------------------------------------
-Stdout Buffer                                          *vim-iced-stdout-buffer*
+STDOUT BUFFER                                          *vim-iced-stdout-buffer*
 
   Standard outputs will be outputted to dedicated buffer.
   |:IcedStdoutBufferOpen| to open it.
@@ -177,7 +179,7 @@ Stdout Buffer                                          *vim-iced-stdout-buffer*
   |g:iced#buffer#stdout#file| option is available for writing file.
 
 ==============================================================================
-Testing                                                      *vim-iced-testing*
+TESTING                                                      *vim-iced-testing*
 
   vim-iced provides following test commands.
   - |:IcedTestUnderCursor|
@@ -197,7 +199,7 @@ Testing                                                      *vim-iced-testing*
   aug END
 <
 ==============================================================================
-Debugging                                                  *vim-iced-debugging*
+DEBUGGING                                                  *vim-iced-debugging*
 
   vim-iced supports cider's `#dbg` and `#break` reader literals.
   Easiest way is to put `#dbg` to your code, and evaluate it.
@@ -210,7 +212,7 @@ Debugging                                                  *vim-iced-debugging*
        #dbg (recur b (+ a b) (dec n)))))
 <
 ==============================================================================
-Skeleton                                                    *vim-iced-skeleton*
+SKELETON                                                    *vim-iced-skeleton*
 
   vim-iced provides code skeleton when you open new clojure files.
   Currently, these extensions are supported.
@@ -219,20 +221,20 @@ Skeleton                                                    *vim-iced-skeleton*
   - `*.cljc`
 
 ==============================================================================
-Tag Jump                                                    *vim-iced-tag-jump*
+TAG JUMP                                                    *vim-iced-tag-jump*
 
   |:IcedDefJump| to jump to definition.
   |:IcedDefBack| to jump back.
 
 ==============================================================================
-Editing S-exp                                          *vim-iced-editing-s-exp*
+EDITING S-EXP                                          *vim-iced-editing-s-exp*
 
   Provides slurp and barf function.
   - |IcedSlurp|
   - |IcedBarf|
 
 ------------------------------------------------------------------------------
-Formatting                                                *vim-iced-formatting*
+FORMATTING                                                *vim-iced-formatting*
 
   vim-sexp also provides formatting codes function.
   If you want to use vim-iced's formatting function,
@@ -241,7 +243,7 @@ Formatting                                                *vim-iced-formatting*
   let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
 <
 ------------------------------------------------------------------------------
-Refactoring                                              *vim-iced-refactoring*
+REFACTORING                                              *vim-iced-refactoring*
 
   Provides following functions powered by refactor-nrepl.
   - |:IcedCleanNs| (|<Plug>(iced_clean_ns)|)
@@ -252,7 +254,7 @@ Refactoring                                              *vim-iced-refactoring*
   - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
 
 ------------------------------------------------------------------------------
-Linting                                                      *vim-iced-linting*
+LINTING                                                      *vim-iced-linting*
 
   vim-iced can collaborate with `jonase/eastwood` and `joker`.
   - https://github.com/jonase/eastwood
@@ -278,10 +280,10 @@ Linting                                                      *vim-iced-linting*
   To define which linters to use, see |g:iced#lint#linters|.
 
 ==============================================================================
-Interface                                                  *vim-iced-interface*
+INTERFACE                                                  *vim-iced-interface*
 
 ------------------------------------------------------------------------------
-Commands                                                    *vim-iced-commands*
+COMMANDS                                                    *vim-iced-commands*
 
                                                                  *:IcedConnect*
 :IcedConnect [{port}]
@@ -622,7 +624,7 @@ Commands                                                    *vim-iced-commands*
   Key is mapped to |<Plug>(iced_goto_let)|.
 
 ------------------------------------------------------------------------------
-Functions                                                  *vim-iced-functions*
+FUNCTIONS                                                  *vim-iced-functions*
 
                                                                 *iced#status()*
 iced#status()
@@ -638,7 +640,7 @@ iced#status()
 <
 
 ------------------------------------------------------------------------------
-Key Mappings                                            *vim-iced-key-mappings*
+KEY MAPPINGS                                            *vim-iced-key-mappings*
 
                                                          *<Plug>(iced_connect)*
 <Plug>(iced_connect)
@@ -778,7 +780,7 @@ Key Mappings                                            *vim-iced-key-mappings*
 
                                                    *<Plug>(iced_form_document)*
 <Plug>(iced_form_document)
-  Same as |:IcedEchoFormDocument|.
+  Same as |:IcedFormDocument|.
   This is convenient to display documents about the form you are editing.
 >
   aug vim_iced_echo_document_setting
@@ -904,7 +906,7 @@ Key Mappings                                            *vim-iced-key-mappings*
   Same as |:IcedGotoLet|.
 
 ==============================================================================
-Customizing                                              *vim-iced-customizing*
+CUSTOMIZING                                              *vim-iced-customizing*
 
                                                             *g:iced#nrepl#host*
 g:iced#nrepl#host
@@ -984,7 +986,7 @@ g:iced#grep#target
     `'{{user.dir}}{{separator}}**{{separator}}*.{clj,cljs,cljc}'`.
 
 ------------------------------------------------------------------------------
-Indent rules                                     *vim-iced-customizing-indents*
+INDENT RULES                                     *vim-iced-customizing-indents*
 
                                                            *g:iced#format#rule*
 g:iced#format#rule
@@ -996,7 +998,7 @@ g:iced#format#rule
         \ }
 <
 ------------------------------------------------------------------------------
-Linters                                          *vim-iced-customizing-linters*
+LINTERS                                          *vim-iced-customizing-linters*
 
                                                           *g:iced#lint#linters*
 g:iced#lint#linters
@@ -1017,7 +1019,7 @@ g:iced_enable_auto_linting
   See details: |vim-iced-linting|
 
 ------------------------------------------------------------------------------
-Command palettes                                 *vim-iced-customizing-palette*
+COMMAND PALETTES                                 *vim-iced-customizing-palette*
 
                                                        *g:iced#palette#palette*
 g:iced#palette#palette
@@ -1029,7 +1031,7 @@ g:iced#palette#palette
         \ }
 <
 ------------------------------------------------------------------------------
-Default keys                                *vim-iced-customizing-default-keys*
+DEFAULT KEYS                                *vim-iced-customizing-default-keys*
 
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
@@ -1083,9 +1085,9 @@ g:iced_enable_default_key_mappings
   ==             <Plug>(iced_format)
 
 ==============================================================================
-Changelog                                                  *vim-iced-changelog*
+CHANGELOG                                                  *vim-iced-changelog*
 
-See `git log`.
+See `git log` .
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:
