@@ -64,6 +64,7 @@ function! s:move_cursor_and_set_highlight(resp) abort
     let l = max([len(expand('<cword>'))-1, 0])
   endif
   call iced#highlight#clear()
+  call iced#highlight#set_by_line('DiffText', pos[1])
   call iced#highlight#set_by_position('Search', pos[1], pos[2], pos[2]+l)
 endfunction
 

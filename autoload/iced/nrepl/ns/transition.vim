@@ -54,5 +54,11 @@ function! iced#nrepl#ns#transition#list() abort
   " endif
 endfunction
 
+function! iced#nrepl#ns#transition#related() abort
+  let ns_name = iced#nrepl#ns#name()
+  call iced#message#info('fetching')
+  call iced#nrepl#op#iced#related_namespaces(ns_name, funcref('s:select_ns_from_list'))
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
