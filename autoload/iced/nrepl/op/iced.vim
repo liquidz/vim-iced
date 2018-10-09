@@ -11,6 +11,7 @@ function! s:concat_handler(key, resp) abort
   return s:concat_results[a:key]
 endfunction
 
+""" lint-file {{{
 function! iced#nrepl#op#iced#lint_file(file, linters, callback) abort
   if !iced#nrepl#is_connected() | return | endif
 
@@ -29,8 +30,9 @@ function! iced#nrepl#op#iced#lint_file(file, linters, callback) abort
 
   let s:concat_results['lint-warnings'] = []
   call iced#nrepl#send(msg)
-endfunction
+endfunction " }}}
 
+""" grimoire {{{
 function! iced#nrepl#op#iced#grimoire(platform, ns_name, symbol, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
@@ -42,8 +44,9 @@ function! iced#nrepl#op#iced#grimoire(platform, ns_name, symbol, callback) abort
         \ 'symbol': a:symbol,
         \ 'callback': a:callback,
         \ })
-endfunction
+endfunction " }}}
 
+""" project-namespaces {{{
 function! iced#nrepl#op#iced#project_namespaces(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let s:concat_results['namespaces'] = []
@@ -53,8 +56,9 @@ function! iced#nrepl#op#iced#project_namespaces(callback) abort
         \ 'sesion': iced#nrepl#current_session(),
         \ 'callback': a:callback,
         \ })
-endfunction
+endfunction " }}}
 
+""" project-functions {{{
 function! iced#nrepl#op#iced#project_functions(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let s:concat_results['functions'] = []
@@ -64,7 +68,7 @@ function! iced#nrepl#op#iced#project_functions(callback) abort
         \ 'sesion': iced#nrepl#current_session(),
         \ 'callback': a:callback,
         \ })
-endfunction
+endfunction " }}}
 
 call iced#nrepl#register_handler('lint-file', {resp -> s:concat_handler('lint-warnings', resp)})
 call iced#nrepl#register_handler('project-namespaces', {resp -> s:concat_handler('namespaces', resp)})
