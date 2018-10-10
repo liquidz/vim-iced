@@ -7,7 +7,11 @@ let s:D = s:V.import('Data.Dict')
 
 function! s:generate_javadoc(resp) abort
   let doc = []
-  call add(doc, printf('# %s/%s', a:resp['class'], a:resp['member']))
+  if has_key(a:resp, 'member')
+    call add(doc, printf('# %s/%s', a:resp['class'], a:resp['member']))
+  else
+    call add(doc, printf('# %s', a:resp['class']))
+  endif
 
   if has_key(a:resp, 'arglists-str')
     call add(doc, printf('  %s', join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")))

@@ -108,14 +108,8 @@ function! iced#nrepl#eval#undef(symbol) abort
   call iced#nrepl#op#cider#undef(symbol, {resp -> s:undefined(resp, symbol)})
 endfunction
 
-function! s:print_last(resp) abort
-  if has_key(a:resp, 'pprint-out') && !empty(a:resp['pprint-out'])
-    call iced#buffer#stdout#append(a:resp['pprint-out'])
-  endif
-endfunction
-
 function! iced#nrepl#eval#print_last() abort
-  call iced#nrepl#op#cider#pprint_eval('*1', funcref('s:print_last'))
+  call iced#nrepl#op#cider#pprint_eval('*1', {_ -> v:true})
 endfunction
 
 function! iced#nrepl#eval#outer_top_list() abort

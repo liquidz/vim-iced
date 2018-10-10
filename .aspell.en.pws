@@ -1,4 +1,4 @@
-personal_ws-1.1 en 154 
+personal_ws-1.1 en 155 
 grimoire
 IcedGrep
 IcedDocumentOpen
@@ -37,6 +37,7 @@ affd
 belowright
 linter
 IcedGotoLet
+IcedTestSpecCheck
 undef
 figwheel
 IcedThreadLast

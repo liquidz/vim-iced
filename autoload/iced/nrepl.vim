@@ -149,6 +149,9 @@ function! s:dispatcher(ch, resp) abort
         if has_key(rsp, 'err')
           call iced#buffer#stdout#append(rsp['err'])
         endif
+        if has_key(rsp, 'pprint-out')
+          call iced#buffer#stdout#append(rsp['pprint-out'])
+        endif
       endfor
     endif
 

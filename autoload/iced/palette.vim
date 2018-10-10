@@ -8,7 +8,7 @@ let s:default_palette = [
       \ 'EvalNs',
       \ 'Require', 'RequireAll',
       \ 'PrintLast',
-      \ 'TestNs', 'TestAll', 'TestRedo', 'TestRerunLast',
+      \ 'TestNs', 'TestAll', 'TestRedo', 'TestSpecCheck', 'TestRerunLast',
       \ 'TestBufferOpen',
       \ 'StdoutBufferOpen', 'StdoutBufferClear', 'StdoutBufferClose',
       \ 'DocumentClose',

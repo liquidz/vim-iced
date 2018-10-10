@@ -83,6 +83,19 @@ function! iced#nrepl#op#iced#project_functions(callback) abort
         \ })
 endfunction " }}}
 
+""" spec-check {{{
+function! iced#nrepl#op#iced#spec_check(symbol, num_tests, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#eval#id(),
+        \ 'op': 'spec-check',
+        \ 'sesion': iced#nrepl#current_session(),
+        \ 'symbol': a:symbol,
+        \ 'num-tests': a:num_tests,
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
 call iced#nrepl#register_handler('lint-file', {resp -> s:concat_handler('lint-warnings', resp)})
 call iced#nrepl#register_handler('project-namespaces', {resp -> s:concat_handler('namespaces', resp)})
 call iced#nrepl#register_handler('related-namespaces', {resp -> s:concat_handler('related-namespaces', resp)})
