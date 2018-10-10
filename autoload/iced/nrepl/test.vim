@@ -5,7 +5,6 @@ let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
-let s:last_test_var = ''
 let s:last_test = {}
 let g:iced#nrepl#test#spec_num_tests = get(g:, 'iced#nrepl#test#spec_num_tests', 10)
 
@@ -142,7 +141,7 @@ function! s:test(resp) abort
     call iced#nrepl#eval#err(a:resp['err'])
   elseif has_key(a:resp, 'value')
     let var = a:resp['value']
-    let s:last_test_var = var
+    let s:last_test = {'type': 'test-var', 'var': var}
 
     let var = substitute(var, '^#''', '', '')
     let i = stridx(var, '/')
@@ -164,13 +163,6 @@ function! iced#nrepl#test#under_cursor() abort
     call iced#sign#unplace_all()
     call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)}, option)})
   endif
-endfunction
-
-function! iced#nrepl#test#rerun_last() abort
-  if empty(s:last_test_var)
-    return
-  endif
-  call s:test({'value': s:last_test_var})
 endfunction
 
 function! iced#nrepl#test#ns() abort
@@ -267,6 +259,18 @@ function! iced#nrepl#test#spec_check(...) abort
     call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:current_var(num_tests, resp)})})
   endif
 endfunction " }}}
+
+function! iced#nrepl#test#rerun_last() abort
+  if empty(s:last_test)
+    return
+  endif
+
+  if s:last_test['type'] ==# 'test-var'
+    call s:test({'value': s:last_test['var']})
+  elseif s:last_test['type'] ==# 'spec-check'
+    call s:current_var(s:last_test['num_tests'], {'value': s:last_test['var']})
+  endif
+endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
