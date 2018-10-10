@@ -35,6 +35,7 @@
   'ns_list_error':      'Failed to fetch ns list.',
   'spec_list_error':    'Failed to fetch spec list.',
   'spec_form_error':    'Failed to fetch spec form.',
+  'spec_check_error':   'Failed to check spec.',
   'no_spec':            'No spec form is found.',
   'testing':            'Testing...',
   'retesting':          'Re-testing...',
