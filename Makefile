@@ -41,7 +41,7 @@ lint:
 clean:
 	/bin/rm -rf autoload/vital*
 	/bin/rm -f bin/iced
-	/bin/rm rm -rf target
+	/bin/rm -rf target
 
 bin:
 	clojure -A:jackin -m iced-jackin
