@@ -6,6 +6,8 @@ let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
 let s:last_test_var = ''
+let s:last_test = {}
+let g:iced#nrepl#test#spec_num_tests = get(g:, 'iced#nrepl#test#spec_num_tests', 10)
 
 function! s:error_message(test) abort
   if has_key(a:test, 'context') && !empty(a:test['context'])
@@ -213,6 +215,58 @@ function! iced#nrepl#test#redo() abort
     call winrestview(view)
   endtry
 endfunction
+
+" test#spec_check {{{
+function! s:spec_check(var, resp) abort
+  if !has_key(a:resp, 'result') | return iced#message#error('spec_check_error') | endif
+  let num_tests = a:resp['num-tests']
+
+  if a:resp['result'] ==# 'OK'
+    if num_tests == 0
+      let msg = printf('%s: No tests.', a:var)
+    else
+      let msg = printf('%s: Ran %d tests. Passed.', a:var, num_tests)
+    endif
+    return iced#message#info_str(msg)
+  else
+    if has_key(a:resp, 'message')
+      let msg = printf('%s: Ran %d tests. Failed because ''%s'' with %s args.',
+            \ a:var, num_tests, a:resp['message'], a:resp['fail'])
+    else
+      let msg = printf('%s: Ran %d tests. Failed with %s args.',
+            \ a:var, num_tests, a:resp['fail'])
+    endif
+    return iced#message#error_str(msg)
+  endif
+endfunction
+
+function! s:current_var(num_tests, resp) abort
+  if has_key(a:resp, 'err')
+    call iced#nrepl#eval#err(a:resp['err'])
+  elseif has_key(a:resp, 'value')
+    let var = a:resp['value']
+    let s:last_test = {'type': 'spec-check', 'var': var, 'num_tests': a:num_tests}
+
+    let var = substitute(var, '^#''', '', '')
+    call iced#nrepl#op#iced#spec_check(var, a:num_tests, {resp -> s:spec_check(var, resp)})
+  endif
+endfunction
+
+function! iced#nrepl#test#spec_check(...) abort
+  let num_tests = get(a:, 1, '')
+  let num_tests = str2nr(num_tests)
+  if num_tests <= 0
+    let num_tests = g:iced#nrepl#test#spec_num_tests
+  endif
+
+  let ret = iced#paredit#get_current_top_list()
+  let code = ret['code']
+  if empty(code)
+    call iced#message#error('finding_code_error')
+  else
+    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:current_var(num_tests, resp)})})
+  endif
+endfunction " }}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

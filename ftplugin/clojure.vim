@@ -34,6 +34,7 @@ command!          IcedTestAll           call iced#nrepl#test#all()
 command!          IcedTestRedo          call iced#nrepl#test#redo()
 command!          IcedTestUnderCursor   call iced#nrepl#test#under_cursor()
 command!          IcedTestRerunLast     call iced#nrepl#test#rerun_last()
+command! -nargs=? IcedTestSpecCheck     call iced#nrepl#test#spec_check(<q-args>)
 command!          IcedTestBufferOpen    call iced#buffer#error#open()
 
 command!          IcedStdoutBufferOpen  call iced#buffer#stdout#open()
@@ -111,6 +112,7 @@ nnoremap <silent> <Plug>(iced_test_all)            :<C-u>IcedTestAll<CR>
 nnoremap <silent> <Plug>(iced_test_redo)           :<C-u>IcedTestRedo<CR>
 nnoremap <silent> <Plug>(iced_test_under_cursor)   :<C-u>IcedTestUnderCursor<CR>
 nnoremap <silent> <Plug>(iced_test_rerun_last)     :<C-u>IcedTestRerunLast<CR>
+nnoremap <silent> <Plug>(iced_test_spec_check)     :<C-u>IcedTestSpecCheck<CR>
 nnoremap <silent> <Plug>(iced_test_buffer_open)    :<C-u>IcedTestBufferOpen<CR>
 
 nnoremap <silent> <Plug>(iced_stdout_buffer_open)  :<C-u>IcedStdoutBufferOpen<CR>
@@ -233,6 +235,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_test_rerun_last)')
     silent! nmap <buffer> <Leader>tl <Plug>(iced_test_rerun_last)
+  endif
+
+  if !hasmapto('<Plug>(iced_test_spec_check)')
+    silent! nmap <buffer> <Leader>ts <Plug>(iced_test_spec_check)
   endif
 
   if !hasmapto('<Plug>(iced_test_buffer_open)')
