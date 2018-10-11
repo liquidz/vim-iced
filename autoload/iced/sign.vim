@@ -92,5 +92,13 @@ function! iced#sign#place_error(lnum, ...) abort
   call iced#sign#place('iced_err', a:lnum, file)
 endfunction
 
+function! iced#sign#refresh() abort
+  let sign_list = iced#sign#list_in_current_buffer()
+  for sign in sign_list
+    call iced#sign#unplace(sign['id'])
+    call iced#sign#place(sign['name'], sign['line'], sign['file'])
+  endfor
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
