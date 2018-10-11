@@ -17,7 +17,7 @@ function! s:lint(warnings) abort
 endfunction
 
 function! iced#lint#current_file() abort
-  if !iced#nrepl#is_connected() || !s:enabled
+  if !iced#nrepl#is_connected() || !s:enabled || iced#nrepl#op#iced#is_lint_running()
     return
   endif
 
