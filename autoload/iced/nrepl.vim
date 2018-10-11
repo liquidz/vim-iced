@@ -322,10 +322,7 @@ function! s:interrupted() abort
 endfunction
 
 function! iced#nrepl#interrupt(...) abort
-  if ! iced#nrepl#is_connected()
-    call iced#message#warning('not_connected')
-    return
-  endif
+  if ! iced#nrepl#is_connected() | return iced#message#warning('not_connected') | endif
   let session = get(a:, 1, iced#nrepl#current_session())
   " NOTE: ignore reading error
   let s:response_buffer = ''
@@ -381,6 +378,15 @@ function! iced#nrepl#load_file(callback) abort
       \ 'file-path': expand('%:p'),
       \ 'callback': a:callback,
       \ })
+endfunction
+
+function! iced#nrepl#is_op_running(op) abort
+  for id in keys(s:messages)
+    if s:messages[id]['op'] ==# a:op
+      return v:true
+    endif
+  endfor
+  return v:false
 endfunction
 
 call iced#nrepl#register_handler('eval', funcref('s:merge_response_handler'))
