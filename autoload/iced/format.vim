@@ -55,6 +55,7 @@ function! iced#format#form() abort
   finally
     let @@ = reg_save
     call winrestview(view)
+    call iced#sign#refresh()
   endtry
 endfunction
 
