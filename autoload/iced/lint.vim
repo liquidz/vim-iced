@@ -17,7 +17,7 @@ function! s:lint(warnings) abort
 endfunction
 
 function! iced#lint#current_file() abort
-  if !iced#nrepl#is_connected() || !s:enabled
+  if !iced#nrepl#is_connected() || !s:enabled || iced#nrepl#op#iced#is_lint_running()
     return
   endif
 
@@ -48,7 +48,8 @@ function! iced#lint#toggle() abort
   if s:enabled
     return iced#message#info('lint_enabled')
   endif
-  return iced#message#info('lint_disabled')
+  call iced#message#info('lint_disabled')
+  call iced#sign#unplace_all()
 endfunction
 
 let &cpo = s:save_cpo

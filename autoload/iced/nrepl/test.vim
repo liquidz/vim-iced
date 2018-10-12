@@ -111,10 +111,12 @@ function! s:out(resp) abort
   if iced#util#has_status(a:resp, 'namespace-not-found')
     return iced#message#error('not_found')
   endif
-  
+
   let errors = s:collect_errors(a:resp)
   let expected_and_actuals = []
   for err in errors
+    let lnum = err['lnum']
+    if type(lnum) != type(0) | continue | endif
     call iced#sign#place_error(err['lnum'], err['filename'])
 
     if has_key(err, 'expected') && has_key(err, 'actual')

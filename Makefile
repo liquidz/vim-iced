@@ -1,4 +1,4 @@
-.PHONY: all vital test themis html lint clean bin ancient aspell repl circleci
+.PHONY: all vital test themis html lint python_doctest clean bin ancient aspell repl circleci
 
 PLUGIN_NAME = iced
 VITAL_MODULES = Data.Dict \
@@ -14,7 +14,7 @@ all: vital bin test
 vital:
 	vim -c "Vitalize . --name=$(PLUGIN_NAME) $(VITAL_MODULES)" -c q
 
-test: themis lint
+test: themis lint python_doctest
 
 .vim-themis:
 	git clone https://github.com/thinca/vim-themis .vim-themis
@@ -37,6 +37,9 @@ html: doc/vim-iced.txt .vimdoc
 
 lint:
 	find . -name "*.vim" | grep -v vital | grep -v .vim-themis | grep -v .vim-sexp | grep -v .vimdoc | xargs vint
+
+python_doctest:
+	python3 -m doctest python/bencode.py
 
 clean:
 	/bin/rm -rf autoload/vital*
@@ -61,4 +64,5 @@ _circleci-lint:
 	circleci build --job lint
 _circleci-test:
 	\rm -rf .vim-sexp
+	\rm -rf .vimdoc
 	circleci build --job test

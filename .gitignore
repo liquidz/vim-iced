@@ -6,4 +6,5 @@ doc/tags
 .cpcache
 .nrepl-port
 *.bak
+*.pyc
 target

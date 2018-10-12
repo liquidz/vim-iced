@@ -21,6 +21,7 @@ jobs:
           command: |
             . venv/bin/activate
             find . -name "*.vim" | grep -v vital | grep -v .vim-themis | grep -v .vim-sexp | xargs vint
+            python3 -m doctest python/bencode.py
   test:
     docker:
       - image: thinca/themis

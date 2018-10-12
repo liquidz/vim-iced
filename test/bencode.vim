@@ -28,31 +28,3 @@ function! s:suite.encode_dict_test() abort
   call s:assert.equals('d3:foo0:e', iced#nrepl#bencode#encode({'foo': ''}))
   call s:assert.equals('d3:foo0:e', iced#nrepl#bencode#encode({'foo': v:none}))
 endfunction
-
-"" DECODING TEST
-
-function! s:suite.decode_string_test() abort
-  call s:assert.equals('hello', iced#nrepl#bencode#decode('5:hello'))
-endfunction
-
-function! s:suite.decode_number_test() abort
-  call s:assert.equals(1024, iced#nrepl#bencode#decode('i1024e'))
-endfunction
-
-function! s:suite.decode_list_test() abort
-  call s:assert.equals(['foo', 123], iced#nrepl#bencode#decode('l3:fooi123ee'))
-  call s:assert.equals(['foo', [123]], iced#nrepl#bencode#decode('l3:fooli123eee'))
-  call s:assert.equals([], iced#nrepl#bencode#decode('le'))
-endfunction
-
-function! s:suite.decode_dict_test() abort
-  call s:assert.equals({'foo': 123}, iced#nrepl#bencode#decode('d3:fooi123ee'))
-  call s:assert.equals({'foo': ['bar', 123]}, iced#nrepl#bencode#decode('d3:fool3:bari123eee'))
-  call s:assert.equals({'foo': {'bar': 123}}, iced#nrepl#bencode#decode('d3:food3:bari123eee'))
-  call s:assert.equals({}, iced#nrepl#bencode#decode('de'))
-endfunction
-
-function! s:suite.decode_concated_test() abort
-  call s:assert.equals(['foo', 123], iced#nrepl#bencode#decode('3:fooi123e'))
-  call s:assert.equals([{'foo': 123}, {'bar': 456}], iced#nrepl#bencode#decode('d3:fooi123eed3:bari456ee'))
-endfunction

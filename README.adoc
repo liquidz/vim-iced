@@ -30,7 +30,7 @@
  ** Neovim support is *VERY EXPERIMENTAL*
  * Clojure & Java
  * https://github.com/guns/vim-sexp[vim-sexp]
- * No python!
+ * No python! (boost possible with `if_python3`)
 
 == Features
 

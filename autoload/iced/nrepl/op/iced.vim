@@ -12,6 +12,10 @@ function! s:concat_handler(key, resp) abort
 endfunction
 
 """ lint-file {{{
+function! iced#nrepl#op#iced#is_lint_running() abort
+  return iced#nrepl#is_op_running('lint-file')
+endfunction
+
 function! iced#nrepl#op#iced#lint_file(file, linters, callback) abort
   if !iced#nrepl#is_connected() | return | endif
 
