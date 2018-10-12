@@ -13,6 +13,7 @@ CONTENTS                                                    *vim-iced-contents*
     Manual Install             |vim-iced-install-manually|
       Leiningen                |vim-iced-manual-leiningen|
       Boot                     |vim-iced-manual-boot|
+    Boost by Python            |vim-iced-install-python|
   nREPL Connection             |vim-iced-nrepl-connection|
   ClojureScript                |vim-iced-clojurescript|
   Evaluating                   |vim-iced-evaluating|
@@ -129,6 +130,15 @@ BOOT~
       refactor-nrepl.middleware/wrap-refactor
       iced.nrepl/wrap-iced])
 <
+==============================================================================
+BOOST BY PYTHON                                       *vim-iced-install-python*
+
+  vim-iced does not require `if_python3` basically,
+  and all communication with nrepl is done by pure vim script.
+
+  But pure vim script is slow.
+  So vim-iced uses `if_python3` to boost process if it is enabled.
+
 ==============================================================================
 NREPL CONNECTION                                    *vim-iced-nrepl-connection*
 
