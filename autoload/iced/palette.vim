@@ -15,6 +15,7 @@ let s:default_palette = [
       \ 'ToggleSrcAndTest',
       \ 'BrowseNamespace', 'RelatedNamespace', 'BrowseFunction', 'BrowseSpec',
       \ 'CleanNs', 'AddNs',
+      \ 'ExtractFunction', 'MoveToLet',
       \ 'ToggleTraceVar', 'ToggleTraceNs',
       \ 'InReplNs',
       \ 'LintCurrentFile', 'LintToggle',
