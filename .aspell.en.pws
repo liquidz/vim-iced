@@ -58,7 +58,6 @@ clojure
 deps
 rightbelow
 namespace
-IcedBrowseNamespace
 namespaces
 fdl
 src

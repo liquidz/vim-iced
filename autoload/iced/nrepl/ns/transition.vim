@@ -44,16 +44,6 @@ function! s:select_ns_from_list(namespaces) abort
   call ctrlp#iced#start({'candidates': a:namespaces, 'accept': funcref('s:open')})
 endfunction
 
-function! iced#nrepl#ns#transition#list() abort
-  " if ctrlp#iced#cache#exists(s:cache_name)
-  "   let lines = ctrlp#iced#cache#read(s:cache_name)
-  "   call ctrlp#iced#start({'candidates': lines, 'accept': funcref('s:open')})
-  " else
-    call iced#message#info('fetching')
-    call iced#nrepl#op#iced#project_namespaces(funcref('s:select_ns_from_list'))
-  " endif
-endfunction
-
 function! iced#nrepl#ns#transition#related() abort
   let ns_name = iced#nrepl#ns#name()
   call iced#message#info('fetching')

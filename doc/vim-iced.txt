@@ -518,12 +518,6 @@ COMMANDS                                                    *vim-iced-commands*
   If {keyword} is not passed, keyword under cursor is used.
   Key is mapped to |<Plug>(iced_grep)|.
 
-                                                         *:IcedBrowseNamespace*
-:IcedBrowseNamespace
-  Browse project namespaces, and open selected namespace.
-  `ctrlp.vim` is required to select namespace.
-  Key is mapped to |<Plug>(iced_browse_namespace)|.
-
                                                         *:IcedRelatedNamespace*
 :IcedRelatedNamespace
   Browse namespaces relating to current namespace, and open selected one.
@@ -840,10 +834,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_grep)
   Same as |:IcedGrep|.
 
-                                                *<Plug>(iced_browse_namespace)*
-<Plug>(iced_browse_namespace)
-  Same as |:IcedBrowseNamespace|.
-
                                                *<Plug>(iced_related_namespace)*
 <Plug>(iced_related_namespace)
   Same as |:IcedRelatedNamespace|.
@@ -1087,7 +1077,6 @@ g:iced_enable_default_key_mappings
   <Leader>hs     <Plug>(iced_source_show)
   <Leader>hg     <Plug>(iced_grimoire_open)
   <Leader>hh     <Plug>(iced_command_palette)
-  <Leader>bn     <Plug>(iced_browse_namespace)
   <Leader>br     <Plug>(iced_related_namespace)
   <Leader>bs     <Plug>(iced_browse_spec)
   <Leader>jn     <Plug>(iced_jump_to_next_sign)
