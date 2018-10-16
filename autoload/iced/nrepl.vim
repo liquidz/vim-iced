@@ -73,7 +73,7 @@ function! iced#nrepl#check_session_validity() abort
   let ext = expand('%:e')
   let sess_key = iced#nrepl#current_session_key()
 
-  if ext !=# 'cljc' && sess_key !=# ext
+  if !empty(ext) && ext !=# 'cljc' && sess_key !=# ext
     call iced#message#error_str(
           \ printf(iced#message#get('invalid_session'), ext))
     return v:false
