@@ -75,18 +75,6 @@ function! iced#nrepl#op#iced#related_namespaces(ns_name, callback) abort
         \ })
 endfunction " }}}
 
-""" project-functions {{{
-function! iced#nrepl#op#iced#project_functions(callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  let s:concat_results['functions'] = []
-  call iced#nrepl#send({
-        \ 'id': iced#nrepl#eval#id(),
-        \ 'op': 'project-functions',
-        \ 'sesion': iced#nrepl#current_session(),
-        \ 'callback': a:callback,
-        \ })
-endfunction " }}}
-
 """ spec-check {{{
 function! iced#nrepl#op#iced#spec_check(symbol, num_tests, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
@@ -103,7 +91,6 @@ endfunction " }}}
 call iced#nrepl#register_handler('lint-file', {resp -> s:concat_handler('lint-warnings', resp)})
 call iced#nrepl#register_handler('project-namespaces', {resp -> s:concat_handler('namespaces', resp)})
 call iced#nrepl#register_handler('related-namespaces', {resp -> s:concat_handler('related-namespaces', resp)})
-call iced#nrepl#register_handler('project-functions', {resp -> s:concat_handler('functions', resp)})
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

@@ -82,7 +82,6 @@ qf
 IcedDisconnect
 IcedTestAll
 Undefine
-IcedBrowseFunction
 stdout
 Javadoc
 IcedExtractFunction
