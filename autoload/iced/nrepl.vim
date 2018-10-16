@@ -268,6 +268,11 @@ function! s:connected(resp) abort
 endfunction
 
 function! iced#nrepl#connect(port) abort
+  " required by iced#buffer
+  if !&hidden
+    return iced#message#error('no_set_hidden')
+  endif
+
   if empty(a:port)
     return iced#nrepl#connect#auto()
   endif
