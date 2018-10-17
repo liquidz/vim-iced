@@ -58,6 +58,7 @@ clojure
 deps
 rightbelow
 namespace
+IcedBrowseNamespace
 namespaces
 fdl
 src
@@ -81,6 +82,7 @@ qf
 IcedDisconnect
 IcedTestAll
 Undefine
+IcedBrowseFunction
 stdout
 Javadoc
 IcedExtractFunction
