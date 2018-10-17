@@ -74,6 +74,7 @@ function! iced#buffer#open(bufname, ...) abort
 
   if iced#buffer#is_visible(a:bufname)
     call s:focus_window(s:bufwinnr(a:bufname))
+    call s:apply_option(opt)
   else
     call s:B.open(nr, {
         \ 'opener': get(opt, 'opener', 'split'),
@@ -83,10 +84,10 @@ function! iced#buffer#open(bufname, ...) abort
     if has_key(opt, 'height')
       silent exec printf(':resize %d', opt['height'])
     endif
-  endif
 
-  call s:apply_option(opt)
-  call s:focus_window(current_window)
+    call s:apply_option(opt)
+    call s:focus_window(current_window)
+  endif
 endfunction
 
 function! iced#buffer#append(bufname, s, ...) abort
@@ -131,9 +132,13 @@ function! iced#buffer#close(bufname) abort
   endif
 
   let current_window = winnr()
-  call s:focus_window(s:bufwinnr(a:bufname))
+  let target_window = s:bufwinnr(a:bufname)
+  call s:focus_window(target_window)
   silent execute ':q'
-  call s:focus_window(current_window)
+
+  if target_window >= current_window
+    call s:focus_window(current_window)
+  endif
 endfunction
 
 let &cpo = s:save_cpo

@@ -1,14 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! iced#nrepl#op#iced#sync#system_info() abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  return iced#nrepl#sync#send({
-        \ 'op': 'system-info',
-        \ 'sesion': iced#nrepl#current_session(),
-        \ })
-endfunction
-
 function! iced#nrepl#op#iced#sync#set_indentation_rules(rules) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 

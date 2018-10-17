@@ -1,23 +1,20 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:select_keys(dict, keys) abort
-  let res = {}
-  for k in a:keys
-    let res[k] = a:dict[k]
-  endfor
-  return res
-endfunction
+let s:system_info_code = join([
+      \ '(let [user-dir (System/getProperty "user.dir")',
+      \ '      sep (System/getProperty "file.separator")]',
+      \ '  {:user-dir user-dir',
+      \ '   :file-separator sep',
+      \ '   :project-name (-> (.split user-dir sep) seq last)})'
+      \ ], "\n")
 
 function! iced#nrepl#system#info() abort
   if !iced#nrepl#is_connected() | return {} | endif
-  let resp = iced#nrepl#op#iced#sync#system_info()
+  let resp = iced#eval_and_read(s:system_info_code)
 
-  if !has_key(resp, 'user-dir')
-    return {}
-  endif
-
-  return s:select_keys(resp, ['user-dir', 'file-separator', 'project-name'])
+  if !has_key(resp, 'read_value') | return {} | endif
+  return resp['read_value']
 endfunction
 
 function! s:update_cache() abort

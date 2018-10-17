@@ -60,10 +60,20 @@ function! s:ns_var_candidates(ns_name, base, alias) abort
   let dict = get(resp, 'ns-vars-with-meta', {})
   for k in keys(dict)
     if stridx(k, a:base) == 0
+      let arglists = [get(dict[k], 'arglists', '')]
+      let doc = get(dict[k], 'doc', '')
+      let doc = strpart(doc, 1, len(doc)-2)
+      let doc = substitute(doc, '\\n', "\n", 'g')
+      let doc = '  ' . doc
+      let doc = join([
+            \ printf('%s/%s', a:ns_name, k),
+            \ join(map(copy(arglists), {_, v -> s:format_arglist(v)}), ' '),
+            \ doc,
+            \ ], "\n")
       call add(result, {
           \ 'candidate': (empty(a:alias) ? k : printf('%s/%s', a:alias, k)),
-          \ 'arglists': [get(dict[k], 'arglists', '')],
-          \ 'doc': get(dict[k], 'doc', ''),
+          \ 'arglists': arglists,
+          \ 'doc': doc,
           \ 'type': 'var',
           \ })
     endif

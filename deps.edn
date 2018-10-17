@@ -3,7 +3,7 @@
  :deps {nrepl {:mvn/version "0.4.5"}
         refactor-nrepl {:mvn/version "2.4.0"}
         cider/cider-nrepl {:mvn/version "0.18.0"}
-        iced-nrepl {:mvn/version "0.1.11"}}
+        iced-nrepl {:mvn/version "0.2.0"}}
 
  :aliases
  {:jackin {:extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}}}

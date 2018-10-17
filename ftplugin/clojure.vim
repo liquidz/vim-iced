@@ -57,9 +57,7 @@ command!          IcedFormat            call iced#format#form()
 command!          IcedToggleSrcAndTest  call iced#nrepl#ns#transition#toggle_src_and_test()
 command! -nargs=? IcedGrep              call iced#grep#exe(<q-args>)
 
-command!          IcedBrowseNamespace   call iced#nrepl#ns#transition#list()
 command!          IcedRelatedNamespace  call iced#nrepl#ns#transition#related()
-command!          IcedBrowseFunction    call iced#nrepl#function#list()
 command!          IcedBrowseSpec        call iced#nrepl#spec#list()
 command!          IcedClearCtrlpCache   call ctrlp#iced#cache#clear()
 
@@ -135,9 +133,7 @@ nnoremap <silent> <Plug>(iced_format)              :<C-u>IcedFormat<CR>
 nnoremap <silent> <Plug>(iced_toggle_src_and_test) :<C-u>IcedToggleSrcAndTest<CR>
 nnoremap <silent> <Plug>(iced_grep)                :<C-u>IcedGrep<CR>
 
-nnoremap <silent> <Plug>(iced_browse_namespace)    :<C-u>IcedBrowseNamespace<CR>
 nnoremap <silent> <Plug>(iced_related_namespace)   :<C-u>IcedRelatedNamespace<CR>
-nnoremap <silent> <Plug>(iced_browse_function)     :<C-u>IcedBrowseFunction<CR>
 nnoremap <silent> <Plug>(iced_browse_spec)         :<C-u>IcedBrowseSpec<CR>
 nnoremap <silent> <Plug>(iced_clear_ctrlp_cache)   :<C-u>IcedClearCtrlpCache<CR>
 
@@ -334,16 +330,8 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>hh <Plug>(iced_command_palette)
   endif
 
-  if !hasmapto('<Plug>(iced_browse_namespace)')
-    silent! nmap <buffer> <Leader>bn <Plug>(iced_browse_namespace)
-  endif
-
   if !hasmapto('<Plug>(iced_related_namespace)')
     silent! nmap <buffer> <Leader>br <Plug>(iced_related_namespace)
-  endif
-
-  if !hasmapto('<Plug>(iced_browse_function)')
-    silent! nmap <buffer> <Leader>bf <Plug>(iced_browse_function)
   endif
 
   if !hasmapto('<Plug>(iced_browse_spec)')

@@ -65,6 +65,11 @@ function! s:suite.connect_test() abort
       \ 'status_value': 'open',
       \ 'relay': {msg -> test.relay(msg)},
       \ })
+
+  set nohidden
+  call s:assert.equals(iced#nrepl#connect(1234), v:false)
+
+  set hidden
   call s:assert.equals(iced#nrepl#connect(1234), v:true)
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
   call s:assert.equals(iced#nrepl#repl_session(), 'foo-session')

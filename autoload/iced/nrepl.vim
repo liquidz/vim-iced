@@ -73,7 +73,7 @@ function! iced#nrepl#check_session_validity() abort
   let ext = expand('%:e')
   let sess_key = iced#nrepl#current_session_key()
 
-  if ext !=# 'cljc' && sess_key !=# ext
+  if !empty(ext) && ext !=# 'cljc' && sess_key !=# ext
     call iced#message#error_str(
           \ printf(iced#message#get('invalid_session'), ext))
     return v:false
@@ -268,6 +268,11 @@ function! s:connected(resp) abort
 endfunction
 
 function! iced#nrepl#connect(port) abort
+  " required by iced#buffer
+  if !&hidden
+    return iced#message#error('no_set_hidden')
+  endif
+
   if empty(a:port)
     return iced#nrepl#connect#auto()
   endif
@@ -350,18 +355,18 @@ function! iced#nrepl#eval(code, ...) abort
   let option = get(a:, 2, {})
   let session_key  = get(option, 'session', iced#nrepl#current_session_key())
   let session = get(s:nrepl['sessions'], session_key, iced#nrepl#current_session())
-
   let pos = getcurpos()
+
   call iced#nrepl#send({
-      \ 'id': get(option, 'id', iced#nrepl#eval#id()),
-      \ 'op': 'eval',
-      \ 'code': a:code,
-      \ 'session': session,
-      \ 'file': expand('%:p'),
-      \ 'line': get(option, 'line', pos[1]),
-      \ 'column': get(option, 'column', pos[2]),
-      \ 'callback': Callback,
-      \ })
+        \ 'id': get(option, 'id', iced#nrepl#eval#id()),
+        \ 'op': 'eval',
+        \ 'code': a:code,
+        \ 'session': session,
+        \ 'file': get(option, 'file', expand('%:p')),
+        \ 'line': get(option, 'line', pos[1]),
+        \ 'column': get(option, 'column', pos[2]),
+        \ 'callback': Callback,
+        \ })
 endfunction
 
 function! iced#nrepl#load_file(callback) abort
