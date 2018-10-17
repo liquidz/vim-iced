@@ -9,11 +9,6 @@ let s:system_info_code = join([
       \ '   :project-name (-> (.split user-dir sep) seq last)})'
       \ ], "\n")
 
-function! iced#nrepl#system#test() abort
-  let resp = iced#eval_and_read(s:code)
-  echom printf('FIXME %s', resp)
-endfunction
-
 function! iced#nrepl#system#info() abort
   if !iced#nrepl#is_connected() | return {} | endif
   let resp = iced#eval_and_read(s:system_info_code)
