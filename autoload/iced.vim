@@ -13,26 +13,39 @@ function! iced#status() abort
   endif
 endfunction
 
+function! s:json_resp(resp) abort
+  let resp = copy(a:resp)
+  if has_key(resp, 'json')
+    let resp['value'] = json_decode(a:resp['json'])
+  endif
+  return resp
+endfunction
+
 function! iced#eval_and_read(code, ...) abort
   let msg = {
       \ 'id': iced#nrepl#eval#id(),
       \ 'op': 'eval',
       \ 'code': a:code,
       \ 'session': iced#nrepl#current_session(),
-      \ 'read-value': 'true',
+      \ 'json': 'true',
       \ }
   let Callback = get(a:, 1, '')
   if iced#util#is_function(Callback)
-    let msg['callback'] = Callback
+    let msg['callback'] = {resp -> Callback(s:json_resp(resp))}
     call iced#nrepl#send(msg)
   else
-    return iced#nrepl#sync#send(msg)
+    return s:json_resp(iced#nrepl#sync#send(msg))
   endif
 endfunction
 
-"" alias to ctrlp#iced#start
-function! iced#select(config) abort
-  return ctrlp#iced#start(a:config)
+function! iced#selector(config) abort
+  if globpath(&rtp, 'plugin/ctrlp.vim') !=# ''
+    return ctrlp#iced#start(a:config)
+  elseif globpath(&rtp, 'plugin/fzf.vim') !=# ''
+    return fzf#iced#start(a:config)
+  else
+    return iced#message#error('no_selector')
+  end
 endfunction
 
 let &cpo = s:save_cpo

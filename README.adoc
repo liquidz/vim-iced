@@ -29,7 +29,6 @@
  * Vim 8.1 or later, Neovim 0.3.1 or later
  ** Neovim support is *VERY EXPERIMENTAL*
  * Clojure & Java
- * https://github.com/guns/vim-sexp[vim-sexp]
  * No python! (boost possible with `if_python3`)
 
 == Features
@@ -96,12 +95,16 @@ and https://github.com/liquidz/iced-nrepl[iced-nrepl].
 
 [source,vim]
 ----
+" One of following is required
 Plug 'ctrlpvim/ctrlp.vim'
+" or
+Plug 'junegunn/fzf'
+
 Plug 'guns/vim-sexp',    {'for': 'clojure'}
 Plug 'liquidz/vim-iced', {'for': 'clojure'}
 ----
 
-NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim] is required when selecting multiple candidates.
+NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim] or https://github.com/junegunn/fzf[fzf] is required when selecting multiple candidates.
 
 === iced command (recommended)
 

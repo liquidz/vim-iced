@@ -54,7 +54,7 @@ function! s:spec_list(resp) abort
   if len(list) == 1
     call s:browse_spec(list[0])
   else
-    call ctrlp#iced#start({
+    call iced#selector({
         \ 'candidates': list,
         \ 'accept': {_, spec_name -> s:browse_spec(spec_name)},
         \ })

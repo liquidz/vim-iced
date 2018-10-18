@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.6.0
+Version: 0.6.1
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -56,9 +56,12 @@ INSTALL                                                      *vim-iced-install*
 
   - vim-sexp
     https://github.com/guns/vim-sexp
-  - ctrlp.vim
-    https://github.com/ctrlpvim/ctrlp.vim
-    Required when selecting multiple candidates
+  - selector
+    One of following is required when selecting multiple candidates
+    - ctrlp.vim
+      https://github.com/ctrlpvim/ctrlp.vim
+    - fzf
+      https://github.com/junegunn/fzf
 
   Clojure library dependencies:
   - Leiningen user: |vim-iced-leiningen|
@@ -82,7 +85,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.4.5"]
-                   [iced-nrepl "0.2.0"]
+                   [iced-nrepl "0.2.1"]
                    [cider/cider-nrepl "0.18.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
@@ -111,7 +114,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
-      [iced-nrepl "0.2.0"]])
+      [iced-nrepl "0.2.1"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -487,7 +490,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                           *:IcedCommandPalette*
 :IcedCommandPalette
   Select command from palette.
-  `ctrlp.vim` is required to select namespace.
+  `ctrlp.vim` or `fzf` is required to select namespace.
   Key is mapped to |<Plug>(iced_command_palette)|.
 
                                                                    *:IcedSlurp*
@@ -521,13 +524,13 @@ COMMANDS                                                    *vim-iced-commands*
                                                         *:IcedRelatedNamespace*
 :IcedRelatedNamespace
   Browse namespaces relating to current namespace, and open selected one.
-  `ctrlp.vim` is required to select namespace.
+  `ctrlp.vim` or `fzf` is required to select namespace.
   Key is mapped to |<Plug>(iced_related_namespace)|.
 
                                                               *:IcedBrowseSpec*
 :IcedBrowseSpec
   Browse specs, and show spec form in document buffer.
-  `ctrlp.vim` is required to select spec.
+  `ctrlp.vim` or `fzf` is required to select spec.
   Key is mapped to |<Plug>(iced_browse_spec)|.
 
                                                          *:IcedClearCtrlpCache*
@@ -551,7 +554,7 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedAddNs [{ns}]
   Add require to `ns` form.
   If {ns} is not passed, select namespaces in your project
-  via `ctrlp.vim` interface.
+  via `ctrlp.vim` or `fzf` interface.
 
                                                              *:IcedThreadFirst*
 :IcedThreadFirst

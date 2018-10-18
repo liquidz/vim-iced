@@ -14,7 +14,7 @@
       (format "update-in :dependencies conj '[%s \"%s\"]'" name version))
     (for [middleware iced-repl/middlewares]
       (format "update-in :repl-options:nrepl-middleware conj '%s'" middleware))
-    ["repl"])
+    ["$OPTIONS repl"])
    (str/join " -- ")
    (str "lein ")))
 

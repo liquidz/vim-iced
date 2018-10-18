@@ -121,7 +121,7 @@ function! s:resolve_missing(symbol, resp) abort
   if c == 1
     call s:add_ns(ns_candidates[0], symbol_alias)
   elseif c > 1
-    call ctrlp#iced#start({
+    call iced#selector({
         \ 'candidates': ns_candidates,
         \ 'accept': {_, ns_name -> s:add_ns(ns_name, symbol_alias)}
         \ })
@@ -167,7 +167,7 @@ function! s:ns_list(resp) abort
   let favorites = get(g:iced#nrepl#ns#refactor#favorites, iced#nrepl#current_session_key(), {})
   let namespaces = s:L.uniq(s:L.concat([namespaces, keys(favorites)]))
 
-  call ctrlp#iced#start({
+  call iced#selector({
         \ 'candidates': namespaces,
         \ 'accept': {_, ns_name -> s:add(ns_name)}
         \ })

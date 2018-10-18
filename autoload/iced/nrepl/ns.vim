@@ -122,6 +122,10 @@ function! iced#nrepl#ns#repl() abort
 endfunction
 
 function! iced#nrepl#ns#in_repl_session_ns() abort
+  if iced#nrepl#current_session_key() ==# 'cljs'
+    return iced#message#error_str(printf(iced#message#get('invalid_session'), 'clj'))
+  endif
+
   let ns_name = s:ns_name_by_var(iced#nrepl#repl_session())
   if empty(ns_name)
     call iced#message#warn('not_found')
