@@ -13,8 +13,8 @@ function! iced#nrepl#system#info() abort
   if !iced#nrepl#is_connected() | return {} | endif
   let resp = iced#eval_and_read(s:system_info_code)
 
-  if !has_key(resp, 'read_value') | return {} | endif
-  return resp['read_value']
+  if !has_key(resp, 'value') | return {} | endif
+  return resp['value']
 endfunction
 
 function! s:update_cache() abort
