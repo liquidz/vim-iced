@@ -133,53 +133,55 @@ function! s:dispatcher(ch, resp) abort
 
   try
     let resp = iced#nrepl#bencode#decode(text)
-    let s:response_buffer = ''
-    let id = s:get_message_id(resp)
-    let is_verbose = get(get(s:messages, id, {}), 'verbose', v:true)
-
-    if is_verbose
-      for rsp in iced#util#ensure_array(resp)
-        if type(rsp) != type({})
-          break
-        endif
-
-        if has_key(rsp, 'out')
-          call iced#buffer#stdout#append(rsp['out'])
-        endif
-        if has_key(rsp, 'err')
-          call iced#buffer#stdout#append(rsp['err'])
-        endif
-        if has_key(rsp, 'pprint-out')
-          call iced#buffer#stdout#append(rsp['pprint-out'])
-        endif
-      endfor
-    endif
-
-    if has_key(s:messages, id)
-      let handler_result = ''
-      let Handler = get(s:handlers, s:messages[id]['op'], funcref('s:default_handler'))
-      if iced#util#is_function(Handler)
-        let handler_result = Handler(resp)
-      endif
-
-      if iced#util#has_status(resp, 'done')
-        let Callback = get(s:messages[id], 'callback')
-        unlet s:messages[id]
-        call iced#nrepl#debug#quit()
-
-        if !empty(handler_result) && iced#util#is_function(Callback)
-          call Callback(handler_result)
-        endif
-      endif
-    endif
-
-    if iced#util#has_status(resp, 'need-debug-input')
-      call iced#buffer#stdout#open()
-      call iced#nrepl#debug#start(resp)
-    endif
   catch /Failed to parse bencode/
     let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
+    return
   endtry
+
+  let s:response_buffer = ''
+  let id = s:get_message_id(resp)
+  let is_verbose = get(get(s:messages, id, {}), 'verbose', v:true)
+
+  if is_verbose
+    for rsp in iced#util#ensure_array(resp)
+      if type(rsp) != type({})
+        break
+      endif
+
+      if has_key(rsp, 'out')
+        call iced#buffer#stdout#append(rsp['out'])
+      endif
+      if has_key(rsp, 'err')
+        call iced#buffer#stdout#append(rsp['err'])
+      endif
+      if has_key(rsp, 'pprint-out')
+        call iced#buffer#stdout#append(rsp['pprint-out'])
+      endif
+    endfor
+  endif
+
+  if has_key(s:messages, id)
+    let handler_result = ''
+    let Handler = get(s:handlers, s:messages[id]['op'], funcref('s:default_handler'))
+    if iced#util#is_function(Handler)
+      let handler_result = Handler(resp)
+    endif
+
+    if iced#util#has_status(resp, 'done')
+      let Callback = get(s:messages[id], 'callback')
+      unlet s:messages[id]
+      call iced#nrepl#debug#quit()
+
+      if !empty(handler_result) && iced#util#is_function(Callback)
+        call Callback(handler_result)
+      endif
+    endif
+  endif
+
+  if iced#util#has_status(resp, 'need-debug-input')
+    call iced#buffer#stdout#open()
+    call iced#nrepl#debug#start(resp)
+  endif
 endfunction
 
 "" -----
