@@ -46,10 +46,6 @@ function! ctrlp#iced#id() abort
 endfunction
 
 function! ctrlp#iced#start(config) abort
-  if !exists('g:loaded_ctrlp')
-    return iced#message#error('no_ctrlp')
-  endif
-
   let s:config = copy(a:config)
   call ctrlp#init(ctrlp#iced#id())
 endfunction

@@ -38,9 +38,14 @@ function! iced#eval_and_read(code, ...) abort
   endif
 endfunction
 
-"" alias to ctrlp#iced#start
-function! iced#select(config) abort
-  return ctrlp#iced#start(a:config)
+function! iced#selector(config) abort
+  if globpath(&rtp, 'plugin/ctrlp.vim') !=# ""
+    return ctrlp#iced#start(a:config)
+  elseif globpath(&rtp, 'plugin/fzf.vim') !=# ""
+    return fzf#iced#start(a:config)
+  else
+    return iced#message#error('no_selector')
+  end
 endfunction
 
 let &cpo = s:save_cpo
