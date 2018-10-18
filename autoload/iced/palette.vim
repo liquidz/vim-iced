@@ -47,7 +47,7 @@ function! s:run(candidate) abort
 endfunction
 
 function! iced#palette#show() abort
-  call ctrlp#iced#start({
+  call iced#selector({
         \ 'candidates': keys(s:palette),
         \ 'accept': {_, candidate -> s:run(candidate)},
         \ })

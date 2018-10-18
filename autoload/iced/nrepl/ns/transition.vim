@@ -41,7 +41,7 @@ endfunction
 function! s:select_ns_from_list(namespaces) abort
   if empty(a:namespaces) | return iced#message#error('not_found') | endif
   "call ctrlp#iced#cache#write(s:cache_name, a:namespaces)
-  call ctrlp#iced#start({'candidates': a:namespaces, 'accept': funcref('s:open')})
+  call iced#selector({'candidates': a:namespaces, 'accept': funcref('s:open')})
 endfunction
 
 function! iced#nrepl#ns#transition#related() abort
