@@ -32,7 +32,7 @@ function! s:spec_format(spec) abort
     endfor
     " 15 = len('clojure.spec.alpha/') + len('(s/') + len(' ')
     let indent = len(fn) - 15
-    return printf("(%s %s)", fn, iced#util#add_indent(indent, join(res, "\n")))
+    return printf('(%s %s)', fn, iced#util#add_indent(indent, join(res, "\n")))
   elseif fn[0] ==# ':'
     return '[' . join(a:spec, ' ') . ']'
   endif
