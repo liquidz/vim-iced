@@ -58,13 +58,13 @@ function! s:generate_cljdoc(resp) abort
     call add(doc, '')
     call add(doc, printf('## %s', a:resp['spec'][0]))
     let specs = s:D.from_list(a:resp['spec'][1:])
-    for k in keys(specs)
+    for k in [':args', ':ret']
+      if !has_key(specs, k) | continue | endif
+
       let v = specs[k]
-      if k ==# ':args' || k ==# ':ret'
-        let formatted = iced#nrepl#spec#format(v)
-        let formatted = s:add_indent(9, formatted)
-        call add(doc, printf('%7s  %s', k, formatted))
-      endif
+      let formatted = iced#nrepl#spec#format(v)
+      let formatted = s:add_indent(9, formatted)
+      call add(doc, printf('  %-5s  %s', k, formatted))
     endfor
   endif
 
