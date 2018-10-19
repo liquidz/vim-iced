@@ -46,7 +46,7 @@ function! iced#format#form() abort
     else
       let resp = iced#nrepl#op#iced#sync#format_code(code, s:ns_aliases(ns_code))
       if has_key(resp, 'formatted') && !empty(resp['formatted'])
-        let @@ = join(split(resp['formatted'], '[\r\n]\+'), "\n")
+        let @@ = resp['formatted']
         silent normal! gvp
       elseif has_key(resp, 'error')
         call iced#message#error_str(resp['error'])
@@ -88,8 +88,7 @@ function! iced#format#minimal() abort
     let code = @@
     let resp = iced#nrepl#op#iced#sync#format_code(code, s:ns_aliases(ns_code))
     if has_key(resp, 'formatted') && !empty(resp['formatted'])
-      let formatted = join(split(resp['formatted'], '[\r\n]\+'), "\n")
-      let @@ = iced#util#add_indent(ncol, formatted)
+      let @@ = iced#util#add_indent(ncol, resp['formatted'])
       silent normal! gvp
     endif
   finally
