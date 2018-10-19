@@ -307,6 +307,7 @@ function! iced#nrepl#disconnect() abort
   if !iced#nrepl#is_connected() | return | endif
 
   for id in iced#nrepl#sync#session_list()
+    call iced#nrepl#sync#send({'op': 'interrupt', 'session': id})
     call iced#nrepl#sync#close(id)
   endfor
   call s:ch.close(s:nrepl['channel'])

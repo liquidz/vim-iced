@@ -91,7 +91,7 @@ function! s:suite.disconnect_test() abort
       call add(self.closed_sessions, a:msg['session'])
       return {'status': ['done']}
     endif
-    return {}
+    return {'status': ['done']}
   endfunction
 
   call s:ch.inject_dummy({

@@ -84,5 +84,27 @@ function! iced#util#char() abort
   return getline('.')[max([col('.')-1, 0])]
 endfunction
 
+function! iced#util#partition(arr, n, is_all) abort
+  let result = []
+  let tmp = []
+  let i = 0
+  for x in a:arr
+    if i < a:n
+      call add(tmp, x)
+    else
+      call add(result, copy(tmp))
+      let tmp = [x]
+      let i = 0
+    endif
+    let i = i + 1
+  endfor
+
+  if a:is_all || len(tmp) == a:n
+    call add(result, copy(tmp))
+  endif
+
+  return result
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

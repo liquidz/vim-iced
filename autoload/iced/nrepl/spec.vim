@@ -2,31 +2,48 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! s:common_replace(s) abort
-  let s = substitute(a:s, 'clojure.spec.alpha', 's', '')
+  let s = substitute(a:s, 'clojure.spec.alpha', 's', 'g')
   return substitute(s, 'clojure.core/', '', 'g')
 endfunction
 
+function! s:prn(v) abort
+  return empty(a:v) ? 'nil' : a:v
+endfunction
+
 function! s:spec_format(spec) abort
-  if type(a:spec) != type([])
-    return empty(a:spec) ? 'nil' : s:common_replace(a:spec)
+  if type(a:spec) != type([]) | return s:prn(a:spec) | endif
+
+  let fn = a:spec[0]
+  if fn ==# 'clojure.spec.alpha/fspec' || fn ==# 'clojure.spec.alpha/cat'
+    let res = []
+    for kv in iced#util#partition(a:spec[1:], 2, v:false)
+      let [k, v] = kv
+      let v = (type(v) == type([])) ? s:spec_format(v) : s:prn(v)
+      let indent = len(k) + 3
+      call add(res, printf('  %s %s', k, iced#util#add_indent(indent, v)))
+    endfor
+    return printf("(%s\n%s)", fn, join(res, "\n"))
+  elseif fn ==# 'clojure.spec.alpha/keys' || fn ==# 'clojure.spec.alpha/or'
+    let res = []
+    for kv in iced#util#partition(a:spec[1:], 2, v:false)
+      let [k, v] = kv
+      let v = (type(v) == type([])) ? s:spec_format(v) : s:prn(v)
+      call add(res, printf('%s %s', k, v))
+    endfor
+    " 15 = len('clojure.spec.alpha/') + len('(s/') + len(' ')
+    let indent = len(fn) - 15
+    return printf('(%s %s)', fn, iced#util#add_indent(indent, join(res, "\n")))
+  elseif fn[0] ==# ':'
+    return '[' . join(a:spec, ' ') . ']'
   endif
 
-  let fn = s:common_replace(a:spec[0])
-  let args = join(map(a:spec[1:], {_, v -> s:spec_format(v)}), ' ')
-  return printf('(%s %s)', fn, args)
+  return '(' . join(a:spec, ' ') . ')'
 endfunction
 
 function! iced#nrepl#spec#format(spec) abort
   let code = s:spec_format(a:spec)
-  if !empty(code)
-    let resp = iced#nrepl#sync#pprint(code)
-    if has_key(resp, 'value')
-      let code = substitute(resp['value'], '\(^"\|"$\)', '', 'g')
-      " NOTE: ignore '\\n'
-      let code = substitute(code, '\%(\\\)\@<!\\n', "\n", 'g')
-    endif
-  endif
-  return iced#compat#trim(code)
+  let code = s:common_replace(code)
+  return code
 endfunction
 
 function! s:spec_form(resp) abort

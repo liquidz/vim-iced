@@ -57,7 +57,7 @@ aspell:
 	aspell -d en -W 3 -p ./.aspell.en.pws check doc/vim-iced.txt
 
 repl:
-	clojure -Adev -m iced-repl
+	clojure -R:jackin:dev -m iced-repl
 
 circleci: _circleci-lint _circleci-test
 _circleci-lint:
