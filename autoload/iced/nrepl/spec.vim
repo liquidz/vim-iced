@@ -14,7 +14,10 @@ function! s:spec_format(spec) abort
   if type(a:spec) != type([]) | return s:prn(a:spec) | endif
 
   let fn = a:spec[0]
-  if fn ==# 'clojure.spec.alpha/fspec' || fn ==# 'clojure.spec.alpha/cat'
+  if fn ==# 'clojure.spec.alpha/fspec'
+        \ || fn ==# 'clojure.spec.alpha/cat'
+        \ || fn ==# 'clojure.spec.alpha/keys'
+        \ || fn ==# 'clojure.spec.alpha/or'
     let res = []
     for kv in iced#util#partition(a:spec[1:], 2, v:false)
       let [k, v] = kv
@@ -22,17 +25,21 @@ function! s:spec_format(spec) abort
       let indent = len(k) + 3
       call add(res, printf('  %s %s', k, iced#util#add_indent(indent, v)))
     endfor
-    return printf("(%s\n%s)", fn, join(res, "\n"))
-  elseif fn ==# 'clojure.spec.alpha/keys' || fn ==# 'clojure.spec.alpha/or'
-    let res = []
-    for kv in iced#util#partition(a:spec[1:], 2, v:false)
-      let [k, v] = kv
-      let v = (type(v) == type([])) ? s:spec_format(v) : s:prn(v)
-      call add(res, printf('%s %s', k, v))
-    endfor
-    " 15 = len('clojure.spec.alpha/') + len('(s/') + len(' ')
-    let indent = len(fn) - 15
-    return printf('(%s %s)', fn, iced#util#add_indent(indent, join(res, "\n")))
+    if len(res) == 1 && stridx(res[0], "\n") == -1
+      return printf("(%s %s)", fn, iced#compat#trim(res[0]))
+    else
+      return printf("(%s\n%s)", fn, join(res, "\n"))
+    endif
+  " elseif fn ==# 'clojure.spec.alpha/keys' || fn ==# 'clojure.spec.alpha/or'
+  "   let res = []
+  "   for kv in iced#util#partition(a:spec[1:], 2, v:false)
+  "     let [k, v] = kv
+  "     let v = (type(v) == type([])) ? s:spec_format(v) : s:prn(v)
+  "     call add(res, printf('%s %s', k, v))
+  "   endfor
+  "   " 15 = len('clojure.spec.alpha/') + len('(s/') + len(' ')
+  "   let indent = len(fn) - 15
+  "   return printf('(%s %s)', fn, iced#util#add_indent(indent, join(res, "\n")))
   elseif fn[0] ==# ':'
     return '[' . join(a:spec, ' ') . ']'
   endif
