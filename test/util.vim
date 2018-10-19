@@ -49,3 +49,18 @@ function! s:suite.del_indent_test() abort
         \ "foo\nbar\n  baz")
   call s:assert.equals(iced#util#del_indent(10, 'foo'), 'foo')
 endfunction
+
+function! s:suite.partition_test() abort
+  call s:assert.equals(iced#util#partition([1, 2, 3, 4], 2, v:false),
+        \ [[1, 2], [3, 4]])
+  call s:assert.equals(iced#util#partition([1, 2, 3, 4, 5], 2, v:false),
+        \ [[1, 2], [3, 4]])
+  call s:assert.equals(iced#util#partition([1, 2, 3, 4, 5], 2, v:true),
+        \ [[1, 2], [3, 4], [5]])
+  call s:assert.equals(iced#util#partition([], 2, v:false),
+        \ [])
+  call s:assert.equals(iced#util#partition([1, 2], 1, v:false),
+        \ [[1], [2]])
+  call s:assert.equals(iced#util#partition([1, 2], 1, v:true),
+        \ [[1], [2]])
+endfunction
