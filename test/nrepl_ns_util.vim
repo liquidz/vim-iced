@@ -9,6 +9,7 @@ function! s:format_relay(msg) abort
   elseif a:msg['op'] ==# 'eval'
     return {'status': ['done'], 'value': 'nil'}
   endif
+  return {'status': ['done']}
 endfunction
 
 function! s:suite.replace_test() abort
