@@ -26,7 +26,7 @@ function! s:spec_format(spec) abort
       call add(res, printf('  %s %s', k, iced#util#add_indent(indent, v)))
     endfor
     if len(res) == 1 && stridx(res[0], "\n") == -1
-      return printf("(%s %s)", fn, iced#compat#trim(res[0]))
+      return printf('(%s %s)', fn, iced#compat#trim(res[0]))
     else
       return printf("(%s\n%s)", fn, join(res, "\n"))
     endif
