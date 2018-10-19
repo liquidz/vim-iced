@@ -62,10 +62,10 @@ case "$1" in
     "repl")
         if [ $IS_LEININGEN -eq 1 ];then
             echo "Leiningen project is detected."
-            {{{leiningen}}}
+            lein {{{leiningen-params}}} -- $OPTIONS repl
         elif [ $IS_BOOT -eq 1 ]; then
             echo "Boot project is detected."
-            {{{boot}}}
+            boot {{{boot-params}}} -- $OPTIONS repl
         elif [ $IS_CLOJURE_CLI -eq 1 ]; then
             echo "Clojure CLI project is detected."
             clojure $OPTIONS -Sdeps "{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"}}}" -m iced-repl
