@@ -994,6 +994,12 @@ g:iced#grep#target
   Default value is
     `'{{user.dir}}{{separator}}**{{separator}}*.{clj,cljs,cljc}'`.
 
+                                             *g:iced#refactor#prefix_rewriting*
+g:iced#refactor#prefix_rewriting
+  Should `clean-ns` favor prefix forms in the ns macro?
+  c.f. https://github.com/clojure-emacs/refactor-nrepl#available-features
+  Default value is `v:false`.
+
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*
 

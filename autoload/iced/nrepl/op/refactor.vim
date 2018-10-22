@@ -1,13 +1,17 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let g:iced#refactor#prefix_rewriting = get(g:, 'iced#refactor#prefix_rewriting', v:false)
+
 function! iced#nrepl#op#refactor#clean_ns(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   let path = expand('%:p')
+  let prefix_rewriting = (g:iced#refactor#prefix_rewriting ? 'true' : 'false')
   call iced#nrepl#send({
       \ 'op': 'clean-ns',
       \ 'path': path,
+      \ 'prefix-rewriting': prefix_rewriting,
       \ 'sesion': iced#nrepl#current_session(),
       \ 'callback': a:callback,
       \ })
