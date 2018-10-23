@@ -26,7 +26,7 @@ endfunction
 function! s:ns_name_by_var(...) abort
   let session = get(a:, 1, iced#nrepl#current_session())
   let resp = iced#nrepl#sync#send({
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'op': 'eval',
       \ 'code': '*ns*',
       \ 'session': session,
@@ -78,7 +78,7 @@ function! s:cljs_load_file(callback) abort
   call iced#nrepl#send({
       \ 'op': 'eval',
       \ 'session': iced#nrepl#current_session(),
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'code': printf('(load-file "%s")', expand('%:p')),
       \ 'callback': a:callback,
       \ })

@@ -65,7 +65,7 @@ function! iced#nrepl#op#cider#test_var(test_ns, test_var, callback) abort
   call iced#nrepl#send({
       \ 'op': 'test',
       \ 'session': iced#nrepl#current_session(),
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'ns': test_ns,
       \ 'tests': [a:test_var],
       \ 'callback': {resp -> a:callback(s:tested(resp))},
@@ -77,7 +77,7 @@ function! iced#nrepl#op#cider#test_ns(test_ns, callback) abort
     call iced#nrepl#send({
         \ 'op': 'test',
         \ 'session': iced#nrepl#current_session(),
-        \ 'id': iced#nrepl#eval#id(),
+        \ 'id': iced#nrepl#id(),
         \ 'ns': a:test_ns,
         \ 'callback': {resp -> a:callback(s:tested(resp))},
         \ })
@@ -90,7 +90,7 @@ function! iced#nrepl#op#cider#retest(callback) abort
   call iced#nrepl#send({
       \ 'op': 'retest',
       \ 'session': iced#nrepl#current_session(),
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'callback': {resp -> a:callback(s:tested(resp))},
       \ })
 endfunction " }}}
@@ -101,7 +101,7 @@ function! iced#nrepl#op#cider#test_all(callback) abort
   call iced#nrepl#send({
       \ 'op': 'test-all',
       \ 'session': iced#nrepl#current_session(),
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'callback': {resp -> a:callback(s:tested(resp))},
       \ })
 endfunction " }}}
@@ -123,7 +123,7 @@ endfunction " }}}
 function! iced#nrepl#op#cider#macroexpand_1(code, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'op': 'macroexpand',
       \ 'ns': iced#nrepl#ns#name(),
       \ 'code': a:code,
@@ -136,7 +136,7 @@ endfunction
 function! iced#nrepl#op#cider#macroexpand_all(code, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'op': 'macroexpand',
       \ 'ns': iced#nrepl#ns#name(),
       \ 'code': a:code,
@@ -194,7 +194,7 @@ endfunction " }}}
 function! iced#nrepl#op#cider#pprint_eval(code, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'op': 'eval',
       \ 'code': a:code,
       \ 'pprint': 'true',

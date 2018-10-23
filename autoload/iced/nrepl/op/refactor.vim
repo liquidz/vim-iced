@@ -35,7 +35,7 @@ function! iced#nrepl#op#refactor#find_used_locals(filepath, line, column, callba
 
   call iced#nrepl#send({
         \ 'op': 'find-used-locals',
-        \ 'id': iced#nrepl#eval#id(),
+        \ 'id': iced#nrepl#id(),
         \ 'sesion': iced#nrepl#current_session(),
         \ 'file': a:filepath,
         \ 'line': a:line,

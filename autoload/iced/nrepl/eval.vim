@@ -3,14 +3,6 @@ set cpo&vim
 
 let g:iced#eval#inside_comment = get(g:, 'iced#eval#inside_comment', v:true)
 
-let s:id_counter = 1
-
-function! iced#nrepl#eval#id() abort
-  let res = s:id_counter
-  let s:id_counter = (res < 100) ? res + 1 : 1
-  return res
-endfunction
-
 function! s:parse_error(err) abort
   " Clojure 1.9 or above
   let err = matchstr(a:err, ', compiling:(.\+:\d\+:\d\+)')

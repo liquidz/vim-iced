@@ -24,6 +24,13 @@ let s:response_buffer = ''
 let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 
+let s:id_counter = 1
+function! iced#nrepl#id() abort
+  let res = s:id_counter
+  let s:id_counter = (res < 100) ? res + 1 : 1
+  return res
+endfunction
+
 function! iced#nrepl#inject_channel(ch) abort
   let s:ch = a:ch
 endfunction
@@ -340,7 +347,7 @@ function! iced#nrepl#eval(code, ...) abort
   let pos = getcurpos()
 
   call iced#nrepl#send({
-        \ 'id': get(option, 'id', iced#nrepl#eval#id()),
+        \ 'id': get(option, 'id', iced#nrepl#id()),
         \ 'op': 'eval',
         \ 'code': a:code,
         \ 'session': session,
@@ -357,7 +364,7 @@ function! iced#nrepl#load_file(callback) abort " {{{
   endif
 
   call iced#nrepl#send({
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'op': 'load-file',
       \ 'session': iced#nrepl#current_session(),
       \ 'file': join(getline(1, '$'), "\n"),

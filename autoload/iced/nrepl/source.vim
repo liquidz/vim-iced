@@ -16,7 +16,7 @@ function! iced#nrepl#source#show(symbol) abort
   let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
   let code = printf('(%s/source %s)', iced#nrepl#ns#repl(), symbol)
   call iced#nrepl#send({
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'op': 'eval',
       \ 'code': code,
       \ 'session': iced#nrepl#repl_session(),

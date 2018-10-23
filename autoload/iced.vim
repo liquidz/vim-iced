@@ -23,7 +23,7 @@ endfunction
 
 function! iced#eval_and_read(code, ...) abort
   let msg = {
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'op': 'eval',
       \ 'code': a:code,
       \ 'session': iced#nrepl#current_session(),

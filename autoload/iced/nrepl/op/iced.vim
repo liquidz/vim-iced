@@ -20,7 +20,7 @@ function! iced#nrepl#op#iced#lint_file(file, linters, callback) abort
   if !iced#nrepl#is_connected() | return | endif
 
   let msg = {
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'op': 'lint-file',
       \ 'sesion': iced#nrepl#current_session(),
       \ 'env': iced#nrepl#current_session_key(),
@@ -55,7 +55,7 @@ function! iced#nrepl#op#iced#related_namespaces(ns_name, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let s:concat_results['related-namespaces'] = []
   call iced#nrepl#send({
-        \ 'id': iced#nrepl#eval#id(),
+        \ 'id': iced#nrepl#id(),
         \ 'op': 'related-namespaces',
         \ 'sesion': iced#nrepl#current_session(),
         \ 'ns': a:ns_name,
@@ -67,7 +67,7 @@ endfunction " }}}
 function! iced#nrepl#op#iced#spec_check(symbol, num_tests, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
-        \ 'id': iced#nrepl#eval#id(),
+        \ 'id': iced#nrepl#id(),
         \ 'op': 'spec-check',
         \ 'sesion': iced#nrepl#current_session(),
         \ 'symbol': a:symbol,

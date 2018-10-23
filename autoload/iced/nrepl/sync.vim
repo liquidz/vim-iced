@@ -50,7 +50,7 @@ endfunction
 function! iced#nrepl#sync#pprint(code) abort
   let code = printf('(with-out-str (clojure.pprint/write ''%s :dispatch clojure.pprint/code-dispatch))', a:code)
   return iced#nrepl#sync#send({
-        \ 'id': iced#nrepl#eval#id(),
+        \ 'id': iced#nrepl#id(),
         \ 'op': 'eval',
         \ 'code': code,
         \ 'session': iced#nrepl#clj_session(),
