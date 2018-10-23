@@ -6,7 +6,7 @@ let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
 let s:last_test = {}
-let g:iced#nrepl#test#spec_num_tests = get(g:, 'iced#nrepl#test#spec_num_tests', 10)
+let g:iced#test#spec_num_tests = get(g:, 'iced#test#spec_num_tests', 10)
 
 function! s:error_message(test) abort
   if has_key(a:test, 'context') && !empty(a:test['context'])
@@ -170,7 +170,7 @@ endfunction
 function! iced#nrepl#test#ns() abort
   let ns = iced#nrepl#ns#name()
   if !s:S.ends_with(ns, '-test')
-    let ns = iced#nrepl#ns#transition#cycle(ns)
+    let ns = iced#nrepl#navigate#cycle_ns(ns)
   endif
 
   call iced#sign#unplace_all()
@@ -250,7 +250,7 @@ function! iced#nrepl#test#spec_check(...) abort
   let num_tests = get(a:, 1, '')
   let num_tests = str2nr(num_tests)
   if num_tests <= 0
-    let num_tests = g:iced#nrepl#test#spec_num_tests
+    let num_tests = g:iced#test#spec_num_tests
   endif
 
   let ret = iced#paredit#get_current_top_list()

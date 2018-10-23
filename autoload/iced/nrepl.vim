@@ -24,14 +24,18 @@ let s:response_buffer = ''
 let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 
+let s:id_counter = 1
+function! iced#nrepl#id() abort
+  let res = s:id_counter
+  let s:id_counter = (res < 100) ? res + 1 : 1
+  return res
+endfunction
+
 function! iced#nrepl#inject_channel(ch) abort
   let s:ch = a:ch
 endfunction
 
-"" ---------
-"" =SESSIONS
-"" ---------
-
+" SESSIONS {{{
 function! iced#nrepl#set_session(k, v) abort
   if a:k =~# '\(cljs\?\|repl\)'
     let s:nrepl['sessions'][a:k] = a:v
@@ -81,11 +85,9 @@ function! iced#nrepl#check_session_validity() abort
 
   return v:true
 endfunction
+" }}}
 
-"" --------
-"" =HANDLER
-"" --------
-
+" HANDLER {{{
 function! s:get_message_id(x) abort
   let x = a:x
   if type(x) == type([])
@@ -98,21 +100,18 @@ function! s:get_message_id(x) abort
   endif
 endfunction
 
-function! s:merge_response_handler(resp) abort
-  let id = s:get_message_id(a:resp)
-  let result = get(s:messages[id], 'result', {})
-
+function! s:merge_response_handler(resp, last_result) abort
+  let result = empty(a:last_result) ? {} : a:last_result
   for resp in iced#util#ensure_array(a:resp)
     for k in keys(resp)
       let result[k] = resp[k]
     endfor
   endfor
 
-  let s:messages[id]['result'] = result
   return result
 endfunction
 
-function! s:default_handler(resp) abort
+function! s:default_handler(resp, _) abort
   return a:resp
 endfunction
 
@@ -122,11 +121,9 @@ function! iced#nrepl#register_handler(op, handler) abort
   endif
   let s:handlers[a:op] = a:handler
 endfunction
+" }}}
 
-"" -----------
-"" =DISPATCHER
-"" -----------
-
+" DISPATCHER {{{
 function! s:dispatcher(ch, resp) abort
   let text = printf('%s%s', s:response_buffer, a:resp)
   call iced#util#debug(text)
@@ -161,14 +158,15 @@ function! s:dispatcher(ch, resp) abort
   endif
 
   if has_key(s:messages, id)
-    let handler_result = ''
+    let last_handler_result = get(s:messages[id], 'handler_result', '')
     let Handler = get(s:handlers, s:messages[id]['op'], funcref('s:default_handler'))
     if iced#util#is_function(Handler)
-      let handler_result = Handler(resp)
+      let s:messages[id]['handler_result'] = Handler(resp, last_handler_result)
     endif
 
     if iced#util#has_status(resp, 'done')
       let Callback = get(s:messages[id], 'callback')
+      let handler_result = get(s:messages[id], 'handler_result')
       unlet s:messages[id]
       call iced#nrepl#debug#quit()
 
@@ -183,11 +181,9 @@ function! s:dispatcher(ch, resp) abort
     call iced#nrepl#debug#start(resp)
   endif
 endfunction
+" }}}
 
-"" -----
-"" =SEND
-"" -----
-
+" SEND {{{
 function! s:auto_connect() abort
   call iced#message#echom('auto_connect')
   if ! iced#nrepl#connect#auto()
@@ -232,10 +228,17 @@ function! iced#nrepl#send(data) abort
   call s:ch.sendraw(s:nrepl['channel'], iced#nrepl#bencode#encode(data))
 endfunction
 
-"" --------
-"" =CONNECT
-"" --------
+function! iced#nrepl#is_op_running(op) abort " {{{
+  for id in keys(s:messages)
+    if s:messages[id]['op'] ==# a:op
+      return v:true
+    endif
+  endfor
+  return v:false
+endfunction " }}}
+" }}}
 
+" CONNECT {{{
 function! s:warm_up() abort
   " FIXME init-debugger does not return response immediately
   call iced#nrepl#op#cider#debug#init()
@@ -299,11 +302,11 @@ function! iced#nrepl#connect(port) abort
   return v:true
 endfunction
 
-function! iced#nrepl#is_connected() abort
+function! iced#nrepl#is_connected() abort " {{{
   return (s:status(s:nrepl['channel']) ==# 'open')
-endfunction
+endfunction " }}}
 
-function! iced#nrepl#disconnect() abort
+function! iced#nrepl#disconnect() abort " {{{
   if !iced#nrepl#is_connected() | return | endif
 
   for id in iced#nrepl#sync#session_list()
@@ -313,38 +316,19 @@ function! iced#nrepl#disconnect() abort
   call s:ch.close(s:nrepl['channel'])
   call s:initialize_nrepl()
   call iced#cache#clear()
-endfunction
+endfunction " }}}
 
-function! iced#nrepl#reconnect() abort
+function! iced#nrepl#reconnect() abort " {{{
   if !iced#nrepl#is_connected() | return | endif
 
   let port = s:nrepl['port']
   call iced#nrepl#disconnect()
   sleep 500m
   call iced#nrepl#connect(port)
-endfunction
+endfunction " }}}
+" }}}
 
-function! s:interrupted() abort
-  let s:messages = {}
-  call iced#message#info('interrupted')
-endfunction
-
-function! iced#nrepl#interrupt(...) abort
-  if ! iced#nrepl#is_connected() | return iced#message#warning('not_connected') | endif
-  let session = get(a:, 1, iced#nrepl#current_session())
-  " NOTE: ignore reading error
-  let s:response_buffer = ''
-  call iced#nrepl#send({
-      \ 'op': 'interrupt',
-      \ 'session': session,
-      \ 'callback': {_ -> s:interrupted()},
-      \ })
-endfunction
-
-"" -----
-"" =EVAL
-"" -----
-
+" EVAL {{{
 function! iced#nrepl#is_evaluating() abort
   return !empty(s:messages)
 endfunction
@@ -361,7 +345,7 @@ function! iced#nrepl#eval(code, ...) abort
   let pos = getcurpos()
 
   call iced#nrepl#send({
-        \ 'id': get(option, 'id', iced#nrepl#eval#id()),
+        \ 'id': get(option, 'id', iced#nrepl#id()),
         \ 'op': 'eval',
         \ 'code': a:code,
         \ 'session': session,
@@ -372,13 +356,13 @@ function! iced#nrepl#eval(code, ...) abort
         \ })
 endfunction
 
-function! iced#nrepl#load_file(callback) abort
+function! iced#nrepl#load_file(callback) abort " {{{
   if !iced#nrepl#is_connected() && !s:auto_connect()
     return
   endif
 
   call iced#nrepl#send({
-      \ 'id': iced#nrepl#eval#id(),
+      \ 'id': iced#nrepl#id(),
       \ 'op': 'load-file',
       \ 'session': iced#nrepl#current_session(),
       \ 'file': join(getline(1, '$'), "\n"),
@@ -386,19 +370,31 @@ function! iced#nrepl#load_file(callback) abort
       \ 'file-path': expand('%:p'),
       \ 'callback': a:callback,
       \ })
+endfunction " }}}
+" }}}
+
+" INTERRUPT {{{
+function! s:interrupted() abort
+  let s:messages = {}
+  call iced#message#info('interrupted')
 endfunction
 
-function! iced#nrepl#is_op_running(op) abort
-  for id in keys(s:messages)
-    if s:messages[id]['op'] ==# a:op
-      return v:true
-    endif
-  endfor
-  return v:false
+function! iced#nrepl#interrupt(...) abort
+  if ! iced#nrepl#is_connected() | return iced#message#warning('not_connected') | endif
+  let session = get(a:, 1, iced#nrepl#current_session())
+  " NOTE: ignore reading error
+  let s:response_buffer = ''
+  call iced#nrepl#send({
+      \ 'op': 'interrupt',
+      \ 'session': session,
+      \ 'callback': {_ -> s:interrupted()},
+      \ })
 endfunction
+" }}}
 
 call iced#nrepl#register_handler('eval', funcref('s:merge_response_handler'))
 call iced#nrepl#register_handler('load-file', funcref('s:merge_response_handler'))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
+" vim:fdm=marker:fdl=0

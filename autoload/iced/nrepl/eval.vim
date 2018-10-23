@@ -1,14 +1,31 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let g:iced#nrepl#eval#inside_comment = get(g:, 'iced#nrepl#eval#inside_comment', v:true)
+let g:iced#eval#inside_comment = get(g:, 'iced#eval#inside_comment', v:true)
 
-let s:id_counter = 1
+function! s:parse_error(err) abort
+  " Clojure 1.9 or above
+  let err = matchstr(a:err, ', compiling:(.\+:\d\+:\d\+)')
+  if !empty(err)
+    let text = iced#compat#trim(substitute(a:err, err, '', ''))
+    " 13 = len(', compiling:(')
+    let err = err[13:len(err)-2]
+    let arr = split(err, ':')
 
-function! iced#nrepl#eval#id() abort
-  let res = s:id_counter
-  let s:id_counter = (res < 100) ? res + 1 : 1
-  return res
+    return {'filename': arr[0], 'lnum': arr[1], 'text': text}
+  endif
+
+  " Clojure 1.10 or later
+  let err = matchstr(a:err, 'compiling at (.\+:\d\+:\d\+)')
+  if !empty(err)
+    let idx = stridx(a:err, "\n")
+    let text = (idx == -1) ? '' : iced#compat#trim(strpart(a:err, idx))
+
+    " 14 = len('compiling at (')
+    let err = err[14:len(err)-2]
+    let arr = split(err, ':')
+    return {'filename': arr[0], 'lnum': arr[1], 'text': text}
+  endif
 endfunction
 
 function! iced#nrepl#eval#err(err) abort
@@ -16,22 +33,13 @@ function! iced#nrepl#eval#err(err) abort
     return iced#qf#clear()
   endif
 
-  let err = matchstr(a:err, ':(.\+:\d\+:\d\+)')
-  if !empty(err)
-    let text = iced#compat#trim(substitute(a:err, err, '', ''))
-    let err = err[2:len(err)-2]
-    let arr = split(err, ':')
-
-    let info = {
-        \ 'filename': arr[0],
-        \ 'lnum': arr[1],
-        \ 'text': text,
-        \ }
-
-    call iced#qf#set([info])
+  let err_info = s:parse_error(a:err)
+  if !empty(err_info)
+    call iced#qf#set([err_info])
+    call iced#message#error_str(err_info['text'])
+  else
+    call iced#message#error_str(a:err)
   endif
-
-  call iced#message#error_str(a:err)
 endfunction
 
 function! s:out(resp) abort
@@ -71,7 +79,7 @@ function! iced#nrepl#eval#code(code, ...) abort
   let opt = get(a:, 1, {})
 
   let code = a:code
-  if g:iced#nrepl#eval#inside_comment && s:is_comment_form(code)
+  if g:iced#eval#inside_comment && s:is_comment_form(code)
     let code = s:extract_inside_form(code)
   endif
 

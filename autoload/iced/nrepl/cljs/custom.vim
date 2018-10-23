@@ -1,18 +1,18 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let g:iced#nrepl#cljs#custom#start_code = get(g:, 'iced#nrepl#cljs#custom#start_code', '')
-let g:iced#nrepl#cljs#custom#stop_code = get(g:, 'iced#nrepl#cljs#custom#stop_code', '')
+let g:iced#cljs#custom#start_code = get(g:, 'iced#cljs#custom#start_code', '')
+let g:iced#cljs#custom#stop_code = get(g:, 'iced#cljs#custom#stop_code', '')
 
 function! s:custom_start() abort
-  if !empty(g:iced#nrepl#cljs#custom#start_code)
-    call iced#nrepl#eval#repl(g:iced#nrepl#cljs#custom#start_code)
+  if !empty(g:iced#cljs#custom#start_code)
+    call iced#nrepl#eval#repl(g:iced#cljs#custom#start_code)
   endif
 endfunction
 
 function! s:custom_stop() abort
-  if !empty(g:iced#nrepl#cljs#custom#stop_code)
-    call iced#nrepl#eval#repl(g:iced#nrepl#cljs#custom#stop_code)
+  if !empty(g:iced#cljs#custom#stop_code)
+    call iced#nrepl#eval#repl(g:iced#cljs#custom#stop_code)
   endif
 endfunction
 

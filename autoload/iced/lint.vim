@@ -6,7 +6,7 @@ let s:M = s:V.import('Vim.Message')
 let s:last_warnings = []
 
 let s:enabled = v:true
-let g:iced#lint#linters = get(g:, 'iced#lint#linters', [])
+let g:iced#eastwood#linters = get(g:, 'iced#eastwood#linters', [])
 
 function! s:lint(warnings) abort
   let s:last_warnings = a:warnings
@@ -24,7 +24,7 @@ function! iced#lint#current_file() abort
   let s:last_warnings = []
   call iced#sign#unplace_all()
   let file = expand('%:p')
-  call iced#nrepl#op#iced#lint_file(file, g:iced#lint#linters, funcref('s:lint'))
+  call iced#nrepl#op#iced#lint_file(file, g:iced#eastwood#linters, funcref('s:lint'))
 endfunction
 
 function! iced#lint#echo_message() abort

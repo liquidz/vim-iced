@@ -29,7 +29,7 @@ function! s:build_palette() abort
     let palette[cmd] = ':Iced'.cmd
   endfor
 
-  let user_dict = get(g:, 'iced#palette#palette', {})
+  let user_dict = get(g:, 'iced#palette', {})
   for cmd in keys(user_dict)
     let palette[cmd] = user_dict[cmd]
   endfor

@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.6.2
+Version: 0.7.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -45,6 +45,8 @@ INTRODUCTION                                            *vim-iced-introduction*
   Requirement:
   - Vim 8.1 or later, Neovim 0.3.1 or later
     Neovim support is VERY EXPERIMENTAL
+  - Clojure 1.8 or later
+    1.9 is recommended
 
   Latest Version:
   - https://github.com/liquidz/vim-iced
@@ -85,7 +87,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.4.5"]
-                   [iced-nrepl "0.2.1"]
+                   [iced-nrepl "0.2.2"]
                    [cider/cider-nrepl "0.18.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
@@ -114,7 +116,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.18.0"]
-      [iced-nrepl "0.2.1"]])
+      [iced-nrepl "0.2.2"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -165,8 +167,8 @@ CLOJURE SCRIPT                                         *vim-iced-clojurescript*
   - custom
 
   With {custom} environment, you can define start/stop code.
-  - |g:iced#nrepl#cljs#custom#start_code|
-  - |g:iced#nrepl#cljs#custom#stop_code|
+  - |g:iced#cljs#custom#start_code|
+  - |g:iced#cljs#custom#stop_code|
 
   |IcedStartCljsRepl| to start cljs-repl.
   |IcedQuitCljsRepl| to quit it.
@@ -291,7 +293,7 @@ LINTING                                                      *vim-iced-linting*
     au CursorMoved  *.clj,*.cljs,*.cljc call iced#lint#echo_message()
   aug END
 <
-  To define which linters to use, see |g:iced#lint#linters|.
+  To define which linters to use, see |g:iced#eastwood#linters|.
 
 ==============================================================================
 INTERFACE                                                  *vim-iced-interface*
@@ -326,14 +328,14 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedStartCljsRepl [{env}]
   Start CLJS REPL with specified environment.
   REPL session changes to 'cljs.user' namespace.
-  If {env} is not passed, |g:iced#nrepl#cljs#default_env| is used.
+  If {env} is not passed, |g:iced#cljs#default_env| is used.
 
   Supports following environment currently.
   - figwheel
   - nashorn
   - custom
-    see |g:iced#nrepl#cljs#custom#start_code|
-        |g:iced#nrepl#cljs#custom#stop_code|
+    see |g:iced#cljs#custom#start_code|
+        |g:iced#cljs#custom#stop_code|
 
   Key is mapped to |<Plug>(iced_start_cljs_repl)|.
 
@@ -410,7 +412,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                            *:IcedTestSpecCheck*
 :IcedTestSpecCheck [{num-tests}]
   Run `clojure.spec.test.alpha/check` for the function under cursor.
-  If {num-tests} is not passed, |g:iced#nrepl#test#spec_num_tests| is used.
+  If {num-tests} is not passed, |g:iced#test#spec_num_tests| is used.
   Key is mapped to |<Plug>(iced_test_spec_check)|.
 
                                                           *:IcedTestBufferOpen*
@@ -922,13 +924,13 @@ g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
   Default value is `5`.
 
-                                                *g:iced#nrepl#cljs#default_env*
-g:iced#nrepl#cljs#default_env
+                                                      *g:iced#cljs#default_env*
+g:iced#cljs#default_env
   Environment used when |:IcedStartCljsRepl| is called with no argument.
   Default value is `'figwheel'`.
 
-                                             *g:iced#nrepl#eval#inside_comment*
-g:iced#nrepl#eval#inside_comment
+                                                   *g:iced#eval#inside_comment*
+g:iced#eval#inside_comment
   If {v:true}, evaluate inside comment form.
   Default value is `v:true`.
 
@@ -959,12 +961,12 @@ g:iced#buffer#error#height
   Error window height.
   Default value is |'previewheight'|.
 
-                                          *g:iced#nrepl#cljs#custom#start_code*
-g:iced#nrepl#cljs#custom#start_code
+                                                *g:iced#cljs#custom#start_code*
+g:iced#cljs#custom#start_code
   Code to start CLJS REPL in {custom} environment.
 
-                                           *g:iced#nrepl#cljs#custom#stop_code*
-g:iced#nrepl#cljs#custom#stop_code
+                                                 *g:iced#cljs#custom#stop_code*
+g:iced#cljs#custom#stop_code
   Code to stop CLJS REPL in {custom} environment.
 
                                                  *g:iced#nrepl#sync#timeout_ms*
@@ -972,8 +974,8 @@ g:iced#nrepl#sync#timeout_ms
   Time to timeout (unit: milli sec).
   Default value is `3000`.
 
-                                             *g:iced#nrepl#test#spec_num_tests*
-g:iced#nrepl#test#spec_num_tests
+                                                   *g:iced#test#spec_num_tests*
+g:iced#test#spec_num_tests
   Default num-tests for |IcedTestSpecCheck|.
   Default value is `10`.
 
@@ -994,6 +996,12 @@ g:iced#grep#target
   Default value is
     `'{{user.dir}}{{separator}}**{{separator}}*.{clj,cljs,cljc}'`.
 
+                                             *g:iced#refactor#prefix_rewriting*
+g:iced#refactor#prefix_rewriting
+  Should `clean-ns` favor prefix forms in the ns macro?
+  c.f. https://github.com/clojure-emacs/refactor-nrepl#available-features
+  Default value is `v:false`.
+
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*
 
@@ -1009,8 +1017,8 @@ g:iced#format#rule
 ------------------------------------------------------------------------------
 LINTERS                                          *vim-iced-customizing-linters*
 
-                                                          *g:iced#lint#linters*
-g:iced#lint#linters
+                                                      *g:iced#eastwood#linters*
+g:iced#eastwood#linters
   Linter definition which is used by `jonase/eastwood`.
   See details: |vim-iced-linting|
 
@@ -1019,7 +1027,7 @@ g:iced#lint#linters
 
   Ex. enable all linters
 >
-  let g:iced#lint#linters = ['all']
+  let g:iced#eastwood#linters = ['all']
 <
                                                    *g:iced_enable_auto_linting*
 g:iced_enable_auto_linting
@@ -1030,12 +1038,12 @@ g:iced_enable_auto_linting
 ------------------------------------------------------------------------------
 COMMAND PALETTES                                 *vim-iced-customizing-palette*
 
-                                                       *g:iced#palette#palette*
-g:iced#palette#palette
+                                                               *g:iced#palette*
+g:iced#palette
   User custom commands.
   Ex. define command palette to start cljs REPL
 >
-  let g:iced#palette#palette = {
+  let g:iced#palette = {
         \ 'foo bar': ':IcedEvalRepl (cljs-repl)'
         \ }
 <
