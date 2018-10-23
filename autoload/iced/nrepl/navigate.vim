@@ -22,37 +22,37 @@ function! s:open(mode, ns_name) abort
   exe printf('%s %s', cmd, resp['path'])
 endfunction
 
-" iced#nrepl#navigation#cycle_ns {{{
-function! iced#nrepl#navigation#cycle_ns(ns) abort
+" iced#nrepl#navigate#cycle_ns {{{
+function! iced#nrepl#navigate#cycle_ns(ns) abort
   return (s:S.ends_with(a:ns, '-test')
       \ ? substitute(a:ns, '-test$', '', '')
       \ : a:ns . '-test')
 endfunction " }}}
 
-" iced#nrepl#navigation#toggle_src_and_test {{{
-function! iced#nrepl#navigation#toggle_src_and_test() abort
+" iced#nrepl#navigate#toggle_src_and_test {{{
+function! iced#nrepl#navigate#toggle_src_and_test() abort
   if !iced#nrepl#is_connected()
     return iced#message#error('not_connected')
   endif
 
   let ns = iced#nrepl#ns#name()
-  let toggle_ns = iced#nrepl#navigation#cycle_ns(ns)
+  let toggle_ns = iced#nrepl#navigate#cycle_ns(ns)
   call s:open('e', toggle_ns)
 endfunction " }}}
 
-" iced#nrepl#navigation#related_ns {{{
+" iced#nrepl#navigate#related_ns {{{
 function! s:select_ns_from_list(namespaces) abort
   if empty(a:namespaces) | return iced#message#error('not_found') | endif
   call iced#selector({'candidates': a:namespaces, 'accept': funcref('s:open')})
 endfunction
 
-function! iced#nrepl#navigation#related_ns() abort
+function! iced#nrepl#navigate#related_ns() abort
   let ns_name = iced#nrepl#ns#name()
   call iced#message#info('fetching')
   call iced#nrepl#op#iced#related_namespaces(ns_name, funcref('s:select_ns_from_list'))
 endfunction " }}}
 
-" iced#nrepl#navigation#jump_to_def {{{
+" iced#nrepl#navigate#jump_to_def {{{
 function! s:jump(resp) abort
   let path = substitute(a:resp['file'], '^file:', '', '')
   let line = a:resp['line']
@@ -67,7 +67,7 @@ function! s:jump(resp) abort
   redraw!
 endfunction
 
-function! iced#nrepl#navigation#jump_to_def(symbol) abort
+function! iced#nrepl#navigate#jump_to_def(symbol) abort
   let pos = getcurpos()
   let pos[0] = bufnr('%')
   call s:L.push(s:tagstack, pos)
@@ -76,8 +76,8 @@ function! iced#nrepl#navigation#jump_to_def(symbol) abort
   call iced#nrepl#op#cider#info(kw, function('s:jump'))
 endfunction " }}}
 
-" iced#nrepl#navigation#jump_back {{{
-function! iced#nrepl#navigation#jump_back() abort
+" iced#nrepl#navigate#jump_back {{{
+function! iced#nrepl#navigate#jump_back() abort
   if empty(s:tagstack)
     echo 'Local tag stack is empty'
   else

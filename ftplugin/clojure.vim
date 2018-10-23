@@ -41,8 +41,8 @@ command!          IcedStdoutBufferOpen  call iced#buffer#stdout#open()
 command!          IcedStdoutBufferClear call iced#buffer#stdout#clear()
 command!          IcedStdoutBufferClose call iced#buffer#stdout#close()
 
-command! -nargs=? IcedDefJump           call iced#nrepl#navigation#jump_to_def(<q-args>)
-command!          IcedDefBack           call iced#nrepl#navigation#jump_back()
+command! -nargs=? IcedDefJump           call iced#nrepl#navigate#jump_to_def(<q-args>)
+command!          IcedDefBack           call iced#nrepl#navigate#jump_back()
 
 command! -nargs=? IcedDocumentOpen      call iced#nrepl#document#open(<q-args>)
 command!          IcedFormDocument      call iced#nrepl#document#current_form()
@@ -54,10 +54,10 @@ command!          IcedCommandPalette    call iced#palette#show()
 command!          IcedSlurp             call iced#paredit#deep_slurp()
 command!          IcedBarf              call iced#paredit#barf()
 command!          IcedFormat            call iced#format#form()
-command!          IcedToggleSrcAndTest  call iced#nrepl#navigation#toggle_src_and_test()
+command!          IcedToggleSrcAndTest  call iced#nrepl#navigate#toggle_src_and_test()
 command! -nargs=? IcedGrep              call iced#grep#exe(<q-args>)
 
-command!          IcedRelatedNamespace  call iced#nrepl#navigation#related_ns()
+command!          IcedRelatedNamespace  call iced#nrepl#navigate#related_ns()
 command!          IcedBrowseSpec        call iced#nrepl#spec#list()
 command!          IcedClearCtrlpCache   call ctrlp#iced#cache#clear()
 
