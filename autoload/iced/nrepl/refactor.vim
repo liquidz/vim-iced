@@ -141,7 +141,7 @@ function! s:resolve_missing(symbol, resp) abort
   if empty(a:resp['candidates'])
     let ns_candidates = []
   else
-    let alias_dict = iced#nrepl#ns#alias#dict(iced#nrepl#ns#get())
+    let alias_dict = iced#nrepl#ns#alias_dict(iced#nrepl#ns#get())
     if has_key(alias_dict, symbol_alias)
       return iced#message#error_str(printf(iced#message#get('alias_exists'), symbol_alias))
     endif
@@ -179,7 +179,7 @@ function! s:add(ns_name) abort
   if has_key(favorites, a:ns_name)
     let ns_alias = favorites[a:ns_name]
   else
-    let candidate = iced#nrepl#ns#alias#find_existing_alias(a:ns_name)
+    let candidate = iced#nrepl#ns#find_existing_alias(a:ns_name)
     if empty(candidate)
       let candidate = ''
     endif
