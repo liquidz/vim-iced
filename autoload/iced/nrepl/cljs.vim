@@ -30,7 +30,7 @@ function! iced#nrepl#cljs#switch_session(resp) abort
   endif
 endfunction
 
-let g:iced#nrepl#cljs#default_env = get(g:, 'iced#nrepl#cljs#default_env', 'figwheel')
+let g:iced#cljs#default_env = get(g:, 'iced#cljs#default_env', 'figwheel')
 let s:using_env_key = ''
 
 let s:env = {
@@ -40,7 +40,7 @@ let s:env = {
     \ }
 
 function! iced#nrepl#cljs#repl(env_key) abort
-  let env_key = iced#compat#trim(empty(a:env_key) ? g:iced#nrepl#cljs#default_env : a:env_key)
+  let env_key = iced#compat#trim(empty(a:env_key) ? g:iced#cljs#default_env : a:env_key)
   if !has_key(s:env, env_key)
     return iced#message#error('invalid_cljs_env')
   endif

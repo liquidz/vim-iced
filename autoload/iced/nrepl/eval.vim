@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let g:iced#nrepl#eval#inside_comment = get(g:, 'iced#nrepl#eval#inside_comment', v:true)
+let g:iced#eval#inside_comment = get(g:, 'iced#eval#inside_comment', v:true)
 
 let s:id_counter = 1
 
@@ -71,7 +71,7 @@ function! iced#nrepl#eval#code(code, ...) abort
   let opt = get(a:, 1, {})
 
   let code = a:code
-  if g:iced#nrepl#eval#inside_comment && s:is_comment_form(code)
+  if g:iced#eval#inside_comment && s:is_comment_form(code)
     let code = s:extract_inside_form(code)
   endif
 

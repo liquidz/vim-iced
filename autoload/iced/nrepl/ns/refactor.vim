@@ -28,8 +28,8 @@ let s:default_ns_favorites = {
       \   'clojure.zip': 'zip',
       \   },
       \ }
-let g:iced#nrepl#ns#refactor#favorites
-      \ = get(g:, 'iced#nrepl#ns#refactor#favorites', s:default_ns_favorites)
+let g:iced#ns#favorites
+      \ = get(g:, 'iced#ns#favorites', s:default_ns_favorites)
 
 """ iced#nrepl#ns#refactor#clean
 """ ----------------------------------------------------------------
@@ -139,7 +139,7 @@ endfunction
 """ ----------------------------------------------------------------
 
 function! s:add(ns_name) abort
-  let favorites = get(g:iced#nrepl#ns#refactor#favorites, iced#nrepl#current_session_key(), {})
+  let favorites = get(g:iced#ns#favorites, iced#nrepl#current_session_key(), {})
   if has_key(favorites, a:ns_name)
     let ns_alias = favorites[a:ns_name]
   else
@@ -164,7 +164,7 @@ endfunction
 function! s:ns_list(resp) abort
   if !has_key(a:resp, 'ns-list') | return iced#message#error('ns_list_error') | endif
   let namespaces = get(a:resp, 'ns-list', [])
-  let favorites = get(g:iced#nrepl#ns#refactor#favorites, iced#nrepl#current_session_key(), {})
+  let favorites = get(g:iced#ns#favorites, iced#nrepl#current_session_key(), {})
   let namespaces = s:L.uniq(s:L.concat([namespaces, keys(favorites)]))
 
   call iced#selector({
