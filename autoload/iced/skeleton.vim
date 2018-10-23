@@ -9,7 +9,7 @@ function! s:src_skeleton_list(ns) abort
 endfunction
 
 function! s:clj_test_skeleton_list(ns) abort
-  let src_ns = iced#nrepl#ns#transition#cycle(a:ns)
+  let src_ns = iced#nrepl#navigation#cycle_ns(a:ns)
   return [
       \ printf('(ns %s', a:ns),
       \ '  (:require [clojure.test :as t]',
@@ -18,7 +18,7 @@ function! s:clj_test_skeleton_list(ns) abort
 endfunction
 
 function! s:cljs_test_skeleton_list(ns) abort
-  let src_ns = iced#nrepl#ns#transition#cycle(a:ns)
+  let src_ns = iced#nrepl#navigation#cycle_ns(a:ns)
   return [
       \ printf('(ns %s', a:ns),
       \ '  (:require [cljs.test :as t :include-macros true]',
@@ -27,7 +27,7 @@ function! s:cljs_test_skeleton_list(ns) abort
 endfunction
 
 function! s:cljc_test_skeleton_list(ns) abort
-  let src_ns = iced#nrepl#ns#transition#cycle(a:ns)
+  let src_ns = iced#nrepl#navigation#cycle_ns(a:ns)
   return [
       \ printf('(ns %s', a:ns),
       \ '  (:require #?@(:clj  [[clojure.test :as t]',

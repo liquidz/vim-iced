@@ -170,7 +170,7 @@ endfunction
 function! iced#nrepl#test#ns() abort
   let ns = iced#nrepl#ns#name()
   if !s:S.ends_with(ns, '-test')
-    let ns = iced#nrepl#ns#transition#cycle(ns)
+    let ns = iced#nrepl#navigation#cycle_ns(ns)
   endif
 
   call iced#sign#unplace_all()

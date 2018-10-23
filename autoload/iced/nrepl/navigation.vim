@@ -19,32 +19,29 @@ function! s:open(mode, ns_name) abort
   exe printf('%s %s', cmd, resp['path'])
 endfunction
 
-function! iced#nrepl#ns#transition#cycle(ns) abort
+function! iced#nrepl#navigation#cycle_ns(ns) abort
   return (s:S.ends_with(a:ns, '-test')
       \ ? substitute(a:ns, '-test$', '', '')
       \ : a:ns . '-test'
       \ )
 endfunction
 
-function! iced#nrepl#ns#transition#toggle_src_and_test() abort
+function! iced#nrepl#navigation#toggle_src_and_test() abort
   if !iced#nrepl#is_connected()
     return iced#message#error('not_connected')
   endif
 
   let ns = iced#nrepl#ns#name()
-  let toggle_ns = iced#nrepl#ns#transition#cycle(ns)
+  let toggle_ns = iced#nrepl#navigation#cycle_ns(ns)
   call s:open('e', toggle_ns)
 endfunction
 
-"let s:cache_name = 'namespaces'
-
 function! s:select_ns_from_list(namespaces) abort
   if empty(a:namespaces) | return iced#message#error('not_found') | endif
-  "call ctrlp#iced#cache#write(s:cache_name, a:namespaces)
   call iced#selector({'candidates': a:namespaces, 'accept': funcref('s:open')})
 endfunction
 
-function! iced#nrepl#ns#transition#related() abort
+function! iced#nrepl#navigation#related_ns() abort
   let ns_name = iced#nrepl#ns#name()
   call iced#message#info('fetching')
   call iced#nrepl#op#iced#related_namespaces(ns_name, funcref('s:select_ns_from_list'))

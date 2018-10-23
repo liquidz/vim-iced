@@ -54,10 +54,10 @@ command!          IcedCommandPalette    call iced#palette#show()
 command!          IcedSlurp             call iced#paredit#deep_slurp()
 command!          IcedBarf              call iced#paredit#barf()
 command!          IcedFormat            call iced#format#form()
-command!          IcedToggleSrcAndTest  call iced#nrepl#ns#transition#toggle_src_and_test()
+command!          IcedToggleSrcAndTest  call iced#nrepl#navigation#toggle_src_and_test()
 command! -nargs=? IcedGrep              call iced#grep#exe(<q-args>)
 
-command!          IcedRelatedNamespace  call iced#nrepl#ns#transition#related()
+command!          IcedRelatedNamespace  call iced#nrepl#navigation#related_ns()
 command!          IcedBrowseSpec        call iced#nrepl#spec#list()
 command!          IcedClearCtrlpCache   call ctrlp#iced#cache#clear()
 
