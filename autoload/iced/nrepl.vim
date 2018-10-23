@@ -100,21 +100,18 @@ function! s:get_message_id(x) abort
   endif
 endfunction
 
-function! s:merge_response_handler(resp) abort
-  let id = s:get_message_id(a:resp)
-  let result = get(s:messages[id], 'result', {})
-
+function! s:merge_response_handler(resp, last_result) abort
+  let result = empty(a:last_result) ? {} : a:last_result
   for resp in iced#util#ensure_array(a:resp)
     for k in keys(resp)
       let result[k] = resp[k]
     endfor
   endfor
 
-  let s:messages[id]['result'] = result
   return result
 endfunction
 
-function! s:default_handler(resp) abort
+function! s:default_handler(resp, _) abort
   return a:resp
 endfunction
 
@@ -161,14 +158,15 @@ function! s:dispatcher(ch, resp) abort
   endif
 
   if has_key(s:messages, id)
-    let handler_result = ''
+    let last_handler_result = get(s:messages[id], 'handler_result', '')
     let Handler = get(s:handlers, s:messages[id]['op'], funcref('s:default_handler'))
     if iced#util#is_function(Handler)
-      let handler_result = Handler(resp)
+      let s:messages[id]['handler_result'] = Handler(resp, last_handler_result)
     endif
 
     if iced#util#has_status(resp, 'done')
       let Callback = get(s:messages[id], 'callback')
+      let handler_result = get(s:messages[id], 'handler_result')
       unlet s:messages[id]
       call iced#nrepl#debug#quit()
 
