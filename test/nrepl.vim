@@ -45,10 +45,10 @@ function! s:suite.change_to_invalid_session_test() abort
 endfunction
 
 function! s:suite.is_connected_test() abort
-  call s:ch.inject_dummy({'status_value': 'open'})
+  call s:ch.register_test_builder({'status_value': 'open'})
   call s:assert.true(iced#nrepl#is_connected())
 
-  call s:ch.inject_dummy({'status_value': 'fail'})
+  call s:ch.register_test_builder({'status_value': 'fail'})
   call s:assert.false(iced#nrepl#is_connected())
 endfunction
 
@@ -61,7 +61,7 @@ function! s:suite.connect_test() abort
     return {}
   endfunction
 
-  call s:ch.inject_dummy({
+  call s:ch.register_test_builder({
       \ 'status_value': 'open',
       \ 'relay': {msg -> test.relay(msg)},
       \ })
@@ -77,7 +77,7 @@ function! s:suite.connect_test() abort
 endfunction
 
 function! s:suite.connect_failure_test() abort
-  call s:ch.inject_dummy({'status_value': 'fail'})
+  call s:ch.register_test_builder({'status_value': 'fail'})
   call s:assert.equals(iced#nrepl#connect(1234), v:false)
 endfunction
 
@@ -94,7 +94,7 @@ function! s:suite.disconnect_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.inject_dummy({
+  call s:ch.register_test_builder({
       \ 'status_value': 'open',
       \ 'relay': {msg -> test.relay(msg)},
       \ })
@@ -123,7 +123,7 @@ function! s:suite.eval_test() abort
     let self['result'] = a:result
   endfunction
 
-  call s:ch.inject_dummy({
+  call s:ch.register_test_builder({
       \ 'status_value': 'open',
       \ 'relay_raw': {msg -> test.relay_raw(msg)},
       \ })

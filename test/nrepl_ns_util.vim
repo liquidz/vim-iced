@@ -16,7 +16,7 @@ function! s:suite.replace_test() abort
   call s:buf.start_dummy([
         \ '(ns foo.core)',
         \ 'nil|'])
-  call s:ch.inject_dummy({'status_value': 'open', 'relay': funcref('s:format_relay')})
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:format_relay')})
 
   call s:assert.equals(line('.'), 2)
   call iced#nrepl#ns#util#replace("(ns bar.core\n  (:require clojure.string))")
@@ -93,7 +93,7 @@ function! s:suite.add_test() abort
   call s:buf.start_dummy([
         \ '(ns foo.core)',
         \ 'nil|'])
-  call s:ch.inject_dummy({'status_value': 'open', 'relay': funcref('s:format_relay')})
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:format_relay')})
 
   call s:assert.equals(line('.'), 2)
 

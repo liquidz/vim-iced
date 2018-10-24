@@ -5,7 +5,7 @@ let s:helper = {}
 let s:Local = g:themis#vital.import('Vim.ScriptLocal')
 let s:funcs = s:Local.sfuncs('autoload/iced/nrepl.vim')
 
-function! s:test_channel(opt) abort
+function! s:build_test_channel(opt) abort
   let dummy = {'env': 'test', 'status_value': 'fail'}
   call extend(dummy, a:opt)
 
@@ -53,8 +53,8 @@ function! s:test_channel(opt) abort
   return dummy
 endfunction
 
-function! s:helper.inject_dummy(opt) abort
-  call iced#nrepl#inject_channel(s:test_channel(a:opt))
+function! s:helper.register_test_builder(opt) abort
+  call iced#dicon#register('channel', function('s:build_test_channel', [a:opt]))
 endfunction
 
 function! themis#helper#iced_channel#new(runner) abort
