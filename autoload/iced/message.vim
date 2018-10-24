@@ -33,24 +33,36 @@ function! iced#message#error_str(s) abort
   call s:echom('ErrorMsg', a:s)
 endfunction
 
-function! iced#message#echom(k) abort
-  echom iced#message#get(a:k)
+function! iced#message#echom(k, ...) abort
+  let msg = iced#message#get(a:k)
+  if !empty(a:000)
+    let msg = call('printf', [msg] + a:000)
+  endif
+  echom msg
 endfunction
 
-function! iced#message#info(k) abort
-  call iced#message#info_str(iced#message#get(a:k))
+function! iced#message#info(k, ...) abort
+  let msg = iced#message#get(a:k)
+  if !empty(a:000)
+    let msg = call('printf', [msg] + a:000)
+  endif
+  call iced#message#info_str(msg)
 endfunction
 
-function! iced#message#warning(k) abort
-  call iced#message#warning_str(iced#message#get(a:k))
+function! iced#message#warning(k, ...) abort
+  let msg = iced#message#get(a:k)
+  if !empty(a:000)
+    let msg = call('printf', [msg] + a:000)
+  endif
+  call iced#message#warning_str(msg)
 endfunction
 
-function! iced#message#error(k) abort
-  call iced#message#error_str(iced#message#get(a:k))
-endfunction
-
-function! iced#message#test(k) abort
-  return s:msg.get(a:k)
+function! iced#message#error(k, ...) abort
+  let msg = iced#message#get(a:k)
+  if !empty(a:000)
+    let msg = call('printf', [msg] + a:000)
+  endif
+  call iced#message#error_str(msg)
 endfunction
 
 let &cpo = s:save_cpo
