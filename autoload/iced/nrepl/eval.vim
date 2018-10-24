@@ -105,7 +105,7 @@ function! s:undefined(resp, symbol) abort
       call iced#message#error_str(get(a:resp, 'ex', 'undef-error'))
     endif
   else
-    call iced#message#info_str(printf(iced#message#get('undefined'), a:symbol))
+    call iced#message#info('undefined', a:symbol)
   endif
 endfunction
 

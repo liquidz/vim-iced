@@ -113,7 +113,7 @@ endfunction
 
 function! s:add_ns(ns_name, symbol_alias) abort
   call iced#nrepl#ns#util#add(a:ns_name, a:symbol_alias)
-  call iced#message#info_str(printf(iced#message#get('ns_added'), a:ns_name))
+  call iced#message#info('ns_added', a:ns_name)
 endfunction
 
 function! s:add_all_ns_alias_candidates(candidates, symbol_alias) abort
@@ -143,7 +143,7 @@ function! s:resolve_missing(symbol, resp) abort
   else
     let alias_dict = iced#nrepl#ns#alias_dict(iced#nrepl#ns#get())
     if has_key(alias_dict, symbol_alias)
-      return iced#message#error_str(printf(iced#message#get('alias_exists'), symbol_alias))
+      return iced#message#error('alias_exists', symbol_alias)
     endif
 
     let existing_ns = values(alias_dict) + ['clojure.core']
@@ -187,14 +187,10 @@ function! s:add(ns_name) abort
   endif
 
   call iced#nrepl#ns#util#add(a:ns_name, ns_alias)
-
-  let msg = ''
-  if empty(ns_alias)
-    let msg = printf(iced#message#get('ns_added'), a:ns_name)
-  else
-    let msg = printf(iced#message#get('ns_added_as'), a:ns_name, ns_alias)
-  endif
-  call iced#message#info_str(msg)
+  return (empty(ns_alias)
+        \ ? iced#message#info('ns_added', a:ns_name)
+        \ : iced#message#info('ns_added_as', a:ns_name, ns_alias)
+        \ )
 endfunction
 
 function! s:ns_list(resp) abort
