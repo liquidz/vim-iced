@@ -124,7 +124,7 @@ function! s:dispatcher(ch, resp) abort
   call iced#util#debug(text)
 
   try
-    let resp = iced#nrepl#bencode#decode(text)
+    let resp = iced#dicon#get('bencode').decode(text)
   catch /Failed to parse bencode/
     let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
     return
@@ -220,7 +220,9 @@ function! iced#nrepl#send(data) abort
     let s:messages[id] = message
   endif
 
-  call iced#dicon#get('channel').sendraw(s:nrepl['channel'], iced#nrepl#bencode#encode(data))
+  call iced#dicon#get('channel').sendraw(
+        \ s:nrepl['channel'],
+        \ iced#dicon#get('bencode').encode(data))
 endfunction
 
 function! iced#nrepl#is_op_running(op) abort " {{{
