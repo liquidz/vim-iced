@@ -17,7 +17,6 @@ endfunction
 let s:nrepl = s:initialize_nrepl()
 let s:handlers = {}
 
-let s:ch = iced#channel#new()
 let s:messages = {}
 let s:response_buffer = ''
 
@@ -29,10 +28,6 @@ function! iced#nrepl#id() abort
   let res = s:id_counter
   let s:id_counter = (res < 100) ? res + 1 : 1
   return res
-endfunction
-
-function! iced#nrepl#inject_channel(ch) abort
-  let s:ch = a:ch
 endfunction
 
 " SESSIONS {{{
@@ -129,7 +124,7 @@ function! s:dispatcher(ch, resp) abort
   call iced#util#debug(text)
 
   try
-    let resp = iced#nrepl#bencode#decode(text)
+    let resp = iced#dicon#get('bencode').decode(text)
   catch /Failed to parse bencode/
     let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
     return
@@ -225,7 +220,9 @@ function! iced#nrepl#send(data) abort
     let s:messages[id] = message
   endif
 
-  call s:ch.sendraw(s:nrepl['channel'], iced#nrepl#bencode#encode(data))
+  call iced#dicon#get('channel').sendraw(
+        \ s:nrepl['channel'],
+        \ iced#dicon#get('bencode').encode(data))
 endfunction
 
 function! iced#nrepl#is_op_running(op) abort " {{{
@@ -248,7 +245,7 @@ endfunction
 
 function! s:status(ch) abort
   try
-    return s:ch.status(a:ch)
+    return iced#dicon#get('channel').status(a:ch)
   catch
     return 'fail'
   endtry
@@ -285,7 +282,7 @@ function! iced#nrepl#connect(port) abort
   if ! iced#nrepl#is_connected()
     let address = printf('%s:%d', g:iced#nrepl#host, a:port)
     let s:nrepl['port'] = a:port
-    let s:nrepl['channel'] = s:ch.open(address, {
+    let s:nrepl['channel'] = iced#dicon#get('channel').open(address, {
         \ 'mode': 'raw',
         \ 'callback': funcref('s:dispatcher'),
         \ 'drop': 'never',
@@ -313,7 +310,7 @@ function! iced#nrepl#disconnect() abort " {{{
     call iced#nrepl#sync#send({'op': 'interrupt', 'session': id})
     call iced#nrepl#sync#close(id)
   endfor
-  call s:ch.close(s:nrepl['channel'])
+  call iced#dicon#get('channel').close(s:nrepl['channel'])
   call s:initialize_nrepl()
   call iced#cache#clear()
 endfunction " }}}

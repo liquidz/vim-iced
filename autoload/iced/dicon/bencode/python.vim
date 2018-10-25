@@ -3,9 +3,8 @@ set cpo&vim
 
 python3 import vim
 py3file <sfile>:h:h:h:h:h/python/bencode.py
-let s:decoder = {}
 
-function! s:decoder.decode(s) abort
+function! s:decode_via_python(s) abort
   let ret = ''
   python3 <<EOT
 ret = iced_bencode_decode(str(vim.eval('a:s')))
@@ -18,8 +17,10 @@ EOT
   return ret
 endfunction
 
-function! iced#nrepl#bencode#python#new() abort
-  return s:decoder
+function! iced#dicon#bencode#python#build() abort
+  let bencode = iced#dicon#bencode#vim#build()
+  let bencode['decode'] = funcref('s:decode_via_python')
+  return bencode
 endfunction
 
 let &cpo = s:save_cpo

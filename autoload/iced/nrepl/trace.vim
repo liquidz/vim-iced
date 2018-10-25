@@ -32,7 +32,7 @@ function! s:toggle_trace_var(resp, opts) abort
     endif
   endif
 
-  call iced#message#info_str(printf(iced#message#get(msg_key), var))
+  call iced#message#info(msg_key, var)
 endfunction
 
 function! iced#nrepl#trace#toggle_var(symbol) abort
@@ -53,7 +53,7 @@ function! s:toggle_trace_ns(resp, ns_name) abort
   endif
 
   let msg_key = (a:resp['ns-status'] ==# 'traced') ? 'start_to_trace' : 'stop_to_trace'
-  call iced#message#info_str(printf(iced#message#get(msg_key), a:ns_name))
+  call iced#message#info(msg_key, a:ns_name)
 endfunction
 
 function! iced#nrepl#trace#toggle_ns(ns_name) abort

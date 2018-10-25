@@ -50,5 +50,6 @@
   'invalid_session':    'Session error. You should be in %s session.',
   'grimoire_error':     'Invalid response from Grimoire.',
   'no_set_hidden':      'You must add `set hidden` to your .vimrc.',
+  'jump_error':         'Failed to jump: ''%s''.',
 }
 #vim:ft=ruby

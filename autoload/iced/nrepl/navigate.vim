@@ -58,6 +58,10 @@ function! s:jump(resp) abort
   let line = a:resp['line']
   let column = a:resp['column']
 
+  if stridx(path, 'jar:') == 0
+    return iced#message#error('jump_error', path)
+  endif
+
   if expand('%:p') !=# path
     execute(printf(':edit %s', path))
   endif

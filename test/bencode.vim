@@ -1,30 +1,89 @@
-let s:suite  = themis#suite('iced.nrepl.bencode')
+let s:suite  = themis#suite('iced.dicon.bencode.vim')
 let s:assert = themis#helper('assert')
+
+function! s:assert_parse_failure(f) abort
+  try
+    call a:f()
+    call s:assert.fail('must be errored')
+  catch /^Failed to parse/
+    call s:assert.true(1)
+  catch
+    call s:assert.fail('unexpected error: ' . v:exception)
+  endtry
+endfunction
 
 "" ENCODING TEST
 
 function! s:suite.encode_string_test() abort
-  call s:assert.equals('5:hello', iced#nrepl#bencode#encode('hello'))
-  call s:assert.equals('0:', iced#nrepl#bencode#encode(''))
-  call s:assert.equals('0:', iced#nrepl#bencode#encode(v:none))
+  call iced#dicon#register('bencode', function('iced#dicon#bencode#vim#build'))
+
+  call s:assert.equals('5:hello', iced#dicon#get('bencode').encode('hello'))
+  call s:assert.equals('0:', iced#dicon#get('bencode').encode(''))
+  call s:assert.equals('0:', iced#dicon#get('bencode').encode(v:none))
 endfunction
 
 function! s:suite.encode_number_test() abort
-  call s:assert.equals('i1024e', iced#nrepl#bencode#encode(1024))
+  call iced#dicon#register('bencode', function('iced#dicon#bencode#vim#build'))
+
+  call s:assert.equals('i1024e', iced#dicon#get('bencode').encode(1024))
 endfunction
 
 function! s:suite.encode_list_test() abort
-  call s:assert.equals('l3:fooi123ee', iced#nrepl#bencode#encode(['foo', 123]))
-  call s:assert.equals('l3:fooli123eee', iced#nrepl#bencode#encode(['foo', [123]]))
-  call s:assert.equals('le', iced#nrepl#bencode#encode([]))
-  call s:assert.equals('l0:e', iced#nrepl#bencode#encode(['']))
+  call iced#dicon#register('bencode', function('iced#dicon#bencode#vim#build'))
+
+  call s:assert.equals('l3:fooi123ee', iced#dicon#get('bencode').encode(['foo', 123]))
+  call s:assert.equals('l3:fooli123eee', iced#dicon#get('bencode').encode(['foo', [123]]))
+  call s:assert.equals('le', iced#dicon#get('bencode').encode([]))
+  call s:assert.equals('l0:e', iced#dicon#get('bencode').encode(['']))
 endfunction
 
 function! s:suite.encode_dict_test() abort
-  call s:assert.equals('d3:fooi123ee', iced#nrepl#bencode#encode({'foo': 123}))
-  call s:assert.equals('d3:fool3:bari123eee', iced#nrepl#bencode#encode({'foo': ['bar', 123]}))
-  call s:assert.equals('d3:food3:bari123eee', iced#nrepl#bencode#encode({'foo': {'bar': 123}}))
-  call s:assert.equals('de', iced#nrepl#bencode#encode({}))
-  call s:assert.equals('d3:foo0:e', iced#nrepl#bencode#encode({'foo': ''}))
-  call s:assert.equals('d3:foo0:e', iced#nrepl#bencode#encode({'foo': v:none}))
+  call iced#dicon#register('bencode', function('iced#dicon#bencode#vim#build'))
+
+  call s:assert.equals('d3:fooi123ee', iced#dicon#get('bencode').encode({'foo': 123}))
+  call s:assert.equals('d3:fool3:bari123eee', iced#dicon#get('bencode').encode({'foo': ['bar', 123]}))
+  call s:assert.equals('d3:food3:bari123eee', iced#dicon#get('bencode').encode({'foo': {'bar': 123}}))
+  call s:assert.equals('de', iced#dicon#get('bencode').encode({}))
+  call s:assert.equals('d3:foo0:e', iced#dicon#get('bencode').encode({'foo': ''}))
+  call s:assert.equals('d3:foo0:e', iced#dicon#get('bencode').encode({'foo': v:none}))
+endfunction
+
+"" DECODING TEST
+
+function! s:suite.decode_string_test() abort
+  call iced#dicon#register('bencode', function('iced#dicon#bencode#vim#build'))
+
+  call s:assert.equals('hello', iced#dicon#get('bencode').decode('5:hello'))
+  call s:assert_parse_failure({-> iced#dicon#get('bencode').decode('5:helloo')})
+  call s:assert_parse_failure({-> iced#dicon#get('bencode').decode('5hello')})
+endfunction
+
+function! s:suite.decode_integer_test() abort
+  call s:assert.equals(1024, iced#dicon#get('bencode').decode('i1024e'))
+  call s:assert_parse_failure({-> iced#dicon#get('bencode').decode('i1024')})
+endfunction
+
+function! s:suite.decode_list_test() abort
+  call s:assert.equals(['foo', 123], iced#dicon#get('bencode').decode('l3:fooi123ee'))
+  call s:assert.equals(['foo', [123]], iced#dicon#get('bencode').decode('l3:fooli123eee'))
+  call s:assert.equals([], iced#dicon#get('bencode').decode('le'))
+  call s:assert_parse_failure({-> iced#dicon#get('bencode').decode('li1024e')})
+  call s:assert_parse_failure({-> iced#dicon#get('bencode').decode('li1024')})
+endfunction
+
+function! s:suite.decode_dict_test() abort
+  call s:assert.equals({'foo': 123}, iced#dicon#get('bencode').decode('d3:fooi123ee'))
+  call s:assert.equals({'foo': ['bar', 123]}, iced#dicon#get('bencode').decode('d3:fool3:bari123eee'))
+  call s:assert.equals({'foo': {'bar': 123}}, iced#dicon#get('bencode').decode('d3:food3:bari123eee'))
+  call s:assert.equals({}, iced#dicon#get('bencode').decode('de'))
+  call s:assert_parse_failure({-> iced#dicon#get('bencode').decode('d3:fooi123e')})
+  call s:assert_parse_failure({-> iced#dicon#get('bencode').decode('d3:fooi123')})
+  call s:assert_parse_failure({-> iced#dicon#get('bencode').decode('d3:foo')})
+  call s:assert_parse_failure({-> iced#dicon#get('bencode').decode('d3:fo')})
+  call s:assert_parse_failure({-> iced#dicon#get('bencode').decode('d')})
+endfunction
+
+function! s:suite.decode_concated_test() abort
+  call s:assert.equals(['foo', 123], iced#dicon#get('bencode').decode('3:fooi123e'))
+  call s:assert.equals([{'foo': 123}, {'bar': 456}], iced#dicon#get('bencode').decode('d3:fooi123eed3:bari456ee'))
 endfunction

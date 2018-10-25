@@ -20,7 +20,7 @@ function! s:suite.form_test() abort
         \ '(list :foo)',
         \ '(list 123 456|)',
         \ ])
-  call s:ch.inject_dummy({
+  call s:ch.register_test_builder({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:format_code_relay(msg, ':dummy-formatted')}})
 

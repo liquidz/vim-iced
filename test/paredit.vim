@@ -19,7 +19,7 @@ function! s:format_code_relay(msg) abort
 endfunction
 
 function! s:suite.deep_slurp_test() abort
-  call s:ch.inject_dummy({
+  call s:ch.register_test_builder({
       \ 'status_value': 'open',
       \ 'relay': funcref('s:format_code_relay'),
       \ })

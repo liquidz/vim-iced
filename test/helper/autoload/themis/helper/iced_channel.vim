@@ -5,7 +5,7 @@ let s:helper = {}
 let s:Local = g:themis#vital.import('Vim.ScriptLocal')
 let s:funcs = s:Local.sfuncs('autoload/iced/nrepl.vim')
 
-function! s:test_channel(opt) abort
+function! s:build_test_channel(opt) abort
   let dummy = {'env': 'test', 'status_value': 'fail'}
   call extend(dummy, a:opt)
 
@@ -25,18 +25,18 @@ function! s:test_channel(opt) abort
 
   function! dummy.sendraw(handle, string) abort
     if has_key(self, 'relay') && type(self.relay) == 2
-      let sent_data = iced#nrepl#bencode#decode(a:string)
+      let sent_data = iced#dicon#get('bencode').decode(a:string)
       let resp_data = self.relay(sent_data)
       if has_key(sent_data, 'id') && !has_key(resp_data, 'id')
         let resp_data['id'] = sent_data['id']
       endif
 
-      let resp_data = iced#nrepl#bencode#encode(resp_data)
+      let resp_data = iced#dicon#get('bencode').encode(resp_data)
       let Cb = (has_key(self, 'callback') && type(self.callback) == 2)
           \ ? self.callback : s:funcs.dispatcher
       call Cb(self, resp_data)
     elseif has_key(self, 'relay_raw') && type(self.relay_raw) == 2
-      let sent_data = iced#nrepl#bencode#decode(a:string)
+      let sent_data = iced#dicon#get('bencode').decode(a:string)
       let resp_data = self.relay_raw(sent_data)
       let Cb = (has_key(self, 'callback') && type(self.callback) == 2)
           \ ? self.callback : s:funcs.dispatcher
@@ -53,8 +53,8 @@ function! s:test_channel(opt) abort
   return dummy
 endfunction
 
-function! s:helper.inject_dummy(opt) abort
-  call iced#nrepl#inject_channel(s:test_channel(a:opt))
+function! s:helper.register_test_builder(opt) abort
+  call iced#dicon#register('channel', function('s:build_test_channel', [a:opt]))
 endfunction
 
 function! themis#helper#iced_channel#new(runner) abort
