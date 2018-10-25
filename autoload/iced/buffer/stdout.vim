@@ -66,5 +66,9 @@ function! iced#buffer#stdout#close() abort
   call iced#buffer#close(s:bufname)
 endfunction
 
+function! iced#buffer#stdout#is_visible() abort
+  return iced#buffer#is_visible(s:bufname)
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
