@@ -24,7 +24,7 @@ test: themis lint python_doctest
 	git clone https://github.com/vim-jp/vimdoc-ja-working .vimdoc
 
 themis: .vim-themis .vim-sexp
-	./.vim-themis/bin/themis --runtimepath ./.vim-sexp --runtimepath ./test/helper
+	./.vim-themis/bin/themis
 
 html: doc/vim-iced.txt .vimdoc
 	rm -rf target/html
