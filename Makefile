@@ -1,4 +1,4 @@
-.PHONY: all vital test themis html lint python_doctest clean bin ancient aspell repl circleci
+.PHONY: all vital test themis html pip_install lint python_doctest clean clean-all bin ancient aspell repl circleci
 
 PLUGIN_NAME = iced
 VITAL_MODULES = Data.Dict \
@@ -43,10 +43,10 @@ coverage: themis
 
 clean:
 	\rm -rf target .vim-sexp .vimdoc .vim-themis
-	\rm -f bin/iced
 
 clan-all: clean
 	\rm -rf autoload/vital*
+	\rm -f bin/iced
 
 bin:
 	clojure -A:jackin -m iced-jackin
@@ -61,10 +61,5 @@ aspell:
 repl:
 	clojure -R:jackin:dev -m iced-repl
 
-circleci: _circleci-lint _circleci-test
-_circleci-lint:
-	circleci build --job lint
-_circleci-test:
-	\rm -rf .vim-sexp
-	\rm -rf .vimdoc
-	circleci build --job test
+circleci: clean
+	circleci build
