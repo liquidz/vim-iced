@@ -1,8 +1,8 @@
 version: 2
 jobs:
-  lint:
+  build:
     docker:
-      - image: circleci/python:3.6.1
+      - image: thinca/vim:latest-full
     working_directory: /tmp/workspace
     steps:
       - checkout
@@ -10,9 +10,10 @@ jobs:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           command: |
+            apk add --no-cache bash curl git
             python3 -m venv venv
             . venv/bin/activate
-            pip install -r requirements.txt
+            pip3 install -r requirements.txt
       - save_cache:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
@@ -20,22 +21,14 @@ jobs:
       - run:
           command: |
             . venv/bin/activate
-            find . -name "*.vim" | grep -v vital | grep -v .vim-themis | grep -v .vim-sexp | xargs vint
+            bash scripts/lint.sh
             python3 -m doctest python/bencode.py
-  test:
-    docker:
-      - image: thinca/themis
-    working_directory: /tmp/workspace
-    steps:
-      - checkout
       - run:
           command: |
+            git clone https://github.com/thinca/vim-themis .vim-themis
             git clone https://github.com/guns/vim-sexp .vim-sexp
-            vim --version
-            themis --runtimepath ./.vim-sexp --runtimepath ./test/helper
-workflows:
-  version: 2
-  all_test:
-    jobs:
-      - lint
-      - test
+            ./.vim-themis/bin/themis
+      - run:
+          command: |
+            . venv/bin/activate
+            bash scripts/coverage.sh
