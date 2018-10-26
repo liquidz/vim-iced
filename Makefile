@@ -27,16 +27,10 @@ themis: .vim-themis .vim-sexp
 	./.vim-themis/bin/themis
 
 html: doc/vim-iced.txt .vimdoc
-	rm -rf target/html
-	mkdir -p target/html/doc
-	cp doc/vim-iced.txt target/html/doc
-	-cd target/html/doc ; vim -eu ../../../.vimdoc/tools/buildhtml.vim -c "qall!"
-	sed -i '1,4d' target/html/doc/vim-iced.html
-	sed -i 's/vim-iced\.html/index\.html/g' target/html/doc/vim-iced.html
-	cat doc/.head.html target/html/doc/vim-iced.html doc/.foot.html > target/index.html
+	bash scripts/html.sh
 
 lint:
-	find . -name "*.vim" | grep -v vital | grep -v .vim-themis | grep -v .vim-sexp | grep -v .vimdoc | xargs vint
+	bash scripts/lint.sh
 
 python_doctest:
 	python3 -m doctest python/bencode.py
