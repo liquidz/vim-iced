@@ -29,16 +29,24 @@ themis: .vim-themis .vim-sexp
 html: doc/vim-iced.txt .vimdoc
 	bash scripts/html.sh
 
+pip_install:
+	sudo pip3 install -r requirements.txt
+
 lint:
 	bash scripts/lint.sh
 
 python_doctest:
 	python3 -m doctest python/bencode.py
 
+coverage: themis
+	bash scripts/coverage.sh
+
 clean:
-	/bin/rm -rf autoload/vital*
-	/bin/rm -f bin/iced
-	/bin/rm -rf target
+	\rm -rf target .vim-sexp .vimdoc .vim-themis
+	\rm -f bin/iced
+
+clan-all: clean
+	\rm -rf autoload/vital*
 
 bin:
 	clojure -A:jackin -m iced-jackin
