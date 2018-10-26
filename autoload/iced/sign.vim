@@ -86,11 +86,6 @@ function! iced#sign#unplace_all() abort
   let s:id = 1
 endfunction
 
-function! iced#sign#place_error(lnum, ...) abort
-  let file = get(a:, 1, expand('%:p'))
-  call iced#sign#place('iced_err', a:lnum, file)
-endfunction
-
 function! iced#sign#refresh() abort
   let sign_list = iced#sign#list_in_current_buffer()
   for sign in sign_list

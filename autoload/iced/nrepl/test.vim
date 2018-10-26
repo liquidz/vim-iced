@@ -117,7 +117,7 @@ function! s:out(resp) abort
   for err in errors
     let lnum = err['lnum']
     if type(lnum) != type(0) | continue | endif
-    call iced#sign#place_error(err['lnum'], err['filename'])
+    call iced#sign#place('iced_err', err['lnum'], err['filename'])
 
     if has_key(err, 'expected') && has_key(err, 'actual')
       let expected_and_actuals = expected_and_actuals + [
