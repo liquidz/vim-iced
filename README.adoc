@@ -12,6 +12,9 @@
   <a href="https://circleci.com/gh/liquidz/vim-iced">
     <img src="https://img.shields.io/circleci/project/github/liquidz/vim-iced/master.svg" alt="CircleCI" />
   </a>
+  <a href="https://codecov.io/gh/liquidz/vim-iced">
+    <img src="https://codecov.io/gh/liquidz/vim-iced/branch/master/graph/badge.svg" alt="Codecov" />
+  </a>
   <a href="https://github.com/liquidz/vim-iced/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/liquidz/vim-iced.svg" alt="GitHub license" />
   </a>
@@ -29,7 +32,7 @@
  * Vim 8.1 or later, Neovim 0.3.1 or later
  ** Neovim support is *VERY EXPERIMENTAL*
  * Clojure 1.8 or later
- ** 1.9 is recommended
+ ** 1.9 or later is recommended
  * No python! (boost possible with `if_python3`)
 
 == Features

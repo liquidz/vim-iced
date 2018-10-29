@@ -7,7 +7,7 @@ function! s:helper.start_dummy(lines) abort
   vnew
   setl buftype=nofile
   setl nobuflisted
- 
+
   let i = 1
   let cursor_pos = [1, 1]
   for line in a:lines

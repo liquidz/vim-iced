@@ -8,3 +8,5 @@ doc/tags
 *.bak
 *.pyc
 target
+.coverage_covimerage
+coverage.xml

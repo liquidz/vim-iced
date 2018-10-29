@@ -172,7 +172,9 @@ function! s:dispatcher(ch, resp) abort
   endif
 
   if iced#util#has_status(resp, 'need-debug-input')
-    call iced#buffer#stdout#open()
+    if !iced#buffer#stdout#is_visible()
+      call iced#buffer#stdout#open()
+    endif
     call iced#nrepl#debug#start(resp)
   endif
 endfunction
