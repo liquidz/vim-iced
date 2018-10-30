@@ -68,13 +68,16 @@ function! iced#nrepl#repl_session() abort
   return s:nrepl['sessions']['repl']
 endfunction
 
-function! iced#nrepl#check_session_validity() abort
+function! iced#nrepl#check_session_validity(...) abort
   let ext = expand('%:e')
   let sess_key = iced#nrepl#current_session_key()
+  let is_verbose = get(a:, 1, v:true)
 
   if !empty(ext) && ext !=# 'cljc' && sess_key !=# ext
-    call iced#message#error_str(
-          \ printf(iced#message#get('invalid_session'), ext))
+    if is_verbose
+      call iced#message#error_str(
+            \ printf(iced#message#get('invalid_session'), ext))
+    endif
     return v:false
   endif
 
