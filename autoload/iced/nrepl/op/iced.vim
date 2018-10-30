@@ -16,7 +16,7 @@ function! iced#nrepl#op#iced#is_lint_running() abort
   return iced#nrepl#is_op_running('iced-lint-file')
 endfunction
 
-function! iced#nrepl#op#iced#lint_file(file, linters, callback) abort
+function! iced#nrepl#op#iced#lint_file(file, opt, callback) abort
   if !iced#nrepl#is_connected() | return | endif
 
   let msg = {
@@ -28,8 +28,8 @@ function! iced#nrepl#op#iced#lint_file(file, linters, callback) abort
       \ 'callback': a:callback,
       \ }
 
-  if !empty(a:linters) && type(a:linters) == type([])
-    let msg['linters'] = a:linters
+  if !empty(a:opt) && type(a:opt) == type({})
+    let msg['opt'] = a:opt
   endif
 
   call iced#nrepl#send(msg)
