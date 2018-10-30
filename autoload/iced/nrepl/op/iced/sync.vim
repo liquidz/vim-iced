@@ -6,7 +6,7 @@ function! iced#nrepl#op#iced#sync#set_indentation_rules(rules) abort
 
   return iced#nrepl#sync#send({
         \ 'id': iced#nrepl#id(),
-        \ 'op': 'set-indentation-rules',
+        \ 'op': 'iced-set-indentation-rules',
         \ 'sesion': iced#nrepl#current_session(),
         \ 'rules': a:rules,
         \ })
@@ -17,7 +17,7 @@ function! iced#nrepl#op#iced#sync#format_code(code, alias_map) abort
 
   return iced#nrepl#sync#send({
         \ 'id': iced#nrepl#id(),
-        \ 'op': 'format-code-with-indents',
+        \ 'op': 'iced-format-code-with-indents',
         \ 'sesion': iced#nrepl#current_session(),
         \ 'code': a:code,
         \ 'alias-map': a:alias_map,
@@ -29,7 +29,7 @@ function! iced#nrepl#op#iced#sync#refactor_thread_first(code) abort
 
   return iced#nrepl#sync#send({
         \ 'id': iced#nrepl#id(),
-        \ 'op': 'refactor-thread-first',
+        \ 'op': 'iced-refactor-thread-first',
         \ 'sesion': iced#nrepl#current_session(),
         \ 'code': a:code,
         \ })
@@ -40,7 +40,7 @@ function! iced#nrepl#op#iced#sync#refactor_thread_last(code) abort
 
   return iced#nrepl#sync#send({
         \ 'id': iced#nrepl#id(),
-        \ 'op': 'refactor-thread-last',
+        \ 'op': 'iced-refactor-thread-last',
         \ 'sesion': iced#nrepl#current_session(),
         \ 'code': a:code,
         \ })
@@ -51,7 +51,7 @@ function! iced#nrepl#op#iced#sync#ns_aliases(code) abort
 
   return iced#nrepl#sync#send({
         \ 'id': iced#nrepl#id(),
-        \ 'op': 'ns-aliases',
+        \ 'op': 'iced-ns-aliases',
         \ 'sesion': iced#nrepl#current_session(),
         \ 'env': iced#nrepl#current_session_key(),
         \ 'code': a:code,

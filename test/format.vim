@@ -4,11 +4,11 @@ let s:ch = themis#helper('iced_channel')
 let s:buf = themis#helper('iced_buffer')
 
 function! s:format_code_relay(msg, formatted) abort
-  if a:msg['op'] ==# 'format-code-with-indents'
+  if a:msg['op'] ==# 'iced-format-code-with-indents'
     return {'status': ['done'], 'formatted': a:formatted}
-  elseif a:msg['op'] ==# 'set-indentation-rules'
+  elseif a:msg['op'] ==# 'iced-set-indentation-rules'
     return {'status': ['done']}
-  elseif a:msg['op'] ==# 'ns-aliases'
+  elseif a:msg['op'] ==# 'iced-ns-aliases'
     return {'status': ['done'], 'aliases': {}}
   else
     return {}
