@@ -1,4 +1,4 @@
-personal_ws-1.1 en 156 
+personal_ws-1.1 en 157 
 grimoire
 IcedGrep
 IcedDocumentOpen
@@ -130,6 +130,7 @@ IcedJumpToNextSign
 IcedToggleTraceVar
 IcedStdoutBufferClose
 txt
+Codecov
 IcedBrowseSpec
 Sdeps
 eval
