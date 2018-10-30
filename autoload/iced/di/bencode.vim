@@ -41,10 +41,10 @@ set cpo&vim
 "   endif
 " endfunction
 
-function! iced#dicon#bencode#build() abort
+function! iced#di#bencode#build() abort
   return has('python3')
-        \ ? iced#dicon#bencode#python#build()
-        \ : iced#dicon#bencode#vim#build()
+        \ ? iced#di#bencode#python#build()
+        \ : iced#di#bencode#vim#build()
 endfunction
 
 let &cpo = s:save_cpo
