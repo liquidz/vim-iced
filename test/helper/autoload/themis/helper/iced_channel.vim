@@ -54,7 +54,7 @@ function! s:build_test_channel(opt) abort
 endfunction
 
 function! s:helper.register_test_builder(opt) abort
-  call iced#di#register('channel', function('s:build_test_channel', [a:opt]))
+  call iced#di#register('channel', {_ -> s:build_test_channel(a:opt)})
 endfunction
 
 function! themis#helper#iced_channel#new(runner) abort

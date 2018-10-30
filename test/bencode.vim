@@ -15,7 +15,7 @@ endfunction
 "" ENCODING TEST
 
 function! s:suite.encode_string_test() abort
-  call iced#di#register('bencode', function('iced#di#bencode#vim#build'))
+  call iced#di#register('bencode', {_ -> iced#di#bencode#vim#build()})
 
   call s:assert.equals('5:hello', iced#di#get('bencode').encode('hello'))
   call s:assert.equals('0:', iced#di#get('bencode').encode(''))
@@ -23,13 +23,13 @@ function! s:suite.encode_string_test() abort
 endfunction
 
 function! s:suite.encode_number_test() abort
-  call iced#di#register('bencode', function('iced#di#bencode#vim#build'))
+  call iced#di#register('bencode', {_ -> iced#di#bencode#vim#build()})
 
   call s:assert.equals('i1024e', iced#di#get('bencode').encode(1024))
 endfunction
 
 function! s:suite.encode_list_test() abort
-  call iced#di#register('bencode', function('iced#di#bencode#vim#build'))
+  call iced#di#register('bencode', {_ -> iced#di#bencode#vim#build()})
 
   call s:assert.equals('l3:fooi123ee', iced#di#get('bencode').encode(['foo', 123]))
   call s:assert.equals('l3:fooli123eee', iced#di#get('bencode').encode(['foo', [123]]))
@@ -38,7 +38,7 @@ function! s:suite.encode_list_test() abort
 endfunction
 
 function! s:suite.encode_dict_test() abort
-  call iced#di#register('bencode', function('iced#di#bencode#vim#build'))
+  call iced#di#register('bencode', {_ -> iced#di#bencode#vim#build()})
 
   call s:assert.equals('d3:fooi123ee', iced#di#get('bencode').encode({'foo': 123}))
   call s:assert.equals('d3:fool3:bari123eee', iced#di#get('bencode').encode({'foo': ['bar', 123]}))
@@ -51,7 +51,7 @@ endfunction
 "" DECODING TEST
 
 function! s:suite.decode_string_test() abort
-  call iced#di#register('bencode', function('iced#di#bencode#vim#build'))
+  call iced#di#register('bencode', {_ -> iced#di#bencode#vim#build()})
 
   call s:assert.equals('hello', iced#di#get('bencode').decode('5:hello'))
   call s:assert_parse_failure({-> iced#di#get('bencode').decode('5:helloo')})
@@ -59,11 +59,15 @@ function! s:suite.decode_string_test() abort
 endfunction
 
 function! s:suite.decode_integer_test() abort
+  call iced#di#register('bencode', {_ -> iced#di#bencode#vim#build()})
+
   call s:assert.equals(1024, iced#di#get('bencode').decode('i1024e'))
   call s:assert_parse_failure({-> iced#di#get('bencode').decode('i1024')})
 endfunction
 
 function! s:suite.decode_list_test() abort
+  call iced#di#register('bencode', {_ -> iced#di#bencode#vim#build()})
+
   call s:assert.equals(['foo', 123], iced#di#get('bencode').decode('l3:fooi123ee'))
   call s:assert.equals(['foo', [123]], iced#di#get('bencode').decode('l3:fooli123eee'))
   call s:assert.equals([], iced#di#get('bencode').decode('le'))
@@ -72,6 +76,8 @@ function! s:suite.decode_list_test() abort
 endfunction
 
 function! s:suite.decode_dict_test() abort
+  call iced#di#register('bencode', {_ -> iced#di#bencode#vim#build()})
+
   call s:assert.equals({'foo': 123}, iced#di#get('bencode').decode('d3:fooi123ee'))
   call s:assert.equals({'foo': ['bar', 123]}, iced#di#get('bencode').decode('d3:fool3:bari123eee'))
   call s:assert.equals({'foo': {'bar': 123}}, iced#di#get('bencode').decode('d3:food3:bari123eee'))
@@ -84,6 +90,8 @@ function! s:suite.decode_dict_test() abort
 endfunction
 
 function! s:suite.decode_concated_test() abort
+  call iced#di#register('bencode', {_ -> iced#di#bencode#vim#build()})
+
   call s:assert.equals(['foo', 123], iced#di#get('bencode').decode('3:fooi123e'))
   call s:assert.equals([{'foo': 123}, {'bar': 456}], iced#di#get('bencode').decode('d3:fooi123eed3:bari456ee'))
 endfunction

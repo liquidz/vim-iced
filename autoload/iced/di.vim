@@ -1,35 +1,46 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:container = {}
+function! iced#di#new_container() abort
+  let container = {}
 
-function! s:default_builder(name) abort
-  let l:res = ''
-  exe printf('let l:res = iced#di#%s#build()', a:name)
-  return l:res
+  function! container.register(name, builder) abort
+    if type(a:builder) != 2 | return | endif
+    let self[a:name] = a:builder
+  endfunction
+
+  function! container.get(name) abort
+    let Builder = get(self, a:name, '')
+    if type(Builder) != 2 | return | endif
+    return Builder(self)
+  endfunction
+
+  return container
 endfunction
 
-function! s:value(name) abort
-  return a:name.'.value'
-endfunction
+let s:container_cache = {}
 
 function! iced#di#register(name, builder) abort
-  let s:container[a:name] = a:builder
-  if has_key(s:container, s:value(a:name))
-    unlet s:container[s:value(a:name)]
+  if has_key(s:container_cache, a:name)
+    unlet s:container_cache[a:name]
   endif
-endfunction
-
-function! iced#di#build(name) abort
-  let Builder = get(s:container, a:name, function('s:default_builder', [a:name]))
-  let value_name = s:value(a:name)
-  let s:container[value_name] = Builder()
-  return s:container[value_name]
+  return g:iced#di#container.register(a:name, a:builder)
 endfunction
 
 function! iced#di#get(name) abort
-  return get(s:container, s:value(a:name), iced#di#build(a:name))
+  if !has_key(s:container_cache, a:name)
+    let s:container_cache[a:name] = g:iced#di#container.get(a:name)
+  endif
+  return s:container_cache[a:name]
 endfunction
+
+" Initializer {{{
+if !exists('g:iced#di#container')
+  let g:iced#di#container = iced#di#new_container()
+  call iced#di#register('channel', {_ -> iced#di#channel#build()})
+  call iced#di#register('bencode', {_ -> iced#di#bencode#build()})
+  call iced#di#register('sign',    {_ -> iced#di#sign#build()})
+endif " }}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
