@@ -113,7 +113,7 @@ function! iced#nrepl#document#open(symbol) abort
     let symbol = s:expand_ns_alias(symbol)
   endif
 
-  call iced#nrepl#op#cider#info(symbol, funcref('s:view_doc'))
+  call iced#nrepl#ns#eval({_ -> iced#nrepl#op#cider#info(symbol, funcref('s:view_doc'))})
 endfunction
 
 function! s:one_line_doc(resp) abort
