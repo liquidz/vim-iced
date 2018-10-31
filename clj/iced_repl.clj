@@ -1,8 +1,5 @@
 (ns iced-repl
-  (:require [cider-nrepl.main :as main]
-            cider.nrepl
-            refactor-nrepl.middleware
-            iced.nrepl))
+  (:require [nrepl.cmdline :as cmd]))
 
 (def middlewares
   ["cider.nrepl/wrap-complete"
@@ -22,4 +19,4 @@
    "iced.nrepl/wrap-iced"])
 
 (defn -main []
-  (main/init middlewares))
+  (cmd/-main "-m" (pr-str middlewares)))
