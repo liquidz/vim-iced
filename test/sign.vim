@@ -19,7 +19,7 @@ function! s:test_sign_builder() abort
 endfunction
 
 function! s:suite.place_test() abort
-  call iced#dicon#register('sign', funcref('s:test_sign_builder'))
+  call iced#di#register('sign', {_ -> s:test_sign_builder()})
   call iced#sign#unplace_all()
   let file = '/path/to/file'
 
@@ -32,7 +32,7 @@ function! s:suite.place_test() abort
 endfunction
 
 function! s:suite.unplace_test() abort
-  call iced#dicon#register('sign', funcref('s:test_sign_builder'))
+  call iced#di#register('sign', {_ -> s:test_sign_builder()})
   call iced#sign#unplace_all()
   let file = '/path/to/file'
 

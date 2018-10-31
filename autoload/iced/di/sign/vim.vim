@@ -16,7 +16,7 @@ function! s:sign.unplace_all() abort
   sign unplace *
 endfunction
 
-function! iced#dicon#sign#vim#build() abort
+function! iced#di#sign#vim#build() abort
   return s:sign
 endfunction
 

@@ -7,11 +7,11 @@ let s:funcs = s:scope.funcs('autoload/iced/nrepl.vim')
 
 
 function! s:format_code_relay(msg) abort
-  if a:msg['op'] ==# 'format-code-with-indents'
+  if a:msg['op'] ==# 'iced-format-code-with-indents'
     return {'status': ['done'], 'formatted': a:msg['code']}
-  elseif a:msg['op'] ==# 'set-indentation-rules'
+  elseif a:msg['op'] ==# 'iced-set-indentation-rules'
     return {'status': ['done']}
-  elseif a:msg['op'] ==# 'ns-aliases'
+  elseif a:msg['op'] ==# 'iced-ns-aliases'
     return {'status': ['done'], 'aliases': {}}
   else
     return {}

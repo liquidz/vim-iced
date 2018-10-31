@@ -3,6 +3,7 @@ set cpo&vim
 
 function! iced#nrepl#auto#bufread() abort
   if !iced#nrepl#is_connected() | return | endif
+  if !iced#nrepl#check_session_validity(v:false) | return | endif
   call iced#nrepl#ns#eval({_ -> ''})
 endfunction
 

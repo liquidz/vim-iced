@@ -68,13 +68,16 @@ function! iced#nrepl#repl_session() abort
   return s:nrepl['sessions']['repl']
 endfunction
 
-function! iced#nrepl#check_session_validity() abort
+function! iced#nrepl#check_session_validity(...) abort
   let ext = expand('%:e')
   let sess_key = iced#nrepl#current_session_key()
+  let is_verbose = get(a:, 1, v:true)
 
   if !empty(ext) && ext !=# 'cljc' && sess_key !=# ext
-    call iced#message#error_str(
-          \ printf(iced#message#get('invalid_session'), ext))
+    if is_verbose
+      call iced#message#error_str(
+            \ printf(iced#message#get('invalid_session'), ext))
+    endif
     return v:false
   endif
 
@@ -124,7 +127,7 @@ function! s:dispatcher(ch, resp) abort
   call iced#util#debug(text)
 
   try
-    let resp = iced#dicon#get('bencode').decode(text)
+    let resp = iced#di#get('bencode').decode(text)
   catch /Failed to parse bencode/
     let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
     return
@@ -222,9 +225,9 @@ function! iced#nrepl#send(data) abort
     let s:messages[id] = message
   endif
 
-  call iced#dicon#get('channel').sendraw(
+  call iced#di#get('channel').sendraw(
         \ s:nrepl['channel'],
-        \ iced#dicon#get('bencode').encode(data))
+        \ iced#di#get('bencode').encode(data))
 endfunction
 
 function! iced#nrepl#is_op_running(op) abort " {{{
@@ -247,7 +250,7 @@ endfunction
 
 function! s:status(ch) abort
   try
-    return iced#dicon#get('channel').status(a:ch)
+    return iced#di#get('channel').status(a:ch)
   catch
     return 'fail'
   endtry
@@ -284,7 +287,7 @@ function! iced#nrepl#connect(port) abort
   if ! iced#nrepl#is_connected()
     let address = printf('%s:%d', g:iced#nrepl#host, a:port)
     let s:nrepl['port'] = a:port
-    let s:nrepl['channel'] = iced#dicon#get('channel').open(address, {
+    let s:nrepl['channel'] = iced#di#get('channel').open(address, {
         \ 'mode': 'raw',
         \ 'callback': funcref('s:dispatcher'),
         \ 'drop': 'never',
@@ -312,7 +315,7 @@ function! iced#nrepl#disconnect() abort " {{{
     call iced#nrepl#sync#send({'op': 'interrupt', 'session': id})
     call iced#nrepl#sync#close(id)
   endfor
-  call iced#dicon#get('channel').close(s:nrepl['channel'])
+  call iced#di#get('channel').close(s:nrepl['channel'])
   call s:initialize_nrepl()
   call iced#cache#clear()
 endfunction " }}}

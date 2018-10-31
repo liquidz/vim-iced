@@ -12,7 +12,7 @@ endfunction
 
 function! iced#sign#place(name, lnum, file) abort
   let id = s:next_id()
-  call iced#dicon#get('sign').place(id, a:lnum, a:name, a:file)
+  call iced#di#get('sign').place(id, a:lnum, a:name, a:file)
   call add(s:sign_list, {'id': id, 'line': a:lnum, 'name': a:name, 'file': a:file})
   return id
 endfunction
@@ -76,12 +76,12 @@ function! iced#sign#jump_to_prev() abort
 endfunction
 
 function! iced#sign#unplace(id) abort
-  call iced#dicon#get('sign').unplace(a:id)
+  call iced#di#get('sign').unplace(a:id)
   call filter(s:sign_list, {_, v -> v['id'] !=# a:id })
 endfunction
 
 function! iced#sign#unplace_all() abort
-  call iced#dicon#get('sign').unplace_all()
+  call iced#di#get('sign').unplace_all()
   let s:sign_list = []
   let s:id = 1
 endfunction
