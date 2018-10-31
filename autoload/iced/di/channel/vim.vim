@@ -9,16 +9,16 @@ function! s:ch.open(address, options) abort
   return ch_open(a:address, a:options)
 endfunction
 
-function! s:ch.close(handle) abort
-  return ch_close(a:handle)
+function! s:ch.close(handler) abort
+  return ch_close(a:handler)
 endfunction
 
-function! s:ch.status(handle) abort
-  return ch_status(a:handle)
+function! s:ch.status(handler) abort
+  return ch_status(a:handler)
 endfunction
 
-function! s:ch.sendraw(handle, string) abort
-  return ch_sendraw(a:handle, a:string)
+function! s:ch.sendraw(handler, string) abort
+  return ch_sendraw(a:handler, a:string)
 endfunction
 
 function! iced#di#channel#vim#build() abort
