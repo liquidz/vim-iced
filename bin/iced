@@ -75,7 +75,7 @@ case "$1" in
             echo_info "Boot project is detected"
             boot -i "(require 'cider.tasks)" -d nrepl:0.4.5 -d refactor-nrepl:2.4.0 -d cider/cider-nrepl:0.18.0 -d iced-nrepl:0.2.3 -- cider.tasks/add-middleware -m cider.nrepl/wrap-complete -m cider.nrepl/wrap-debug -m cider.nrepl/wrap-format -m cider.nrepl/wrap-info -m cider.nrepl/wrap-macroexpand -m cider.nrepl/wrap-ns -m cider.nrepl/wrap-out -m cider.nrepl/wrap-pprint -m cider.nrepl/wrap-pprint-fn -m cider.nrepl/wrap-spec -m cider.nrepl/wrap-test -m cider.nrepl/wrap-trace -m cider.nrepl/wrap-undef -m refactor-nrepl.middleware/wrap-refactor -m iced.nrepl/wrap-iced -- $OPTIONS repl
         elif [ $IS_CLOJURE_CLI -eq 1 ]; then
-            echo "Clojure CLI project is detected"
+            echo_info "Clojure CLI project is detected"
             clojure $OPTIONS -Sdeps "{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"}}}" -m iced-repl
         else
             echo_error 'Failed to detect clojure project'
