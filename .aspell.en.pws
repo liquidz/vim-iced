@@ -1,4 +1,5 @@
-personal_ws-1.1 en 157 
+personal_ws-1.1 en 163 
+IcedRelatedNamespaces
 grimoire
 IcedGrep
 IcedDocumentOpen
@@ -21,6 +22,7 @@ IcedMacroExpandOuterList
 au
 libspec
 setl
+bencode
 aug
 norl
 IcedDefBack
@@ -84,7 +86,7 @@ IcedTestAll
 Undefine
 IcedBrowseFunction
 stdout
-Javadoc
+javadoc
 IcedExtractFunction
 IcedGrimoireOpen
 IcedToggleTraceNs
@@ -93,6 +95,7 @@ IcedMoveToLet
 aboveleft
 env
 IcedDocumentClose
+cmdline
 IcedTestNs
 lightline
 uochan
@@ -110,11 +113,13 @@ IcedToggleSrcAndTest
 neovim
 BufWritePost
 junegunn
+bufread
 linters
 IcedLintCurrentFile
 IcedFormDocument
 IcedCleanNs
 Cljfmt's
+occured
 IcedClearCtrlpCache
 url
 goto
@@ -125,12 +130,13 @@ nashorn
 IcedSlurp
 leftabove
 vimrc
+sockconnect
 CircleCI
 IcedJumpToNextSign
 IcedToggleTraceVar
 IcedStdoutBufferClose
 txt
-Codecov
+codecov
 IcedBrowseSpec
 Sdeps
 eval
