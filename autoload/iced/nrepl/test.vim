@@ -67,8 +67,18 @@ function! s:collect_errors(resp) abort
             continue
           endif
 
+          if empty(ns_path_resp['path'])
+            if !has_key(test, 'file') | continue | endif
+            let filename = printf('%s%s%s',
+                  \ iced#nrepl#system#user_dir(),
+                  \ iced#nrepl#system#separator(),
+                  \ test['file'])
+          else
+            let filename = ns_path_resp['path']
+          endif
+
           let err = {
-                  \ 'filename': ns_path_resp['path'],
+                  \ 'filename': filename,
                   \ 'lnum': test['line'],
                   \ 'text': s:error_message(test),
                   \ 'expected': iced#compat#trim(get(test, 'expected', '')),

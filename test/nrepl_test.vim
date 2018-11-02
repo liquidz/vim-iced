@@ -107,3 +107,24 @@ function! s:suite.collect_errors_errored_test() abort
         \  'actual': 'error-message',
         \  'text': 'err-test'}])
 endfunction
+
+function! s:suite.collect_errors_could_not_find_ns_path_test() abort
+  let dummy_resp = [{
+        \ 'results': {
+        \   'foo.core-test': {
+        \     'err-test': [
+        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test',
+        \        'file': 'test/foo/core_test.clj', 'line': 123, 'expected': 'expected-result', 'actual': 'actual-result'}]}}}]
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': {msg ->
+        \ (msg['op'] ==# 'ns-path') ? {'status': ['done'], 'path': []} : {}}})
+  call iced#cache#set('user-dir', '/user/dir')
+  call iced#cache#set('file-separator', '/')
+
+  call s:assert.equals(s:funcs.collect_errors(dummy_resp), [
+        \ {'type': 'E',
+        \  'lnum': 123,
+        \  'filename': '/user/dir/test/foo/core_test.clj',
+        \  'expected': 'expected-result',
+        \  'actual': 'actual-result',
+        \  'text': 'err-test'}])
+endfunction
