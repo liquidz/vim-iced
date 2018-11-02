@@ -19,6 +19,10 @@ endfunction
 
 function! s:update_cache() abort
   let info = iced#nrepl#system#info()
+  if type(info) != type({})
+    return {}
+  endif
+
   if has_key(info, 'user-dir')
     call iced#cache#merge(info)
   endif
