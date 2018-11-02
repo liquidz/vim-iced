@@ -956,6 +956,12 @@ g:iced#buffer#document#height
   Document window height.
   Default value is |'previewheight'|.
 
+                             *g:iced#buffer#document#does_update_automatically*
+g:iced#buffer#document#does_update_automatically
+  If {v:true} and document buffer is visible,
+  update document buffer with document for the form under cursor.
+  Default value is `v:false`.
+
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
