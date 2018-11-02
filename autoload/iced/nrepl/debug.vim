@@ -17,6 +17,11 @@ let s:saved_view = ''
 " o: out
 let s:supported_types = {'n': '', 'c': '', 'q': '', 'j': '' }
 
+" a COORDINATES list of '(1 0 2) means:
+"  - enter next sexp then `forward-sexp' once,
+"  - enter next sexp,
+"  - enter next sexp then `forward-sexp' twice.
+" c.f. copy from https://github.com/clojure-emacs/cider/blob/c936cdad4c944b716e2842f11c373f69a452c4b2/cider-debug.el#L478-L481
 function! s:apply_coordination(coordination) abort
   for c in a:coordination
     " enter next sexp
