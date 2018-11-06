@@ -19,11 +19,11 @@ function iced_usage() {
 }
 
 function echo_info() {
-    echo -e "\e[36m🍧\e[m \e[1m${1}\e[m \e[36m🍧\e[m"
+    echo -e "\e[32mOK\e[m: \e[1m${1}\e[m"
 }
 
 function echo_error() {
-    echo -e "\e[31m💔\e[m \e[1m${1}\e[m \e[31m💔\e[m"
+    echo -e "\e[31mNG\e[m: \e[1m${1}\e[m"
 }
 
 if [ $# -lt 1 ]; then
