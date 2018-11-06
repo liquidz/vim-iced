@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file. This change
 * *BREAKING*: Change not to update document buffer with current form document when document buffer is visible.
 ** You can change this behavior with `g:iced#buffer#document#does_update_automatically` option.
 
+=== Removed
+* `g:iced#eastwood#linters` option
+
 === Fixed
 * Fix to work document/grimoire reference before evaluation.
 * Fix `iced#sign` to check file existence before placing it.

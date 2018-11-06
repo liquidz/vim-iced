@@ -1023,21 +1023,6 @@ g:iced#format#rule
 ------------------------------------------------------------------------------
 LINTERS                                          *vim-iced-customizing-linters*
 
-                                                      *g:iced#eastwood#linters*
-g:iced#eastwood#linters
-  WARNING: This option will be deprecated.
-           Use |g:iced#eastwood#option|.
-
-  Linter definition which is used by `jonase/eastwood`.
-  See details: |vim-iced-linting|
-
-  Specific linter names are shown at:
-  - https://github.com/jonase/eastwood#whats-there
-
-  Ex. enable all linters
->
-  let g:iced#eastwood#linters = ['all']
-<
                                                        *g:iced#eastwood#option*
 g:iced#eastwood#option
   Linting option which is used by `jonase/eastwood`.

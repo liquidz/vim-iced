@@ -6,7 +6,6 @@ let s:M = s:V.import('Vim.Message')
 let s:last_warnings = []
 
 let s:enabled = v:true
-let g:iced#eastwood#linters = get(g:, 'iced#eastwood#linters', [])
 let g:iced#eastwood#option = get(g:, 'iced#eastwood#option', {})
 
 function! s:lint(warnings) abort
@@ -25,14 +24,6 @@ function! iced#lint#current_file() abort
   let s:last_warnings = []
   call iced#sign#unplace_all()
   let file = expand('%:p')
-
-  if !empty(g:iced#eastwood#linters)
-    if has_key(g:iced#eastwood#option, 'linters')
-      call extend(g:iced#eastwood#option['linters'], g:iced#eastwood#linters)
-    else
-      let g:iced#eastwood#option['linters'] = g:iced#eastwood#linters
-    endif
-  endif
 
   call iced#nrepl#op#iced#lint_file(file, g:iced#eastwood#option, funcref('s:lint'))
 endfunction
