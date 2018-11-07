@@ -56,6 +56,7 @@ ancient:
 
 aspell:
 	aspell -d en -W 3 -p ./.aspell.en.pws check README.adoc
+	aspell -d en -W 3 -p ./.aspell.en.pws check CHANGELOG.adoc
 	aspell -d en -W 3 -p ./.aspell.en.pws check doc/vim-iced.txt
 
 repl:

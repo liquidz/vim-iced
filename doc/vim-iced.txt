@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.7.3
+Version: 0.8.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -956,6 +956,12 @@ g:iced#buffer#document#height
   Document window height.
   Default value is |'previewheight'|.
 
+                             *g:iced#buffer#document#does_update_automatically*
+g:iced#buffer#document#does_update_automatically
+  If {v:true} and document buffer is visible,
+  update document buffer with document for the form under cursor.
+  Default value is `v:false`.
+
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
@@ -1017,21 +1023,6 @@ g:iced#format#rule
 ------------------------------------------------------------------------------
 LINTERS                                          *vim-iced-customizing-linters*
 
-                                                      *g:iced#eastwood#linters*
-g:iced#eastwood#linters
-  WARNING: This option will be deprecated.
-           Use |g:iced#eastwood#option|.
-
-  Linter definition which is used by `jonase/eastwood`.
-  See details: |vim-iced-linting|
-
-  Specific linter names are shown at:
-  - https://github.com/jonase/eastwood#whats-there
-
-  Ex. enable all linters
->
-  let g:iced#eastwood#linters = ['all']
-<
                                                        *g:iced#eastwood#option*
 g:iced#eastwood#option
   Linting option which is used by `jonase/eastwood`.
@@ -1121,7 +1112,7 @@ g:iced_enable_default_key_mappings
 ==============================================================================
 CHANGELOG                                                  *vim-iced-changelog*
 
-See https://github.com/liquidz/vim-iced/releases.
+See https://github.com/liquidz/vim-iced/blob/master/CHANGELOG.adoc
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

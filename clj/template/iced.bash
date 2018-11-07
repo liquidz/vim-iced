@@ -18,6 +18,14 @@ function iced_usage() {
     exit 1
 }
 
+function echo_info() {
+    echo -e "\e[32mOK\e[m: \e[1m${1}\e[m"
+}
+
+function echo_error() {
+    echo -e "\e[31mNG\e[m: \e[1m${1}\e[m"
+}
+
 if [ $# -lt 1 ]; then
     iced_usage
     exit 1
@@ -61,16 +69,16 @@ done
 case "$1" in
     "repl")
         if [ $IS_LEININGEN -eq 1 ];then
-            echo "Leiningen project is detected."
+            echo_info "Leiningen project is detected"
             lein {{{leiningen-params}}} -- $OPTIONS repl
         elif [ $IS_BOOT -eq 1 ]; then
-            echo "Boot project is detected."
+            echo_info "Boot project is detected"
             boot {{{boot-params}}} -- $OPTIONS repl
         elif [ $IS_CLOJURE_CLI -eq 1 ]; then
-            echo "Clojure CLI project is detected."
+            echo_info "Clojure CLI project is detected"
             clojure $OPTIONS -Sdeps "{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"}}}" -m iced-repl
         else
-            echo 'Failed to detect clojure project.'
+            echo_error 'Failed to detect clojure project'
             exit 1
         fi
         ;;

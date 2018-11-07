@@ -67,8 +67,18 @@ function! s:collect_errors(resp) abort
             continue
           endif
 
+          if empty(ns_path_resp['path'])
+            if !has_key(test, 'file') | continue | endif
+            let filename = printf('%s%s%s',
+                  \ iced#nrepl#system#user_dir(),
+                  \ iced#nrepl#system#separator(),
+                  \ test['file'])
+          else
+            let filename = ns_path_resp['path']
+          endif
+
           let err = {
-                  \ 'filename': ns_path_resp['path'],
+                  \ 'filename': filename,
                   \ 'lnum': test['line'],
                   \ 'text': s:error_message(test),
                   \ 'expected': iced#compat#trim(get(test, 'expected', '')),
@@ -168,6 +178,7 @@ function! iced#nrepl#test#under_cursor() abort
 endfunction
 
 function! iced#nrepl#test#ns() abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let ns = iced#nrepl#ns#name()
   if !s:S.ends_with(ns, '-test')
     let ns = iced#nrepl#navigate#cycle_ns(ns)
@@ -179,6 +190,7 @@ function! iced#nrepl#test#ns() abort
 endfunction
 
 function! iced#nrepl#test#all() abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#sign#unplace_all()
   call iced#message#info('testing')
   call iced#nrepl#op#cider#ns_load_all({_ ->
@@ -186,6 +198,7 @@ function! iced#nrepl#test#all() abort
 endfunction
 
 function! iced#nrepl#test#redo() abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let view = winsaveview()
   let reg_save = @@
 
@@ -247,6 +260,7 @@ function! s:current_var(num_tests, resp) abort
 endfunction
 
 function! iced#nrepl#test#spec_check(...) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let num_tests = get(a:, 1, '')
   let num_tests = str2nr(num_tests)
   if num_tests <= 0
@@ -263,6 +277,7 @@ function! iced#nrepl#test#spec_check(...) abort
 endfunction " }}}
 
 function! iced#nrepl#test#rerun_last() abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   if empty(s:last_test)
     return
   endif

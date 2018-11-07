@@ -35,3 +35,14 @@ function! s:suite.clear_test() abort
   call s:assert.equals(iced#cache#get('foo'), '')
   call s:assert.equals(iced#cache#get('bar'), '')
 endfunction
+
+function! s:suite.has_key_test() abort
+  call iced#cache#clear()
+  call s:assert.false(iced#cache#has_key('foo'))
+
+  call iced#cache#set('foo', 'bar')
+  call s:assert.true(iced#cache#has_key('foo'))
+
+  call iced#cache#delete('foo')
+  call s:assert.false(iced#cache#has_key('foo'))
+endfunction

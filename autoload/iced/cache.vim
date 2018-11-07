@@ -12,6 +12,10 @@ function! iced#cache#get(k, ...) abort
   return get(s:cache, a:k, default)
 endfunction
 
+function! iced#cache#has_key(k) abort
+  return has_key(s:cache, a:k)
+endfunction
+
 function! iced#cache#delete(k) abort
   unlet s:cache[a:k]
 endfunction

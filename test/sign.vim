@@ -21,7 +21,8 @@ endfunction
 function! s:suite.place_test() abort
   call iced#di#register('sign', {_ -> s:test_sign_builder()})
   call iced#sign#unplace_all()
-  let file = '/path/to/file'
+  let file = tempname()
+  call writefile([''], file)
 
   let id = iced#sign#place('iced_err', 123, file)
   call s:assert.true(type(id) == type(1))
@@ -29,12 +30,27 @@ function! s:suite.place_test() abort
   let res = iced#sign#list_in_current_buffer(file)
   call s:assert.equals(len(res), 1)
   call s:assert.equals(res[0], {'file': file, 'id': id, 'name': 'iced_err', 'line': 123})
+
+  call delete(file)
+endfunction
+
+function! s:suite.place_non_existing_file_test() abort
+  call iced#di#register('sign', {_ -> s:test_sign_builder()})
+  call iced#sign#unplace_all()
+  let file = tempname()
+
+  let id = iced#sign#place('iced_err', 123, file)
+  call s:assert.true(empty(id))
+
+  let res = iced#sign#list_in_current_buffer(file)
+  call s:assert.true(empty(res))
 endfunction
 
 function! s:suite.unplace_test() abort
   call iced#di#register('sign', {_ -> s:test_sign_builder()})
   call iced#sign#unplace_all()
-  let file = '/path/to/file'
+  let file = tempname()
+  call writefile([''], file)
 
   let id1 = iced#sign#place('iced_err', 123, file)
   let id2 = iced#sign#place('iced_err', 234, file)
@@ -45,5 +61,7 @@ function! s:suite.unplace_test() abort
   let res = iced#sign#list_in_current_buffer(file)
   call s:assert.equals(len(res), 1)
   call s:assert.equals(res[0], {'file': file, 'id': id2, 'name': 'iced_err', 'line': 234})
+
+  call delete(file)
 endfunction
 

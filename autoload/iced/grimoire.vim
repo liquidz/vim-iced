@@ -25,7 +25,7 @@ endfunction
 
 function! iced#grimoire#open(symbol) abort
   let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
-  call iced#nrepl#op#cider#info(symbol, funcref('s:search'))
+  call iced#nrepl#ns#eval({_ -> iced#nrepl#op#cider#info(symbol, funcref('s:search'))})
 endfunction
 
 let &cpo = s:save_cpo

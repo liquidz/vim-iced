@@ -11,6 +11,8 @@ function! s:next_id() abort
 endfunction
 
 function! iced#sign#place(name, lnum, file) abort
+  if !filereadable(a:file) | return | endif
+
   let id = s:next_id()
   call iced#di#get('sign').place(id, a:lnum, a:name, a:file)
   call add(s:sign_list, {'id': id, 'line': a:lnum, 'name': a:name, 'file': a:file})

@@ -5,6 +5,9 @@ let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 let s:D = s:V.import('Data.Dict')
 
+let g:iced#buffer#document#does_update_automatically =
+      \ get(g:, 'iced#buffer#document#does_update_automatically', v:false)
+
 function! s:generate_javadoc(resp) abort
   let doc = []
   if has_key(a:resp, 'member')
@@ -113,11 +116,11 @@ function! iced#nrepl#document#open(symbol) abort
     let symbol = s:expand_ns_alias(symbol)
   endif
 
-  call iced#nrepl#op#cider#info(symbol, funcref('s:view_doc'))
+  call iced#nrepl#ns#eval({_ -> iced#nrepl#op#cider#info(symbol, funcref('s:view_doc'))})
 endfunction
 
 function! s:one_line_doc(resp) abort
-  if iced#buffer#document#is_visible()
+  if iced#buffer#document#is_visible() && g:iced#buffer#document#does_update_automatically
     let doc = s:generate_doc(a:resp)
     if !empty(doc)
       call iced#buffer#document#update(doc)

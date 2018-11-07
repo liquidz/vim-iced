@@ -2,11 +2,11 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:system_info_code = join([
-      \ '(let [user-dir (System/getProperty "user.dir")',
-      \ '      sep (System/getProperty "file.separator")]',
+      \ '(clojure.core/let [user-dir (System/getProperty "user.dir")',
+      \ '                   sep (System/getProperty "file.separator")]',
       \ '  {:user-dir user-dir',
       \ '   :file-separator sep',
-      \ '   :project-name (-> (.split user-dir sep) seq last)})'
+      \ '   :project-name (-> (.split user-dir sep) clojure.core/seq clojure.core/last)})'
       \ ], "\n")
 
 function! iced#nrepl#system#info() abort
@@ -19,6 +19,10 @@ endfunction
 
 function! s:update_cache() abort
   let info = iced#nrepl#system#info()
+  if type(info) != type({})
+    return {}
+  endif
+
   if has_key(info, 'user-dir')
     call iced#cache#merge(info)
   endif

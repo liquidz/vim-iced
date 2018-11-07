@@ -1,0 +1,166 @@
+= Change Log
+
+All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
+
+== Unreleased
+
+== 0.8.0
+// {{{
+=== Added
+* Add option for updating document buffer with current form document.
+** `g:iced#buffer#document#does_update_automatically`
+
+=== Changed
+* Update to use nrepl.cmdline to launch nREPL server for Clojure CLI instead of cider-nrepl.main
+* *BREAKING*: Change not to update document buffer with current form document when document buffer is visible.
+** You can change this behavior with `g:iced#buffer#document#does_update_automatically` option.
+
+=== Removed
+* `g:iced#eastwood#linters` option
+
+=== Fixed
+* Fix to work document/grimoire reference before evaluation.
+* Fix `iced#sign` to check file existence before placing it.
+* Update `iced#nrepl#system` to evaluate with fully qualified name.
+  * ex) error occured when custom `let` is defined.
+* Update test commands to check nREPL connection before running.
+// }}}
+
+== 0.7.3
+// {{{
+=== Added
+* Add `g:iced#eastwood#option` which allows to set `exclude-linters`
+=== Changed
+* Bump iced-nrepl version to 0.2.3
+
+=== Deprecated
+* `g:iced#eastwood#linters` option
+
+=== Fixed
+* Fix `iced#nrepl#auto#bufread` to check session validity
+// }}}
+
+== 0.7.2
+// {{{
+=== Added
+* Add codecov badge
+** for measuring code coverage
+* Add test codes
+** `iced#complete`, `iced#sign`
+
+=== Fixed
+* Fix not to split window permanently when debugging
+// }}}
+
+== 0.7.1
+// {{{
+* Fix jumping to definition not to jump into JAR file
+* Refactor codes
+// }}}
+
+== 0.7.0
+// {{{
+* Update to support Clojure 1.10's error message format
+* Update to work with Clojure 1.8
+** via updating https://github.com/liquidz/iced-nrepl/commit/3837d103454586d81f36130defa9daf1575adcb5[iced-nrepl]
+* Bump orchard version to 0.3.3
+* Refactor codes
+
+=== Breaking changes
+* Update `:IcedCleanNs` command not to rewrite prefix
+** Add `g:iced#refactor#prefix_rewriting` option to change behavior. (default value is 'v:false')
+* Rename options
+
+|===
+| before | after
+| g:iced#nrepl#cljs#default_env | g:iced#cljs#default_env
+| g:iced#nrepl#cljs#custom#start_code | g:iced#cljs#custom#start_code
+| g:iced#nrepl#cljs#custom#stop_code | g:iced#cljs#custom#stop_code
+| g:iced#nrepl#eval#inside_comment | g:iced#eval#inside_comment
+| g:iced#nrepl#ns#refactor#favorites | g:iced#ns#favorites
+| g:iced#nrepl#op#cider#debug#print_length | g:iced#debug#print_length
+| g:iced#nrepl#op#cider#debug#print_level | g:iced#debug#print_level
+| g:iced#nrepl#test#spec_num_tests | g:iced#test#spec_num_tests
+| g:iced#palette#palette | g:iced#palette
+| g:iced#lint#linters | g:iced#eastwood#linters
+|===
+// }}}
+
+== 0.6.2
+// {{{
+* Fix not to remove blank lines too much in code formatting #49
+* Update to interrupt when disconnecting
+* Update to make spec document more readable
+// }}}
+
+== 0.6.1
+// {{{
+* Fix to work skeleton correctly #47
+* Fix "Argument to in-ns must be a symbol" error by `IcedInReplNs` command #46
+* Support junegunn/fzf as a selector
+** https://github.com/junegunn/fzf
+* Update `iced` command to allow `with-profile` option for leiningen
+// }}}
+
+== 0.6.0
+// {{{
+* Fix code formatting to delete extra empty line
+* Fix a bug causes evaluation error on stdout buffer
+* Update to check `set hidden` when connecting to nrepl
+* Fix a bug causes vim error when closing stdout/repl buffer
+* Update completion to display correct document in preview window
+
+=== Breaking changes
+* Delete `:IcedBrowseFunction` command
+** Extracted to https://github.com/liquidz/vim-iced-project-namespaces
+* Delete `:IcedBrowseNamespace` command
+** Extracted to https://github.com/liquidz/vim-iced-function-list
+// }}}
+
+== 0.5.5
+// {{{
+* Update linting not to run when linting is already running
+* Update to clear signs when linting is disabled
+* Update to refresh signs when code is formatted
+* Add python3 code to boost decoding bencode
+* Fix decoding bencode in vim script to work(detect error) with incorrect character
+* Fix setting sign to ignore errors that has no line number
+// }}}
+
+== 0.5.4
+// {{{
+* Fixed `IcedPrintLast` to output all results
+* Fixed a bug that caused an error if javadoc result did not have a `member` key
+* Add `clojure.spec.test.alpha` as ns favorites for `IcedAddNs`
+* Add `IcedTestSpecCheck` command
+// }}}
+
+== 0.5.3
+// {{{
+* Fix to use `sockconnect` for nREPL connection #40
+* Update debugging highlighting to specify background color
+* Update to reload all namespaces before running all tests
+* Add `IcedRelatedNamespaces` command
+// }}}
+
+== 0.5.2
+// {{{
+* Update code formatting to specify `alias-map` for cljfmt
+* Tweak codes
+// }}}
+
+== 0.5.1
+// {{{
+* Update to show evaluation error when it is clear that current session is invalid from the extension
+* Update to be able to define custom command in the command palette
+// }}}
+
+== 0.5.0
+// {{{
+* Fix to work completion on the stdout buffer correctly
+** https://github.com/liquidz/iced-nrepl/commit/15697d35f6407a1d86d1a9bce68341792a41cbbc
+* Update to execute corresponding test codes even if test-ns is executed on the src side
+* Add `IcedTestRerunLast` command
+* Support neovim EXPERIMENTALLY
+// }}}
+// vim:fdm=marker:fdl=0
