@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased
+// {{{
+=== Added
+* Add option to restrict value length in debugging.
+** `g:iced#debug#value_max_length`
+* Add option for `:IcedRelatedNamespace` command.
+** `g:iced#related_ns#tail_patterns`
+*** The namespace tailing pattern to decide the namespace is related or not.
+
+=== Changed
+* Update referencing document to show with vim's `help` format.
+
+=== Fixed
+* Fix bug for echoing document for Java class constructor under cursor.
+// }}}
 
 == 0.8.0
 // {{{
