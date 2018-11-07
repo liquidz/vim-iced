@@ -127,9 +127,13 @@ function! s:one_line_doc(resp) abort
     endif
   else
     if has_key(a:resp, 'javadoc')
-      let name =  printf('%s/%s', a:resp['class'], a:resp['member'])
+      let name = (has_key(a:resp, 'member'))
+            \ ? printf('%s/%s', a:resp['class'], a:resp['member'])
+            \ : a:resp['class']
       let args = substitute(get(a:resp, 'arglists-str', ''), '\r\?\n', ' ', 'g')
-      echo printf('%s %s %s', a:resp['returns'], name, args)
+      echo (has_key(a:resp, 'returns'))
+            \ ? printf('%s %s %s', a:resp['returns'], name, args)
+            \ : printf('%s %s', name, args)
     elseif has_key(a:resp, 'ns') && has_key(a:resp, 'name')
       let name = printf('%s/%s', a:resp['ns'], a:resp['name'])
       let args = substitute(get(a:resp, 'arglists-str', ''), '\r\?\n', ' ', 'g')
