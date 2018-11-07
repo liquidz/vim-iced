@@ -227,6 +227,9 @@ DEBUGGING                                                  *vim-iced-debugging*
        a
        #dbg (recur b (+ a b) (dec n)))))
 <
+  Related options:
+  - |g:iced#debug#value_max_length|
+
 ==============================================================================
 SKELETON                                                    *vim-iced-skeleton*
 
@@ -974,6 +977,12 @@ g:iced#cljs#custom#start_code
                                                  *g:iced#cljs#custom#stop_code*
 g:iced#cljs#custom#stop_code
   Code to stop CLJS REPL in {custom} environment.
+
+                                                *g:iced#debug#value_max_length*
+g:iced#debug#value_max_length
+  Max length to show value in debugging.
+  Negative value means no limitation.
+  Default value is `-1`.
 
                                                  *g:iced#nrepl#sync#timeout_ms*
 g:iced#nrepl#sync#timeout_ms
