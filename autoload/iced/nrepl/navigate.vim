@@ -6,6 +6,8 @@ let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
 let s:tagstack = []
+let g:iced#related_ns#tail_patterns =
+      \ get(g:, 'iced#related_ns#tail_patterns', ['', '-test', '-spec', '\.spec'])
 
 function! s:open(mode, ns_name) abort
   let resp = iced#nrepl#op#cider#sync#ns_path(a:ns_name)
