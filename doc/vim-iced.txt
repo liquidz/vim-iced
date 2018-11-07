@@ -530,6 +530,7 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedRelatedNamespace
   Browse namespaces relating to current namespace, and open selected one.
   `ctrlp.vim` or `fzf` is required to select namespace.
+  Configurable option is |g:iced#related_ns#tail_patterns|.
   Key is mapped to |<Plug>(iced_related_namespace)|.
 
                                                               *:IcedBrowseSpec*
@@ -988,6 +989,12 @@ g:iced#debug#value_max_length
 g:iced#nrepl#sync#timeout_ms
   Time to timeout (unit: milli sec).
   Default value is `3000`.
+
+                                              *g:iced#related_ns#tail_patterns*
+g:iced#related_ns#tail_patterns
+  The namespace tailing pattern to decide the namespace is related or not.
+  This option is used by|:IcedRelatedNamespace| command.
+  Default value is `['', '-test', '-spec', '\.spec']` .
 
                                                    *g:iced#test#spec_num_tests*
 g:iced#test#spec_num_tests
