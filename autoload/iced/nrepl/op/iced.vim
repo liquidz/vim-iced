@@ -49,18 +49,6 @@ function! iced#nrepl#op#iced#grimoire(platform, ns_name, symbol, callback) abort
         \ })
 endfunction " }}}
 
-""" related-namespaces {{{
-function! iced#nrepl#op#iced#related_namespaces(ns_name, callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#nrepl#send({
-        \ 'id': iced#nrepl#id(),
-        \ 'op': 'iced-related-namespaces',
-        \ 'sesion': iced#nrepl#current_session(),
-        \ 'ns': a:ns_name,
-        \ 'callback': a:callback,
-        \ })
-endfunction " }}}
-
 """ spec-check {{{
 function! iced#nrepl#op#iced#spec_check(symbol, num_tests, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
@@ -75,7 +63,6 @@ function! iced#nrepl#op#iced#spec_check(symbol, num_tests, callback) abort
 endfunction " }}}
 
 call iced#nrepl#register_handler('iced-lint-file', function('s:concat_handler', ['lint-warnings']))
-call iced#nrepl#register_handler('iced-related-namespaces', function('s:concat_handler', ['related-namespaces']))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
