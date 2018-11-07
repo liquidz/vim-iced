@@ -8,13 +8,14 @@ let s:D = s:V.import('Data.Dict')
 let g:iced#buffer#document#does_update_automatically =
       \ get(g:, 'iced#buffer#document#does_update_automatically', v:false)
 
+let s:subsection_sep = '------------------------------------------------------------------------------'
+
 function! s:generate_javadoc(resp) abort
   let doc = []
-  if has_key(a:resp, 'member')
-    call add(doc, printf('# %s/%s', a:resp['class'], a:resp['member']))
-  else
-    call add(doc, printf('# %s', a:resp['class']))
-  endif
+  let title = (has_key(a:resp, 'member'))
+        \ ? printf('%s/%s', a:resp['class'], a:resp['member'])
+        \ : a:resp['class']
+  call add(doc, printf('*%s*', title))
 
   if has_key(a:resp, 'arglists-str')
     call add(doc, printf('  %s', join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")))
@@ -25,8 +26,14 @@ function! s:generate_javadoc(resp) abort
 
   if has_key(a:resp, 'returns')
     call add(doc, '')
-    call add (doc, '## Returns')
+    call add(doc, s:subsection_sep)
+    call add (doc, '*Returns*')
     call add (doc, printf('  %s', a:resp['returns']))
+  endif
+
+  if has_key(a:resp, 'javadoc')
+    call add(doc, '')
+    call add(doc, a:resp['javadoc'])
   endif
 
   return doc
@@ -42,11 +49,10 @@ function! s:generate_cljdoc(resp) abort
   let doc = []
   if !has_key(a:resp, 'name') | return doc | endif
 
-  if has_key(a:resp, 'ns')
-    call add(doc, printf('# %s/%s', a:resp['ns'], a:resp['name']))
-  else
-    call add(doc, a:resp['name'])
-  endif
+  let title = (has_key(a:resp, 'ns'))
+        \ ? printf('%s/%s', a:resp['ns'], a:resp['name'])
+        \ : a:resp['name']
+  call add(doc, printf('*%s*', title))
 
   if has_key(a:resp, 'arglists-str')
     call add(doc, printf('  %s', join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")))
@@ -59,7 +65,8 @@ function! s:generate_cljdoc(resp) abort
 
   if has_key(a:resp, 'spec')
     call add(doc, '')
-    call add(doc, printf('## %s', a:resp['spec'][0]))
+    call add(doc, s:subsection_sep)
+    call add(doc, printf('*%s*', a:resp['spec'][0]))
     let specs = s:D.from_list(a:resp['spec'][1:])
     for k in [':args', ':ret']
       if !has_key(specs, k) | continue | endif
@@ -89,7 +96,7 @@ endfunction
 function! s:view_doc(resp) abort
   let doc = s:generate_doc(a:resp)
   if !empty(doc)
-    call iced#buffer#document#open(s:generate_doc(a:resp))
+    call iced#buffer#document#open(s:generate_doc(a:resp), 'help')
   endif
 endfunction
 
@@ -123,7 +130,7 @@ function! s:one_line_doc(resp) abort
   if iced#buffer#document#is_visible() && g:iced#buffer#document#does_update_automatically
     let doc = s:generate_doc(a:resp)
     if !empty(doc)
-      call iced#buffer#document#update(doc)
+      call iced#buffer#document#update(doc, 'help')
     endif
   else
     if has_key(a:resp, 'javadoc')
