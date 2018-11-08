@@ -2,7 +2,28 @@
 
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
-== Unreleased
+== Unreleased (master)
+
+== 0.8.1
+// {{{
+=== Added
+* Add option to restrict value length in debugging.
+** `g:iced#debug#value_max_length`
+* Add option for `:IcedRelatedNamespace` command.
+** `g:iced#related_ns#tail_patterns`
+*** The namespace tailing pattern to decide the namespace is related or not.
+* Add clojurescript environment for https://github.com/graalvm/graaljs[GraalJS]
+
+=== Changed
+* Update referencing document to show with vim's `help` format.
+* Update testing process to use `test-var-query` op instead of `test`/`test-all` op in cider-nrepl.
+** `test` and `test-all` ops are already deprecated.
+*** https://github.com/clojure-emacs/cider-nrepl/blob/master/CHANGELOG.md#0170-2018-05-07
+* Update to connect nREPL automatically when starting `cljs-repl`.
+
+=== Fixed
+* Fix bug for echoing document for Java class constructor under cursor.
+// }}}
 
 == 0.8.0
 // {{{

@@ -6,6 +6,8 @@ let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
 let s:tagstack = []
+let g:iced#related_ns#tail_patterns =
+      \ get(g:, 'iced#related_ns#tail_patterns', ['', '-test', '-spec', '\.spec'])
 
 function! s:open(mode, ns_name) abort
   let resp = iced#nrepl#op#cider#sync#ns_path(a:ns_name)
@@ -41,15 +43,25 @@ function! iced#nrepl#navigate#toggle_src_and_test() abort
 endfunction " }}}
 
 " iced#nrepl#navigate#related_ns {{{
-function! s:select_ns_from_list(namespaces) abort
-  if empty(a:namespaces) | return iced#message#error('not_found') | endif
-  call iced#selector({'candidates': a:namespaces, 'accept': funcref('s:open')})
+function! s:ns_list(resp) abort
+  if !has_key(a:resp, 'ns-list') | return iced#message#error('ns_list_error') | endif
+
+  let ns = iced#nrepl#ns#name()
+  let arr = split(ns, '\.')
+  let ns_head = arr[0]
+  let ns_tail = substitute(arr[len(arr)-1], '-test$', '', '')
+  let pattern = printf('^%s\.\(.\+\.\)\?\(%s\)$',
+        \ ns_head,
+        \ join(map(copy(g:iced#related_ns#tail_patterns),
+        \          {_, v -> printf('%s%s', ns_tail, v)}), '\|'))
+
+  let related = filter(copy(a:resp['ns-list']), {_, v -> (v !=# ns && match(v, pattern) != -1)})
+  if empty(related) | return iced#message#error('not_found') | endif
+  call iced#selector({'candidates': related, 'accept': funcref('s:open')})
 endfunction
 
 function! iced#nrepl#navigate#related_ns() abort
-  let ns_name = iced#nrepl#ns#name()
-  call iced#message#info('fetching')
-  call iced#nrepl#op#iced#related_namespaces(ns_name, funcref('s:select_ns_from_list'))
+  call iced#nrepl#op#cider#ns_list(funcref('s:ns_list'))
 endfunction " }}}
 
 " iced#nrepl#navigate#jump_to_def {{{

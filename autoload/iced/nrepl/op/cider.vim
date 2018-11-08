@@ -44,34 +44,28 @@ function! iced#nrepl#op#cider#ns_load_all(callback) abort
       \ })
 endfunction " }}}
 
-""" test {{{
+
+""" test-var-query {{{
 function! s:test_handler(resp, last_result) abort
   let responses = empty(a:last_result) ? [] : a:last_result
   call extend(responses, iced#util#ensure_array(a:resp))
   return responses
 endfunction
 
-function! iced#nrepl#op#cider#test_var(test_ns, test_var, callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  let test_ns = (empty(a:test_ns) ? iced#nrepl#ns#name() : a:test_ns)
-
-  call iced#nrepl#send({
-      \ 'op': 'test',
-      \ 'session': iced#nrepl#current_session(),
-      \ 'id': iced#nrepl#id(),
-      \ 'ns': test_ns,
-      \ 'tests': [a:test_var],
-      \ 'callback': a:callback,
-      \ })
-endfunction
-
-function! iced#nrepl#op#cider#test_ns(test_ns, callback) abort
+" var_query examples)
+" * testing var
+"   {'ns-query': {'exactly': ['foo.core']}, 'exactly': ['foo.core/bar-test']}
+" * testing ns
+"   {'ns-query': {'exactly': ['foo.core']}}
+" * testing all
+"   {'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}}
+function! iced#nrepl#op#cider#test_var_query(var_query, callback) abort
   if iced#nrepl#is_connected()
     call iced#nrepl#send({
-        \ 'op': 'test',
+        \ 'op': 'test-var-query',
         \ 'session': iced#nrepl#current_session(),
         \ 'id': iced#nrepl#id(),
-        \ 'ns': a:test_ns,
+        \ 'var-query': a:var_query,
         \ 'callback': a:callback,
         \ })
   endif
@@ -82,17 +76,6 @@ function! iced#nrepl#op#cider#retest(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'retest',
-      \ 'session': iced#nrepl#current_session(),
-      \ 'id': iced#nrepl#id(),
-      \ 'callback': a:callback,
-      \ })
-endfunction " }}}
-
-""" test-all {{{
-function! iced#nrepl#op#cider#test_all(callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#nrepl#send({
-      \ 'op': 'test-all',
       \ 'session': iced#nrepl#current_session(),
       \ 'id': iced#nrepl#id(),
       \ 'callback': a:callback,
@@ -196,9 +179,8 @@ function! iced#nrepl#op#cider#pprint_eval(code, callback) abort
       \ })
 endfunction " }}}
 
-call iced#nrepl#register_handler('test', funcref('s:test_handler'))
+call iced#nrepl#register_handler('test-var-query', funcref('s:test_handler'))
 call iced#nrepl#register_handler('retest', funcref('s:test_handler'))
-call iced#nrepl#register_handler('test-all', funcref('s:test_handler'))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

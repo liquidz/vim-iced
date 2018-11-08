@@ -36,6 +36,7 @@ let s:using_env_key = ''
 let s:env = {
     \ 'figwheel': {-> iced#nrepl#cljs#figwheel#get_env()},
     \ 'nashorn': {-> iced#nrepl#cljs#nashorn#get_env()},
+    \ 'graaljs': {-> iced#nrepl#cljs#graaljs#get_env()},
     \ 'custom': {-> iced#nrepl#cljs#custom#get_env()},
     \ }
 
@@ -44,6 +45,8 @@ function! iced#nrepl#cljs#repl(env_key) abort
   if !has_key(s:env, env_key)
     return iced#message#error('invalid_cljs_env')
   endif
+
+  if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect() | return | endif
 
   if iced#nrepl#current_session_key() ==# 'clj' && empty(s:using_env_key)
     let s:using_env_key = env_key

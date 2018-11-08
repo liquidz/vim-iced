@@ -17,6 +17,9 @@ let s:saved_view = ''
 " o: out
 let s:supported_types = {'n': '', 'c': '', 'q': '', 'j': '' }
 
+" negative value means no limit
+let g:iced#debug#value_max_length = get(g:, 'iced#debug#value_max_length', -1)
+
 " a COORDINATES list of '(1 0 2) means:
 "  - enter next sexp then `forward-sexp' once,
 "  - enter next sexp,
@@ -73,6 +76,12 @@ function! s:move_cursor_and_set_highlight(resp) abort
   call iced#highlight#set_by_position('Search', pos[1], pos[2], pos[2]+l)
 endfunction
 
+function! s:abbrev_value(s) abort
+  return (g:iced#debug#value_max_length > 0 && len(a:s) > g:iced#debug#value_max_length)
+       \ ? printf('%s...', strpart(a:s, 0, g:iced#debug#value_max_length))
+       \ : a:s
+endfunction
+
 function! iced#nrepl#debug#start(resp) abort
   if type(s:saved_view) != type({})
     let s:saved_view = iced#util#save_cursor_position()
@@ -82,7 +91,7 @@ function! iced#nrepl#debug#start(resp) abort
   call s:move_cursor_and_set_highlight(resp)
 
   call iced#buffer#stdout#append(" \n;; Debugging")
-  call iced#buffer#stdout#append(printf('::value %s', resp['debug-value']))
+  call iced#buffer#stdout#append(printf('::value %s', s:abbrev_value(resp['debug-value'])))
   call iced#buffer#stdout#append('::locals')
 
   let locals = resp['locals']
@@ -90,6 +99,7 @@ function! iced#nrepl#debug#start(resp) abort
   let max_key_len = max(map(ks, {_, v -> len(v)})) + 2
   for kv in locals
     let [k, v] = kv
+    let v = s:abbrev_value(v)
     call iced#buffer#stdout#append(printf('%' . max_key_len . 's: %s', k, v))
   endfor
 

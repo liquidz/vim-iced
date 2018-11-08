@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.8.0
+Version: 0.8.1
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -16,6 +16,7 @@ CONTENTS                                                    *vim-iced-contents*
     Boost by Python            |vim-iced-install-python|
   nREPL Connection             |vim-iced-nrepl-connection|
   ClojureScript                |vim-iced-clojurescript|
+    GraalJS                    |vim-iced-graaljs|
   Evaluating                   |vim-iced-evaluating|
     Stdout Buffer              |vim-iced-stdout-buffer|
   Testing                      |vim-iced-testing|
@@ -163,6 +164,8 @@ CLOJURE SCRIPT                                         *vim-iced-clojurescript*
 
   Supports following environment currently.
   - figwheel
+  - graaljs
+    ClojureScript 1.10.439 or later is required.
   - nashorn
   - custom
 
@@ -173,6 +176,17 @@ CLOJURE SCRIPT                                         *vim-iced-clojurescript*
   |IcedStartCljsRepl| to start cljs-repl.
   |IcedQuitCljsRepl| to quit it.
 
+------------------------------------------------------------------------------
+GRAALJS                                                      *vim-iced-graaljs*
+
+  At first, ClojureScript 1.10.439 or later is required.
+
+  GraalVM is also required, and you must add GraalVM `/bin` to your `PATH`.
+  c.f. https://www.graalvm.org/docs/getting-started/#install-graalvm
+  Otherwise you can set `PATH` temporarily when you execute `iced` command.
+>
+  $ PATH=/path/to/graalvm/bin:$PATH iced repl
+<
 ==============================================================================
 EVALUATING                                                *vim-iced-evaluating*
 
@@ -227,6 +241,9 @@ DEBUGGING                                                  *vim-iced-debugging*
        a
        #dbg (recur b (+ a b) (dec n)))))
 <
+  Related options:
+  - |g:iced#debug#value_max_length|
+
 ==============================================================================
 SKELETON                                                    *vim-iced-skeleton*
 
@@ -527,6 +544,7 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedRelatedNamespace
   Browse namespaces relating to current namespace, and open selected one.
   `ctrlp.vim` or `fzf` is required to select namespace.
+  Configurable option is |g:iced#related_ns#tail_patterns|.
   Key is mapped to |<Plug>(iced_related_namespace)|.
 
                                                               *:IcedBrowseSpec*
@@ -975,10 +993,22 @@ g:iced#cljs#custom#start_code
 g:iced#cljs#custom#stop_code
   Code to stop CLJS REPL in {custom} environment.
 
+                                                *g:iced#debug#value_max_length*
+g:iced#debug#value_max_length
+  Max length to show value in debugging.
+  Negative value means no limitation.
+  Default value is `-1`.
+
                                                  *g:iced#nrepl#sync#timeout_ms*
 g:iced#nrepl#sync#timeout_ms
   Time to timeout (unit: milli sec).
   Default value is `3000`.
+
+                                              *g:iced#related_ns#tail_patterns*
+g:iced#related_ns#tail_patterns
+  The namespace tailing pattern to decide the namespace is related or not.
+  This option is used by|:IcedRelatedNamespace| command.
+  Default value is `['', '-test', '-spec', '\.spec']` .
 
                                                    *g:iced#test#spec_num_tests*
 g:iced#test#spec_num_tests

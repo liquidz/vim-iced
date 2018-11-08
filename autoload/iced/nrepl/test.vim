@@ -158,9 +158,11 @@ function! s:test(resp) abort
     let var = substitute(var, '^#''', '', '')
     let i = stridx(var, '/')
     let ns = var[0:i-1]
-    let var = var[i+1:]
-    echom printf('Testing: %s', var)
-    call iced#nrepl#op#cider#test_var(ns, var, funcref('s:out'))
+    echom printf('Testing: %s', var[i+1:])
+    call iced#nrepl#op#cider#test_var_query({
+          \ 'ns-query': {'exactly': [ns]},
+          \ 'exactly': [var],
+          \ }, funcref('s:out'))
   endif
 endfunction
 
@@ -186,15 +188,18 @@ function! iced#nrepl#test#ns() abort
 
   call iced#sign#unplace_all()
   call iced#message#info('testing')
-  call iced#nrepl#op#cider#test_ns(ns, funcref('s:out'))
+  call iced#nrepl#op#cider#test_var_query({
+        \ 'ns-query': {'exactly': [ns]},
+        \ }, funcref('s:out'))
 endfunction
 
 function! iced#nrepl#test#all() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#sign#unplace_all()
   call iced#message#info('testing')
-  call iced#nrepl#op#cider#ns_load_all({_ ->
-        \ iced#nrepl#op#cider#test_all(funcref('s:out'))})
+  call iced#nrepl#op#cider#test_var_query({
+        \ 'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}
+        \ }, funcref('s:out'))
 endfunction
 
 function! iced#nrepl#test#redo() abort

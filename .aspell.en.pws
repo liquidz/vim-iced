@@ -1,4 +1,4 @@
-personal_ws-1.1 en 163 
+personal_ws-1.1 en 167 
 IcedRelatedNamespaces
 grimoire
 IcedGrep
@@ -27,6 +27,8 @@ aug
 norl
 IcedDefBack
 botright
+GraalVM
+graalvm
 IcedEvalRepl
 IcedQuitCljsRepl
 hardbreaks
@@ -103,8 +105,8 @@ nrepl's
 OuterList
 eastwood
 CursorMoved
-nREPL
 nrepl
+nREPL
 IcedTestRerunLast
 Iizuka
 IcedJumpToPrevSign
@@ -146,9 +148,11 @@ paredit
 tophat
 IcedInReplNs
 noet
-clojurescript
 ClojureScript
+clojurescript
 IcedBarf
+graaljs
+GraalJS
 ctrlp
 IcedRequire
 IcedInterrupt
