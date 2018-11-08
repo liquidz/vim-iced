@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file. This change
 * Update testing process to use `test-var-query` op instead of `test`/`test-all` op in cider-nrepl.
 ** `test` and `test-all` ops are already deprecated.
 *** https://github.com/clojure-emacs/cider-nrepl/blob/master/CHANGELOG.md#0170-2018-05-07
+* Update to connect nREPL automatically when starting `cljs-repl`.
 
 === Fixed
 * Fix bug for echoing document for Java class constructor under cursor.

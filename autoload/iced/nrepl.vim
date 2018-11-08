@@ -184,7 +184,7 @@ endfunction
 " }}}
 
 " SEND {{{
-function! s:auto_connect() abort
+function! iced#nrepl#auto_connect() abort
   call iced#message#echom('auto_connect')
   if ! iced#nrepl#connect#auto()
     call iced#message#error('try_connect')
@@ -336,7 +336,7 @@ function! iced#nrepl#is_evaluating() abort
 endfunction
 
 function! iced#nrepl#eval(code, ...) abort
-  if !iced#nrepl#is_connected() && !s:auto_connect()
+  if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect()
     return
   endif
 
@@ -359,7 +359,7 @@ function! iced#nrepl#eval(code, ...) abort
 endfunction
 
 function! iced#nrepl#load_file(callback) abort " {{{
-  if !iced#nrepl#is_connected() && !s:auto_connect()
+  if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect()
     return
   endif
 
