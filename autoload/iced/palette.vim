@@ -3,7 +3,7 @@ set cpo&vim
 
 let s:default_palette = [
       \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt',
-      \ 'StartCljsRepl figwheel', 'StartCljsRepl nashorn',
+      \ 'StartCljsRepl figwheel', 'StartCljsRepl graaljs', 'StartCljsRepl nashorn',
       \ 'QuitCljsRepl',
       \ 'EvalNs',
       \ 'Require', 'RequireAll',

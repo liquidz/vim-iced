@@ -36,6 +36,7 @@ let s:using_env_key = ''
 let s:env = {
     \ 'figwheel': {-> iced#nrepl#cljs#figwheel#get_env()},
     \ 'nashorn': {-> iced#nrepl#cljs#nashorn#get_env()},
+    \ 'graaljs': {-> iced#nrepl#cljs#graaljs#get_env()},
     \ 'custom': {-> iced#nrepl#cljs#custom#get_env()},
     \ }
 
