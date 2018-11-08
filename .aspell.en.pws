@@ -27,8 +27,8 @@ aug
 norl
 IcedDefBack
 botright
-graalvm
 GraalVM
+graalvm
 IcedEvalRepl
 IcedQuitCljsRepl
 hardbreaks
@@ -105,8 +105,8 @@ nrepl's
 OuterList
 eastwood
 CursorMoved
-nREPL
 nrepl
+nREPL
 IcedTestRerunLast
 Iizuka
 IcedJumpToPrevSign
@@ -148,11 +148,11 @@ paredit
 tophat
 IcedInReplNs
 noet
-clojurescript
 ClojureScript
+clojurescript
 IcedBarf
-GraalJS
 graaljs
+GraalJS
 ctrlp
 IcedRequire
 IcedInterrupt
