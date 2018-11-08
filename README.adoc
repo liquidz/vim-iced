@@ -81,7 +81,7 @@ and https://github.com/candid82/joker[joker]
 
 |:tophat:
 |ClojureScript support
-|`figwheel` and `nashorn` is supported currently
+|`figwheel`, `graaljs` and `nashorn` is supported currently
 
 |:art:
 |Command palette

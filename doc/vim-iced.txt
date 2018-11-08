@@ -16,6 +16,7 @@ CONTENTS                                                    *vim-iced-contents*
     Boost by Python            |vim-iced-install-python|
   nREPL Connection             |vim-iced-nrepl-connection|
   ClojureScript                |vim-iced-clojurescript|
+    GraalJS                    |vim-iced-graaljs|
   Evaluating                   |vim-iced-evaluating|
     Stdout Buffer              |vim-iced-stdout-buffer|
   Testing                      |vim-iced-testing|
@@ -163,6 +164,8 @@ CLOJURE SCRIPT                                         *vim-iced-clojurescript*
 
   Supports following environment currently.
   - figwheel
+  - graaljs
+    ClojureScript 1.10.439 or later is required.
   - nashorn
   - custom
 
@@ -173,6 +176,17 @@ CLOJURE SCRIPT                                         *vim-iced-clojurescript*
   |IcedStartCljsRepl| to start cljs-repl.
   |IcedQuitCljsRepl| to quit it.
 
+------------------------------------------------------------------------------
+GRAALJS                                                      *vim-iced-graaljs*
+
+  At first, ClojureScript 1.10.439 or later is required.
+
+  GraalVM is also required, and you must add GraalVM `/bin` to your `PATH`.
+  c.f. https://www.graalvm.org/docs/getting-started/#install-graalvm
+  Otherwise you can set `PATH` temporarily when you execute `iced` command.
+>
+  $ PATH=/path/to/graalvm/bin:$PATH iced repl
+<
 ==============================================================================
 EVALUATING                                                *vim-iced-evaluating*
 
