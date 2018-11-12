@@ -43,8 +43,12 @@ function! iced#nrepl#navigate#toggle_src_and_test() abort
 endfunction " }}}
 
 " iced#nrepl#navigate#related_ns {{{
+let s:does_all_ns_loaded = v:false
+
 function! s:ns_list(resp) abort
   if !has_key(a:resp, 'ns-list') | return iced#message#error('ns_list_error') | endif
+
+  let s:does_all_ns_loaded = v:true
 
   let ns = iced#nrepl#ns#name()
   let arr = split(ns, '\.')
@@ -61,7 +65,12 @@ function! s:ns_list(resp) abort
 endfunction
 
 function! iced#nrepl#navigate#related_ns() abort
-  call iced#nrepl#op#cider#ns_list(funcref('s:ns_list'))
+  if !s:does_all_ns_loaded
+    call iced#message#echom('all_ns_loading')
+    call iced#nrepl#op#cider#ns_load_all({_ -> iced#nrepl#op#cider#ns_list(funcref('s:ns_list'))})
+  else
+    call iced#nrepl#op#cider#ns_list(funcref('s:ns_list'))
+  endif
 endfunction " }}}
 
 " iced#nrepl#navigate#jump_to_def {{{

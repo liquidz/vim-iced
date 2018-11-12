@@ -51,5 +51,6 @@
   'grimoire_error':     'Invalid response from Grimoire.',
   'no_set_hidden':      'You must add `set hidden` to your .vimrc.',
   'jump_error':         'Failed to jump: ''%s''.',
+  'all_ns_loading':     'Loading all namespaces...',
 }
 #vim:ft=ruby
