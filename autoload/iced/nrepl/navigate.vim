@@ -75,6 +75,7 @@ endfunction " }}}
 
 " iced#nrepl#navigate#jump_to_def {{{
 function! s:jump(resp) abort
+  if !has_key(a:resp, 'file') | return iced#message#error('jump_not_found') | endif
   let path = substitute(a:resp['file'], '^file:', '', '')
   let line = a:resp['line']
   let column = a:resp['column']
