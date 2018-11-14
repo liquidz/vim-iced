@@ -126,17 +126,17 @@ function! iced#complete#omni(findstart, base) abort
     let s = line[0:ncol-2]
     return ncol - strlen(matchstr(s, '\k\+$')) - 1
   elseif len(a:base) > 1 && iced#nrepl#is_connected() && iced#nrepl#check_session_validity()
-    let ns = iced#nrepl#ns#name()
+    let ns_name = iced#nrepl#ns#name()
     let candidates = []
 
     " vars in current namespace
-    let tmp = s:ns_var_candidates(ns, a:base, '')
+    let tmp = s:ns_var_candidates(ns_name, a:base, '')
     if !empty(tmp)
       let candidates = candidates + tmp
     endif
 
     " namespace aliases
-    let alias_dict = iced#nrepl#ns#alias_dict(iced#nrepl#ns#get())
+    let alias_dict = iced#nrepl#ns#alias_dict(ns_name)
     if !empty(alias_dict)
       let candidates = candidates + s:ns_alias_candidates(keys(alias_dict), a:base)
     endif
@@ -155,7 +155,7 @@ function! iced#complete#omni(findstart, base) abort
 
     " cider completions
     let ctx = s:context()
-    let resp = iced#nrepl#op#cider#sync#complete(a:base, ns, ctx)
+    let resp = iced#nrepl#op#cider#sync#complete(a:base, ns_name, ctx)
     if type(resp) == type({}) && has_key(resp, 'completions')
       let candidates = candidates + resp['completions']
     endif

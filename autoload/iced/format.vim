@@ -16,15 +16,6 @@ function! s:set_indentation_rule() abort
   endif
 endfunction
 
-function! s:ns_aliases(ns_code) abort
-  try
-    let resp = iced#nrepl#op#iced#sync#ns_aliases(a:ns_code)
-    return get(resp, 'aliases', {})
-  catch
-    return {}
-  endtry
-endfunction
-
 function! iced#format#form() abort
   if !iced#nrepl#is_connected()
     silent exe "normal \<Plug>(sexp_indent)"
@@ -37,14 +28,14 @@ function! iced#format#form() abort
 
   let view = winsaveview()
   let reg_save = @@
-  let ns_code = iced#nrepl#ns#get()
+  let ns_name = iced#nrepl#ns#name()
   try
     let res = iced#paredit#get_current_top_list_raw()
     let code = res['code']
     if empty(code)
       call iced#message#warning('finding_code_error')
     else
-      let resp = iced#nrepl#op#iced#sync#format_code(code, s:ns_aliases(ns_code))
+      let resp = iced#nrepl#op#iced#sync#format_code(code, iced#nrepl#ns#alias_dict(ns_name))
       if has_key(resp, 'formatted') && !empty(resp['formatted'])
         let @@ = resp['formatted']
         silent normal! gvp
@@ -71,7 +62,7 @@ function! iced#format#minimal() abort
 
   let view = winsaveview()
   let reg_save = @@
-  let ns_code = iced#nrepl#ns#get()
+  let ns_name = iced#nrepl#ns#name()
   try
     " NOTE: vim-sexp's slurp move cursor to tail of form
     normal! %
@@ -86,7 +77,7 @@ function! iced#format#minimal() abort
       silent normal! va(y
     endif
     let code = @@
-    let resp = iced#nrepl#op#iced#sync#format_code(code, s:ns_aliases(ns_code))
+    let resp = iced#nrepl#op#iced#sync#format_code(code, iced#nrepl#ns#alias_dict(ns_name))
     if has_key(resp, 'formatted') && !empty(resp['formatted'])
       let @@ = iced#util#add_indent(ncol, resp['formatted'])
       silent normal! gvp

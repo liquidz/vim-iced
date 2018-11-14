@@ -106,7 +106,7 @@ function! s:expand_ns_alias(symbol) abort
     return a:symbol
   endif
 
-  let alias_dict = iced#nrepl#ns#alias_dict(iced#nrepl#ns#get())
+  let alias_dict = iced#nrepl#ns#alias_dict(iced#nrepl#ns#name())
   let ns = a:symbol[0:i-1]
   let ns = get(alias_dict, ns, ns)
 
