@@ -60,6 +60,19 @@ function! iced#nrepl#op#cider#sync#ns_path(ns) abort
       \ 'ns': a:ns,
       \ })
 endfunction
+" ns-aliases {{{
+function! iced#nrepl#op#cider#sync#ns_aliases(ns) abort
+  if !iced#nrepl#is_connected()
+    call iced#message#error('not_connected')
+    return ''
+  endif
+
+  return iced#nrepl#sync#send({
+      \ 'op': 'ns-aliases',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'ns': a:ns,
+      \ })
+endfunction " }}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
