@@ -4,12 +4,21 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (master)
 
+== 0.8.2
+// {{{
+=== Changed
+
+* Update to load all ns before browsing related ns only for the first time.
+* Bump cider-nrepl to 0.19.0-SNAPSHOT
+** Update `ns-aliases` op in cider-nrepl to fetch namespace aliases.
+
 === Fixed
 * #55: Fix not to expand macro in IcedThreadFirst/Last command.
 ** via https://github.com/liquidz/iced-nrepl/commit/de329da8c0f7cffb8fdbd20b6baec581ba15ae76[iced-nrepl]
 * Fix not to expand vector in IcedThreadFirst/Last command.
 ** Same above
 * Fix to handle not-found error on jumping to definition
+// }}}
 
 == 0.8.1
 // {{{
