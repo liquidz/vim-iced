@@ -46,17 +46,5 @@ function! iced#nrepl#op#iced#sync#refactor_thread_last(code) abort
         \ })
 endfunction
 
-function! iced#nrepl#op#iced#sync#ns_aliases(code) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-
-  return iced#nrepl#sync#send({
-        \ 'id': iced#nrepl#id(),
-        \ 'op': 'iced-ns-aliases',
-        \ 'sesion': iced#nrepl#current_session(),
-        \ 'env': iced#nrepl#current_session_key(),
-        \ 'code': a:code,
-        \ })
-endfunction
-
 let &cpo = s:save_cpo
 unlet s:save_cpo
