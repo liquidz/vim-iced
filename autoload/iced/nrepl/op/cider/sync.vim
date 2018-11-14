@@ -1,6 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" complete {{{
 function! iced#nrepl#op#cider#sync#complete(base, ns_name, context) abort
   if !iced#nrepl#is_connected()
     call iced#message#error('not_connected')
@@ -20,8 +21,9 @@ function! iced#nrepl#op#cider#sync#complete(base, ns_name, context) abort
   endif
 
   return iced#nrepl#sync#send(msg)
-endfunction
+endfunction " }}}
 
+" ns-list {{{
 function! iced#nrepl#op#cider#sync#ns_list() abort
   if !iced#nrepl#is_connected()
     call iced#message#error('not_connected')
@@ -32,8 +34,9 @@ function! iced#nrepl#op#cider#sync#ns_list() abort
       \ 'op': 'ns-list',
       \ 'session': iced#nrepl#current_session(),
       \ })
-endfunction
+endfunction " }}}
 
+" ns-vars-with-meta {{{
 function! iced#nrepl#op#cider#sync#ns_vars(ns) abort
   if !iced#nrepl#is_connected()
     call iced#message#error('not_connected')
@@ -46,8 +49,9 @@ function! iced#nrepl#op#cider#sync#ns_vars(ns) abort
       \ 'ns': a:ns,
       \ 'verbose': v:false,
       \ })
-endfunction
+endfunction " }}}
 
+" ns-path {{{
 function! iced#nrepl#op#cider#sync#ns_path(ns) abort
   if !iced#nrepl#is_connected()
     call iced#message#error('not_connected')
@@ -59,7 +63,8 @@ function! iced#nrepl#op#cider#sync#ns_path(ns) abort
       \ 'session': iced#nrepl#current_session(),
       \ 'ns': a:ns,
       \ })
-endfunction
+endfunction " }}}
+
 " ns-aliases {{{
 function! iced#nrepl#op#cider#sync#ns_aliases(ns) abort
   if !iced#nrepl#is_connected()
@@ -76,3 +81,4 @@ endfunction " }}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
+" vim:fdm=marker:fdl=0
