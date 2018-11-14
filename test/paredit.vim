@@ -11,10 +11,10 @@ function! s:format_code_relay(msg) abort
     return {'status': ['done'], 'formatted': a:msg['code']}
   elseif a:msg['op'] ==# 'iced-set-indentation-rules'
     return {'status': ['done']}
-  elseif a:msg['op'] ==# 'iced-ns-aliases'
-    return {'status': ['done'], 'aliases': {}}
+  elseif a:msg['op'] ==# 'ns-aliases'
+    return {'status': ['done'], 'ns-aliases': {}}
   else
-    return {}
+    return {'status': ['done']}
   endif
 endfunction
 
