@@ -89,7 +89,7 @@ LEININGEN~
   {:user
    {:dependencies [[nrepl "0.4.5"]
                    [iced-nrepl "0.2.4"]
-                   [cider/cider-nrepl "0.18.0"]]
+                   [cider/cider-nrepl "0.19.0-SNAPSHOT"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
                                       cider.nrepl/wrap-format
@@ -116,7 +116,7 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
-      [cider/cider-nrepl "0.18.0"]
+      [cider/cider-nrepl "0.19.0-SNAPSHOT"]
       [iced-nrepl "0.2.4"]])
 
   (swap! boot.repl/*default-middleware* concat
