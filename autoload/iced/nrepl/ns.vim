@@ -139,9 +139,13 @@ function! iced#nrepl#ns#in_repl_session_ns() abort
   call iced#nrepl#eval#code(code)
 endfunction
 
-function! iced#nrepl#ns#alias_dict(code) abort
-  let resp = iced#nrepl#op#iced#sync#ns_aliases(a:code)
-  return has_key(resp, 'aliases') ? resp['aliases'] : {}
+function! iced#nrepl#ns#alias_dict(ns_name) abort
+  try
+    let resp = iced#nrepl#op#cider#sync#ns_aliases(a:ns_name)
+    return get(resp, 'ns-aliases', {})
+  catch
+    return {}
+  endtry
 endfunction
 
 function! iced#nrepl#ns#find_existing_alias(ns_name) abort
