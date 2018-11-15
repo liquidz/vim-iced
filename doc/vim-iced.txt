@@ -419,6 +419,12 @@ COMMANDS                                                    *vim-iced-commands*
                                                          *:IcedTestUnderCursor*
 :IcedTestUnderCursor
   Run test under cursor.
+
+  If the var under cursor does not contains `:test` metadata
+  and current ns doesn't ends with "-test",
+  vim-iced searches test vars in corresponding test ns and run them.
+  Target test vars includes original var name in its name.
+
   Key is mapped to |<Plug>(iced_test_under_cursor)|.
 
                                                            *:IcedTestRerunLast*
