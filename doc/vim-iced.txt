@@ -553,6 +553,12 @@ COMMANDS                                                    *vim-iced-commands*
   `ctrlp.vim` or `fzf` is required to select spec.
   Key is mapped to |<Plug>(iced_browse_spec)|.
 
+                                                   *:IcedBrowseTestUnderCursor*
+:IcedBrowseTestUnderCursor
+  Browse test vars, and jump to the selected var definition.
+  `ctrlp.vim` or `fzf` is required to select a test var.
+  Key is mapped to |<Plug>(iced_browse_test_under_cursor)|.
+
                                                          *:IcedClearCtrlpCache*
 :IcedClearCtrlpCache
   Clear ctrlp cache used by vim-iced.
@@ -865,6 +871,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_browse_spec)
   Same as |:IcedBrowseSpec|.
 
+                                        *<Plug>(iced_browse_test_under_cursor)*
+<Plug>(iced_browse_test_under_cursor)
+  Same as |:IcedBrowseTestUnderCursor|.
+
                                                *<Plug>(iced_clear_ctrlp_cache)*
 <Plug>(iced_clear_ctrlp_cache)
   Same as |:IcedClearCtrlpCache|.
@@ -1129,6 +1139,7 @@ g:iced_enable_default_key_mappings
   <Leader>hh     <Plug>(iced_command_palette)
   <Leader>br     <Plug>(iced_related_namespace)
   <Leader>bs     <Plug>(iced_browse_spec)
+  <Leader>bt     <Plug>(iced_browse_test_under_cursor)
   <Leader>jn     <Plug>(iced_jump_to_next_sign)
   <Leader>jN     <Plug>(iced_jump_to_prev_sign)
   <Leader>gl     <Plug>(iced_goto_let)
