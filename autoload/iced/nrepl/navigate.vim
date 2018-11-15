@@ -98,8 +98,9 @@ function! iced#nrepl#navigate#jump_to_def(symbol) abort
   let pos[0] = bufnr('%')
   call s:L.push(s:tagstack, pos)
 
+  let ns_name = iced#nrepl#ns#name()
   let kw = empty(a:symbol) ? expand('<cword>') : a:symbol
-  call iced#nrepl#op#cider#info(kw, function('s:jump'))
+  call iced#nrepl#op#cider#info(ns_name, kw, function('s:jump'))
 endfunction " }}}
 
 " iced#nrepl#navigate#jump_back {{{
