@@ -62,7 +62,20 @@ function! iced#nrepl#op#iced#spec_check(symbol, num_tests, callback) abort
         \ })
 endfunction " }}}
 
+""" test-vars {{{
+function! iced#nrepl#op#iced#test_vars(ns_name, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'iced-test-vars',
+        \ 'sesion': iced#nrepl#current_session(),
+        \ 'ns': a:ns_name,
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
 call iced#nrepl#register_handler('iced-lint-file', function('s:concat_handler', ['lint-warnings']))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
+" vim:fdm=marker:fdl=0
