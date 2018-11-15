@@ -179,6 +179,7 @@ function! iced#nrepl#test#under_cursor() abort
   endif
 endfunction
 
+" iced#nrepl#test#ns {{{
 function! iced#nrepl#test#ns() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let ns = iced#nrepl#ns#name()
@@ -188,10 +189,10 @@ function! iced#nrepl#test#ns() abort
 
   call iced#sign#unplace_all()
   call iced#message#info('testing')
-  call iced#nrepl#op#cider#test_var_query({
+  call iced#nrepl#ns#require(ns, {_ -> iced#nrepl#op#cider#test_var_query({
         \ 'ns-query': {'exactly': [ns]},
-        \ }, funcref('s:out'))
-endfunction
+        \ }, funcref('s:out'))})
+endfunction " }}}
 
 function! iced#nrepl#test#all() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
