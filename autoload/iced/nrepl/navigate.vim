@@ -9,20 +9,48 @@ let s:tagstack = []
 let g:iced#related_ns#tail_patterns =
       \ get(g:, 'iced#related_ns#tail_patterns', ['', '-test', '-spec', '\.spec'])
 
-function! s:open(mode, ns_name) abort
-  let resp = iced#nrepl#op#cider#sync#ns_path(a:ns_name)
-  if !has_key(resp, 'path') || empty(resp['path']) || !filereadable(resp['path'])
-    return iced#message#error('not_found')
-  endif
-
+function! s:apply_mode_to_file(mode, file) abort
   let cmd = ':edit'
   if a:mode ==# 'v'
     let cmd = ':split'
   elseif a:mode ==# 't'
     let cmd = ':tabedit'
   endif
-  exe printf('%s %s', cmd, resp['path'])
+  exe printf('%s %s', cmd, a:file)
 endfunction
+
+" s:open_ns {{{
+function! s:open_ns(mode, ns_name) abort
+  let resp = iced#nrepl#op#cider#sync#ns_path(a:ns_name)
+  if !has_key(resp, 'path') || empty(resp['path']) || !filereadable(resp['path'])
+    return iced#message#error('not_found')
+  endif
+
+  call s:apply_mode_to_file(a:mode, resp['path'])
+endfunction " }}}
+
+" s:open_var {{{
+function! s:open_var_info(mode, resp) abort
+  if !has_key(a:resp, 'file') | return iced#message#error('not_found') | endif
+  let path = substitute(a:resp['file'], '^file:', '', '')
+  if stridx(path, 'jar:') == 0 | return iced#message#error('not_found') | endif
+
+  if expand('%:p') !=# path
+    call s:apply_mode_to_file(a:mode, path)
+  endif
+
+  let line = a:resp['line']
+  let column = a:resp['column']
+  call cursor(line, column)
+  normal! zz
+  redraw!
+endfunction
+
+function! s:open_var(mode, var_name) abort
+  let arr = split(a:var_name, '/')
+  if len(arr) != 2 | return iced#message#error('invalid_format', a:var_name) | endif
+  call iced#nrepl#op#cider#info(arr[0], arr[1], {resp -> s:open_var_info(a:mode, resp)})
+endfunction " }}}
 
 " iced#nrepl#navigate#cycle_ns {{{
 function! iced#nrepl#navigate#cycle_ns(ns) abort
@@ -39,7 +67,7 @@ function! iced#nrepl#navigate#toggle_src_and_test() abort
 
   let ns = iced#nrepl#ns#name()
   let toggle_ns = iced#nrepl#navigate#cycle_ns(ns)
-  call s:open('e', toggle_ns)
+  call s:open_ns('e', toggle_ns)
 endfunction " }}}
 
 " iced#nrepl#navigate#related_ns {{{
@@ -61,7 +89,7 @@ function! s:ns_list(resp) abort
 
   let related = filter(copy(a:resp['ns-list']), {_, v -> (v !=# ns && match(v, pattern) != -1)})
   if empty(related) | return iced#message#error('not_found') | endif
-  call iced#selector({'candidates': related, 'accept': funcref('s:open')})
+  call iced#selector({'candidates': related, 'accept': funcref('s:open_ns')})
 endfunction
 
 function! iced#nrepl#navigate#related_ns() abort
@@ -115,6 +143,15 @@ function! iced#nrepl#navigate#jump_back() abort
     redraw!
   endif
 endfunction " }}}
+
+function! iced#nrepl#navigate#test() abort
+  let ns_name = iced#nrepl#ns#name()
+  if s:S.ends_with(ns_name, '-test') | return iced#message#warning('already_in_test_ns') | endif
+
+  let ns_name = iced#nrepl#navigate#cycle_ns(ns_name)
+  call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, {test_vars ->
+        \ iced#selector({'candidates': test_vars, 'accept': funcref('s:open_var')})})
+endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
