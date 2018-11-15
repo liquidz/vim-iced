@@ -249,6 +249,7 @@ function! iced#nrepl#test#ns() abort
         \ }, funcref('s:out'))})
 endfunction " }}}
 
+" iced#nrepl#test#all {{{
 function! iced#nrepl#test#all() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#sign#unplace_all()
@@ -256,8 +257,9 @@ function! iced#nrepl#test#all() abort
   call iced#nrepl#op#cider#test_var_query({
         \ 'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}
         \ }, funcref('s:out'))
-endfunction
+endfunction " }}}
 
+" iced#nrepl#test#redo {{{
 function! iced#nrepl#test#redo() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let view = winsaveview()
@@ -282,9 +284,9 @@ function! iced#nrepl#test#redo() abort
     let @@ = reg_save
     call winrestview(view)
   endtry
-endfunction
+endfunction " }}}
 
-" test#spec_check {{{
+" iced#nrepl#test#spec_check {{{
 function! s:spec_check(var, resp) abort
   if !has_key(a:resp, 'result') | return iced#message#error('spec_check_error') | endif
   let num_tests = a:resp['num-tests']
@@ -337,6 +339,7 @@ function! iced#nrepl#test#spec_check(...) abort
   endif
 endfunction " }}}
 
+" iced#nrepl#test#rerun_last {{{
 function! iced#nrepl#test#rerun_last() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   if empty(s:last_test)
@@ -348,7 +351,8 @@ function! iced#nrepl#test#rerun_last() abort
   elseif s:last_test['type'] ==# 'spec-check'
     call s:current_var(s:last_test['num_tests'], {'value': s:last_test['var']})
   endif
-endfunction
+endfunction " }}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
+" vim:fdm=marker:fdl=0
