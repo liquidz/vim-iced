@@ -14,13 +14,17 @@ function! iced#status() abort
 endfunction
 
 function! s:json_resp(resp) abort
-  let resp = copy(a:resp)
-  if has_key(a:resp, 'value')
-    let value = a:resp['value']
-    let value = (stridx(value, '"') == 0) ? json_decode(value) : value
-    let resp['value'] = json_decode(value)
-  endif
-  return resp
+  try
+    let resp = copy(a:resp)
+    if has_key(a:resp, 'value')
+      let value = a:resp['value']
+      let value = (stridx(value, '"') == 0) ? json_decode(value) : value
+      let resp['value'] = json_decode(value)
+    endif
+    return resp
+  catch
+    return {}
+  endtry
 endfunction
 
 function! iced#eval_and_read(code, ...) abort

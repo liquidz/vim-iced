@@ -5,8 +5,8 @@ let s:ch = themis#helper('iced_channel')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl/system.vim')
 
 function! s:info_relay(msg, resp) abort
-  if a:msg['op'] ==# 'eval' && a:msg['json'] ==# 'true'
-    return empty(a:resp) ? {'status': ['done']} : {'status': ['done'], 'value': a:resp}
+  if a:msg['op'] ==# 'eval'
+    return empty(a:resp) ? {'status': ['done']} : {'status': ['done'], 'value': json_encode(a:resp)}
   else
     return {}
   endif
