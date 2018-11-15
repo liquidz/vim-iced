@@ -15,8 +15,10 @@ endfunction
 
 function! s:json_resp(resp) abort
   let resp = copy(a:resp)
-  if has_key(resp, 'json')
-    let resp['value'] = json_decode(a:resp['json'])
+  if has_key(a:resp, 'value')
+    let value = a:resp['value']
+    let value = (stridx(value, '"') == 0) ? json_decode(value) : value
+    let resp['value'] = json_decode(value)
   endif
   return resp
 endfunction
@@ -25,9 +27,8 @@ function! iced#eval_and_read(code, ...) abort
   let msg = {
       \ 'id': iced#nrepl#id(),
       \ 'op': 'eval',
-      \ 'code': a:code,
+      \ 'code': printf('(try (require ''clojure.data.json) (clojure.data.json/write-str %s) (catch Exception ex))', a:code),
       \ 'session': iced#nrepl#current_session(),
-      \ 'json': 'true',
       \ }
   let Callback = get(a:, 1, '')
   if iced#util#is_function(Callback)
