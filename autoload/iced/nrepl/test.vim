@@ -8,6 +8,36 @@ let s:L = s:V.import('Data.List')
 let s:last_test = {}
 let g:iced#test#spec_num_tests = get(g:, 'iced#test#spec_num_tests', 10)
 
+" iced#nrepl#test#fetch_test_vars_by_function_under_cursor {{{
+function! s:test_vars(eval_resp, test_vars_resp, ns_name, callback) abort
+  if !has_key(a:test_vars_resp, 'test-vars') || empty(a:test_vars_resp['test-vars'])
+    return iced#message#warning('no_test_vars')
+  endif
+
+  let var = a:eval_resp['value']
+  let var = substitute(var, '^#''', '', '')
+  let i = stridx(var, '/')
+  let name = (i == -1) ? var : strpart(var, i+1)
+
+  let test_vars = filter(copy(a:test_vars_resp['test-vars']), {_, v -> stridx(v, name) != -1})
+  call map(test_vars, {_, v -> printf('%s/%s', a:ns_name, v)})
+  call a:callback(test_vars)
+endfunction
+
+function! iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, callback) abort
+  let ret = iced#paredit#get_current_top_list()
+  let code = ret['code']
+  if empty(code) | return iced#message#error('finding_code_error') | endif
+
+  call iced#nrepl#ns#eval({_ ->
+        \ iced#nrepl#eval(code, {eval_resp ->
+        \   (has_key(eval_resp, 'value') && eval_resp['value'] !=# 'nil')
+        \   ? iced#nrepl#ns#require(a:ns_name, {_ ->
+        \       iced#nrepl#op#iced#test_vars(a:ns_name, {test_vars_resp ->
+        \         s:test_vars(eval_resp, test_vars_resp, a:ns_name, a:callback)})})
+        \   : iced#message#error('not_found')})})
+endfunction " }}}
+
 function! s:error_message(test) abort
   if has_key(a:test, 'context') && !empty(a:test['context'])
     return printf('%s: %s', a:test['var'], a:test['context'])
