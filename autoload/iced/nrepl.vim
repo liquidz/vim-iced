@@ -333,6 +333,7 @@ endfunction " }}}
 " EVAL {{{
 function! iced#nrepl#is_evaluating() abort
   return !empty(s:messages)
+        \ && (len(s:messages) != 1 || s:messages[keys(s:messages)[0]]['op'] !=# 'iced-lint-file')
 endfunction
 
 function! iced#nrepl#eval(code, ...) abort
