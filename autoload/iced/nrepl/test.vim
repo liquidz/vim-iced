@@ -38,6 +38,9 @@ function! iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, call
         \   : iced#message#error('not_found')})})
 endfunction " }}}
 
+" iced#nrepl#test#under_cursor {{{
+
+" common {{{
 function! s:error_message(test) abort
   if has_key(a:test, 'context') && !empty(a:test['context'])
     return printf('%s: %s', a:test['var'], a:test['context'])
@@ -177,7 +180,9 @@ function! s:out(resp) abort
     call iced#message#error_str(summary['summary'])
   endif
 endfunction
+" }}}
 
+" s:test_under_cursor {{{
 function! s:test(resp) abort
   if has_key(a:resp, 'err')
     call iced#nrepl#eval#err(a:resp['err'])
@@ -188,7 +193,7 @@ function! s:test(resp) abort
     let var = substitute(var, '^#''', '', '')
     let i = stridx(var, '/')
     let ns = var[0:i-1]
-    echom printf('Testing: %s', var[i+1:])
+    call iced#message#echom('testing_var', var[i+1:])
     call iced#nrepl#op#cider#test_var_query({
           \ 'ns-query': {'exactly': [ns]},
           \ 'exactly': [var],
@@ -196,7 +201,7 @@ function! s:test(resp) abort
   endif
 endfunction
 
-function! iced#nrepl#test#under_cursor() abort
+function! s:test_under_cursor() abort
   let ret = iced#paredit#get_current_top_list()
   let code = ret['code']
   if empty(code)
@@ -207,7 +212,27 @@ function! iced#nrepl#test#under_cursor() abort
     call iced#sign#unplace_all()
     call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)}, option)})
   endif
-endfunction
+endfunction " }}}
+
+" s:test_under_cursor_from_source {{{
+function! s:test_under_cursor_from_source(ns_name, test_vars) abort
+  call iced#message#echom('testing_var', join(a:test_vars, ', '))
+  call iced#nrepl#op#cider#test_var_query({
+        \   'ns-query': {'exactly': [a:ns_name]},
+        \   'exactly': a:test_vars
+        \   }, funcref('s:out'))
+endfunction " }}}
+
+function! iced#nrepl#test#under_cursor() abort
+  let ns_name = iced#nrepl#ns#name()
+  if s:S.ends_with(ns_name, '-test')
+    call s:test_under_cursor()
+  else
+    let ns_name = iced#nrepl#navigate#cycle_ns(ns_name)
+    call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, {test_vars ->
+          \ s:test_under_cursor_from_source(ns_name, test_vars)})
+  endif
+endfunction "}}}
 
 " iced#nrepl#test#ns {{{
 function! iced#nrepl#test#ns() abort

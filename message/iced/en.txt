@@ -37,6 +37,7 @@
   'spec_form_error':    'Failed to fetch spec form.',
   'spec_check_error':   'Failed to check spec.',
   'no_spec':            'No spec form is found.',
+  'testing_var':        'Testing: %s',
   'testing':            'Testing...',
   'retesting':          'Re-testing...',
   'lint_enabled':       'Lint enabled.',
