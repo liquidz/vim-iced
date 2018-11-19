@@ -150,3 +150,32 @@ function! s:suite.test_vars_by_ns_name_error_test() abort
   let ret = iced#nrepl#test#test_vars_by_ns_name('foo.core')
   call s:assert.true(empty(ret))
 endfunction
+
+function! s:suite.fetch_test_vars_by_function_under_cursor_test() abort
+  let test = {}
+  function! test.relay(msg) abort
+    if a:msg['op'] ==# 'eval'
+      return {'status': ['done'], 'value': '#''foo.bar/baz'}
+    elseif a:msg['op'] ==# 'ns-vars-with-meta'
+      return {'status': ['done'], 'ns-vars-with-meta': {
+            \   'foo-test': {'test': ''},
+            \   'bar-test': {'test': ''},
+            \   'baz-test': {'test': ''},
+            \   'baz-test-fn': {}}}
+    else
+      return {'status': ['done']}
+    endif
+  endfunction
+
+  function! test.result_callback(result) abort
+    let self.result = a:result
+  endfunction
+
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
+  call s:buf.start_dummy([
+       \ '(ns foo.bar)',
+       \ '(defn baz [] "baz" |)'])
+  call iced#nrepl#test#fetch_test_vars_by_function_under_cursor('foo.bar', test.result_callback)
+  call s:assert.equals(test.result, ['foo.bar/baz-test'])
+  call s:buf.stop_dummy()
+endfunction
