@@ -43,3 +43,31 @@ function! s:suite.related_ns_test() abort
 
   call s:buf.stop_dummy()
 endfunction
+
+function! s:suite.test_test() abort
+  let test = {}
+  function! test.relay(msg) abort
+    if a:msg['op'] ==# 'eval'
+      return {'status': ['done'], 'value': '#''foo.bar/baz'}
+    elseif a:msg['op'] ==# 'ns-vars-with-meta' && a:msg['ns'] ==# 'foo.bar-test'
+      return {'status': ['done'], 'ns-vars-with-meta': {
+            \   'baz-success-test': {'test': ''},
+            \   'baz-failure-test': {'test': ''},
+            \   'baz-test-fn': {}}}
+    else
+      return {'status': ['done']}
+    endif
+  endfunction
+
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
+  call s:sel.register_test_builder()
+  call s:buf.start_dummy(['(ns foo.bar)', '(defn baz [] "dummy"|)'])
+
+  call iced#nrepl#navigate#test()
+  let candidates = s:sel.get_last_config()['candidates']
+  call s:assert.equals(sort(copy(candidates)), [
+        \ 'foo.bar-test/baz-failure-test',
+        \ 'foo.bar-test/baz-success-test'])
+
+  call s:buf.stop_dummy()
+endfunction
