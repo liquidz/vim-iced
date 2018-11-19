@@ -8,9 +8,21 @@ let s:L = s:V.import('Data.List')
 let s:last_test = {}
 let g:iced#test#spec_num_tests = get(g:, 'iced#test#spec_num_tests', 10)
 
+" iced#nrepl#test#test_vars_by_ns_name {{{
+function! iced#nrepl#test#test_vars_by_ns_name(ns_name) abort
+  let resp = iced#nrepl#op#cider#sync#ns_vars(a:ns_name)
+  if !has_key(resp, 'ns-vars-with-meta')
+    call iced#message#error('ns_vars_error')
+    return []
+  endif
+  let var_dict = resp['ns-vars-with-meta']
+  return filter(copy(keys(var_dict)), {_, k -> has_key(var_dict[k], 'test')})
+endfunction " }}}
+
 " iced#nrepl#test#fetch_test_vars_by_function_under_cursor {{{
-function! s:test_vars(eval_resp, test_vars_resp, ns_name, callback) abort
-  if !has_key(a:test_vars_resp, 'test-vars') || empty(a:test_vars_resp['test-vars'])
+function! s:test_vars(eval_resp, ns_name, callback) abort
+  let test_vars = iced#nrepl#test#test_vars_by_ns_name(a:ns_name)
+  if empty(test_vars)
     return iced#message#warning('no_test_vars')
   endif
 
@@ -19,7 +31,7 @@ function! s:test_vars(eval_resp, test_vars_resp, ns_name, callback) abort
   let i = stridx(var, '/')
   let name = (i == -1) ? var : strpart(var, i+1)
 
-  let test_vars = filter(copy(a:test_vars_resp['test-vars']), {_, v -> stridx(v, name) != -1})
+  let test_vars = filter(copy(test_vars), {_, v -> stridx(v, name) != -1})
   call map(test_vars, {_, v -> printf('%s/%s', a:ns_name, v)})
   call a:callback(test_vars)
 endfunction
@@ -33,8 +45,7 @@ function! iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, call
         \ iced#nrepl#eval(code, {eval_resp ->
         \   (has_key(eval_resp, 'value') && eval_resp['value'] !=# 'nil')
         \   ? iced#nrepl#ns#require(a:ns_name, {_ ->
-        \       iced#nrepl#op#iced#test_vars(a:ns_name, {test_vars_resp ->
-        \         s:test_vars(eval_resp, test_vars_resp, a:ns_name, a:callback)})})
+        \       s:test_vars(eval_resp, a:ns_name, a:callback)})
         \   : iced#message#error('not_found')})})
 endfunction " }}}
 
