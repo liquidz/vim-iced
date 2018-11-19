@@ -33,6 +33,7 @@
   'stop_to_trace':      'Stop to trace: %s.',
   'untraced':           'Untraced.',
   'ns_list_error':      'Failed to fetch ns list.',
+  'ns_vars_error':      'Failed to fetch ns vars.',
   'spec_list_error':    'Failed to fetch spec list.',
   'spec_form_error':    'Failed to fetch spec form.',
   'spec_check_error':   'Failed to check spec.',
