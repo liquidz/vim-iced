@@ -68,6 +68,8 @@ function! s:suite.test_test() abort
             \   'baz-success-test': {'test': ''},
             \   'baz-failure-test': {'test': ''},
             \   'baz-test-fn': {}}}
+    elseif a:msg['op'] ==# 'info'
+      return {'status': ['done'], 'file': 'file:/path/to/file.clj', 'line': 1, 'column': 1}
     else
       return {'status': ['done']}
     endif
@@ -75,13 +77,17 @@ function! s:suite.test_test() abort
 
   call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
   call s:sel.register_test_builder()
+  call s:vim.register_test_builder()
   call s:buf.start_dummy(['(ns foo.bar)', '(defn baz [] "dummy"|)'])
 
   call iced#nrepl#navigate#test()
-  let candidates = s:sel.get_last_config()['candidates']
-  call s:assert.equals(sort(copy(candidates)), [
+  let config = s:sel.get_last_config()
+  call s:assert.equals(sort(copy(config['candidates'])), [
         \ 'foo.bar-test/baz-failure-test',
         \ 'foo.bar-test/baz-success-test'])
+
+  call config['accept']('', 'foo.bar-test/baz-success-test')
+  call s:assert.equals(s:vim.get_last_args()['exe'], ':edit /path/to/file.clj')
 
   call s:buf.stop_dummy()
 endfunction
