@@ -37,9 +37,10 @@ endfunction
 " Initializer {{{
 if !exists('g:iced#di#container')
   let g:iced#di#container = iced#di#new_container()
-  call iced#di#register('channel', {_ -> iced#di#channel#build()})
-  call iced#di#register('bencode', {_ -> iced#di#bencode#build()})
-  call iced#di#register('sign',    {_ -> iced#di#sign#build()})
+  call iced#di#register('channel',  {_ -> iced#di#channel#build()})
+  call iced#di#register('bencode',  {_ -> iced#di#bencode#build()})
+  call iced#di#register('sign',     {_ -> iced#di#sign#build()})
+  call iced#di#register('selector', {_ -> iced#di#selector#build()})
 endif " }}}
 
 let &cpo = s:save_cpo

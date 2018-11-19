@@ -44,13 +44,7 @@ function! iced#eval_and_read(code, ...) abort
 endfunction
 
 function! iced#selector(config) abort
-  if globpath(&rtp, 'plugin/ctrlp.vim') !=# ''
-    return ctrlp#iced#start(a:config)
-  elseif globpath(&rtp, 'plugin/fzf.vim') !=# ''
-    return fzf#iced#start(a:config)
-  else
-    return iced#message#error('no_selector')
-  end
+  call iced#di#get('selector').select(a:config)
 endfunction
 
 let &cpo = s:save_cpo
