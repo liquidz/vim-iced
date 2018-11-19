@@ -44,7 +44,6 @@ function! iced#nrepl#op#cider#ns_load_all(callback) abort
       \ })
 endfunction " }}}
 
-
 """ test-var-query {{{
 function! s:test_handler(resp, last_result) abort
   let responses = empty(a:last_result) ? [] : a:last_result
