@@ -16,7 +16,7 @@ function! s:apply_mode_to_file(mode, file) abort
   elseif a:mode ==# 't'
     let cmd = ':tabedit'
   endif
-  exe printf('%s %s', cmd, a:file)
+  call iced#di#get('vim').exe(printf('%s %s', cmd, a:file))
 endfunction
 
 " s:open_ns {{{

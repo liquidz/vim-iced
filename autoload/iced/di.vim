@@ -41,6 +41,7 @@ if !exists('g:iced#di#container')
   call iced#di#register('bencode',  {_ -> iced#di#bencode#build()})
   call iced#di#register('sign',     {_ -> iced#di#sign#build()})
   call iced#di#register('selector', {_ -> iced#di#selector#build()})
+  call iced#di#register('vim',      {_ -> iced#di#vim#build()})
 endif " }}}
 
 let &cpo = s:save_cpo
