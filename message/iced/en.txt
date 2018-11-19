@@ -33,10 +33,12 @@
   'stop_to_trace':      'Stop to trace: %s.',
   'untraced':           'Untraced.',
   'ns_list_error':      'Failed to fetch ns list.',
+  'ns_vars_error':      'Failed to fetch ns vars.',
   'spec_list_error':    'Failed to fetch spec list.',
   'spec_form_error':    'Failed to fetch spec form.',
   'spec_check_error':   'Failed to check spec.',
   'no_spec':            'No spec form is found.',
+  'testing_var':        'Testing: %s',
   'testing':            'Testing...',
   'retesting':          'Re-testing...',
   'lint_enabled':       'Lint enabled.',
@@ -53,5 +55,8 @@
   'jump_error':         'Failed to jump: ''%s''.',
   'jump_not_found':     'Not found. Target namespace may not be loaded. Try :IcedRequireAll.',
   'all_ns_loading':     'Loading all namespaces...',
+  'no_test_vars':       'No test vars.',
+  'invalid_format':     'Invalid format: %s.',
+  'already_in_test_ns': 'Already in test namespace.',
 }
 #vim:ft=ruby

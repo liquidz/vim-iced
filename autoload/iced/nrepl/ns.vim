@@ -70,6 +70,12 @@ function! iced#nrepl#ns#eval(callback) abort
   endif
 endfunction
 
+function! iced#nrepl#ns#require(ns_name, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  let code = printf('(clojure.core/require ''%s)', a:ns_name)
+  call iced#nrepl#eval(code, a:callback)
+endfunction
+
 function! s:cljs_load_file(callback) abort
   if !iced#nrepl#is_connected()
     return iced#message#error('not_connected')
@@ -84,7 +90,7 @@ function! s:cljs_load_file(callback) abort
       \ })
 endfunction
 
-function! s:required(resp, callback) abort
+function! s:loaded(resp, callback) abort
   if has_key(a:resp, 'error')
     return iced#nrepl#eval#err(a:resp['error'])
   elseif has_key(a:resp, 'err')
@@ -94,18 +100,18 @@ function! s:required(resp, callback) abort
   call iced#nrepl#ns#eval(a:callback)
 endfunction
 
-function! iced#nrepl#ns#require() abort
+function! iced#nrepl#ns#load_current_file() abort
   let Cb = {_ -> iced#message#info('required')}
   if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#current_session_key() ==# 'clj'
-    call iced#nrepl#load_file({resp -> s:required(resp, Cb)})
+    call iced#nrepl#load_file({resp -> s:loaded(resp, Cb)})
   else
     call s:cljs_load_file(Cb)
   endif
 endfunction
 
-function! iced#nrepl#ns#require_all() abort
+function! iced#nrepl#ns#reload_all() abort
   let Cb = {_ -> iced#message#info('all_reloaded')}
   if ! iced#nrepl#check_session_validity() | return | endif
 

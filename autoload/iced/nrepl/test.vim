@@ -8,6 +8,50 @@ let s:L = s:V.import('Data.List')
 let s:last_test = {}
 let g:iced#test#spec_num_tests = get(g:, 'iced#test#spec_num_tests', 10)
 
+" iced#nrepl#test#test_vars_by_ns_name {{{
+function! iced#nrepl#test#test_vars_by_ns_name(ns_name) abort
+  let resp = iced#nrepl#op#cider#sync#ns_vars(a:ns_name)
+  if !has_key(resp, 'ns-vars-with-meta')
+    call iced#message#error('ns_vars_error')
+    return []
+  endif
+  let var_dict = resp['ns-vars-with-meta']
+  return filter(copy(keys(var_dict)), {_, k -> has_key(var_dict[k], 'test')})
+endfunction " }}}
+
+" iced#nrepl#test#fetch_test_vars_by_function_under_cursor {{{
+function! s:test_vars(eval_resp, ns_name, callback) abort
+  let test_vars = iced#nrepl#test#test_vars_by_ns_name(a:ns_name)
+  if empty(test_vars)
+    return iced#message#warning('no_test_vars')
+  endif
+
+  let var = a:eval_resp['value']
+  let var = substitute(var, '^#''', '', '')
+  let i = stridx(var, '/')
+  let name = (i == -1) ? var : strpart(var, i+1)
+
+  let test_vars = filter(copy(test_vars), {_, v -> stridx(v, name) != -1})
+  call map(test_vars, {_, v -> printf('%s/%s', a:ns_name, v)})
+  call a:callback(test_vars)
+endfunction
+
+function! iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, callback) abort
+  let ret = iced#paredit#get_current_top_list()
+  let code = ret['code']
+  if empty(code) | return iced#message#error('finding_code_error') | endif
+
+  call iced#nrepl#ns#eval({_ ->
+        \ iced#nrepl#eval(code, {eval_resp ->
+        \   (has_key(eval_resp, 'value') && eval_resp['value'] !=# 'nil')
+        \   ? iced#nrepl#ns#require(a:ns_name, {_ ->
+        \       s:test_vars(eval_resp, a:ns_name, a:callback)})
+        \   : iced#message#error('not_found')})})
+endfunction " }}}
+
+" iced#nrepl#test#under_cursor {{{
+
+" common {{{
 function! s:error_message(test) abort
   if has_key(a:test, 'context') && !empty(a:test['context'])
     return printf('%s: %s', a:test['var'], a:test['context'])
@@ -147,7 +191,9 @@ function! s:out(resp) abort
     call iced#message#error_str(summary['summary'])
   endif
 endfunction
+" }}}
 
+" s:test_under_cursor {{{
 function! s:test(resp) abort
   if has_key(a:resp, 'err')
     call iced#nrepl#eval#err(a:resp['err'])
@@ -158,7 +204,7 @@ function! s:test(resp) abort
     let var = substitute(var, '^#''', '', '')
     let i = stridx(var, '/')
     let ns = var[0:i-1]
-    echom printf('Testing: %s', var[i+1:])
+    call iced#message#echom('testing_var', var[i+1:])
     call iced#nrepl#op#cider#test_var_query({
           \ 'ns-query': {'exactly': [ns]},
           \ 'exactly': [var],
@@ -166,7 +212,7 @@ function! s:test(resp) abort
   endif
 endfunction
 
-function! iced#nrepl#test#under_cursor() abort
+function! s:test_under_cursor() abort
   let ret = iced#paredit#get_current_top_list()
   let code = ret['code']
   if empty(code)
@@ -177,8 +223,29 @@ function! iced#nrepl#test#under_cursor() abort
     call iced#sign#unplace_all()
     call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)}, option)})
   endif
-endfunction
+endfunction " }}}
 
+" s:test_under_cursor_from_source {{{
+function! s:test_under_cursor_from_source(ns_name, test_vars) abort
+  call iced#message#echom('testing_var', join(a:test_vars, ', '))
+  call iced#nrepl#op#cider#test_var_query({
+        \   'ns-query': {'exactly': [a:ns_name]},
+        \   'exactly': a:test_vars
+        \   }, funcref('s:out'))
+endfunction " }}}
+
+function! iced#nrepl#test#under_cursor() abort
+  let ns_name = iced#nrepl#ns#name()
+  if s:S.ends_with(ns_name, '-test')
+    call s:test_under_cursor()
+  else
+    let ns_name = iced#nrepl#navigate#cycle_ns(ns_name)
+    call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, {test_vars ->
+          \ s:test_under_cursor_from_source(ns_name, test_vars)})
+  endif
+endfunction "}}}
+
+" iced#nrepl#test#ns {{{
 function! iced#nrepl#test#ns() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let ns = iced#nrepl#ns#name()
@@ -188,11 +255,12 @@ function! iced#nrepl#test#ns() abort
 
   call iced#sign#unplace_all()
   call iced#message#info('testing')
-  call iced#nrepl#op#cider#test_var_query({
+  call iced#nrepl#ns#require(ns, {_ -> iced#nrepl#op#cider#test_var_query({
         \ 'ns-query': {'exactly': [ns]},
-        \ }, funcref('s:out'))
-endfunction
+        \ }, funcref('s:out'))})
+endfunction " }}}
 
+" iced#nrepl#test#all {{{
 function! iced#nrepl#test#all() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#sign#unplace_all()
@@ -200,8 +268,9 @@ function! iced#nrepl#test#all() abort
   call iced#nrepl#op#cider#test_var_query({
         \ 'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}
         \ }, funcref('s:out'))
-endfunction
+endfunction " }}}
 
+" iced#nrepl#test#redo {{{
 function! iced#nrepl#test#redo() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let view = winsaveview()
@@ -226,9 +295,9 @@ function! iced#nrepl#test#redo() abort
     let @@ = reg_save
     call winrestview(view)
   endtry
-endfunction
+endfunction " }}}
 
-" test#spec_check {{{
+" iced#nrepl#test#spec_check {{{
 function! s:spec_check(var, resp) abort
   if !has_key(a:resp, 'result') | return iced#message#error('spec_check_error') | endif
   let num_tests = a:resp['num-tests']
@@ -281,6 +350,7 @@ function! iced#nrepl#test#spec_check(...) abort
   endif
 endfunction " }}}
 
+" iced#nrepl#test#rerun_last {{{
 function! iced#nrepl#test#rerun_last() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   if empty(s:last_test)
@@ -292,7 +362,8 @@ function! iced#nrepl#test#rerun_last() abort
   elseif s:last_test['type'] ==# 'spec-check'
     call s:current_var(s:last_test['num_tests'], {'value': s:last_test['var']})
   endif
-endfunction
+endfunction " }}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
+" vim:fdm=marker:fdl=0

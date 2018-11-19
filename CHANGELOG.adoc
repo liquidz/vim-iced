@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (master)
 
+== 0.8.3
+// {{{
+=== Added
+* Allowed to run tests on source code.
+** In the test namespace corresponding to the current namespace, tests including name of function under the cursor are the target.
+* Added `:IcedBrowseTestUnderCursor` command.
+
+=== Changed
+* Update not to display "evaluating" on status line during linter check.
+
+=== Fixed
+* Fix `iced#eval_and_read` to work correctly.
+** Code skeleton sometimes failed.
+* Fix `:IcedTestNs` to work correctly.
+** In source code, "Not found" error is shown before evaluating some codes.
+// }}}
+
 == 0.8.2
 // {{{
 === Changed

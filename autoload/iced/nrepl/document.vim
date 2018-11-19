@@ -118,12 +118,13 @@ function! iced#nrepl#document#open(symbol) abort
     return iced#message#error('not_connected')
   endif
 
+  let ns_name = iced#nrepl#ns#name()
   let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
   if iced#nrepl#current_session_key() ==# 'cljs'
     let symbol = s:expand_ns_alias(symbol)
   endif
 
-  call iced#nrepl#ns#eval({_ -> iced#nrepl#op#cider#info(symbol, funcref('s:view_doc'))})
+  call iced#nrepl#ns#eval({_ -> iced#nrepl#op#cider#info(ns_name, symbol, funcref('s:view_doc'))})
 endfunction
 
 function! s:one_line_doc(resp) abort
@@ -154,6 +155,7 @@ function! iced#nrepl#document#current_form() abort
     return
   endif
 
+  let ns_name = iced#nrepl#ns#name()
   let view = winsaveview()
   let reg_save = @@
 
@@ -169,7 +171,7 @@ function! iced#nrepl#document#current_form() abort
         if iced#nrepl#current_session_key() ==# 'cljs'
           let symbol = s:expand_ns_alias(symbol)
         endif
-        call iced#nrepl#op#cider#info(symbol, funcref('s:one_line_doc'))
+        call iced#nrepl#op#cider#info(ns_name, symbol, funcref('s:one_line_doc'))
       endif
     endif
   finally

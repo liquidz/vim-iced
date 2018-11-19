@@ -1,6 +1,7 @@
 let s:suite  = themis#suite('iced.nrepl.test')
 let s:assert = themis#helper('assert')
 let s:scope = themis#helper('scope')
+let s:buf = themis#helper('iced_buffer')
 let s:ch = themis#helper('iced_channel')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl/test.vim')
 
@@ -127,4 +128,54 @@ function! s:suite.collect_errors_could_not_find_ns_path_test() abort
         \  'expected': 'expected-result',
         \  'actual': 'actual-result',
         \  'text': 'err-test'}])
+endfunction
+
+function! s:suite.test_vars_by_ns_name_test() abort
+  let test_vars = {'foo': {}, 'bar': {'test': ''}, 'baz': {'test': 'test'}}
+  call s:ch.register_test_builder({
+        \ 'status_value': 'open',
+        \ 'relay': {msg -> (msg['op'] ==# 'ns-vars-with-meta')
+        \           ? {'status': ['done'], 'ns-vars-with-meta': test_vars}
+        \           : {'status': ['done']}}})
+
+  let ret = iced#nrepl#test#test_vars_by_ns_name('foo.core')
+  call s:assert.equals(copy(sort(ret)), ['bar', 'baz'])
+endfunction
+
+function! s:suite.test_vars_by_ns_name_error_test() abort
+  call s:ch.register_test_builder({
+        \ 'status_value': 'open',
+        \ 'relay': {msg -> {'status': ['done']}}})
+
+  let ret = iced#nrepl#test#test_vars_by_ns_name('foo.core')
+  call s:assert.true(empty(ret))
+endfunction
+
+function! s:suite.fetch_test_vars_by_function_under_cursor_test() abort
+  let test = {}
+  function! test.relay(msg) abort
+    if a:msg['op'] ==# 'eval'
+      return {'status': ['done'], 'value': '#''foo.bar/baz'}
+    elseif a:msg['op'] ==# 'ns-vars-with-meta'
+      return {'status': ['done'], 'ns-vars-with-meta': {
+            \   'foo-test': {'test': ''},
+            \   'bar-test': {'test': ''},
+            \   'baz-test': {'test': ''},
+            \   'baz-test-fn': {}}}
+    else
+      return {'status': ['done']}
+    endif
+  endfunction
+
+  function! test.result_callback(result) abort
+    let self.result = a:result
+  endfunction
+
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
+  call s:buf.start_dummy([
+       \ '(ns foo.bar)',
+       \ '(defn baz [] "baz" |)'])
+  call iced#nrepl#test#fetch_test_vars_by_function_under_cursor('foo.bar', test.result_callback)
+  call s:assert.equals(test.result, ['foo.bar/baz-test'])
+  call s:buf.stop_dummy()
 endfunction

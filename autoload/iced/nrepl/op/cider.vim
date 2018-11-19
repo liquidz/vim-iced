@@ -2,13 +2,13 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 """ info {{{
-function! iced#nrepl#op#cider#info(symbol, callback) abort
+function! iced#nrepl#op#cider#info(ns_name, symbol, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
       \ 'op': 'info',
       \ 'session': iced#nrepl#current_session(),
       \ 'symbol': a:symbol,
-      \ 'ns': iced#nrepl#ns#name(),
+      \ 'ns': a:ns_name,
       \ 'callback': a:callback,
       \ })
 endfunction " }}}
@@ -43,7 +43,6 @@ function! iced#nrepl#op#cider#ns_load_all(callback) abort
       \ 'callback': a:callback,
       \ })
 endfunction " }}}
-
 
 """ test-var-query {{{
 function! s:test_handler(resp, last_result) abort
