@@ -13,6 +13,7 @@ CONTENTS                                                    *vim-iced-contents*
     Manual Install             |vim-iced-install-manually|
       Leiningen                |vim-iced-manual-leiningen|
       Boot                     |vim-iced-manual-boot|
+      shadow-cljs              |vim-iced-manual-shadow-cljs|
     Boost by Python            |vim-iced-install-python|
   nREPL Connection             |vim-iced-nrepl-connection|
   ClojureScript                |vim-iced-clojurescript|
@@ -135,6 +136,34 @@ BOOT~
       cider.nrepl/wrap-undef
       refactor-nrepl.middleware/wrap-refactor
       iced.nrepl/wrap-iced])
+<
+                                                  *vim-iced-manual-shadow-cljs*
+SHADOW-CLJS~
+
+  WARNING: `iced` command does not support shadow-cljs currently.
+  shadow-cljs.edn
+>
+  {
+   :dependencies [[refactor-nrepl "2.4.0"]
+                  [cider/cider-nrepl "0.19.0-SNAPSHOT"]
+                  [iced-nrepl "0.2.5"]]
+
+   :nrepl {:middlewares [cider.nrepl/wrap-complete
+                         cider.nrepl/wrap-debug
+                         cider.nrepl/wrap-format
+                         cider.nrepl/wrap-info
+                         cider.nrepl/wrap-macroexpand
+                         cider.nrepl/wrap-ns
+                         cider.nrepl/wrap-out
+                         cider.nrepl/wrap-pprint
+                         cider.nrepl/wrap-pprint-fn
+                         cider.nrepl/wrap-spec
+                         cider.nrepl/wrap-test
+                         cider.nrepl/wrap-trace
+                         cider.nrepl/wrap-undef
+                         refactor-nrepl.middleware/wrap-refactor
+                         iced.nrepl/wrap-iced]}
+  }
 <
 ==============================================================================
 BOOST BY PYTHON                                       *vim-iced-install-python*
