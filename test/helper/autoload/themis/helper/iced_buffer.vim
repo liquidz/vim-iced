@@ -20,6 +20,8 @@ function! s:helper.start_dummy(lines) abort
   endfor
 
   call cursor(cursor_pos[0], cursor_pos[1])
+
+  let self['started'] = v:true
 endfunction
 
 function! s:helper.get_texts() abort
@@ -27,7 +29,10 @@ function! s:helper.get_texts() abort
 endfunction
 
 function! s:helper.stop_dummy() abort
-  exe ':q'
+  if self['started']
+    exe ':q'
+    unlet self['started']
+  endif
 endfunction
 
 function! themis#helper#iced_buffer#new(runner) abort
