@@ -32,3 +32,21 @@ jobs:
           command: |
             . venv/bin/activate
             bash scripts/coverage.sh
+  ancient:
+    docker:
+      - image: circleci/clojure:tools-deps
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v2-dependencies-{{ checksum "deps.edn" }}
+      - run:
+          command: |
+            bash scripts/ancient.sh
+      - save_cache:
+          paths:
+            - ~/.clojure/.cpcache
+            - ~/.m2
+          key: v2-dependencies-{{ checksum "deps.edn" }}
+
