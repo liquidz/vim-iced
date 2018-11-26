@@ -50,3 +50,9 @@ jobs:
             - ~/.m2
           key: v2-dependencies-{{ checksum "deps.edn" }}
 
+workflows:
+  version: 2
+  all_test:
+    jobs:
+      - build
+      - ancient
