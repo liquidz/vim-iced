@@ -274,7 +274,7 @@ function! s:connected(resp, initial_session) abort
   endif
 endfunction
 
-function! iced#nrepl#connect(port) abort
+function! iced#nrepl#connect(port, ...) abort
   " required by iced#buffer
   if !&hidden
     return iced#message#error('no_set_hidden')
@@ -300,8 +300,7 @@ function! iced#nrepl#connect(port) abort
     endif
   endif
 
-  let ext = expand('%:e')
-  let initial_session = (ext ==# 'cljs') ? 'cljs' : 'clj'
+  let initial_session = get(a:, 1, 'clj')
   call iced#nrepl#send({'op': 'clone', 'callback': {resp -> s:connected(resp, initial_session)}})
   return v:true
 endfunction
