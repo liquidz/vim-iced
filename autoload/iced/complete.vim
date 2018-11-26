@@ -129,6 +129,10 @@ function! iced#complete#omni(findstart, base) abort
     let ns_name = iced#nrepl#ns#name()
     let candidates = []
 
+    " require current namespace once
+    call iced#cache#do_once('require_current_namespace',
+          \ {-> iced#eval_and_read(printf('(require ''%s)', ns_name))})
+
     " vars in current namespace
     let tmp = s:ns_var_candidates(ns_name, a:base, '')
     if !empty(tmp)
