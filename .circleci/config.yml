@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: thinca/vim:latest-full
+      - image: uochan/vim:latest
     working_directory: /tmp/workspace
     steps:
       - checkout
@@ -10,7 +10,6 @@ jobs:
           key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           command: |
-            apk add --no-cache bash curl git
             python3 -m venv venv
             . venv/bin/activate
             pip3 install -r requirements.txt
@@ -32,3 +31,27 @@ jobs:
           command: |
             . venv/bin/activate
             bash scripts/coverage.sh
+  ancient:
+    docker:
+      - image: circleci/clojure:tools-deps
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v2-dependencies-{{ checksum "deps.edn" }}
+      - run:
+          command: |
+            bash scripts/ancient.sh
+      - save_cache:
+          paths:
+            - ~/.clojure/.cpcache
+            - ~/.m2
+          key: v2-dependencies-{{ checksum "deps.edn" }}
+
+workflows:
+  version: 2
+  all_test:
+    jobs:
+      - build
+      - ancient

@@ -28,5 +28,13 @@ function! iced#cache#clear() abort
   let s:cache = {}
 endfunction
 
+function! iced#cache#do_once(key, f) abort
+  let key = printf('iced_do_once_%s', a:key)
+  if ! iced#cache#has_key(key)
+    call a:f()
+    call iced#cache#set(key, v:true)
+  endif
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

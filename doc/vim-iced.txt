@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.8.3
+Version: 0.8.4
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -13,6 +13,7 @@ CONTENTS                                                    *vim-iced-contents*
     Manual Install             |vim-iced-install-manually|
       Leiningen                |vim-iced-manual-leiningen|
       Boot                     |vim-iced-manual-boot|
+      shadow-cljs              |vim-iced-manual-shadow-cljs|
     Boost by Python            |vim-iced-install-python|
   nREPL Connection             |vim-iced-nrepl-connection|
   ClojureScript                |vim-iced-clojurescript|
@@ -88,7 +89,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.4.5"]
-                   [iced-nrepl "0.2.5"]
+                   [iced-nrepl "0.2.6"]
                    [cider/cider-nrepl "0.19.0-SNAPSHOT"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
@@ -117,7 +118,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.19.0-SNAPSHOT"]
-      [iced-nrepl "0.2.5"]])
+      [iced-nrepl "0.2.6"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -135,6 +136,34 @@ BOOT~
       cider.nrepl/wrap-undef
       refactor-nrepl.middleware/wrap-refactor
       iced.nrepl/wrap-iced])
+<
+                                                  *vim-iced-manual-shadow-cljs*
+SHADOW-CLJS~
+
+  WARNING: `iced` command does not support shadow-cljs currently.
+  shadow-cljs.edn
+>
+  {
+   :dependencies [[refactor-nrepl "2.4.0"]
+                  [cider/cider-nrepl "0.19.0-SNAPSHOT"]
+                  [iced-nrepl "0.2.6"]]
+
+   :nrepl {:middlewares [cider.nrepl/wrap-complete
+                         cider.nrepl/wrap-debug
+                         cider.nrepl/wrap-format
+                         cider.nrepl/wrap-info
+                         cider.nrepl/wrap-macroexpand
+                         cider.nrepl/wrap-ns
+                         cider.nrepl/wrap-out
+                         cider.nrepl/wrap-pprint
+                         cider.nrepl/wrap-pprint-fn
+                         cider.nrepl/wrap-spec
+                         cider.nrepl/wrap-test
+                         cider.nrepl/wrap-trace
+                         cider.nrepl/wrap-undef
+                         refactor-nrepl.middleware/wrap-refactor
+                         iced.nrepl/wrap-iced]}
+  }
 <
 ==============================================================================
 BOOST BY PYTHON                                       *vim-iced-install-python*
@@ -423,7 +452,7 @@ COMMANDS                                                    *vim-iced-commands*
   If the var under cursor does not contains `:test` metadata
   and current ns doesn't ends with "-test",
   vim-iced searches test vars in corresponding test ns and run them.
-  Target test vars includes original var name in its name.
+  Target test vars include original var name in its name.
 
   Key is mapped to |<Plug>(iced_test_under_cursor)|.
 

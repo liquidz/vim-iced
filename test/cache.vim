@@ -46,3 +46,16 @@ function! s:suite.has_key_test() abort
   call iced#cache#delete('foo')
   call s:assert.false(iced#cache#has_key('foo'))
 endfunction
+
+function! s:suite.do_once_test() abort
+  call iced#cache#clear()
+  call iced#cache#set('i', 1)
+
+  call iced#cache#do_once('foo', {-> iced#cache#set('i', iced#cache#get('i') + 1)})
+  call s:assert.equals(iced#cache#get('i'), 2)
+  call iced#cache#do_once('foo', {-> iced#cache#set('i', iced#cache#get('i') + 1)})
+  call s:assert.equals(iced#cache#get('i'), 2)
+
+  call iced#cache#do_once('bar', {-> iced#cache#set('i', iced#cache#get('i') + 1)})
+  call s:assert.equals(iced#cache#get('i'), 3)
+endfunction

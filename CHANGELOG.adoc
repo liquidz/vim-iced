@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (master)
 
+== 0.8.4
+// {{{
+=== Added
+* Allow to connect shadow-cljs's nREPL server as ClojureScript session.
+
+=== Changed
+* Bump iced-nrepl to 0.2.6
+* Update `:IcedRelatedNamespace` command not to load all namespace at first.
+
+=== Fixed
+* Fix completion bug immediately after nREPL connection.
+// }}}
+
 == 0.8.3
 // {{{
 === Added

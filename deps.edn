@@ -4,10 +4,10 @@
         refactor-nrepl {:mvn/version "2.4.0"}
         cider/cider-nrepl {:mvn/version "0.19.0-SNAPSHOT"}
         cider/piggieback {:mvn/version "0.3.10"}
-        iced-nrepl {:mvn/version "0.2.5"}}
+        iced-nrepl {:mvn/version "0.2.6"}}
 
  :aliases
  {:jackin {:extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}}}
-  :ancient {:extra-deps {olical/depot {:mvn/version "1.3.0"}}
+  :ancient {:extra-deps {olical/depot {:mvn/version "1.5.0"}}
             :main-opts ["-m" "depot.outdated.main"]}
   :dev {}}}

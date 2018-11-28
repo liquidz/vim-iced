@@ -256,14 +256,14 @@ function! s:status(ch) abort
   endtry
 endfunction
 
-function! s:connected(resp) abort
+function! s:connected(resp, initial_session) abort
   if has_key(a:resp, 'new-session')
     let session = a:resp['new-session']
     call iced#nrepl#set_session('repl', session)
 
     let new_session = iced#nrepl#sync#clone(session)
-    call iced#nrepl#set_session('clj', new_session)
-    call iced#nrepl#change_current_session('clj')
+    call iced#nrepl#set_session(a:initial_session, new_session)
+    call iced#nrepl#change_current_session(a:initial_session)
 
     call iced#buffer#stdout#init()
     call iced#buffer#document#init()
@@ -274,7 +274,7 @@ function! s:connected(resp) abort
   endif
 endfunction
 
-function! iced#nrepl#connect(port) abort
+function! iced#nrepl#connect(port, ...) abort
   " required by iced#buffer
   if !&hidden
     return iced#message#error('no_set_hidden')
@@ -300,7 +300,8 @@ function! iced#nrepl#connect(port) abort
     endif
   endif
 
-  call iced#nrepl#send({'op': 'clone', 'callback': funcref('s:connected')})
+  let initial_session = get(a:, 1, 'clj')
+  call iced#nrepl#send({'op': 'clone', 'callback': {resp -> s:connected(resp, initial_session)}})
   return v:true
 endfunction
 

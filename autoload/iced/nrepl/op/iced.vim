@@ -62,6 +62,17 @@ function! iced#nrepl#op#iced#spec_check(symbol, num_tests, callback) abort
         \ })
 endfunction " }}}
 
+""" project-ns-list {{{
+function! iced#nrepl#op#iced#project_ns_list(callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'iced-project-ns-list',
+        \ 'sesion': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
 call iced#nrepl#register_handler('iced-lint-file', function('s:concat_handler', ['lint-warnings']))
 
 let &cpo = s:save_cpo
