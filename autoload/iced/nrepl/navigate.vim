@@ -71,12 +71,8 @@ function! iced#nrepl#navigate#toggle_src_and_test() abort
 endfunction " }}}
 
 " iced#nrepl#navigate#related_ns {{{
-let s:does_all_ns_loaded = v:false
-
 function! s:ns_list(resp) abort
-  if !has_key(a:resp, 'ns-list') | return iced#message#error('ns_list_error') | endif
-
-  let s:does_all_ns_loaded = v:true
+  if !has_key(a:resp, 'project-ns-list') | return iced#message#error('ns_list_error') | endif
 
   let ns = iced#nrepl#ns#name()
   let arr = split(ns, '\.')
@@ -87,18 +83,13 @@ function! s:ns_list(resp) abort
         \ join(map(copy(g:iced#related_ns#tail_patterns),
         \          {_, v -> printf('%s%s', ns_tail, v)}), '\|'))
 
-  let related = filter(copy(a:resp['ns-list']), {_, v -> (v !=# ns && match(v, pattern) != -1)})
+  let related = filter(copy(a:resp['project-ns-list']), {_, v -> (v !=# ns && match(v, pattern) != -1)})
   if empty(related) | return iced#message#error('not_found') | endif
   call iced#selector({'candidates': related, 'accept': funcref('s:open_ns')})
 endfunction
 
 function! iced#nrepl#navigate#related_ns() abort
-  if !s:does_all_ns_loaded
-    call iced#message#echom('all_ns_loading')
-    call iced#nrepl#op#cider#ns_load_all({_ -> iced#nrepl#op#cider#ns_list(funcref('s:ns_list'))})
-  else
-    call iced#nrepl#op#cider#ns_list(funcref('s:ns_list'))
-  endif
+  call iced#nrepl#op#iced#project_ns_list(funcref('s:ns_list'))
 endfunction " }}}
 
 " iced#nrepl#navigate#jump_to_def {{{
