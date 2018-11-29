@@ -1,23 +1,11 @@
 let s:suite  = themis#suite('iced.sign')
 let s:assert = themis#helper('assert')
+let s:sign = themis#helper('iced_sign')
 
 let s:tempfile = tempname()
 
 function! s:setup() abort " {{{
-  let test_sign = {}
-  function! test_sign.place(id, lnum, name, file) abort
-    return ''
-  endfunction
-
-  function! test_sign.unplace(id) abort
-    return ''
-  endfunction
-
-  function! test_sign.unplace_all() abort
-    return ''
-  endfunction
-
-  call iced#di#register('sign', {_ -> test_sign})
+  call s:sign.register_test_builder()
   call iced#sign#unplace_all()
   call writefile([''], s:tempfile)
 endfunction " }}}
