@@ -33,7 +33,7 @@ function! s:test_vars(eval_resp, ns_name, callback) abort
 
   let test_vars = filter(copy(test_vars), {_, v -> stridx(v, name) != -1})
   call map(test_vars, {_, v -> printf('%s/%s', a:ns_name, v)})
-  call a:callback(test_vars)
+  call a:callback(name, test_vars)
 endfunction
 
 function! iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, callback) abort
@@ -226,7 +226,11 @@ function! s:test_under_cursor() abort
 endfunction " }}}
 
 " s:test_under_cursor_from_source {{{
-function! s:test_under_cursor_from_source(ns_name, test_vars) abort
+function! s:test_under_cursor_from_source(ns_name, var_name, test_vars) abort
+  if empty(a:test_vars)
+    return iced#message#warning('no_test_vars_for', a:var_name)
+  endif
+
   call iced#message#echom('testing_var', join(a:test_vars, ', '))
   call iced#nrepl#op#cider#test_var_query({
         \   'ns-query': {'exactly': [a:ns_name]},
@@ -240,8 +244,8 @@ function! iced#nrepl#test#under_cursor() abort
     call s:test_under_cursor()
   else
     let ns_name = iced#nrepl#navigate#cycle_ns(ns_name)
-    call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, {test_vars ->
-          \ s:test_under_cursor_from_source(ns_name, test_vars)})
+    call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, {var_name, test_vars ->
+          \ s:test_under_cursor_from_source(ns_name, var_name, test_vars)})
   endif
 endfunction "}}}
 
