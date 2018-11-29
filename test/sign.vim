@@ -1,5 +1,6 @@
 let s:suite  = themis#suite('iced.sign')
 let s:assert = themis#helper('assert')
+let s:buf = themis#helper('iced_buffer')
 let s:sign = themis#helper('iced_sign')
 
 let s:tempfile = tempname()
@@ -53,6 +54,46 @@ function! s:suite.unplace_test() abort
   call s:assert.equals(len(res), 1)
   call s:assert.equals(res[0], {'file': s:tempfile, 'id': id2, 'name': 'iced_err', 'line': 234})
 
+  call s:teardown()
+endfunction
+
+function! s:suite.jump_to_next_test() abort
+  call s:setup()
+  call s:buf.start_dummy(['', '|', '', ''])
+
+  call iced#sign#place('iced_err', 1, s:tempfile)
+  call iced#sign#place('iced_err', 4, s:tempfile)
+
+  call s:assert.equals(line('.'), 2)
+
+  call iced#sign#jump_to_next(s:tempfile)
+  call s:assert.equals(line('.'), 4)
+
+  setl wrapscan
+  call iced#sign#jump_to_next(s:tempfile)
+  call s:assert.equals(line('.'), 1)
+
+  call s:buf.stop_dummy()
+  call s:teardown()
+endfunction
+
+function! s:suite.jump_to_prev_test() abort
+  call s:setup()
+  call s:buf.start_dummy(['', '|', '', ''])
+
+  call iced#sign#place('iced_err', 1, s:tempfile)
+  call iced#sign#place('iced_err', 4, s:tempfile)
+
+  call s:assert.equals(line('.'), 2)
+
+  call iced#sign#jump_to_prev(s:tempfile)
+  call s:assert.equals(line('.'), 1)
+
+  setl wrapscan
+  call iced#sign#jump_to_prev(s:tempfile)
+  call s:assert.equals(line('.'), 4)
+
+  call s:buf.stop_dummy()
   call s:teardown()
 endfunction
 
