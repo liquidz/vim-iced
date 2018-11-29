@@ -25,10 +25,11 @@ function! iced#sign#list_in_current_buffer(...) abort
   return sort(list, {a, b -> a['line'] > b['line']})
 endfunction
 
-function! iced#sign#jump_to_next() abort
+function! iced#sign#jump_to_next(...) abort
   let lnum = line('.')
+  let file = get(a:, 1, expand('%:p'))
   let target = ''
-  let sign_list = iced#sign#list_in_current_buffer()
+  let sign_list = iced#sign#list_in_current_buffer(file)
 
   for sign in sign_list
     if sign['line'] > lnum
@@ -49,11 +50,12 @@ function! iced#sign#jump_to_next() abort
   endif
 endfunction
 
-function! iced#sign#jump_to_prev() abort
+function! iced#sign#jump_to_prev(...) abort
   let lnum = line('.')
+  let file = get(a:, 1, expand('%:p'))
   let tmp = ''
   let target = ''
-  let sign_list = iced#sign#list_in_current_buffer()
+  let sign_list = iced#sign#list_in_current_buffer(file)
 
   for sign in sign_list
     if sign['line'] < lnum
