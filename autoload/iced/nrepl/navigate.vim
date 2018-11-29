@@ -136,13 +136,20 @@ function! iced#nrepl#navigate#jump_back() abort
 endfunction " }}}
 
 " iced#nrepl#navigate#test {{{
+function! s:test_vars(var_name, test_vars) abort
+  if empty(a:test_vars)
+    return iced#message#warning('no_test_vars_for', a:var_name)
+  endif
+
+  call iced#selector({'candidates': a:test_vars, 'accept': funcref('s:open_var')})
+endfunction
+
 function! iced#nrepl#navigate#test() abort
   let ns_name = iced#nrepl#ns#name()
   if s:S.ends_with(ns_name, '-test') | return iced#message#warning('already_in_test_ns') | endif
 
   let ns_name = iced#nrepl#navigate#cycle_ns(ns_name)
-  call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, {test_vars ->
-        \ iced#selector({'candidates': test_vars, 'accept': funcref('s:open_var')})})
+  call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, funcref('s:test_vars'))
 endfunction " }}}
 
 let &cpo = s:save_cpo
