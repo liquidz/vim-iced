@@ -8,6 +8,10 @@ let s:last_warnings = []
 let s:enabled = v:true
 let g:iced#eastwood#option = get(g:, 'iced#eastwood#option', {})
 
+function! iced#lint#is_enabled() abort
+  return s:enabled
+endfunction
+
 function! s:lint(warnings) abort
   let s:last_warnings = a:warnings
   for warn in s:last_warnings
@@ -28,19 +32,23 @@ function! iced#lint#current_file() abort
   call iced#nrepl#op#iced#lint_file(file, g:iced#eastwood#option, funcref('s:lint'))
 endfunction
 
-function! iced#lint#echo_message() abort
-  if !s:enabled
-    return
-  endif
-
-  let lnum = line('.')
-  let path = expand('%:p')
+function! iced#lint#find_message(lnum, path) abort
   for warn in s:last_warnings
     if !has_key(warn, 'line') || !has_key(warn, 'path') | continue | endif
-    if warn['line'] == lnum && warn['path'] ==# path
-      return s:M.echo('WarningMsg', warn['msg'])
+    if warn['line'] == a:lnum && warn['path'] ==# a:path
+      return warn['msg']
     endif
   endfor
+  return ''
+endfunction
+
+function! iced#lint#echo_message() abort
+  if !s:enabled | return | endif
+
+  let msg = iced#lint#find_message(line('.'), expand('%:p'))
+  if !empty(msg)
+    call s:M.echo('WarningMsg', msg)
+  endif
 endfunction
 
 function! iced#lint#toggle() abort
