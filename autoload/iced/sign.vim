@@ -91,6 +91,15 @@ function! iced#sign#unplace_all() abort
   let s:id = 1
 endfunction
 
+function! iced#sign#unplace_by_name(name) abort
+  let file = get(a:, 1, expand('%:p'))
+  for sign in s:sign_list
+    if sign['name'] ==# a:name
+      call iced#sign#unplace(sign['id'])
+    endif
+  endfor
+endfunction
+
 function! iced#sign#refresh() abort
   let sign_list = iced#sign#list_in_current_buffer()
   for sign in sign_list

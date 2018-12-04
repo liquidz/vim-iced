@@ -57,6 +57,22 @@ function! s:suite.unplace_test() abort
   call s:teardown()
 endfunction
 
+function! s:suite.unplace_by_name_test() abort
+  call s:setup()
+
+  let id1 = iced#sign#place('foo', 123, s:tempfile)
+  let id2 = iced#sign#place('bar', 234, s:tempfile)
+  let id3 = iced#sign#place('foo', 345, s:tempfile)
+  call s:assert.equals(len(iced#sign#list_in_current_buffer(s:tempfile)), 3)
+
+  call iced#sign#unplace_by_name('foo')
+  let res = iced#sign#list_in_current_buffer(s:tempfile)
+  call s:assert.equals(len(res), 1)
+  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id2, 'name': 'bar', 'line': 234})
+
+  call s:teardown()
+endfunction
+
 function! s:suite.jump_to_next_test() abort
   call s:setup()
   call s:buf.start_dummy(['', '|', '', ''])
