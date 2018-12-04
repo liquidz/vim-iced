@@ -3,14 +3,14 @@ let s:assert = themis#helper('assert')
 let s:buf = themis#helper('iced_buffer')
 let s:ch = themis#helper('iced_channel')
 let s:sel = themis#helper('iced_selector')
-let s:vim = themis#helper('iced_vim')
+let s:ex_cmd = themis#helper('iced_ex_cmd')
 
 let s:temp_file = tempname()
 
 function! s:setup(opts) abort " {{{
   call writefile([''], s:temp_file)
   call s:sel.register_test_builder()
-  call s:vim.register_test_builder()
+  call s:ex_cmd.register_test_builder()
 
   if has_key(a:opts, 'channel')
     call s:ch.register_test_builder({'status_value': 'open', 'relay': a:opts['channel']})
@@ -69,7 +69,7 @@ function! s:suite.related_ns_test() abort
         \ ])
 
   call config['accept']('', 'foo.bar-test')
-  call s:assert.equals(s:vim.get_last_args()['exe'], printf(':edit %s', s:temp_file))
+  call s:assert.equals(s:ex_cmd.get_last_args()['exe'], printf(':edit %s', s:temp_file))
 
   call s:teardown()
 endfunction
@@ -105,7 +105,7 @@ function! s:suite.test_test() abort
         \ 'foo.bar-test/baz-success-test'])
 
   call config['accept']('', 'foo.bar-test/baz-success-test')
-  call s:assert.equals(s:vim.get_last_args()['exe'], ':edit /path/to/file.clj')
+  call s:assert.equals(s:ex_cmd.get_last_args()['exe'], ':edit /path/to/file.clj')
 
   call s:teardown()
 endfunction

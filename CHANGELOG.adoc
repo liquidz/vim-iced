@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (master)
 
+== 0.8.5
+// {{{
+=== Changed
+* Bump nrepl to 0.5.1
+* Bump iced-nrepl to 0.2.8
+
+=== Fixed
+* Fix to warn if there are no test vars on testing from source.
+* Fix to warn if there are no test_vars on browsing tests.
+* Fix to unplace corresponding signs when linting and testing.
+* Fix starting trace process to unplace sign if the sign already exists.
+// }}}
+
 == 0.8.4
 // {{{
 === Added

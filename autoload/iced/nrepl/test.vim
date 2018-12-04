@@ -6,6 +6,7 @@ let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
 let s:last_test = {}
+let s:sign_name = 'iced_err'
 let g:iced#test#spec_num_tests = get(g:, 'iced#test#spec_num_tests', 10)
 
 " iced#nrepl#test#test_vars_by_ns_name {{{
@@ -33,7 +34,7 @@ function! s:test_vars(eval_resp, ns_name, callback) abort
 
   let test_vars = filter(copy(test_vars), {_, v -> stridx(v, name) != -1})
   call map(test_vars, {_, v -> printf('%s/%s', a:ns_name, v)})
-  call a:callback(test_vars)
+  call a:callback(name, test_vars)
 endfunction
 
 function! iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, callback) abort
@@ -171,7 +172,7 @@ function! s:out(resp) abort
   for err in errors
     let lnum = err['lnum']
     if type(lnum) != type(0) | continue | endif
-    call iced#sign#place('iced_err', err['lnum'], err['filename'])
+    call iced#sign#place(s:sign_name, err['lnum'], err['filename'])
 
     if has_key(err, 'expected') && has_key(err, 'actual')
       let expected_and_actuals = expected_and_actuals + [
@@ -220,13 +221,17 @@ function! s:test_under_cursor() abort
   else
     let pos = ret['curpos']
     let option = {'line': pos[1], 'column': pos[2]}
-    call iced#sign#unplace_all()
+    call iced#sign#unplace_by_name(s:sign_name)
     call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)}, option)})
   endif
 endfunction " }}}
 
 " s:test_under_cursor_from_source {{{
-function! s:test_under_cursor_from_source(ns_name, test_vars) abort
+function! s:test_under_cursor_from_source(ns_name, var_name, test_vars) abort
+  if empty(a:test_vars)
+    return iced#message#warning('no_test_vars_for', a:var_name)
+  endif
+
   call iced#message#echom('testing_var', join(a:test_vars, ', '))
   call iced#nrepl#op#cider#test_var_query({
         \   'ns-query': {'exactly': [a:ns_name]},
@@ -240,8 +245,8 @@ function! iced#nrepl#test#under_cursor() abort
     call s:test_under_cursor()
   else
     let ns_name = iced#nrepl#navigate#cycle_ns(ns_name)
-    call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, {test_vars ->
-          \ s:test_under_cursor_from_source(ns_name, test_vars)})
+    call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, {var_name, test_vars ->
+          \ s:test_under_cursor_from_source(ns_name, var_name, test_vars)})
   endif
 endfunction "}}}
 
@@ -253,7 +258,7 @@ function! iced#nrepl#test#ns() abort
     let ns = iced#nrepl#navigate#cycle_ns(ns)
   endif
 
-  call iced#sign#unplace_all()
+  call iced#sign#unplace_by_name(s:sign_name)
   call iced#message#info('testing')
   call iced#nrepl#ns#require(ns, {_ -> iced#nrepl#op#cider#test_var_query({
         \ 'ns-query': {'exactly': [ns]},
@@ -263,7 +268,7 @@ endfunction " }}}
 " iced#nrepl#test#all {{{
 function! iced#nrepl#test#all() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#sign#unplace_all()
+  call iced#sign#unplace_by_name(s:sign_name)
   call iced#message#info('testing')
   call iced#nrepl#op#cider#test_var_query({
         \ 'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}
@@ -277,7 +282,7 @@ function! iced#nrepl#test#redo() abort
   let reg_save = @@
 
   try
-    call iced#sign#unplace_all()
+    call iced#sign#unplace_by_name(s:sign_name)
     " vim-sexp: move to top
     silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
     silent normal! va(y

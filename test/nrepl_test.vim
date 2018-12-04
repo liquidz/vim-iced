@@ -167,8 +167,8 @@ function! s:suite.fetch_test_vars_by_function_under_cursor_test() abort
     endif
   endfunction
 
-  function! test.result_callback(result) abort
-    let self.result = a:result
+  function! test.result_callback(var_name, test_vars) abort
+    let self.result = {'var_name': a:var_name, 'test_vars': a:test_vars}
   endfunction
 
   call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
@@ -176,6 +176,7 @@ function! s:suite.fetch_test_vars_by_function_under_cursor_test() abort
        \ '(ns foo.bar)',
        \ '(defn baz [] "baz" |)'])
   call iced#nrepl#test#fetch_test_vars_by_function_under_cursor('foo.bar', test.result_callback)
-  call s:assert.equals(test.result, ['foo.bar/baz-test'])
+  call s:assert.equals(test.result['var_name'], 'baz')
+  call s:assert.equals(test.result['test_vars'], ['foo.bar/baz-test'])
   call s:buf.stop_dummy()
 endfunction

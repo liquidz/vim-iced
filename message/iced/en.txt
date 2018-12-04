@@ -56,6 +56,7 @@
   'jump_not_found':     'Not found. Target namespace may not be loaded. Try :IcedRequireAll.',
   'all_ns_loading':     'Loading all namespaces...',
   'no_test_vars':       'No test vars.',
+  'no_test_vars_for':   'No test vars for %s.',
   'invalid_format':     'Invalid format: %s.',
   'already_in_test_ns': 'Already in test namespace.',
 }

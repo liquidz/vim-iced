@@ -14,7 +14,8 @@ function! iced#sign#place(name, lnum, file) abort
   if !filereadable(a:file) | return | endif
 
   let id = s:next_id()
-  call iced#di#get('sign').place(id, a:lnum, a:name, a:file)
+  call iced#di#get('ex_cmd').exe(printf(':sign place %d line=%d name=%s file=%s',
+        \ id, a:lnum, a:name, a:file))
   call add(s:sign_list, {'id': id, 'line': a:lnum, 'name': a:name, 'file': a:file})
   return id
 endfunction
@@ -25,10 +26,11 @@ function! iced#sign#list_in_current_buffer(...) abort
   return sort(list, {a, b -> a['line'] > b['line']})
 endfunction
 
-function! iced#sign#jump_to_next() abort
+function! iced#sign#jump_to_next(...) abort
   let lnum = line('.')
+  let file = get(a:, 1, expand('%:p'))
   let target = ''
-  let sign_list = iced#sign#list_in_current_buffer()
+  let sign_list = iced#sign#list_in_current_buffer(file)
 
   for sign in sign_list
     if sign['line'] > lnum
@@ -49,11 +51,12 @@ function! iced#sign#jump_to_next() abort
   endif
 endfunction
 
-function! iced#sign#jump_to_prev() abort
+function! iced#sign#jump_to_prev(...) abort
   let lnum = line('.')
+  let file = get(a:, 1, expand('%:p'))
   let tmp = ''
   let target = ''
-  let sign_list = iced#sign#list_in_current_buffer()
+  let sign_list = iced#sign#list_in_current_buffer(file)
 
   for sign in sign_list
     if sign['line'] < lnum
@@ -78,14 +81,23 @@ function! iced#sign#jump_to_prev() abort
 endfunction
 
 function! iced#sign#unplace(id) abort
-  call iced#di#get('sign').unplace(a:id)
+  call iced#di#get('ex_cmd').exe(printf(':sign unplace %d', a:id))
   call filter(s:sign_list, {_, v -> v['id'] !=# a:id })
 endfunction
 
 function! iced#sign#unplace_all() abort
-  call iced#di#get('sign').unplace_all()
+  call iced#di#get('ex_cmd').exe(':sign unplace *')
   let s:sign_list = []
   let s:id = 1
+endfunction
+
+function! iced#sign#unplace_by_name(name) abort
+  let file = get(a:, 1, expand('%:p'))
+  for sign in s:sign_list
+    if sign['name'] ==# a:name
+      call iced#sign#unplace(sign['id'])
+    endif
+  endfor
 endfunction
 
 function! iced#sign#refresh() abort

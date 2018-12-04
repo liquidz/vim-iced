@@ -1,9 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:cache_key(opts) abort
-  if has_key(a:opts, 'lnum') && has_key(a:opts, 'file')
-    return printf('%s:%d', a:opts['file'], a:opts['lnum'])
+function! s:cache_key(var_name, opts) abort
+  if !empty(a:var_name) && has_key(a:opts, 'file')
+    return printf('%s:%s', a:var_name, a:opts['file'])
   endif
   return ''
 endfunction
@@ -14,10 +14,16 @@ function! s:toggle_trace_var(resp, opts) abort
   endif
 
   let var = a:resp['var-name']
-  let cache_key = s:cache_key(a:opts)
+  let cache_key = s:cache_key(var, a:opts)
   if a:resp['var-status'] ==# 'traced'
     let msg_key = 'start_to_trace'
     if !empty(cache_key)
+      " delete existing sign
+      let existing_sign_id = iced#cache#get(cache_key, -1)
+      if existing_sign_id != -1
+        call iced#sign#unplace(existing_sign_id)
+      endif
+
       let sign_id = iced#sign#place('iced_trace', a:opts['lnum'], a:opts['file'])
       call iced#cache#set(cache_key, sign_id)
     endif
