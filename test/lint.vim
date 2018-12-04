@@ -1,12 +1,12 @@
 let s:suite  = themis#suite('iced.lint')
 let s:assert = themis#helper('assert')
 let s:ch = themis#helper('iced_channel')
-let s:sign = themis#helper('iced_sign')
+let s:ex_cmd = themis#helper('iced_ex_cmd')
 
 let s:tempfile = tempname()
 
 function! s:setup(lint_resp) abort " {{{
-  call s:sign.register_test_builder()
+  call s:ex_cmd.register_test_builder()
   call iced#sign#unplace_all()
   call writefile([''], s:tempfile)
 
