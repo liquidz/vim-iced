@@ -6,6 +6,7 @@ let s:M = s:V.import('Vim.Message')
 let s:last_warnings = []
 
 let s:enabled = v:true
+let s:sign_name = 'iced_lint'
 let g:iced#eastwood#option = get(g:, 'iced#eastwood#option', {})
 
 function! iced#lint#is_enabled() abort
@@ -16,7 +17,7 @@ function! s:lint(warnings) abort
   let s:last_warnings = a:warnings
   for warn in s:last_warnings
     if !has_key(warn, 'line') || !has_key(warn, 'path') | continue | endif
-    call iced#sign#place('iced_lint', warn['line'], warn['path'])
+    call iced#sign#place(s:sign_name, warn['line'], warn['path'])
   endfor
 endfunction
 
@@ -26,7 +27,7 @@ function! iced#lint#current_file() abort
   endif
 
   let s:last_warnings = []
-  call iced#sign#unplace_all()
+  call iced#sign#unplace_by_name(s:sign_name)
   let file = expand('%:p')
 
   call iced#nrepl#op#iced#lint_file(file, g:iced#eastwood#option, funcref('s:lint'))
