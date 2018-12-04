@@ -14,7 +14,8 @@ function! iced#sign#place(name, lnum, file) abort
   if !filereadable(a:file) | return | endif
 
   let id = s:next_id()
-  call iced#di#get('sign').place(id, a:lnum, a:name, a:file)
+  call iced#di#get('ex_cmd').exe(printf(':sign place %d line=%d name=%s file=%s',
+        \ id, a:lnum, a:name, a:file))
   call add(s:sign_list, {'id': id, 'line': a:lnum, 'name': a:name, 'file': a:file})
   return id
 endfunction
@@ -80,12 +81,12 @@ function! iced#sign#jump_to_prev(...) abort
 endfunction
 
 function! iced#sign#unplace(id) abort
-  call iced#di#get('sign').unplace(a:id)
+  call iced#di#get('ex_cmd').exe(printf(':sign unplace %d', a:id))
   call filter(s:sign_list, {_, v -> v['id'] !=# a:id })
 endfunction
 
 function! iced#sign#unplace_all() abort
-  call iced#di#get('sign').unplace_all()
+  call iced#di#get('ex_cmd').exe(':sign unplace *')
   let s:sign_list = []
   let s:id = 1
 endfunction

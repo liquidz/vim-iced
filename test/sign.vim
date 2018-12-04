@@ -1,12 +1,12 @@
 let s:suite  = themis#suite('iced.sign')
 let s:assert = themis#helper('assert')
 let s:buf = themis#helper('iced_buffer')
-let s:sign = themis#helper('iced_sign')
+let s:ex_cmd = themis#helper('iced_ex_cmd')
 
 let s:tempfile = tempname()
 
 function! s:setup() abort " {{{
-  call s:sign.register_test_builder()
+  call s:ex_cmd.register_test_builder()
   call iced#sign#unplace_all()
   call writefile([''], s:tempfile)
 endfunction " }}}
