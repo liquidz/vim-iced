@@ -60,7 +60,9 @@ function! s:move_cursor_and_set_highlight(resp) abort
   let nrow = max([a:resp['line'], 1])
   let ncol = max([a:resp['column'], 1])
 
-  silent exe printf(':edit %s', a:resp['file'])
+  if expand('%:p') !=# a:resp['file']
+    silent exe printf(':edit %s', a:resp['file'])
+  endif
   call cursor(nrow, ncol)
   call s:apply_coordination(a:resp['coor'])
 
