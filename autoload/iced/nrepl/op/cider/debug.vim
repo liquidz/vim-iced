@@ -12,6 +12,7 @@ function! iced#nrepl#op#cider#debug#init() abort
       \ 'session': iced#nrepl#current_session(),
       \ 'print-length': g:iced#debug#print_length,
       \ 'print-level': g:iced#debug#print_level,
+      \ 'does_not_capture_id': v:true,
       \ })
 endfunction
 
@@ -22,6 +23,7 @@ function! iced#nrepl#op#cider#debug#input(key, in) abort
       \ 'session': iced#nrepl#current_session(),
       \ 'key': a:key,
       \ 'input': a:in,
+      \ 'does_not_capture_id': v:true,
       \ })
 endfunction
 
