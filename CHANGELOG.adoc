@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (master)
 
-== 0.8.5
+== 0.8.5 (2018-12-05)
 // {{{
 === Changed
 * Bump nrepl to 0.5.1
@@ -17,7 +17,7 @@ All notable changes to this project will be documented in this file. This change
 * Fix starting trace process to unplace sign if the sign already exists.
 // }}}
 
-== 0.8.4
+== 0.8.4 (2018-11-28)
 // {{{
 === Added
 * Allow to connect shadow-cljs's nREPL server as ClojureScript session.
@@ -30,7 +30,7 @@ All notable changes to this project will be documented in this file. This change
 * Fix completion bug immediately after nREPL connection.
 // }}}
 
-== 0.8.3
+== 0.8.3 (2018-11-20)
 // {{{
 === Added
 * Allowed to run tests on source code.
@@ -47,7 +47,7 @@ All notable changes to this project will be documented in this file. This change
 ** In source code, "Not found" error is shown before evaluating some codes.
 // }}}
 
-== 0.8.2
+== 0.8.2 (2018-11-15)
 // {{{
 === Changed
 
@@ -63,7 +63,7 @@ All notable changes to this project will be documented in this file. This change
 * Fix to handle not-found error on jumping to definition
 // }}}
 
-== 0.8.1
+== 0.8.1 (2018-11-08)
 // {{{
 === Added
 * Add option to restrict value length in debugging.
@@ -84,7 +84,7 @@ All notable changes to this project will be documented in this file. This change
 * Fix bug for echoing document for Java class constructor under cursor.
 // }}}
 
-== 0.8.0
+== 0.8.0 (2018-11-07)
 // {{{
 === Added
 * Add option for updating document buffer with current form document.
@@ -106,7 +106,7 @@ All notable changes to this project will be documented in this file. This change
 * Update test commands to check nREPL connection before running.
 // }}}
 
-== 0.7.3
+== 0.7.3 (2018-10-31)
 // {{{
 === Added
 * Add `g:iced#eastwood#option` which allows to set `exclude-linters`
@@ -120,7 +120,7 @@ All notable changes to this project will be documented in this file. This change
 * Fix `iced#nrepl#auto#bufread` to check session validity
 // }}}
 
-== 0.7.2
+== 0.7.2 (2018-10-29)
 // {{{
 === Added
 * Add codecov badge
@@ -132,13 +132,13 @@ All notable changes to this project will be documented in this file. This change
 * Fix not to split window permanently when debugging
 // }}}
 
-== 0.7.1
+== 0.7.1 (2018-10-25)
 // {{{
 * Fix jumping to definition not to jump into JAR file
 * Refactor codes
 // }}}
 
-== 0.7.0
+== 0.7.0 (2018-10-23)
 // {{{
 * Update to support Clojure 1.10's error message format
 * Update to work with Clojure 1.8
@@ -166,14 +166,14 @@ All notable changes to this project will be documented in this file. This change
 |===
 // }}}
 
-== 0.6.2
+== 0.6.2 (2018-10-19)
 // {{{
 * Fix not to remove blank lines too much in code formatting #49
 * Update to interrupt when disconnecting
 * Update to make spec document more readable
 // }}}
 
-== 0.6.1
+== 0.6.1 (2018-10-19)
 // {{{
 * Fix to work skeleton correctly #47
 * Fix "Argument to in-ns must be a symbol" error by `IcedInReplNs` command #46
@@ -182,7 +182,7 @@ All notable changes to this project will be documented in this file. This change
 * Update `iced` command to allow `with-profile` option for leiningen
 // }}}
 
-== 0.6.0
+== 0.6.0 (2018-10-17)
 // {{{
 * Fix code formatting to delete extra empty line
 * Fix a bug causes evaluation error on stdout buffer
@@ -197,7 +197,7 @@ All notable changes to this project will be documented in this file. This change
 ** Extracted to https://github.com/liquidz/vim-iced-function-list
 // }}}
 
-== 0.5.5
+== 0.5.5 (2018-10-13)
 // {{{
 * Update linting not to run when linting is already running
 * Update to clear signs when linting is disabled
@@ -207,7 +207,7 @@ All notable changes to this project will be documented in this file. This change
 * Fix setting sign to ignore errors that has no line number
 // }}}
 
-== 0.5.4
+== 0.5.4 (2018-10-10)
 // {{{
 * Fixed `IcedPrintLast` to output all results
 * Fixed a bug that caused an error if javadoc result did not have a `member` key
@@ -215,7 +215,7 @@ All notable changes to this project will be documented in this file. This change
 * Add `IcedTestSpecCheck` command
 // }}}
 
-== 0.5.3
+== 0.5.3 (2018-10-09)
 // {{{
 * Fix to use `sockconnect` for nREPL connection #40
 * Update debugging highlighting to specify background color
@@ -223,19 +223,19 @@ All notable changes to this project will be documented in this file. This change
 * Add `IcedRelatedNamespaces` command
 // }}}
 
-== 0.5.2
+== 0.5.2 (2018-10-06)
 // {{{
 * Update code formatting to specify `alias-map` for cljfmt
 * Tweak codes
 // }}}
 
-== 0.5.1
+== 0.5.1 (2018-10-05)
 // {{{
 * Update to show evaluation error when it is clear that current session is invalid from the extension
 * Update to be able to define custom command in the command palette
 // }}}
 
-== 0.5.0
+== 0.5.0 (2018-10-03)
 // {{{
 * Fix to work completion on the stdout buffer correctly
 ** https://github.com/liquidz/iced-nrepl/commit/15697d35f6407a1d86d1a9bce68341792a41cbbc
