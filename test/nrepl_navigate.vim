@@ -1,16 +1,20 @@
 let s:suite  = themis#suite('iced.nrepl.navigate')
 let s:assert = themis#helper('assert')
+let s:scope = themis#helper('scope')
 let s:buf = themis#helper('iced_buffer')
 let s:ch = themis#helper('iced_channel')
 let s:sel = themis#helper('iced_selector')
 let s:ex_cmd = themis#helper('iced_ex_cmd')
+let s:qf = themis#helper('iced_quickfix')
 
+let s:funcs = s:scope.funcs('autoload/iced/nrepl/navigate.vim')
 let s:temp_file = tempname()
 
 function! s:setup(opts) abort " {{{
   call writefile([''], s:temp_file)
   call s:sel.register_test_builder()
   call s:ex_cmd.register_test_builder()
+  call s:qf.register_test_builder()
 
   if has_key(a:opts, 'channel')
     call s:ch.register_test_builder({'status_value': 'open', 'relay': a:opts['channel']})
@@ -106,6 +110,50 @@ function! s:suite.test_test() abort
 
   call config['accept']('', 'foo.bar-test/baz-success-test')
   call s:assert.equals(s:ex_cmd.get_last_args()['exe'], ':edit /path/to/file.clj')
+
+  call s:teardown()
+endfunction
+
+function! s:find_var_references_relay(msg) abort
+  let op = a:msg['op']
+  if op ==# 'info'
+    return {'status': ['done'], 'ns': 'foo', 'name': 'bar'}
+  elseif op ==# 'iced-find-var-references'
+    return {'status': ['done'], 'var-references': [
+          \ {'filename': '/path/to/foo.txt', 'lnum': 12, 'text': 'hello'},
+          \ {'filename': '/path/to/bar.txt', 'lnum': 34, 'text': 'world'}]}
+  elseif op ==# 'eval'
+    return {'status': ['done'], 'value': json_encode({
+          \ 'user-dir': '/path/to/user/dir',
+          \ 'file-separator': '/'})}
+  else
+    return {'status': ['done']}
+  endif
+endfunction
+
+function! s:suite.find_var_references_test() abort
+  let g:iced#var_references#cache_dir = fnamemodify(s:temp_file, ':h')
+  call s:setup({'channel': funcref('s:find_var_references_relay')})
+  let cache_path = s:funcs.reference_cache_path('foo', 'bar')
+
+  call s:assert.false(filereadable(cache_path))
+
+  call iced#nrepl#navigate#find_var_references('foo/bar', '')
+  let qf_list = s:qf.get_last_args()['list']
+  call s:assert.equals(qf_list, [
+        \ {'filename': '/path/to/foo.txt', 'lnum': 12, 'text': 'hello'},
+        \ {'filename': '/path/to/bar.txt', 'lnum': 34, 'text': 'world'}])
+
+  " cache file existence
+  call s:assert.true(filereadable(cache_path))
+  call s:assert.equals(iced#util#read_var(cache_path), qf_list)
+
+  " find var references with cache file
+  let cache_test_data = [
+        \ {'filename': '/path/to/baz.txt', 'lnum': 56, 'text': 'zzz'}]
+  call iced#util#save_var(cache_test_data, cache_path)
+  call iced#nrepl#navigate#find_var_references('foo/bar', '')
+  call s:assert.equals(s:qf.get_last_args()['list'], cache_test_data)
 
   call s:teardown()
 endfunction

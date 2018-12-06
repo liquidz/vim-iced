@@ -9,6 +9,8 @@ let s:tagstack = []
 let g:iced#related_ns#tail_patterns =
       \ get(g:, 'iced#related_ns#tail_patterns', ['', '-test', '-spec', '\.spec'])
 
+let g:iced#var_references#cache_dir = get(g:, 'iced#var_references#cache_dir', '/tmp')
+
 function! s:apply_mode_to_file(mode, file) abort
   let cmd = ':edit'
   if a:mode ==# 'v'
@@ -151,6 +153,73 @@ function! iced#nrepl#navigate#test() abort
   let ns_name = iced#nrepl#navigate#cycle_ns(ns_name)
   call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, funcref('s:test_vars'))
 endfunction " }}}
+
+function! s:set_references_to_quickfix(references) abort
+  call iced#qf#set(a:references)
+  call iced#di#get('ex_cmd').silent_exe(':cwindow')
+endfunction
+
+function! s:reference_cache_path(ns_name, var_name) abort
+  if empty(g:iced#var_references#cache_dir)
+    return ''
+  else
+    let sep = iced#nrepl#system#separator()
+    let name = s:S.hash(printf('%s:%s/%s',
+          \ iced#nrepl#system#user_dir(),
+          \ a:ns_name,
+          \ a:var_name))
+    return g:iced#var_references#cache_dir . sep . name
+  endif
+endfunction
+
+function! s:find_var_references(resp, ns_name, var_name) abort
+  if !has_key(a:resp, 'var-references') || empty(a:resp['var-references'])
+    return iced#message#warning('no_var_references', a:ns_name, a:var_name)
+  endif
+
+  let references = a:resp['var-references']
+  call iced#message#info('var_references_found', len(references))
+
+  let cache_path = s:reference_cache_path(a:ns_name, a:var_name)
+  if !empty(cache_path)
+    call iced#util#save_var(references, cache_path)
+  endif
+
+  call s:set_references_to_quickfix(references)
+endfunction
+
+function! s:find_var_references_info(info_resp, ignore_cache) abort
+  if !has_key(a:info_resp, 'ns') || !has_key(a:info_resp, 'name')
+    return iced#message#error('not_found')
+  endif
+
+  let ns_name = a:info_resp['ns']
+  let var_name = a:info_resp['name']
+
+  let cache_path = s:reference_cache_path(ns_name, var_name)
+  if !a:ignore_cache && filereadable(cache_path)
+    call iced#message#info('hit_var_reference_cache')
+    let references = iced#util#read_var(cache_path)
+    call s:set_references_to_quickfix(references)
+  else
+    call iced#message#echom('finding_var_references')
+    call iced#nrepl#op#iced#find_var_references(ns_name, var_name,
+          \ {resp -> s:find_var_references(resp, ns_name, var_name)})
+  endif
+endfunction
+
+function! iced#nrepl#navigate#find_var_references(symbol, bang) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  if iced#nrepl#current_session_key() !=# 'clj'
+    return iced#message#error('invalid_session', 'clj')
+  endif
+
+  let ignore_cache = !empty(a:bang)
+  let ns_name = iced#nrepl#ns#name()
+  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  call iced#nrepl#op#cider#info(ns_name, symbol,
+        \ {resp -> s:find_var_references_info(resp, ignore_cache)})
+endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

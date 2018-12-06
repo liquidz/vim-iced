@@ -59,5 +59,9 @@
   'no_test_vars_for':   'No test vars for %s.',
   'invalid_format':     'Invalid format: %s.',
   'already_in_test_ns': 'Already in test namespace.',
+  'hit_var_reference_cache': 'Hit var references cache.',
+  'finding_var_references':  'Finding var references...',
+  'var_references_found':    'Found %d references.',
+  'no_var_references':       'No %s/%s references.',
 }
 #vim:ft=ruby
