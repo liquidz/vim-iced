@@ -512,6 +512,19 @@ COMMANDS                                                    *vim-iced-commands*
   Jump back cursor.
   Key is mapped to |<Plug>(iced_def_back)|.
 
+                                                       *:IcedFindVarReferences*
+:IcedFindVarReferences
+  Find positions referencing the var under cursor.
+  Results are set to |quickfix|,
+  and saved as cache to |g:iced#var_references#cache_dir|.
+
+  If cache file exists, vim-iced use it as a priority.
+  See also |:IcedFindVarReferences!|
+
+                                                      *:IcedFindVarReferences!*
+:IcedFindVarReferences!
+  Work as same as |:IcedFindVarReferences| ignoring cache file.
+
                                                             *:IcedDocumentOpen*
 :IcedDocumentOpen [{symbol}]
   Open a window, and show documents for {symbol}.
@@ -847,6 +860,14 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_def_back)
   Same as |:IcedDefBack|.
 
+                                             *<Plug>(iced_find_var_references)*
+<Plug>(iced_find_var_references)
+  Same as |:IcedFindVarReferences|.
+
+                                            *<Plug>(iced_find_var_references!)*
+<Plug>(iced_find_var_references!)
+  Same as |:IcedFindVarReferences!|.
+
                                                    *<Plug>(iced_document_open)*
 <Plug>(iced_document_open)
   Same as |:IcedDocumentOpen|.
@@ -1083,6 +1104,11 @@ g:iced#refactor#prefix_rewriting
   c.f. https://github.com/clojure-emacs/refactor-nrepl#available-features
   Default value is `v:false`.
 
+                                              *g:iced#var_references#cache_dir*
+g:iced#var_references#cache_dir
+  Directory to save var references result.
+  Default value is `'/tmp'`.
+
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*
 
@@ -1178,7 +1204,9 @@ g:iced_enable_default_key_mappings
   <Leader>jn     <Plug>(iced_jump_to_next_sign)
   <Leader>jN     <Plug>(iced_jump_to_prev_sign)
   <Leader>gl     <Plug>(iced_goto_let)
-  <Leader>*      <Plug>(iced_iced)
+  <Leader>fr     <Plug>(iced_find_var_references)
+  <Leader>fR     <Plug>(iced_find_var_references!)
+  <Leader>*      <Plug>(iced_grep)
   <Leader>/      :<C-u>IcedGrep<Space>
   <C-]>          <Plug>(iced_def_jump)
   <C-t>          <Plug>(iced_def_back)
