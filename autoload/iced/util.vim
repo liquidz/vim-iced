@@ -106,5 +106,17 @@ function! iced#util#partition(arr, n, is_all) abort
   return result
 endfunction
 
+function! iced#util#save_var(v, filename) abort
+  let serialized = string(a:v)
+  call writefile([serialized], a:filename)
+endfunction
+
+function! iced#util#read_var(filename) abort
+  let serialized = readfile(a:filename)[0]
+  let result = ''
+  silent exec printf('let result = %s', serialized)
+  return result
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
