@@ -15,6 +15,7 @@
    "cider.nrepl/wrap-test"
    "cider.nrepl/wrap-trace"
    "cider.nrepl/wrap-undef"
+   "cider.piggieback/wrap-cljs-repl"
    "refactor-nrepl.middleware/wrap-refactor"
    "iced.nrepl/wrap-iced"])
 
