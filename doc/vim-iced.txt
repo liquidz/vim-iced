@@ -26,6 +26,7 @@ CONTENTS                                                    *vim-iced-contents*
   Tag Jump                     |vim-iced-tag-jump|
   Editing S-exp                |vim-iced-editing-s-exp|
     Formatting                 |vim-iced-formatting|
+    Indenting                  |vim-iced-indenting|
     Refactoring                |vim-iced-refactoring|
     Linting                    |vim-iced-linting|
   Interface                    |vim-iced-interface|
@@ -34,6 +35,7 @@ CONTENTS                                                    *vim-iced-contents*
     Key Mappings               |vim-iced-key-mappings|
   Customizing                  |vim-iced-customizing|
     Indent rules               |vim-iced-customizing-indents|
+    Auto indent                |vim-iced-customizing-auto-indent|
     Linters                    |vim-iced-customizing-linters|
     Command palettes           |vim-iced-customizing-palette|
     Default keys               |vim-iced-customizing-default-keys|
@@ -303,6 +305,17 @@ FORMATTING                                                *vim-iced-formatting*
   you should define {g:sexp_mappings} as follows.
 >
   let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
+<
+------------------------------------------------------------------------------
+INDENTING                                                  *vim-iced-indenting*
+
+  vim-iced provides 'cljfmt' based auto indentation,
+  and it is enabled by default.
+
+  If you don't use vim-iced's auto indentation,
+  you can disable it by |g:iced_enable_auto_indent| variable.
+>
+  let g:iced_enable_auto_indent = v:false
 <
 ------------------------------------------------------------------------------
 REFACTORING                                              *vim-iced-refactoring*
@@ -1121,6 +1134,15 @@ g:iced#format#rule
         \ 'merr.core/let': '[[:block 2] [:inner 1]]',
         \ }
 <
+------------------------------------------------------------------------------
+AUTO INDENT                                  *vim-iced-customizing-auto-indent*
+
+                                                    *g:iced_enable_auto_indent*
+g:iced_enable_auto_indent
+  If {v:true}, enable indenting automatically.
+  Default value is `v:true`.
+  See details: |vim-iced-indenting|.
+
 ------------------------------------------------------------------------------
 LINTERS                                          *vim-iced-customizing-linters*
 
