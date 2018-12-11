@@ -29,7 +29,7 @@ function! s:helper.get_texts() abort
 endfunction
 
 function! s:helper.stop_dummy() abort
-  if self['started']
+  if has_key(self, 'started') && self['started']
     exe ':q'
     unlet self['started']
   endif

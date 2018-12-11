@@ -11,10 +11,10 @@ function! iced#qf#is_opened() abort
 endfunction
 
 function! iced#qf#set(ls) abort
-  silent call setqflist(a:ls , 'r')
+  call iced#di#get('quickfix').setlist(a:ls, 'r')
 
   if empty(a:ls)
-    cclose
+    call iced#di#get('ex_cmd').silent_exe(':cclose')
     return
   endif
 

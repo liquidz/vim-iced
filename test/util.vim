@@ -64,3 +64,17 @@ function! s:suite.partition_test() abort
   call s:assert.equals(iced#util#partition([1, 2], 1, v:true),
         \ [[1], [2]])
 endfunction
+
+function! s:suite.save_read_var_test() abort
+  let name = tempname()
+  try
+    let v = {'foo': 123, 'bar': [4, 5, 6]}
+    call iced#util#save_var(v, name)
+    call s:assert.true(filewritable(name))
+
+    let a = iced#util#read_var(name)
+    call s:assert.equals(v, a)
+  finally
+    call delete(name)
+  endtry
+endfunction

@@ -21,6 +21,7 @@ let s:default_palette = [
       \ 'LintCurrentFile', 'LintToggle',
       \ 'JumpToNextSign', 'JumpToPrevSign',
       \ 'GotoLet',
+      \ 'FindVarReferences', 'FindVarReferences!',
       \ ]
 
 function! s:build_palette() abort

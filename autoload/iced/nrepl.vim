@@ -221,7 +221,9 @@ function! iced#nrepl#send(data) abort
     unlet data['callback']
   endif
 
-  if data['op'] !=# 'debug-input'
+  if has_key(data, 'does_not_capture_id')
+    unlet data['does_not_capture_id']
+  else
     let s:messages[id] = message
   endif
 

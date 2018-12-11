@@ -40,6 +40,7 @@ if !exists('g:iced#di#container')
   call iced#di#register('channel',  {_ -> iced#di#channel#build()})
   call iced#di#register('bencode',  {_ -> iced#di#bencode#build()})
   call iced#di#register('ex_cmd',   {_ -> iced#di#ex_cmd#build()})
+  call iced#di#register('quickfix', {_ -> iced#di#quickfix#build()})
   call iced#di#register('selector', {_ -> iced#di#selector#build()})
 endif " }}}
 

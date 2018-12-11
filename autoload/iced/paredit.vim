@@ -99,9 +99,11 @@ function! iced#paredit#move_to_parent_element() abort
   return col('.')
 endfunction
 
-function! iced#paredit#get_current_top_list_raw() abort
+function! iced#paredit#get_current_top_list_raw(...) abort
   let code = ''
   let pos = ''
+  let target_level = get(a:, 1, -1) " -1 = top level
+  let level = 1
 
   try
     while v:true
@@ -113,12 +115,16 @@ function! iced#paredit#get_current_top_list_raw() abort
         break
       endif
 
-      if col('.') == 1 || stridx(getline('.'), '#') == 0
-        silent normal! vabo0y
+      if col('.') == 1 || stridx(getline('.'), '#') == 0 || level == target_level
+        " To wrap top level tag literal
+        if level != target_level
+          silent normal! vabo0y
+        endif
         let code = @@
         let pos = getcurpos()
         break
       else
+        let level = level + 1
         silent normal! h
       endif
     endwhile
@@ -129,13 +135,14 @@ function! iced#paredit#get_current_top_list_raw() abort
   return {'code': code, 'curpos': pos}
 endfunction
 
-function! iced#paredit#get_current_top_list() abort
+function! iced#paredit#get_current_top_list(...) abort
+  let target_level = get(a:, 1, -1)
   let view = winsaveview()
   let reg_save = @@
   let res = ''
 
   try
-    let res = iced#paredit#get_current_top_list_raw()
+    let res = iced#paredit#get_current_top_list_raw(target_level)
   finally
     let @@ = reg_save
     call winrestview(view)

@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (master)
 
+== 0.8.6 (2018-12-11)
+// {{{
+=== Added
+* Add `:IcedFindVarReferences` command.
+* Support auto indentation.
+
+=== Changed
+* Bump nrepl to 0.5.2
+* Bump iced-nrepl to 0.2.11
+
+=== Fixed
+* Fix error in debugging if the file is not saved.
+** Fix not to execute `:edit` file in debugging if the file is already opened.
+* Fix evaluation status not to display "evaluating" for initializing debugger.
+// }}}
+
 == 0.8.5 (2018-12-05)
 // {{{
 === Changed
