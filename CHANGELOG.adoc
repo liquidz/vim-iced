@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (master)
+
+== 0.8.6 (2018-12-11)
+// {{{
 === Added
 * Add `:IcedFindVarReferences` command.
 * Support auto indentation.
@@ -15,6 +18,7 @@ All notable changes to this project will be documented in this file. This change
 * Fix error in debugging if the file is not saved.
 ** Fix not to execute `:edit` file in debugging if the file is already opened.
 * Fix evaluation status not to display "evaluating" for initializing debugger.
+// }}}
 
 == 0.8.5 (2018-12-05)
 // {{{
