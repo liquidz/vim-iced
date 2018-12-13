@@ -1,10 +1,10 @@
 {
  :paths ["clj"]
- :deps {nrepl {:mvn/version "0.5.2"}
+ :deps {nrepl {:mvn/version "0.5.3"}
         refactor-nrepl {:mvn/version "2.4.0"}
         cider/cider-nrepl {:mvn/version "0.19.0-SNAPSHOT"}
         cider/piggieback {:mvn/version "0.3.10"}
-        iced-nrepl {:mvn/version "0.2.11"}}
+        iced-nrepl {:mvn/version "0.2.12"}}
 
  :aliases
  {:jackin {:extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}}}
