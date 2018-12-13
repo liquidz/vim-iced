@@ -362,6 +362,7 @@ function! iced#nrepl#test#rerun_last() abort
     return
   endif
 
+  call iced#sign#unplace_by_name(s:sign_name)
   if s:last_test['type'] ==# 'test-var'
     call s:test({'value': s:last_test['var']})
   elseif s:last_test['type'] ==# 'spec-check'
