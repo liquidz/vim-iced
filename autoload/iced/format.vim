@@ -90,7 +90,7 @@ endfunction
 
 function! iced#format#calculate_indent(lnum) abort
   if !iced#nrepl#is_connected()
-    return -1
+    return GetClojureIndent()
   endif
 
   if ! s:is_indentation_rule_setted
@@ -104,7 +104,7 @@ function! iced#format#calculate_indent(lnum) abort
     let res = iced#paredit#get_current_top_list(2)
     let code = res['code']
     if iced#compat#trim(code) ==# ''
-      return 0
+      return GetClojureIndent()
     endif
 
     let start_line = res['curpos'][1]
@@ -112,10 +112,11 @@ function! iced#format#calculate_indent(lnum) abort
     let target_lnum = a:lnum - start_line
 
     let resp = iced#nrepl#op#iced#sync#calculate_indent_level(code, target_lnum, iced#nrepl#ns#alias_dict(ns_name))
+    echom printf('FIXME %s', resp)
     if has_key(resp, 'indent-level') && type(resp['indent-level']) == type(1)
       return resp['indent-level'] + start_column
     else
-      return -1
+      return GetClojureIndent()
     endif
   finally
     let @@ = reg_save

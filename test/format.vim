@@ -3,6 +3,10 @@ let s:assert = themis#helper('assert')
 let s:ch = themis#helper('iced_channel')
 let s:buf = themis#helper('iced_buffer')
 
+function! GetClojureIndent() abort
+  return -1
+endfunction
+
 function! s:format_code_relay(msg, formatted) abort
   if a:msg['op'] ==# 'iced-format-code-with-indents'
     return {'status': ['done'], 'formatted': a:formatted}
@@ -82,7 +86,7 @@ function! s:suite.calculate_indent_without_corresponding_form_test() abort
         \ '|',
         \ ])
   let result = iced#format#calculate_indent(line('.'))
-  call s:assert.equals(result, 0)
+  call s:assert.equals(result, GetClojureIndent())
 
   call s:buf.stop_dummy()
 endfunction

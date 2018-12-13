@@ -1,19 +1,10 @@
-let g:iced_enable_auto_indent = get(g:, 'iced_enable_auto_indent', v:true)
-if exists('b:did_indent') || !g:iced_enable_auto_indent
-  finish
-endif
+let s:save_cpo = &cpo
+set cpo&vim
 
-setlocal autoindent
-setlocal indentexpr=GetIcedIndent()
-setlocal indentkeys=!^F,o,O
-
-setlocal expandtab
-setlocal tabstop<
-setlocal softtabstop=2
-setlocal shiftwidth=2
-
+" NOTE: setting indentexpr is executed at nREPL connection
 function! GetIcedIndent()
   return iced#format#calculate_indent(v:lnum)
 endfunction
 
-let b:did_indent = 1
+let &cpo = s:save_cpo
+unlet s:save_cpo
