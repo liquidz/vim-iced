@@ -248,6 +248,10 @@ function! s:warm_up() abort
   call iced#nrepl#op#cider#debug#init()
   sleep 100m
   call iced#nrepl#op#cider#debug#init()
+
+  if get(g:, 'iced_enable_auto_indent', v:true)
+    setlocal indentexpr=GetIcedIndent()
+  endif
 endfunction
 
 function! s:status(ch) abort
