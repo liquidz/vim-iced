@@ -6,7 +6,7 @@ let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
 let s:last_test = {}
-let s:sign_name = 'iced_err'
+let s:sign_name = 'iced_error'
 let g:iced#test#spec_num_tests = get(g:, 'iced#test#spec_num_tests', 10)
 
 " iced#nrepl#test#test_vars_by_ns_name {{{
