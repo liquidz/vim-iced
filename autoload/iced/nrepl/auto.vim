@@ -8,5 +8,11 @@ function! iced#nrepl#auto#bufread() abort
   call iced#format#set_indentexpr()
 endfunction
 
+function! iced#nrepl#auto#newfile() abort
+  if !iced#nrepl#is_connected() | return | endif
+  call iced#skeleton#new()
+  call iced#format#set_indentexpr()
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
