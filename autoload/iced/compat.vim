@@ -14,8 +14,16 @@ endfunction
 
 function! iced#compat#appendbufline(expr, lnum, text) abort
   if has('nvim')
-    let lnum = (a:lnum ==# '$') ? -1 : a:lnum
-    return nvim_buf_set_lines(a:expr, lnum, lnum, 0, [a:text])
+    " HACK: Workaround for https://github.com/liquidz/vim-iced/issues/65
+    "       Probably caused by this nvim's bug
+    "       https://github.com/neovim/neovim/issues/7756
+    let view = winsaveview()
+    try
+      let lnum = (a:lnum ==# '$') ? -1 : a:lnum
+      return nvim_buf_set_lines(a:expr, lnum, lnum, 0, [a:text])
+    finally
+      call winrestview(view)
+    endtry
   else
     return appendbufline(a:expr, a:lnum, a:text)
   endif
