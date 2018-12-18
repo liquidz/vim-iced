@@ -1,4 +1,4 @@
-personal_ws-1.1 en 172 
+personal_ws-1.1 en 177 
 IcedRelatedNamespaces
 grimoire
 IcedGrep
@@ -19,6 +19,7 @@ sha
 CursorHoldI
 IcedEval
 autocmd
+ErrorMsg
 IcedMacroExpandOuterList
 au
 libspec
@@ -47,6 +48,7 @@ undef
 figwheel
 IcedThreadLast
 sexp
+linthl
 dir
 href
 IcedEvalOuterTopList
@@ -73,6 +75,7 @@ cljc
 repl
 ctrlpvim
 IcedRequireAll
+WarningMsg
 iced's
 IcedLintToggle
 cwindow
@@ -116,6 +119,7 @@ IcedFindVarReferences
 concat
 IcedToggleSrcAndTest
 neovim
+tracehl
 BufWritePost
 junegunn
 bufread
@@ -143,6 +147,7 @@ IcedStdoutBufferClose
 txt
 codecov
 IcedBrowseSpec
+errorhl
 Sdeps
 eval
 autcmd
