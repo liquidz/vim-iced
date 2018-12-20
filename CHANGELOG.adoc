@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (master)
+
+== 0.8.7 (2018-12-20)
 // {{{
 === Added
 * Add `g:iced_sign` variable to customize signs.
