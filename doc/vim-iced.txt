@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.8.6
+Version: 0.8.7
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -37,6 +37,7 @@ CONTENTS                                                    *vim-iced-contents*
     Indent rules               |vim-iced-customizing-indents|
     Auto indent                |vim-iced-customizing-auto-indent|
     Linters                    |vim-iced-customizing-linters|
+    Signs                      |vim-iced-customizing-signs|
     Command palettes           |vim-iced-customizing-palette|
     Default keys               |vim-iced-customizing-default-keys|
   Changelog                    |vim-iced-changelog|
@@ -90,8 +91,8 @@ LEININGEN~
   $HOME/.lein/profile.clj
 >
   {:user
-   {:dependencies [[nrepl "0.5.2"]
-                   [iced-nrepl "0.2.11"]
+   {:dependencies [[nrepl "0.5.3"]
+                   [iced-nrepl "0.2.12"]
                    [cider/cider-nrepl "0.19.0-SNAPSHOT"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
@@ -120,7 +121,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.19.0-SNAPSHOT"]
-      [iced-nrepl "0.2.11"]])
+      [iced-nrepl "0.2.12"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-complete
@@ -148,7 +149,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "2.4.0"]
                   [cider/cider-nrepl "0.19.0-SNAPSHOT"]
-                  [iced-nrepl "0.2.11"]]
+                  [iced-nrepl "0.2.12"]]
 
    :nrepl {:middlewares [cider.nrepl/wrap-complete
                          cider.nrepl/wrap-debug
@@ -1167,6 +1168,32 @@ g:iced_enable_auto_linting
   Linting is worked when |BufWritePost|.
   See details: |vim-iced-linting|
 
+------------------------------------------------------------------------------
+SIGNS                                              *vim-iced-customizing-signs*
+
+                                                                  *g:iced_sign*
+g:iced_sign
+  Sign setting.
+  vim-iced provides following signs.
+  - iced_error (for test failure position)
+  - iced_trace (for tracing var position)
+  - iced_lint  (for lint warning position)
+
+  Each signs have default setting as follows. >
+  {
+    'error':   '🔥',
+    'trace':   '👁',
+    'lint':    '💔',
+    'errorhl': 'ErrorMsg',
+    'tracehl': 'Search',
+    'linthl':  'WarningMsg',
+  }
+<
+  You can change the setting by `g:iced_sign` variable.
+  Ex. changing sign text
+>
+  let g:iced_sign = {'error': 'E', 'trace': 'T', 'lint': 'L'}
+<
 ------------------------------------------------------------------------------
 COMMAND PALETTES                                 *vim-iced-customizing-palette*
 

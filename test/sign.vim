@@ -18,12 +18,12 @@ endfunction " }}}
 function! s:suite.place_test() abort
   call s:setup()
 
-  let id = iced#sign#place('iced_err', 123, s:tempfile)
+  let id = iced#sign#place('iced_error', 123, s:tempfile)
   call s:assert.true(type(id) == type(1))
 
   let res = iced#sign#list_in_current_buffer(s:tempfile)
   call s:assert.equals(len(res), 1)
-  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id, 'name': 'iced_err', 'line': 123})
+  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id, 'name': 'iced_error', 'line': 123})
 
   call s:teardown()
 endfunction
@@ -32,7 +32,7 @@ function! s:suite.place_non_existing_file_test() abort
   call s:setup()
 
   let non_existing_file = tempname()
-  let id = iced#sign#place('iced_err', 123, non_existing_file)
+  let id = iced#sign#place('iced_error', 123, non_existing_file)
   call s:assert.true(empty(id))
 
   let res = iced#sign#list_in_current_buffer(non_existing_file)
@@ -44,15 +44,15 @@ endfunction
 function! s:suite.unplace_test() abort
   call s:setup()
 
-  let id1 = iced#sign#place('iced_err', 123, s:tempfile)
-  let id2 = iced#sign#place('iced_err', 234, s:tempfile)
+  let id1 = iced#sign#place('iced_error', 123, s:tempfile)
+  let id2 = iced#sign#place('iced_error', 234, s:tempfile)
 
   call s:assert.equals(len(iced#sign#list_in_current_buffer(s:tempfile)), 2)
   call iced#sign#unplace(id1)
 
   let res = iced#sign#list_in_current_buffer(s:tempfile)
   call s:assert.equals(len(res), 1)
-  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id2, 'name': 'iced_err', 'line': 234})
+  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id2, 'name': 'iced_error', 'line': 234})
 
   call s:teardown()
 endfunction
@@ -77,8 +77,8 @@ function! s:suite.jump_to_next_test() abort
   call s:setup()
   call s:buf.start_dummy(['', '|', '', ''])
 
-  call iced#sign#place('iced_err', 1, s:tempfile)
-  call iced#sign#place('iced_err', 4, s:tempfile)
+  call iced#sign#place('iced_error', 1, s:tempfile)
+  call iced#sign#place('iced_error', 4, s:tempfile)
 
   call s:assert.equals(line('.'), 2)
 
@@ -97,8 +97,8 @@ function! s:suite.jump_to_prev_test() abort
   call s:setup()
   call s:buf.start_dummy(['', '|', '', ''])
 
-  call iced#sign#place('iced_err', 1, s:tempfile)
-  call iced#sign#place('iced_err', 4, s:tempfile)
+  call iced#sign#place('iced_error', 1, s:tempfile)
+  call iced#sign#place('iced_error', 4, s:tempfile)
 
   call s:assert.equals(line('.'), 2)
 

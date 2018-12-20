@@ -6,7 +6,7 @@ let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
 let s:last_test = {}
-let s:sign_name = 'iced_err'
+let s:sign_name = 'iced_error'
 let g:iced#test#spec_num_tests = get(g:, 'iced#test#spec_num_tests', 10)
 
 " iced#nrepl#test#test_vars_by_ns_name {{{
@@ -195,21 +195,39 @@ endfunction
 " }}}
 
 " s:test_under_cursor {{{
+
+function! s:echo_testing_message(query) abort
+  if has_key(a:query, 'exactly') && !empty(a:query['exactly'])
+    let vars = join(a:query['exactly'], ', ')
+    call iced#message#echom('testing_var', vars)
+  elseif has_key(a:query, 'ns-query') && !empty(a:query['ns-query'])
+        \ && has_key(a:query['ns-query'], 'exactly') && !empty(a:query['ns-query']['exactly'])
+    let ns_query = a:query['ns-query']
+    let nss = join(ns_query['exactly'], ', ')
+    call iced#message#echom('testing_var', nss)
+  else
+    call iced#message#echom('testing')
+  endif
+endfunction
+
 function! s:test(resp) abort
   if has_key(a:resp, 'err')
     call iced#nrepl#eval#err(a:resp['err'])
   elseif has_key(a:resp, 'value')
     let var = a:resp['value']
-    let s:last_test = {'type': 'test-var', 'var': var}
 
     let var = substitute(var, '^#''', '', '')
     let i = stridx(var, '/')
     let ns = var[0:i-1]
-    call iced#message#echom('testing_var', var[i+1:])
-    call iced#nrepl#op#cider#test_var_query({
+
+    let query = {
           \ 'ns-query': {'exactly': [ns]},
           \ 'exactly': [var],
-          \ }, funcref('s:out'))
+          \ }
+    let s:last_test = {'type': 'test-var', 'query': query}
+
+    call s:echo_testing_message(query)
+    call iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))
   endif
 endfunction
 
@@ -232,11 +250,15 @@ function! s:test_under_cursor_from_source(ns_name, var_name, test_vars) abort
     return iced#message#warning('no_test_vars_for', a:var_name)
   endif
 
-  call iced#message#echom('testing_var', join(a:test_vars, ', '))
-  call iced#nrepl#op#cider#test_var_query({
+  let query = {
         \   'ns-query': {'exactly': [a:ns_name]},
         \   'exactly': a:test_vars
-        \   }, funcref('s:out'))
+        \   }
+  let s:last_test = {'type': 'test-var', 'query': query}
+
+  "call iced#message#echom('testing_var', join(a:test_vars, ', '))
+  call s:echo_testing_message(query)
+  call iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))
 endfunction " }}}
 
 function! iced#nrepl#test#under_cursor() abort
@@ -258,48 +280,36 @@ function! iced#nrepl#test#ns() abort
     let ns = iced#nrepl#navigate#cycle_ns(ns)
   endif
 
+  let query = {'ns-query': {'exactly': [ns]}}
+  let s:last_test = {'type': 'test-var', 'query': query}
+
   call iced#sign#unplace_by_name(s:sign_name)
-  call iced#message#info('testing')
-  call iced#nrepl#ns#require(ns, {_ -> iced#nrepl#op#cider#test_var_query({
-        \ 'ns-query': {'exactly': [ns]},
-        \ }, funcref('s:out'))})
+  call s:echo_testing_message(query)
+  call iced#nrepl#ns#require(ns, {_ -> iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))})
 endfunction " }}}
 
 " iced#nrepl#test#all {{{
 function! iced#nrepl#test#all() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#sign#unplace_by_name(s:sign_name)
-  call iced#message#info('testing')
-  call iced#nrepl#op#cider#test_var_query({
+
+  let query = {
         \ 'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}
-        \ }, funcref('s:out'))
+        \ }
+  let s:last_test = {'type': 'test-var', 'query': query}
+
+  call s:echo_testing_message(query)
+  call iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))
 endfunction " }}}
 
 " iced#nrepl#test#redo {{{
 function! iced#nrepl#test#redo() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  let view = winsaveview()
-  let reg_save = @@
+  call iced#sign#unplace_by_name(s:sign_name)
 
-  try
-    call iced#sign#unplace_by_name(s:sign_name)
-    " vim-sexp: move to top
-    silent exe "normal \<Plug>(sexp_move_to_prev_top_element)"
-    silent normal! va(y
-
-    let code = @@
-    if empty(code)
-      call iced#message#error('finding_code_error')
-    else
-      let pos = getcurpos()
-      let option = {'line': pos[1], 'column': pos[2]}
-      call iced#message#info('retesting')
-      call iced#nrepl#eval(code, {_ -> iced#nrepl#op#cider#retest(funcref('s:out'))}, option)
-    endif
-  finally
-    let @@ = reg_save
-    call winrestview(view)
-  endtry
+  let s:last_test = {'type': 'retest'}
+  call iced#message#info('retesting')
+  call iced#nrepl#op#cider#retest(funcref('s:out'))
 endfunction " }}}
 
 " iced#nrepl#test#spec_check {{{
@@ -362,10 +372,19 @@ function! iced#nrepl#test#rerun_last() abort
     return
   endif
 
-  if s:last_test['type'] ==# 'test-var'
-    call s:test({'value': s:last_test['var']})
-  elseif s:last_test['type'] ==# 'spec-check'
-    call s:current_var(s:last_test['num_tests'], {'value': s:last_test['var']})
+  let test_type = s:last_test['type']
+
+  call iced#sign#unplace_by_name(s:sign_name)
+  if test_type ==# 'test-var'
+    let query = s:last_test['query']
+    call s:echo_testing_message(query)
+    call iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))
+  elseif test_type ==# 'retest'
+    call iced#nrepl#test#redo()
+  elseif test_type ==# 'spec-check'
+    let num_tests = s:last_test['num_tests']
+    let var = s:last_test['var']
+    call s:current_var(num_tests, {'value': var})
   endif
 endfunction " }}}
 

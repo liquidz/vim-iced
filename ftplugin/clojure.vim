@@ -170,7 +170,7 @@ aug vim_iced_initial_setting
   au!
   au FileType clojure setl omnifunc=iced#complete#omni
   au BufRead *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufread()
-  au BufNewFile *.clj,*.cljs,*.cljc call iced#skeleton#new()
+  au BufNewFile *.clj,*.cljs,*.cljc call iced#nrepl#auto#newfile()
   au VimLeave * call iced#nrepl#disconnect()
 aug END
 
@@ -381,9 +381,24 @@ endif
 "" }}}
 
 "" Signs {{{
-sign define iced_err text=🔥 texthl=ErrorMsg
-sign define iced_trace text=👁 texthl=Search
-sign define iced_lint text=💔 texthl=WarningMsg
+let s:default_signs = {
+      \ 'error': '🔥',
+      \ 'trace': '👁',
+      \ 'lint': '💔',
+      \ 'errorhl': 'ErrorMsg',
+      \ 'tracehl': 'Search',
+      \ 'linthl': 'WarningMsg',
+      \ }
+
+let g:iced_sign = get(g:, 'iced_sign', {})
+let sign_setting = extend(copy(s:default_signs), g:iced_sign)
+
+for key in ['error', 'trace', 'lint']
+  exe printf(':sign define %s text=%s texthl=%s',
+        \ 'iced_'.key,
+        \ sign_setting[key],
+        \ sign_setting[key.'hl'])
+endfor
 "" }}}
 
 let &cpo = s:save_cpo

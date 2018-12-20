@@ -248,6 +248,8 @@ function! s:warm_up() abort
   call iced#nrepl#op#cider#debug#init()
   sleep 100m
   call iced#nrepl#op#cider#debug#init()
+
+  call iced#format#set_indentexpr()
 endfunction
 
 function! s:status(ch) abort

@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (master)
 
+== 0.8.7 (2018-12-20)
+// {{{
+=== Added
+* Add `g:iced_sign` variable to customize signs.
+
+=== Changed
+* Bump nrepl to 0.5.3
+
+=== Fixed
+* #64 Fix to work auto-indent with EDN file.
+* Fix to work auto-indent after moving buffer or window.
+* Fix to clear error sign before running `:IcedTestRerunLast`.
+* Fix `:IcedTestRerunLast` to work with any test patterns.
+* #65 Fix redrawing glitches for neovim 0.3.2-dev
+** This is a workaround for https://github.com/neovim/neovim/issues/7756[neovim's #7756].
+* #66 Fix to work auto-indent for string literal.
+// }}}
+
 == 0.8.6 (2018-12-11)
 // {{{
 === Added
