@@ -95,9 +95,10 @@ function! iced#sign#unplace_by_name(name) abort
   let file = get(a:, 1, expand('%:p'))
   for sign in s:sign_list
     if sign['name'] ==# a:name
-      call iced#sign#unplace(sign['id'])
+      call iced#di#get('ex_cmd').exe(printf(':sign unplace %d', sign['id']))
     endif
   endfor
+  call filter(s:sign_list, {_, v -> v['name'] !=# a:name })
 endfunction
 
 function! iced#sign#refresh() abort
