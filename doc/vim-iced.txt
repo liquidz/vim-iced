@@ -1162,6 +1162,11 @@ g:iced#eastwood#option
       \ 'exclude-linters': ['implicit-dependencies'],
       \ }
 <
+                                               *g:iced#lint#message_max_length*
+g:iced#lint#message_max_length
+  Max length of linting message for echoing.
+  Default value is `-1`, and it means no limitation.
+
                                                    *g:iced_enable_auto_linting*
 g:iced_enable_auto_linting
   If {v:true}, enable linting automatically.

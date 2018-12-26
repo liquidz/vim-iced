@@ -8,6 +8,7 @@ let s:last_warnings = []
 let s:enabled = v:true
 let s:sign_name = 'iced_lint'
 let g:iced#eastwood#option = get(g:, 'iced#eastwood#option', {})
+let g:iced#lint#message_max_length = get(g:, 'iced#lint#message_max_length', -1)
 
 function! iced#lint#is_enabled() abort
   return s:enabled
@@ -48,6 +49,9 @@ function! iced#lint#echo_message() abort
 
   let msg = iced#lint#find_message(line('.'), expand('%:p'))
   if !empty(msg)
+    let msg = (g:iced#lint#message_max_length > 0 && len(msg) > g:iced#lint#message_max_length)
+          \ ? strpart(msg, 0, g:iced#lint#message_max_length).'...'
+          \ : msg
     call s:M.echo('WarningMsg', msg)
   endif
 endfunction
