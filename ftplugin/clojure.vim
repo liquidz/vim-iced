@@ -171,14 +171,14 @@ aug vim_iced_initial_setting
   au FileType clojure setl omnifunc=iced#complete#omni
   au BufRead *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufread()
   au BufNewFile *.clj,*.cljs,*.cljc call iced#nrepl#auto#newfile()
-  au VimLeave * call iced#nrepl#disconnect()
+  au VimLeave * call iced#nrepl#auto#leave()
 aug END
 
 if exists('g:iced_enable_auto_linting')
     \ && g:iced_enable_auto_linting
   aug iced_auto_linting
     au!
-    au BufWritePost *.clj,*.cljs,*.cljc call iced#lint#current_file()
+    au BufWritePost *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufwrite_post()
     au CursorMoved *.clj,*.cljs,*.cljc call iced#lint#echo_message()
   aug END
 endif

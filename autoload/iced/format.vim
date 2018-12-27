@@ -101,7 +101,7 @@ function! iced#format#calculate_indent(lnum) abort
   let reg_save = @@
   let ns_name = iced#nrepl#ns#name()
   try
-    let res = iced#paredit#get_current_top_list(2)
+    let res = iced#paredit#get_current_top_list()
     let code = res['code']
     if iced#compat#trim(code) ==# ''
       return GetClojureIndent()

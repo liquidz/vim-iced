@@ -64,7 +64,7 @@ endfunction
 function! s:suite.calculate_indent_with_nested_form_test() abort
   call s:ch.register_test_builder({
         \ 'status_value': 'open',
-        \ 'relay': {msg -> s:calculate_indent_relay(msg, 2)}})
+        \ 'relay': {msg -> s:calculate_indent_relay(msg, 3)}})
   call s:buf.start_dummy([
         \ '(foo',
         \ ' (bar',
