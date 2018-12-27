@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (master)
+== 0.9.0 (2018-12-27)
+// {{{
+=== Added
+* Add `g:iced#lint#message_max_length` option.
+
+=== Changed
+* Bump iced-nrepl to 0.3.0.
+** Isolate iced-nrepl depending libraries by https://github.com/benedekfazekas/mranderson[mranderson].
+* Improve switching signs process performance.
+** `iced#sign#unplace#_by_name` is updated.
+
+=== Fixed
+* Fix auto-indent for `defrecord`.
+* Fix to show eastwood's warnings correctly.
+** iced-nrepl was failed to detect some type of warnings.
+* Fix not to throw exception when `:wq` is executed.
+** Make linting delay to working.
+// }}}
 
 == 0.8.7 (2018-12-20)
 // {{{

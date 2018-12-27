@@ -1,4 +1,4 @@
-personal_ws-1.1 en 177 
+personal_ws-1.1 en 179 
 IcedRelatedNamespaces
 grimoire
 IcedGrep
@@ -18,6 +18,7 @@ IcedReconnect
 sha
 CursorHoldI
 IcedEval
+defrecord
 autocmd
 ErrorMsg
 IcedMacroExpandOuterList
@@ -29,8 +30,8 @@ aug
 norl
 IcedDefBack
 botright
-GraalVM
 graalvm
+GraalVM
 IcedEvalRepl
 IcedQuitCljsRepl
 hardbreaks
@@ -97,6 +98,7 @@ IcedExtractFunction
 IcedGrimoireOpen
 IcedToggleTraceNs
 FileType
+eastwood's
 IcedMoveToLet
 unplace
 aboveleft
@@ -110,8 +112,8 @@ nrepl's
 OuterList
 eastwood
 CursorMoved
-nrepl
 nREPL
+nrepl
 IcedTestRerunLast
 Iizuka
 IcedJumpToPrevSign
@@ -157,12 +159,12 @@ tophat
 middlewares
 IcedInReplNs
 noet
-ClojureScript
 clojurescript
+ClojureScript
 IcedBarf
 cljs's
-graaljs
 GraalJS
+graaljs
 ctrlp
 IcedRequire
 IcedInterrupt
