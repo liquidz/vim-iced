@@ -158,6 +158,6 @@ See `Customizing` section in link:./doc/vim-iced.txt[vim-iced.txt] for actual ma
 
 == License
 
-Copyright (c) 2018 http://twitter.com/uochan[Masashi Iizuka]
+Copyright (c) 2018-2019 http://twitter.com/uochan[Masashi Iizuka]
 
 Distributed under the MIT License.
