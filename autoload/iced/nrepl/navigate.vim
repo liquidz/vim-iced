@@ -35,8 +35,6 @@ endfunction " }}}
 function! s:open_var_info(mode, resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('not_found') | endif
   let path = substitute(a:resp['file'], '^file:', '', '')
-  if stridx(path, 'jar:') == 0 | return iced#message#error('not_found') | endif
-
   if expand('%:p') !=# path
     call s:apply_mode_to_file(a:mode, path)
   endif
@@ -102,7 +100,8 @@ function! s:jump(resp) abort
   let column = a:resp['column']
 
   if stridx(path, 'jar:') == 0
-    return iced#message#error('jump_error', path)
+    let path = substitute(path, '^jar:file:', 'zipfile:', '')
+    let path = substitute(path, '!/', '::', '')
   endif
 
   if expand('%:p') !=# path
