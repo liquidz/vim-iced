@@ -48,6 +48,10 @@ function! iced#nrepl#cljs#repl(env_key) abort
 
   if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect() | return | endif
 
+  if !iced#nrepl#system#piggieback_enabled()
+    return iced#message#error('no_piggieback')
+  endif
+
   if iced#nrepl#current_session_key() ==# 'clj' && empty(s:using_env_key)
     let s:using_env_key = env_key
     let env = s:env[s:using_env_key]()
