@@ -17,6 +17,7 @@ CONTENTS                                                    *vim-iced-contents*
     Boost by Python            |vim-iced-install-python|
   nREPL Connection             |vim-iced-nrepl-connection|
   ClojureScript                |vim-iced-clojurescript|
+    Piggieback                 |vim-iced-piggieback|
     GraalJS                    |vim-iced-graaljs|
   Evaluating                   |vim-iced-evaluating|
     Stdout Buffer              |vim-iced-stdout-buffer|
@@ -94,7 +95,8 @@ LEININGEN~
    {:dependencies [[nrepl "0.5.3"]
                    [iced-nrepl "0.3.0"]
                    [cider/cider-nrepl "0.19.0"]]
-    :repl-options {:nrepl-middleware [cider.nrepl/wrap-complete
+    :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
+                                      cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
                                       cider.nrepl/wrap-format
                                       cider.nrepl/wrap-info
@@ -124,7 +126,8 @@ BOOT~
       [iced-nrepl "0.3.0"]])
 
   (swap! boot.repl/*default-middleware* concat
-    '[cider.nrepl/wrap-complete
+    '[cider.nrepl/wrap-classpath
+      cider.nrepl/wrap-complete
       cider.nrepl/wrap-debug
       cider.nrepl/wrap-format
       cider.nrepl/wrap-info
@@ -151,7 +154,8 @@ SHADOW-CLJS~
                   [cider/cider-nrepl "0.19.0"]
                   [iced-nrepl "0.3.0"]]
 
-   :nrepl {:middlewares [cider.nrepl/wrap-complete
+   :nrepl {:middlewares [cider.nrepl/wrap-classpath
+                         cider.nrepl/wrap-complete
                          cider.nrepl/wrap-debug
                          cider.nrepl/wrap-format
                          cider.nrepl/wrap-info
@@ -208,6 +212,18 @@ CLOJURE SCRIPT                                         *vim-iced-clojurescript*
   |IcedStartCljsRepl| to start cljs-repl.
   |IcedQuitCljsRepl| to quit it.
 
+------------------------------------------------------------------------------
+PIGGIEBACK                                                *vim-iced-piggieback*
+
+  Supporting ClojureScript requires `nrepl/piggieback`.
+  - https://github.com/nrepl/piggieback
+
+  `iced` command will inject piggieback dependency automatically,
+  when project configuration files contains `org.clojure/clojurescript`.
+  Or you can use `--with-cljs` option to inject piggieback explicitly.
+>
+  iced repl --with-cljs
+<
 ------------------------------------------------------------------------------
 GRAALJS                                                      *vim-iced-graaljs*
 
