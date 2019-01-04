@@ -79,6 +79,46 @@ function! s:suite.related_ns_test() abort
   call s:teardown()
 endfunction
 
+function! s:jump_to_def_relay(info, msg) abort
+  let resp = {'status': ['done']}
+  if a:msg['op'] ==# 'info'
+    call extend(resp, a:info)
+  endif
+  return resp
+endfunction
+
+function! s:suite.jump_to_def_test() abort
+  let info = {
+        \ 'file': '/path/to/file.clj',
+        \ 'line': 1,
+        \ 'column': 2,
+        \ }
+  call s:setup({'channel': {msg -> s:jump_to_def_relay(info, msg)}})
+
+  call iced#nrepl#navigate#jump_to_def('dummy')
+  call s:assert.equals(
+        \ s:ex_cmd.get_last_args(),
+        \ {'exe': ':edit /path/to/file.clj'})
+
+  call s:teardown()
+endfunction
+
+function! s:suite.jump_to_def_in_jar_test() abort
+  let info = {
+        \ 'file': 'jar:file:/path/to/jarfile.jar!/path/to/file.clj',
+        \ 'line': 1,
+        \ 'column': 2,
+        \ }
+  call s:setup({'channel': {msg -> s:jump_to_def_relay(info, msg)}})
+
+  call iced#nrepl#navigate#jump_to_def('dummy')
+  call s:assert.equals(
+        \ s:ex_cmd.get_last_args(),
+        \ {'exe': ':edit zipfile:/path/to/jarfile.jar::path/to/file.clj'})
+
+  call s:teardown()
+endfunction
+
 let s:test_test_vars = {
       \ 'baz-success-test': {'test': ''},
       \ 'baz-failure-test': {'test': ''},
