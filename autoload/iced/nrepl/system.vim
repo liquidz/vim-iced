@@ -10,11 +10,25 @@ let s:system_info_code = join([
       \ ], "\n")
 
 function! iced#nrepl#system#info() abort
-  if !iced#nrepl#is_connected() | return {} | endif
+  let result = {}
+
+  if !iced#nrepl#is_connected() | return result | endif
   let resp = iced#eval_and_read(s:system_info_code)
 
-  if !has_key(resp, 'value') | return {} | endif
-  return resp['value']
+  if has_key(resp, 'value')
+    let result = resp['value']
+  endif
+
+  let cp_resp = iced#nrepl#op#cider#sync#classpath()
+  if has_key(cp_resp, 'classpath')
+    for path in cp_resp['classpath']
+      if stridx(path, 'cider/piggieback') != -1
+        let result['piggieback-enabled?'] = 1
+      endif
+    endfor
+  endif
+
+  return result
 endfunction
 
 function! s:update_cache() abort
@@ -45,6 +59,10 @@ endfunction
 
 function! iced#nrepl#system#project_name() abort
   return s:get('project-name')
+endfunction
+
+function! iced#nrepl#system#piggieback_enabled() abort
+  return s:get('piggieback-enabled?')
 endfunction
 
 let &cpo = s:save_cpo
