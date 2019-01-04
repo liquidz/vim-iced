@@ -88,7 +88,7 @@ endfunction
 " HANDLER {{{
 function! s:get_message_id(x) abort
   let x = a:x
-  if type(x) == type([])
+  if type(x) == type([]) && len(x) > 0
     let x = x[0]
   endif
   if type(x) == type({})
@@ -321,12 +321,15 @@ function! iced#nrepl#disconnect() abort " {{{
     call iced#nrepl#sync#close(id)
   endfor
   call iced#di#get('channel').close(s:nrepl['channel'])
-  call s:initialize_nrepl()
+  let s:nrepl = s:initialize_nrepl()
   call iced#cache#clear()
+  call iced#message#info('disconnected')
 endfunction " }}}
 
 function! iced#nrepl#reconnect() abort " {{{
-  if !iced#nrepl#is_connected() | return | endif
+  if !iced#nrepl#is_connected()
+    return iced#nrepl#connect#auto()
+  endif
 
   let port = s:nrepl['port']
   call iced#nrepl#disconnect()
