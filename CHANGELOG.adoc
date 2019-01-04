@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (master)
+// {{{
+=== Changed
+* https://github.com/liquidz/vim-iced/pull/72[#72]: Update `IcedDefJump` to enable jump into JAR file.
+* https://github.com/liquidz/vim-iced/pull/74[#74]: Update `:IcedReconnect` to work if a connection is not already established.
+// }}}
 
 == 0.9.1 (2019-01-01)
 // {{{
