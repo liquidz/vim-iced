@@ -8,6 +8,7 @@ function! s:suite.status_test() abort
 
   call s:ch.register_test_builder({'status_value': 'open'})
   call iced#nrepl#set_session('clj',  'clj-session')
+  call iced#nrepl#change_current_session('clj')
   call s:assert.equals(iced#status(), 'clj repl')
 endfunction
 

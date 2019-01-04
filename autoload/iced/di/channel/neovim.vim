@@ -36,6 +36,7 @@ function! s:ch.open(address, options) abort
 endfunction
 
 function! s:ch.close(handler) abort
+  let self['is_connected'] = v:false
   return chanclose(s:ch_id(a:handler))
 endfunction
 

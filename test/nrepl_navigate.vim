@@ -15,6 +15,7 @@ function! s:setup(opts) abort " {{{
   call s:sel.register_test_builder()
   call s:ex_cmd.register_test_builder()
   call s:qf.register_test_builder()
+  call iced#nrepl#change_current_session('clj')
 
   if has_key(a:opts, 'channel')
     call s:ch.register_test_builder({'status_value': 'open', 'relay': a:opts['channel']})

@@ -6,6 +6,7 @@
   'not_connected':      'Not connected.',
   'try_connect':        'Not connected. Try `:IcedConnect <port>`',
   'connected':          'Connected.',
+  'disconnected':       'Disconnected.',
   'interrupted':        'Interrupted.',
   'reading':            'Still reading..',
   'not_found':          'Not found.',
