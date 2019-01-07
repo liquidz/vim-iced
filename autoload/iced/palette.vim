@@ -13,7 +13,7 @@ let s:default_palette = [
       \ 'StdoutBufferOpen', 'StdoutBufferClear', 'StdoutBufferClose',
       \ 'DocumentClose',
       \ 'ToggleSrcAndTest',
-      \ 'RelatedNamespace', 'BrowseSpec',
+      \ 'RelatedNamespace', 'BrowseSpec', 'BrowseTestUnderCursor',
       \ 'CleanNs', 'AddNs',
       \ 'ExtractFunction', 'MoveToLet',
       \ 'ToggleTraceVar', 'ToggleTraceNs',
