@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This change
 * https://github.com/liquidz/vim-iced/pull/74[#74]: Update `:IcedReconnect` to work if a connection is not already established.
 
 === Fixed
+* https://github.com/liquidz/vim-iced/pull/75[#75]: Fix `E158` error on testing.
 * https://github.com/liquidz/vim-iced/pull/77[#77]: Fix running tests to work correctly in any namespaces.
 // }}}
 

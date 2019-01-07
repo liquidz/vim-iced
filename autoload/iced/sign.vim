@@ -14,8 +14,16 @@ function! iced#sign#place(name, lnum, file) abort
   if !filereadable(a:file) | return | endif
 
   let id = s:next_id()
-  call iced#di#get('ex_cmd').exe(printf(':sign place %d line=%d name=%s file=%s',
-        \ id, a:lnum, a:name, a:file))
+  let ex = iced#di#get('ex_cmd')
+  try
+    call ex.exe(printf(':sign place %d line=%d name=%s file=%s',
+          \ id, a:lnum, a:name, a:file))
+  catch /E158:/
+    " Invalid buffer name
+    let current_buf = bufnr('%')
+    call ex.exe(printf(':edit %s | buffer %d | sign place %d line=%d name=%s file=%s',
+          \ a:file, current_buf, id, a:lnum, a:name, a:file))
+  endtry
   call add(s:sign_list, {'id': id, 'line': a:lnum, 'name': a:name, 'file': a:file})
   return id
 endfunction
