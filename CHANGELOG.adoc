@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. This change
 === Fixed
 * https://github.com/liquidz/vim-iced/pull/75[#75]: Fix `E158` error on testing.
 * https://github.com/liquidz/vim-iced/pull/77[#77]: Fix running tests to work correctly in any namespaces.
+* https://github.com/liquidz/vim-iced/pull/78[#78]: Fix a bug on processing `info` op response from nREPL.
 // }}}
 
 == 0.9.1 (2019-01-01)
