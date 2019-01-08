@@ -118,7 +118,7 @@ function! iced#util#read_var(filename) abort
   return result
 endfunction
 
-function! iced#util#shorten(msg, ...) abort
+function! iced#util#shorten(msg) abort
   let max_length = (&columns * &cmdheight) - 1
   if &showcmd " from experimenting: seems to use 12 characters
     let max_length -= 12

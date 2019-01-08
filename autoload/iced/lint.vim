@@ -49,10 +49,7 @@ function! iced#lint#echo_message() abort
 
   let msg = iced#lint#find_message(line('.'), expand('%:p'))
   if !empty(msg)
-    let msg = (g:iced#lint#message_max_length > 0 && len(msg) > g:iced#lint#message_max_length)
-          \ ? strpart(msg, 0, g:iced#lint#message_max_length).'...'
-          \ : msg
-    call s:M.echo('WarningMsg', msg)
+    call s:M.echo('WarningMsg', iced#util#shorten(msg))
   endif
 endfunction
 
