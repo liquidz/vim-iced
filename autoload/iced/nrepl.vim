@@ -98,7 +98,7 @@ function! s:get_message_id(x) abort
   endif
 endfunction
 
-function! s:merge_response_handler(resp, last_result) abort
+function! iced#nrepl#merge_response_handler(resp, last_result) abort
   let result = empty(a:last_result) ? {} : a:last_result
   for resp in iced#util#ensure_array(a:resp)
     for k in keys(resp)
@@ -403,8 +403,8 @@ function! iced#nrepl#interrupt(...) abort
 endfunction
 " }}}
 
-call iced#nrepl#register_handler('eval', funcref('s:merge_response_handler'))
-call iced#nrepl#register_handler('load-file', funcref('s:merge_response_handler'))
+call iced#nrepl#register_handler('eval', funcref('iced#nrepl#merge_response_handler'))
+call iced#nrepl#register_handler('load-file', funcref('iced#nrepl#merge_response_handler'))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
