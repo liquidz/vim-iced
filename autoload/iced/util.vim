@@ -3,10 +3,6 @@ set cpo&vim
 
 let g:iced#debug = v:false
 
-function! iced#util#is_function(v) abort
-  return type(a:v) == 2
-endfunction
-
 function! iced#util#wait(pred, timeout_ms) abort
   let t = 0
   while a:pred() && t < a:timeout_ms

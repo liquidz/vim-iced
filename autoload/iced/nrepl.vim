@@ -114,7 +114,7 @@ function! s:default_handler(resp, _) abort
 endfunction
 
 function! iced#nrepl#register_handler(op, handler) abort
-  if !iced#util#is_function(a:handler)
+  if type(a:handler) != v:t_func
     throw 'handler must be funcref'
   endif
   let s:handlers[a:op] = a:handler
@@ -158,7 +158,7 @@ function! s:dispatcher(ch, resp) abort
   if has_key(s:messages, id)
     let last_handler_result = get(s:messages[id], 'handler_result', '')
     let Handler = get(s:handlers, s:messages[id]['op'], funcref('s:default_handler'))
-    if iced#util#is_function(Handler)
+    if type(Handler) == v:t_func
       let s:messages[id]['handler_result'] = Handler(resp, last_handler_result)
     endif
 
@@ -168,7 +168,7 @@ function! s:dispatcher(ch, resp) abort
       unlet s:messages[id]
       call iced#nrepl#debug#quit()
 
-      if !empty(handler_result) && iced#util#is_function(Callback)
+      if !empty(handler_result) && type(Callback) == v:t_func
         call Callback(handler_result)
       endif
     endif
@@ -215,7 +215,7 @@ function! iced#nrepl#send(data) abort
   endif
 
   if has_key(data, 'callback')
-    if iced#util#is_function(data['callback'])
+    if type(data['callback']) == v:t_func
       let message['callback'] = data['callback']
     endif
     unlet data['callback']

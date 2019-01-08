@@ -35,7 +35,7 @@ function! iced#eval_and_read(code, ...) abort
       \ 'session': iced#nrepl#current_session(),
       \ }
   let Callback = get(a:, 1, '')
-  if iced#util#is_function(Callback)
+  if type(Callback) == v:t_func
     let msg['callback'] = {resp -> Callback(s:json_resp(resp))}
     call iced#nrepl#send(msg)
   else
