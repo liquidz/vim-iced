@@ -11,7 +11,7 @@ function! s:prn(v) abort
 endfunction
 
 function! s:spec_format(spec) abort
-  if type(a:spec) != type([]) | return s:prn(a:spec) | endif
+  if type(a:spec) != v:t_list | return s:prn(a:spec) | endif
 
   let fn = a:spec[0]
   if fn ==# 'clojure.spec.alpha/fspec'
@@ -21,7 +21,7 @@ function! s:spec_format(spec) abort
     let res = []
     for kv in iced#util#partition(a:spec[1:], 2, v:false)
       let [k, v] = kv
-      let v = (type(v) == type([])) ? s:spec_format(v) : s:prn(v)
+      let v = (type(v) == v:t_list) ? s:spec_format(v) : s:prn(v)
       let indent = len(k) + 3
       call add(res, printf('  %s %s', k, iced#util#add_indent(indent, v)))
     endfor

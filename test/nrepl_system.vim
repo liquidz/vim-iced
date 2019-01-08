@@ -6,7 +6,7 @@ let s:funcs = s:scope.funcs('autoload/iced/nrepl/system.vim')
 
 function! s:info_relay(msg, resp) abort
   if a:msg['op'] ==# 'eval'
-    if type(a:resp) == type({})
+    if type(a:resp) == v:t_dict
       let resp = copy(a:resp)
       if has_key(resp, 'classpath') | unlet resp['classpath'] | endif
       return {'status': ['done'], 'value': json_encode(resp)}
@@ -14,7 +14,7 @@ function! s:info_relay(msg, resp) abort
       return {'status': ['done']}
     endif
   elseif a:msg['op'] ==# 'classpath'
-    if type(a:resp) == type({}) && has_key(a:resp, 'classpath')
+    if type(a:resp) == v:t_dict && has_key(a:resp, 'classpath')
       return {'status': ['done'], 'classpath': a:resp['classpath']}
     else
       return {'status': ['done']}

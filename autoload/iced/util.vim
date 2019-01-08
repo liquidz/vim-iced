@@ -32,7 +32,7 @@ function! iced#util#unescape(s) abort
 endfunction
 
 function! iced#util#ensure_array(x) abort
-  return (type(a:x) == type([]) ? a:x : [a:x])
+  return (type(a:x) == v:t_list ? a:x : [a:x])
 endfunction
 
 function! iced#util#debug(x) abort

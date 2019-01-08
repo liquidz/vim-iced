@@ -33,7 +33,7 @@ endfunction
 
 function! s:update_cache() abort
   let info = iced#nrepl#system#info()
-  if type(info) != type({})
+  if type(info) != v:t_dict
     return {}
   endif
 

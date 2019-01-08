@@ -5,13 +5,13 @@ function! iced#di#new_container() abort
   let container = {}
 
   function! container.register(name, builder) abort
-    if type(a:builder) != 2 | return | endif
+    if type(a:builder) != v:t_func | return | endif
     let self[a:name] = a:builder
   endfunction
 
   function! container.get(name) abort
     let Builder = get(self, a:name, '')
-    if type(Builder) != 2 | return | endif
+    if type(Builder) != v:t_func | return | endif
     return Builder(self)
   endfunction
 

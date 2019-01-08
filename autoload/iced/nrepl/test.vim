@@ -79,7 +79,7 @@ function! s:summary(resp) abort
 endfunction
 
 function! s:extract_actual_values(test) abort
-  if !has_key(a:test, 'diffs') || type(a:test['diffs']) != type([])
+  if !has_key(a:test, 'diffs') || type(a:test['diffs']) != v:t_list
     return {'actual': iced#compat#trim(get(a:test, 'actual', ''))}
   endif
 
@@ -108,7 +108,7 @@ function! s:collect_errors(resp) abort
           endif
 
           let ns_path_resp = iced#nrepl#op#cider#sync#ns_path(ns_name)
-          if type(ns_path_resp) != type({}) || !has_key(ns_path_resp, 'path')
+          if type(ns_path_resp) != v:t_dict || !has_key(ns_path_resp, 'path')
             continue
           endif
 
@@ -171,7 +171,7 @@ function! s:out(resp) abort
   let expected_and_actuals = []
   for err in errors
     let lnum = err['lnum']
-    if type(lnum) != type(0) | continue | endif
+    if type(lnum) != v:t_number | continue | endif
     call iced#sign#place(s:sign_name, err['lnum'], err['filename'])
 
     if has_key(err, 'expected') && has_key(err, 'actual')

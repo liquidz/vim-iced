@@ -88,10 +88,10 @@ endfunction
 " HANDLER {{{
 function! s:get_message_id(x) abort
   let x = a:x
-  if type(x) == type([]) && len(x) > 0
+  if type(x) == v:t_list && len(x) > 0
     let x = x[0]
   endif
-  if type(x) == type({})
+  if type(x) == v:t_dict
     return get(x, 'id', get(x, 'original-id', -1))
   else
     return -1
@@ -139,7 +139,7 @@ function! s:dispatcher(ch, resp) abort
 
   if is_verbose
     for rsp in iced#util#ensure_array(resp)
-      if type(rsp) != type({})
+      if type(rsp) != v:t_dict
         break
       endif
 

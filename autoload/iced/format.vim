@@ -112,7 +112,7 @@ function! iced#format#calculate_indent(lnum) abort
     let target_lnum = a:lnum - start_line
 
     let resp = iced#nrepl#op#iced#sync#calculate_indent_level(code, target_lnum, iced#nrepl#ns#alias_dict(ns_name))
-    if has_key(resp, 'indent-level') && type(resp['indent-level']) == type(1) && resp['indent-level'] != 0
+    if has_key(resp, 'indent-level') && type(resp['indent-level']) == v:t_number && resp['indent-level'] != 0
       return resp['indent-level'] + start_column
     else
       return GetClojureIndent()

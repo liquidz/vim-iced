@@ -26,7 +26,7 @@ function! iced#buffer#is_initialized(bufname) abort
 endfunction
 
 function! s:buffer_manager() abort
-  if type(s:manager) != type({})
+  if type(s:manager) != v:t_dict
     let s:manager = s:BM.new()
   endif
 

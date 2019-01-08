@@ -31,15 +31,15 @@ endfunction
 
 function! s:encode(v) abort
   let t = type(a:v)
-  if t == 0
+  if t == v:t_number
     return s:encode_number(a:v)
-  elseif t == 1
+  elseif t == v:t_string
     return s:encode_string(a:v)
-  elseif t == 3
+  elseif t == v:t_list
     return s:encode_list(a:v)
-  elseif t == 4
+  elseif t == v:t_dict
     return s:encode_dict(a:v)
-  elseif t == 7
+  elseif t == 7 " v:none or v:null
     return s:encode_string('')
   endif
 endfunction

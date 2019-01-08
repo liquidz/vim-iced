@@ -19,7 +19,7 @@ function! s:suite.place_test() abort
   call s:setup()
 
   let id = iced#sign#place('iced_error', 123, s:tempfile)
-  call s:assert.true(type(id) == type(1))
+  call s:assert.true(type(id) == v:t_number)
 
   let res = iced#sign#list_in_current_buffer(s:tempfile)
   call s:assert.equals(len(res), 1)
