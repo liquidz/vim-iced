@@ -178,6 +178,7 @@ function! iced#nrepl#op#cider#pprint_eval(code, callback) abort
       \ })
 endfunction " }}}
 
+call iced#nrepl#register_handler('info', funcref('iced#nrepl#merge_response_handler'))
 call iced#nrepl#register_handler('test-var-query', funcref('s:test_handler'))
 call iced#nrepl#register_handler('retest', funcref('s:test_handler'))
 
