@@ -2,8 +2,8 @@
  :paths ["clj"]
  :deps {nrepl {:mvn/version "0.5.3"}
         refactor-nrepl {:mvn/version "2.4.0"}
-        cider/cider-nrepl {:mvn/version "0.19.0"}
-        iced-nrepl {:mvn/version "0.3.0"}}
+        cider/cider-nrepl {:mvn/version "0.20.0"}
+        iced-nrepl {:mvn/version "0.4.0"}}
 
  :aliases
  {:icedcljs {:extra-deps {cider/piggieback {:mvn/version "0.3.10"}}}
