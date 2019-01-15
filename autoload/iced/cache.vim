@@ -31,8 +31,13 @@ endfunction
 function! iced#cache#do_once(key, f) abort
   let key = printf('iced_do_once_%s', a:key)
   if ! iced#cache#has_key(key)
-    call a:f()
-    call iced#cache#set(key, v:true)
+    let ret = a:f()
+    if !empty(ret)
+      call iced#cache#set(key, ret)
+    endif
+    return ret
+  else
+    return iced#cache#get(key)
   endif
 endfunction
 

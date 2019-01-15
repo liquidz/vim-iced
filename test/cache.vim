@@ -47,15 +47,22 @@ function! s:suite.has_key_test() abort
   call s:assert.false(iced#cache#has_key('foo'))
 endfunction
 
+function! s:set(k, v, r) abort
+  call iced#cache#set(a:k, a:v)
+  return a:r
+endfunction
+
 function! s:suite.do_once_test() abort
   call iced#cache#clear()
-  call iced#cache#set('i', 1)
+  call s:set('i', 1, v:true)
 
-  call iced#cache#do_once('foo', {-> iced#cache#set('i', iced#cache#get('i') + 1)})
+  call iced#cache#do_once('foo', {-> s:set('i', iced#cache#get('i') + 1, v:true)})
   call s:assert.equals(iced#cache#get('i'), 2)
-  call iced#cache#do_once('foo', {-> iced#cache#set('i', iced#cache#get('i') + 1)})
+  call iced#cache#do_once('foo', {-> s:set('i', iced#cache#get('i') + 1, v:true)})
   call s:assert.equals(iced#cache#get('i'), 2)
 
-  call iced#cache#do_once('bar', {-> iced#cache#set('i', iced#cache#get('i') + 1)})
+  call iced#cache#do_once('bar', {-> s:set('i', iced#cache#get('i') + 1, v:false)})
   call s:assert.equals(iced#cache#get('i'), 3)
+  call iced#cache#do_once('bar', {-> s:set('i', iced#cache#get('i') + 1, v:false)})
+  call s:assert.equals(iced#cache#get('i'), 4)
 endfunction

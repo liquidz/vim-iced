@@ -38,6 +38,7 @@ function! iced#eval_and_read(code, ...) abort
   if type(Callback) == v:t_func
     let msg['callback'] = {resp -> Callback(s:json_resp(resp))}
     call iced#nrepl#send(msg)
+    return v:true
   else
     return s:json_resp(iced#nrepl#sync#send(msg))
   endif
