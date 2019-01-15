@@ -28,7 +28,7 @@ function! iced#nrepl#op#iced#lint_file(file, opt, callback) abort
       \ 'callback': a:callback,
       \ }
 
-  if !empty(a:opt) && type(a:opt) == type({})
+  if !empty(a:opt) && type(a:opt) == v:t_dict
     let msg['opt'] = a:opt
   endif
 

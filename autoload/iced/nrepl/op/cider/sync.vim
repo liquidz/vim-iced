@@ -79,6 +79,15 @@ function! iced#nrepl#op#cider#sync#ns_aliases(ns) abort
       \ })
 endfunction " }}}
 
+" classpath {{{
+function! iced#nrepl#op#cider#sync#classpath() abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  return iced#nrepl#sync#send({
+      \ 'op': 'classpath',
+      \ 'session': iced#nrepl#current_session(),
+      \ })
+endfunction " }}}
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
 " vim:fdm=marker:fdl=0

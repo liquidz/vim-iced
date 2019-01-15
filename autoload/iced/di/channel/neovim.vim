@@ -15,7 +15,7 @@ function! s:ch_id(handler) abort
 endfunction
 
 function! s:data_relay(data) abort
-  if type(a:data) == type([])
+  if type(a:data) == v:t_list
     return join(a:data, "\n")
   endif
   return a:data

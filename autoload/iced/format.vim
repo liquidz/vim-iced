@@ -1,19 +1,14 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:is_indentation_rule_setted = v:false
 " NOTE: used in iced/nrepl/format.vim
 let g:iced#format#rule = get(g:, 'iced#format#rule', {})
 
 function! s:set_indentation_rule() abort
-  if s:is_indentation_rule_setted
-    return
-  endif
-
-  let resp = iced#nrepl#op#iced#sync#set_indentation_rules(g:iced#format#rule)
-  if iced#util#has_status(resp, 'done')
-    let s:is_indentation_rule_setted = v:true
-  endif
+  call iced#cache#do_once('set-indentation-rule', {->
+        \ iced#util#has_status(
+        \   iced#nrepl#op#iced#sync#set_indentation_rules(g:iced#format#rule),
+        \   'done')})
 endfunction
 
 function! iced#format#form() abort
@@ -22,9 +17,7 @@ function! iced#format#form() abort
     return
   endif
 
-  if ! s:is_indentation_rule_setted
-    call s:set_indentation_rule()
-  endif
+  call s:set_indentation_rule()
 
   let view = winsaveview()
   let reg_save = @@
@@ -56,9 +49,7 @@ function! iced#format#minimal() abort
     return
   endif
 
-  if ! s:is_indentation_rule_setted
-    call s:set_indentation_rule()
-  endif
+  call s:set_indentation_rule()
 
   let view = winsaveview()
   let reg_save = @@
@@ -93,9 +84,7 @@ function! iced#format#calculate_indent(lnum) abort
     return GetClojureIndent()
   endif
 
-  if ! s:is_indentation_rule_setted
-    call s:set_indentation_rule()
-  endif
+  call s:set_indentation_rule()
 
   let view = winsaveview()
   let reg_save = @@
@@ -112,7 +101,7 @@ function! iced#format#calculate_indent(lnum) abort
     let target_lnum = a:lnum - start_line
 
     let resp = iced#nrepl#op#iced#sync#calculate_indent_level(code, target_lnum, iced#nrepl#ns#alias_dict(ns_name))
-    if has_key(resp, 'indent-level') && type(resp['indent-level']) == type(1) && resp['indent-level'] != 0
+    if has_key(resp, 'indent-level') && type(resp['indent-level']) == v:t_number && resp['indent-level'] != 0
       return resp['indent-level'] + start_column
     else
       return GetClojureIndent()

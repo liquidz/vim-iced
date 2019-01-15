@@ -20,8 +20,13 @@ let s:handlers = {}
 let s:messages = {}
 let s:response_buffer = ''
 
+let s:printer_dict = {
+      \ 'default': 'cider.nrepl.pprint/pprint',
+      \ }
+
 let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
+let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
 
 let s:id_counter = 1
 function! iced#nrepl#id() abort
@@ -88,17 +93,17 @@ endfunction
 " HANDLER {{{
 function! s:get_message_id(x) abort
   let x = a:x
-  if type(x) == type([]) && len(x) > 0
+  if type(x) == v:t_list && len(x) > 0
     let x = x[0]
   endif
-  if type(x) == type({})
+  if type(x) == v:t_dict
     return get(x, 'id', get(x, 'original-id', -1))
   else
     return -1
   endif
 endfunction
 
-function! s:merge_response_handler(resp, last_result) abort
+function! iced#nrepl#merge_response_handler(resp, last_result) abort
   let result = empty(a:last_result) ? {} : a:last_result
   for resp in iced#util#ensure_array(a:resp)
     for k in keys(resp)
@@ -114,7 +119,7 @@ function! s:default_handler(resp, _) abort
 endfunction
 
 function! iced#nrepl#register_handler(op, handler) abort
-  if !iced#util#is_function(a:handler)
+  if type(a:handler) != v:t_func
     throw 'handler must be funcref'
   endif
   let s:handlers[a:op] = a:handler
@@ -139,7 +144,7 @@ function! s:dispatcher(ch, resp) abort
 
   if is_verbose
     for rsp in iced#util#ensure_array(resp)
-      if type(rsp) != type({})
+      if type(rsp) != v:t_dict
         break
       endif
 
@@ -158,7 +163,7 @@ function! s:dispatcher(ch, resp) abort
   if has_key(s:messages, id)
     let last_handler_result = get(s:messages[id], 'handler_result', '')
     let Handler = get(s:handlers, s:messages[id]['op'], funcref('s:default_handler'))
-    if iced#util#is_function(Handler)
+    if type(Handler) == v:t_func
       let s:messages[id]['handler_result'] = Handler(resp, last_handler_result)
     endif
 
@@ -168,7 +173,7 @@ function! s:dispatcher(ch, resp) abort
       unlet s:messages[id]
       call iced#nrepl#debug#quit()
 
-      if !empty(handler_result) && iced#util#is_function(Callback)
+      if !empty(handler_result) && type(Callback) == v:t_func
         call Callback(handler_result)
       endif
     endif
@@ -215,7 +220,7 @@ function! iced#nrepl#send(data) abort
   endif
 
   if has_key(data, 'callback')
-    if iced#util#is_function(data['callback'])
+    if type(data['callback']) == v:t_func
       let message['callback'] = data['callback']
     endif
     unlet data['callback']
@@ -354,8 +359,7 @@ function! iced#nrepl#eval(code, ...) abort
   let session_key  = get(option, 'session', iced#nrepl#current_session_key())
   let session = get(s:nrepl['sessions'], session_key, iced#nrepl#current_session())
   let pos = getcurpos()
-
-  call iced#nrepl#send({
+  let msg = {
         \ 'id': get(option, 'id', iced#nrepl#id()),
         \ 'op': 'eval',
         \ 'code': a:code,
@@ -364,7 +368,13 @@ function! iced#nrepl#eval(code, ...) abort
         \ 'line': get(option, 'line', pos[1]),
         \ 'column': get(option, 'column', pos[2]),
         \ 'callback': Callback,
-        \ })
+        \ }
+
+  if has_key(option, 'use-printer?')
+    let msg['printer'] = get(s:printer_dict, g:iced#nrepl#printer, s:printer_dict['default'])
+  endif
+
+  call iced#nrepl#send(msg)
 endfunction
 
 function! iced#nrepl#load_file(callback) abort " {{{
@@ -403,8 +413,8 @@ function! iced#nrepl#interrupt(...) abort
 endfunction
 " }}}
 
-call iced#nrepl#register_handler('eval', funcref('s:merge_response_handler'))
-call iced#nrepl#register_handler('load-file', funcref('s:merge_response_handler'))
+call iced#nrepl#register_handler('eval', funcref('iced#nrepl#merge_response_handler'))
+call iced#nrepl#register_handler('load-file', funcref('iced#nrepl#merge_response_handler'))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

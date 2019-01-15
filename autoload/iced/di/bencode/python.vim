@@ -11,7 +11,7 @@ ret = iced_bencode_decode(str(vim.eval('a:s')))
 cmd = 'let ret = %s' % (iced_vim_repr(ret))
 vim.command(cmd)
 EOT
-  if type(ret) == 1 && ret ==# '__FAILED__'
+  if type(ret) == v:t_string && ret ==# '__FAILED__'
     throw 'Failed to parse bencode.'
   endif
   return ret

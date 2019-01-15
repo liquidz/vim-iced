@@ -43,9 +43,9 @@ endfunction
 
 function! s:ensure_dict(x) abort
   let t = type(a:x)
-  if t == type({})
+  if t == v:t_dict
     return a:x
-  elseif t == type([])
+  elseif t == v:t_list
     let result = {}
     for x in a:x
       call extend(result, s:ensure_dict(x))
@@ -85,7 +85,7 @@ function! s:abbrev_value(s) abort
 endfunction
 
 function! iced#nrepl#debug#start(resp) abort
-  if type(s:saved_view) != type({})
+  if type(s:saved_view) != v:t_dict
     let s:saved_view = iced#util#save_cursor_position()
   endif
 
@@ -106,7 +106,7 @@ function! iced#nrepl#debug#start(resp) abort
   endfor
 
   let input_type = resp['input-type']
-  if type(input_type) == type({})
+  if type(input_type) == v:t_dict
     let ks = filter(sort(keys(input_type)), {_, v -> has_key(s:supported_types, v)})
     let prompt = join(map(ks, {_, k -> printf('(%s)%s', k, input_type[k])}), ', ')
   elseif has_key(resp, 'prompt')
@@ -115,14 +115,14 @@ function! iced#nrepl#debug#start(resp) abort
 
   redraw
   let in = iced#compat#trim(input(prompt . "\n: "))
-  if type(input_type) == type({})
+  if type(input_type) == v:t_dict
     let in = ':'.get(input_type, in, 'quit')
   endif
   call iced#nrepl#op#cider#debug#input(resp['key'], in)
 endfunction
 
 function! iced#nrepl#debug#quit() abort
-  if type(s:saved_view) == type({})
+  if type(s:saved_view) == v:t_dict
     let s:debug_key = ''
     call iced#buffer#stdout#append(';; Quit')
     call iced#highlight#clear()

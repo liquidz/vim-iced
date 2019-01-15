@@ -160,7 +160,7 @@ function! iced#complete#omni(findstart, base) abort
     " cider completions
     let ctx = s:context()
     let resp = iced#nrepl#op#cider#sync#complete(a:base, ns_name, ctx)
-    if type(resp) == type({}) && has_key(resp, 'completions')
+    if type(resp) == v:t_dict && has_key(resp, 'completions')
       let candidates = candidates + resp['completions']
     endif
 

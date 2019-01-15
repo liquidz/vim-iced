@@ -24,7 +24,7 @@ function! s:build_test_channel(opt) abort
   endfunction
 
   function! dummy.sendraw(handle, string) abort
-    if has_key(self, 'relay') && type(self.relay) == 2
+    if has_key(self, 'relay') && type(self.relay) == v:t_func
       let sent_data = iced#di#get('bencode').decode(a:string)
       let resp_data = self.relay(sent_data)
       if has_key(sent_data, 'id') && !has_key(resp_data, 'id')
@@ -32,16 +32,16 @@ function! s:build_test_channel(opt) abort
       endif
 
       let resp_data = iced#di#get('bencode').encode(resp_data)
-      let Cb = (has_key(self, 'callback') && type(self.callback) == 2)
+      let Cb = (has_key(self, 'callback') && type(self.callback) == v:t_func)
           \ ? self.callback : s:funcs.dispatcher
       call Cb(self, resp_data)
-    elseif has_key(self, 'relay_raw') && type(self.relay_raw) == 2
+    elseif has_key(self, 'relay_raw') && type(self.relay_raw) == v:t_func
       let sent_data = iced#di#get('bencode').decode(a:string)
       let resp_data = self.relay_raw(sent_data)
-      let Cb = (has_key(self, 'callback') && type(self.callback) == 2)
+      let Cb = (has_key(self, 'callback') && type(self.callback) == v:t_func)
           \ ? self.callback : s:funcs.dispatcher
 
-      for resp_string in ((type(resp_data) == type([])) ? resp_data : [resp_data])
+      for resp_string in ((type(resp_data) == v:t_list) ? resp_data : [resp_data])
         call Cb(self, resp_string)
         sleep 10m
       endfor

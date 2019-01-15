@@ -26,7 +26,7 @@ function! iced#buffer#is_initialized(bufname) abort
 endfunction
 
 function! s:buffer_manager() abort
-  if type(s:manager) != type({})
+  if type(s:manager) != v:t_dict
     let s:manager = s:BM.new()
   endif
 
@@ -42,7 +42,7 @@ function! iced#buffer#init(bufname, ...) abort
   let s:info[a:bufname] = manager.open(a:bufname)
 
   let InitFn = get(a:, 1, '')
-  if iced#util#is_function(InitFn)
+  if type(InitFn) == v:t_func
     call InitFn(s:bufnr(a:bufname))
   endif
   silent execute ':q'
@@ -121,7 +121,7 @@ function! iced#buffer#clear(bufname, ...) abort
   let nr = s:bufnr(a:bufname)
   silent call iced#compat#deletebufline(nr, 1, '$')
   let InitFn = get(a:, 1, '')
-  if iced#util#is_function(InitFn)
+  if type(InitFn) == v:t_func
     call InitFn(nr)
   endif
 endfunction

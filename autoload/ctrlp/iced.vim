@@ -36,7 +36,7 @@ function! ctrlp#iced#accept(mode, line) abort
   let s:config = {}
 
   let Callback = get(config, 'accept', '')
-  if iced#util#is_function(Callback)
+  if type(Callback) == v:t_func
     call Callback(a:mode, a:line)
   endif
 endfunction

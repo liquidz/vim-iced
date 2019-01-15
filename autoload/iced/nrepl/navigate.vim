@@ -99,13 +99,14 @@ function! s:jump(resp) abort
   let line = a:resp['line']
   let column = a:resp['column']
 
+  " NOTE: jar:file:/path/to/jarfile.jar!/path/to/file.clj
   if stridx(path, 'jar:') == 0
     let path = substitute(path, '^jar:file:', 'zipfile:', '')
     let path = substitute(path, '!/', '::', '')
   endif
 
   if expand('%:p') !=# path
-    execute(printf(':edit %s', path))
+    call iced#di#get('ex_cmd').exe(printf(':edit %s', path))
   endif
 
   call cursor(line, column)

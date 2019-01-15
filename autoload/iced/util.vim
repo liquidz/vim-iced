@@ -3,10 +3,6 @@ set cpo&vim
 
 let g:iced#debug = v:false
 
-function! iced#util#is_function(v) abort
-  return type(a:v) == 2
-endfunction
-
 function! iced#util#wait(pred, timeout_ms) abort
   let t = 0
   while a:pred() && t < a:timeout_ms
@@ -32,7 +28,7 @@ function! iced#util#unescape(s) abort
 endfunction
 
 function! iced#util#ensure_array(x) abort
-  return (type(a:x) == type([]) ? a:x : [a:x])
+  return (type(a:x) == v:t_list ? a:x : [a:x])
 endfunction
 
 function! iced#util#debug(x) abort

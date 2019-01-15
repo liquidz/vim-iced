@@ -79,7 +79,7 @@ function! s:summary(resp) abort
 endfunction
 
 function! s:extract_actual_values(test) abort
-  if !has_key(a:test, 'diffs') || type(a:test['diffs']) != type([])
+  if !has_key(a:test, 'diffs') || type(a:test['diffs']) != v:t_list
     return {'actual': iced#compat#trim(get(a:test, 'actual', ''))}
   endif
 
@@ -108,7 +108,7 @@ function! s:collect_errors(resp) abort
           endif
 
           let ns_path_resp = iced#nrepl#op#cider#sync#ns_path(ns_name)
-          if type(ns_path_resp) != type({}) || !has_key(ns_path_resp, 'path')
+          if type(ns_path_resp) != v:t_dict || !has_key(ns_path_resp, 'path')
             continue
           endif
 
@@ -171,7 +171,7 @@ function! s:out(resp) abort
   let expected_and_actuals = []
   for err in errors
     let lnum = err['lnum']
-    if type(lnum) != type(0) | continue | endif
+    if type(lnum) != v:t_number | continue | endif
     call iced#sign#place(s:sign_name, err['lnum'], err['filename'])
 
     if has_key(err, 'expected') && has_key(err, 'actual')
@@ -194,8 +194,6 @@ function! s:out(resp) abort
 endfunction
 " }}}
 
-" s:test_under_cursor {{{
-
 function! s:echo_testing_message(query) abort
   if has_key(a:query, 'exactly') && !empty(a:query['exactly'])
     let vars = join(a:query['exactly'], ', ')
@@ -210,73 +208,71 @@ function! s:echo_testing_message(query) abort
   endif
 endfunction
 
-function! s:test(resp) abort
-  if has_key(a:resp, 'err')
-    call iced#nrepl#eval#err(a:resp['err'])
-  elseif has_key(a:resp, 'value')
-    let var = a:resp['value']
+function! s:run_test_vars(ns_name, vars) abort
+  let query = {
+        \ 'ns-query': {'exactly': [a:ns_name]},
+        \ 'exactly': a:vars}
+  let s:last_test = {'type': 'test-var', 'query': query}
+  call s:echo_testing_message(query)
+  call iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))
+endfunction
 
-    let var = substitute(var, '^#''', '', '')
-    let i = stridx(var, '/')
-    let ns = var[0:i-1]
+function! s:test_ns_required(ns_name, var_name) abort
+    let test_vars = iced#nrepl#test#test_vars_by_ns_name(a:ns_name)
+    if empty(test_vars)
+      return iced#message#warning('no_test_vars_for', a:var_name)
+    endif
 
-    let query = {
-          \ 'ns-query': {'exactly': [ns]},
-          \ 'exactly': [var],
-          \ }
-    let s:last_test = {'type': 'test-var', 'query': query}
+    let target_test_vars = filter(copy(test_vars), {_, v -> stridx(v, a:var_name) != -1})
+    if empty(target_test_vars)
+      return iced#message#warning('no_test_vars_for', a:var_name)
+    endif
 
-    call s:echo_testing_message(query)
-    call iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))
+    call map(target_test_vars, {_, v -> printf('%s/%s', a:ns_name, v)})
+    call s:run_test_vars(a:ns_name, target_test_vars)
+endfunction
+
+function! s:extract_var_name(eval_resp) abort
+  if has_key(a:eval_resp, 'err') | return iced#nrepl#eval#err(a:eval_resp['err']) | endif
+  if !has_key(a:eval_resp, 'value') | return iced#message#error('not_found') | endif
+
+  let var = a:eval_resp['value']
+  let var = substitute(var, '^#''', '', '')
+  let i = stridx(var, '/')
+  let ns = var[0:i-1]
+  let var_name = strpart(var, i+1)
+
+  let test_vars = iced#nrepl#test#test_vars_by_ns_name(ns)
+  if index(test_vars, var_name) != -1
+    " Form under the cursor is a test
+    call s:run_test_vars(ns, [var])
+  elseif s:S.ends_with(ns, '-test')
+    " Form under the cursor is not a test, and current ns is ns for test
+    return iced#message#error('not_found')
+  else
+    " Form under the cursor is not a test, and current ns is NOT ns for test
+    let ns = iced#nrepl#navigate#cycle_ns(ns)
+    call iced#nrepl#ns#require(ns, {_ -> s:test_ns_required(ns, var_name)})
   endif
 endfunction
 
-function! s:test_under_cursor() abort
+function! iced#nrepl#test#under_cursor() abort
   let ret = iced#paredit#get_current_top_list()
   let code = ret['code']
-  if empty(code)
-    call iced#message#error('finding_code_error')
-  else
-    let pos = ret['curpos']
-    let option = {'line': pos[1], 'column': pos[2]}
-    call iced#sign#unplace_by_name(s:sign_name)
-    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:test(resp)}, option)})
-  endif
-endfunction " }}}
+  if empty(code) | return iced#message#error('finding_code_error') | endif
 
-" s:test_under_cursor_from_source {{{
-function! s:test_under_cursor_from_source(ns_name, var_name, test_vars) abort
-  if empty(a:test_vars)
-    return iced#message#warning('no_test_vars_for', a:var_name)
-  endif
-
-  let query = {
-        \   'ns-query': {'exactly': [a:ns_name]},
-        \   'exactly': a:test_vars
-        \   }
-  let s:last_test = {'type': 'test-var', 'query': query}
-
-  "call iced#message#echom('testing_var', join(a:test_vars, ', '))
-  call s:echo_testing_message(query)
-  call iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))
-endfunction " }}}
-
-function! iced#nrepl#test#under_cursor() abort
-  let ns_name = iced#nrepl#ns#name()
-  if s:S.ends_with(ns_name, '-test')
-    call s:test_under_cursor()
-  else
-    let ns_name = iced#nrepl#navigate#cycle_ns(ns_name)
-    call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, {var_name, test_vars ->
-          \ s:test_under_cursor_from_source(ns_name, var_name, test_vars)})
-  endif
+  let pos = ret['curpos']
+  let option = {'line': pos[1], 'column': pos[2]}
+  call iced#sign#unplace_by_name(s:sign_name)
+  call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:extract_var_name(resp)}, option)})
 endfunction "}}}
 
 " iced#nrepl#test#ns {{{
 function! iced#nrepl#test#ns() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let ns = iced#nrepl#ns#name()
-  if !s:S.ends_with(ns, '-test')
+  let test_vars = iced#nrepl#test#test_vars_by_ns_name(ns)
+  if empty(test_vars) && !s:S.ends_with(ns, '-test')
     let ns = iced#nrepl#navigate#cycle_ns(ns)
   endif
 
