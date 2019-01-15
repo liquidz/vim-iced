@@ -165,19 +165,6 @@ function! iced#nrepl#op#cider#spec_form(spec_name, callback) abort
       \ })
 endfunction " }}}
 
-""" pprint {{{
-function! iced#nrepl#op#cider#pprint_eval(code, callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#nrepl#send({
-      \ 'id': iced#nrepl#id(),
-      \ 'op': 'eval',
-      \ 'code': a:code,
-      \ 'pprint': 'true',
-      \ 'session': iced#nrepl#current_session(),
-      \ 'callback': a:callback,
-      \ })
-endfunction " }}}
-
 call iced#nrepl#register_handler('info', funcref('iced#nrepl#merge_response_handler'))
 call iced#nrepl#register_handler('test-var-query', funcref('s:test_handler'))
 call iced#nrepl#register_handler('retest', funcref('s:test_handler'))
