@@ -3,17 +3,21 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (master)
+
+== 0.9.2 (2019-01-15)
 // {{{
 === Changed
 * https://github.com/liquidz/vim-iced/pull/72[#72]: Update `IcedDefJump` to enable jump into JAR file.
 * https://github.com/liquidz/vim-iced/pull/73[#73]: Update `iced` command to `piggieback` as an option.
 ** `iced` command will detect use of CLJS automatically, so you won't need to specify this option basically.
 * https://github.com/liquidz/vim-iced/pull/74[#74]: Update `:IcedReconnect` to work if a connection is not already established.
+* Bump iced-nrepl to 0.4.0.
 
 === Fixed
 * https://github.com/liquidz/vim-iced/pull/75[#75]: Fix `E158` error on testing.
 * https://github.com/liquidz/vim-iced/pull/77[#77]: Fix running tests to work correctly in any namespaces.
 * https://github.com/liquidz/vim-iced/pull/78[#78]: Fix a bug on processing `info` op response from nREPL.
+* Fix to reset indentation rules when `:IcedReconnect` is executed.
 // }}}
 
 == 0.9.1 (2019-01-01)
