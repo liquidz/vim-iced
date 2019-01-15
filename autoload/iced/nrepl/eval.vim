@@ -117,7 +117,14 @@ function! iced#nrepl#eval#undef(symbol) abort
 endfunction
 
 function! iced#nrepl#eval#print_last() abort
-  call iced#nrepl#op#cider#pprint_eval('*1', {_ -> v:true})
+  let m = {}
+  function! m.callback(resp) abort
+    if has_key(a:resp, 'value')
+      call iced#buffer#stdout#append(a:resp['value'])
+    endif
+  endfunction
+
+  call iced#nrepl#eval('*1', m.callback, {'use-printer?': v:true})
 endfunction
 
 function! iced#nrepl#eval#outer_top_list() abort

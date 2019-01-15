@@ -20,8 +20,13 @@ let s:handlers = {}
 let s:messages = {}
 let s:response_buffer = ''
 
+let s:printer_dict = {
+      \ 'default': 'cider.nrepl.pprint/pprint',
+      \ }
+
 let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
+let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
 
 let s:id_counter = 1
 function! iced#nrepl#id() abort
@@ -354,8 +359,7 @@ function! iced#nrepl#eval(code, ...) abort
   let session_key  = get(option, 'session', iced#nrepl#current_session_key())
   let session = get(s:nrepl['sessions'], session_key, iced#nrepl#current_session())
   let pos = getcurpos()
-
-  call iced#nrepl#send({
+  let msg = {
         \ 'id': get(option, 'id', iced#nrepl#id()),
         \ 'op': 'eval',
         \ 'code': a:code,
@@ -364,7 +368,13 @@ function! iced#nrepl#eval(code, ...) abort
         \ 'line': get(option, 'line', pos[1]),
         \ 'column': get(option, 'column', pos[2]),
         \ 'callback': Callback,
-        \ })
+        \ }
+
+  if has_key(option, 'use-printer?')
+    let msg['printer'] = get(s:printer_dict, g:iced#nrepl#printer, s:printer_dict['default'])
+  endif
+
+  call iced#nrepl#send(msg)
 endfunction
 
 function! iced#nrepl#load_file(callback) abort " {{{
