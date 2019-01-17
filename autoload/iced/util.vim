@@ -114,5 +114,16 @@ function! iced#util#read_var(filename) abort
   return result
 endfunction
 
+function! iced#util#shorten(msg) abort
+  let max_length = (&columns * &cmdheight) - 1
+  if &showcmd " from experimenting: seems to use 12 characters
+    let max_length -= 12
+  endif
+
+  return (max_length >= 3 && len(a:msg) > max_length)
+        \ ? strpart(a:msg, 0, max_length - 3).'...'
+        \ : a:msg
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
