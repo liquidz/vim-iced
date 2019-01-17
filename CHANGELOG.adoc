@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (master)
+// {{{
+=== Fixed
+* https://github.com/liquidz/vim-iced/pull/79[#79]: Fix to prevent "Press ENTER" prompt on `one_line_doc` and `lint` message.
+// }}}
 
 == 0.9.2 (2019-01-15)
 // {{{
