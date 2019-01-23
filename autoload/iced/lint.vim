@@ -8,7 +8,6 @@ let s:last_warnings = []
 let s:enabled = v:true
 let s:sign_name = 'iced_lint'
 let g:iced#eastwood#option = get(g:, 'iced#eastwood#option', {})
-let g:iced#lint#message_max_length = get(g:, 'iced#lint#message_max_length', -1)
 
 function! iced#lint#is_enabled() abort
   return s:enabled

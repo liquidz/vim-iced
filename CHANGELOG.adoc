@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (master)
 // {{{
+=== Removed
+* Remove `g:iced#lint#message_max_length` option. (https://github.com/liquidz/vim-iced/pull/79[#79])
+
 === Fixed
 * https://github.com/liquidz/vim-iced/pull/79[#79]: Fix to prevent "Press ENTER" prompt on `one_line_doc` and `lint` message.
 // }}}
