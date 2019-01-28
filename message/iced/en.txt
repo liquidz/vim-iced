@@ -61,6 +61,7 @@
   'invalid_format':     'Invalid format: %s.',
   'already_in_test_ns': 'Already in test namespace.',
   'no_piggieback':      'Piggieback is not enabled. Please launch repl with `iced repl --with-cljs` command.',
+  'invalid_hook':       'Hook setting for "%s" is invalid.',
   'hit_var_reference_cache': 'Hit var references cache.',
   'finding_var_references':  'Finding var references...',
   'var_references_found':    'Found %d references.',
