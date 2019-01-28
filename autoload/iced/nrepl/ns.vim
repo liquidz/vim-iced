@@ -100,8 +100,13 @@ function! s:loaded(resp, callback) abort
   call iced#nrepl#ns#eval(a:callback)
 endfunction
 
+function! s:required(resp) abort
+  call iced#message#info('required')
+  call iced#hook#run('ns_required', {'response': a:resp})
+endfunction
+
 function! iced#nrepl#ns#load_current_file() abort
-  let Cb = {_ -> iced#message#info('required')}
+  let Cb = funcref('s:required')
   if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#current_session_key() ==# 'clj'
@@ -111,8 +116,14 @@ function! iced#nrepl#ns#load_current_file() abort
   endif
 endfunction
 
+function! s:all_reloaded(resp) abort
+  call iced#message#info('all_reloaded')
+  call iced#hook#run('ns_all_reloaded', {'response': a:resp})
+endfunction
+
 function! iced#nrepl#ns#reload_all() abort
   let Cb = {_ -> iced#message#info('all_reloaded')}
+  let Cb = funcref('s:all_reloaded')
   if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#current_session_key() ==# 'clj'
