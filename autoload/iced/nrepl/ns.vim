@@ -158,6 +158,13 @@ endfunction
 
 function! iced#nrepl#ns#alias_dict(ns_name) abort
   try
+    " NOTE: To avoid evaluating `ns-aliases` with non-existing namespace.
+    let ret = iced#cache#do_once('alias_dict'.a:ns_name,
+          \ {-> iced#eval_and_read(printf('(try (require ''%s) "ok" (catch Exception _ "ng"))'))})
+    if ret['value'] ==# 'ng'
+      return {}
+    endif
+
     let resp = iced#nrepl#op#cider#sync#ns_aliases(a:ns_name)
     return get(resp, 'ns-aliases', {})
   catch
