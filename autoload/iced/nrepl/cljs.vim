@@ -25,8 +25,10 @@ function! iced#nrepl#cljs#switch_session(resp) abort
   let session_key = iced#nrepl#current_session_key()
   if session_key ==# 'clj' && ns ==# 'cljs.user'
     call s:switch_session_to_cljs()
+    call iced#hook#run('session_switched', {'session': 'cljs'})
   elseif session_key ==# 'cljs' && ns !=# 'cljs.user'
     call s:switch_session_to_clj()
+    call iced#hook#run('session_switched', {'session': 'clj'})
   endif
 endfunction
 
