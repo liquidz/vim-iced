@@ -31,7 +31,7 @@ function! iced#eval_and_read(code, ...) abort
   let msg = {
       \ 'id': iced#nrepl#id(),
       \ 'op': 'eval',
-      \ 'code': printf('(try (require ''clojure.data.json) (clojure.data.json/write-str %s) (catch Exception ex))', a:code),
+      \ 'code': printf('(do (require ''iced.alias.json) (iced.alias.json/write-str %s))', a:code),
       \ 'session': iced#nrepl#current_session(),
       \ }
   let Callback = get(a:, 1, '')
