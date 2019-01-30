@@ -57,5 +57,13 @@ function! iced#nrepl#sync#pprint(code) abort
         \ })
 endfunction
 
+function! iced#nrepl#sync#eval(code) abort
+  return iced#nrepl#sync#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'eval',
+        \ 'code': a:code,
+        \ 'session': iced#nrepl#current_session()})
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

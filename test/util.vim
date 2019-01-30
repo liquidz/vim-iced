@@ -78,3 +78,25 @@ function! s:suite.save_read_var_test() abort
     call delete(name)
   endtry
 endfunction
+
+function! s:suite.shorted_test() abort
+  let current_columns = &columns
+  let current_cmdheight = &cmdheight
+  let current_showcmd = &showcmd
+
+  try
+    set columns=20
+    set cmdheight=1
+    set noshowcmd
+
+    let text = '01234567890123456789'
+    call s:assert.equals(iced#util#shorten(text), '0123456789012345...')
+
+    set columns=21
+    call s:assert.equals(iced#util#shorten(text), text)
+  finally
+    exec printf('set columns=%d', current_columns)
+    exec printf('set cmdheight=%d', current_cmdheight)
+    if current_showcmd | set showcmd | endif
+  endtry
+endfunction

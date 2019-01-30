@@ -1,4 +1,4 @@
-personal_ws-1.1 en 180 
+personal_ws-1.1 en 182 
 IcedRelatedNamespaces
 grimoire
 IcedGrep
@@ -30,8 +30,8 @@ aug
 norl
 IcedDefBack
 botright
-GraalVM
 graalvm
+GraalVM
 IcedEvalRepl
 IcedQuitCljsRepl
 hardbreaks
@@ -80,6 +80,7 @@ WarningMsg
 iced's
 IcedLintToggle
 cwindow
+printf
 topleft
 IcedThreadFirst
 IcedStdoutBufferOpen
@@ -112,8 +113,8 @@ nrepl's
 OuterList
 eastwood
 CursorMoved
-nrepl
 nREPL
+nrepl
 IcedTestRerunLast
 Iizuka
 IcedJumpToPrevSign
@@ -160,12 +161,12 @@ tophat
 middlewares
 IcedInReplNs
 noet
-ClojureScript
 clojurescript
+ClojureScript
 IcedBarf
 cljs's
-graaljs
 GraalJS
+graaljs
 ctrlp
 IcedRequire
 IcedInterrupt
@@ -173,6 +174,7 @@ IcedRelatedNamespace
 IcedUndef
 IcedAddMissing
 IcedStartCljsRepl
+tmux
 VimIcedAutoOpenQuickfix
 IcedMacroExpand
 IcedTestUnderCursor

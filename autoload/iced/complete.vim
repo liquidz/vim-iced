@@ -129,31 +129,29 @@ function! iced#complete#omni(findstart, base) abort
     let ns_name = iced#nrepl#ns#name()
     let candidates = []
 
-    " require current namespace once
-    call iced#cache#do_once('require_current_namespace',
-          \ {-> iced#eval_and_read(printf('(require ''%s)', ns_name))})
-
-    " vars in current namespace
-    let tmp = s:ns_var_candidates(ns_name, a:base, '')
-    if !empty(tmp)
-      let candidates = candidates + tmp
-    endif
-
-    " namespace aliases
-    let alias_dict = iced#nrepl#ns#alias_dict(ns_name)
-    if !empty(alias_dict)
-      let candidates = candidates + s:ns_alias_candidates(keys(alias_dict), a:base)
-    endif
-
-    " vars in aliased namespace
-    let i = stridx(a:base, '/')
-    if i != -1 && a:base[0] !=# ':'
-      let org_base_ns = a:base[0:i-1]
-      let base_ns = get(alias_dict, org_base_ns, org_base_ns)
-      let base_sym = a:base[i+1:]
-      let tmp = s:ns_var_candidates(base_ns, base_sym, org_base_ns)
+    if iced#nrepl#ns#does_exist(ns_name)
+      " vars in current namespace
+      let tmp = s:ns_var_candidates(ns_name, a:base, '')
       if !empty(tmp)
         let candidates = candidates + tmp
+      endif
+
+      " namespace aliases
+      let alias_dict = iced#nrepl#ns#alias_dict(ns_name)
+      if !empty(alias_dict)
+        let candidates = candidates + s:ns_alias_candidates(keys(alias_dict), a:base)
+      endif
+
+      " vars in aliased namespace
+      let i = stridx(a:base, '/')
+      if i != -1 && a:base[0] !=# ':'
+        let org_base_ns = a:base[0:i-1]
+        let base_ns = get(alias_dict, org_base_ns, org_base_ns)
+        let base_sym = a:base[i+1:]
+        let tmp = s:ns_var_candidates(base_ns, base_sym, org_base_ns)
+        if !empty(tmp)
+          let candidates = candidates + tmp
+        endif
       endif
     endif
 

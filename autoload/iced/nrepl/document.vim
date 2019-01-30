@@ -145,7 +145,8 @@ function! s:one_line_doc(resp) abort
     elseif has_key(a:resp, 'ns') && has_key(a:resp, 'name')
       let name = printf('%s/%s', a:resp['ns'], a:resp['name'])
       let args = substitute(get(a:resp, 'arglists-str', ''), '\r\?\n', ' ', 'g')
-      echo printf('%s %s', name, args)
+      let msg = printf('%s %s', name, args)
+      echo iced#util#shorten(msg)
     endif
   endif
 endfunction

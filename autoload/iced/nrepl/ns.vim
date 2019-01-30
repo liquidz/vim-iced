@@ -100,8 +100,13 @@ function! s:loaded(resp, callback) abort
   call iced#nrepl#ns#eval(a:callback)
 endfunction
 
+function! s:required(resp) abort
+  call iced#message#info('required')
+  call iced#hook#run('ns_required', {'response': a:resp})
+endfunction
+
 function! iced#nrepl#ns#load_current_file() abort
-  let Cb = {_ -> iced#message#info('required')}
+  let Cb = funcref('s:required')
   if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#current_session_key() ==# 'clj'
@@ -111,8 +116,14 @@ function! iced#nrepl#ns#load_current_file() abort
   endif
 endfunction
 
+function! s:all_reloaded(resp) abort
+  call iced#message#info('all_reloaded')
+  call iced#hook#run('ns_all_reloaded', {'response': a:resp})
+endfunction
+
 function! iced#nrepl#ns#reload_all() abort
   let Cb = {_ -> iced#message#info('all_reloaded')}
+  let Cb = funcref('s:all_reloaded')
   if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#current_session_key() ==# 'clj'
@@ -145,8 +156,18 @@ function! iced#nrepl#ns#in_repl_session_ns() abort
   call iced#nrepl#eval#code(code)
 endfunction
 
+function! iced#nrepl#ns#does_exist(ns_name) abort
+  let find_ns_result = iced#nrepl#sync#eval(printf('(if (find-ns ''%s) :ok :ng)', a:ns_name))
+  return (find_ns_result['value'] ==# ':ok') ? v:true : v:false
+endfunction
+
 function! iced#nrepl#ns#alias_dict(ns_name) abort
   try
+    " NOTE: To avoid evaluating `ns-aliases` with non-existing namespace.
+    if !iced#nrepl#ns#does_exist(a:ns_name)
+      return {}
+    endif
+
     let resp = iced#nrepl#op#cider#sync#ns_aliases(a:ns_name)
     return get(resp, 'ns-aliases', {})
   catch

@@ -191,6 +191,10 @@ function! s:out(resp) abort
   else
     call iced#message#error_str(summary['summary'])
   endif
+
+  call iced#hook#run('test_finished', {
+        \ 'result': summary['is_success'] ? 'succeeded' : 'failed',
+        \ 'summary': summary['summary']})
 endfunction
 " }}}
 
