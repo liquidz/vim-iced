@@ -4,11 +4,22 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (master)
 // {{{
+=== Added
+* Add hooking feature.
+** See details `:h vim-iced-customizing-hooks`
+
+=== Changed
+* Bump iced-nrepl to 0.4.1.
+* https://github.com/liquidz/vim-iced/pull/85[#85]: Update sample code for debugging to work correctly.
+
 === Removed
 * Remove `g:iced#lint#message_max_length` option. (https://github.com/liquidz/vim-iced/pull/79[#79])
 
 === Fixed
 * https://github.com/liquidz/vim-iced/pull/79[#79]: Fix to prevent "Press ENTER" prompt on `one_line_doc` and `lint` message.
+* Fix bug when completing on new file.
+* Fix bug when slurping on new file.
+* Fix to apply skeleton without `clojure.data.json` correctly.
 // }}}
 
 == 0.9.2 (2019-01-15)
