@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.9.2
+Version: 0.9.3
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -1267,7 +1267,7 @@ NS ALL RELOADED                                     *hook_kind_ns_all_reloaded*
 
 SESSION SWITCHED                                   *hook_kind_session_switched*
 
-  Hooked when currentsession is switched.
+  Hooked when current session is switched.
   Following parameters are pass to reporter.
 
   - session

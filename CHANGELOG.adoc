@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (master)
 // {{{
+// }}}
+
+== 0.9.3 (2019-01-30)
+// {{{
 === Added
 * Add hooking feature.
 ** See details `:h vim-iced-customizing-hooks`
