@@ -40,6 +40,7 @@ CONTENTS                                                    *vim-iced-contents*
     Linters                    |vim-iced-customizing-linters|
     Signs                      |vim-iced-customizing-signs|
     Command palettes           |vim-iced-customizing-palette|
+    Hooks                      |vim-iced-customizing-hooks|
     Default keys               |vim-iced-customizing-default-keys|
   Changelog                    |vim-iced-changelog|
 
@@ -1221,6 +1222,57 @@ g:iced#palette
         \ 'foo bar': ':IcedEvalRepl (cljs-repl)'
         \ }
 <
+------------------------------------------------------------------------------
+HOOKS                                              *vim-iced-customizing-hooks*
+
+                                                                  *g:iced#hook*
+g:iced#hook
+  Hook setting.
+
+  - Hook kinds
+    - test_finished     |hook_kind_test_finished|
+    - ns_required       |hook_kind_ns_required|
+    - ns_all_reloaded   |hook_kind_ns_all_reloaded|
+    - session_switched  |hook_kind_session_switched|
+  - Hook report types
+    - shell             |hook_report_shell|
+    - eval              |hook_report_eval|
+    - eval-repl         |hook_report_eval_repl|
+    - function          |hook_report_function|
+
+  Ex. >
+  let g:iced#hook = {
+      \ 'test_finished':
+      \ {'type': 'shell',
+      \  'exec': {v -> printf('tmux display-message "%s"', v.summary)}}
+      \ }
+<
+TEST FINISHED                                         *hook_kind_test_finished*
+
+  Hooked when running test is finished.
+  Following parameters are pass to reporter.
+
+  - result
+    Test result. "succeeded" or "failed".
+  - summary
+    Test summary.
+
+NS REQUIRED                                             *hook_kind_ns_required*
+
+  Hooked when `:IcedRequire` is finished.
+
+NS ALL RELOADED                                     *hook_kind_ns_all_reloaded*
+
+  Hooked when `:IcedRequireAll` is finished.
+
+SESSION SWITCHED                                   *hook_kind_session_switched*
+
+  Hooked when currentsession is switched.
+  Following parameters are pass to reporter.
+
+  - session
+    Destination session type. "clj" or "cljs".
+
 ------------------------------------------------------------------------------
 DEFAULT KEYS                                *vim-iced-customizing-default-keys*
 
