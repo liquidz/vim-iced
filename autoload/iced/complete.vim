@@ -119,11 +119,6 @@ function! s:context() abort
   endtry
 endfunction
 
-function! s:require(ns_name) abort
-  let resp = iced#eval_and_read(printf('(try (require ''%s) "ok" (catch Exception _ "ng"))', a:ns_name))
-  return get(resp, 'value', '')
-endfunction
-
 function! iced#complete#omni(findstart, base) abort
   if a:findstart
     let line = getline('.')
@@ -134,8 +129,7 @@ function! iced#complete#omni(findstart, base) abort
     let ns_name = iced#nrepl#ns#name()
     let candidates = []
 
-    let result = iced#cache#do_once('require_current_namespace', {-> s:require(ns_name)})
-    if result ==# 'ok'
+    if iced#nrepl#ns#does_exist(ns_name)
       " vars in current namespace
       let tmp = s:ns_var_candidates(ns_name, a:base, '')
       if !empty(tmp)

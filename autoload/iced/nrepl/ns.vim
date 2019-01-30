@@ -156,12 +156,15 @@ function! iced#nrepl#ns#in_repl_session_ns() abort
   call iced#nrepl#eval#code(code)
 endfunction
 
+function! iced#nrepl#ns#does_exist(ns_name) abort
+  let find_ns_result = iced#nrepl#sync#eval(printf('(if (find-ns ''%s) :ok :ng)', a:ns_name))
+  return (find_ns_result['value'] ==# ':ok') ? v:true : v:false
+endfunction
+
 function! iced#nrepl#ns#alias_dict(ns_name) abort
   try
     " NOTE: To avoid evaluating `ns-aliases` with non-existing namespace.
-    let ret = iced#cache#do_once('alias_dict'.a:ns_name,
-          \ {-> iced#eval_and_read(printf('(try (require ''%s) "ok" (catch Exception _ "ng"))'))})
-    if ret['value'] ==# 'ng'
+    if !iced#nrepl#ns#does_exist(a:ns_name)
       return {}
     endif
 
