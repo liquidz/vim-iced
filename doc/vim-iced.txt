@@ -282,12 +282,11 @@ DEBUGGING                                                  *vim-iced-debugging*
   vim-iced supports cider's `#dbg` and `#break` reader literals.
   Easiest way is to put `#dbg` to your code, and evaluate it.
 >
-  (defn fib
-    ([n] (fib 0 1 n))
-    ([a b n]
-      (if (<= n 0)
-       a
-       #dbg (recur b (+ a b) (dec n)))))
+  (defn fib [n]
+    #dbg (loop [a 0 b 1 n n]
+           (if (<= n 0)
+             a
+             (recur b (+ a b) (dec n)))))
 <
   Related options:
   - |g:iced#debug#value_max_length|
