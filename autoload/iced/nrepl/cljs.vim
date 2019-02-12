@@ -68,12 +68,12 @@ function! iced#nrepl#cljs#stop_repl(...) abort
   return v:false
 endfunction
 
-let g:iced#cljs#default_env = get(g:, 'iced#cljs#default_env', 'figwheel')
+let g:iced#cljs#default_env = get(g:, 'iced#cljs#default_env', 'figwheel-sidecar')
 let s:using_env = {}
 let s:env_options = []
 
 let s:env = {
-    \ 'figwheel': function('iced#nrepl#cljs#figwheel#get_env'),
+    \ 'figwheel-sidecar': function('iced#nrepl#cljs#figwheel_sidecar#get_env'),
     \ 'figwheel-main': function('iced#nrepl#cljs#figwheel_main#get_env'),
     \ 'nashorn': function('iced#nrepl#cljs#nashorn#get_env'),
     \ 'graaljs': function('iced#nrepl#cljs#graaljs#get_env'),
