@@ -32,43 +32,84 @@ function! iced#nrepl#cljs#switch_session(resp) abort
   endif
 endfunction
 
+function! iced#nrepl#cljs#start_repl(code, ...) abort
+  if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect() | return v:false | endif
+  if !iced#nrepl#system#piggieback_enabled()
+    call iced#message#error('no_piggieback')
+    return v:false
+  endif
+
+  if iced#nrepl#current_session_key() ==# 'clj'
+    let opt = get(a:, 1, {})
+    let pre_code = get(opt, 'pre', '')
+
+    if type(a:code) == v:t_dict && has_key(a:code, 'raw')
+      let code = printf('(do %s %s)', pre_code, a:code['raw'])
+    else
+      let code = printf('(do %s (cider.piggieback/cljs-repl %s))', pre_code, a:code)
+    endif
+    call iced#nrepl#eval#repl(code)
+    return v:true
+  endif
+  return v:false
+endfunction
+
+function! iced#nrepl#cljs#stop_repl(...) abort
+  if iced#nrepl#current_session_key() ==# 'cljs'
+    call iced#nrepl#eval#repl(':cljs/quit')
+
+    let opt = get(a:, 1, {})
+    let post_code = get(opt, 'post', '')
+    if !empty(post_code)
+      call iced#nrepl#eval#repl(post_code)
+    endif
+    return v:true
+  endif
+  return v:false
+endfunction
+
 let g:iced#cljs#default_env = get(g:, 'iced#cljs#default_env', 'figwheel')
-let s:using_env_key = ''
+let s:using_env = {}
+let s:env_options = []
 
 let s:env = {
-    \ 'figwheel': {-> iced#nrepl#cljs#figwheel#get_env()},
-    \ 'nashorn': {-> iced#nrepl#cljs#nashorn#get_env()},
-    \ 'graaljs': {-> iced#nrepl#cljs#graaljs#get_env()},
-    \ 'custom': {-> iced#nrepl#cljs#custom#get_env()},
+    \ 'figwheel': function('iced#nrepl#cljs#figwheel#get_env'),
+    \ 'figwheel-main': function('iced#nrepl#cljs#figwheel_main#get_env'),
+    \ 'nashorn': function('iced#nrepl#cljs#nashorn#get_env'),
+    \ 'graaljs': function('iced#nrepl#cljs#graaljs#get_env'),
     \ }
 
-function! iced#nrepl#cljs#repl(env_key) abort
+function! iced#nrepl#cljs#start_repl_via_env(env_key, ...) abort
   let env_key = iced#compat#trim(empty(a:env_key) ? g:iced#cljs#default_env : a:env_key)
   if !has_key(s:env, env_key)
     return iced#message#error('invalid_cljs_env')
   endif
 
-  if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect() | return | endif
+  if empty(s:using_env)
+    let env = s:env[env_key](a:000)
+    if type(env) != v:t_dict | return iced#message#error_str(env) | endif
 
-  if !iced#nrepl#system#piggieback_enabled()
-    return iced#message#error('no_piggieback')
-  endif
+    let Pre_code_f = get(env, 'pre-code', '')
+    let Env_code_f = get(env, 'env-code', '')
 
-  if iced#nrepl#current_session_key() ==# 'clj' && empty(s:using_env_key)
-    let s:using_env_key = env_key
-    let env = s:env[s:using_env_key]()
-    call env['start']()
+    if type(Env_code_f) != v:t_func
+      return iced#message#error('invalid_cljs_env')
+    endif
+
+    let pre_code = type(Pre_code_f) == v:t_func ? Pre_code_f() : ''
+    let env_code = Env_code_f()
+    if iced#nrepl#cljs#start_repl(env_code, {'pre': pre_code})
+      let s:using_env = env
+    endif
   endif
 endfunction
 
-function! iced#nrepl#cljs#quit() abort
-  if iced#nrepl#current_session_key() ==# 'cljs'
-    call iced#nrepl#eval#repl(':cljs/quit')
-
-    if !empty(s:using_env_key)
-      let env = s:env[s:using_env_key]()
-      call env['stop']()
-      let s:using_env_key = ''
+function! iced#nrepl#cljs#stop_repl_via_env() abort
+  if !empty(s:using_env)
+    let Post_code_f = get(s:using_env, 'post-code', '')
+    let post_code = type(Post_code_f) == v:t_func ? Post_code_f() : ''
+    if iced#nrepl#cljs#stop_repl({'post': post_code})
+      let s:using_env = {}
     endif
   endif
 endfunction
