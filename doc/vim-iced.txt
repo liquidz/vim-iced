@@ -194,7 +194,9 @@ NREPL CONNECTION                                    *vim-iced-nrepl-connection*
 CLOJURE SCRIPT                                         *vim-iced-clojurescript*
 
   Supports following environment currently.
-  - figwheel
+  - figwheel-sidecar
+  - figwheel-main
+    0.2.0 or later is required.
   - graaljs
     ClojureScript 1.10.439 or later is required.
   - nashorn
