@@ -54,6 +54,8 @@ INTRODUCTION                                            *vim-iced-introduction*
     Neovim support is VERY EXPERIMENTAL
   - Clojure 1.8 or later
     1.9 or later is recommended
+  - For Leiningen user
+    2.8.2 or later
 
   Latest Version:
   - https://github.com/liquidz/vim-iced
