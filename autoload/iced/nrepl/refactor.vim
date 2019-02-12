@@ -14,6 +14,7 @@ let s:default_ns_favorites = {
       \   'clojure.spec.gen.alpha': 'sgen',
       \   'clojure.spec.test.alpha': 'stest',
       \   'clojure.string': 'str',
+      \   'clojure.tools.logging': 'log',
       \   'clojure.walk': 'walk',
       \   'clojure.zip': 'zip',
       \   },
