@@ -74,10 +74,6 @@ INSTALL                                                      *vim-iced-install*
     - fzf
       https://github.com/junegunn/fzf
 
-  Clojure library dependencies:
-  - Leiningen user: |vim-iced-leiningen|
-  - Boot user: |vim-iced-boot|
-
 ------------------------------------------------------------------------------
 ICED COMMAND                                         *vim-iced-install-command*
 
