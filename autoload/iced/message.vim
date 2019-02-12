@@ -11,8 +11,12 @@ if stridx(join(s:supported_langs, ','), s:LM.get_lang()) == -1
   call s:msg.load(s:supported_langs[0])
 endif
 
-function! iced#message#get(k) abort
-  return s:msg.get(a:k)
+function! iced#message#get(k, ...) abort
+  let msg = s:msg.get(a:k)
+  if !empty(a:000)
+    let msg = call('printf', [msg] + a:000)
+  endif
+  return msg
 endfunction
 
 function! s:echom(hl, s) abort
