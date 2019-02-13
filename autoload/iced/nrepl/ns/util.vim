@@ -3,7 +3,7 @@ set cpo&vim
 
 function! iced#nrepl#ns#util#search() abort
   call cursor(1, 1)
-  let line = iced#compat#trim(getline('.'))
+  let line = trim(getline('.'))
   if line !=# '(ns' && line[0:3] !=# '(ns '
     return search('(ns[ \r\n]')
   endif
@@ -21,7 +21,7 @@ function! iced#nrepl#ns#util#replace(new_ns) abort
     endif
     silent normal! dab
 
-    let new_ns = iced#compat#trim(a:new_ns)
+    let new_ns = trim(a:new_ns)
     let before_lnum = len(split(@@, '\r\?\n'))
     let after_lnum = len(split(new_ns, '\r\?\n'))
     let view['lnum'] = view['lnum'] + (after_lnum - before_lnum)
@@ -58,12 +58,12 @@ function! iced#nrepl#ns#util#add_namespace_to_require(ns_code, ns_name, ns_alias
   let reqstart = stridx(a:ns_code, '(:require')
   let reqend = stridx(a:ns_code, ')', reqstart)
 
-  let head = iced#compat#trim(a:ns_code[0:reqend-1])
+  let head = trim(a:ns_code[0:reqend-1])
   if stridx(head, a:ns_name, reqstart) != -1
     return a:ns_code
   endif
 
-  let tail = iced#compat#trim(strpart(a:ns_code, reqend))
+  let tail = trim(strpart(a:ns_code, reqend))
   let body = (empty(a:ns_alias) ? a:ns_name : printf('[%s :as %s]', a:ns_name, a:ns_alias))
   let head_len = len(head)
   if head[head_len-8:head_len-1] ==# ':require'

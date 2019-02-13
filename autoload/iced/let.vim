@@ -42,7 +42,7 @@ function! iced#let#move_to_let(...) abort
     let form = iced#util#del_indent(indent, form)
     let name = get(a:, 1, '')
     if empty(name)
-      let name = iced#compat#trim(input('Name: '))
+      let name = trim(input('Name: '))
     endif
     if empty(name)
       return iced#message#echom('canceled')

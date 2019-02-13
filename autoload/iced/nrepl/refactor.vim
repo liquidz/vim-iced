@@ -44,7 +44,7 @@ function! iced#nrepl#refactor#extract_function() abort
 
     try
       let locals = a:resp['used-locals']
-      let func_name = iced#compat#trim(input('Function name: '))
+      let func_name = trim(input('Function name: '))
       if empty(func_name)
         return iced#message#echom('canceled')
       endif
@@ -184,7 +184,7 @@ function! s:add(ns_name) abort
     if empty(candidate)
       let candidate = ''
     endif
-    let ns_alias = iced#compat#trim(input('Alias: ', candidate))
+    let ns_alias = trim(input('Alias: ', candidate))
   endif
 
   call iced#nrepl#ns#util#add(a:ns_name, ns_alias)

@@ -80,13 +80,13 @@ endfunction
 
 function! s:extract_actual_values(test) abort
   if !has_key(a:test, 'diffs') || type(a:test['diffs']) != v:t_list
-    return {'actual': iced#compat#trim(get(a:test, 'actual', ''))}
+    return {'actual': trim(get(a:test, 'actual', ''))}
   endif
 
   let diffs = a:test['diffs'][0]
   return {
-      \ 'actual': iced#compat#trim(diffs[0]),
-      \ 'diffs': printf("- %s\n+ %s", iced#compat#trim(diffs[1][0]), iced#compat#trim(diffs[1][1])),
+      \ 'actual': trim(diffs[0]),
+      \ 'diffs': printf("- %s\n+ %s", trim(diffs[1][0]), trim(diffs[1][1])),
       \ }
 endfunction
 
@@ -126,7 +126,7 @@ function! s:collect_errors(resp) abort
                   \ 'filename': filename,
                   \ 'lnum': test['line'],
                   \ 'text': s:error_message(test),
-                  \ 'expected': iced#compat#trim(get(test, 'expected', '')),
+                  \ 'expected': trim(get(test, 'expected', '')),
                   \ 'type': 'E',
                   \ }
           if test['type'] ==# 'fail'

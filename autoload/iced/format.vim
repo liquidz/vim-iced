@@ -92,7 +92,7 @@ function! iced#format#calculate_indent(lnum) abort
   try
     let res = iced#paredit#get_current_top_list()
     let code = res['code']
-    if iced#compat#trim(code) ==# ''
+    if trim(code) ==# ''
       return GetClojureIndent()
     endif
 

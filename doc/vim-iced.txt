@@ -50,7 +50,7 @@ INTRODUCTION                                            *vim-iced-introduction*
   Clojure interactive development environment for Vim8/Neovim.
 
   Requirement:
-  - Vim 8.1 or later, Neovim 0.3.1 or later
+  - Vim 8.1 or later, Neovim 0.3.2 or later
     Neovim support is VERY EXPERIMENTAL
   - Clojure 1.8 or later
     1.9 or later is recommended

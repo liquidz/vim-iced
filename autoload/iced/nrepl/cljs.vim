@@ -80,7 +80,7 @@ let s:env = {
     \ }
 
 function! iced#nrepl#cljs#start_repl_via_env(env_key, ...) abort
-  let env_key = iced#compat#trim(empty(a:env_key) ? g:iced#cljs#default_env : a:env_key)
+  let env_key = trim(empty(a:env_key) ? g:iced#cljs#default_env : a:env_key)
   if !has_key(s:env, env_key)
     return iced#message#error('invalid_cljs_env')
   endif
