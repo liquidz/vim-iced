@@ -192,20 +192,17 @@ NREPL CONNECTION                                    *vim-iced-nrepl-connection*
 CLOJURE SCRIPT                                         *vim-iced-clojurescript*
 
   Supports following environment currently.
-  - figwheel-sidecar
   - figwheel-main
     0.2.0 or later is required.
+  - figwheel-sidecar
   - graaljs
     ClojureScript 1.10.439 or later is required.
   - nashorn
-  - custom
 
-  With {custom} environment, you can define start/stop code.
-  - |g:iced#cljs#custom#start_code|
-  - |g:iced#cljs#custom#stop_code|
+  |:IcedStartCljsRepl| to start cljs-repl.
+  |:IcedQuitCljsRepl| to quit it.
 
-  |IcedStartCljsRepl| to start cljs-repl.
-  |IcedQuitCljsRepl| to quit it.
+  For other environments, you can use |:IcedCljsRepl| command.
 
 ------------------------------------------------------------------------------
 PIGGIEBACK                                                *vim-iced-piggieback*
@@ -394,6 +391,24 @@ COMMANDS                                                    *vim-iced-commands*
   Interrupt some code evaluation in current session.
   Key is mapped to |<Plug>(iced_interrupt)|.
 
+                                                                *:IcedCljsRepl*
+:IcedCljsRepl {form}
+  Start CLJS REPL via user specified code.
+  The code will be passed to `cider.piggieback/cljs-repl`.
+
+  Ex. >
+  ;; figwheel-main
+  :IcedCljsRepl (figwheel.main.api/repl-env "app")
+
+  ;; figwheel-sidecar
+  :IcedCljsRepl (figwheel-sidecar.repl-api/repl-env)
+
+  ;; graaljs
+  :IcedCljsRepl (cljs.repl.graaljs/repl-env)
+
+  ;; nashorn
+  :IcedCljsRepl (cljs.repl.nashorn/repl-env)
+<
                                                            *:IcedStartCljsRepl*
 :IcedStartCljsRepl [{env}]
   Start CLJS REPL with specified environment.
