@@ -111,6 +111,8 @@ function! iced#nrepl#cljs#stop_repl_via_env() abort
     if iced#nrepl#cljs#stop_repl({'post': post_code})
       let s:using_env = {}
     endif
+  else
+    call iced#nrepl#cljs#stop_repl()
   endif
 endfunction
 
