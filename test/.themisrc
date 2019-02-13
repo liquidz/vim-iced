@@ -1,14 +1,12 @@
 set encoding=utf-8
 
 let g:root = fnamemodify(expand('<sfile>'), ':h:h')
-let g:testplugin_name = 'testplugin'
-let g:testplugin_root = g:root . '/test/_testdata/vital/' . g:testplugin_name . '/'
 
 call themis#option('runtimepath', g:root . '/.vim-sexp')
 call themis#option('runtimepath', g:root . '/test/helper')
 
 profile start /tmp/vim-profile.txt
 profile! file ./autoload/iced/*
-profile! file ./autoload/iced/ctrlp/*
-profile! file ./autoload/iced/fzf/*
+profile! file ./autoload/ctrlp/*
+profile! file ./autoload/fzf/*
 profile! file ./autoload/iced.vim
