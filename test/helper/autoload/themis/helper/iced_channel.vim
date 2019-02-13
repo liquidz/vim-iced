@@ -54,6 +54,7 @@ function! s:build_test_channel(opt) abort
 endfunction
 
 function! s:helper.register_test_builder(opt) abort
+  call iced#di#register('bencode', {_ -> iced#di#bencode#vim#build()})
   call iced#di#register('channel', {_ -> s:build_test_channel(a:opt)})
 endfunction
 
