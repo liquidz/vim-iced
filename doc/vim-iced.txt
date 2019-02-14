@@ -19,6 +19,7 @@ CONTENTS                                                    *vim-iced-contents*
   ClojureScript                |vim-iced-clojurescript|
     Piggieback                 |vim-iced-piggieback|
     GraalJS                    |vim-iced-graaljs|
+    FigwheelMain               |vim-iced-figwheel-main|
   Evaluating                   |vim-iced-evaluating|
     Stdout Buffer              |vim-iced-stdout-buffer|
   Testing                      |vim-iced-testing|
@@ -227,6 +228,15 @@ GRAALJS                                                      *vim-iced-graaljs*
 >
   $ PATH=/path/to/graalvm/bin:$PATH iced repl
 <
+------------------------------------------------------------------------------
+FIGWHEEL MAIN                                          *vim-iced-figwheel-main*
+
+  To start CLJS REPL with figwheel-main, you need to specify {build-id}.
+  Ex. `:IcedCljsRepl (figwheel.main.api/repl-env "build-id")`
+
+  Via `:IcedStartCljsRepl` command, you can specify {build-id} as follows.
+  `:IcedStartCljsRepl figwheel-main build-id`
+
 ==============================================================================
 EVALUATING                                                *vim-iced-evaluating*
 
