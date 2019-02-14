@@ -56,7 +56,7 @@ endfunction
 
 function! s:repl_out(resp) abort
   call s:out(a:resp)
-  call iced#nrepl#cljs#switch_session(a:resp)
+  call iced#nrepl#cljs#check_switching_session(a:resp)
 endfunction
 
 function! s:is_comment_form(code) abort

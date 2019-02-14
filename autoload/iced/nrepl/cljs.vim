@@ -16,7 +16,7 @@ function! s:switch_session_to_clj() abort
   call iced#message#info('quitted_cljs_repl')
 endfunction
 
-function! iced#nrepl#cljs#switch_session(resp) abort
+function! iced#nrepl#cljs#check_switching_session(resp) abort
   if !has_key(a:resp, 'ns') || !has_key(a:resp, 'session') || a:resp['session'] !=# iced#nrepl#repl_session()
     return
   endif
