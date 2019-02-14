@@ -44,6 +44,10 @@ endfunction
 
 function! iced#nrepl#sync#session_list() abort
   let resp = iced#nrepl#sync#send({'op': 'ls-sessions'})
+  if empty(resp)
+    return []
+  endif
+
   return get(resp, 'sessions', [])
 endfunction
 
