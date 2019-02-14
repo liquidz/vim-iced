@@ -4,29 +4,42 @@ set cpo&vim
 function! s:switch_session_to_cljs() abort
   let repl_session = iced#nrepl#repl_session()
   let cljs_session = iced#nrepl#sync#clone(repl_session)
+  let cljs_repl_session = iced#nrepl#sync#clone(cljs_session)
+
+  call iced#nrepl#sync#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'eval',
+        \ 'code': ':cljs/quit',
+        \ 'session': repl_session})
+
   call iced#nrepl#set_session('cljs', cljs_session)
+  call iced#nrepl#set_session('cljs_repl', cljs_repl_session)
   call iced#nrepl#change_current_session('cljs')
   call iced#message#info('started_cljs_repl')
 endfunction
 
 function! s:switch_session_to_clj() abort
   call iced#nrepl#sync#close(iced#nrepl#cljs_session())
+  call iced#nrepl#sync#close(iced#nrepl#cljs_repl_session())
   call iced#nrepl#set_session('cljs', '')
+  call iced#nrepl#set_session('cljs_repl', '')
   call iced#nrepl#change_current_session('clj')
   call iced#message#info('quitted_cljs_repl')
 endfunction
 
 function! iced#nrepl#cljs#check_switching_session(resp) abort
-  if !has_key(a:resp, 'ns') || !has_key(a:resp, 'session') || a:resp['session'] !=# iced#nrepl#repl_session()
-    return
-  endif
+  if !has_key(a:resp, 'ns') || !has_key(a:resp, 'session') | return | endif
+
+  let session = a:resp['session']
+  let eq_to_repl_session = (session ==# iced#nrepl#repl_session())
+  let eq_to_cljs_repl_session = (session ==# iced#nrepl#cljs_repl_session())
+  if !eq_to_repl_session && !eq_to_cljs_repl_session | return | endif
 
   let ns = a:resp['ns']
-  let session_key = iced#nrepl#current_session_key()
-  if session_key ==# 'clj' && ns ==# 'cljs.user'
+  if eq_to_repl_session && ns ==# 'cljs.user'
     call s:switch_session_to_cljs()
     call iced#hook#run('session_switched', {'session': 'cljs'})
-  elseif session_key ==# 'cljs' && ns !=# 'cljs.user'
+  elseif eq_to_cljs_repl_session && ns !=# 'cljs.user'
     call s:switch_session_to_clj()
     call iced#hook#run('session_switched', {'session': 'clj'})
   endif
@@ -55,8 +68,8 @@ function! iced#nrepl#cljs#start_repl(code, ...) abort
 endfunction
 
 function! iced#nrepl#cljs#stop_repl(...) abort
-  if iced#nrepl#current_session_key() ==# 'cljs'
-    call iced#nrepl#eval#repl(':cljs/quit')
+  if iced#nrepl#cljs_session() !=# ''
+    call iced#nrepl#eval#repl(':cljs/quit', 'cljs_repl')
 
     let opt = get(a:, 1, {})
     let post_code = get(opt, 'post', '')
