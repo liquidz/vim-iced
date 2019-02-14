@@ -45,6 +45,20 @@ function! iced#nrepl#cljs#check_switching_session(resp) abort
   endif
 endfunction
 
+function! iced#nrepl#cljs#cycle_session() abort
+  if iced#nrepl#current_session_key() ==# 'cljs'
+    call iced#nrepl#change_current_session('clj')
+    call iced#hook#run('session_switched', {'session': 'clj'})
+  else
+    if empty(iced#nrepl#cljs_session())
+      return iced#message#error('no_session', 'cljs')
+    else
+      call iced#nrepl#change_current_session('cljs')
+      call iced#hook#run('session_switched', {'session': 'cljs'})
+    endif
+  endif
+endfunction
+
 function! iced#nrepl#cljs#start_repl(code, ...) abort
   if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect() | return v:false | endif
   if !iced#nrepl#system#piggieback_enabled()

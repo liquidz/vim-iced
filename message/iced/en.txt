@@ -51,6 +51,7 @@
   'used_locals_error':  'Failed to fetch used-locals.',
   'canceled':           'Canceled.',
   'invalid_session':    'Session error. You should be in %s session.',
+  'no_session':         'Session does not exists: %s.',
   'grimoire_error':     'Invalid response from Grimoire.',
   'no_set_hidden':      'You must add `set hidden` to your .vimrc.',
   'jump_error':         'Failed to jump: ''%s''.',
