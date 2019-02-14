@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+== 0.10.0 (2019-02-14)
 // {{{
 === Added
 * Add support for https://github.com/bhauman/figwheel-main[figwheel-main].
