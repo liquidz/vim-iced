@@ -18,6 +18,7 @@ command!          IcedCljsRepl              call iced#nrepl#cljs#start_repl()
 command! -nargs=+ -complete=custom,iced#nrepl#cljs#env_complete
     \ IcedStartCljsRepl    call iced#nrepl#cljs#start_repl_via_env(<f-args>)
 command!          IcedQuitCljsRepl          call iced#nrepl#cljs#stop_repl_via_env()
+command!          IcedCycleSession          call iced#nrepl#cljs#cycle_session()
 
 command! -nargs=1 IcedEval                  call iced#nrepl#eval#code(<q-args>)
 command! -nargs=1 IcedEvalRepl              call iced#nrepl#eval#repl(<q-args>)

@@ -202,6 +202,7 @@ CLOJURE SCRIPT                                         *vim-iced-clojurescript*
 
   |:IcedStartCljsRepl| to start cljs-repl.
   |:IcedQuitCljsRepl| to quit it.
+  |:IcedCycleSession| to cycle clj/cljs session.
 
   For other environments, you can use |:IcedCljsRepl| command.
 
@@ -439,6 +440,11 @@ COMMANDS                                                    *vim-iced-commands*
   Quit CLJS REPL.
   REPL session changes to 'user' namespace.
   Key is mapped to |<Plug>(iced_quit_cljs_repl)|.
+
+                                                            *:IcedCycleSession*
+:IcedCycleSession
+  Cycle clj/cljs session.
+  Error occurs when CLJS session does not exists.
 
                                                                     *:IcedEval*
 :IcedEval {form}

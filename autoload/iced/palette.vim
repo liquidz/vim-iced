@@ -4,7 +4,7 @@ set cpo&vim
 let s:default_palette = [
       \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt',
       \ 'StartCljsRepl figwheel-sidecar', 'StartCljsRepl graaljs', 'StartCljsRepl nashorn',
-      \ 'QuitCljsRepl',
+      \ 'QuitCljsRepl', 'CycleSession',
       \ 'EvalNs',
       \ 'Require', 'RequireAll',
       \ 'PrintLast',
