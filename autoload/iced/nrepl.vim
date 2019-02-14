@@ -11,6 +11,7 @@ function! s:initialize_nrepl() abort
       \   'repl': '',
       \   'clj':  '',
       \   'cljs': '',
+      \   'cljs_repl': '',
       \   },
       \ }
 endfunction
@@ -37,7 +38,7 @@ endfunction
 
 " SESSIONS {{{
 function! iced#nrepl#set_session(k, v) abort
-  if a:k =~# '\(cljs\?\|repl\)'
+  if a:k =~# '\(cljs\?\|repl\|cljs_repl\)'
     let s:nrepl['sessions'][a:k] = a:v
   else
     throw printf('Invalid session-key to set: %s', a:k)
@@ -67,6 +68,10 @@ endfunction
 
 function! iced#nrepl#cljs_session() abort
   return s:nrepl['sessions']['cljs']
+endfunction
+
+function! iced#nrepl#cljs_repl_session() abort
+  return s:nrepl['sessions']['cljs_repl']
 endfunction
 
 function! iced#nrepl#repl_session() abort
