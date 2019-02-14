@@ -91,9 +91,10 @@ function! iced#nrepl#eval#code(code, ...) abort
   endtry
 endfunction
 
-function! iced#nrepl#eval#repl(code) abort
-  call iced#nrepl#eval(a:code, funcref('s:repl_out'),
-      \ {'session': 'repl'})
+function! iced#nrepl#eval#repl(code, ...) abort
+  let default_session = iced#nrepl#current_session_key() ==# 'cljs' ? 'cljs_repl' : 'repl'
+  let session = get(a:, 1, default_session)
+  call iced#nrepl#eval(a:code, funcref('s:repl_out'), {'session': session})
 endfunction
 
 function! s:undefined(resp, symbol) abort
