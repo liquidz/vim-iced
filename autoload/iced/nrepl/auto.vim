@@ -4,16 +4,9 @@ set cpo&vim
 let g:iced#nrepl#auto#does_switch_session = get(g:, 'iced#nrepl#auto#does_switch_session', v:false)
 let s:leaving = v:false
 
-function! iced#nrepl#auto#bufread() abort
-  if !iced#nrepl#is_connected() | return | endif
-  if !iced#nrepl#check_session_validity(v:false) | return | endif
-
-  call iced#nrepl#ns#eval({_ -> ''})
-  call iced#format#set_indentexpr()
-endfunction
-
 function! iced#nrepl#auto#winenter() abort
   if !g:iced#nrepl#auto#does_switch_session | return | endif
+  if !iced#nrepl#is_connected() | return | endif
   if iced#nrepl#check_session_validity(v:false) | return | endif
 
   let ext = expand('%:e')
@@ -24,6 +17,15 @@ function! iced#nrepl#auto#winenter() abort
     call iced#nrepl#change_current_session('clj')
     call iced#hook#run('session_switched', {'session': 'clj'})
   endif
+endfunction
+
+function! iced#nrepl#auto#bufread() abort
+  if !iced#nrepl#is_connected() | return | endif
+  call iced#nrepl#auto#winenter()
+  if !iced#nrepl#check_session_validity(v:false) | return | endif
+
+  call iced#nrepl#ns#eval({_ -> ''})
+  call iced#format#set_indentexpr()
 endfunction
 
 function! iced#nrepl#auto#bufwrite_post() abort
