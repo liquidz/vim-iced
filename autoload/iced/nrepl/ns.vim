@@ -25,12 +25,7 @@ endfunction
 
 function! s:ns_name_by_var(...) abort
   let session = get(a:, 1, iced#nrepl#current_session())
-  let resp = iced#nrepl#sync#send({
-      \ 'id': iced#nrepl#id(),
-      \ 'op': 'eval',
-      \ 'code': '*ns*',
-      \ 'session': session,
-      \ })
+  let resp = iced#nrepl#sync#eval('*ns*', {'session_id': session})
   if !has_key(resp, 'value')
     return ''
   endif

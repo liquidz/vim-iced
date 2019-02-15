@@ -2,15 +2,14 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! s:switch_session_to_cljs() abort
+  " repl_session is CLJS
   let repl_session = iced#nrepl#repl_session()
+  " cljs_session is CLJS
   let cljs_session = iced#nrepl#sync#clone(repl_session)
+  " cljs_repl_session is CLJS
   let cljs_repl_session = iced#nrepl#sync#clone(cljs_session)
-
-  call iced#nrepl#sync#send({
-        \ 'id': iced#nrepl#id(),
-        \ 'op': 'eval',
-        \ 'code': ':cljs/quit',
-        \ 'session': repl_session})
+  " make repl_session to be CLJ
+  call iced#nrepl#sync#eval(':cljs/quit', {'session_id': repl_session})
 
   call iced#nrepl#set_session('cljs', cljs_session)
   call iced#nrepl#set_session('cljs_repl', cljs_repl_session)
