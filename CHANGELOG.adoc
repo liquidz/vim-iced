@@ -3,21 +3,28 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
-== 0.10.0 (2019-02-14)
+== 0.10.0 (2019-02-19)
 // {{{
 === Added
 * Add support for https://github.com/bhauman/figwheel-main[figwheel-main].
 * Add `:IcedCljsRepl` command for general use of starting CLJS REPL.
 * Add `:IcedCycleSession` command for cycling clj/cljs session.
+* Add `g:iced#nrepl#auto#does_switch_session` option for switching CLJ/CLJS session automatically.
 
 === Changed
 * (Breaking) Rename `figwheel` CLJS environment to `figwheel-sidecar`.
+* Bump nrepl to 0.6.0.
+* Bump cider-nrepl to 0.21.1.
 * Bump piggieback to 0.4.0.
-* (Breaking) Change to require neovim 0.3.2 or later
+* (Breaking) Change to require neovim 0.3.2 or later.
+* Change status text to clarify CLJ/CLJS session status.
 
 === Removed
 * (Breaking) Remove `iced#nrepl#cljs#custom` option.
 ** Instead of this option, `:IcedCljsRepl` command is added.
+
+=== Fixed
+* Fix a bug that response to difference IDs cannot be processed correctly.
 // }}}
 
 == 0.9.3 (2019-01-30)
