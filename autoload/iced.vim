@@ -9,7 +9,12 @@ function! iced#status() abort
   if iced#nrepl#is_evaluating()
     return 'evaluating'
   else
-    return printf('%s repl', iced#nrepl#current_session_key())
+    let k = iced#nrepl#current_session_key()
+    if iced#nrepl#cljs_session() ==# ''
+      return toupper(k)
+    else
+      return (k ==# 'clj') ? 'CLJ(cljs)' : 'CLJS(clj)'
+    endif
   endif
 endfunction
 
