@@ -1164,6 +1164,12 @@ g:iced#var_references#cache_dir
   Directory to save var references result.
   Default value is `'/tmp'`.
 
+                                        *g:iced#nrepl#auto#does_switch_session*
+g:iced#nrepl#auto#does_switch_session
+  If {v:true}, enable automatic switching CLJ/CLJS session.
+  This will be done by |WinEnter| auto command.
+  Default value is `v:false`.
+
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*
 
