@@ -398,7 +398,7 @@ function! iced#nrepl#eval(code, ...) abort
         \ }
 
   if has_key(option, 'use-printer?')
-    let msg['printer'] = get(s:printer_dict, g:iced#nrepl#printer, s:printer_dict['default'])
+    let msg['nrepl.middleware.print/print'] = get(s:printer_dict, g:iced#nrepl#printer, s:printer_dict['default'])
   endif
 
   call iced#nrepl#send(msg)
