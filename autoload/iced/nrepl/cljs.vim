@@ -2,17 +2,19 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! s:switch_session_to_cljs() abort
-  " repl_session is CLJS
-  let repl_session = iced#nrepl#repl_session()
-  " cljs_session is CLJS
-  let cljs_session = iced#nrepl#sync#clone(repl_session)
-  " cljs_repl_session is CLJS
-  let cljs_repl_session = iced#nrepl#sync#clone(cljs_session)
+  " WARN: An exception occurs if an evaluation error occurs in the CLONED cljs session.
+  "       c.f. https://github.com/liquidz/vim-iced/issues/91
+  "       So `original_cljs_session` must be setted to cljs session.
+  let original_cljs_session = iced#nrepl#repl_session()
+  let cljs_repl_session = iced#nrepl#sync#clone(original_cljs_session)
+
+  let repl_session = iced#nrepl#sync#clone(original_cljs_session)
   " make repl_session to be CLJ
   call iced#nrepl#sync#eval(':cljs/quit', {'session_id': repl_session})
 
-  call iced#nrepl#set_session('cljs', cljs_session)
+  call iced#nrepl#set_session('cljs', original_cljs_session)
   call iced#nrepl#set_session('cljs_repl', cljs_repl_session)
+  call iced#nrepl#set_session('repl', repl_session)
   call iced#nrepl#change_current_session('cljs')
   call iced#message#info('started_cljs_repl')
 endfunction
