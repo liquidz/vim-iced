@@ -25,6 +25,9 @@ let s:printer_dict = {
       \ 'default': 'cider.nrepl.pprint/pprint',
       \ }
 
+let s:V = vital#iced#new()
+let s:L = s:V.import('Data.List')
+
 let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
@@ -34,6 +37,14 @@ function! iced#nrepl#id() abort
   let res = s:id_counter
   let s:id_counter = (res < 100) ? res + 1 : 1
   return res
+endfunction
+
+function! s:set_message(id, msg) abort
+  let s:messages[a:id] = a:msg
+endfunction
+
+function! s:clear_messages() abort
+  let s:messages = {}
 endfunction
 
 " SESSIONS {{{
@@ -97,15 +108,16 @@ endfunction
 
 " HANDLER {{{
 function! s:get_message_id(x) abort
-  let x = a:x
-  if type(x) == v:t_list && len(x) > 0
-    let x = x[0]
-  endif
-  if type(x) == v:t_dict
-    return get(x, 'id', get(x, 'original-id', -1))
-  else
+  if type(a:x) != v:t_dict
     return -1
   endif
+  return get(a:x, 'id', get(a:x, 'original-id', -1))
+endfunction
+
+function! s:get_message_ids(x) abort
+  let x = copy(a:x)
+  call map(x, {_, v -> s:get_message_id(v)})
+  return s:L.uniq(x)
 endfunction
 
 function! iced#nrepl#merge_response_handler(resp, last_result) abort
@@ -137,59 +149,69 @@ function! s:dispatcher(ch, resp) abort
   call iced#util#debug(text)
 
   try
-    let resp = iced#di#get('bencode').decode(text)
+    let original_resp = iced#di#get('bencode').decode(text)
   catch /Failed to parse bencode/
     let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
     return
   endtry
 
   let s:response_buffer = ''
-  let id = s:get_message_id(resp)
-  let is_verbose = get(get(s:messages, id, {}), 'verbose', v:true)
+  let responses = iced#util#ensure_array(original_resp)
+  let ids = s:get_message_ids(responses)
+  let original_resp_type = type(original_resp)
 
-  if is_verbose
-    for rsp in iced#util#ensure_array(resp)
-      if type(rsp) != v:t_dict
-        break
-      endif
-
-      if has_key(rsp, 'out')
-        call iced#buffer#stdout#append(rsp['out'])
-      endif
-      if has_key(rsp, 'err')
-        call iced#buffer#stdout#append(rsp['err'])
-      endif
-      if has_key(rsp, 'pprint-out')
-        call iced#buffer#stdout#append(rsp['pprint-out'])
-      endif
-    endfor
-  endif
-
-  if has_key(s:messages, id)
-    let last_handler_result = get(s:messages[id], 'handler_result', '')
-    let Handler = get(s:handlers, s:messages[id]['op'], funcref('s:default_handler'))
-    if type(Handler) == v:t_func
-      let s:messages[id]['handler_result'] = Handler(resp, last_handler_result)
+  for resp in responses
+    if type(resp) != v:t_dict
+      break
     endif
 
-    if iced#util#has_status(resp, 'done')
-      let Callback = get(s:messages[id], 'callback')
-      let handler_result = get(s:messages[id], 'handler_result')
-      unlet s:messages[id]
-      call iced#nrepl#debug#quit()
+    if !get(get(s:messages, s:get_message_id(resp), {}), 'verbose', v:true)
+      continue
+    endif
 
-      if !empty(handler_result) && type(Callback) == v:t_func
-        call Callback(handler_result)
+    if has_key(resp, 'out')
+      call iced#buffer#stdout#append(resp['out'])
+    endif
+    if has_key(resp, 'err')
+      call iced#buffer#stdout#append(resp['err'])
+    endif
+    if has_key(resp, 'pprint-out')
+      call iced#buffer#stdout#append(resp['pprint-out'])
+    endif
+  endfor
+
+  for id in ids
+    if has_key(s:messages, id)
+      let resp = filter(copy(responses), {_, r -> s:get_message_id(r) == id})
+      if original_resp_type == v:t_dict && len(resp) == 1
+        let resp = resp[0]
+      endif
+
+      let last_handler_result = get(s:messages[id], 'handler_result', '')
+      let Handler = get(s:handlers, s:messages[id]['op'], funcref('s:default_handler'))
+      if type(Handler) == v:t_func
+        let s:messages[id]['handler_result'] = Handler(resp, last_handler_result)
+      endif
+
+      if iced#util#has_status(resp, 'done')
+        let Callback = get(s:messages[id], 'callback')
+        let handler_result = get(s:messages[id], 'handler_result')
+        unlet s:messages[id]
+        call iced#nrepl#debug#quit()
+
+        if !empty(handler_result) && type(Callback) == v:t_func
+          call Callback(handler_result)
+        endif
       endif
     endif
-  endif
 
-  if iced#util#has_status(resp, 'need-debug-input')
-    if !iced#buffer#stdout#is_visible()
-      call iced#buffer#stdout#open()
+    if iced#util#has_status(resp, 'need-debug-input')
+      if !iced#buffer#stdout#is_visible()
+        call iced#buffer#stdout#open()
+      endif
+      call iced#nrepl#debug#start(resp)
     endif
-    call iced#nrepl#debug#start(resp)
-  endif
+  endfor
 endfunction
 " }}}
 
@@ -234,7 +256,7 @@ function! iced#nrepl#send(data) abort
   if has_key(data, 'does_not_capture_id')
     unlet data['does_not_capture_id']
   else
-    let s:messages[id] = message
+    call s:set_message(id, message)
   endif
 
   call iced#di#get('channel').sendraw(
@@ -401,7 +423,7 @@ endfunction " }}}
 
 " INTERRUPT {{{
 function! s:interrupted() abort
-  let s:messages = {}
+  call s:clear_messages()
   call iced#message#info('interrupted')
 endfunction
 
