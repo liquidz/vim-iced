@@ -135,3 +135,38 @@ function! s:suite.eval_test() abort
       \ )
   call s:assert.equals(test.result, {'status': ['done'], 'id': 123, 'ns': 'foo.core', 'value': 6})
 endfunction
+
+function! s:suite.get_message_ids_test() abort
+  call s:assert.equals([123], s:funcs.get_message_ids([{'id': 123}]))
+  call s:assert.equals([123, 234], s:funcs.get_message_ids([{'id': 123}, {'id': 234}]))
+  call s:assert.equals([123, 234], s:funcs.get_message_ids([{'id': 123}, {'id': 234}, {'id': 123}]))
+  call s:assert.equals([-1], s:funcs.get_message_ids([{'foo': 'bar'}]))
+  call s:assert.equals([-1, 123], s:funcs.get_message_ids([{'foo': 'bar'}, {'id': 123}]))
+endfunction
+
+function! s:suite.multiple_different_ids_response_test() abort
+  let test = {}
+  function! test.relay_raw(msg) abort
+    if a:msg['op'] !=# 'eval' | return '' | endif
+    let resp1 = iced#di#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': 6, 'status': ['done']})
+    let resp2 = iced#di#get('bencode').encode({'id': 234, 'ns': 'bar.core', 'value': 'baaaarrrr', 'status': ['done']})
+    return printf('%s%s', resp1, resp2)
+  endfunction
+
+  function! test.callback_for_123(result) abort
+    let self['result123'] = a:result
+  endfunction
+
+  function! test.callback_for_234(result) abort
+    let self['result234'] = a:result
+  endfunction
+
+  call s:ch.register_test_builder({'status_value': 'open', 'relay_raw': {msg -> test.relay_raw(msg)}})
+  call s:funcs.set_message(234, {'op': 'eval', 'callback': test.callback_for_234})
+
+  call iced#nrepl#eval('(+ 1 2 3)', {result -> test.callback_for_123(result)}, {'id': 123})
+  call s:assert.equals(test.result123, {'status': ['done'], 'id': 123, 'ns': 'foo.core', 'value': 6})
+  call s:assert.equals(test.result234, {'status': ['done'], 'id': 234, 'ns': 'bar.core', 'value': 'baaaarrrr'})
+
+  call s:funcs.clear_messages()
+endfunction

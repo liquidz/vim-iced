@@ -14,9 +14,11 @@ command!          IcedDisconnect            call iced#nrepl#disconnect()
 command!          IcedReconnect             call iced#nrepl#reconnect()
 command!          IcedInterrupt             call iced#nrepl#interrupt()
 
-command! -nargs=? -complete=custom,iced#nrepl#cljs#env_complete
-    \ IcedStartCljsRepl    call iced#nrepl#cljs#repl(<q-args>)
-command!          IcedQuitCljsRepl          call iced#nrepl#cljs#quit()
+command! -nargs=? IcedCljsRepl              call iced#nrepl#cljs#start_repl(<q-args>)
+command! -nargs=+ -complete=custom,iced#nrepl#cljs#env_complete
+    \ IcedStartCljsRepl    call iced#nrepl#cljs#start_repl_via_env(<f-args>)
+command!          IcedQuitCljsRepl          call iced#nrepl#cljs#stop_repl_via_env()
+command!          IcedCycleSession          call iced#nrepl#cljs#cycle_session()
 
 command! -nargs=1 IcedEval                  call iced#nrepl#eval#code(<q-args>)
 command! -nargs=1 IcedEvalRepl              call iced#nrepl#eval#repl(<q-args>)
@@ -171,6 +173,7 @@ aug vim_iced_initial_setting
   au FileType clojure setl omnifunc=iced#complete#omni
   au BufRead *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufread()
   au BufNewFile *.clj,*.cljs,*.cljc call iced#nrepl#auto#newfile()
+  au WinEnter *.clj,*.cljs call iced#nrepl#auto#winenter()
   au VimLeave * call iced#nrepl#auto#leave()
 aug END
 

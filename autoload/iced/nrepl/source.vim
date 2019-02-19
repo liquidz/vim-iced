@@ -2,7 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! s:show_source(resp) abort
-  if !has_key(a:resp, 'out') || iced#compat#trim(a:resp['out']) ==# 'Source not found'
+  if !has_key(a:resp, 'out') || trim(a:resp['out']) ==# 'Source not found'
     call iced#message#error('not_found')
     return
   endif

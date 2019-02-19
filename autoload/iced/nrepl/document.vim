@@ -163,11 +163,11 @@ function! iced#nrepl#document#current_form() abort
   try
     let @@ = ''
     silent normal! vi(y
-    let code = iced#compat#trim(@@)
+    let code = trim(@@)
     if empty(code)
       exe "normal! \<Esc>"
     else
-      let symbol = iced#compat#trim(split(code, ' ')[0])
+      let symbol = trim(split(code, ' ')[0])
       if stridx(symbol, ':') != 0
         if iced#nrepl#current_session_key() ==# 'cljs'
           let symbol = s:expand_ns_alias(symbol)

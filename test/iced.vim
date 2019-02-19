@@ -9,7 +9,17 @@ function! s:suite.status_test() abort
   call s:ch.register_test_builder({'status_value': 'open'})
   call iced#nrepl#set_session('clj',  'clj-session')
   call iced#nrepl#change_current_session('clj')
-  call s:assert.equals(iced#status(), 'clj repl')
+  call s:assert.equals(iced#status(), 'CLJ')
+endfunction
+
+function! s:suite.status_with_cljs_session_test() abort
+  call s:ch.register_test_builder({'status_value': 'open'})
+  call iced#nrepl#set_session('clj',  'clj-session')
+  call iced#nrepl#set_session('cljs',  'cljs-session')
+  call iced#nrepl#change_current_session('clj')
+  call s:assert.equals(iced#status(), 'CLJ(cljs)')
+  call iced#nrepl#change_current_session('cljs')
+  call s:assert.equals(iced#status(), 'CLJS(clj)')
 endfunction
 
 function! s:suite.status_evaluating_test() abort

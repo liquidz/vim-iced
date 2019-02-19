@@ -44,6 +44,10 @@ endfunction
 
 function! iced#nrepl#sync#session_list() abort
   let resp = iced#nrepl#sync#send({'op': 'ls-sessions'})
+  if empty(resp)
+    return []
+  endif
+
   return get(resp, 'sessions', [])
 endfunction
 
@@ -57,12 +61,15 @@ function! iced#nrepl#sync#pprint(code) abort
         \ })
 endfunction
 
-function! iced#nrepl#sync#eval(code) abort
+function! iced#nrepl#sync#eval(code, ...) abort
+  let option = get(a:, 1, {})
+  let session  = get(option, 'session_id', iced#nrepl#current_session())
+
   return iced#nrepl#sync#send({
         \ 'id': iced#nrepl#id(),
         \ 'op': 'eval',
         \ 'code': a:code,
-        \ 'session': iced#nrepl#current_session()})
+        \ 'session': session})
 endfunction
 
 let &cpo = s:save_cpo

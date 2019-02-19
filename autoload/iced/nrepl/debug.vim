@@ -114,7 +114,7 @@ function! iced#nrepl#debug#start(resp) abort
   endif
 
   redraw
-  let in = iced#compat#trim(input(prompt . "\n: "))
+  let in = trim(input(prompt . "\n: "))
   if type(input_type) == v:t_dict
     let in = ':'.get(input_type, in, 'quit')
   endif

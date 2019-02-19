@@ -7,7 +7,7 @@ function! s:parse_error(err) abort
   " Clojure 1.9 or above
   let err = matchstr(a:err, ', compiling:(.\+:\d\+:\d\+)')
   if !empty(err)
-    let text = iced#compat#trim(substitute(a:err, err, '', ''))
+    let text = trim(substitute(a:err, err, '', ''))
     " 13 = len(', compiling:(')
     let err = err[13:len(err)-2]
     let arr = split(err, ':')
@@ -19,7 +19,7 @@ function! s:parse_error(err) abort
   let err = matchstr(a:err, 'compiling at (.\+:\d\+:\d\+)')
   if !empty(err)
     let idx = stridx(a:err, "\n")
-    let text = (idx == -1) ? '' : iced#compat#trim(strpart(a:err, idx))
+    let text = (idx == -1) ? '' : trim(strpart(a:err, idx))
 
     " 14 = len('compiling at (')
     let err = err[14:len(err)-2]
@@ -56,7 +56,7 @@ endfunction
 
 function! s:repl_out(resp) abort
   call s:out(a:resp)
-  call iced#nrepl#cljs#switch_session(a:resp)
+  call iced#nrepl#cljs#check_switching_session(a:resp)
 endfunction
 
 function! s:is_comment_form(code) abort
@@ -67,7 +67,7 @@ function! s:extract_inside_form(code) abort
   let i = strridx(a:code, ')')
   if i != -1
     " NOTE: 8 = len('(comment')
-    return iced#compat#trim(a:code[8:i-1])
+    return trim(a:code[8:i-1])
   endif
   return a:code
 endfunction
@@ -91,9 +91,10 @@ function! iced#nrepl#eval#code(code, ...) abort
   endtry
 endfunction
 
-function! iced#nrepl#eval#repl(code) abort
-  call iced#nrepl#eval(a:code, funcref('s:repl_out'),
-      \ {'session': 'repl'})
+function! iced#nrepl#eval#repl(code, ...) abort
+  let default_session = iced#nrepl#current_session_key() ==# 'cljs' ? 'cljs_repl' : 'repl'
+  let session = get(a:, 1, default_session)
+  call iced#nrepl#eval(a:code, funcref('s:repl_out'), {'session': session})
 endfunction
 
 function! s:undefined(resp, symbol) abort

@@ -1,4 +1,4 @@
-personal_ws-1.1 en 182 
+personal_ws-1.1 en 186 
 IcedRelatedNamespaces
 grimoire
 IcedGrep
@@ -36,6 +36,7 @@ IcedEvalRepl
 IcedQuitCljsRepl
 hardbreaks
 clj
+FigwheelMain
 ncat
 liquidz
 macroexpand
@@ -73,6 +74,7 @@ src
 updatetime
 IcedFormat
 cljc
+IcedCljsRepl
 repl
 ctrlpvim
 IcedRequireAll
@@ -124,6 +126,7 @@ IcedToggleSrcAndTest
 neovim
 tracehl
 piggieback
+WinEnter
 BufWritePost
 junegunn
 bufread
@@ -167,6 +170,7 @@ IcedBarf
 cljs's
 GraalJS
 graaljs
+IcedCycleSession
 ctrlp
 IcedRequire
 IcedInterrupt

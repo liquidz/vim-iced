@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.9.3
+Version: 0.10.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -19,6 +19,7 @@ CONTENTS                                                    *vim-iced-contents*
   ClojureScript                |vim-iced-clojurescript|
     Piggieback                 |vim-iced-piggieback|
     GraalJS                    |vim-iced-graaljs|
+    FigwheelMain               |vim-iced-figwheel-main|
   Evaluating                   |vim-iced-evaluating|
     Stdout Buffer              |vim-iced-stdout-buffer|
   Testing                      |vim-iced-testing|
@@ -50,10 +51,12 @@ INTRODUCTION                                            *vim-iced-introduction*
   Clojure interactive development environment for Vim8/Neovim.
 
   Requirement:
-  - Vim 8.1 or later, Neovim 0.3.1 or later
+  - Vim 8.1 or later, Neovim 0.3.2 or later
     Neovim support is VERY EXPERIMENTAL
   - Clojure 1.8 or later
     1.9 or later is recommended
+  - For Leiningen user
+    2.8.2 or later
 
   Latest Version:
   - https://github.com/liquidz/vim-iced
@@ -71,10 +74,6 @@ INSTALL                                                      *vim-iced-install*
       https://github.com/ctrlpvim/ctrlp.vim
     - fzf
       https://github.com/junegunn/fzf
-
-  Clojure library dependencies:
-  - Leiningen user: |vim-iced-leiningen|
-  - Boot user: |vim-iced-boot|
 
 ------------------------------------------------------------------------------
 ICED COMMAND                                         *vim-iced-install-command*
@@ -104,8 +103,6 @@ LEININGEN~
                                       cider.nrepl/wrap-macroexpand
                                       cider.nrepl/wrap-ns
                                       cider.nrepl/wrap-out
-                                      cider.nrepl/wrap-pprint
-                                      cider.nrepl/wrap-pprint-fn
                                       cider.nrepl/wrap-spec
                                       cider.nrepl/wrap-test
                                       cider.nrepl/wrap-trace
@@ -135,8 +132,6 @@ BOOT~
       cider.nrepl/wrap-macroexpand
       cider.nrepl/wrap-ns
       cider.nrepl/wrap-out
-      cider.nrepl/wrap-pprint
-      cider.nrepl/wrap-pprint-fn
       cider.nrepl/wrap-spec
       cider.nrepl/wrap-test
       cider.nrepl/wrap-trace
@@ -163,8 +158,6 @@ SHADOW-CLJS~
                          cider.nrepl/wrap-macroexpand
                          cider.nrepl/wrap-ns
                          cider.nrepl/wrap-out
-                         cider.nrepl/wrap-pprint
-                         cider.nrepl/wrap-pprint-fn
                          cider.nrepl/wrap-spec
                          cider.nrepl/wrap-test
                          cider.nrepl/wrap-trace
@@ -200,18 +193,18 @@ NREPL CONNECTION                                    *vim-iced-nrepl-connection*
 CLOJURE SCRIPT                                         *vim-iced-clojurescript*
 
   Supports following environment currently.
-  - figwheel
+  - figwheel-main
+    0.2.0 or later is required.
+  - figwheel-sidecar
   - graaljs
     ClojureScript 1.10.439 or later is required.
   - nashorn
-  - custom
 
-  With {custom} environment, you can define start/stop code.
-  - |g:iced#cljs#custom#start_code|
-  - |g:iced#cljs#custom#stop_code|
+  |:IcedStartCljsRepl| to start cljs-repl.
+  |:IcedQuitCljsRepl| to quit it.
+  |:IcedCycleSession| to cycle clj/cljs session.
 
-  |IcedStartCljsRepl| to start cljs-repl.
-  |IcedQuitCljsRepl| to quit it.
+  For other environments, you can use |:IcedCljsRepl| command.
 
 ------------------------------------------------------------------------------
 PIGGIEBACK                                                *vim-iced-piggieback*
@@ -236,6 +229,15 @@ GRAALJS                                                      *vim-iced-graaljs*
 >
   $ PATH=/path/to/graalvm/bin:$PATH iced repl
 <
+------------------------------------------------------------------------------
+FIGWHEEL MAIN                                          *vim-iced-figwheel-main*
+
+  To start CLJS REPL with figwheel-main, you need to specify {build-id}.
+  Ex. `:IcedCljsRepl (figwheel.main.api/repl-env "build-id")`
+
+  Via `:IcedStartCljsRepl` command, you can specify {build-id} as follows.
+  `:IcedStartCljsRepl figwheel-main build-id`
+
 ==============================================================================
 EVALUATING                                                *vim-iced-evaluating*
 
@@ -400,6 +402,24 @@ COMMANDS                                                    *vim-iced-commands*
   Interrupt some code evaluation in current session.
   Key is mapped to |<Plug>(iced_interrupt)|.
 
+                                                                *:IcedCljsRepl*
+:IcedCljsRepl {form}
+  Start CLJS REPL via user specified code.
+  The code will be passed to `cider.piggieback/cljs-repl`.
+
+  Ex. >
+  ;; figwheel-main
+  :IcedCljsRepl (figwheel.main.api/repl-env "app")
+
+  ;; figwheel-sidecar
+  :IcedCljsRepl (figwheel-sidecar.repl-api/repl-env)
+
+  ;; graaljs
+  :IcedCljsRepl (cljs.repl.graaljs/repl-env)
+
+  ;; nashorn
+  :IcedCljsRepl (cljs.repl.nashorn/repl-env)
+<
                                                            *:IcedStartCljsRepl*
 :IcedStartCljsRepl [{env}]
   Start CLJS REPL with specified environment.
@@ -420,6 +440,11 @@ COMMANDS                                                    *vim-iced-commands*
   Quit CLJS REPL.
   REPL session changes to 'user' namespace.
   Key is mapped to |<Plug>(iced_quit_cljs_repl)|.
+
+                                                            *:IcedCycleSession*
+:IcedCycleSession
+  Cycle clj/cljs session.
+  Error occurs when CLJS session does not exists.
 
                                                                     *:IcedEval*
 :IcedEval {form}
@@ -1138,6 +1163,12 @@ g:iced#refactor#prefix_rewriting
 g:iced#var_references#cache_dir
   Directory to save var references result.
   Default value is `'/tmp'`.
+
+                                        *g:iced#nrepl#auto#does_switch_session*
+g:iced#nrepl#auto#does_switch_session
+  If {v:true}, enable automatic switching CLJ/CLJS session.
+  This will be done by |WinEnter| auto command.
+  Default value is `v:false`.
 
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*

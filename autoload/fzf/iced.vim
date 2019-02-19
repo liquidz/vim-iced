@@ -10,7 +10,7 @@ let s:mode_dict = {
 function! s:sink(result, callback) abort
   if len(a:result) < 2 | return | endif
   let mode = get(s:mode_dict, a:result[0], s:default_mode)
-  let text = iced#compat#trim(a:result[1])
+  let text = trim(a:result[1])
   call a:callback(mode, text)
 endfunction
 

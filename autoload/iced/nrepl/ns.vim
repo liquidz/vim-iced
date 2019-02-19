@@ -25,12 +25,7 @@ endfunction
 
 function! s:ns_name_by_var(...) abort
   let session = get(a:, 1, iced#nrepl#current_session())
-  let resp = iced#nrepl#sync#send({
-      \ 'id': iced#nrepl#id(),
-      \ 'op': 'eval',
-      \ 'code': '*ns*',
-      \ 'session': session,
-      \ })
+  let resp = iced#nrepl#sync#eval('*ns*', {'session_id': session})
   if !has_key(resp, 'value')
     return ''
   endif
@@ -51,7 +46,7 @@ function! iced#nrepl#ns#name() abort
       return ns_name
     endif
     let start = line('.')
-    let line = iced#compat#trim(join(getline(start, start+1), ' '))
+    let line = trim(join(getline(start, start+1), ' '))
     let line = substitute(line, '(ns ', '', '')
     return matchstr(line, '[a-z0-9.\-]\+',
           \ (stridx(line, '^') == 0 ? stridx(line, ' ') : 0))
@@ -157,6 +152,10 @@ function! iced#nrepl#ns#in_repl_session_ns() abort
 endfunction
 
 function! iced#nrepl#ns#does_exist(ns_name) abort
+  " FIXME: Workaround for supporting cider-nrepl 0.21.0
+  "        In cljs, find-ns is bootstrap only.
+  "        https://github.com/clojure/clojurescript/blob/v1.10/src/main/cljs/cljs/core.cljs#L11405
+  if iced#nrepl#current_session_key() ==# 'cljs' | return v:true | endif
   let find_ns_result = iced#nrepl#sync#eval(printf('(if (find-ns ''%s) :ok :ng)', a:ns_name))
   return (find_ns_result['value'] ==# ':ok') ? v:true : v:false
 endfunction

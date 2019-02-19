@@ -1,17 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V  = vital#iced#new()
-let s:S  = s:V.import('Data.String')
-
-function! iced#compat#trim(s) abort
-  if has('nvim')
-    return s:S.trim(a:s)
-  else
-    return trim(a:s)
-  endif
-endfunction
-
 function! iced#compat#appendbufline(expr, lnum, text) abort
   if has('nvim')
     " HACK: Workaround for https://github.com/liquidz/vim-iced/issues/65
