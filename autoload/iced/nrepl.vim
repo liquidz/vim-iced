@@ -355,6 +355,7 @@ function! iced#nrepl#disconnect() abort " {{{
   call iced#di#get('channel').close(s:nrepl['channel'])
   let s:nrepl = s:initialize_nrepl()
   call iced#cache#clear()
+  call iced#nrepl#cljs#reset()
   call iced#message#info('disconnected')
 endfunction " }}}
 
