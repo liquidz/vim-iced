@@ -29,10 +29,10 @@
 
 == Requirements
 
- * Vim 8.1 or later, Neovim 0.3.1 or later
+ * Vim 8.1 or later, Neovim 0.3.2 or later
  ** Neovim support is *VERY EXPERIMENTAL*
  * Clojure 1.8 or later
- ** 1.9 or later is recommended
+ ** 1.10 or later is recommended
  * No python! (boost possible with `if_python3`)
 
 == Features
@@ -81,7 +81,7 @@ and https://github.com/candid82/joker[joker]
 
 |:tophat:
 |ClojureScript support
-|https://github.com/bhauman/lein-figwheel[Figwheel], https://github.com/graalvm/graaljs[GraalJS] and `Nashorn` is supported currently
+|https://github.com/bhauman/figwheel-main[Figwheel Main], https://github.com/bhauman/lein-figwheel[lein-figwheel], https://github.com/graalvm/graaljs[GraalJS] and `Nashorn` is supported currently
 
 |:art:
 |Command palette
