@@ -173,7 +173,7 @@ aug vim_iced_initial_setting
   au FileType clojure setl omnifunc=iced#complete#omni
   au BufRead *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufread()
   au BufNewFile *.clj,*.cljs,*.cljc call iced#nrepl#auto#newfile()
-  au WinEnter *.clj,*.cljs call iced#nrepl#auto#winenter()
+  au WinEnter *.clj,*.cljs,*.cljc call iced#nrepl#auto#winenter()
   au VimLeave * call iced#nrepl#auto#leave()
 aug END
 
