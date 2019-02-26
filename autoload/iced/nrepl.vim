@@ -96,8 +96,7 @@ function! iced#nrepl#check_session_validity(...) abort
 
   if !empty(ext) && ext !=# 'cljc' && sess_key !=# ext
     if is_verbose
-      call iced#message#error_str(
-            \ printf(iced#message#get('invalid_session'), ext))
+      call iced#message#error('invalid_session', ext)
     endif
     return v:false
   endif
