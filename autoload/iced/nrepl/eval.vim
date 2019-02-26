@@ -84,7 +84,7 @@ function! iced#nrepl#eval#code(code, ...) abort
   endif
 
   try
-    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, funcref('s:out'), opt)})
+    call iced#nrepl#eval(code, funcref('s:out'), opt)
   finally
     let @@ = reg_save
     call winrestview(view)
@@ -138,7 +138,7 @@ function! iced#nrepl#eval#outer_top_list() abort
 
   let pos = ret['curpos']
   let opt = {'line': pos[1], 'column': pos[2]}
-  call iced#nrepl#ns#eval({_ -> iced#nrepl#eval#code(code, opt)})
+  call iced#nrepl#eval#code(code, opt)
 endfunction
 
 function! iced#nrepl#eval#ns() abort
