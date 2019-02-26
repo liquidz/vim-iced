@@ -65,6 +65,12 @@ function! iced#nrepl#ns#eval(callback) abort
   endif
 endfunction
 
+function! iced#nrepl#ns#in() abort
+  let ns_name = iced#nrepl#ns#name()
+  if empty(ns_name) | return | endif
+  call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), {_ -> ''})
+endfunction
+
 function! iced#nrepl#ns#require(ns_name, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let code = printf('(clojure.core/require ''%s)', a:ns_name)
