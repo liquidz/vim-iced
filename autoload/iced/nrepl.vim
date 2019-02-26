@@ -281,6 +281,7 @@ function! s:warm_up() abort
   sleep 100m
   call iced#nrepl#op#cider#debug#init()
 
+  call iced#nrepl#ns#eval({_ -> ''})
   call iced#format#set_indentexpr()
 endfunction
 
