@@ -16,6 +16,12 @@ function! s:switch_session_to_cljs() abort
   call iced#nrepl#set_session('cljs_repl', cljs_repl_session)
   call iced#nrepl#set_session('repl', repl_session)
   call iced#nrepl#change_current_session('cljs')
+
+  let ext = expand('%:e')
+  if ext ==# 'cljs' || ext ==# 'cljc'
+    call iced#nrepl#ns#in()
+  endif
+
   call iced#message#info('started_cljs_repl')
 endfunction
 
@@ -25,6 +31,12 @@ function! s:switch_session_to_clj() abort
   call iced#nrepl#set_session('cljs', '')
   call iced#nrepl#set_session('cljs_repl', '')
   call iced#nrepl#change_current_session('clj')
+
+  let ext = expand('%:e')
+  if ext ==# 'clj' || ext ==# 'cljc'
+    call iced#nrepl#ns#in()
+  endif
+
   call iced#message#info('quitted_cljs_repl')
 endfunction
 
