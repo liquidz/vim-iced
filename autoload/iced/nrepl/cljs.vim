@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:switch_session_to_cljs() abort
+function! s:set_cljs_session() abort
   " WARN: An exception occurs if an evaluation error occurs in the CLONED cljs session.
   "       c.f. https://github.com/liquidz/vim-iced/issues/91
   "       So `original_cljs_session` must be setted to cljs session.
@@ -15,29 +15,13 @@ function! s:switch_session_to_cljs() abort
   call iced#nrepl#set_session('cljs', original_cljs_session)
   call iced#nrepl#set_session('cljs_repl', cljs_repl_session)
   call iced#nrepl#set_session('repl', repl_session)
-  call iced#nrepl#change_current_session('cljs')
-
-  let ext = expand('%:e')
-  if ext ==# 'cljs' || ext ==# 'cljc'
-    call iced#nrepl#ns#in()
-  endif
-
-  call iced#message#info('started_cljs_repl')
 endfunction
 
-function! s:switch_session_to_clj() abort
+function! s:unset_cljs_session() abort
   call iced#nrepl#sync#close(iced#nrepl#cljs_session())
   call iced#nrepl#sync#close(iced#nrepl#cljs_repl_session())
   call iced#nrepl#set_session('cljs', '')
   call iced#nrepl#set_session('cljs_repl', '')
-  call iced#nrepl#change_current_session('clj')
-
-  let ext = expand('%:e')
-  if ext ==# 'clj' || ext ==# 'cljc'
-    call iced#nrepl#ns#in()
-  endif
-
-  call iced#message#info('quitted_cljs_repl')
 endfunction
 
 function! iced#nrepl#cljs#check_switching_session(resp) abort
@@ -49,11 +33,25 @@ function! iced#nrepl#cljs#check_switching_session(resp) abort
   if !eq_to_repl_session && !eq_to_cljs_repl_session | return | endif
 
   let ns = a:resp['ns']
+  let ext = expand('%:e')
+
   if eq_to_repl_session && ns ==# 'cljs.user'
-    call s:switch_session_to_cljs()
-    call iced#hook#run('session_switched', {'session': 'cljs'})
+    call s:set_cljs_session()
+    if ext !=# 'clj'
+      call iced#nrepl#change_current_session('cljs')
+      call iced#nrepl#ns#in()
+      call iced#hook#run('session_switched', {'session': 'cljs'})
+    endif
+
+    call iced#message#info('started_cljs_repl')
   elseif eq_to_cljs_repl_session && ns !=# 'cljs.user'
-    call s:switch_session_to_clj()
+    call s:unset_cljs_session()
+    call iced#nrepl#change_current_session('clj')
+    if ext !=# 'cljs'
+      call iced#nrepl#ns#in()
+    endif
+
+    call iced#message#info('quitted_cljs_repl')
     call iced#hook#run('session_switched', {'session': 'clj'})
   endif
 endfunction
