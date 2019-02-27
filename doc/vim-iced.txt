@@ -150,20 +150,20 @@ SHADOW-CLJS~
                   [cider/cider-nrepl "0.21.1"]
                   [iced-nrepl "0.4.1"]]
 
-   :nrepl {:middlewares [cider.nrepl/wrap-classpath
-                         cider.nrepl/wrap-complete
-                         cider.nrepl/wrap-debug
-                         cider.nrepl/wrap-format
-                         cider.nrepl/wrap-info
-                         cider.nrepl/wrap-macroexpand
-                         cider.nrepl/wrap-ns
-                         cider.nrepl/wrap-out
-                         cider.nrepl/wrap-spec
-                         cider.nrepl/wrap-test
-                         cider.nrepl/wrap-trace
-                         cider.nrepl/wrap-undef
-                         refactor-nrepl.middleware/wrap-refactor
-                         iced.nrepl/wrap-iced]}
+   :nrepl {:middleware [cider.nrepl/wrap-classpath
+                        cider.nrepl/wrap-complete
+                        cider.nrepl/wrap-debug
+                        cider.nrepl/wrap-format
+                        cider.nrepl/wrap-info
+                        cider.nrepl/wrap-macroexpand
+                        cider.nrepl/wrap-ns
+                        cider.nrepl/wrap-out
+                        cider.nrepl/wrap-spec
+                        cider.nrepl/wrap-test
+                        cider.nrepl/wrap-trace
+                        cider.nrepl/wrap-undef
+                        refactor-nrepl.middleware/wrap-refactor
+                        iced.nrepl/wrap-iced]}
   }
 <
 ==============================================================================
