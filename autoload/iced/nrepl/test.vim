@@ -42,12 +42,11 @@ function! iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, call
   let code = ret['code']
   if empty(code) | return iced#message#error('finding_code_error') | endif
 
-  call iced#nrepl#ns#eval({_ ->
-        \ iced#nrepl#eval(code, {eval_resp ->
+  call iced#nrepl#eval(code, {eval_resp ->
         \   (has_key(eval_resp, 'value') && eval_resp['value'] !=# 'nil')
         \   ? iced#nrepl#ns#require(a:ns_name, {_ ->
         \       s:test_vars(eval_resp, a:ns_name, a:callback)})
-        \   : iced#message#error('not_found')})})
+        \   : iced#message#error('not_found')})
 endfunction " }}}
 
 " iced#nrepl#test#under_cursor {{{
@@ -273,7 +272,7 @@ function! iced#nrepl#test#under_cursor() abort
   let pos = ret['curpos']
   let option = {'line': pos[1], 'column': pos[2]}
   call iced#sign#unplace_by_name(s:sign_name)
-  call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:extract_var_name(resp)}, option)})
+  call iced#nrepl#eval(code, {resp -> s:extract_var_name(resp)}, option)
 endfunction "}}}
 
 " iced#nrepl#test#ns {{{
@@ -366,7 +365,7 @@ function! iced#nrepl#test#spec_check(...) abort
   if empty(code)
     call iced#message#error('finding_code_error')
   else
-    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:current_var(num_tests, resp)})})
+    call iced#nrepl#eval(code, {resp -> s:current_var(num_tests, resp)})
   endif
 endfunction " }}}
 
