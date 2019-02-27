@@ -22,12 +22,11 @@ endfunction
 
 function! iced#nrepl#connect#auto() abort
   let port = s:detect_shadow_cljs_nrepl_port()
-  if port
-    call iced#nrepl#connect(port, 'cljs')
-    return v:true
+
+  if ! port
+    let port = s:detect_port_from_nrepl_port_file()
   endif
 
-  let port = s:detect_port_from_nrepl_port_file()
   if port
     call iced#nrepl#connect(port)
     return v:true
