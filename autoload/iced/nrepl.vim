@@ -145,7 +145,7 @@ endfunction
 " DISPATCHER {{{
 function! s:dispatcher(ch, resp) abort
   let text = printf('%s%s', s:response_buffer, a:resp)
-  call iced#util#debug(text)
+  call iced#util#debug('<<<', text)
 
   try
     let original_resp = iced#di#get('bencode').decode(text)
@@ -234,6 +234,8 @@ function! iced#nrepl#send(data) abort
     call iced#message#warning('reading')
     return
   endif
+
+  call iced#util#debug('>>>', a:data)
 
   let data = copy(a:data)
   let id = s:get_message_id(data)
