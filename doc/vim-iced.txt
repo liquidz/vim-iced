@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.10.0
+Version: 0.11.0-dev
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -20,6 +20,7 @@ CONTENTS                                                    *vim-iced-contents*
     Piggieback                 |vim-iced-piggieback|
     GraalJS                    |vim-iced-graaljs|
     FigwheelMain               |vim-iced-figwheel-main|
+    shadow-cljs                |vim-iced-shadow-cljs|
   Evaluating                   |vim-iced-evaluating|
     Stdout Buffer              |vim-iced-stdout-buffer|
   Testing                      |vim-iced-testing|
@@ -143,6 +144,7 @@ BOOT~
 SHADOW-CLJS~
 
   WARNING: `iced` command does not support shadow-cljs currently.
+
   shadow-cljs.edn
 >
   {
@@ -166,6 +168,8 @@ SHADOW-CLJS~
                         iced.nrepl/wrap-iced]}
   }
 <
+  To start CLJS REPL, see |vim-iced-shadow-cljs|.
+
 ==============================================================================
 BOOST BY PYTHON                                       *vim-iced-install-python*
 
@@ -237,6 +241,24 @@ FIGWHEEL MAIN                                          *vim-iced-figwheel-main*
 
   Via `:IcedStartCljsRepl` command, you can specify {build-id} as follows.
   `:IcedStartCljsRepl figwheel-main build-id`
+
+------------------------------------------------------------------------------
+SHADOW-CLJS                                              *vim-iced-shadow-cljs*
+
+  To start CLJS REPL with shadow-cljs, you need 3 steps.
+
+  1. Add definitions to shadow-cljs.edn
+    See details: |vim-iced-manual-shadow-cljs|
+
+  2. Start to watch
+    `$ shadow-cljs watch {build-id}`
+
+  3. Connect and start cljs-repl
+    - |:IcedConnect|
+    - |:IcedStartCljsRepl| shadow-cljs {build-id}
+
+  If you would like to start CLJS REPL by hand, you can do it as follows.
+  `:IcedEvalRepl (shadow.cljs.devtools.api/repl :build-id)`
 
 ==============================================================================
 EVALUATING                                                *vim-iced-evaluating*
@@ -427,11 +449,11 @@ COMMANDS                                                    *vim-iced-commands*
   If {env} is not passed, |g:iced#cljs#default_env| is used.
 
   Supports following environment currently.
-  - figwheel
+  - figwheel-sidecar
+  - figwheel-main
   - nashorn
-  - custom
-    see |g:iced#cljs#custom#start_code|
-        |g:iced#cljs#custom#stop_code|
+  - graaljs
+  - shadow-cljs
 
   Key is mapped to |<Plug>(iced_start_cljs_repl)|.
 
