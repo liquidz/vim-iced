@@ -297,7 +297,8 @@ endfunction
 function! s:connected(resp, initial_session) abort
   if has_key(a:resp, 'new-session')
     let session = a:resp['new-session']
-    call iced#nrepl#set_session('repl', session)
+    let repl_session_key = (a:initial_session ==# 'cljs') ? 'cljs_repl' : 'repl'
+    call iced#nrepl#set_session(repl_session_key, session)
 
     let new_session = iced#nrepl#sync#clone(session)
     call iced#nrepl#set_session(a:initial_session, new_session)
