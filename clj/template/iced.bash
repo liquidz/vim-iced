@@ -99,6 +99,12 @@ do
         break
     fi
 
+    ls shadow-cljs.edn > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        IS_SHADOW_CLJS=1
+        break
+    fi
+
     cd ..
     if [ $(pwd) == $CWD ]; then
         break
@@ -133,6 +139,10 @@ case "$1" in
                 clojure $OPTIONS -Sdeps "{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"} {{{cli-cljs-extra-deps}}}}}" \
                     -m iced-repl 'with-cljs-middleware'
             fi
+        elif [ $IS_SHADOW_CLJS -eq 1 ]; then
+            echo_error 'Currently iced command does not support shadow-cljs.'
+            echo 'Please see `:h vim-iced-manual-shadow-cljs` for manual setting up.'
+            exit 1
         else
             echo_error 'Failed to detect clojure project'
             exit 1
