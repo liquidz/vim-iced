@@ -72,13 +72,16 @@ endfunction
 
 function! iced#nrepl#cljs#start_repl(code, ...) abort
   if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect() | return v:false | endif
-  if !iced#nrepl#system#piggieback_enabled()
+
+  let opt = get(a:, 1, {})
+  let does_use_piggieback = get(opt, 'does_use_piggieback', v:true)
+
+  if does_use_piggieback && !iced#nrepl#system#piggieback_enabled()
     call iced#message#error('no_piggieback')
     return v:false
   endif
 
   if iced#nrepl#current_session_key() ==# 'clj'
-    let opt = get(a:, 1, {})
     let pre_code = get(opt, 'pre', '')
 
     if type(a:code) == v:t_dict && has_key(a:code, 'raw')
@@ -141,7 +144,10 @@ function! iced#nrepl#cljs#start_repl_via_env(env_key, ...) abort
 
     let pre_code = type(Pre_code_f) == v:t_func ? Pre_code_f() : ''
     let env_code = Env_code_f()
-    if iced#nrepl#cljs#start_repl(env_code, {'pre': pre_code})
+
+    let opt = copy(env)
+    call extend(opt, {'pre': pre_code})
+    if iced#nrepl#cljs#start_repl(env_code, opt)
       let s:using_env = env
     endif
   endif
