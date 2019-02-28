@@ -6,6 +6,7 @@ function! s:initialize_nrepl() abort
   return {
       \ 'port': '',
       \ 'channel': v:false,
+      \ 'is_ready': v:false,
       \ 'current_session_key': '',
       \ 'sessions': {
       \   'repl': '',
@@ -282,8 +283,8 @@ function! s:warm_up() abort
   sleep 100m
   call iced#nrepl#op#cider#debug#init()
 
-  if iced#nrepl#check_session_validity()
-    call iced#nrepl#ns#eval({_ -> ''})
+  if iced#nrepl#check_session_validity(v:false)
+    call iced#nrepl#ns#in()
   endif
   call iced#format#set_indentexpr()
 endfunction
@@ -309,10 +310,16 @@ function! s:connected(resp, initial_session) abort
     call iced#buffer#stdout#init()
     call iced#buffer#document#init()
     call iced#buffer#error#init()
+
+    let s:nrepl['is_ready'] = v:true
     silent call s:warm_up()
 
     call iced#message#info('connected')
   endif
+endfunction
+
+function! s:is_connection_established() abort
+  return (s:status(s:nrepl['channel']) ==# 'open')
 endfunction
 
 function! iced#nrepl#connect(port, ...) abort
@@ -330,7 +337,7 @@ function! iced#nrepl#connect(port, ...) abort
     return iced#nrepl#connect#auto()
   endif
 
-  if ! iced#nrepl#is_connected()
+  if !s:is_connection_established()
     let address = printf('%s:%d', g:iced#nrepl#host, a:port)
     let s:nrepl['port'] = a:port
     let s:nrepl['channel'] = iced#di#get('channel').open(address, {
@@ -339,7 +346,7 @@ function! iced#nrepl#connect(port, ...) abort
         \ 'drop': 'never',
         \ })
 
-    if !iced#nrepl#is_connected()
+    if !s:is_connection_established()
       let s:nrepl['channel'] = v:false
       call iced#message#error('connect_error')
       return v:false
@@ -352,7 +359,7 @@ function! iced#nrepl#connect(port, ...) abort
 endfunction
 
 function! iced#nrepl#is_connected() abort " {{{
-  return (s:status(s:nrepl['channel']) ==# 'open')
+  return s:is_connection_established() && s:nrepl['is_ready']
 endfunction " }}}
 
 function! iced#nrepl#disconnect() abort " {{{
