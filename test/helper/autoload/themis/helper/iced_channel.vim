@@ -20,7 +20,15 @@ function! s:build_test_channel(opt) abort
   endfunction
 
   function! dummy.status(handle) abort
-    return self.status_value
+    if type(self.status_value) == v:t_list
+      if empty(self.status_value)
+        return 'fail'
+      else
+        return remove(self.status_value, 0)
+      endif
+    else
+      return self.status_value
+    endif
   endfunction
 
   function! dummy.sendraw(handle, string) abort

@@ -61,8 +61,12 @@ function! s:suite.connect_test() abort
     return {}
   endfunction
 
+  " # status_value
+  "   1.fail means not connected yet
+  "   2.fail means not connected by auto connection
+  "   3.open means connection established
   call s:ch.register_test_builder({
-      \ 'status_value': 'open',
+      \ 'status_value': ['fail', 'fail', 'open'],
       \ 'relay': {msg -> test.relay(msg)},
       \ })
 

@@ -322,7 +322,8 @@ function! iced#nrepl#connect(port, ...) abort
   endif
 
   if iced#nrepl#is_connected()
-    return iced#message#info('already_connected')
+    call iced#message#info('already_connected')
+    return v:true
   endif
 
   if empty(a:port)
