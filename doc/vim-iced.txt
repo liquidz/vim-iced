@@ -270,6 +270,9 @@ EVALUATING                                                *vim-iced-evaluating*
   |:IcedEvalRepl| will evaluate form in REPL session.
   See details: |<Plug>(iced_eval_repl)|
 
+  |:IcedEvalVisual| will evaluate selected form.
+  |:IcedEvalReplVisual| will evaluate selected form in REPL session.
+
 ------------------------------------------------------------------------------
 STDOUT BUFFER                                          *vim-iced-stdout-buffer*
 
@@ -482,6 +485,16 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedEvalNs
   Evaluate `ns` form in current session.
   Key is mapped to |<Plug>(iced_eval_ns)|
+
+                                                              *:IcedEvalVisual*
+:IcedEvalVisual
+  Evaluate selected form in current session.
+  Key is mapped to |<Plug>(iced_eval_visual)|
+
+                                                          *:IcedEvalReplVisual*
+:IcedEvalReplVisual
+  Evaluate selected form in REPL session.
+  Key is mapped to |<Plug>(iced_eval_repl_visual)|
 
                                                                  *:IcedRequire*
 :IcedRequire
@@ -845,7 +858,17 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <
                                                          *<Plug>(iced_eval_ns)*
 <Plug>(iced_eval_ns)
-  Same as |:IcedEvalNs|
+  Same as |:IcedEvalNs|.
+
+                                                     *<Plug>(iced_eval_visual)*
+<Plug>(iced_eval_visual)
+  Same as |:IcedEvalVisual|.
+  This is mapped to `vnoremap`.
+
+                                                *<Plug>(iced_eval_repl_visual)*
+<Plug>(iced_eval_repl_visual)
+  Same as |:IcedEvalReplVisual|.
+  This is mapped to `vnoremap`.
 
                                                      *<Plug>(iced_macroexpand)*
 <Plug>(iced_macroexpand)
@@ -1333,54 +1356,56 @@ DEFAULT KEYS                                *vim-iced-customizing-default-keys*
 g:iced_enable_default_key_mappings
   If {v:true}, apply following mappings.
 
-  {lhs}          {rhs}
-  -----------    ---------------------------------------------------
-  <Leader>'      <Plug>(iced_connect)
-  <Leader>ei     <Plug>(iced_eval)<Plug>(sexp_inner_element)``
-  <Leader>ee     <Plug>(iced_eval)<Plug>(sexp_outer_list)``
-  <Leader>et     <Plug>(iced_eval_outer_top_list)
-  <Leader>er     <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
-  <Leader>en     <Plug>(iced_eval_ns)
-  <Leader>ep     <Plug>(iced_print_last)
-  <Leader>eb     <Plug>(iced_require)
-  <Leader>eB     <Plug>(iced_require_all)
-  <Leader>eu     <Plug>(iced_undef)
-  <Leader>eM     <Plug>(iced_macroexpand_outer_list)
-  <Leader>em     <Plug>(iced_macroexpand_1_outer_list)
-  <Leader>tt     <Plug>(iced_test_under_cursor)
-  <Leader>tl     <Plug>(iced_test_rerun_last)
-  <Leader>ts     <Plug>(iced_test_spec_check)
-  <Leader>to     <Plug>(iced_test_buffer_open)
-  <Leader>tn     <Plug>(iced_test_ns)
-  <Leader>tp     <Plug>(iced_test_all)
-  <Leader>tr     <Plug>(iced_test_redo)
-  <Leader>ss     <Plug>(iced_stdout_buffer_open)
-  <Leader>sl     <Plug>(iced_stdout_buffer_clear)
-  <Leader>sq     <Plug>(iced_stdout_buffer_close)
-  <Leader>rcn    <Plug>(iced_clean_ns)
-  <Leader>ram    <Plug>(iced_add_missing)
-  <Leader>ran    <Plug>(iced_add_ns)
-  <Leader>rtf    <Plug>(iced_thread_first)
-  <Leader>rtl    <Plug>(iced_thread_last)
-  <Leader>ref    <Plug>(iced_extract_function)
-  <Leader>rml    <Plug>(iced_move_to_let)
-  <Leader>hs     <Plug>(iced_source_show)
-  <Leader>hg     <Plug>(iced_grimoire_open)
-  <Leader>hh     <Plug>(iced_command_palette)
-  <Leader>br     <Plug>(iced_related_namespace)
-  <Leader>bs     <Plug>(iced_browse_spec)
-  <Leader>bt     <Plug>(iced_browse_test_under_cursor)
-  <Leader>jn     <Plug>(iced_jump_to_next_sign)
-  <Leader>jN     <Plug>(iced_jump_to_prev_sign)
-  <Leader>gl     <Plug>(iced_goto_let)
-  <Leader>fr     <Plug>(iced_find_var_references)
-  <Leader>fR     <Plug>(iced_find_var_references!)
-  <Leader>*      <Plug>(iced_grep)
-  <Leader>/      :<C-u>IcedGrep<Space>
-  <C-]>          <Plug>(iced_def_jump)
-  <C-t>          <Plug>(iced_def_back)
-  K              <Plug>(iced_document_open)
-  ==             <Plug>(iced_format)
+  {mode}  {lhs}        {rhs}
+  ------  -----------  ---------------------------------------------------
+  n       <Leader>'    <Plug>(iced_connect)
+  n       <Leader>ei   <Plug>(iced_eval)<Plug>(sexp_inner_element)``
+  n       <Leader>ee   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
+  n       <Leader>et   <Plug>(iced_eval_outer_top_list)
+  n       <Leader>er   <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
+  n       <Leader>en   <Plug>(iced_eval_ns)
+  v       <Leader>ee   <Plug>(iced_eval_visual)
+  v       <Leader>er   <Plug>(iced_eval_repl_visual)
+  n       <Leader>ep   <Plug>(iced_print_last)
+  n       <Leader>eb   <Plug>(iced_require)
+  n       <Leader>eB   <Plug>(iced_require_all)
+  n       <Leader>eu   <Plug>(iced_undef)
+  n       <Leader>eM   <Plug>(iced_macroexpand_outer_list)
+  n       <Leader>em   <Plug>(iced_macroexpand_1_outer_list)
+  n       <Leader>tt   <Plug>(iced_test_under_cursor)
+  n       <Leader>tl   <Plug>(iced_test_rerun_last)
+  n       <Leader>ts   <Plug>(iced_test_spec_check)
+  n       <Leader>to   <Plug>(iced_test_buffer_open)
+  n       <Leader>tn   <Plug>(iced_test_ns)
+  n       <Leader>tp   <Plug>(iced_test_all)
+  n       <Leader>tr   <Plug>(iced_test_redo)
+  n       <Leader>ss   <Plug>(iced_stdout_buffer_open)
+  n       <Leader>sl   <Plug>(iced_stdout_buffer_clear)
+  n       <Leader>sq   <Plug>(iced_stdout_buffer_close)
+  n       <Leader>rcn  <Plug>(iced_clean_ns)
+  n       <Leader>ram  <Plug>(iced_add_missing)
+  n       <Leader>ran  <Plug>(iced_add_ns)
+  n       <Leader>rtf  <Plug>(iced_thread_first)
+  n       <Leader>rtl  <Plug>(iced_thread_last)
+  n       <Leader>ref  <Plug>(iced_extract_function)
+  n       <Leader>rml  <Plug>(iced_move_to_let)
+  n       <Leader>hs   <Plug>(iced_source_show)
+  n       <Leader>hg   <Plug>(iced_grimoire_open)
+  n       <Leader>hh   <Plug>(iced_command_palette)
+  n       <Leader>br   <Plug>(iced_related_namespace)
+  n       <Leader>bs   <Plug>(iced_browse_spec)
+  n       <Leader>bt   <Plug>(iced_browse_test_under_cursor)
+  n       <Leader>jn   <Plug>(iced_jump_to_next_sign)
+  n       <Leader>jN   <Plug>(iced_jump_to_prev_sign)
+  n       <Leader>gl   <Plug>(iced_goto_let)
+  n       <Leader>fr   <Plug>(iced_find_var_references)
+  n       <Leader>fR   <Plug>(iced_find_var_references!)
+  n       <Leader>*    <Plug>(iced_grep)
+  n       <Leader>/    :<C-u>IcedGrep<Space>
+  n       <C-]>        <Plug>(iced_def_jump)
+  n       <C-t>        <Plug>(iced_def_back)
+  n       K            <Plug>(iced_document_open)
+  n       ==           <Plug>(iced_format)
 
 ==============================================================================
 CHANGELOG                                                  *vim-iced-changelog*

@@ -150,5 +150,23 @@ function! iced#nrepl#eval#ns() abort
   call iced#nrepl#eval#code(ns_code)
 endfunction
 
+function! s:eval_visual(evaluator) abort
+  let reg_save = @@
+  try
+    silent normal! gvy
+    call a:evaluator(trim(@@))
+  finally
+    let @@ = reg_save
+  endtry
+endfunction
+
+function! iced#nrepl#eval#visual() abort " range
+  call s:eval_visual(function('iced#nrepl#eval#code'))
+endfunction
+
+function! iced#nrepl#eval#repl_visual() abort " range
+  call s:eval_visual(function('iced#nrepl#eval#repl'))
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
