@@ -49,6 +49,8 @@ function! iced#lint#echo_message() abort
   let msg = iced#lint#find_message(line('.'), expand('%:p'))
   if !empty(msg)
     call s:M.echo('WarningMsg', iced#util#shorten(msg))
+    call iced#di#get('virtual_text').set(msg,
+          \ {'auto_clear': v:true, 'highlight': 'WarningMsg'})
   endif
 endfunction
 
