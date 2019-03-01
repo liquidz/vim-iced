@@ -57,6 +57,8 @@ function! s:suite.connect_test() abort
   function! test.relay(msg) abort
     if a:msg['op'] ==# 'clone'
       return {'status': ['done'], 'new-session': remove(self.session_patterns, 0)}
+    else
+      return {'status': ['done']}
     endif
     return {}
   endfunction

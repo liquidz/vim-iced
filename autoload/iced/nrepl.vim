@@ -6,7 +6,6 @@ function! s:initialize_nrepl() abort
   return {
       \ 'port': '',
       \ 'channel': v:false,
-      \ 'is_ready': v:false,
       \ 'current_session_key': '',
       \ 'sessions': {
       \   'repl': '',
@@ -307,19 +306,10 @@ function! s:connected(resp, initial_session) abort
     call iced#nrepl#set_session(a:initial_session, new_session)
     call iced#nrepl#change_current_session(a:initial_session)
 
-    call iced#buffer#stdout#init()
-    call iced#buffer#document#init()
-    call iced#buffer#error#init()
-
-    let s:nrepl['is_ready'] = v:true
     silent call s:warm_up()
 
     call iced#message#info('connected')
   endif
-endfunction
-
-function! s:is_connection_established() abort
-  return (s:status(s:nrepl['channel']) ==# 'open')
 endfunction
 
 function! iced#nrepl#connect(port, ...) abort
@@ -333,11 +323,17 @@ function! iced#nrepl#connect(port, ...) abort
     return v:true
   endif
 
+  " NOTE: Initialize buffers here to avoid firing `winenter` autocmd
+  "       after connection established
+  call iced#buffer#stdout#init()
+  call iced#buffer#document#init()
+  call iced#buffer#error#init()
+
   if empty(a:port)
     return iced#nrepl#connect#auto()
   endif
 
-  if !s:is_connection_established()
+  if !iced#nrepl#is_connected()
     let address = printf('%s:%d', g:iced#nrepl#host, a:port)
     let s:nrepl['port'] = a:port
     let s:nrepl['channel'] = iced#di#get('channel').open(address, {
@@ -346,7 +342,7 @@ function! iced#nrepl#connect(port, ...) abort
         \ 'drop': 'never',
         \ })
 
-    if !s:is_connection_established()
+    if !iced#nrepl#is_connected()
       let s:nrepl['channel'] = v:false
       call iced#message#error('connect_error')
       return v:false
@@ -359,7 +355,7 @@ function! iced#nrepl#connect(port, ...) abort
 endfunction
 
 function! iced#nrepl#is_connected() abort " {{{
-  return s:is_connection_established() && s:nrepl['is_ready']
+  return (s:status(s:nrepl['channel']) ==# 'open')
 endfunction " }}}
 
 function! iced#nrepl#disconnect() abort " {{{
