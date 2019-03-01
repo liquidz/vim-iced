@@ -84,6 +84,8 @@ function! s:abbrev_value(s) abort
        \ : a:s
 endfunction
 
+let s:debug_info_window_id = -1
+
 function! iced#nrepl#debug#start(resp) abort
   if type(s:saved_view) != v:t_dict
     let s:saved_view = iced#util#save_cursor_position()
@@ -92,9 +94,9 @@ function! iced#nrepl#debug#start(resp) abort
   let resp = s:ensure_dict(a:resp)
   call s:move_cursor_and_set_highlight(resp)
 
-  call iced#buffer#stdout#append(" \n;; Debugging")
-  call iced#buffer#stdout#append(printf('::value %s', s:abbrev_value(resp['debug-value'])))
-  call iced#buffer#stdout#append('::locals')
+  let debug_texts = []
+  call add(debug_texts, printf(' ::value %s', s:abbrev_value(resp['debug-value'])))
+  call add(debug_texts, ' ::locals')
 
   let locals = resp['locals']
   let ks = map(copy(locals), {_, v -> v[0]})
@@ -102,8 +104,30 @@ function! iced#nrepl#debug#start(resp) abort
   for kv in locals
     let [k, v] = kv
     let v = s:abbrev_value(v)
-    call iced#buffer#stdout#append(printf('%' . max_key_len . 's: %s', k, v))
+    call add(debug_texts, printf(' %' . max_key_len . 's: %s', k, v))
   endfor
+
+  let width = max(map(copy(debug_texts), {_, v -> len(v)})) - 2
+  let head = printf(' ;; Debugging %s', (width <= 10) ? '' : iced#util#char_repeat(width-10, '-'))
+  let foot = printf(' ;; %s', iced#util#char_repeat(width, '-'))
+
+  call insert(debug_texts, head)
+  call add(debug_texts, foot)
+
+  if iced#buffer#floating#is_supported()
+    if s:debug_info_window_id != -1
+      call iced#buffer#floating#close(s:debug_info_window_id)
+    endif
+    let s:debug_info_window_id = iced#buffer#floating#open(debug_texts, {
+          \ 'line': line('.') + 1,
+          \ 'col': col('.')-2,
+          \ 'auto_close': v:false
+          \ })
+  else
+    for text in debug_texts
+      call iced#buffer#stdout#append(text)
+    endfor
+  endif
 
   let input_type = resp['input-type']
   if type(input_type) == v:t_dict
@@ -128,6 +152,11 @@ function! iced#nrepl#debug#quit() abort
     call iced#highlight#clear()
     call iced#util#restore_cursor_position(s:saved_view)
     let s:saved_view = ''
+
+    if s:debug_info_window_id != -1
+      call iced#buffer#floating#close(s:debug_info_window_id)
+    endif
+    let s:debug_info_window_id = -1
   endif
 endfunction
 
