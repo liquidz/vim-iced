@@ -17,6 +17,11 @@ function! s:bufnr(bufname) abort
   return get(info, 'bufnr', -1)
 endfunction
 
+function! iced#buffer#nr(bufname) abort
+  let info = get(s:info, a:bufname, {})
+  return get(info, 'bufnr', -1)
+endfunction
+
 function! s:bufwinnr(bufname) abort
   return bufwinnr(s:bufnr(a:bufname))
 endfunction
