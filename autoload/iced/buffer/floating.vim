@@ -34,6 +34,7 @@ function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&filetype', s:default_filetype)
   call setbufvar(a:bufnr, '&swapfile', 0)
   call setbufvar(a:bufnr, '&wrap', 0)
+  call setbufvar(a:bufnr, '&winhl', 'Normal:Folded')
 endfunction
 
 function! iced#buffer#floating#is_supported() abort
@@ -69,7 +70,7 @@ function! iced#buffer#floating#open(texts, ...) abort
   let col = get(opts, 'col', len(getline('.')) + 1)
 
   let max_width = &columns - col - 5
-  let width = max(map(copy(a:texts), {_, v -> len(v)})) + 1
+  let width = max(map(copy(a:texts), {_, v -> len(v)})) + 2
   let width = (width > max_width) ? max_width : width
   let height = len(a:texts)
   let height = (height > s:max_height) ? s:max_height : height
