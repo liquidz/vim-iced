@@ -108,7 +108,8 @@ function! iced#nrepl#debug#start(resp) abort
   endfor
 
   let width = max(map(copy(debug_texts), {_, v -> len(v)})) - 2
-  let head = printf(' ;; Debugging %s', (width <= 10) ? '' : iced#util#char_repeat(width-10, '-'))
+  let head = ' ;; Debugging'
+  let head = (width <= 10) ? head : printf('%s %s', head, iced#util#char_repeat(width-10, '-'))
   let foot = printf(' ;; %s', iced#util#char_repeat(width, '-'))
 
   call insert(debug_texts, head)
