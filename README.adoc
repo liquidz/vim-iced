@@ -22,17 +22,14 @@
     <img src="https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg" alt="Powered by vital.vim" />
   </a>
 </p>
-<p align="center">
-  <img src="https://img.shields.io/badge/status-WORK%20IN%20PROGRESS-red.svg" alt="Work in progress" />
-</p>
 +++
 
 == Requirements
 
- * Vim 8.1 or later, Neovim 0.3.2 or later
- ** Neovim support is *VERY EXPERIMENTAL*
- * Clojure 1.8 or later
- ** 1.10 or later is recommended
+ * Vim 8.1 or later, Neovim 0.3.2 or later.
+ ** Neovim support is *EXPERIMENTAL*.
+ * Clojure 1.8 or later.
+ ** 1.10 or later is recommended.
  * No python! (boost possible with `if_python3`)
 
 == Features
@@ -47,18 +44,18 @@
 |:fire:
 |Testing
 |[%hardbreaks]
-run test under cursor
-run tests in namespace
-re run failed/last test
+Run test under cursor
+Run tests in namespace
+Re run failed/last test
 
 |:rocket:
 |Refactoring
 |[%hardbreaks]
-clean namespace
-add missing
-thread first/last
-extract function
-move to let
+Clean namespace
+Add missing
+Thread first/last
+Extract function
+Move to let
 
 |:mag:
 |Reference
@@ -66,26 +63,31 @@ move to let
 
 |:ant:
 |Debugging
-|supports cider-nrepl's debugger
+|Supports cider-nrepl's debugger
 https://twitter.com/uochan/status/1034404572368842752[:movie_camera:]
 
 |:eyes:
 |Linting
-|powered by https://github.com/jonase/eastwood[jonase/eastwood]
+|Powered by https://github.com/jonase/eastwood[jonase/eastwood]
 https://twitter.com/uochan/status/1038050122062413824[:movie_camera:]
 and https://github.com/candid82/joker[joker]
 
 |:notebook:
 |Skeleton
-|provides code skeleton when you open new file
+|Provides code skeleton when you open new file
 
 |:tophat:
 |ClojureScript support
-|https://github.com/bhauman/figwheel-main[Figwheel Main], https://github.com/bhauman/lein-figwheel[lein-figwheel], https://github.com/graalvm/graaljs[GraalJS] and `Nashorn` is supported currently
+|[%hardbreaks]
+Supports followings currently.
+- https://github.com/bhauman/figwheel-main[Figwheel Main], https://github.com/bhauman/lein-figwheel[lein-figwheel]
+- https://github.com/thheller/shadow-cljs[shadow-cljs]
+- https://github.com/graalvm/graaljs[GraalJS]
+- Nashorn
 
 |:art:
 |Command palette
-|access commands smoothly and define user custom commands
+|Access commands smoothly and define user custom commands
 
 |===
 
@@ -123,13 +125,14 @@ NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim] or https://github.com/jun
 === Manual setting (not recommended)
 
 * See `Manual Install` section in link:./doc/vim-iced.txt[vim-iced.txt].
+** To work with https://github.com/thheller/shadow-cljs[shadow-cljs], you need to set up manually.
 
 == Usage
 
-. Start repl via `iced` command
+. Start repl via `iced` command.
 ** `iced repl`
-. Open source file
-. Evaluate forms (If not connected, vim-iced will connect automatically)
+. Open source file.
+. Evaluate forms. (If not connected, vim-iced will connect automatically)
 
 == Configuration
 
