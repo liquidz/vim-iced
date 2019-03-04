@@ -397,6 +397,7 @@ LINTING                                                      *vim-iced-linting*
   aug END
 <
   To define which linters to use, see |g:iced#eastwood#option|.
+  To show warnings as virtual text, see |g:iced#lint#use_virtual_text|.
 
 ==============================================================================
 INTERFACE                                                  *vim-iced-interface*
@@ -1254,6 +1255,13 @@ g:iced#eastwood#option
       \ 'exclude-linters': ['implicit-dependencies'],
       \ }
 <
+                                                *g:iced#lint#use_virtual_text*
+g:iced#lint#use_virtual_text
+  WARNING: Neovim only
+
+  If {v:true}, use virtual text to show lint warning text.
+  Default value is `v:false`.
+
                                                    *g:iced_enable_auto_linting*
 g:iced_enable_auto_linting
   If {v:true}, enable linting automatically.

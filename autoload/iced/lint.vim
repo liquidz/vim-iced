@@ -8,6 +8,7 @@ let s:last_warnings = []
 let s:enabled = v:true
 let s:sign_name = 'iced_lint'
 let g:iced#eastwood#option = get(g:, 'iced#eastwood#option', {})
+let g:iced#lint#use_virtual_text = get(g:, 'iced#lint#use_virtual_text', v:false)
 
 function! iced#lint#is_enabled() abort
   return s:enabled
@@ -49,8 +50,11 @@ function! iced#lint#echo_message() abort
   let msg = iced#lint#find_message(line('.'), expand('%:p'))
   if !empty(msg)
     call s:M.echo('WarningMsg', iced#util#shorten(msg))
-    call iced#di#get('virtual_text').set(msg,
-          \ {'auto_clear': v:true, 'highlight': 'WarningMsg'})
+    if g:iced#lint#use_virtual_text
+      call iced#di#get('virtual_text').set(
+            \ printf('=> %s', msg),
+            \ {'auto_clear': v:true, 'highlight': 'WarningMsg'})
+    endif
   endif
 endfunction
 

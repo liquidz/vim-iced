@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file. This change
 * Add neovim virtual text support.
 ** Evaluation result and lint warning messages are shown as virtual text.
 ** WARNING: Neovim only
+* Add `g:iced#lint#use_virtual_text` option.
+** WARNING: Neovim only
 * https://github.com/liquidz/vim-iced/pull/87[#87]: Add `:IcedEvalVisual` and `:IcedEvalReplVisual` commands to evaluate selected forms.
 
 === Changed
