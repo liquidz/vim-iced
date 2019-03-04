@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file. This change
 * Update `:IcedEval` not to evaluate `ns` form every evaluations.
 ** This leads to evaluation performance improvement for CLJS codes.
 * Update not to switch session unnecessarily at cljs repl startup.
+* Update echoing eval result to shorten
 
 === Fixed
 * Fix a bug that `:IcedDefJump` fails for protocol fns.
