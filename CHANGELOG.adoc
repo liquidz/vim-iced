@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file. This change
 * Add `g:iced#lint#use_virtual_text` option.
 ** WARNING: Neovim only
 * https://github.com/liquidz/vim-iced/pull/87[#87]: Add `:IcedEvalVisual` and `:IcedEvalReplVisual` commands to evaluate selected forms.
+* https://github.com/liquidz/vim-iced/issues/99[#99]: Add `--force-boot` and `--force-clojure-cli` options to `iced` command.
 
 === Changed
 * Update `:IcedEval` not to evaluate `ns` form every evaluations.

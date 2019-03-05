@@ -82,6 +82,7 @@ ICED COMMAND                                         *vim-iced-install-command*
   vim-iced provides `iced` command to use vim-iced easily.
 
   Add `$PATH` environment variable to `/path/to/vim-iced/bin`.
+  To show help, run `iced help` .
 
 ------------------------------------------------------------------------------
 MANUAL INSTALL                                      *vim-iced-install-manually*
