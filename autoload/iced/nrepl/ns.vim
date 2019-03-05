@@ -163,7 +163,7 @@ function! iced#nrepl#ns#does_exist(ns_name) abort
   "        https://github.com/clojure/clojurescript/blob/v1.10/src/main/cljs/cljs/core.cljs#L11405
   if iced#nrepl#current_session_key() ==# 'cljs' | return v:true | endif
   let find_ns_result = iced#nrepl#sync#eval(printf('(if (find-ns ''%s) :ok :ng)', a:ns_name))
-  return (find_ns_result['value'] ==# ':ok') ? v:true : v:false
+  return (has_key(find_ns_result, 'value') && find_ns_result['value'] ==# ':ok') ? v:true : v:false
 endfunction
 
 function! iced#nrepl#ns#alias_dict(ns_name) abort
