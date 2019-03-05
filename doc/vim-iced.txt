@@ -1152,14 +1152,6 @@ g:iced#buffer#error#height
   Error window height.
   Default value is |'previewheight'|.
 
-                                                *g:iced#cljs#custom#start_code*
-g:iced#cljs#custom#start_code
-  Code to start CLJS REPL in {custom} environment.
-
-                                                 *g:iced#cljs#custom#stop_code*
-g:iced#cljs#custom#stop_code
-  Code to stop CLJS REPL in {custom} environment.
-
                                                 *g:iced#debug#value_max_length*
 g:iced#debug#value_max_length
   Max length to show value in debugging.
