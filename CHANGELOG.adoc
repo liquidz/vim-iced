@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 0.10.1 (2019-03-05)
+// {{{
+=== Added
+* Add http://shadow-cljs.org[shadow-cljs] as a CLJS environment.
+** Now you can start CLJS REPL via `:IcedStartCljsRepl shadow-cljs {build-id}`.
+** WARNING: `iced` command does not support shadow-cljs yet.
+* Add neovim virtual text support.
+** Evaluation result and lint warning messages are shown as virtual text.
+** WARNING: Neovim only
+* Add `g:iced#lint#use_virtual_text` option.
+** WARNING: Neovim only
+* https://github.com/liquidz/vim-iced/pull/87[#87]: Add `:IcedEvalVisual` and `:IcedEvalReplVisual` commands to evaluate selected forms.
+* https://github.com/liquidz/vim-iced/issues/99[#99]: Add `--force-boot` and `--force-clojure-cli` options to `iced` command.
+
+=== Changed
+* Update `:IcedEval` not to evaluate `ns` form every evaluations.
+** This leads to evaluation performance improvement for CLJS codes.
+* Update not to switch session unnecessarily at cljs repl startup.
+* Update echoing eval result to shorten
+
+=== Fixed
+* Fix a bug that `:IcedDefJump` fails for protocol fns.
+* Fix a type checking bug in testing.
+// }}}
+
 == 0.10.0 (2019-02-19)
 // {{{
 === Added

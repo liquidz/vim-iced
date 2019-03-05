@@ -4,9 +4,8 @@ set cpo&vim
 let g:iced#nrepl#auto#does_switch_session = get(g:, 'iced#nrepl#auto#does_switch_session', v:false)
 let s:leaving = v:false
 
-function! iced#nrepl#auto#winenter() abort
-  if !g:iced#nrepl#auto#does_switch_session | return | endif
-  if !iced#nrepl#is_connected() | return | endif
+function! s:auto_switching_session() abort
+  if ! g:iced#nrepl#auto#does_switch_session | return | endif
   if iced#nrepl#check_session_validity(v:false) | return | endif
 
   let ext = expand('%:e')
@@ -19,9 +18,17 @@ function! iced#nrepl#auto#winenter() abort
   endif
 endfunction
 
+function! iced#nrepl#auto#winenter() abort
+  if !iced#nrepl#is_connected() | return | endif
+  call s:auto_switching_session()
+  " eval `in-ns` automatically
+  if ! iced#nrepl#check_session_validity(v:false) | return | endif
+  call iced#nrepl#ns#in()
+endfunction
+
 function! iced#nrepl#auto#bufread() abort
   if !iced#nrepl#is_connected() | return | endif
-  call iced#nrepl#auto#winenter()
+  call s:auto_switching_session()
   if !iced#nrepl#check_session_validity(v:false) | return | endif
 
   call iced#nrepl#ns#eval({_ -> ''})

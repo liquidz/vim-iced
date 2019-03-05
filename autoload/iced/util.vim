@@ -31,9 +31,9 @@ function! iced#util#ensure_array(x) abort
   return (type(a:x) == v:t_list ? a:x : [a:x])
 endfunction
 
-function! iced#util#debug(x) abort
+function! iced#util#debug(title, x) abort
   if g:iced#debug
-    echom printf('DEBUG: %s', a:x)
+    echom printf('DEBUG %s: %s', a:title, a:x)
   endif
 endfunction
 

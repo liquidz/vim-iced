@@ -57,12 +57,18 @@ function! s:suite.connect_test() abort
   function! test.relay(msg) abort
     if a:msg['op'] ==# 'clone'
       return {'status': ['done'], 'new-session': remove(self.session_patterns, 0)}
+    else
+      return {'status': ['done']}
     endif
     return {}
   endfunction
 
+  " # status_value
+  "   1.fail means not connected yet
+  "   2.fail means not connected by auto connection
+  "   3.open means connection established
   call s:ch.register_test_builder({
-      \ 'status_value': 'open',
+      \ 'status_value': ['fail', 'fail', 'open'],
       \ 'relay': {msg -> test.relay(msg)},
       \ })
 

@@ -44,7 +44,11 @@ endfunction
 
 function! s:out(resp) abort
   if has_key(a:resp, 'value')
-    echo a:resp['value']
+    echo iced#util#shorten(a:resp['value'])
+
+    call iced#di#get('virtual_text').set(
+          \ printf('=> %s', a:resp['value']),
+          \ {'highlight': 'Comment', 'auto_clear': v:true})
   endif
 
   if has_key(a:resp, 'ex') && !empty(a:resp['ex'])
@@ -84,7 +88,7 @@ function! iced#nrepl#eval#code(code, ...) abort
   endif
 
   try
-    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, funcref('s:out'), opt)})
+    call iced#nrepl#eval(code, funcref('s:out'), opt)
   finally
     let @@ = reg_save
     call winrestview(view)
@@ -138,12 +142,30 @@ function! iced#nrepl#eval#outer_top_list() abort
 
   let pos = ret['curpos']
   let opt = {'line': pos[1], 'column': pos[2]}
-  call iced#nrepl#ns#eval({_ -> iced#nrepl#eval#code(code, opt)})
+  call iced#nrepl#eval#code(code, opt)
 endfunction
 
 function! iced#nrepl#eval#ns() abort
   let ns_code = iced#nrepl#ns#get()
   call iced#nrepl#eval#code(ns_code)
+endfunction
+
+function! s:eval_visual(evaluator) abort
+  let reg_save = @@
+  try
+    silent normal! gvy
+    call a:evaluator(trim(@@))
+  finally
+    let @@ = reg_save
+  endtry
+endfunction
+
+function! iced#nrepl#eval#visual() abort " range
+  call s:eval_visual(function('iced#nrepl#eval#code'))
+endfunction
+
+function! iced#nrepl#eval#repl_visual() abort " range
+  call s:eval_visual(function('iced#nrepl#eval#repl'))
 endfunction
 
 let &cpo = s:save_cpo

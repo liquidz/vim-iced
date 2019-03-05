@@ -23,6 +23,8 @@ command!          IcedCycleSession          call iced#nrepl#cljs#cycle_session()
 command! -nargs=1 IcedEval                  call iced#nrepl#eval#code(<q-args>)
 command! -nargs=1 IcedEvalRepl              call iced#nrepl#eval#repl(<q-args>)
 command!          IcedEvalNs                call iced#nrepl#eval#ns()
+command! -range   IcedEvalVisual            call iced#nrepl#eval#visual()
+command! -range   IcedEvalReplVisual        call iced#nrepl#eval#repl_visual()
 command!          IcedRequire               call iced#nrepl#ns#load_current_file()
 command!          IcedRequireAll            call iced#nrepl#ns#reload_all()
 command! -nargs=? IcedUndef                 call iced#nrepl#eval#undef(<q-args>)
@@ -101,6 +103,8 @@ nnoremap <silent> <Plug>(iced_quit_cljs_repl)           :<C-u>IcedQuitCljsRepl<C
 nnoremap <silent> <Plug>(iced_eval)                     :<C-u>set opfunc=iced#operation#eval<CR>g@
 nnoremap <silent> <Plug>(iced_eval_repl)                :<C-u>set opfunc=iced#operation#eval_repl<CR>g@
 nnoremap <silent> <Plug>(iced_eval_ns)                  :<C-u>IcedEvalNs<CR>
+vnoremap <silent> <Plug>(iced_eval_visual)              :<C-u>IcedEvalVisual<CR>
+vnoremap <silent> <Plug>(iced_eval_repl_visual)         :<C-u>IcedEvalReplVisual<CR>
 nnoremap <silent> <Plug>(iced_macroexpand)              :<C-u>set opfunc=iced#operation#macroexpand<CR>g@
 nnoremap <silent> <Plug>(iced_macroexpand_1)            :<C-u>set opfunc=iced#operation#macroexpand_1<CR>g@
 nnoremap <silent> <Plug>(iced_require)                  :<C-u>IcedRequire<CR>
@@ -173,7 +177,7 @@ aug vim_iced_initial_setting
   au FileType clojure setl omnifunc=iced#complete#omni
   au BufRead *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufread()
   au BufNewFile *.clj,*.cljs,*.cljc call iced#nrepl#auto#newfile()
-  au WinEnter *.clj,*.cljs call iced#nrepl#auto#winenter()
+  au WinEnter *.clj,*.cljs,*.cljc call iced#nrepl#auto#winenter()
   au VimLeave * call iced#nrepl#auto#leave()
 aug END
 
@@ -201,6 +205,14 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>ei <Plug>(iced_eval)<Plug>(sexp_inner_element)``
     silent! nmap <buffer> <Leader>ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
     silent! nmap <buffer> <Leader>et <Plug>(iced_eval_outer_top_list)
+  endif
+
+  if !hasmapto('<Plug>(iced_eval_visual)')
+    silent! vmap <buffer> <Leader>ee <Plug>(iced_eval_visual)
+  endif
+
+  if !hasmapto('<Plug>(iced_eval_repl_visual)')
+    silent! vmap <buffer> <Leader>er <Plug>(iced_eval_repl_visual)
   endif
 
   if !hasmapto('<Plug>(iced_eval_repl)')

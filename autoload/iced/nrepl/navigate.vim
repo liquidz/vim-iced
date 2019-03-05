@@ -97,7 +97,7 @@ function! s:jump(resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('jump_not_found') | endif
   let path = substitute(a:resp['file'], '^file:', '', '')
   let line = a:resp['line']
-  let column = a:resp['column']
+  let column = get(a:resp, 'column', '0')
 
   " NOTE: jar:file:/path/to/jarfile.jar!/path/to/file.clj
   if stridx(path, 'jar:') == 0

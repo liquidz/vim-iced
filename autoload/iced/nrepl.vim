@@ -96,8 +96,7 @@ function! iced#nrepl#check_session_validity(...) abort
 
   if !empty(ext) && ext !=# 'cljc' && sess_key !=# ext
     if is_verbose
-      call iced#message#error_str(
-            \ printf(iced#message#get('invalid_session'), ext))
+      call iced#message#error('invalid_session', ext)
     endif
     return v:false
   endif
@@ -146,7 +145,7 @@ endfunction
 " DISPATCHER {{{
 function! s:dispatcher(ch, resp) abort
   let text = printf('%s%s', s:response_buffer, a:resp)
-  call iced#util#debug(text)
+  call iced#util#debug('<<<', text)
 
   try
     let original_resp = iced#di#get('bencode').decode(text)
@@ -236,6 +235,8 @@ function! iced#nrepl#send(data) abort
     return
   endif
 
+  call iced#util#debug('>>>', a:data)
+
   let data = copy(a:data)
   let id = s:get_message_id(data)
 
@@ -281,6 +282,9 @@ function! s:warm_up() abort
   sleep 100m
   call iced#nrepl#op#cider#debug#init()
 
+  if iced#nrepl#check_session_validity(v:false)
+    call iced#nrepl#ns#in()
+  endif
   call iced#format#set_indentexpr()
 endfunction
 
@@ -295,15 +299,13 @@ endfunction
 function! s:connected(resp, initial_session) abort
   if has_key(a:resp, 'new-session')
     let session = a:resp['new-session']
-    call iced#nrepl#set_session('repl', session)
+    let repl_session_key = (a:initial_session ==# 'cljs') ? 'cljs_repl' : 'repl'
+    call iced#nrepl#set_session(repl_session_key, session)
 
     let new_session = iced#nrepl#sync#clone(session)
     call iced#nrepl#set_session(a:initial_session, new_session)
     call iced#nrepl#change_current_session(a:initial_session)
 
-    call iced#buffer#stdout#init()
-    call iced#buffer#document#init()
-    call iced#buffer#error#init()
     silent call s:warm_up()
 
     call iced#message#info('connected')
@@ -316,11 +318,22 @@ function! iced#nrepl#connect(port, ...) abort
     return iced#message#error('no_set_hidden')
   endif
 
+  if iced#nrepl#is_connected()
+    call iced#message#info('already_connected')
+    return v:true
+  endif
+
+  " NOTE: Initialize buffers here to avoid firing `winenter` autocmd
+  "       after connection established
+  call iced#buffer#stdout#init()
+  call iced#buffer#document#init()
+  call iced#buffer#error#init()
+
   if empty(a:port)
     return iced#nrepl#connect#auto()
   endif
 
-  if ! iced#nrepl#is_connected()
+  if !iced#nrepl#is_connected()
     let address = printf('%s:%d', g:iced#nrepl#host, a:port)
     let s:nrepl['port'] = a:port
     let s:nrepl['channel'] = iced#di#get('channel').open(address, {

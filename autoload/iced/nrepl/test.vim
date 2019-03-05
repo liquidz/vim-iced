@@ -42,12 +42,11 @@ function! iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, call
   let code = ret['code']
   if empty(code) | return iced#message#error('finding_code_error') | endif
 
-  call iced#nrepl#ns#eval({_ ->
-        \ iced#nrepl#eval(code, {eval_resp ->
+  call iced#nrepl#eval(code, {eval_resp ->
         \   (has_key(eval_resp, 'value') && eval_resp['value'] !=# 'nil')
         \   ? iced#nrepl#ns#require(a:ns_name, {_ ->
         \       s:test_vars(eval_resp, a:ns_name, a:callback)})
-        \   : iced#message#error('not_found')})})
+        \   : iced#message#error('not_found')})
 endfunction " }}}
 
 " iced#nrepl#test#under_cursor {{{
@@ -113,7 +112,9 @@ function! s:collect_errors(resp) abort
           endif
 
           if empty(ns_path_resp['path'])
-            if !has_key(test, 'file') | continue | endif
+            if !has_key(test, 'file') || type(test['file']) != v:t_string
+              continue
+            endif
             let filename = printf('%s%s%s',
                   \ iced#nrepl#system#user_dir(),
                   \ iced#nrepl#system#separator(),
@@ -124,11 +125,14 @@ function! s:collect_errors(resp) abort
 
           let err = {
                   \ 'filename': filename,
-                  \ 'lnum': test['line'],
                   \ 'text': s:error_message(test),
                   \ 'expected': trim(get(test, 'expected', '')),
                   \ 'type': 'E',
                   \ }
+          if has_key(test, 'line') && type(test['line']) == v:t_number
+            let err['lnum'] = test['line']
+          endif
+
           if test['type'] ==# 'fail'
             call add(errors, extend(copy(err), s:extract_actual_values(test)))
           elseif test['type'] ==# 'error'
@@ -170,9 +174,9 @@ function! s:out(resp) abort
   let errors = s:collect_errors(a:resp)
   let expected_and_actuals = []
   for err in errors
-    let lnum = err['lnum']
-    if type(lnum) != v:t_number | continue | endif
-    call iced#sign#place(s:sign_name, err['lnum'], err['filename'])
+    if has_key(err, 'lnum')
+      call iced#sign#place(s:sign_name, err['lnum'], err['filename'])
+    endif
 
     if has_key(err, 'expected') && has_key(err, 'actual')
       let expected_and_actuals = expected_and_actuals + [
@@ -268,7 +272,7 @@ function! iced#nrepl#test#under_cursor() abort
   let pos = ret['curpos']
   let option = {'line': pos[1], 'column': pos[2]}
   call iced#sign#unplace_by_name(s:sign_name)
-  call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:extract_var_name(resp)}, option)})
+  call iced#nrepl#eval(code, {resp -> s:extract_var_name(resp)}, option)
 endfunction "}}}
 
 " iced#nrepl#test#ns {{{
@@ -361,7 +365,7 @@ function! iced#nrepl#test#spec_check(...) abort
   if empty(code)
     call iced#message#error('finding_code_error')
   else
-    call iced#nrepl#ns#eval({_ -> iced#nrepl#eval(code, {resp -> s:current_var(num_tests, resp)})})
+    call iced#nrepl#eval(code, {resp -> s:current_var(num_tests, resp)})
   endif
 endfunction " }}}
 

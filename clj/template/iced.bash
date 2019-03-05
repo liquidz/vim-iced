@@ -8,6 +8,7 @@ VERSION=$(grep 'Version: ' ${SCRIPT_DIR}/../doc/vim-iced.txt | cut -d' ' -f2)
 IS_LEININGEN=0
 IS_BOOT=0
 IS_CLOJURE_CLI=0
+IS_SHADOW_CLJS=0
 
 function iced_usage() {
     echo "vim-iced ${VERSION}"
@@ -26,12 +27,23 @@ function iced_usage() {
 
 function iced_repl_usage() {
     echo "Usage:"
-    echo "  iced repl [--with-cljs]"
+    echo "  iced repl [options] [--with-cljs] [--force-boot] [--force-clojure-cli]"
     echo ""
     echo "Start repl. Leiningen, Boot, and Clojure CLI are supported."
     echo ""
     echo "The --with-cljs option enables ClojureScript features."
-    echo "This option is enabled automatically when project configuration file(eg. project.clj) contains 'org.clojure/clojurescript' dependency."
+    echo "This option is enabled automatically when project configuration"
+    echo "file(eg. project.clj) contains 'org.clojure/clojurescript' dependency."
+    echo ""
+    echo "The --force-boot and --force-clojure-cli option enable you to start specified repl."
+    echo ""
+    echo "Other options are passed to each programs."
+    echo "To specify Leiningen profile:"
+    echo "  $ iced repl with-profile +foo"
+    echo "To specify Clojure CLI alias:"
+    echo "  $ iced repl -A:foo"
+    echo "Combinating several options:"
+    echo "  $ iced repl --with-cljs --force-clojure-cli -A:foo"
 }
 
 function echo_info() {
@@ -52,6 +64,8 @@ ARGV=("${ARGV[@]:1}")
 
 IS_HELP=0
 IS_CLJS=0
+FORCE_BOOT=0
+FORCE_CLOJURE_CLI=0
 
 OPTIONS=""
 for x in ${ARGV[@]}; do
@@ -59,43 +73,58 @@ for x in ${ARGV[@]}; do
         IS_HELP=1
     elif [ $x = '--with-cljs' ]; then
         IS_CLJS=1
+    elif [ $x = '--force-boot' ]; then
+        FORCE_BOOT=1
+    elif [ $x = '--force-clojure-cli' ]; then
+        FORCE_CLOJURE_CLI=1
     else
         OPTIONS="${OPTIONS} ${x}"
     fi
 done
 
+IS_DETECTED=0
 while :
 do
     ls project.clj > /dev/null 2>&1
     if [ $? -eq 0 ]; then
         IS_LEININGEN=1
+        IS_DETECTED=1
 
         grep org.clojure/clojurescript project.clj > /dev/null 2>&1
         if [ $? -eq 0 ]; then
             IS_CLJS=1
         fi
-        break
     fi
 
     ls build.boot > /dev/null 2>&1
     if [ $? -eq 0 ]; then
         IS_BOOT=1
+        IS_DETECTED=1
 
         grep org.clojure/clojurescript build.boot > /dev/null 2>&1
         if [ $? -eq 0 ]; then
             IS_CLJS=1
         fi
-        break
     fi
 
     ls deps.edn > /dev/null 2>&1
     if [ $? -eq 0 ]; then
         IS_CLOJURE_CLI=1
+        IS_DETECTED=1
 
         grep org.clojure/clojurescript deps.edn > /dev/null 2>&1
         if [ $? -eq 0 ]; then
             IS_CLJS=1
         fi
+    fi
+
+    ls shadow-cljs.edn > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        IS_SHADOW_CLJS=1
+        IS_DETECTED=1
+    fi
+
+    if [ $IS_DETECTED -eq 1 ]; then
         break
     fi
 
@@ -106,6 +135,14 @@ do
         CWD=$(pwd)
     fi
 done
+
+if [ $FORCE_BOOT -eq 1 ]; then
+    IS_LEININGEN=0
+    IS_CLOJURE_CLI=0
+elif [ $FORCE_CLOJURE_CLI -eq 1 ]; then
+    IS_LEININGEN=0
+    IS_BOOT=0
+fi
 
 case "$1" in
     "repl")
@@ -133,6 +170,10 @@ case "$1" in
                 clojure $OPTIONS -Sdeps "{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"} {{{cli-cljs-extra-deps}}}}}" \
                     -m iced-repl 'with-cljs-middleware'
             fi
+        elif [ $IS_SHADOW_CLJS -eq 1 ]; then
+            echo_error 'Currently iced command does not support shadow-cljs.'
+            echo 'Please see `:h vim-iced-manual-shadow-cljs` for manual setting up.'
+            exit 1
         else
             echo_error 'Failed to detect clojure project'
             exit 1

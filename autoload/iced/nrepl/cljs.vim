@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:switch_session_to_cljs() abort
+function! s:set_cljs_session() abort
   " WARN: An exception occurs if an evaluation error occurs in the CLONED cljs session.
   "       c.f. https://github.com/liquidz/vim-iced/issues/91
   "       So `original_cljs_session` must be setted to cljs session.
@@ -15,17 +15,13 @@ function! s:switch_session_to_cljs() abort
   call iced#nrepl#set_session('cljs', original_cljs_session)
   call iced#nrepl#set_session('cljs_repl', cljs_repl_session)
   call iced#nrepl#set_session('repl', repl_session)
-  call iced#nrepl#change_current_session('cljs')
-  call iced#message#info('started_cljs_repl')
 endfunction
 
-function! s:switch_session_to_clj() abort
+function! s:unset_cljs_session() abort
   call iced#nrepl#sync#close(iced#nrepl#cljs_session())
   call iced#nrepl#sync#close(iced#nrepl#cljs_repl_session())
   call iced#nrepl#set_session('cljs', '')
   call iced#nrepl#set_session('cljs_repl', '')
-  call iced#nrepl#change_current_session('clj')
-  call iced#message#info('quitted_cljs_repl')
 endfunction
 
 function! iced#nrepl#cljs#check_switching_session(resp) abort
@@ -37,11 +33,25 @@ function! iced#nrepl#cljs#check_switching_session(resp) abort
   if !eq_to_repl_session && !eq_to_cljs_repl_session | return | endif
 
   let ns = a:resp['ns']
+  let ext = expand('%:e')
+
   if eq_to_repl_session && ns ==# 'cljs.user'
-    call s:switch_session_to_cljs()
-    call iced#hook#run('session_switched', {'session': 'cljs'})
+    call s:set_cljs_session()
+    if ext !=# 'clj'
+      call iced#nrepl#change_current_session('cljs')
+      call iced#nrepl#ns#in()
+      call iced#hook#run('session_switched', {'session': 'cljs'})
+    endif
+
+    call iced#message#info('started_cljs_repl')
   elseif eq_to_cljs_repl_session && ns !=# 'cljs.user'
-    call s:switch_session_to_clj()
+    call s:unset_cljs_session()
+    call iced#nrepl#change_current_session('clj')
+    if ext !=# 'cljs'
+      call iced#nrepl#ns#in()
+    endif
+
+    call iced#message#info('quitted_cljs_repl')
     call iced#hook#run('session_switched', {'session': 'clj'})
   endif
 endfunction
@@ -62,13 +72,16 @@ endfunction
 
 function! iced#nrepl#cljs#start_repl(code, ...) abort
   if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect() | return v:false | endif
-  if !iced#nrepl#system#piggieback_enabled()
+
+  let opt = get(a:, 1, {})
+  let does_use_piggieback = get(opt, 'does_use_piggieback', v:true)
+
+  if does_use_piggieback && !iced#nrepl#system#piggieback_enabled()
     call iced#message#error('no_piggieback')
     return v:false
   endif
 
   if iced#nrepl#current_session_key() ==# 'clj'
-    let opt = get(a:, 1, {})
     let pre_code = get(opt, 'pre', '')
 
     if type(a:code) == v:t_dict && has_key(a:code, 'raw')
@@ -105,6 +118,7 @@ let s:env = {
     \ 'figwheel-main': function('iced#nrepl#cljs#figwheel_main#get_env'),
     \ 'nashorn': function('iced#nrepl#cljs#nashorn#get_env'),
     \ 'graaljs': function('iced#nrepl#cljs#graaljs#get_env'),
+    \ 'shadow-cljs': function('iced#nrepl#cljs#shadow_cljs#get_env'),
     \ }
 
 function! iced#nrepl#cljs#reset() abort
@@ -131,7 +145,10 @@ function! iced#nrepl#cljs#start_repl_via_env(env_key, ...) abort
 
     let pre_code = type(Pre_code_f) == v:t_func ? Pre_code_f() : ''
     let env_code = Env_code_f()
-    if iced#nrepl#cljs#start_repl(env_code, {'pre': pre_code})
+
+    let opt = copy(env)
+    call extend(opt, {'pre': pre_code})
+    if iced#nrepl#cljs#start_repl(env_code, opt)
       let s:using_env = env
     endif
   endif

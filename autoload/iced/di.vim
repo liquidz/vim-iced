@@ -42,6 +42,7 @@ if !exists('g:iced#di#container')
   call iced#di#register('ex_cmd',   {_ -> iced#di#ex_cmd#build()})
   call iced#di#register('quickfix', {_ -> iced#di#quickfix#build()})
   call iced#di#register('selector', {_ -> iced#di#selector#build()})
+  call iced#di#register('virtual_text', {_ -> iced#di#virtual_text#build()})
 endif " }}}
 
 let &cpo = s:save_cpo
