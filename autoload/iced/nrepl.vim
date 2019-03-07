@@ -308,6 +308,7 @@ function! s:connected(resp, initial_session) abort
 
     silent call s:warm_up()
 
+    call iced#nrepl#auto#enable_winenter(v:true)
     call iced#message#info('connected')
   endif
 endfunction

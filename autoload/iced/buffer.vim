@@ -99,12 +99,17 @@ function! iced#buffer#append(bufname, s, ...) abort
     silent call iced#compat#appendbufline(nr, '$', line)
   endfor
 
-  if get(opt, 'scroll_to_bottom', v:false) && iced#buffer#is_visible(a:bufname)
-    let current_window = winnr()
-    call s:focus_window(bufwinnr(nr))
-    silent normal! G
-    call s:focus_window(current_window)
-  endif
+  call iced#nrepl#auto#enable_winenter(v:false)
+  try
+    if get(opt, 'scroll_to_bottom', v:false) && iced#buffer#is_visible(a:bufname)
+      let current_window = winnr()
+      call s:focus_window(bufwinnr(nr))
+      silent normal! G
+      call s:focus_window(current_window)
+    endif
+  finally
+    call iced#nrepl#auto#enable_winenter(v:true)
+  endtry
 endfunction
 
 function! iced#buffer#set_contents(bufname, s) abort
