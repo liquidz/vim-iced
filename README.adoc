@@ -7,19 +7,19 @@
 </h4>
 <p align="center">
   <a href="https://github.com/liquidz/vim-iced/releases">
-    <img src="https://img.shields.io/github/release/liquidz/vim-iced.svg" alt="GitHub release" />
+    <img src="https://img.shields.io/github/release/liquidz/vim-iced.svg?logo=Clojure&logoColor=white" alt="GitHub release" />
   </a>
   <a href="https://circleci.com/gh/liquidz/vim-iced">
-    <img src="https://img.shields.io/circleci/project/github/liquidz/vim-iced/master.svg" alt="CircleCI" />
+    <img src="https://img.shields.io/circleci/project/github/liquidz/vim-iced/master.svg?logo=CircleCI" alt="CircleCI" />
   </a>
   <a href="https://codecov.io/gh/liquidz/vim-iced">
     <img src="https://codecov.io/gh/liquidz/vim-iced/branch/master/graph/badge.svg" alt="Codecov" />
   </a>
   <a href="https://github.com/liquidz/vim-iced/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/liquidz/vim-iced.svg" alt="GitHub license" />
+    <img src="https://img.shields.io/github/license/liquidz/vim-iced.svg?logo=Github" alt="GitHub license" />
   </a>
   <a href="https://github.com/vim-jp/vital.vim">
-    <img src="https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg" alt="Powered by vital.vim" />
+    <img src="https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg?logo=Vim" alt="Powered by vital.vim" />
   </a>
 </p>
 +++
