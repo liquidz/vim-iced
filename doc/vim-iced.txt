@@ -340,8 +340,8 @@ TAG JUMP                                                    *vim-iced-tag-jump*
 EDITING S-EXP                                          *vim-iced-editing-s-exp*
 
   Provides slurp and barf function.
-  - |IcedSlurp|
-  - |IcedBarf|
+  - |:IcedSlurp|
+  - |:IcedBarf|
 
 ------------------------------------------------------------------------------
 FORMATTING                                                *vim-iced-formatting*
