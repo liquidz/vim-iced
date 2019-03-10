@@ -31,6 +31,7 @@ jobs:
           command: |
             . venv/bin/activate
             bash scripts/coverage.sh
+
   ancient:
     docker:
       - image: circleci/clojure:tools-deps
@@ -49,9 +50,60 @@ jobs:
             - ~/.m2
           key: v2-dependencies-{{ checksum "deps.edn" }}
 
+  docs-build:
+    docker:
+      - image: circleci/clojure:tools-deps
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v2-dependencies-{{ checksum "deps.edn" }}
+      - run:
+          command: |
+            bash scripts/html.sh
+      - save_cache:
+          paths:
+            - ~/.clojure/.cpcache
+            - ~/.m2
+          key: v2-dependencies-{{ checksum "deps.edn" }}
+      - persist_to_workspace:
+          root: target
+          paths: html
+
+  docs-deploy:
+    docker:
+      - image: node:8.10.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: target
+      - run:
+          name: Disable jekyll builds
+          command: touch target/html/.nojekyll
+      - run:
+          name: Install and configure dependencies
+          command: |
+            npm install -g --silent gh-pages@2.0.1
+            git config user.email "liquidz.uo+circleci@gmail.com"
+            git config user.name "liquidz"
+      - add_ssh_keys:
+          fingerprints:
+            - "38:58:81:f1:62:2a:de:94:88:b0:f2:72:b7:fc:c6:cf"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: gh-pages --dotfiles --message "[skip ci] Updates" --dist target/html
+
 workflows:
   version: 2
   all_test:
     jobs:
       - build
-#      - ancient
+      - docs-build
+      - docs-deploy:
+          requires:
+            - build
+            - docs-build
+          filters:
+            branches:
+              only: master
