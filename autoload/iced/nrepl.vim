@@ -205,7 +205,7 @@ function! s:dispatcher(ch, resp) abort
     endif
 
     if iced#util#has_status(resp, 'need-debug-input')
-      if !iced#buffer#stdout#is_visible()
+      if !iced#buffer#stdout#is_visible() && !iced#buffer#floating#is_supported()
         call iced#buffer#stdout#open()
       endif
       call iced#nrepl#debug#start(resp)
@@ -308,6 +308,7 @@ function! s:connected(resp, initial_session) abort
 
     silent call s:warm_up()
 
+    call iced#nrepl#auto#enable_winenter(v:true)
     call iced#message#info('connected')
   endif
 endfunction
@@ -328,6 +329,7 @@ function! iced#nrepl#connect(port, ...) abort
   call iced#buffer#stdout#init()
   call iced#buffer#document#init()
   call iced#buffer#error#init()
+  call iced#buffer#floating#init()
 
   if empty(a:port)
     return iced#nrepl#connect#auto()
