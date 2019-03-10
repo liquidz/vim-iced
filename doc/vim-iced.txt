@@ -25,6 +25,7 @@ CONTENTS                                                    *vim-iced-contents*
     Stdout Buffer              |vim-iced-stdout-buffer|
   Testing                      |vim-iced-testing|
   Debugging                    |vim-iced-debugging|
+    Floating Window            |vim-iced-debugging-floating-window|
   Skeleton                     |vim-iced-skeleton|
   Tag Jump                     |vim-iced-tag-jump|
   Editing S-exp                |vim-iced-editing-s-exp|
@@ -320,6 +321,18 @@ DEBUGGING                                                  *vim-iced-debugging*
 <
   Related options:
   - |g:iced#debug#value_max_length|
+
+------------------------------------------------------------------------------
+FLOATING WINDOW                            *vim-iced-debugging-floating-window*
+
+  vim-iced supports floating window for Neovim.
+  This feature is very experimental, but works.
+
+  If your neovim's version is 0.4.0 or later,
+  debugging information will be shown in floating window automatically.
+
+  Related options:
+  - |g:iced#buffer#floating#time|
 
 ==============================================================================
 SKELETON                                                    *vim-iced-skeleton*
@@ -1209,6 +1222,11 @@ g:iced#nrepl#auto#does_switch_session
   If {v:true}, enable automatic switching CLJ/CLJS session.
   This will be done by |WinEnter| auto command.
   Default value is `v:false`.
+
+                                                  *g:iced#buffer#floating#time*
+g:iced#buffer#floating#time
+  Auto closing time(ms) for floating window.
+  Default value is `3000`.
 
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*
