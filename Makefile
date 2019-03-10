@@ -20,13 +20,11 @@ test: themis lint python_doctest
 	git clone https://github.com/thinca/vim-themis .vim-themis
 .vim-sexp:
 	git clone https://github.com/guns/vim-sexp .vim-sexp
-.vimdoc:
-	git clone https://github.com/vim-jp/vimdoc-ja-working .vimdoc
 
 themis: .vim-themis .vim-sexp
 	./.vim-themis/bin/themis
 
-html: doc/vim-iced.txt .vimdoc
+html: doc/vim-iced.txt
 	bash scripts/html.sh
 
 pip_install:
@@ -42,7 +40,7 @@ coverage: themis
 	bash scripts/coverage.sh
 
 clean:
-	\rm -rf target .vim-sexp .vimdoc .vim-themis
+	\rm -rf target .vim-sexp .vim-themis
 
 clan-all: clean
 	\rm -rf autoload/vital*
