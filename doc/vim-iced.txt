@@ -1186,7 +1186,7 @@ g:iced#related_ns#tail_patterns
 
                                                    *g:iced#test#spec_num_tests*
 g:iced#test#spec_num_tests
-  Default num-tests for |IcedTestSpecCheck|.
+  Default num-tests for |:IcedTestSpecCheck|.
   Default value is `10`.
 
                                                              *g:iced#qf#height*

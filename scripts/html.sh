@@ -31,6 +31,9 @@ footer {
     background-color: #fafafa;
     text-align: right;
 }
+.missing-tag {
+    color: red !important;
+}
 EOS
 )
 
