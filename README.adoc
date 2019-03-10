@@ -124,7 +124,7 @@ NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim] or https://github.com/jun
 
 === Manual setting (not recommended)
 
-* See `Manual Install` section in link:./doc/vim-iced.txt[vim-iced.txt].
+* See link:https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-install-manually[manual install] section in vim-iced.txt.
 ** To work with https://github.com/thheller/shadow-cljs[shadow-cljs], you need to set up manually.
 
 == Usage
@@ -146,11 +146,11 @@ To enable default key mappings, add following line to your `.vimrc`.
 let g:iced_enable_default_key_mappings = v:true
 ----
 
-See `Customizing` section in link:./doc/vim-iced.txt[vim-iced.txt] for actual mappings.
+See link:https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-customizing[customizing section] in vim-iced.txt for actual mappings.
 
 == Document
 
-  * See link:./doc/vim-iced.txt[vim-iced.txt].
+  * See link:https://liquidz.github.io/vim-iced/vim-iced.html[vim-iced.txt].
 
 == External plugins
 
