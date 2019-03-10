@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/pull/96[#96]: Add floating window support for neovim.
+** You need nightly build(0.4.0) currently.
+* Add github pages for help file.
+** https://liquidz.github.io/vim-iced/vim-iced.html
+** powered by https://github.com/liquidz/clj-vimhelp[clj-vimhelp].
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/pull/101[#101]: Fix not to evaluate `in-ns` while appending lines to stdout buffer.
+// }}}
 
 == 0.10.1 (2019-03-05)
 // {{{
