@@ -7,7 +7,7 @@ function! s:qf.setlist(list, action) abort
   silent call setqflist(a:list, a:action)
 endfunction
 
-function! iced#di#quickfix#build() abort
+function! iced#di#quickfix#build(container) abort
   return s:qf
 endfunction
 

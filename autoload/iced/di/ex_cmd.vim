@@ -11,7 +11,7 @@ function! s:ex_cmd.silent_exe(str) abort
   exe a:str
 endfunction
 
-function! iced#di#ex_cmd#build() abort
+function! iced#di#ex_cmd#build(container) abort
   return s:ex_cmd
 endfunction
 

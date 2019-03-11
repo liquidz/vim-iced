@@ -133,7 +133,7 @@ function! s:bencode.decode(s) abort
   endif
 endfunction " }}}
 
-function! iced#di#bencode#vim#build() abort
+function! iced#di#bencode#vim#build(container) abort
   return s:bencode
 endfunction
 

@@ -37,12 +37,12 @@ endfunction
 " Initializer {{{
 if !exists('g:iced#di#container')
   let g:iced#di#container = iced#di#new_container()
-  call iced#di#register('channel',  {_ -> iced#di#channel#build()})
-  call iced#di#register('bencode',  {_ -> iced#di#bencode#build()})
-  call iced#di#register('ex_cmd',   {_ -> iced#di#ex_cmd#build()})
-  call iced#di#register('quickfix', {_ -> iced#di#quickfix#build()})
-  call iced#di#register('selector', {_ -> iced#di#selector#build()})
-  call iced#di#register('virtual_text', {_ -> iced#di#virtual_text#build()})
+  call iced#di#register('channel',  function('iced#di#channel#build'))
+  call iced#di#register('bencode',  function('iced#di#bencode#build'))
+  call iced#di#register('ex_cmd',   function('iced#di#ex_cmd#build'))
+  call iced#di#register('quickfix', function('iced#di#quickfix#build'))
+  call iced#di#register('selector', function('iced#di#selector#build'))
+  call iced#di#register('virtual_text', function('iced#di#virtual_text#build'))
 endif " }}}
 
 let &cpo = s:save_cpo
