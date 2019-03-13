@@ -269,13 +269,27 @@ EVALUATING                                                *vim-iced-evaluating*
 
   |:IcedEval| is the simplest way to evaluate forms.
   But working with {vim-sexp} is the best.
-  See details: |<Plug>(iced_eval)|
+  See details to work with {vim-sexp}: |<Plug>(iced_eval)|
 
-  |:IcedEvalRepl| will evaluate form in REPL session.
+  There are 3 default key bingings to evaluate s-expression.
+  - `<Leader>ei` : Evaluate inner element
+  - `<Leader>ee` : Evaluate outer list
+  - `<Leader>et` : Evaluate outer top list
+  c.f. |vim-iced-customizing-default-keys|
+
+  Specific evaluation range(`|` means cursor position): >
+  ;; <------------et----------->
+     (defn greet []
+       (println "|hello world"))
+  ;;            <-----ei----->
+  ;;   <----------ee---------->
+<
+  If you would like to evaluate forms in REPL session,
+  |:IcedEvalRepl| will do.
   See details: |<Plug>(iced_eval_repl)|
 
-  |:IcedEvalVisual| will evaluate selected form.
-  |:IcedEvalReplVisual| will evaluate selected form in REPL session.
+  If you would like to evaluate in visual mode,
+  |:IcedEvalVisual| and |:IcedEvalReplVisual| will do.
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                                          *vim-iced-stdout-buffer*
@@ -1134,6 +1148,7 @@ g:iced#cljs#default_env
 g:iced#eval#inside_comment
   If {v:true}, evaluate inside comment form.
   Default value is `v:true`.
+  See |iced-tips-eval-inside-comment| for more information.
 
                                                     *g:iced#buffer#stdout#mods*
 g:iced#buffer#stdout#mods
