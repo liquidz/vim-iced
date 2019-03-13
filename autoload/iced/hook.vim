@@ -18,7 +18,7 @@ function! s:run_by_shell(exec, params) abort
     let cmdstr = printf(':terminal ++hidden %s', cmdstr)
   endif
 
-  silent exec cmdstr
+  call iced#di#get('ex_cmd').silent_exe(cmdstr)
   return v:true
 endfunction
 
