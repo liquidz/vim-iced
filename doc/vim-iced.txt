@@ -25,6 +25,7 @@ CONTENTS                                                    *vim-iced-contents*
     Stdout Buffer              |vim-iced-stdout-buffer|
   Testing                      |vim-iced-testing|
   Debugging                    |vim-iced-debugging|
+    Tracing function calls     |vim-iced-debugging-tracing-function-calls|
     Floating Window            |vim-iced-debugging-floating-window|
   Skeleton                     |vim-iced-skeleton|
   Tag Jump                     |vim-iced-tag-jump|
@@ -336,6 +337,13 @@ DEBUGGING                                                  *vim-iced-debugging*
 <
   Related options:
   - |g:iced#debug#value_max_length|
+
+------------------------------------------------------------------------------
+TRACING FUNCTION CALLS              *vim-iced-debugging-tracing-function-calls*
+
+  vim-iced provides 2 ways for tracing function calls.
+  - |:IcedToggleTraceVar|
+  - |:IcedToggleTraceNs|
 
 ------------------------------------------------------------------------------
 FLOATING WINDOW                            *vim-iced-debugging-floating-window*
