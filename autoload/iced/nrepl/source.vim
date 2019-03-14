@@ -14,7 +14,11 @@ function! iced#nrepl#source#show(symbol) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
-  let code = printf('(%s/source %s)', iced#nrepl#ns#repl(), symbol)
+  let source_ns = (iced#nrepl#current_session_key() ==# 'clj')
+      \ ? 'clojure.repl'
+      \ : 'cljs.repl'
+
+  let code = printf('(%s/source %s)', source_ns, symbol)
   call iced#nrepl#send({
       \ 'id': iced#nrepl#id(),
       \ 'op': 'eval',
