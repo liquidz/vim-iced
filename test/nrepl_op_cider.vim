@@ -95,3 +95,53 @@ function! s:suite.macroexpand_1_test() abort
         \ 'op': 'macroexpand'})
 endfunction
 
+function! s:suite.macroexpand_all_test() abort
+  call s:setup()
+  call iced#nrepl#op#cider#macroexpand_all('(foo bar)', {v -> s:callback.run(v)})
+
+  let id = s:callback.result['message']['id']
+  call s:assert.equals(type(id), v:t_number)
+  call s:assert.equals(s:callback.result['message'], {
+        \ 'session': 'clj-session',
+        \ 'id': id,
+        \ 'ns': s:default_ns,
+        \ 'code': '(foo bar)',
+        \ 'expander': 'macroexpand-all',
+        \ 'op': 'macroexpand'})
+endfunction
+
+function! s:suite.toggle_trace_ns_test() abort
+  call s:setup()
+  call iced#nrepl#op#cider#toggle_trace_ns('foo.core', {v -> s:callback.run(v)})
+  call s:assert.equals(s:callback.result['message'], {
+        \ 'session': 'clj-session',
+        \ 'ns': 'foo.core',
+        \ 'op': 'toggle-trace-ns'})
+endfunction
+
+function! s:suite.toggle_trace_var_test() abort
+  call s:setup()
+  call iced#nrepl#op#cider#toggle_trace_var('foo.core', 'bar-sym', {v -> s:callback.run(v)})
+  call s:assert.equals(s:callback.result['message'], {
+        \ 'session': 'clj-session',
+        \ 'ns': 'foo.core',
+        \ 'sym': 'bar-sym',
+        \ 'op': 'toggle-trace-var'})
+endfunction
+
+function! s:suite.spec_list_test() abort
+  call s:setup()
+  call iced#nrepl#op#cider#spec_list({v -> s:callback.run(v)})
+  call s:assert.equals(s:callback.result['message'], {
+        \ 'session': 'clj-session',
+        \ 'op': 'spec-list'})
+endfunction
+
+function! s:suite.spec_form_test() abort
+  call s:setup()
+  call iced#nrepl#op#cider#spec_form('spec-name', {v -> s:callback.run(v)})
+  call s:assert.equals(s:callback.result['message'], {
+        \ 'session': 'clj-session',
+        \ 'spec-name': 'spec-name',
+        \ 'op': 'spec-form'})
+endfunction
