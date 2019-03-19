@@ -260,7 +260,7 @@ function! iced#nrepl#send(data) abort
     call s:set_message(id, message)
   endif
 
-  call iced#di#get('channel').sendraw(
+  call iced#state#get('channel').sendraw(
         \ s:nrepl['channel'],
         \ iced#state#get('bencode').encode(data))
 endfunction
@@ -290,7 +290,7 @@ endfunction
 
 function! s:status(ch) abort
   try
-    return iced#di#get('channel').status(a:ch)
+    return iced#state#get('channel').status(a:ch)
   catch
     return 'fail'
   endtry
@@ -340,7 +340,7 @@ function! iced#nrepl#connect(port, ...) abort
   if !iced#nrepl#is_connected()
     let address = printf('%s:%d', g:iced#nrepl#host, a:port)
     let s:nrepl['port'] = a:port
-    let s:nrepl['channel'] = iced#di#get('channel').open(address, {
+    let s:nrepl['channel'] = iced#state#get('channel').open(address, {
         \ 'mode': 'raw',
         \ 'callback': funcref('s:dispatcher'),
         \ 'drop': 'never',
@@ -369,10 +369,12 @@ function! iced#nrepl#disconnect() abort " {{{
     call iced#nrepl#sync#send({'op': 'interrupt', 'session': id})
     call iced#nrepl#sync#close(id)
   endfor
-  call iced#di#get('channel').close(s:nrepl['channel'])
+  call iced#state#get('channel').close(s:nrepl['channel'])
   let s:nrepl = s:initialize_nrepl()
   call iced#nrepl#cljs#reset()
+
   call iced#state#stop()
+
   call iced#message#info('disconnected')
 endfunction " }}}
 
