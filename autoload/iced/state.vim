@@ -64,6 +64,7 @@ endfunction " }}}
 
 call iced#state#define('cache', iced#state#cache#definition())
 call iced#state#define('bencode', iced#state#bencode#definition())
+call iced#state#define('channel', iced#state#channel#definition())
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
