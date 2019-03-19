@@ -21,13 +21,20 @@ function! iced#state#start_by_name(name) abort " {{{
 
   let state_def = s:states[a:name]['definition']
   if has_key(state_def, 'start') && type(state_def.start) == v:t_func
-    let s:states[a:name]['state'] = state_def.start(s:last_starting_params)
+    let new_state = state_def.start(s:last_starting_params)
+    if !empty(new_state)
+      let s:states[a:name]['state'] = new_state
+      return v:true
+    endif
   endif
+
+  return v:false
 endfunction " }}}
 
 function! iced#state#start(...) abort " {{{
   let starting_params = get(a:, 1, {})
   let s:last_starting_params = starting_params
+  let result = v:true
 
   for state_name in s:states_order
     if has_key(s:states, state_name)
@@ -35,8 +42,10 @@ function! iced#state#start(...) abort " {{{
       continue
     endif
 
-    call iced#state#start_by_name(state_name)
+    let result = result && iced#state#start_by_name(state_name)
   endfor
+
+  return result
 endfunction " }}}
 
 function! iced#state#stop() abort " {{{
