@@ -62,6 +62,7 @@ function! iced#state#get(name) abort " {{{
 endfunction " }}}
 
 call iced#state#define('cache', iced#state#cache#definition())
+call iced#state#define('bencode', iced#state#bencode#definition())
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
