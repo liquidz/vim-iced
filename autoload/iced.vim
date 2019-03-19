@@ -50,7 +50,7 @@ function! iced#eval_and_read(code, ...) abort
 endfunction
 
 function! iced#selector(config) abort
-  call iced#di#get('selector').select(a:config)
+  call iced#state#get('selector').select(a:config)
 endfunction
 
 let &cpo = s:save_cpo
