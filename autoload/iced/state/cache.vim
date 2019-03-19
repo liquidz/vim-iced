@@ -43,12 +43,10 @@ endfunction
 
 function! s:start(_) abort
   call iced#util#debug('cache state', 'starting')
-  echom 'starting cache state'
   return deepcopy(s:cache)
 endfunction
 
 function! s:stop(_) abort
-  echom 'stopping cache state'
   call iced#util#debug('cache state', 'stopping')
 endfunction
 
