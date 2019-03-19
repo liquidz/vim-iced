@@ -38,7 +38,6 @@ endfunction
 if !exists('g:iced#di#container')
   let g:iced#di#container = iced#di#new_container()
   call iced#di#register('channel',  function('iced#di#channel#build'))
-  call iced#di#register('bencode',  function('iced#di#bencode#build'))
   call iced#di#register('ex_cmd',   function('iced#di#ex_cmd#build'))
   call iced#di#register('quickfix', function('iced#di#quickfix#build'))
   call iced#di#register('selector', function('iced#di#selector#build'))
