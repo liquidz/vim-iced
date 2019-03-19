@@ -5,7 +5,7 @@ set cpo&vim
 let g:iced#format#rule = get(g:, 'iced#format#rule', {})
 
 function! s:set_indentation_rule() abort
-  call iced#cache#do_once('set-indentation-rule', {->
+  call iced#state#get('cache').do_once('set-indentation-rule', {->
         \ iced#util#has_status(
         \   iced#nrepl#op#iced#sync#set_indentation_rules(g:iced#format#rule),
         \   'done')})

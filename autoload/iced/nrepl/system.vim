@@ -38,13 +38,13 @@ function! s:update_cache() abort
   endif
 
   if has_key(info, 'user-dir')
-    call iced#cache#merge(info)
+    call iced#state#get('cache').merge(info)
   endif
   return info
 endfunction
 
 function! s:get(key) abort
-  let val = iced#cache#get(a:key)
+  let val = iced#state#get('cache').get(a:key)
   if !empty(val) | return val | endif
   return get(s:update_cache(), a:key)
 endfunction

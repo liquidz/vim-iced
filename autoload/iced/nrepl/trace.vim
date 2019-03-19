@@ -19,21 +19,21 @@ function! s:toggle_trace_var(resp, opts) abort
     let msg_key = 'start_to_trace'
     if !empty(cache_key)
       " delete existing sign
-      let existing_sign_id = iced#cache#get(cache_key, -1)
+      let existing_sign_id = iced#state#get('cache').get(cache_key, -1)
       if existing_sign_id != -1
         call iced#sign#unplace(existing_sign_id)
       endif
 
       let sign_id = iced#sign#place('iced_trace', a:opts['lnum'], a:opts['file'])
-      call iced#cache#set(cache_key, sign_id)
+      call iced#state#get('cache').set(cache_key, sign_id)
     endif
   else
     let msg_key = 'stop_to_trace'
     if !empty(cache_key)
-      let sign_id = iced#cache#get(cache_key, -1)
+      let sign_id = iced#state#get('cache').get(cache_key, -1)
       if sign_id != -1
         call iced#sign#unplace(sign_id)
-        call iced#cache#delete(cache_key)
+        call iced#state#get('cache').delete(cache_key)
       endif
     endif
   endif
