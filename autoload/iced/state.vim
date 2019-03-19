@@ -45,8 +45,9 @@ function! iced#state#stop() abort " {{{
     if has_key(state_def, 'stop') && type(state_def.stop) == v:t_func
       let current_state = s:states[state_name]['state']
       call state_def.stop(current_state)
-      let s:states[state_name]['state'] = ''
     endif
+
+    let s:states[state_name]['state'] = ''
   endfor
 endfunction " }}}
 

@@ -319,6 +319,8 @@ function! iced#nrepl#connect(port, ...) abort
     return iced#message#error('no_set_hidden')
   endif
 
+  call iced#state#start()
+
   if iced#nrepl#is_connected()
     call iced#message#info('already_connected')
     return v:true
