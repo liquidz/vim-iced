@@ -11,7 +11,7 @@ function! iced#qf#is_opened() abort
 endfunction
 
 function! iced#qf#set(ls) abort
-  call iced#di#get('quickfix').setlist(a:ls, 'r')
+  call iced#state#get('quickfix').setlist(a:ls, 'r')
 
   if empty(a:ls)
     call iced#state#get('ex_cmd').silent_exe(':cclose')
