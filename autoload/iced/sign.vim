@@ -14,7 +14,7 @@ function! iced#sign#place(name, lnum, file) abort
   if !filereadable(a:file) | return | endif
 
   let id = s:next_id()
-  let ex = iced#di#get('ex_cmd')
+  let ex = iced#state#get('ex_cmd')
   try
     call ex.exe(printf(':sign place %d line=%d name=%s file=%s',
           \ id, a:lnum, a:name, a:file))
@@ -89,12 +89,12 @@ function! iced#sign#jump_to_prev(...) abort
 endfunction
 
 function! iced#sign#unplace(id) abort
-  call iced#di#get('ex_cmd').exe(printf(':sign unplace %d', a:id))
+  call iced#state#get('ex_cmd').exe(printf(':sign unplace %d', a:id))
   call filter(s:sign_list, {_, v -> v['id'] !=# a:id })
 endfunction
 
 function! iced#sign#unplace_all() abort
-  call iced#di#get('ex_cmd').exe(':sign unplace *')
+  call iced#state#get('ex_cmd').exe(':sign unplace *')
   let s:sign_list = []
   let s:id = 1
 endfunction
@@ -103,7 +103,7 @@ function! iced#sign#unplace_by_name(name) abort
   let file = get(a:, 1, expand('%:p'))
   for sign in s:sign_list
     if sign['name'] ==# a:name
-      call iced#di#get('ex_cmd').exe(printf(':sign unplace %d', sign['id']))
+      call iced#state#get('ex_cmd').exe(printf(':sign unplace %d', sign['id']))
     endif
   endfor
   call filter(s:sign_list, {_, v -> v['name'] !=# a:name })

@@ -18,7 +18,7 @@ function! s:apply_mode_to_file(mode, file) abort
   elseif a:mode ==# 't'
     let cmd = ':tabedit'
   endif
-  call iced#di#get('ex_cmd').exe(printf('%s %s', cmd, a:file))
+  call iced#state#get('ex_cmd').exe(printf('%s %s', cmd, a:file))
 endfunction
 
 " s:open_ns {{{
@@ -106,7 +106,7 @@ function! s:jump(resp) abort
   endif
 
   if expand('%:p') !=# path
-    call iced#di#get('ex_cmd').exe(printf(':edit %s', path))
+    call iced#state#get('ex_cmd').exe(printf(':edit %s', path))
   endif
 
   call cursor(line, column)
@@ -156,7 +156,7 @@ endfunction " }}}
 
 function! s:set_references_to_quickfix(references) abort
   call iced#qf#set(a:references)
-  call iced#di#get('ex_cmd').silent_exe(':cwindow')
+  call iced#state#get('ex_cmd').silent_exe(':cwindow')
 endfunction
 
 function! s:reference_cache_path(ns_name, var_name) abort
