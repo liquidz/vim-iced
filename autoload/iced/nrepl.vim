@@ -143,21 +143,10 @@ endfunction
 " }}}
 
 " DISPATCHER {{{
-function! s:dispatcher(ch, resp) abort
-  let text = printf('%s%s', s:response_buffer, a:resp)
-  call iced#util#debug('<<<', text)
-
-  try
-    let original_resp = iced#state#get('bencode').decode(text)
-  catch /Failed to parse bencode/
-    let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
-    return
-  endtry
-
-  let s:response_buffer = ''
-  let responses = iced#util#ensure_array(original_resp)
+function! s:dispatcher(resp) abort
+  let responses = iced#util#ensure_array(a:resp)
   let ids = s:get_message_ids(responses)
-  let original_resp_type = type(original_resp)
+  let original_resp_type = type(a:resp)
 
   for resp in responses
     if type(resp) != v:t_dict
@@ -217,7 +206,8 @@ endfunction
 " SEND {{{
 function! iced#nrepl#auto_connect() abort
   call iced#message#echom('auto_connect')
-  if ! iced#nrepl#connect#auto()
+
+  if !iced#nrepl#connect('')
     call iced#message#error('try_connect')
     return v:false
   endif
@@ -234,8 +224,6 @@ function! iced#nrepl#send(data) abort
     call iced#message#warning('reading')
     return
   endif
-
-  call iced#util#debug('>>>', a:data)
 
   let data = copy(a:data)
   let id = s:get_message_id(data)
@@ -260,9 +248,7 @@ function! iced#nrepl#send(data) abort
     call s:set_message(id, message)
   endif
 
-  call iced#state#get('channel').sendraw(
-        \ s:nrepl['channel'],
-        \ iced#state#get('bencode').encode(data))
+  call iced#state#get('nrepl').send(data)
 endfunction
 
 function! iced#nrepl#is_op_running(op) abort " {{{
@@ -288,14 +274,6 @@ function! s:warm_up() abort
   call iced#format#set_indentexpr()
 endfunction
 
-function! s:status(ch) abort
-  try
-    return iced#state#get('channel').status(a:ch)
-  catch
-    return 'fail'
-  endtry
-endfunction
-
 function! s:connected(resp, initial_session) abort
   if has_key(a:resp, 'new-session')
     let session = a:resp['new-session']
@@ -316,14 +294,8 @@ endfunction
 function! iced#nrepl#connect(port, ...) abort
   " required by iced#buffer
   if !&hidden
-    return iced#message#error('no_set_hidden')
-  endif
-
-  call iced#state#start()
-
-  if iced#nrepl#is_connected()
-    call iced#message#info('already_connected')
-    return v:true
+    call iced#message#error('no_set_hidden')
+    return v:false
   endif
 
   " NOTE: Initialize buffers here to avoid firing `winenter` autocmd
@@ -333,33 +305,25 @@ function! iced#nrepl#connect(port, ...) abort
   call iced#buffer#error#init()
   call iced#buffer#floating#init()
 
-  if empty(a:port)
-    return iced#nrepl#connect#auto()
-  endif
-
-  if !iced#nrepl#is_connected()
-    let address = printf('%s:%d', g:iced#nrepl#host, a:port)
-    let s:nrepl['port'] = a:port
-    let s:nrepl['channel'] = iced#state#get('channel').open(address, {
-        \ 'mode': 'raw',
-        \ 'callback': funcref('s:dispatcher'),
-        \ 'drop': 'never',
-        \ })
-
-    if !iced#nrepl#is_connected()
-      let s:nrepl['channel'] = v:false
-      call iced#message#error('connect_error')
-      return v:false
-    endif
+  if !iced#state#start({
+        \ 'port': a:port,
+        \ 'callback': funcref('s:dispatcher')})
+    return v:false
   endif
 
   let initial_session = get(a:, 1, 'clj')
-  call iced#nrepl#send({'op': 'clone', 'callback': {resp -> s:connected(resp, initial_session)}})
+  call iced#nrepl#send({
+        \ 'op': 'clone',
+        \ 'callback': {resp -> s:connected(resp, initial_session)}})
   return v:true
 endfunction
 
 function! iced#nrepl#is_connected() abort " {{{
-  return (s:status(s:nrepl['channel']) ==# 'open')
+  let nrepl = iced#state#get('nrepl')
+  if empty(nrepl)
+    return v:false
+  endif
+  return nrepl.is_connected()
 endfunction " }}}
 
 function! iced#nrepl#disconnect() abort " {{{
@@ -369,7 +333,6 @@ function! iced#nrepl#disconnect() abort " {{{
     call iced#nrepl#sync#send({'op': 'interrupt', 'session': id})
     call iced#nrepl#sync#close(id)
   endfor
-  call iced#state#get('channel').close(s:nrepl['channel'])
   let s:nrepl = s:initialize_nrepl()
   call iced#nrepl#cljs#reset()
 

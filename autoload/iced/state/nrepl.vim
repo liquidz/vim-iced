@@ -74,7 +74,7 @@ endfunction
 
 function! s:start(params) abort
   let nrepl = deepcopy(s:nrepl)
-  let nrepl['port'] = empty(a:params['port'])
+  let nrepl['port'] = empty(get(a:params, 'port'))
         \ ? s:detect_port()
         \ : a:params['port']
 
