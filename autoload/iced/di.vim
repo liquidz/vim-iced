@@ -37,7 +37,6 @@ endfunction
 " Initializer {{{
 if !exists('g:iced#di#container')
   let g:iced#di#container = iced#di#new_container()
-  call iced#di#register('virtual_text', function('iced#di#virtual_text#build'))
 endif " }}}
 
 let &cpo = s:save_cpo
