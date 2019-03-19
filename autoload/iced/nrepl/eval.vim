@@ -46,7 +46,7 @@ function! s:out(resp) abort
   if has_key(a:resp, 'value')
     echo iced#util#shorten(a:resp['value'])
 
-    call iced#di#get('virtual_text').set(
+    call iced#state#get('virtual_text').set(
           \ printf('=> %s', a:resp['value']),
           \ {'highlight': 'Comment', 'auto_clear': v:true})
   endif
