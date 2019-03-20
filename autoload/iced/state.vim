@@ -16,12 +16,27 @@ function! iced#state#define(name, definition) abort " {{{
   let s:states[a:name] = {'definition': a:definition, 'state': ''}
 endfunction " }}}
 
+function! iced#state#define_by_dict(dict) abort " {{{
+  for state_name in keys(a:dict)
+    let definition = a:dict[state_name]
+    call iced#state#define(state_name, definition)
+  endfor
+endfunction " }}}
+
 function! iced#state#start_by_name(name) abort " {{{
   if !has_key(s:states, a:name) | return | endif
 
   let state_def = s:states[a:name]['definition']
   if has_key(state_def, 'start') && type(state_def.start) == v:t_func
-    let new_state = state_def.start(s:last_starting_params)
+    let params = copy(s:last_starting_params)
+    if has_key(state_def, 'require') && type(state_def.require) == v:t_list
+      let params['require'] = {}
+      for required_state_name in state_def.require
+        let params['require'][required_state_name] = iced#state#get(required_state_name, v:true)
+      endfor
+    endif
+
+    let new_state = state_def.start(params)
     if !empty(new_state)
       let s:states[a:name]['state'] = new_state
       return v:true
@@ -60,26 +75,32 @@ function! iced#state#stop() abort " {{{
   endfor
 endfunction " }}}
 
-function! iced#state#get(name) abort " {{{
+function! iced#state#get(name, ...) abort " {{{
   if !has_key(s:states, a:name) | return | endif
 
+  let does_force_start = get(a:, 1, v:false)
+
   if empty(s:states[a:name]['state'])
-        \ && get(s:states[a:name]['definition'], 'lazy', v:false)
+        \ && (does_force_start || get(s:states[a:name]['definition'], 'lazy', v:false))
     call iced#state#start_by_name(a:name)
   endif
 
   return s:states[a:name]['state']
 endfunction " }}}
 
-call iced#state#define('cache', iced#state#cache#definition())
-call iced#state#define('ex_cmd', iced#state#ex_cmd#definition())
-call iced#state#define('quickfix', iced#state#quickfix#definition())
-call iced#state#define('selector', iced#state#selector#definition())
-call iced#state#define('virtual_text', iced#state#virtual_text#definition())
-
-call iced#state#define('bencode', iced#state#bencode#definition())
-call iced#state#define('channel', iced#state#channel#definition())
-call iced#state#define('nrepl', iced#state#nrepl#definition())
+call iced#state#define_by_dict({
+     \ 'cache': {'start': function('iced#state#cache#start'),
+     \           'lazy': v:true},
+     \ 'ex_cmd': {'start': function('iced#state#ex_cmd#start')},
+     \ 'quickfix': {'start': function('iced#state#quickfix#start')},
+     \ 'selector': {'start': function('iced#state#selector#start')},
+     \ 'virtual_text': {'start': function('iced#state#virtual_text#start')},
+     \ 'bencode': {'start': function('iced#state#bencode#start')},
+     \ 'channel': {'start': function('iced#state#channel#start')},
+     \ 'nrepl': {'start': function('iced#state#nrepl#start'),
+     \           'stop': function('iced#state#nrepl#stop'),
+     \           'require': ['bencode', 'channel']},
+     \ })
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

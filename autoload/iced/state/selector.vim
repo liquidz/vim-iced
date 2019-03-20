@@ -13,8 +13,8 @@ function! s:selector.select(config) abort
   end
 endfunction
 
-function! iced#state#selector#definition() abort
-  return {'start': {_ -> s:selector}}
+function! iced#state#selector#start(_) abort
+  return s:selector
 endfunction
 
 let &cpo = s:save_cpo

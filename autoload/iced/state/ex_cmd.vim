@@ -11,8 +11,8 @@ function! s:ex_cmd.silent_exe(str) abort
   exe a:str
 endfunction
 
-function! iced#state#ex_cmd#definition() abort
-  return {'start': {_ -> s:ex_cmd}}
+function! iced#state#ex_cmd#start(_) abort
+  return s:ex_cmd
 endfunction
 
 let &cpo = s:save_cpo

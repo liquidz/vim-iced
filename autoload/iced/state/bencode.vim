@@ -1,9 +1,10 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! iced#state#bencode#definition() abort
-  return {'start': has('python3') ? function('iced#state#bencode#python#start')
-        \                         : function('iced#state#bencode#vim#start')}
+function! iced#state#bencode#start(params) abort
+  return has('python3')
+        \ ? iced#state#bencode#python#start(a:params)
+        \ : iced#state#bencode#vim#start(a:params)
 endfunction
 
 let &cpo = s:save_cpo

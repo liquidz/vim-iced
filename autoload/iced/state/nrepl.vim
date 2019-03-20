@@ -5,6 +5,7 @@ let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 
 let s:nrepl = {
+      \ 'state': {'bencode': {}, 'channel': []}
       \ 'port': '',
       \ 'channel': v:false,
       \ 'response_buffer': '',
@@ -40,18 +41,23 @@ endfunction
 
 function s:nrepl.is_connected() abort
   try
-    return (iced#state#get('channel').status(self.channel) ==# 'open')
+    return (self.state.channel.status(self.channel) ==# 'open')
   catch
     return 'fail'
   endtry
 endfunction
 
 function! s:nrepl.send(message) abort
+  if !empty(self.response_buffer)
+    call iced#message#warning('reading')
+    return
+  endif
+
   call iced#util#debug('>>>', a:message)
 
-  call iced#state#get('channel').sendraw(
+  call self.state.channel.sendraw(
         \ self.channel,
-        \ iced#state#get('bencode').encode(a:message))
+        \ self.state.bencode.encode(a:message))
 endfunction
 
 function! s:nrepl.receive(resp) abort
@@ -59,7 +65,7 @@ function! s:nrepl.receive(resp) abort
   call iced#util#debug('<<<', text)
 
   try
-    let decoded_resp = iced#state#get('bencode').decode(text)
+    let decoded_resp = self.state.bencode.decode(text)
   catch /Failed to parse bencode/
     let self['response_buffer'] = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
     return
@@ -72,8 +78,16 @@ function! s:nrepl.receive(resp) abort
   endif
 endfunction
 
-function! s:start(params) abort
+function! s:nrepl.clear() abort
+  let self['response_buffer'] = ''
+endfunction
+
+function! iced#state#nrepl#start(params) abort
   let nrepl = deepcopy(s:nrepl)
+
+  let nrepl['state']['bencode'] = a:params.require.bencode
+  let nrepl['state']['channel'] = a:params.require.channel
+
   let nrepl['port'] = empty(get(a:params, 'port'))
         \ ? s:detect_port()
         \ : a:params['port']
@@ -87,7 +101,7 @@ function! s:start(params) abort
   endif
 
   let address = printf('%s:%d', g:iced#nrepl#host, nrepl['port'])
-  let nrepl['channel'] = iced#state#get('channel').open(address, {
+  let nrepl['channel'] = nrepl.state.channel.open(address, {
         \ 'mode': 'raw',
         \ 'callback': {_, resp -> nrepl.receive(resp)},
         \ 'drop': 'never'})
@@ -101,13 +115,8 @@ function! s:start(params) abort
   return nrepl
 endfunction
 
-function! s:stop(nrepl) abort
-  call iced#state#get('channel').close(a:nrepl.channel)
-endfunction
-
-function! iced#state#nrepl#definition() abort
-  return {'start': funcref('s:start'),
-        \ 'stop': funcref('s:stop')}
+function! iced#state#nrepl#stop(nrepl) abort
+  call a:nrepl.state.channel.close(a:nrepl.channel)
 endfunction
 
 let &cpo = s:save_cpo

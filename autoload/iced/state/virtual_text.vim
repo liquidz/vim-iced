@@ -36,8 +36,8 @@ function! s:neovim.clear(...) abort
   call nvim_buf_clear_namespace(buf, s:ns, line, line + 1)
 endfunction
 
-function! iced#state#virtual_text#definition() abort
-  return {'start': {_ -> has('nvim') ? s:neovim : s:vim}}
+function! iced#state#virtual_text#start(_) abort
+  return has('nvim') ? s:neovim : s:vim
 endfunction
 
 let &cpo = s:save_cpo

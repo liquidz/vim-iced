@@ -41,19 +41,8 @@ function! s:cache.do_once(key, f) abort
   endif
 endfunction
 
-function! s:start(_) abort
-  call iced#util#debug('cache state', 'starting')
+function! iced#state#cache#start(_) abort
   return deepcopy(s:cache)
-endfunction
-
-function! s:stop(_) abort
-  call iced#util#debug('cache state', 'stopping')
-endfunction
-
-function! iced#state#cache#definition() abort
-  return {'start': funcref('s:start'),
-        \ 'stop': funcref('s:stop'),
-        \ 'lazy': v:true}
 endfunction
 
 let &cpo = s:save_cpo
