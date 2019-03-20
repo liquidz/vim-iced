@@ -19,7 +19,6 @@ let s:nrepl = s:initialize_nrepl()
 let s:handlers = {}
 
 let s:messages = {}
-let s:response_buffer = ''
 
 let s:printer_dict = {
       \ 'default': 'cider.nrepl.pprint/pprint',
@@ -28,8 +27,6 @@ let s:printer_dict = {
 let s:V = vital#iced#new()
 let s:L = s:V.import('Data.List')
 
-let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
-let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
 
 let s:id_counter = 1
@@ -220,11 +217,6 @@ function! iced#nrepl#auto_connect() abort
 endfunction
 
 function! iced#nrepl#send(data) abort
-  if !empty(s:response_buffer)
-    call iced#message#warning('reading')
-    return
-  endif
-
   let data = copy(a:data)
   let id = s:get_message_id(data)
 
@@ -414,12 +406,11 @@ function! iced#nrepl#interrupt(...) abort
   if ! iced#nrepl#is_connected() | return iced#message#warning('not_connected') | endif
   let session = get(a:, 1, iced#nrepl#current_session())
   " NOTE: ignore reading error
-  let s:response_buffer = ''
+  call iced#state#get('nrepl').clear()
   call iced#nrepl#send({
       \ 'op': 'interrupt',
       \ 'session': session,
-      \ 'callback': {_ -> s:interrupted()},
-      \ })
+      \ 'callback': {_ -> s:interrupted()}})
 endfunction
 " }}}
 
