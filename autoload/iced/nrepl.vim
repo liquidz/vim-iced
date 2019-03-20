@@ -290,12 +290,12 @@ function! iced#nrepl#connect(port, ...) abort
     return v:false
   endif
 
-  " NOTE: Initialize buffers here to avoid firing `winenter` autocmd
-  "       after connection established
-  call iced#buffer#stdout#init()
-  call iced#buffer#document#init()
-  call iced#buffer#error#init()
-  call iced#buffer#floating#init()
+  " " NOTE: Initialize buffers here to avoid firing `winenter` autocmd
+  " "       after connection established
+  " call iced#buffer#stdout#init()
+  " call iced#buffer#document#init()
+  " call iced#buffer#error#init()
+  " call iced#buffer#floating#init()
 
   if !iced#state#start({
         \ 'port': a:port,

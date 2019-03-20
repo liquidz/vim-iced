@@ -5,7 +5,7 @@ let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 
 let s:nrepl = {
-      \ 'state': {'bencode': {}, 'channel': []}
+      \ 'state': {'bencode': {}, 'channel': []},
       \ 'port': '',
       \ 'channel': v:false,
       \ 'response_buffer': '',

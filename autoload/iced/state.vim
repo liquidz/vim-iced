@@ -95,6 +95,17 @@ call iced#state#define_by_dict({
      \ 'quickfix': {'start': function('iced#state#quickfix#start')},
      \ 'selector': {'start': function('iced#state#selector#start')},
      \ 'virtual_text': {'start': function('iced#state#virtual_text#start')},
+     \
+     \ 'buffer': {'start': function('iced#state#buffer#start')},
+     \ 'stdout': {'start': function('iced#state#buffer#stdout#start'),
+     \            'require': ['buffer']},
+     \ 'error': {'start': function('iced#state#buffer#error#start'),
+     \            'require': ['buffer']},
+     \ 'document': {'start': function('iced#state#buffer#document#start'),
+     \            'require': ['buffer']},
+     \ 'floating': {'start': function('iced#state#buffer#floating#start'),
+     \            'require': ['buffer']},
+     \
      \ 'bencode': {'start': function('iced#state#bencode#start')},
      \ 'channel': {'start': function('iced#state#channel#start')},
      \ 'nrepl': {'start': function('iced#state#nrepl#start'),
