@@ -144,6 +144,7 @@ function! s:dispatcher(resp) abort
   let responses = iced#util#ensure_array(a:resp)
   let ids = s:get_message_ids(responses)
   let original_resp_type = type(a:resp)
+  let stdout = iced#state#get('stdout_buffer')
 
   for resp in responses
     if type(resp) != v:t_dict
@@ -155,13 +156,13 @@ function! s:dispatcher(resp) abort
     endif
 
     if has_key(resp, 'out')
-      call iced#buffer#stdout#append(resp['out'])
+      call stdout.append(resp['out'])
     endif
     if has_key(resp, 'err')
-      call iced#buffer#stdout#append(resp['err'])
+      call stdout.append(resp['err'])
     endif
     if has_key(resp, 'pprint-out')
-      call iced#buffer#stdout#append(resp['pprint-out'])
+      call stdout.append(resp['pprint-out'])
     endif
   endfor
 
@@ -191,8 +192,8 @@ function! s:dispatcher(resp) abort
     endif
 
     if iced#util#has_status(resp, 'need-debug-input')
-      if !iced#buffer#stdout#is_visible() && !iced#buffer#floating#is_supported()
-        call iced#buffer#stdout#open()
+      if !stdout.is_visible() && !iced#state#get('floating_buffer').is_supported()
+        call stdout.open()
       endif
       call iced#nrepl#debug#start(resp)
     endif

@@ -3,7 +3,7 @@ set cpo&vim
 
 function! s:view(resp) abort
   if has_key(a:resp, 'expansion')
-    call iced#buffer#document#open(a:resp['expansion'], 'clojure')
+    call iced#state#get('document_buffer').open(a:resp['expansion'], 'clojure')
   endif
 endfunction
 

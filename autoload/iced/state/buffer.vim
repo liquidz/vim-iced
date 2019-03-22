@@ -21,6 +21,7 @@ endfunction
 
 let s:buffer = {
       \ 'namager': '',
+      \ 'state': {'ex_cmd': {}},
       \ 'info': {}}
 
 function! s:buffer.bufwinnr(bufname) abort
@@ -45,7 +46,7 @@ function! s:buffer.init(bufname, ...) abort
     call InitFn(self.bufnr(a:bufname))
   endif
 
-  call iced#state#get('ex_cmd').silent_exe(':q')
+  call self.state.ex_cmd.silent_exe(':q')
 endfunction
 
 function! s:buffer.is_visible(bufname) abort
@@ -93,7 +94,7 @@ function! s:buffer.append(bufname, s, ...) abort
 
   call iced#nrepl#auto#enable_winenter(v:false)
   try
-    if get(opt, 'scroll_to_bottom', v:false) && iced#buffer#is_visible(a:bufname)
+    if get(opt, 'scroll_to_bottom', v:false) && self.is_visible(a:bufname)
       let current_window = winnr()
       call s:focus_window(bufwinnr(nr))
       silent normal! G
@@ -131,16 +132,17 @@ function! s:buffer.close(bufname) abort
   let current_window = winnr()
   let target_window = self.bufwinnr(a:bufname)
   call s:focus_window(target_window)
-  call iced#state#get('ex_cmd').silent_exe(':q')
+  call self.state.ex_cmd.silent_exe(':q')
 
   if target_window >= current_window
     call s:focus_window(current_window)
   endif
 endfunction
 
-function! iced#state#buffer#start(_) abort
+function! iced#state#buffer#start(params) abort
   let b = deepcopy(s:buffer)
   let b['manager'] = s:BM.new()
+  let b['state']['ex_cmd'] = a:params['require']['ex_cmd']
   return b
 endfunction
 

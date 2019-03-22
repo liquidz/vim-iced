@@ -6,7 +6,7 @@ function! s:grimoire(resp) abort
     return iced#message#error('not_found')
   endif
 
-  call iced#buffer#document#open(a:resp['content'])
+  call iced#state#get('document_buffer').open(a:resp['content'])
 endfunction
 
 function! s:search(resp) abort

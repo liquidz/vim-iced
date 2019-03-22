@@ -96,7 +96,7 @@ endfunction
 function! s:view_doc(resp) abort
   let doc = s:generate_doc(a:resp)
   if !empty(doc)
-    call iced#buffer#document#open(s:generate_doc(a:resp), 'help')
+    call iced#state#get('document_buffer').open(s:generate_doc(a:resp), 'help')
   endif
 endfunction
 
@@ -128,10 +128,11 @@ function! iced#nrepl#document#open(symbol) abort
 endfunction
 
 function! s:one_line_doc(resp) abort
-  if iced#buffer#document#is_visible() && g:iced#buffer#document#does_update_automatically
+  let document = iced#state#get('document_buffer')
+  if document.is_visible() && g:iced#buffer#document#does_update_automatically
     let doc = s:generate_doc(a:resp)
     if !empty(doc)
-      call iced#buffer#document#update(doc, 'help')
+      call document.update(doc, 'help')
     endif
   else
     if has_key(a:resp, 'javadoc')

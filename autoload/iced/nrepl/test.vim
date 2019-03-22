@@ -186,7 +186,7 @@ function! s:out(resp) abort
     endif
   endfor
 
-  call iced#buffer#error#show(join(expected_and_actuals, "\n"))
+  call iced#state#get('error_buffer').show(join(expected_and_actuals, "\n"))
   call iced#qf#set(errors)
 
   let summary = s:summary(a:resp)

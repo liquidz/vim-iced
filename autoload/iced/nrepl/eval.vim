@@ -125,7 +125,7 @@ function! iced#nrepl#eval#print_last() abort
   let m = {}
   function! m.callback(resp) abort
     if has_key(a:resp, 'value')
-      call iced#buffer#stdout#append(a:resp['value'])
+      call iced#state#get('stdout_buffer').append(a:resp['value'])
     endif
   endfunction
 

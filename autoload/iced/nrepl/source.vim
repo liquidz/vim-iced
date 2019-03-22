@@ -7,7 +7,7 @@ function! s:show_source(resp) abort
     return
   endif
 
-  call iced#buffer#document#open(a:resp['out'], 'clojure')
+  call iced#state#get('document_buffer').open(a:resp['out'], 'clojure')
 endfunction
 
 function! iced#nrepl#source#show(symbol) abort

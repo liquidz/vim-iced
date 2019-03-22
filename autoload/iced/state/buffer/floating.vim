@@ -3,9 +3,9 @@ set cpo&vim
 
 let s:floating = {
       \ 'bufname': 'iced_floating',
+      \ 'state': {'buffer': {}},
       \ 'index': 0,
       \ 'max_height': 50,
-      \ 'state': {'buffer': {}},
       \ }
 
 let g:iced#buffer#floating#time = get(g:, 'iced#buffer#floating#time', 3000)
@@ -51,8 +51,8 @@ function! s:floating.close(window_id) abort
 endfunction
 
 function! s:floating.open(texts, ...) abort
-  if !iced#buffer#floating#is_supported() | return | endif
-  let bufnr = iced#buffer#nr(self.bufname)
+  if !self.is_supported() | return | endif
+  let bufnr = self.state.buffer.nr(self.bufname)
   if bufnr < 0 | return | endif
   if type(a:texts) != v:t_list || empty(a:texts)
     return
@@ -95,7 +95,7 @@ function! s:floating.open(texts, ...) abort
 
   if get(opts, 'auto_close', v:true)
     let time = get(opts, 'close_time', g:iced#buffer#floating#time)
-    call timer_start(time, {-> iced#buffer#floating#close(winid)})
+    call timer_start(time, {-> self.close(winid)})
   endif
 
   return winid

@@ -62,7 +62,7 @@ function! s:spec_form(resp) abort
   if empty(formatted)
     return iced#message#warn('no_spec')
   endif
-  call iced#buffer#document#open(formatted, 'clojure')
+  call iced#state#get('document_buffer').open(formatted, 'clojure')
 endfunction
 
 function! s:browse_spec(spec_name) abort
