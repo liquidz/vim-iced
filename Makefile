@@ -1,4 +1,6 @@
-.PHONY: all vital test themis html pip_install lint python_doctest clean clean-all bin ancient aspell repl circleci
+.PHONY: all vital test themis docker_themis html pip_install lint python_doctest clean clean-all bin ancient aspell repl circleci
+
+PWD=$(shell pwd)
 
 PLUGIN_NAME = iced
 VITAL_MODULES = Data.Dict \
@@ -23,6 +25,9 @@ test: themis lint python_doctest
 
 themis: .vim-themis .vim-sexp
 	./.vim-themis/bin/themis
+
+docker_themis: .vim-themis .vim-sexp
+	docker run --rm -v $(PWD):/root --entrypoint './.vim-themis/bin/themis' uochan/vim:latest
 
 html: doc/vim-iced.txt
 	bash scripts/html.sh
