@@ -8,7 +8,7 @@ function! iced#nrepl#cljs#shadow_cljs#get_env(options) abort
     return iced#message#get('argument_missing', 'build-id is required.')
   endif
 
-  let s:build_id = a:options[0]
+  let s:build_id = trim(a:options[0], ' :')
   return {'does_use_piggieback': v:false,
         \ 'pre-code': {-> '(require ''shadow.cljs.devtools.api)'},
         \ 'env-code': {-> {'raw': printf('(shadow.cljs.devtools.api/repl :%s)', s:build_id)}}}
