@@ -154,7 +154,8 @@ SHADOW-CLJS~
                   [cider/cider-nrepl "0.21.1"]
                   [iced-nrepl "0.4.1"]]
 
-   :nrepl {:middleware [cider.nrepl/wrap-classpath
+   :nrepl {:cider false
+           :middleware [cider.nrepl/wrap-classpath
                         cider.nrepl/wrap-complete
                         cider.nrepl/wrap-debug
                         cider.nrepl/wrap-format
