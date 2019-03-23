@@ -76,7 +76,8 @@ footer {
                   [cider/cider-nrepl &quot;0.21.1&quot;]
                   [iced-nrepl &quot;0.4.1&quot;]]
 
-   :nrepl {:middleware [cider.nrepl/wrap-classpath
+   :nrepl {:cider false
+           :middleware [cider.nrepl/wrap-classpath
                         cider.nrepl/wrap-complete
                         cider.nrepl/wrap-debug
                         cider.nrepl/wrap-format
