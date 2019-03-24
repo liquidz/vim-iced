@@ -47,11 +47,11 @@ function iced_repl_usage() {
 }
 
 function echo_info() {
-    echo -e "\e[32mOK\e[m: \e[1m${1}\e[m"
+    echo -e "\x1B[32mOK\x1B[m: \x1B[1m${1}\x1B[m"
 }
 
 function echo_error() {
-    echo -e "\e[31mNG\e[m: \e[1m${1}\e[m"
+    echo -e "\x1B[31mNG\x1B[m: \x1B[1m${1}\x1B[m"
 }
 
 if [ $# -lt 1 ]; then
