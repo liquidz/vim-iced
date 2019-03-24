@@ -2,7 +2,7 @@ let s:suite  = themis#suite('iced.paredit')
 let s:assert = themis#helper('assert')
 let s:scope = themis#helper('scope')
 let s:buf = themis#helper('iced_buffer')
-let s:ch = themis#helper('iced_channel')
+let s:nrepl = themis#helper('iced_nrepl')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl.vim')
 
 
@@ -19,8 +19,7 @@ function! s:format_code_relay(msg) abort
 endfunction
 
 function! s:suite.deep_slurp_test() abort
-  call s:ch.register_test_builder({
-      \ 'status_value': 'open',
+  call s:nrepl.start_test_state({
       \ 'relay': funcref('s:format_code_relay'),
       \ })
 

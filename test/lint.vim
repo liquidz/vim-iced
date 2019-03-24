@@ -1,12 +1,12 @@
 let s:suite  = themis#suite('iced.lint')
 let s:assert = themis#helper('assert')
-let s:ch = themis#helper('iced_channel')
+let s:nrepl = themis#helper('iced_nrepl')
 let s:ex_cmd = themis#helper('iced_ex_cmd')
 
 let s:tempfile = tempname()
 
 function! s:setup(lint_resp) abort " {{{
-  call s:ex_cmd.register_test_builder()
+  call s:ex_cmd.start_test_state()
   call iced#sign#unplace_all()
   call writefile([''], s:tempfile)
 
@@ -19,8 +19,7 @@ function! s:setup(lint_resp) abort " {{{
     return res
   endfunction
 
-  call s:ch.register_test_builder({
-        \ 'status_value': 'open',
+  call s:nrepl.start_test_state({
         \ 'relay': {msg -> test.relay(msg, a:lint_resp)}})
 endfunction " }}}
 

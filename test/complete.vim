@@ -1,7 +1,7 @@
 let s:suite  = themis#suite('iced.complete')
 let s:assert = themis#helper('assert')
 let s:scope  = themis#helper('scope')
-let s:ch     = themis#helper('iced_channel')
+let s:nrepl  = themis#helper('iced_nrepl')
 let s:buf    = themis#helper('iced_buffer')
 let s:funcs  = s:scope.funcs('autoload/iced/complete.vim')
 
@@ -53,7 +53,7 @@ function! s:ns_var_reply(msg) abort
 endfunction
 
 function! s:suite.ns_var_candidates_without_alias_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:ns_var_reply')})
+  call s:nrepl.start_test_state({'relay': funcref('s:ns_var_reply')})
 
   let res = s:funcs.ns_var_candidates('foo.core', 'bar', '')
   call s:assert.equals(len(res), 1)
@@ -88,7 +88,7 @@ function! s:suite.ns_var_candidates_without_alias_test() abort
 endfunction
 
 function! s:suite.ns_var_candidates_with_alias_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:ns_var_reply')})
+  call s:nrepl.start_test_state({'relay': funcref('s:ns_var_reply')})
 
   let res = s:funcs.ns_var_candidates('foo.core', 'bar', 'foo')
   call s:assert.equals(len(res), 1)

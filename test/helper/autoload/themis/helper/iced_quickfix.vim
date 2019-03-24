@@ -1,14 +1,15 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:helper = {}
+let s:helper = {'last_args': []}
 
 function! s:helper.setlist(list, action) abort
   let self.last_args = {'list': a:list, 'action': a:action}
 endfunction
 
-function! s:helper.register_test_builder() abort
-  call iced#di#register('quickfix', {_ -> self})
+function! s:helper.start_test_state() abort
+  call iced#state#define('quickfix', {'start': {_ -> self}})
+  call iced#state#start_by_name('quickfix')
 endfunction
 
 function! s:helper.get_last_args() abort

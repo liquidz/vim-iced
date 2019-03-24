@@ -1,6 +1,6 @@
 let s:suite = themis#suite('iced.nrepl.cljs')
 let s:assert = themis#helper('assert')
-let s:ch = themis#helper('iced_channel')
+let s:nrepl = themis#helper('iced_nrepl')
 
 function! s:clj_session_fixture() abort
   call iced#nrepl#set_session('clj',  'original-clj-session')
@@ -30,7 +30,7 @@ function! s:suite.check_switching_session_switch_to_cljs_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
+  call s:nrepl.start_test_state({'relay': {msg -> test.relay(msg)}})
 
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
   call iced#nrepl#cljs#check_switching_session({
@@ -47,8 +47,7 @@ endfunction
 
 function! s:suite.check_switching_session_switch_to_clj_test() abort
   call s:cljs_session_fixture()
-  call s:ch.register_test_builder({
-        \ 'status_value': 'open',
+  call s:nrepl.start_test_state({
         \ 'relay': {msg -> {'status': ['done']}}})
 
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')

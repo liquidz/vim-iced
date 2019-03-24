@@ -45,10 +45,13 @@ function! s:suite.change_to_invalid_session_test() abort
 endfunction
 
 function! s:suite.is_connected_test() abort
-  call s:ch.register_test_builder({'status_value': 'open'})
+  call s:ch.define_test_state({'status_value': 'open'})
+  call iced#state#start_by_name('nrepl', {'port': 1234})
   call s:assert.true(iced#nrepl#is_connected())
 
-  call s:ch.register_test_builder({'status_value': 'fail'})
+  call iced#state#stop()
+  call s:ch.define_test_state({'status_value': 'fail'})
+  call iced#state#start_by_name('nrepl', {'port': 1234})
   call s:assert.false(iced#nrepl#is_connected())
 endfunction
 
@@ -57,24 +60,23 @@ function! s:suite.connect_test() abort
   function! test.relay(msg) abort
     if a:msg['op'] ==# 'clone'
       return {'status': ['done'], 'new-session': remove(self.session_patterns, 0)}
-    else
-      return {'status': ['done']}
     endif
-    return {}
+    return {'status': ['done']}
   endfunction
 
   " # status_value
   "   1.fail means not connected yet
   "   2.fail means not connected by auto connection
   "   3.open means connection established
-  call s:ch.register_test_builder({
-      \ 'status_value': ['fail', 'fail', 'open'],
-      \ 'relay': {msg -> test.relay(msg)},
-      \ })
+  call s:ch.define_test_state({
+   \ 'status_value': 'open',
+   \ 'relay': {msg -> test.relay(msg)},
+   \ })
 
   set nohidden
   call s:assert.equals(iced#nrepl#connect(1234), v:false)
 
+  " "call iced#state#stop()
   set hidden
   call s:assert.equals(iced#nrepl#connect(1234), v:true)
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
@@ -83,7 +85,8 @@ function! s:suite.connect_test() abort
 endfunction
 
 function! s:suite.connect_failure_test() abort
-  call s:ch.register_test_builder({'status_value': 'fail'})
+  call s:ch.define_test_state({'status_value': 'fail'})
+  set hidden
   call s:assert.equals(iced#nrepl#connect(1234), v:false)
 endfunction
 
@@ -100,10 +103,10 @@ function! s:suite.disconnect_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({
-      \ 'status_value': 'open',
-      \ 'relay': {msg -> test.relay(msg)},
-      \ })
+  call s:ch.start_test_state({
+   \ 'status_value': 'open',
+   \ 'relay': {msg -> test.relay(msg)},
+   \ })
 
   call iced#nrepl#disconnect()
   call s:assert.equals(test.closed_sessions, ['foo-session', 'bar-session'])
@@ -120,8 +123,8 @@ function! s:suite.eval_test() abort
   function! test.relay_raw(msg) abort
     if a:msg['op'] !=# 'eval' | return '' | endif
 
-    let resp1 = iced#di#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': 6})
-    let resp2 = iced#di#get('bencode').encode({'id': 123, 'status': ['done']})
+    let resp1 = iced#state#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': 6})
+    let resp2 = iced#state#get('bencode').encode({'id': 123, 'status': ['done']})
     return (s:split_half(resp1) + s:split_half(resp2))
   endfunction
 
@@ -129,16 +132,17 @@ function! s:suite.eval_test() abort
     let self['result'] = a:result
   endfunction
 
-  call s:ch.register_test_builder({
-      \ 'status_value': 'open',
-      \ 'relay_raw': {msg -> test.relay_raw(msg)},
-      \ })
+  call s:ch.start_test_state({
+    \ 'status_value': 'open',
+    \ 'is_raw': v:true,
+    \ 'relay': {msg -> test.relay_raw(msg)},
+    \ })
 
   call iced#nrepl#eval(
-      \ '(+ 1 2 3)',
-      \ {result -> test.result_callback(result)},
-      \ {'id': 123},
-      \ )
+    \ '(+ 1 2 3)',
+    \ {result -> test.result_callback(result)},
+    \ {'id': 123},
+    \ )
   call s:assert.equals(test.result, {'status': ['done'], 'id': 123, 'ns': 'foo.core', 'value': 6})
 endfunction
 
@@ -154,8 +158,8 @@ function! s:suite.multiple_different_ids_response_test() abort
   let test = {}
   function! test.relay_raw(msg) abort
     if a:msg['op'] !=# 'eval' | return '' | endif
-    let resp1 = iced#di#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': 6, 'status': ['done']})
-    let resp2 = iced#di#get('bencode').encode({'id': 234, 'ns': 'bar.core', 'value': 'baaaarrrr', 'status': ['done']})
+    let resp1 = iced#state#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': 6, 'status': ['done']})
+    let resp2 = iced#state#get('bencode').encode({'id': 234, 'ns': 'bar.core', 'value': 'baaaarrrr', 'status': ['done']})
     return printf('%s%s', resp1, resp2)
   endfunction
 
@@ -167,7 +171,10 @@ function! s:suite.multiple_different_ids_response_test() abort
     let self['result234'] = a:result
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay_raw': {msg -> test.relay_raw(msg)}})
+  call s:ch.start_test_state({
+        \ 'status_value': 'open',
+        \ 'is_raw': v:true,
+        \ 'relay': {msg -> test.relay_raw(msg)}})
   call s:funcs.set_message(234, {'op': 'eval', 'callback': test.callback_for_234})
 
   call iced#nrepl#eval('(+ 1 2 3)', {result -> test.callback_for_123(result)}, {'id': 123})

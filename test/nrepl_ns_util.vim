@@ -1,7 +1,7 @@
 let s:suite  = themis#suite('iced.nrepl.ns.util')
 let s:assert = themis#helper('assert')
 let s:buf = themis#helper('iced_buffer')
-let s:ch = themis#helper('iced_channel')
+let s:nrepl = themis#helper('iced_nrepl')
 
 function! s:format_relay(msg) abort
   if a:msg['op'] ==# 'format-code-with-indents'
@@ -16,7 +16,7 @@ function! s:suite.replace_test() abort
   call s:buf.start_dummy([
         \ '(ns foo.core)',
         \ 'nil|'])
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:format_relay')})
+  call s:nrepl.start_test_state({'relay': funcref('s:format_relay')})
 
   call s:assert.equals(line('.'), 2)
   call iced#nrepl#ns#util#replace("(ns bar.core\n  (:require clojure.string))")
@@ -30,7 +30,7 @@ endfunction
 function! s:suite.replace_ns_not_found_test() abort
   call s:buf.start_dummy(['(list :hello)', 'nil|'])
   let org_text = s:buf.get_texts()
-  
+
   call s:assert.equals(line('.'), 2)
   call iced#nrepl#ns#util#replace('(ns bar.core)')
   call s:assert.equals(s:buf.get_texts(), org_text)
@@ -93,7 +93,7 @@ function! s:suite.add_test() abort
   call s:buf.start_dummy([
         \ '(ns foo.core)',
         \ 'nil|'])
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:format_relay')})
+  call s:nrepl.start_test_state({'relay': funcref('s:format_relay')})
 
   call s:assert.equals(line('.'), 2)
 

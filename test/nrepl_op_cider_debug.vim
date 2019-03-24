@@ -1,6 +1,6 @@
 let s:suite = themis#suite('iced.nrepl.op.cider.debug')
 let s:assert = themis#helper('assert')
-let s:ch = themis#helper('iced_channel')
+let s:nrepl = themis#helper('iced_nrepl')
 
 let s:test = {'last_message': ''}
 function! s:test.relay(msg) abort
@@ -12,7 +12,7 @@ function! s:setup() abort
   call iced#nrepl#set_session('clj', 'clj-session')
   call iced#nrepl#set_session('repl', 'repl-session')
   call iced#nrepl#change_current_session('clj')
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> s:test.relay(v)}})
+  call s:nrepl.start_test_state({'relay': {v -> s:test.relay(v)}})
 endfunction
 
 function! s:suite.init_test() abort

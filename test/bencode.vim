@@ -1,4 +1,4 @@
-let s:suite  = themis#suite('iced.di.bencode.vim')
+let s:suite  = themis#suite('iced.state.bencode.vim')
 let s:assert = themis#helper('assert')
 
 function! s:assert_parse_failure(f) abort
@@ -12,7 +12,7 @@ function! s:assert_parse_failure(f) abort
   endtry
 endfunction
 
-let s:bencode = iced#di#bencode#vim#build({})
+let s:bencode = iced#state#bencode#vim#start({})
 
 "" ENCODING TEST
 

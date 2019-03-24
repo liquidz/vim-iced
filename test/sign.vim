@@ -6,7 +6,7 @@ let s:ex_cmd = themis#helper('iced_ex_cmd')
 let s:tempfile = tempname()
 
 function! s:setup() abort " {{{
-  call s:ex_cmd.register_test_builder()
+  call s:ex_cmd.start_test_state()
   call iced#sign#unplace_all()
   call writefile([''], s:tempfile)
 endfunction " }}}

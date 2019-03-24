@@ -1,13 +1,13 @@
 let s:suite = themis#suite('iced.hook')
 let s:assert = themis#helper('assert')
-let s:ch = themis#helper('iced_channel')
 let s:ex = themis#helper('iced_ex_cmd')
+let s:nrepl = themis#helper('iced_nrepl')
 
 function! s:setup() abort
   call iced#nrepl#set_session('clj',  'clj-session')
   call iced#nrepl#set_session('repl', 'repl-session')
   call iced#nrepl#change_current_session('clj')
-  call s:ex.register_test_builder()
+  call s:ex.start_test_state()
 endfunction
 
 function! s:teardown() abort
@@ -41,7 +41,7 @@ function! s:suite.run_eval_type_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
+  call s:nrepl.start_test_state({'relay': {msg -> test.relay(msg)}})
 
   let g:iced#hook = {'eval-test': {'type': 'eval', 'exec': '(simple form)'}}
   call iced#hook#run('eval-test', 'bar')
@@ -67,7 +67,7 @@ function! s:suite.run_eval_repl_type_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
+  call s:nrepl.start_test_state({'relay': {msg -> test.relay(msg)}})
 
   let g:iced#hook = {'eval-repl-test': {'type': 'eval-repl', 'exec': '(simple form)'}}
   call iced#hook#run('eval-repl-test', 'bar')

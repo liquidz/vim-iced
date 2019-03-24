@@ -2,7 +2,7 @@ let s:suite  = themis#suite('iced.nrepl.navigate')
 let s:assert = themis#helper('assert')
 let s:scope = themis#helper('scope')
 let s:buf = themis#helper('iced_buffer')
-let s:ch = themis#helper('iced_channel')
+let s:nrepl = themis#helper('iced_nrepl')
 let s:sel = themis#helper('iced_selector')
 let s:ex_cmd = themis#helper('iced_ex_cmd')
 let s:qf = themis#helper('iced_quickfix')
@@ -12,13 +12,13 @@ let s:temp_file = tempname()
 
 function! s:setup(opts) abort " {{{
   call writefile([''], s:temp_file)
-  call s:sel.register_test_builder()
-  call s:ex_cmd.register_test_builder()
-  call s:qf.register_test_builder()
+  call s:sel.start_test_state()
+  call s:ex_cmd.start_test_state()
+  call s:qf.start_test_state()
   call iced#nrepl#change_current_session('clj')
 
   if has_key(a:opts, 'channel')
-    call s:ch.register_test_builder({'status_value': 'open', 'relay': a:opts['channel']})
+    call s:nrepl.start_test_state({'relay': a:opts['channel']})
   endif
 
   if has_key(a:opts, 'buffer')

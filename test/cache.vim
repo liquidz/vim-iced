@@ -2,67 +2,74 @@ let s:suite  = themis#suite('iced.cache')
 let s:assert = themis#helper('assert')
 
 function! s:suite.get_and_set_test() abort
-  call s:assert.equals(iced#cache#get('foo'), '')
-  call s:assert.equals(iced#cache#get('foo', 'baz'), 'baz')
+  let s:cache = iced#state#get('cache')
+  call s:assert.equals(s:cache.get('foo'), '')
+  call s:assert.equals(s:cache.get('foo', 'baz'), 'baz')
 
-  call iced#cache#set('foo', 'bar')
-  call s:assert.equals(iced#cache#get('foo'), 'bar')
+  call s:cache.set('foo', 'bar')
+  call s:assert.equals(s:cache.get('foo'), 'bar')
 endfunction
 
 function! s:suite.delete_test() abort
-  call iced#cache#set('foo', 'bar')
-  call s:assert.equals(iced#cache#get('foo'), 'bar')
-  call iced#cache#delete('foo')
-  call s:assert.equals(iced#cache#get('foo'), '')
+  let s:cache = iced#state#get('cache')
+  call s:cache.set('foo', 'bar')
+  call s:assert.equals(s:cache.get('foo'), 'bar')
+  call s:cache.delete('foo')
+  call s:assert.equals(s:cache.get('foo'), '')
 endfunction
 
 function! s:suite.merge_test() abort
-  call iced#cache#set('foo', 'bar')
-  call s:assert.equals(iced#cache#get('foo'), 'bar')
-  call s:assert.equals(iced#cache#get('hello'), '')
+  let s:cache = iced#state#get('cache')
+  call s:cache.set('foo', 'bar')
+  call s:assert.equals(s:cache.get('foo'), 'bar')
+  call s:assert.equals(s:cache.get('hello'), '')
 
-  call iced#cache#merge({'foo': 'baz', 'hello': 'world'})
-  call s:assert.equals(iced#cache#get('foo'), 'baz')
-  call s:assert.equals(iced#cache#get('hello'), 'world')
+  call s:cache.merge({'foo': 'baz', 'hello': 'world'})
+  call s:assert.equals(s:cache.get('foo'), 'baz')
+  call s:assert.equals(s:cache.get('hello'), 'world')
 endfunction
 
 function! s:suite.clear_test() abort
-  call iced#cache#merge({'foo': 'bar', 'bar': 'baz'})
-  call s:assert.equals(iced#cache#get('foo'), 'bar')
-  call s:assert.equals(iced#cache#get('bar'), 'baz')
+  let s:cache = iced#state#get('cache')
+  call s:cache.merge({'foo': 'bar', 'bar': 'baz'})
+  call s:assert.equals(s:cache.get('foo'), 'bar')
+  call s:assert.equals(s:cache.get('bar'), 'baz')
 
-  call iced#cache#clear()
-  call s:assert.equals(iced#cache#get('foo'), '')
-  call s:assert.equals(iced#cache#get('bar'), '')
+  call s:cache.clear()
+  call s:assert.equals(s:cache.get('foo'), '')
+  call s:assert.equals(s:cache.get('bar'), '')
 endfunction
 
 function! s:suite.has_key_test() abort
-  call iced#cache#clear()
-  call s:assert.false(iced#cache#has_key('foo'))
+  let s:cache = iced#state#get('cache')
+  call s:cache.clear()
+  call s:assert.false(s:cache.has_key('foo'))
 
-  call iced#cache#set('foo', 'bar')
-  call s:assert.true(iced#cache#has_key('foo'))
+  call s:cache.set('foo', 'bar')
+  call s:assert.true(s:cache.has_key('foo'))
 
-  call iced#cache#delete('foo')
-  call s:assert.false(iced#cache#has_key('foo'))
+  call s:cache.delete('foo')
+  call s:assert.false(s:cache.has_key('foo'))
 endfunction
 
 function! s:set(k, v, r) abort
-  call iced#cache#set(a:k, a:v)
+  let s:cache = iced#state#get('cache')
+  call s:cache.set(a:k, a:v)
   return a:r
 endfunction
 
 function! s:suite.do_once_test() abort
-  call iced#cache#clear()
+  let s:cache = iced#state#get('cache')
+  call s:cache.clear()
   call s:set('i', 1, v:true)
 
-  call iced#cache#do_once('foo', {-> s:set('i', iced#cache#get('i') + 1, v:true)})
-  call s:assert.equals(iced#cache#get('i'), 2)
-  call iced#cache#do_once('foo', {-> s:set('i', iced#cache#get('i') + 1, v:true)})
-  call s:assert.equals(iced#cache#get('i'), 2)
+  call s:cache.do_once('foo', {-> s:set('i', s:cache.get('i') + 1, v:true)})
+  call s:assert.equals(s:cache.get('i'), 2)
+  call s:cache.do_once('foo', {-> s:set('i', s:cache.get('i') + 1, v:true)})
+  call s:assert.equals(s:cache.get('i'), 2)
 
-  call iced#cache#do_once('bar', {-> s:set('i', iced#cache#get('i') + 1, v:false)})
-  call s:assert.equals(iced#cache#get('i'), 3)
-  call iced#cache#do_once('bar', {-> s:set('i', iced#cache#get('i') + 1, v:false)})
-  call s:assert.equals(iced#cache#get('i'), 4)
+  call s:cache.do_once('bar', {-> s:set('i', s:cache.get('i') + 1, v:false)})
+  call s:assert.equals(s:cache.get('i'), 3)
+  call s:cache.do_once('bar', {-> s:set('i', s:cache.get('i') + 1, v:false)})
+  call s:assert.equals(s:cache.get('i'), 4)
 endfunction

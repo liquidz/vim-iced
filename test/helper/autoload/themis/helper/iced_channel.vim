@@ -5,21 +5,28 @@ let s:helper = {}
 let s:Local = g:themis#vital.import('Vim.ScriptLocal')
 let s:funcs = s:Local.sfuncs('autoload/iced/nrepl.vim')
 
-function! s:build_test_channel(opt) abort
-  let dummy = {'env': 'test', 'status_value': 'fail'}
-  call extend(dummy, a:opt)
+function! s:ensure_list(x) abort
+  return type(a:x) == v:t_list ? a:x : [a:x]
+endfunction
 
-  function! dummy.open(address, options) abort
-    let self['address'] = a:address
-    let self['options'] = a:options
-    return self
+function! s:build_test_state(params, opt) abort
+  let ch = {'status_value': get(a:opt, 'status_value', 'open'),
+        \   'is_raw': get(a:opt, 'is_raw', v:false),
+        \   'relay': get(a:opt, 'relay', ''),
+        \   'callback': '',
+        \   'state': {'bencode': a:params.require.bencode},
+        \   }
+
+  function! ch.open(address, options) abort
+    let self['callback'] = get(a:options, 'callback', '')
+    return {}
   endfunction
 
-  function! dummy.close(handle) abort
+  function! ch.close(handler) abort
     return
   endfunction
 
-  function! dummy.status(handle) abort
+  function! ch.status(handler) abort
     if type(self.status_value) == v:t_list
       if empty(self.status_value)
         return 'fail'
@@ -31,40 +38,41 @@ function! s:build_test_channel(opt) abort
     endif
   endfunction
 
-  function! dummy.sendraw(handle, string) abort
-    if has_key(self, 'relay') && type(self.relay) == v:t_func
-      let sent_data = iced#di#get('bencode').decode(a:string)
-      let resp_data = self.relay(sent_data)
-      if has_key(sent_data, 'id') && !has_key(resp_data, 'id')
-        let resp_data['id'] = sent_data['id']
+  function! ch.sendraw(handler, string) abort
+    if type(self.callback) == v:t_func && type(self.relay) == v:t_func
+      let msg = self.state.bencode.decode(a:string)
+      let resp_data = self.relay(msg)
+
+      if type(resp_data) == v:t_dict && !has_key(resp_data, 'id') && has_key(msg, 'id')
+        let resp_data['id'] = msg['id']
       endif
 
-      let resp_data = iced#di#get('bencode').encode(resp_data)
-      let Cb = (has_key(self, 'callback') && type(self.callback) == v:t_func)
-          \ ? self.callback : s:funcs.dispatcher
-      call Cb(self, resp_data)
-    elseif has_key(self, 'relay_raw') && type(self.relay_raw) == v:t_func
-      let sent_data = iced#di#get('bencode').decode(a:string)
-      let resp_data = self.relay_raw(sent_data)
-      let Cb = (has_key(self, 'callback') && type(self.callback) == v:t_func)
-          \ ? self.callback : s:funcs.dispatcher
-
-      for resp_string in ((type(resp_data) == v:t_list) ? resp_data : [resp_data])
-        call Cb(self, resp_string)
-        sleep 10m
+      let resp_data = self.is_raw ? resp_data : self.state.bencode.encode(resp_data)
+      for resp in s:ensure_list(resp_data)
+        call self.callback({}, resp)
       endfor
-    else
-      return
     endif
   endfunction
 
-  return dummy
+  return ch
 endfunction
 
-function! s:helper.register_test_builder(opt) abort
-  call iced#nrepl#auto#enable_winenter(v:false)
-  call iced#di#register('bencode', {c -> iced#di#bencode#vim#build(c)})
-  call iced#di#register('channel', {c -> s:build_test_channel(a:opt)})
+function! s:helper.define_test_state(opt) abort
+  call iced#state#define('bencode', {'start': {v -> iced#state#bencode#vim#start(v)}})
+  call iced#state#define('channel', {
+        \ 'start': {params -> s:build_test_state(params, a:opt)},
+        \ 'require': ['bencode']})
+  call iced#state#define('nrepl', {
+        \ 'start': function('iced#state#nrepl#start'),
+        \ 'stop': function('iced#state#nrepl#stop'),
+        \ 'require': ['bencode', 'channel']})
+endfunction
+
+function! s:helper.start_test_state(opt) abort
+  call self.define_test_state(a:opt)
+  call iced#state#start_by_name('nrepl', {
+        \ 'port': 1234,
+        \ 'callback': s:funcs.dispatcher})
 endfunction
 
 function! themis#helper#iced_channel#new(runner) abort

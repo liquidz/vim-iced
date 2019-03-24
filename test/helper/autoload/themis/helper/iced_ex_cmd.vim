@@ -11,8 +11,9 @@ function! s:helper.silent_exe(str) abort
   let self.last_args = {'silent_exe': a:str}
 endfunction
 
-function! s:helper.register_test_builder() abort
-  call iced#di#register('ex_cmd', {_ -> self})
+function! s:helper.start_test_state() abort
+  call iced#state#define('ex_cmd', {'start': {_ -> self}})
+  call iced#state#start_by_name('ex_cmd')
 endfunction
 
 function! s:helper.get_last_args() abort

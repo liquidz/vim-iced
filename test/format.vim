@@ -1,6 +1,6 @@
 let s:suite  = themis#suite('iced.format')
 let s:assert = themis#helper('assert')
-let s:ch = themis#helper('iced_channel')
+let s:nrepl = themis#helper('iced_nrepl')
 let s:buf = themis#helper('iced_buffer')
 
 function! GetClojureIndent() abort
@@ -24,8 +24,7 @@ function! s:suite.form_test() abort
         \ '(list :foo)',
         \ '(list 123 456|)',
         \ ])
-  call s:ch.register_test_builder({
-        \ 'status_value': 'open',
+  call s:nrepl.start_test_state({
         \ 'relay': {msg -> s:format_code_relay(msg, ':dummy-formatted')}})
 
   call iced#format#form()
@@ -48,8 +47,7 @@ function! s:calculate_indent_relay(msg, level) abort
 endfunction
 
 function! s:suite.calculate_indent_with_top_form_test() abort
-  call s:ch.register_test_builder({
-        \ 'status_value': 'open',
+  call s:nrepl.start_test_state({
         \ 'relay': {msg -> s:calculate_indent_relay(msg, 1)}})
   call s:buf.start_dummy([
         \ '(foo',
@@ -62,8 +60,7 @@ function! s:suite.calculate_indent_with_top_form_test() abort
 endfunction
 
 function! s:suite.calculate_indent_with_nested_form_test() abort
-  call s:ch.register_test_builder({
-        \ 'status_value': 'open',
+  call s:nrepl.start_test_state({
         \ 'relay': {msg -> s:calculate_indent_relay(msg, 3)}})
   call s:buf.start_dummy([
         \ '(foo',
@@ -78,8 +75,7 @@ function! s:suite.calculate_indent_with_nested_form_test() abort
 endfunction
 
 function! s:suite.calculate_indent_without_corresponding_form_test() abort
-  call s:ch.register_test_builder({
-        \ 'status_value': 'open',
+  call s:nrepl.start_test_state({
         \ 'relay': {msg -> s:calculate_indent_relay(msg, 99)}})
   call s:buf.start_dummy([
         \ '(foo)',
