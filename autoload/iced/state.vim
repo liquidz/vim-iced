@@ -4,15 +4,11 @@ set cpo&vim
 let s:V  = vital#iced#new()
 let s:L  = s:V.import('Data.List')
 
-let s:states_order = []
 let s:states = {}
 let s:last_starting_params = {}
 
 function! iced#state#define(name, definition) abort " {{{
   if type(a:definition) != v:t_dict | return | endif
-  if !s:L.has(s:states_order, a:name)
-    call add(s:states_order, a:name)
-  endif
   let s:states[a:name] = {'definition': a:definition, 'state': ''}
 endfunction " }}}
 
@@ -23,12 +19,13 @@ function! iced#state#define_by_dict(dict) abort " {{{
   endfor
 endfunction " }}}
 
-function! iced#state#start_by_name(name) abort " {{{
+function! iced#state#start_by_name(name, ...) abort " {{{
   if !has_key(s:states, a:name) | return | endif
 
   let state_def = s:states[a:name]['definition']
   if has_key(state_def, 'start') && type(state_def.start) == v:t_func
-    let params = copy(s:last_starting_params)
+    let params = get(a:, 1, copy(s:last_starting_params))
+
     if has_key(state_def, 'require') && type(state_def.require) == v:t_list
       let params['require'] = {}
       for required_state_name in state_def.require
@@ -51,7 +48,7 @@ function! iced#state#start(...) abort " {{{
   let s:last_starting_params = starting_params
   let result = v:true
 
-  for state_name in s:states_order
+  for state_name in keys(s:states)
     if has_key(s:states, state_name)
           \ && get(s:states[state_name]['definition'], 'lazy', v:false)
       continue
@@ -63,15 +60,27 @@ function! iced#state#start(...) abort " {{{
   return result
 endfunction " }}}
 
-function! iced#state#stop() abort " {{{
-  for state_name in reverse(copy(s:states_order))
-    let state_def = s:states[state_name]['definition']
-    if has_key(state_def, 'stop') && type(state_def.stop) == v:t_func
-      let current_state = s:states[state_name]['state']
-      call state_def.stop(current_state)
+function! iced#state#stop_by_name(name) abort " {{{
+  if !has_key(s:states, a:name) | return | endif
+
+  let state_def = s:states[a:name]['definition']
+  if has_key(state_def, 'stop') && type(state_def.stop) == v:t_func
+    if has_key(state_def, 'require') && type(state_def.require) == v:t_list
+      for required_state_name in state_def.require
+        call iced#state#stop_by_name(required_state_name)
+      endfor
     endif
 
-    let s:states[state_name]['state'] = ''
+    let current_state = s:states[a:name]['state']
+    call state_def.stop(current_state)
+  endif
+
+  let s:states[a:name]['state'] = ''
+endfunction " }}}
+
+function! iced#state#stop() abort " {{{
+  for state_name in keys(s:states)
+    call iced#state#stop_by_name(state_name)
   endfor
 endfunction " }}}
 
