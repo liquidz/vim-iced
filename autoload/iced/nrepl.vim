@@ -314,7 +314,7 @@ endfunction
 function! iced#nrepl#is_connected() abort " {{{
   let nrepl = iced#state#get('nrepl')
   if empty(nrepl)
-    return v:false
+    return 0
   endif
   return nrepl.is_connected()
 endfunction " }}}

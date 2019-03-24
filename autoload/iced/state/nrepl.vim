@@ -39,11 +39,11 @@ function! s:detect_port() abort
   return port
 endfunction
 
-function s:nrepl.is_connected() abort
+function! s:nrepl.is_connected() abort
   try
     return (self.state.channel.status(self.channel) ==# 'open')
   catch
-    return 'fail'
+    return 0
   endtry
 endfunction
 
@@ -71,7 +71,7 @@ function! s:nrepl.receive(resp) abort
     return
   endtry
 
-  let s:response_buffer = ''
+  let self.response_buffer = ''
 
   if !empty(self.callback)
     call self.callback(decoded_resp)
@@ -97,7 +97,8 @@ function! iced#state#nrepl#start(params) abort
   endif
 
   if empty(nrepl['port'])
-    return iced#message#error('no_port_file')
+    call iced#message#error('no_port_file')
+    return v:false
   endif
 
   let address = printf('%s:%d', g:iced#nrepl#host, nrepl['port'])
