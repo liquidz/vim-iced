@@ -8,6 +8,7 @@ CONTENTS                                                   *iced-tips-contents*
     Minimal                    |iced-tips-configuration-minimal|
   Evaluating                   |iced-tips-evaluating|
     Eval inside comment        |iced-tips-eval-inside-comment|
+    Motion combination         |iced-tips-motion-combination|
   Sign                         |iced-tips-sign|
     Jumping signs              |iced-tips-jumping-signs|
 
@@ -64,12 +65,25 @@ EVAL INSIDE COMMENT                             *iced-tips-eval-inside-comment*
   - |:IcedEval|, |:IcedEvalOuterTopList| command
   - |<Plug>(iced_eval)| operator
 
-  Example(`|` means cursor position): >
+  Example(`📍` means cursor position): >
   (comment📍
     (+ 1 2 3))
   ;; Execute :IcedEvalOuterTopList
   ;; => 6
 <
+------------------------------------------------------------------------------
+MOTION COMBINATIONT                              *iced-tips-motion-combination*
+
+  vim-iced has some evaluation |operator|s.
+  - |<Plug>(iced_eval)|
+  - |<Plug>(iced_eval_repl)|
+
+  Define the following mapping to work with vim's |{motion}|.
+>
+  nmap <buffer> cp <Plug>(iced_eval)
+<
+  With this mapping, `cp{motion}` is available.
+
 ==============================================================================
 SIGN                                                           *iced-tips-sign*
 

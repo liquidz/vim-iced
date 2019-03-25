@@ -292,6 +292,8 @@ EVALUATING                                                *vim-iced-evaluating*
   If you would like to evaluate in visual mode,
   |:IcedEvalVisual| and |:IcedEvalReplVisual| will do.
 
+  See |iced-tips-evaluating| for more information.
+
 ------------------------------------------------------------------------------
 STDOUT BUFFER                                          *vim-iced-stdout-buffer*
 
