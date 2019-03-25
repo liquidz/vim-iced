@@ -82,6 +82,11 @@ function! s:nrepl.clear() abort
   let self['response_buffer'] = ''
 endfunction
 
+" HACK: To avoid error on covimerage
+function! s:proxy_dict_func(d, k, ch, resp) abort
+  return a:d[a:k](a:resp)
+endfunction
+
 function! iced#state#nrepl#start(params) abort
   let nrepl = deepcopy(s:nrepl)
 
@@ -104,7 +109,7 @@ function! iced#state#nrepl#start(params) abort
   let address = printf('%s:%d', g:iced#nrepl#host, nrepl['port'])
   let nrepl['channel'] = nrepl.state.channel.open(address, {
         \ 'mode': 'raw',
-        \ 'callback': {_, resp -> nrepl.receive(resp)},
+        \ 'callback': function('s:proxy_dict_func', [nrepl, 'receive']),
         \ 'drop': 'never'})
 
   if !nrepl.is_connected()
