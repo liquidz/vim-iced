@@ -13,7 +13,7 @@ function! s:selector.select(config) abort
   end
 endfunction
 
-function! iced#di#selector#build() abort
+function! iced#di#selector#build(container) abort
   return s:selector
 endfunction
 

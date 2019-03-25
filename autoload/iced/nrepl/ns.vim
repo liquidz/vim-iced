@@ -136,12 +136,6 @@ function! iced#nrepl#ns#reload_all() abort
   endif
 endfunction
 
-function! iced#nrepl#ns#repl() abort
-  return (iced#nrepl#current_session_key() ==# 'clj')
-      \ ? 'clojure.repl'
-      \ : 'cljs.repl'
-endfunction
-
 function! iced#nrepl#ns#in_repl_session_ns() abort
   if iced#nrepl#current_session_key() ==# 'cljs'
     return iced#message#error('invalid_session', 'clj')

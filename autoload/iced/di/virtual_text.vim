@@ -36,7 +36,7 @@ function! s:neovim.clear(...) abort
   call nvim_buf_clear_namespace(buf, s:ns, line, line + 1)
 endfunction
 
-function! iced#di#virtual_text#build() abort
+function! iced#di#virtual_text#build(container) abort
   return has('nvim') ? s:neovim : s:vim
 endfunction
 

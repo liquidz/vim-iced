@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+== 0.10.3 (2019-03-25)
+// {{{
+=== Added
+* Add some extra documents.
+** https://liquidz.github.io/vim-iced/vim-iced.html
+
+=== Changed
+* https://github.com/liquidz/vim-iced/pull/110[#110]: Change `:IcedDocumentOpen` not to move focus if document buffer is already opened.
+
+=== Fixed
+* Fix arguments for `nvim_open_win`
+** Neovim's https://github.com/neovim/neovim/commit/27c4b6b9bd90fbc3a41945f87ec944bd0ced8228#diff-49e08ed0add04457bc8a43c962736f13L628[API] has changed.
+* https://github.com/liquidz/vim-iced/pull/105[#105]: Fix shadow-cljs build-id to trim the beginning colon
+* https://github.com/liquidz/vim-iced/pull/107[#107]: Fix iced command to render color correctly
+// }}}
 
 == 0.10.2 (2019-03-10)
 // {{{

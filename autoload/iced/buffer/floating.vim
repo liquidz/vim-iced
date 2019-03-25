@@ -75,14 +75,19 @@ function! iced#buffer#floating#open(texts, ...) abort
   let height = len(a:texts)
   let height = (height > s:max_height) ? s:max_height : height
 
-  let win_opts = {'relative': 'editor', 'row': row, 'col': col}
+  let win_opts = {
+        \ 'relative': 'editor',
+        \ 'row': row,
+        \ 'col': col,
+        \ 'width': width,
+        \ 'height': height}
   call nvim_buf_set_lines(
         \ bufnr,
         \ index,
         \ index + s:max_height,
         \ 0,
         \ s:ensure_array_length(a:texts, s:max_height))
-  let winid = nvim_open_win(bufnr, v:false, width, height, win_opts)
+  let winid = nvim_open_win(bufnr, v:false, win_opts)
   let current_winid = win_getid()
 
   try

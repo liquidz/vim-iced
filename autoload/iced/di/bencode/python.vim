@@ -17,8 +17,8 @@ EOT
   return ret
 endfunction
 
-function! iced#di#bencode#python#build() abort
-  let bencode = iced#di#bencode#vim#build()
+function! iced#di#bencode#python#build(container) abort
+  let bencode = iced#di#bencode#vim#build(a:container)
   let bencode['decode'] = funcref('s:decode_via_python')
   return bencode
 endfunction

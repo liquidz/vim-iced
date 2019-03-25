@@ -53,7 +53,7 @@ function! s:ch.sendraw(handler, string) abort
   return ret
 endfunction
 
-function! iced#di#channel#neovim#build() abort
+function! iced#di#channel#neovim#build(container) abort
   return s:ch
 endfunction
 

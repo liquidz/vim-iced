@@ -11,7 +11,7 @@
   :ancient {:extra-deps {olical/depot {:mvn/version "1.7.0"}}
             :main-opts ["-m" "depot.outdated.main"]}
   :doc {:extra-deps {liquidz/clj-vimhelp {:git/url "https://github.com/liquidz/clj-vimhelp"
-                                          :sha "4905d0b0af99ef82aa63967d4e3de6871bbea5c7"}}
+                                          :sha "38dea58d0516f8f6bbc424da14300c831a824242"}}
         :main-opts ["-m" "vimhelp.core"]}
   :dev {}}
  }

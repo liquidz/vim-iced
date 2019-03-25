@@ -71,6 +71,21 @@ jobs:
           root: target
           paths: html
 
+  nightly-docs-deploy:
+    docker:
+      - image: node:8.10.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: target
+      - run:
+          name: Install and configure dependencies
+          command: |
+            npm install -g --silent netlify-cli
+      - run:
+          name: Deploy dev docs to netlify
+          command: netlify deploy --auth=${NETLIFY_PERSONAL_ACCESS_TOKEN} --site=${NETLIFY_SITE_ID} --dir=target/html --prod
+
   docs-deploy:
     docker:
       - image: node:8.10.0
@@ -100,6 +115,12 @@ workflows:
     jobs:
       - build
       - docs-build
+      - nightly-docs-deploy:
+          requires:
+            - docs-build
+          filters:
+            branches:
+              only: dev
       - docs-deploy:
           requires:
             - build
