@@ -8,7 +8,11 @@ let s:ex = themis#helper('iced_ex_cmd')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl/test.vim')
 
 let s:tempfile = tempname()
-let s:cache = iced#state#get('cache')
+
+function! s:setup() abort
+  call iced#state#get('cache').set('user-dir', '/user/dir')
+  call iced#state#get('cache').set('file-separator', '/')
+endfunction
 
 function! s:suite.error_message_test() abort
   call s:assert.equals(
@@ -104,6 +108,7 @@ function! s:suite.collect_errors_errored_test() abort
        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'error', 'var': 'err-test',
        \        'line': 123, 'expected': 'expected-result', 'error': 'error-message'}]}}}]
   call s:nrepl.start_test_state({'relay': funcref('s:ns_path_relay')})
+  call s:setup()
 
   call s:assert.equals(s:funcs.collect_errors(dummy_resp), [
        \ {'type': 'E',
@@ -123,8 +128,7 @@ function! s:suite.collect_errors_could_not_find_ns_path_test() abort
        \        'file': 'test/foo/core_test.clj', 'line': 123, 'expected': 'expected-result', 'actual': 'actual-result'}]}}}]
   call s:nrepl.start_test_state({'relay': {msg ->
        \ (msg['op'] ==# 'ns-path') ? {'status': ['done'], 'path': []} : {}}})
-  call s:cache.set('user-dir', '/user/dir')
-  call s:cache.set('file-separator', '/')
+  call s:setup()
 
   call s:assert.equals(s:funcs.collect_errors(dummy_resp), [
        \ {'type': 'E',

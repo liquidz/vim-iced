@@ -30,6 +30,10 @@ function! s:build_test_state(opt) abort
     call s:funcs.dispatcher(resp_data)
   endfunction
 
+  function! st.clear() abort
+    return
+  endfunction
+
   return st
 endfunction
 
