@@ -33,24 +33,39 @@ header nav.files {
     margin-left: 5rem;
     position: relative;
 }
-header nav.files p.current {
-    color: #aaa;
+
+header nav.files input#current-file {
+    display: none;
 }
 
-header nav.files:hover p.current + ul {
+header nav.files input#current-file + label {
+    display: inline;
+    color: #aaa;
+    font-weight: 1;
+    margin: 0;
+}
+
+header nav.files input#current-file + label:before {
+    font-family: 'Font Awesome 5 Free';
+    content: '\f0da';
+    font-weight: 900;
+    padding-right: 0.5rem;
+}
+
+header nav.files input#current-file:checked + label:before {
+    font-family: 'Font Awesome 5 Free';
+    content: '\f0d7';
+    font-weight: 900;
+    padding-right: 0.5rem;
+}
+
+header nav.files input#current-file:checked + label + ul {
     opacity: 1;
     height: auto;
     z-index: 999;
     background-color: white;
     border: 1px solid #ccc;
     padding: 1rem;
-}
-
-header nav.files p.current:before {
-    font-family: 'Font Awesome 5 Free';
-    content: '\f0d7';
-    font-weight: 900;
-    padding-right: 0.5rem;
 }
 
 header nav.files ul {
