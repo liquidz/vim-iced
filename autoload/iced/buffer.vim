@@ -77,10 +77,7 @@ function! iced#buffer#open(bufname, ...) abort
   let current_window = winnr()
   let opt = get(a:, 1, {})
 
-  if iced#buffer#is_visible(a:bufname)
-    call s:focus_window(s:bufwinnr(a:bufname))
-    call s:apply_option(opt)
-  else
+  if !iced#buffer#is_visible(a:bufname)
     call s:B.open(nr, {
         \ 'opener': get(opt, 'opener', 'split'),
         \ 'mods': get(opt, 'mods', ''),
