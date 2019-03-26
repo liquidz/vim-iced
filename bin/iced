@@ -35,6 +35,8 @@ function iced_repl_usage() {
     echo "This option is enabled automatically when project configuration"
     echo "file(eg. project.clj) contains 'org.clojure/clojurescript' dependency."
     echo ""
+    echo "On the other hand, the --without-cljs option disables ClojureScript features."
+    echo ""
     echo "The --force-boot and --force-clojure-cli option enable you to start specified repl."
     echo ""
     echo "Other options are passed to each programs."
@@ -66,6 +68,7 @@ IS_HELP=0
 IS_CLJS=0
 FORCE_BOOT=0
 FORCE_CLOJURE_CLI=0
+DISABLE_CLJS_DETECTOR=0
 
 OPTIONS=""
 for x in ${ARGV[@]}; do
@@ -73,6 +76,8 @@ for x in ${ARGV[@]}; do
         IS_HELP=1
     elif [ $x = '--with-cljs' ]; then
         IS_CLJS=1
+    elif [ $x = '--without-cljs' ]; then
+        DISABLE_CLJS_DETECTOR=1
     elif [ $x = '--force-boot' ]; then
         FORCE_BOOT=1
     elif [ $x = '--force-clojure-cli' ]; then
@@ -90,9 +95,11 @@ do
         IS_LEININGEN=1
         IS_DETECTED=1
 
-        grep org.clojure/clojurescript project.clj > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            IS_CLJS=1
+        if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
+            grep org.clojure/clojurescript project.clj > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+                IS_CLJS=1
+            fi
         fi
     fi
 
@@ -101,9 +108,11 @@ do
         IS_BOOT=1
         IS_DETECTED=1
 
-        grep org.clojure/clojurescript build.boot > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            IS_CLJS=1
+        if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
+            grep org.clojure/clojurescript build.boot > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+                IS_CLJS=1
+            fi
         fi
     fi
 
@@ -112,9 +121,11 @@ do
         IS_CLOJURE_CLI=1
         IS_DETECTED=1
 
-        grep org.clojure/clojurescript deps.edn > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            IS_CLJS=1
+        if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
+            grep org.clojure/clojurescript deps.edn > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+                IS_CLJS=1
+            fi
         fi
     fi
 
