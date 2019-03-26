@@ -1,13 +1,15 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" NOTE: used in iced/nrepl/format.vim
+let g:iced#format#does_overwrite_rules = get(g:, 'iced#format#does_overwrite_rules', v:false)
 let g:iced#format#rule = get(g:, 'iced#format#rule', {})
 
 function! s:set_indentation_rule() abort
   call iced#state#get('cache').do_once('set-indentation-rule', {->
         \ iced#util#has_status(
-        \   iced#nrepl#op#iced#sync#set_indentation_rules(g:iced#format#rule),
+        \   iced#nrepl#op#iced#sync#set_indentation_rules(
+        \     g:iced#format#rule,
+        \     g:iced#format#does_overwrite_rules),
         \   'done')})
 endfunction
 
