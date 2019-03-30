@@ -21,11 +21,22 @@ function! s:data_relay(data) abort
   return a:data
 endfunction
 
+function! s:ch.on_data(ch_id, data, callback) abort
+  let handler = s:id_to_handler(a:ch_id)
+
+  " NOTE: This means EOF
+  "       https://neovim.io/doc/user/channel.html
+  if a:data == ['']
+    call self.close(handler)
+  else
+    call a:callback(handler, s:data_relay(a:data))
+  endif
+endfunction
+
 function! s:ch.open(address, options) abort
   let opts = {}
   if has_key(a:options, 'callback')
-    let opts['on_data'] = {ch_id, data, _ ->
-          \ a:options.callback(s:id_to_handler(ch_id), s:data_relay(data))}
+    let opts['on_data'] = {ch_id, data, _ -> self.on_data(ch_id, data, a:options.callback)}
   endif
 
   let id = sockconnect('tcp', a:address, opts)
