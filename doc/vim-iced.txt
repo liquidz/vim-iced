@@ -347,6 +347,9 @@ TRACING FUNCTION CALLS              *vim-iced-debugging-tracing-function-calls*
   - |:IcedToggleTraceVar|
   - |:IcedToggleTraceNs|
 
+  Traced result will be displayed in stdout buffer.
+  - |vim-iced-stdout-buffer|
+
 ------------------------------------------------------------------------------
 FLOATING WINDOW                            *vim-iced-debugging-floating-window*
 
