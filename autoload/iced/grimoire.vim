@@ -24,9 +24,9 @@ function! s:search(resp) abort
 endfunction
 
 function! iced#grimoire#open(symbol) abort
-  let ns_name = iced#nrepl#ns#name()
-  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
-  call iced#nrepl#ns#eval({_ -> iced#nrepl#op#cider#info(ns_name, symbol, funcref('s:search'))})
+  call iced#nrepl#ns#eval({_ ->
+        \ iced#nrepl#var#get(a:symbol, funcref('s:search'))
+        \ })
 endfunction
 
 let &cpo = s:save_cpo
