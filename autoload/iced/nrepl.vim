@@ -130,6 +130,12 @@ function! iced#nrepl#merge_response_handler(resp, last_result) abort
   return result
 endfunction
 
+function! iced#nrepl#extend_responses_handler(resp, last_result) abort
+  let responses = empty(a:last_result) ? [] : a:last_result
+  call extend(responses, iced#util#ensure_array(a:resp))
+  return responses
+endfunction
+
 function! s:default_handler(resp, _) abort
   return a:resp
 endfunction
