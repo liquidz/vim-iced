@@ -9,6 +9,64 @@ let s:last_test = {}
 let s:sign_name = 'iced_error'
 let g:iced#test#spec_num_tests = get(g:, 'iced#test#spec_num_tests', 10)
 
+" API {{{
+function! s:dict_to_str(d, ...) abort
+  let ks = get(a:, 1, keys(a:d))
+  let n = len(s:L.max_by(ks, function('len')))
+  let res = []
+
+  for k in ks
+    if !has_key(a:d, k) || empty(a:d[k])
+      continue
+    endif
+
+    let vs = split(a:d[k], '\r\?\n')
+    call add(res, printf('%' . n . 's: %s', k, vs[0]))
+    for v in vs[1:]
+      call add(res, printf('%' . n . 's  %s', ' ', v))
+    endfor
+  endfor
+
+  return join(res, "\n")
+endfunction
+
+function! iced#nrepl#test#done(parsed_response) abort
+  if empty(a:parsed_response) | return | endif
+
+  let errors = a:parsed_response['errors']
+  let summary = a:parsed_response['summary']
+  let expected_and_actuals = []
+
+  call iced#sign#unplace_by_name(s:sign_name)
+
+  for err in errors
+    if has_key(err, 'lnum')
+      call iced#sign#place(s:sign_name, err['lnum'], err['filename'])
+    endif
+
+    if has_key(err, 'expected') && has_key(err, 'actual')
+      let expected_and_actuals = expected_and_actuals + [
+          \ printf(';; %s', err['text']),
+          \ s:dict_to_str(err, ['expected', 'actual', 'diffs']),
+          \ '']
+    endif
+  endfor
+
+  call iced#buffer#error#show(join(expected_and_actuals, "\n"))
+  call iced#qf#set(errors)
+
+  if summary['is_success']
+    call iced#message#info_str(summary['summary'])
+  else
+    call iced#message#error_str(summary['summary'])
+  endif
+
+  call iced#hook#run('test_finished', {
+        \ 'result': summary['is_success'] ? 'succeeded' : 'failed',
+        \ 'summary': summary['summary']})
+endfunction
+" }}}
+
 " iced#nrepl#test#test_vars_by_ns_name {{{
 function! iced#nrepl#test#test_vars_by_ns_name(ns_name) abort
   let resp = iced#nrepl#op#cider#sync#ns_vars(a:ns_name)
@@ -50,157 +108,10 @@ function! iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, call
 endfunction " }}}
 
 " iced#nrepl#test#under_cursor {{{
-
-" common {{{
-function! s:error_message(test) abort
-  if has_key(a:test, 'context') && !empty(a:test['context'])
-    return printf('%s: %s', a:test['var'], a:test['context'])
-  else
-    return a:test['var']
-  endif
+function! s:clojure_test_out(resp) abort
+  call iced#nrepl#test#done(
+        \ iced#nrepl#test#clojure_test#parse(a:resp))
 endfunction
-
-function! s:summary(resp) abort
-  for resp in iced#util#ensure_array(a:resp)
-    if has_key(resp, 'summary')
-      let summary = resp['summary']
-      return {
-          \ 'summary': printf('%s: Ran %d assertions, in %d test functions. %d failures, %d errors.',
-          \                   get(resp, 'testing-ns', ''),
-          \                   summary['test'], summary['var'],
-          \                   summary['fail'], summary['error']),
-          \ 'is_success': ((summary['fail'] + summary['error']) == 0),
-          \ }
-    endif
-  endfor
-
-  return ''
-endfunction
-
-function! s:extract_actual_values(test) abort
-  if !has_key(a:test, 'diffs') || type(a:test['diffs']) != v:t_list
-    return {'actual': trim(get(a:test, 'actual', ''))}
-  endif
-
-  let diffs = a:test['diffs'][0]
-  return {
-      \ 'actual': trim(diffs[0]),
-      \ 'diffs': printf("- %s\n+ %s", trim(diffs[1][0]), trim(diffs[1][1])),
-      \ }
-endfunction
-
-function! s:collect_errors(resp) abort
-  let errors  = []
-
-  for response in iced#util#ensure_array(a:resp)
-    let results = get(response, 'results', {})
-
-    for ns_name in keys(results)
-      let ns_results = results[ns_name]
-
-      for test_name in keys(ns_results)
-        let test_results = ns_results[test_name]
-
-        for test in test_results
-          if test['type'] !=# 'fail' && test['type'] !=# 'error'
-            continue
-          endif
-
-          let ns_path_resp = iced#nrepl#op#cider#sync#ns_path(ns_name)
-          if type(ns_path_resp) != v:t_dict || !has_key(ns_path_resp, 'path')
-            continue
-          endif
-
-          if empty(ns_path_resp['path'])
-            if !has_key(test, 'file') || type(test['file']) != v:t_string
-              continue
-            endif
-            let filename = printf('%s%s%s',
-                  \ iced#nrepl#system#user_dir(),
-                  \ iced#nrepl#system#separator(),
-                  \ test['file'])
-          else
-            let filename = ns_path_resp['path']
-          endif
-
-          let err = {
-                  \ 'filename': filename,
-                  \ 'text': s:error_message(test),
-                  \ 'expected': trim(get(test, 'expected', '')),
-                  \ 'type': 'E',
-                  \ }
-          if has_key(test, 'line') && type(test['line']) == v:t_number
-            let err['lnum'] = test['line']
-          endif
-
-          if test['type'] ==# 'fail'
-            call add(errors, extend(copy(err), s:extract_actual_values(test)))
-          elseif test['type'] ==# 'error'
-            call add(errors, extend(copy(err), {'actual': test['error']}))
-          endif
-        endfor
-      endfor
-    endfor
-  endfor
-
-  return errors
-endfunction
-
-function! s:dict_to_str(d, ...) abort
-  let ks = get(a:, 1, keys(a:d))
-  let n = len(s:L.max_by(ks, function('len')))
-  let res = []
-
-  for k in ks
-    if !has_key(a:d, k) || empty(a:d[k])
-      continue
-    endif
-
-    let vs = split(a:d[k], '\r\?\n')
-    call add(res, printf('%' . n . 's: %s', k, vs[0]))
-    for v in vs[1:]
-      call add(res, printf('%' . n . 's  %s', ' ', v))
-    endfor
-  endfor
-
-  return join(res, "\n")
-endfunction
-
-function! s:out(resp) abort
-  if iced#util#has_status(a:resp, 'namespace-not-found')
-    return iced#message#error('not_found')
-  endif
-
-  let errors = s:collect_errors(a:resp)
-  let expected_and_actuals = []
-  for err in errors
-    if has_key(err, 'lnum')
-      call iced#sign#place(s:sign_name, err['lnum'], err['filename'])
-    endif
-
-    if has_key(err, 'expected') && has_key(err, 'actual')
-      let expected_and_actuals = expected_and_actuals + [
-          \ printf(';; %s', err['text']),
-          \ s:dict_to_str(err, ['expected', 'actual', 'diffs']),
-          \ '']
-    endif
-  endfor
-
-  call iced#buffer#error#show(join(expected_and_actuals, "\n"))
-  call iced#qf#set(errors)
-
-  let summary = s:summary(a:resp)
-  if summary['is_success']
-    call iced#message#info_str(summary['summary'])
-  else
-    call iced#message#error_str(summary['summary'])
-  endif
-
-  call iced#hook#run('test_finished', {
-        \ 'result': summary['is_success'] ? 'succeeded' : 'failed',
-        \ 'summary': summary['summary']})
-endfunction
-" }}}
 
 function! s:echo_testing_message(query) abort
   if has_key(a:query, 'exactly') && !empty(a:query['exactly'])
@@ -222,7 +133,7 @@ function! s:run_test_vars(ns_name, vars) abort
         \ 'exactly': a:vars}
   let s:last_test = {'type': 'test-var', 'query': query}
   call s:echo_testing_message(query)
-  call iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))
+  call iced#nrepl#op#cider#test_var_query(query, funcref('s:clojure_test_out'))
 endfunction
 
 function! s:test_ns_required(ns_name, var_name) abort
@@ -271,7 +182,6 @@ function! iced#nrepl#test#under_cursor() abort
 
   let pos = ret['curpos']
   let option = {'line': pos[1], 'column': pos[2]}
-  call iced#sign#unplace_by_name(s:sign_name)
   call iced#nrepl#eval(code, {resp -> s:extract_var_name(resp)}, option)
 endfunction "}}}
 
@@ -287,15 +197,13 @@ function! iced#nrepl#test#ns() abort
   let query = {'ns-query': {'exactly': [ns]}}
   let s:last_test = {'type': 'test-var', 'query': query}
 
-  call iced#sign#unplace_by_name(s:sign_name)
   call s:echo_testing_message(query)
-  call iced#nrepl#ns#require(ns, {_ -> iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))})
+  call iced#nrepl#ns#require(ns, {_ -> iced#nrepl#op#cider#test_var_query(query, funcref('s:clojure_test_out'))})
 endfunction " }}}
 
 " iced#nrepl#test#all {{{
 function! iced#nrepl#test#all() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#sign#unplace_by_name(s:sign_name)
 
   let query = {
         \ 'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}
@@ -303,17 +211,16 @@ function! iced#nrepl#test#all() abort
   let s:last_test = {'type': 'test-var', 'query': query}
 
   call s:echo_testing_message(query)
-  call iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))
+  call iced#nrepl#op#cider#test_var_query(query, funcref('s:clojure_test_out'))
 endfunction " }}}
 
 " iced#nrepl#test#redo {{{
 function! iced#nrepl#test#redo() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#sign#unplace_by_name(s:sign_name)
 
   let s:last_test = {'type': 'retest'}
   call iced#message#info('retesting')
-  call iced#nrepl#op#cider#retest(funcref('s:out'))
+  call iced#nrepl#op#cider#retest(funcref('s:clojure_test_out'))
 endfunction " }}}
 
 " iced#nrepl#test#spec_check {{{
@@ -378,11 +285,10 @@ function! iced#nrepl#test#rerun_last() abort
 
   let test_type = s:last_test['type']
 
-  call iced#sign#unplace_by_name(s:sign_name)
   if test_type ==# 'test-var'
     let query = s:last_test['query']
     call s:echo_testing_message(query)
-    call iced#nrepl#op#cider#test_var_query(query, funcref('s:out'))
+    call iced#nrepl#op#cider#test_var_query(query, funcref('s:clojure_test_out'))
   elseif test_type ==# 'retest'
     call iced#nrepl#test#redo()
   elseif test_type ==# 'spec-check'
