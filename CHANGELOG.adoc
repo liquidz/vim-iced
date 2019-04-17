@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file. This change
 // {{{
 === Added
 * Add `--without-cljs` option to `iced` command.
+* Add `--dependencies` option to `iced` command.
+* Add `--middleware` option to `iced` command.
 * Add `g:iced#format#does_overwrite_rules` option.
 
 === Changed
