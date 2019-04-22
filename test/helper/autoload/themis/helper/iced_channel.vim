@@ -62,7 +62,7 @@ function! s:build_test_channel(opt) abort
 endfunction
 
 function! s:helper.register_test_builder(opt) abort
-  call iced#nrepl#auto#enable_winenter(v:false)
+  call iced#nrepl#auto#enable_bufenter(v:false)
   call iced#di#register('bencode', {c -> iced#di#bencode#vim#build(c)})
   call iced#di#register('channel', {c -> s:build_test_channel(a:opt)})
 endfunction

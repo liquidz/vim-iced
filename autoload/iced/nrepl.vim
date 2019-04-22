@@ -314,7 +314,7 @@ function! s:connected(resp, initial_session) abort
 
     silent call s:warm_up()
 
-    call iced#nrepl#auto#enable_winenter(v:true)
+    call iced#nrepl#auto#enable_bufenter(v:true)
     call iced#message#info('connected')
   endif
 endfunction
@@ -330,7 +330,7 @@ function! iced#nrepl#connect(port, ...) abort
     return v:true
   endif
 
-  " NOTE: Initialize buffers here to avoid firing `winenter` autocmd
+  " NOTE: Initialize buffers here to avoid firing `bufenter` autocmd
   "       after connection established
   call iced#buffer#stdout#init()
   call iced#buffer#document#init()
