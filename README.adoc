@@ -27,7 +27,6 @@
 == Requirements
 
  * Vim 8.1 or later, Neovim 0.3.2 or later.
- ** Neovim support is *EXPERIMENTAL*.
  * Clojure 1.8 or later.
  ** 1.10 or later is recommended.
  * No python! (boost possible with `if_python3`)
