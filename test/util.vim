@@ -79,7 +79,7 @@ function! s:suite.save_read_var_test() abort
   endtry
 endfunction
 
-function! s:suite.shorted_test() abort
+function! s:suite.shorten_test() abort
   let current_columns = &columns
   let current_cmdheight = &cmdheight
   let current_showcmd = &showcmd
@@ -94,6 +94,9 @@ function! s:suite.shorted_test() abort
 
     set columns=21
     call s:assert.equals(iced#util#shorten(text), text)
+
+    let text_with_crln = "01234\n56789\r\n0123456789"
+    call s:assert.equals(iced#util#shorten(text_with_crln), '01234 56789 01234...')
   finally
     exec printf('set columns=%d', current_columns)
     exec printf('set cmdheight=%d', current_cmdheight)
