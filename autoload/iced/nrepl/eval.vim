@@ -42,7 +42,7 @@ function! iced#nrepl#eval#err(err) abort
   endif
 endfunction
 
-function! s:out(resp) abort
+function! iced#nrepl#eval#out(resp) abort
   if has_key(a:resp, 'value')
     echo iced#util#shorten(a:resp['value'])
 
@@ -59,7 +59,7 @@ function! s:out(resp) abort
 endfunction
 
 function! s:repl_out(resp) abort
-  call s:out(a:resp)
+  call iced#nrepl#eval#out(a:resp)
   call iced#nrepl#cljs#check_switching_session(a:resp)
 endfunction
 
@@ -87,8 +87,13 @@ function! iced#nrepl#eval#code(code, ...) abort
     let code = s:extract_inside_form(code)
   endif
 
+  let Callback = get(opt, 'callback', function('iced#nrepl#eval#out'))
+  if has_key(opt, 'callback')
+    unlet opt['callback']
+  endif
+
   try
-    call iced#nrepl#eval(code, funcref('s:out'), opt)
+    call iced#nrepl#eval(code, Callback, opt)
   finally
     let @@ = reg_save
     call winrestview(view)
