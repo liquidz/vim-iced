@@ -1,15 +1,21 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! iced#nrepl#op#iced#sync#set_indentation_rules(rules) abort
+function! iced#nrepl#op#iced#sync#set_indentation_rules(rules, does_overwrite) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
-  return iced#nrepl#sync#send({
+  let msg = {
         \ 'id': iced#nrepl#id(),
         \ 'op': 'iced-set-indentation-rules',
         \ 'sesion': iced#nrepl#current_session(),
         \ 'rules': a:rules,
-        \ })
+        \ }
+
+  if a:does_overwrite
+    let msg['overwrite?'] = 1
+  endif
+
+  return iced#nrepl#sync#send(msg)
 endfunction
 
 function! iced#nrepl#op#iced#sync#format_code(code, alias_map) abort

@@ -5,10 +5,14 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 PROJECT_DIR=$(cd $SCRIPT_DIR; cd ..; pwd)
 VERSION=$(grep 'Version: ' ${SCRIPT_DIR}/../doc/vim-iced.txt | cut -d' ' -f2)
 
+DEPENDENCIES=( {{#dependencies}}{{{.}}} {{/dependencies}})
+MIDDLEWARES=( {{#middlewares}}{{{.}}} {{/middlewares}})
+
 IS_LEININGEN=0
 IS_BOOT=0
 IS_CLOJURE_CLI=0
 IS_SHADOW_CLJS=0
+IS_DRYRUN=0
 
 function iced_usage() {
     echo "vim-iced ${VERSION}"
@@ -27,13 +31,24 @@ function iced_usage() {
 
 function iced_repl_usage() {
     echo "Usage:"
-    echo "  iced repl [options] [--with-cljs] [--force-boot] [--force-clojure-cli]"
+    echo "  iced repl [options] [--with-cljs] [--without-cljs]"
+    echo "            [--dependencies=VALUE] [--middleware=VALUE]"
+    echo "            [--force-boot] [--force-clojure-cli]"
     echo ""
     echo "Start repl. Leiningen, Boot, and Clojure CLI are supported."
     echo ""
     echo "The --with-cljs option enables ClojureScript features."
     echo "This option is enabled automatically when project configuration"
     echo "file(eg. project.clj) contains 'org.clojure/clojurescript' dependency."
+    echo ""
+    echo "On the other hand, the --without-cljs option disables ClojureScript features."
+    echo ""
+    echo "The --dependency option adds extra dependency."
+    echo "VALUE format is 'PACKAGE_NAME:VERSION'."
+    echo "For example: --dependency=iced-nrepl:0.4.3"
+    echo ""
+    echo "The --middleware option adds extra nrepl middleware."
+    echo "For example: --middleware=iced.nrepl/wrap-iced"
     echo ""
     echo "The --force-boot and --force-clojure-cli option enable you to start specified repl."
     echo ""
@@ -54,6 +69,69 @@ function echo_error() {
     echo -e "\x1B[31mNG\x1B[m: \x1B[1m${1}\x1B[m"
 }
 
+function leiningen_deps_args() {
+    local deps=($@)
+
+    for s in "${deps[@]}" ; do
+        key="${s%%:*}"
+        value="${s##*:}"
+        echo -n "update-in :dependencies conj '[${key} \"${value}\"]' -- "
+    done
+}
+
+function leiningen_middleware_args() {
+    local mdws=($@)
+    for value in "${mdws[@]}" ; do
+        echo -n "update-in :repl-options:nrepl-middleware conj '${value}' -- "
+    done
+}
+
+function boot_deps_args() {
+    local deps=($@)
+
+    echo -n '-i "(require ''cider.tasks)" '
+    for s in "${deps[@]}" ; do
+        key="${s%%:*}"
+        value="${s##*:}"
+        echo -n "-d ${key}:${value} "
+    done
+}
+
+function boot_middleware_args() {
+    local mdws=($@)
+    echo -n '-- cider.tasks/add-middleware '
+    for value in "${mdws[@]}" ; do
+        echo -n "-m ${value} "
+    done
+}
+
+function cli_deps_args() {
+    local deps=($@)
+    for s in "${deps[@]}" ; do
+        key="${s%%:*}"
+        value="${s##*:}"
+        echo -n "${key} {:mvn/version \"${value}\"} "
+    done
+}
+
+function cli_middleware_args() {
+    local mdws=($@)
+    echo -n "-m '["
+    for value in "${mdws[@]}" ; do
+        echo -n "\"${value}\" "
+    done
+    echo -n "]'"
+}
+
+function run() {
+    local cmd=$1
+    if [ $IS_DRYRUN -eq 0 ]; then
+        bash -c "$cmd"
+    else
+        echo $cmd
+    fi
+}
+
 if [ $# -lt 1 ]; then
     iced_usage
     exit 1
@@ -66,17 +144,31 @@ IS_HELP=0
 IS_CLJS=0
 FORCE_BOOT=0
 FORCE_CLOJURE_CLI=0
+DISABLE_CLJS_DETECTOR=0
 
 OPTIONS=""
+EXTRA_DEPENDENCIES=""
+EXTRA_MIDDLEWARES=""
 for x in ${ARGV[@]}; do
-    if [ $x = '--help' ]; then
+    key="${x%%=*}"
+    value="${x##*=}"
+
+    if [ $key = '--help' ]; then
         IS_HELP=1
-    elif [ $x = '--with-cljs' ]; then
+    elif [ $key = '--with-cljs' ]; then
         IS_CLJS=1
-    elif [ $x = '--force-boot' ]; then
+    elif [ $key = '--without-cljs' ]; then
+        DISABLE_CLJS_DETECTOR=1
+    elif [ $key = '--force-boot' ]; then
         FORCE_BOOT=1
-    elif [ $x = '--force-clojure-cli' ]; then
+    elif [ $key = '--force-clojure-cli' ]; then
         FORCE_CLOJURE_CLI=1
+    elif [ $key = '--dependency' ]; then
+        EXTRA_DEPENDENCIES="${EXTRA_DEPENDENCIES} ${value}"
+    elif [ $key = '--middleware' ]; then
+        EXTRA_MIDDLEWARES="${EXTRA_MIDDLEWARES} ${value}"
+    elif [ $x = '--dryrun' ]; then
+        IS_DRYRUN=1
     else
         OPTIONS="${OPTIONS} ${x}"
     fi
@@ -90,9 +182,11 @@ do
         IS_LEININGEN=1
         IS_DETECTED=1
 
-        grep org.clojure/clojurescript project.clj > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            IS_CLJS=1
+        if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
+            grep org.clojure/clojurescript project.clj > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+                IS_CLJS=1
+            fi
         fi
     fi
 
@@ -101,9 +195,11 @@ do
         IS_BOOT=1
         IS_DETECTED=1
 
-        grep org.clojure/clojurescript build.boot > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            IS_CLJS=1
+        if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
+            grep org.clojure/clojurescript build.boot > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+                IS_CLJS=1
+            fi
         fi
     fi
 
@@ -112,9 +208,11 @@ do
         IS_CLOJURE_CLI=1
         IS_DETECTED=1
 
-        grep org.clojure/clojurescript deps.edn > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
-            IS_CLJS=1
+        if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
+            grep org.clojure/clojurescript deps.edn > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+                IS_CLJS=1
+            fi
         fi
     fi
 
@@ -144,32 +242,37 @@ elif [ $FORCE_CLOJURE_CLI -eq 1 ]; then
     IS_BOOT=0
 fi
 
+
+# cljs = 1
+# next = 2
+# nnext = 4
+CONFIG_INDEX=0
+if [ $IS_CLJS -eq 1 ]; then
+    CONFIG_INDEX=$((CONFIG_INDEX+1))
+fi
+
+TARGET_DEPENDENCIES="${DEPENDENCIES[$CONFIG_INDEX]} ${EXTRA_DEPENDENCIES}"
+TARGET_MIDDLEWARES="${MIDDLEWARES[$CONFIG_INDEX]} ${EXTRA_MIDDLEWARES}"
+
 case "$1" in
     "repl")
         if [ $IS_HELP -eq 1 ]; then
             iced_repl_usage
         elif [ $IS_LEININGEN -eq 1 ]; then
             echo_info "Leiningen project is detected"
-            if [ $IS_CLJS -eq 0 ]; then
-                lein {{{leiningen-params}}} -- $OPTIONS repl
-            else
-                lein {{{leiningen-cljs-params}}} -- $OPTIONS repl
-            fi
+            run "lein $(leiningen_deps_args ${TARGET_DEPENDENCIES}) \
+                      $(leiningen_middleware_args ${TARGET_MIDDLEWARES}) \
+                      $OPTIONS repl"
         elif [ $IS_BOOT -eq 1 ]; then
             echo_info "Boot project is detected"
-            if [ $IS_CLJS -eq 0 ]; then
-                boot {{{boot-params}}} -- $OPTIONS repl
-            else
-                boot {{{boot-cljs-params}}} -- $OPTIONS repl
-            fi
+            run "boot $(boot_deps_args ${TARGET_DEPENDENCIES}) \
+                      $(boot_middleware_args ${TARGET_MIDDLEWARES}) \
+                      -- $OPTIONS repl"
         elif [ $IS_CLOJURE_CLI -eq 1 ]; then
             echo_info "Clojure CLI project is detected"
-            if [ $IS_CLJS -eq 0 ]; then
-                clojure $OPTIONS -Sdeps "{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"}}}" -m iced-repl
-            else
-                clojure $OPTIONS -Sdeps "{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"} {{{cli-cljs-extra-deps}}}}}" \
-                    -m iced-repl 'with-cljs-middleware'
-            fi
+
+            run "clojure $OPTIONS -Sdeps '{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
+                         -m nrepl.cmdline $(cli_middleware_args ${TARGET_MIDDLEWARES})"
         elif [ $IS_SHADOW_CLJS -eq 1 ]; then
             echo_error 'Currently iced command does not support shadow-cljs.'
             echo 'Please see `:h vim-iced-manual-shadow-cljs` for manual setting up.'

@@ -1,56 +1,62 @@
 (ns iced-jackin
   (:require [clojure.java.io :as io]
+            [clojure.math.combinatorics :as combo]
             [clojure.string :as str]
-            iced-repl
             [org.panchromatic.mokuhan :as mokuhan]))
 
-(def ^:private config
-  (-> "deps.edn" slurp read-string))
+;; must be same as :aliases keys in deps.edn
+;; - cljs = 1
+;; - next = 2
+;; - nnext = 4
+(def ^:private aliases
+  {"cljs" 1})
 
 (defn- deps->map [deps]
   (reduce (fn [res [name {:mvn/keys [version]}]]
             (assoc res name version))
           {} deps))
 
-(def ^:private clj-dependencies
+(def ^:private config
+  (-> "deps.edn" slurp read-string))
+
+(def ^:private default-dependencies
   (deps->map (:deps config)))
 
-(def ^:private cljs-dependencies
-  (deps->map (get-in config [:aliases :icedcljs :extra-deps])))
+(def ^:private default-middlewares
+  (:__middlewares__ config))
 
-(defn- leiningen-params [dependencies middlewares]
-  (let [dep-fmt (fn [[name version]] (format "update-in :dependencies conj '[%s \"%s\"]'" name version))
-        mdw-fmt #(format "update-in :repl-options:nrepl-middleware conj '%s'" %)]
-    (->> (concat (map dep-fmt dependencies)
-                 (map mdw-fmt middlewares))
-         (str/join " -- "))))
+(defn- get-config [alias-name]
+  (let [alias-map (get-in config [:aliases (keyword alias-name)])]
+    {:dependencies (some->> alias-map :extra-deps deps->map)
+     :middlewares (some->> alias-map :__middlewares__)}))
 
-(defn- boot-params [dependencies middlewares]
-  (let [dep-fmt (fn [[name version]] (format "-d %s:%s" name version))
-        mdw-fmt #(format "-m %s" %)]
-    (->> (concat ["-i \"(require 'cider.tasks)\""]
-                 (map dep-fmt dependencies)
-                 ["-- cider.tasks/add-middleware"]
-                 (map mdw-fmt middlewares))
-         (str/join " "))))
 
-(defn- cli-extra-deps [dependencies]
-  (->> dependencies
-       (map (fn [[name version]]
-              (format "%s {:mvn/version \\\"%s\\\"}" name version)))
-       (str/join " ")))
+(defn- config-merge [c1 c2]
+  {:dependencies (merge (:dependencies c1) (:dependencies c2))
+   :middlewares (vec (concat (:middlewares c1) (:middlewares c2)))})
+
+(def ^:private all-config-list
+  (let [subsets (combo/subsets (keys aliases))
+        base {:dependencies default-dependencies :middlewares default-middlewares}]
+    (reduce (fn [acc alias-set]
+              (let [index (apply + (map #(get aliases % 0) alias-set))
+                    configs (map #(get-config %) alias-set)]
+                (assoc acc index
+                       (reduce config-merge base configs))))
+            (vec (repeat (count subsets) nil))
+            subsets)))
+
+(defn bash-list [ls]
+  (str "'" (str/join " " ls) "'"))
+
+(defn- bash-map [m]
+  (str "'" (->> m (map  #(apply format "%s:%s" %)) (str/join " ")) "'"))
 
 (defn -main []
-  (let [file (io/file "bin/iced")
-        clj-deps clj-dependencies
-        cljs-deps (merge clj-dependencies cljs-dependencies)]
-    (->> {:leiningen-params (leiningen-params clj-deps iced-repl/clj-middlewares)
-          :leiningen-cljs-params (leiningen-params cljs-deps iced-repl/cljs-middlewares)
-          :boot-params (boot-params clj-deps iced-repl/clj-middlewares)
-          :boot-cljs-params (boot-params cljs-deps iced-repl/cljs-middlewares)
-          :cli-cljs-extra-deps (cli-extra-deps cljs-dependencies)}
+  (let [file (io/file "bin/iced")]
+    (->> {:dependencies (map (comp bash-map :dependencies) all-config-list)
+          :middlewares (map (comp bash-list :middlewares) all-config-list)}
          (mokuhan/render (slurp "clj/template/iced.bash"))
          (spit file))
     (.setExecutable file true)
     (System/exit 0)))
-

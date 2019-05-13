@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+== 0.10.4 (2019-05-14)
+// {{{
+=== Added
+* Add `--without-cljs` option to `iced` command.
+* Add `--dependencies` option to `iced` command.
+* Add `--middleware` option to `iced` command.
+* Add `g:iced#format#does_overwrite_rules` option.
+* Add CI config for neovim testing.
+** Support neovim officially from this version!
+* Add operation to evaluate codes and print its results.
+** `<Plug>(iced_eval_and_print)`
+
+=== Changed
+* Bump https://github.com/liquidz/iced-nrepl[iced-nrepl] to 0.4.3.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/pull/117[#117]: Fix to detect channel disconnection on neovim.
+* Fix grimoire fetching error with OpenJDK 11.
+** See https://github.com/http-kit/http-kit/issues/388
+* Fix to work `in-ns` on reading buffer without moving window.
+// }}}
+
 == 0.10.3 (2019-03-25)
 // {{{
 === Added

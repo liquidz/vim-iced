@@ -8,8 +8,9 @@ function! iced#compat#appendbufline(expr, lnum, text) abort
     "       https://github.com/neovim/neovim/issues/7756
     let view = winsaveview()
     try
+      let buf = (type(a:expr) == v:t_string && a:expr ==# '%') ? 0 : a:expr
       let lnum = (a:lnum ==# '$') ? -1 : a:lnum
-      return nvim_buf_set_lines(a:expr, lnum, lnum, 0, [a:text])
+      return nvim_buf_set_lines(buf, lnum, lnum, 0, [a:text])
     finally
       call winrestview(view)
     endtry
@@ -22,14 +23,17 @@ function! iced#compat#deletebufline(expr, first, ...) abort
   let last = get(a:, 1, '')
 
   if has('nvim')
+    let first = a:first - 1
+    let buf = (type(a:expr) == v:t_string && a:expr ==# '%') ? 0 : a:expr
+
     if empty(last)
-      let last = a:first
+      let last = first + 1
     endif
     if last ==# '$'
       let last = -1
     endif
 
-    return nvim_buf_set_lines(a:expr, a:first, last, 0, [])
+    return nvim_buf_set_lines(buf, first, last, 0, [])
   else
     if empty(last)
       return deletebufline(a:expr, a:first)

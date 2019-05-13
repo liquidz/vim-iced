@@ -8,7 +8,7 @@ function! s:ex_cmd.exe(str) abort
 endfunction
 
 function! s:ex_cmd.silent_exe(str) abort
-  exe a:str
+  silent exe a:str
 endfunction
 
 function! iced#di#ex_cmd#build(container) abort

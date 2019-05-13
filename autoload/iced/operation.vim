@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! iced#operation#eval(type) abort
+function! s:eval(f) abort
   let view = winsaveview()
   let reg_save = @@
 
@@ -11,11 +11,27 @@ function! iced#operation#eval(type) abort
     if empty(code)
       return iced#message#error('finding_code_error')
     endif
-    call iced#nrepl#eval#code(code)
+    call a:f(code)
   finally
     let @@ = reg_save
     call winrestview(view)
   endtry
+endfunction
+
+function! iced#operation#eval(type) abort
+  return s:eval({code -> iced#nrepl#eval#code(code)})
+endfunction
+
+function! iced#operation#eval_and_print(type) abort
+  let opt = {'use-printer?': v:true}
+  function! opt.callback(resp) abort
+    call iced#nrepl#eval#out(a:resp)
+    if has_key(a:resp, 'value')
+      call iced#buffer#stdout#append(a:resp['value'])
+    endif
+  endfunction
+
+  return s:eval({code -> iced#nrepl#eval#code(code, opt)})
 endfunction
 
 function! iced#operation#eval_repl(type) abort

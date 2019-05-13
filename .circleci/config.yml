@@ -32,6 +32,19 @@ jobs:
             . venv/bin/activate
             bash scripts/coverage.sh
 
+  neovim-build:
+    docker:
+      - image: lambdalisue/neovim-themis:latest
+    working_directory: /mnt/volume
+    steps:
+      - run:
+          command: apk add --no-cache --virtual git
+      - checkout
+      - run:
+          command: |
+            git clone --depth 1 --single-branch https://github.com/guns/vim-sexp .vim-sexp
+            /opt/github.com/thinca/vim-themis/bin/themis
+
   ancient:
     docker:
       - image: circleci/clojure:tools-deps
@@ -114,6 +127,7 @@ workflows:
   all_test:
     jobs:
       - build
+      - neovim-build
       - docs-build
       - nightly-docs-deploy:
           requires:
@@ -124,6 +138,7 @@ workflows:
       - docs-deploy:
           requires:
             - build
+            - neovim-build
             - docs-build
           filters:
             branches:

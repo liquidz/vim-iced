@@ -32,6 +32,10 @@ function! s:json_resp(resp) abort
   endtry
 endfunction
 
+function! s:callback(callback, resp) abort
+  return a:callback(s:json_resp(a:resp))
+endfunction
+
 function! iced#eval_and_read(code, ...) abort
   let msg = {
       \ 'id': iced#nrepl#id(),
@@ -41,7 +45,10 @@ function! iced#eval_and_read(code, ...) abort
       \ }
   let Callback = get(a:, 1, '')
   if type(Callback) == v:t_func
-    let msg['callback'] = {resp -> Callback(s:json_resp(resp))}
+    " HACK: let msg['callback'] = {resp -> Callback(s:json_resp(resp))}
+    "       This code will fail when calculating coverage by covimerage.
+    let msg['callback'] = function('s:callback', [Callback])
+
     call iced#nrepl#send(msg)
     return v:true
   else

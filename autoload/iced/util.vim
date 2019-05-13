@@ -120,9 +120,10 @@ function! iced#util#shorten(msg) abort
     let max_length -= 12
   endif
 
-  return (max_length >= 3 && len(a:msg) > max_length)
-        \ ? strpart(a:msg, 0, max_length - 3).'...'
-        \ : a:msg
+  let msg = substitute(a:msg, '\r\?\n', ' ', 'g')
+  return (max_length >= 3 && len(msg) > max_length)
+        \ ? strpart(msg, 0, max_length - 3).'...'
+        \ : msg
 endfunction
 
 let &cpo = s:save_cpo

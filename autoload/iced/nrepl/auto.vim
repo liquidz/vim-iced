@@ -3,7 +3,7 @@ set cpo&vim
 
 let g:iced#nrepl#auto#does_switch_session = get(g:, 'iced#nrepl#auto#does_switch_session', v:false)
 let s:leaving = v:false
-let s:is_winenter_enabled = v:false
+let s:is_bufenter_enabled = v:false
 
 function! s:auto_switching_session() abort
   if ! g:iced#nrepl#auto#does_switch_session | return | endif
@@ -19,8 +19,8 @@ function! s:auto_switching_session() abort
   endif
 endfunction
 
-function! iced#nrepl#auto#winenter() abort
-  if ! s:is_winenter_enabled | return | endif
+function! iced#nrepl#auto#bufenter() abort
+  if ! s:is_bufenter_enabled | return | endif
 
   if !iced#nrepl#is_connected() | return | endif
   call s:auto_switching_session()
@@ -60,9 +60,9 @@ function! iced#nrepl#auto#leave() abort
   call iced#nrepl#disconnect()
 endfunction
 
-function! iced#nrepl#auto#enable_winenter(bool) abort
+function! iced#nrepl#auto#enable_bufenter(bool) abort
   if type(a:bool) != v:t_bool | return | endif
-  let s:is_winenter_enabled = a:bool
+  let s:is_bufenter_enabled = a:bool
 endfunction
 
 let &cpo = s:save_cpo

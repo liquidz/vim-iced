@@ -45,11 +45,6 @@ function! iced#nrepl#op#cider#ns_load_all(callback) abort
 endfunction " }}}
 
 """ test-var-query {{{
-function! s:test_handler(resp, last_result) abort
-  let responses = empty(a:last_result) ? [] : a:last_result
-  call extend(responses, iced#util#ensure_array(a:resp))
-  return responses
-endfunction
 
 " var_query examples)
 " * testing var
@@ -165,9 +160,9 @@ function! iced#nrepl#op#cider#spec_form(spec_name, callback) abort
       \ })
 endfunction " }}}
 
-call iced#nrepl#register_handler('info', funcref('iced#nrepl#merge_response_handler'))
-call iced#nrepl#register_handler('test-var-query', funcref('s:test_handler'))
-call iced#nrepl#register_handler('retest', funcref('s:test_handler'))
+call iced#nrepl#register_handler('info', function('iced#nrepl#merge_response_handler'))
+call iced#nrepl#register_handler('test-var-query', function('iced#nrepl#extend_responses_handler'))
+call iced#nrepl#register_handler('retest', function('iced#nrepl#extend_responses_handler'))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

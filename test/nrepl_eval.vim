@@ -56,3 +56,15 @@ function! s:suite.code_test() abort
   call iced#nrepl#eval#code('(comment (+ 1 2 3))')
   call s:assert.equals(s:last_evaluated_code, '(+ 1 2 3)')
 endfunction
+
+function! s:suite.code_with_callback_test() abort
+  let test = {'resp': ''}
+  function! test.callback(resp) abort
+    let self.resp = a:resp
+  endfunction
+
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:code_relay')})
+  call iced#nrepl#eval#code('(+ 1 2 3)', {'callback': {v -> test.callback(v)}})
+
+  call s:assert.equals(test.resp.status, ['done'])
+endfunction

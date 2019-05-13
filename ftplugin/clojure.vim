@@ -102,6 +102,7 @@ nnoremap <silent> <Plug>(iced_quit_cljs_repl)           :<C-u>IcedQuitCljsRepl<C
 
 nnoremap <silent> <Plug>(iced_eval)                     :<C-u>set opfunc=iced#operation#eval<CR>g@
 nnoremap <silent> <Plug>(iced_eval_repl)                :<C-u>set opfunc=iced#operation#eval_repl<CR>g@
+nnoremap <silent> <Plug>(iced_eval_and_print)           :<C-u>set opfunc=iced#operation#eval_and_print<CR>g@
 nnoremap <silent> <Plug>(iced_eval_ns)                  :<C-u>IcedEvalNs<CR>
 vnoremap <silent> <Plug>(iced_eval_visual)              :<C-u>IcedEvalVisual<CR>
 vnoremap <silent> <Plug>(iced_eval_repl_visual)         :<C-u>IcedEvalReplVisual<CR>
@@ -177,7 +178,7 @@ aug vim_iced_initial_setting
   au FileType clojure setl omnifunc=iced#complete#omni
   au BufRead *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufread()
   au BufNewFile *.clj,*.cljs,*.cljc call iced#nrepl#auto#newfile()
-  au WinEnter *.clj,*.cljs,*.cljc call iced#nrepl#auto#winenter()
+  au BufEnter *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufenter()
   au VimLeave * call iced#nrepl#auto#leave()
 aug END
 

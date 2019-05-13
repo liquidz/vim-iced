@@ -19,7 +19,10 @@ let s:bencode = iced#di#bencode#vim#build({})
 function! s:suite.encode_string_test() abort
   call s:assert.equals('5:hello', s:bencode.encode('hello'))
   call s:assert.equals('0:', s:bencode.encode(''))
-  call s:assert.equals('0:', s:bencode.encode(v:none))
+
+  if !has('nvim')
+    call s:assert.equals('0:', s:bencode.encode(v:none))
+  endif
 endfunction
 
 function! s:suite.encode_number_test() abort
@@ -39,7 +42,10 @@ function! s:suite.encode_dict_test() abort
   call s:assert.equals('d3:food3:bari123eee', s:bencode.encode({'foo': {'bar': 123}}))
   call s:assert.equals('de', s:bencode.encode({}))
   call s:assert.equals('d3:foo0:e', s:bencode.encode({'foo': ''}))
-  call s:assert.equals('d3:foo0:e', s:bencode.encode({'foo': v:none}))
+
+  if !has('nvim')
+    call s:assert.equals('d3:foo0:e', s:bencode.encode({'foo': v:none}))
+  endif
 endfunction
 
 "" DECODING TEST

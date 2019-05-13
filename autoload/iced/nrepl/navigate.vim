@@ -118,10 +118,7 @@ function! iced#nrepl#navigate#jump_to_def(symbol) abort
   let pos = getcurpos()
   let pos[0] = bufnr('%')
   call s:L.push(s:tagstack, pos)
-
-  let ns_name = iced#nrepl#ns#name()
-  let kw = empty(a:symbol) ? expand('<cword>') : a:symbol
-  call iced#nrepl#op#cider#info(ns_name, kw, function('s:jump'))
+  call iced#nrepl#var#get(a:symbol, funcref('s:jump'))
 endfunction " }}}
 
 " iced#nrepl#navigate#jump_back {{{
@@ -215,10 +212,10 @@ function! iced#nrepl#navigate#find_var_references(symbol, bang) abort
   endif
 
   let ignore_cache = !empty(a:bang)
-  let ns_name = iced#nrepl#ns#name()
-  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
-  call iced#nrepl#op#cider#info(ns_name, symbol,
-        \ {resp -> s:find_var_references_info(resp, ignore_cache)})
+  call iced#nrepl#var#get(
+        \ a:symbol,
+        \ {resp -> s:find_var_references_info(resp, ignore_cache)},
+        \ )
 endfunction
 
 let &cpo = s:save_cpo
