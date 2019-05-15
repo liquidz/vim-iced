@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Bump piggieback to 0.4.1.
+// }}}
+
 == 0.10.5 (2019-06-19)
 // {{{
 === Fixed

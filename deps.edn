@@ -21,12 +21,12 @@
   "iced.nrepl/wrap-iced"]
 
  :aliases
- {:cljs {:extra-deps {cider/piggieback {:mvn/version "0.4.0"}}
+ {:cljs {:extra-deps {cider/piggieback {:mvn/version "0.4.1"}}
          :__middlewares__ ["cider.piggieback/wrap-cljs-repl"]}
 
   :jackin {:extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}
                         org.clojure/math.combinatorics {:mvn/version "0.1.5"}}}
-  :ancient {:extra-deps {olical/depot {:mvn/version "1.7.0"}}
+  :ancient {:extra-deps {olical/depot {:mvn/version "1.8.2"}}
             :main-opts ["-m" "depot.outdated.main"]}
   :doc {:extra-deps {liquidz/clj-vimhelp {:git/url "https://github.com/liquidz/clj-vimhelp"
                                           :sha "38dea58d0516f8f6bbc424da14300c831a824242"}}
