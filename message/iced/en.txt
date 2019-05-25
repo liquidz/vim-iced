@@ -67,6 +67,8 @@
   'invalid_hook_exec':  'Hook exec setting is invalid: %s.',
   'unknown_hook_type':  'Hook type "%s" is unknown.',
   'argument_missing':   'Argument missing: %s',
+  'test_summary':       '%s: Ran %d assertions, in %d test functions. %d failures, %d errors.',
+  'no_test_summary':    'No tests to run.',
   'hit_var_reference_cache': 'Hit var references cache.',
   'finding_var_references':  'Finding var references...',
   'var_references_found':    'Found %d references.',
