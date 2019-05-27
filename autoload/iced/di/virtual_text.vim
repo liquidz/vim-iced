@@ -7,8 +7,18 @@ let s:ns = has('nvim')
       \ : -1
 
 let s:vim = {}
-function! s:vim.set(...) abort
-  return v:false
+function! s:vim.set(text, ...) abort
+  let opt = get(a:, 1, {})
+  let win_opts = {
+        \ 'line': get(opt, 'line', line('.') +1),
+        \ 'col': get(opt, 'col', col('$') +2),
+        \ }
+
+  if get(opt, 'auto_clear', v:false)
+    let win_opts['time'] = get(opt, 'clear_time', 3000)
+  endif
+
+  call popup_create(a:text, win_opts)
 endfunction
 
 function! s:vim.clear(...) abort
