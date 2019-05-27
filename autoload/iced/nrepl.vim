@@ -219,7 +219,7 @@ function! s:dispatcher(ch, resp) abort
     endif
 
     if iced#util#has_status(resp, 'need-debug-input')
-      if !iced#buffer#stdout#is_visible() && !iced#buffer#floating#is_supported()
+      if !iced#buffer#stdout#is_visible() && !iced#di#get('popup').is_supported()
         call iced#buffer#stdout#open()
       endif
       call iced#nrepl#debug#start(resp)
@@ -343,7 +343,6 @@ function! iced#nrepl#connect(port, ...) abort
   call iced#buffer#stdout#init()
   call iced#buffer#document#init()
   call iced#buffer#error#init()
-  call iced#buffer#floating#init()
 
   if empty(a:port)
     return iced#nrepl#connect#auto()

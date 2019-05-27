@@ -115,15 +115,14 @@ function! iced#nrepl#debug#start(resp) abort
   call insert(debug_texts, head)
   call add(debug_texts, foot)
 
-  if iced#buffer#floating#is_supported()
+  if iced#di#get('popup').is_supported()
     if s:debug_info_window_id != -1
-      call iced#buffer#floating#close(s:debug_info_window_id)
+      call iced#di#get('popup').close(s:debug_info_window_id)
     endif
-    let s:debug_info_window_id = iced#buffer#floating#open(debug_texts, {
-          \ 'line': line('.') + 1,
-          \ 'col': col('.')-2,
-          \ 'auto_close': v:false
-          \ })
+    let s:debug_info_window_id = iced#di#get('popup').open(debug_texts, {
+         \ 'line': line('.') + 1,
+         \ 'col': col('.') - 2,
+         \ 'auto_close': v:false})
   else
     for text in debug_texts
       call iced#buffer#stdout#append(text)
@@ -149,13 +148,15 @@ endfunction
 function! iced#nrepl#debug#quit() abort
   if type(s:saved_view) == v:t_dict
     let s:debug_key = ''
-    call iced#buffer#stdout#append(';; Quit')
+    if !iced#di#get('popup').is_supported()
+      call iced#buffer#stdout#append(';; Quit')
+    endif
     call iced#highlight#clear()
     call iced#util#restore_cursor_position(s:saved_view)
     let s:saved_view = ''
 
     if s:debug_info_window_id != -1
-      call iced#buffer#floating#close(s:debug_info_window_id)
+      call iced#di#get('popup').close(s:debug_info_window_id)
     endif
     let s:debug_info_window_id = -1
   endif
