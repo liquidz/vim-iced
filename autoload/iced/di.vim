@@ -43,6 +43,7 @@ if !exists('g:iced#di#container')
   call iced#di#register('quickfix', function('iced#di#quickfix#build'))
   call iced#di#register('selector', function('iced#di#selector#build'))
   call iced#di#register('virtual_text', function('iced#di#virtual_text#build'))
+  call iced#di#register('popup', function('iced#di#popup#build'))
 endif " }}}
 
 let &cpo = s:save_cpo
