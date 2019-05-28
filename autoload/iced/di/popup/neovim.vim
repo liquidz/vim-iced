@@ -7,7 +7,6 @@ let s:default_filetype = 'clojure'
 let s:popup = {
       \ 'env': 'neovim',
       \ 'index': 0,
-      \ 'max_height': 50,
       \ }
 
 function! s:is_supported() abort
@@ -21,20 +20,6 @@ function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&swapfile', 0)
   call setbufvar(a:bufnr, '&wrap', 0)
   call setbufvar(a:bufnr, '&winhl', 'Normal:Folded')
-endfunction
-
-function! s:ensure_array_length(arr, n) abort
-  let arr = copy(a:arr)
-  let l = len(arr)
-
-  if l > a:n
-    for _ in range(l - a:n) | call remove(arr, -1) | endfor
-  else
-    let x = a:n - l
-    for _ in range(a:n - l) | call add(arr, '') | endfor
-  endif
-
-  return arr
 endfunction
 
 function! s:popup.is_supported() abort
@@ -68,7 +53,7 @@ function! s:popup.open(texts, ...) abort
   let width = max(map(copy(a:texts), {_, v -> len(v)})) + 2
   let width = (width > max_width) ? max_width : width
   let height = len(a:texts)
-  let height = (height > self.max_height) ? self.max_height : height
+  let height = (height > g:iced#popup#max_height) ? g:iced#popup#max_height : height
 
   let win_opts = {
         \ 'relative': 'editor',
@@ -79,9 +64,9 @@ function! s:popup.open(texts, ...) abort
   call nvim_buf_set_lines(
         \ bufnr,
         \ index,
-        \ index + self.max_height,
+        \ index + g:iced#popup#max_height,
         \ 0,
-        \ s:ensure_array_length(a:texts, self.max_height))
+        \ iced#di#popup#ensure_array_length(a:texts, g:iced#popup#max_height))
   let winid = nvim_open_win(bufnr, v:false, win_opts)
   let current_winid = win_getid()
 
@@ -97,7 +82,7 @@ function! s:popup.open(texts, ...) abort
   endtry
 
   if get(opts, 'auto_close', v:true)
-    let time = get(opts, 'close_time', g:iced#buffer#popup#time)
+    let time = get(opts, 'close_time', g:iced#popup#time)
     call timer_start(time, {-> iced#di#get('popup').close(winid)})
   endif
 

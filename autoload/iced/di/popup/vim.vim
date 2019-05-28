@@ -3,29 +3,14 @@ set cpoptions&vim
 
 let s:popup = {
       \ 'env': 'vim',
-      \ 'max_height': 50,
       \ }
 
-function! s:ensure_array_length(arr, n) abort
-  let arr = copy(a:arr)
-  let l = len(arr)
-
-  if l > a:n
-    for _ in range(l - a:n) | call remove(arr, -1) | endfor
-  else
-    let x = a:n - l
-    for _ in range(a:n - l) | call add(arr, '') | endfor
-  endif
-
-  return arr
-endfunction
-
 function! s:popup.is_supported() abort
-  " FIXME
-  return v:true
+  return exists('*popup_create')
 endfunction
 
 function! s:popup.open(texts, ...) abort
+  echom 'FIXME opening'
   let opts = get(a:, 1, {})
   if type(a:texts) != v:t_list || empty(a:texts)
     return
@@ -40,19 +25,22 @@ function! s:popup.open(texts, ...) abort
   let width = max(map(copy(a:texts), {_, v -> len(v)})) + 2
   let width = (width > max_width) ? max_width : width
   let height = len(a:texts)
-  let height = (height > self.max_height) ? self.max_height : height
+  let height = (height > g:iced#popup#max_height) ? g:iced#popup#max_height : height
 
   let win_opts = {
-        \ 'line': row+1,
-        \ 'col': col+1,
-        \ 'maxwidth': width,
+        \ 'line': row + 1,
+        \ 'col': col + 1,
+        \ 'maxwidth': width + 1,
         \ 'maxheight': height,
         \ }
 
-  let winid = popup_create(
-       \ s:ensure_array_length(a:texts, self.max_height),
-       \ win_opts)
+  if get(opts, 'auto_close', v:true)
+    let win_opts['time'] = get(opts, 'close_time', g:iced#popup#time)
+  endif
 
+  let winid = popup_create(
+       \ iced#di#popup#ensure_array_length(a:texts, g:iced#popup#max_height),
+       \ win_opts)
 
   let bufnr = winbufnr(winid)
   call setbufvar(bufnr, '&filetype', 'clojure')
