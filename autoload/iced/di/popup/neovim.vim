@@ -22,6 +22,20 @@ function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&winhl', 'Normal:Folded')
 endfunction
 
+function! s:ensure_array_length(arr, n) abort
+  let arr = copy(a:arr)
+  let l = len(arr)
+
+  if l > a:n
+    for _ in range(l - a:n) | call remove(arr, -1) | endfor
+  else
+    let x = a:n - l
+    for _ in range(a:n - l) | call add(arr, '') | endfor
+  endif
+
+  return arr
+endfunction
+
 function! s:popup.is_supported() abort
   return s:is_supported()
 endfunction
@@ -66,7 +80,7 @@ function! s:popup.open(texts, ...) abort
         \ index,
         \ index + g:iced#popup#max_height,
         \ 0,
-        \ iced#di#popup#ensure_array_length(a:texts, g:iced#popup#max_height))
+        \ s:ensure_array_length(a:texts, g:iced#popup#max_height))
   let winid = nvim_open_win(bufnr, v:false, win_opts)
   let current_winid = win_getid()
 
