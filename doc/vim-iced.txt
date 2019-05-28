@@ -652,11 +652,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                        *:IcedFindVarReferences*
 :IcedFindVarReferences
   Find positions referencing the var under cursor.
-  Results are set to |quickfix|,
-  and saved as cache to |g:iced#var_references#cache_dir|.
-
-  If cache file exists, vim-iced use it as a priority.
-  See also |:IcedFindVarReferences!|
+  Results are set to |quickfix|.
 
                                                       *:IcedFindVarReferences!*
 :IcedFindVarReferences!
@@ -1252,11 +1248,6 @@ g:iced#refactor#prefix_rewriting
   Should `clean-ns` favor prefix forms in the ns macro?
   c.f. https://github.com/clojure-emacs/refactor-nrepl#available-features
   Default value is `v:false`.
-
-                                              *g:iced#var_references#cache_dir*
-g:iced#var_references#cache_dir
-  Directory to save var references result.
-  Default value is `'/tmp'`.
 
                                         *g:iced#nrepl#auto#does_switch_session*
 g:iced#nrepl#auto#does_switch_session
