@@ -73,19 +73,6 @@ function! iced#nrepl#op#iced#project_ns_list(callback) abort
         \ })
 endfunction " }}}
 
-""" find-var-references {{{
-function! iced#nrepl#op#iced#find_var_references(ns_name, symbol, callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call iced#nrepl#send({
-        \ 'id': iced#nrepl#id(),
-        \ 'op': 'iced-find-var-references',
-        \ 'session': iced#nrepl#current_session(),
-        \ 'ns': a:ns_name,
-        \ 'symbol': a:symbol,
-        \ 'callback': a:callback,
-        \ })
-endfunction " }}}
-
 call iced#nrepl#register_handler('iced-lint-file', function('s:concat_handler', ['lint-warnings']))
 
 let &cpo = s:save_cpo
