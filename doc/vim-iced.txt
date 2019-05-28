@@ -352,14 +352,18 @@ TRACING FUNCTION CALLS              *vim-iced-debugging-tracing-function-calls*
 ------------------------------------------------------------------------------
 FLOATING WINDOW                            *vim-iced-debugging-floating-window*
 
-  vim-iced supports floating window for Neovim.
+  vim-iced supports both of popup window in Vim
+  and floating window in Neovim.
   This feature is very experimental, but works.
 
-  If your neovim's version is 0.4.0 or later,
+  If your environment meets followings, 
   debugging information will be shown in floating window automatically.
+  - Vim 8.1 patch 1-1408 or later
+  - Neovim 0.4.0 or later
 
   Related options:
-  - |g:iced#buffer#floating#time|
+  - |g:iced#popup#time|
+  - |g:iced#popup#max_height|
 
 ==============================================================================
 SKELETON                                                    *vim-iced-skeleton*
@@ -1260,10 +1264,15 @@ g:iced#nrepl#auto#does_switch_session
   This will be done by |WinEnter| auto command.
   Default value is `v:false`.
 
-                                                  *g:iced#buffer#floating#time*
-g:iced#buffer#floating#time
-  Auto closing time(ms) for floating window.
+                                                            *g:iced#popup#time*
+g:iced#popup#time
+  Auto closing time(ms) for popup window.
   Default value is `3000`.
+
+                                                      *g:iced#popup#max_height*
+g:iced#popup#max_height
+  Max height for popup window.
+  Default value is `50`.
 
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*
@@ -1306,8 +1315,6 @@ g:iced#eastwood#option
 <
                                                 *g:iced#lint#use_virtual_text*
 g:iced#lint#use_virtual_text
-  WARNING: Neovim only
-
   If {v:true}, use virtual text to show lint warning text.
   Default value is `v:false`.
 

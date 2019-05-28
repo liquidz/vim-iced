@@ -4,8 +4,14 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 // {{{
+=== Added
+* Add support vim8's popup window.
+** https://github.com/vim/vim/blob/master/runtime/doc/popup.txt
+** Enables virtual text for evaluation and floating window for debugging.
+
 === Changed
 * Bump piggieback to 0.4.1.
+* (BREAKING) Rename `g:iced#buffer#floating#time` to `g:iced#popup#time`.
 // }}}
 
 == 0.10.5 (2019-06-19)
