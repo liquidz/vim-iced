@@ -160,6 +160,32 @@ function! iced#nrepl#op#cider#spec_form(spec_name, callback) abort
       \ })
 endfunction " }}}
 
+""" fn-refs {{{
+function! iced#nrepl#op#cider#fn_refs(ns_name, symbol, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'op': 'fn-refs',
+        \ 'id': iced#nrepl#id(),
+        \ 'ns': a:ns_name,
+        \ 'symbol': a:symbol,
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
+""" fn-deps {{{
+function! iced#nrepl#op#cider#fn_deps(ns_name, symbol, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'op': 'fn-deps',
+        \ 'id': iced#nrepl#id(),
+        \ 'ns': a:ns_name,
+        \ 'symbol': a:symbol,
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
 call iced#nrepl#register_handler('info', function('iced#nrepl#merge_response_handler'))
 call iced#nrepl#register_handler('test-var-query', function('iced#nrepl#extend_responses_handler'))
 call iced#nrepl#register_handler('retest', function('iced#nrepl#extend_responses_handler'))
