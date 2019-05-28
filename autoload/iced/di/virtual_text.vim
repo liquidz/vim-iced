@@ -6,7 +6,7 @@ function! s:vim(container) abort
 
   function! d.set(text, ...) abort
     let opt = get(a:, 1, {})
-    let popup_opts = {'col': get(opt, 'col', col('$') + 1)}
+    let popup_opts = {'col': get(opt, 'col', col('$') + 2)}
 
     if get(opt, 'auto_clear', v:false)
       let popup_opts['time'] = get(opt, 'clear_time', 3000)
