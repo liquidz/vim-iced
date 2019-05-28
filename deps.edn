@@ -2,7 +2,7 @@
  :paths ["clj"]
  :deps {nrepl {:mvn/version "0.6.0"}
         refactor-nrepl {:mvn/version "2.4.0"}
-        cider/cider-nrepl {:mvn/version "0.21.1"}
+        cider/cider-nrepl {:mvn/version "0.22.0-beta1"}
         iced-nrepl {:mvn/version "0.4.3"}}
  :__middlewares__
  ["cider.nrepl/wrap-classpath"
@@ -17,6 +17,7 @@
   "cider.nrepl/wrap-test"
   "cider.nrepl/wrap-trace"
   "cider.nrepl/wrap-undef"
+  "cider.nrepl/wrap-xref"
   "refactor-nrepl.middleware/wrap-refactor"
   "iced.nrepl/wrap-iced"]
 
