@@ -47,8 +47,10 @@ command!          IcedStdoutBufferClose     call iced#buffer#stdout#close()
 
 command! -nargs=? IcedDefJump               call iced#nrepl#navigate#jump_to_def(<q-args>)
 command!          IcedDefBack               call iced#nrepl#navigate#jump_back()
-command! -nargs=? -bang
-      \ IcedFindVarReferences call iced#nrepl#navigate#find_var_references(<q-args>, <bang>0)
+command! -nargs=?
+      \ IcedFindVarReferences call iced#nrepl#navigate#find_var_references(<q-args>)
+command! -nargs=?
+      \ IcedFindVarDependencies call iced#nrepl#navigate#find_var_dependencies(<q-args>)
 
 command! -nargs=? IcedDocumentOpen          call iced#nrepl#document#open(<q-args>)
 command!          IcedFormDocument          call iced#nrepl#document#current_form()
@@ -131,7 +133,7 @@ nnoremap <silent> <Plug>(iced_stdout_buffer_close)      :<C-u>IcedStdoutBufferCl
 nnoremap <silent> <Plug>(iced_def_jump)                 :<C-u>IcedDefJump<CR>
 nnoremap <silent> <Plug>(iced_def_back)                 :<C-u>IcedDefBack<CR>
 nnoremap <silent> <Plug>(iced_find_var_references)      :<C-u>IcedFindVarReferences<CR>
-nnoremap <silent> <Plug>(iced_find_var_references!)     :<C-u>IcedFindVarReferences!<CR>
+nnoremap <silent> <Plug>(iced_find_var_dependencies)    :<C-u>IcedFindVarDependencies<CR>
 
 nnoremap <silent> <Plug>(iced_document_open)            :<C-u>IcedDocumentOpen<CR>
 nnoremap <silent> <Plug>(iced_form_document)            :<C-u>IcedFormDocument<CR>
@@ -300,8 +302,8 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>fr <Plug>(iced_find_var_references)
   endif
 
-  if !hasmapto('<Plug>(iced_find_var_references!)')
-    silent! nmap <buffer> <Leader>fR <Plug>(iced_find_var_references!)
+  if !hasmapto('<Plug>(iced_find_var_dependencies)')
+    silent! nmap <buffer> <Leader>fd <Plug>(iced_find_var_dependencies)
   endif
 
   if !hasmapto('<Plug>(iced_clean_ns)')
