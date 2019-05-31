@@ -5,8 +5,13 @@ let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 let s:D = s:V.import('Data.Dict')
 
+let s:document_popup_winid = -1
+let s:document_target_line = -1
+
 let g:iced#buffer#document#does_update_automatically =
       \ get(g:, 'iced#buffer#document#does_update_automatically', v:false)
+let g:iced#buffer#document#does_use_popup =
+      \ get(g:, 'iced#buffer#document#does_use_popup', v:false)
 
 let s:subsection_sep = '------------------------------------------------------------------------------'
 
@@ -113,21 +118,60 @@ function! s:one_line_doc(resp) abort
       call iced#buffer#document#update(doc, 'help')
     endif
   else
+    let msg = ''
     if has_key(a:resp, 'javadoc')
       let name = (has_key(a:resp, 'member'))
             \ ? printf('%s/%s', a:resp['class'], a:resp['member'])
             \ : a:resp['class']
       let args = substitute(get(a:resp, 'arglists-str', ''), '\r\?\n', ' ', 'g')
-      echo (has_key(a:resp, 'returns'))
+      let msg =  (has_key(a:resp, 'returns'))
             \ ? printf('%s %s %s', a:resp['returns'], name, args)
             \ : printf('%s %s', name, args)
     elseif has_key(a:resp, 'ns') && has_key(a:resp, 'name')
       let name = printf('%s/%s', a:resp['ns'], a:resp['name'])
       let args = substitute(get(a:resp, 'arglists-str', ''), '\r\?\n', ' ', 'g')
       let msg = printf('%s %s', name, args)
-      echo iced#util#shorten(msg)
     endif
+
+    if empty(msg) | return | endif
+
+    let popup = iced#di#get('popup')
+    if popup.is_supported() && g:iced#buffer#document#does_use_popup
+      if s:document_popup_winid != -1 | call popup.close(s:document_popup_winid) | endif
+
+      let popup_opts = {
+            \ 'line': line('.')+1,
+            \ 'col': col('.'),
+            \ 'filetype': 'clojure',
+            \ 'auto_close': v:false,
+            \ }
+
+      let delm = printf(' ; %s ', iced#util#char_repeat(len(msg) - 2, '-'))
+      let s:document_popup_winid = popup.open([
+            \ delm,
+            \ printf(' %s ', msg),
+            \ delm,
+            \ ], popup_opts)
+      let s:document_target_line = line('.')
+    endif
+
+    echo iced#util#shorten(msg)
   endif
+endfunction
+
+function! iced#nrepl#document#clear_one_line_doc_popup() abort
+  let popup = iced#di#get('popup')
+  if !g:iced#buffer#document#does_use_popup
+        \ || !popup.is_supported()
+        \ || s:document_popup_winid == -1
+        \ || s:document_target_line == line('.')
+    return
+  endif
+
+  call popup.close(s:document_popup_winid)
+
+  let s:document_popup_winid = -1
+  let s:document_target_line = -1
 endfunction
 
 function! iced#nrepl#document#current_form() abort
