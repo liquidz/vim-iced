@@ -9,6 +9,10 @@ let s:popup = {
       \ 'index': 0,
       \ }
 
+function! s:init_win(winid) abort
+  call setwinvar(a:winid, '&signcolumn', 'no')
+endfunction
+
 function! s:is_supported() abort
   return exists('*nvim_open_win')
 endfunction
@@ -82,8 +86,9 @@ function! s:popup.open(texts, ...) abort
         \ 0,
         \ s:ensure_array_length(a:texts, g:iced#popup#max_height))
   let winid = nvim_open_win(bufnr, v:false, win_opts)
-  let current_winid = win_getid()
+  call s:init_win(winid)
 
+  let current_winid = win_getid()
   try
     if win_gotoid(winid)
       let v = winsaveview()
