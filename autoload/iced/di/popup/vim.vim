@@ -5,11 +5,13 @@ let s:popup = {
       \ 'env': 'vim',
       \ }
 
-function! s:initialize(winid) abort
+function! s:init_win(winid, opts) abort
   call setwinvar(a:winid, '&signcolumn', 'no')
 
   let bufnr = winbufnr(a:winid)
-  call setbufvar(bufnr, '&filetype', 'clojure')
+  if has_key(a:opts, 'filetype')
+    call setbufvar(bufnr, '&filetype', a:opts['filetype'])
+  endif
 endfunction
 
 function! s:popup.is_supported() abort
@@ -27,7 +29,11 @@ function! s:popup.open(texts, ...) abort
   let view = winsaveview()
   let line = get(opts, 'line', view['lnum'])
   let row = get(opts, 'row', line - view['topline'] + 1)
-  let col = get(opts, 'col', len(getline('.')) + 1)
+  let col = get(opts, 'col', len(getline('.')) + 1) - 1
+
+  let wininfo = getwininfo(win_getid())[0]
+  let row = row + wininfo['winrow'] - 2
+  let col = col + wininfo['wincol'] - 1
 
   let max_width = &columns - col - 5
   let width = max(map(copy(a:texts), {_, v -> len(v)})) + 1
@@ -46,8 +52,12 @@ function! s:popup.open(texts, ...) abort
     let win_opts['time'] = get(opts, 'close_time', g:iced#popup#time)
   endif
 
+  if has_key(opts, 'highlight')
+    let win_opts['highlight'] = opts['highlight']
+  endif
+
   let winid = popup_create(a:texts, win_opts)
-  call s:initialize(winid)
+  call s:init_win(winid, opts)
 
   return winid
 endfunction

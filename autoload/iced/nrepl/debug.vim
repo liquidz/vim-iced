@@ -120,8 +120,9 @@ function! iced#nrepl#debug#start(resp) abort
       call iced#di#get('popup').close(s:debug_info_window_id)
     endif
     let s:debug_info_window_id = iced#di#get('popup').open(debug_texts, {
+         \ 'filetype': 'clojure',
          \ 'line': line('.') + 1,
-         \ 'col': col('.') - 2,
+         \ 'col': col('.'),
          \ 'auto_close': v:false})
   else
     for text in debug_texts

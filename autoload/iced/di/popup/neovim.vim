@@ -59,13 +59,18 @@ function! s:popup.open(texts, ...) abort
     return
   endif
 
+  " TODO: support 'highlight' option
   let opts = get(a:, 1, {})
   let index = self.next_index()
 
   let view = winsaveview()
   let line = get(opts, 'line', view['lnum'])
   let row = get(opts, 'row', line - view['topline'] + 1)
-  let col = get(opts, 'col', len(getline('.')) + 1)
+  let col = get(opts, 'col', len(getline('.')) + 1) - 1
+
+  let wininfo = getwininfo(win_getid())[0]
+  let row = row + wininfo['winrow'] - 1
+  let col = col + wininfo['wincol']
 
   let max_width = &columns - col - 5
   let width = max(map(copy(a:texts), {_, v -> len(v)})) + 2
@@ -99,6 +104,10 @@ function! s:popup.open(texts, ...) abort
   finally
     call win_gotoid(current_winid)
   endtry
+
+  if has_key(opts, 'filetyoe')
+    call setbufvar(bufnr, '&filetype', opts['filetype'])
+  endif
 
   if get(opts, 'auto_close', v:true)
     let time = get(opts, 'close_time', g:iced#popup#time)
