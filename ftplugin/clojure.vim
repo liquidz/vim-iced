@@ -181,6 +181,9 @@ aug vim_iced_initial_setting
   au BufRead *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufread()
   au BufNewFile *.clj,*.cljs,*.cljc call iced#nrepl#auto#newfile()
   au BufEnter *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufenter()
+  au CursorMoved *.clj,*.cljs,*.cljc call iced#nrepl#auto#cursor_moved()
+  au CursorHold *.clj,*.cljs,*.cljc call iced#nrepl#auto#cursor_hold()
+  au CursorHoldI *.clj,*.cljs,*.cljc call iced#nrepl#auto#cursor_hold()
   au VimLeave * call iced#nrepl#auto#leave()
 aug END
 
