@@ -1028,13 +1028,11 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_form_document)
   Same as |:IcedFormDocument|.
   This is convenient to display documents about the form you are editing.
->
-  aug vim_iced_echo_document_setting
-    au!
-    au FileType clojure setl updatetime=1000
-    au CursorHoldI *.clj,*.cljs,*.cljc call iced#nrepl#document#current_form()
-  aug END
-<
+
+  Configurable options are:
+  - |g:iced#nrepl#auto#document|
+  - |g:iced#buffer#document#does_use_popup|
+
                                                   *<Plug>(iced_document_close)*
 <Plug>(iced_document_close)
   Same as |:IcedDocumentClose|.
@@ -1199,6 +1197,12 @@ g:iced#buffer#document#does_update_automatically
   update document buffer with document for the form under cursor.
   Default value is `v:false`.
 
+                                        *g:iced#buffer#document#does_use_popup*
+g:iced#buffer#document#does_use_popup
+  If {v:true}, display one-line document on popup window.
+  To enable this option, it is required to enable |g:iced#nrepl#auto#document|.
+  Default value is `v:false`.
+
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
@@ -1254,6 +1258,13 @@ g:iced#nrepl#auto#does_switch_session
   If {v:true}, enable automatic switching CLJ/CLJS session.
   This will be done by |WinEnter| auto command.
   Default value is `v:false`.
+
+                                                   *g:iced#nrepl#auto#document*
+g:iced#nrepl#auto#document
+  If {v:true}, enable automatic displaying one-line document.
+  This will be done by |CursorHold| and |CursorHoldI| auto command.
+  Default value is `v:false`.
+  See also |g:iced#buffer#document#does_use_popup|.
 
                                                             *g:iced#popup#time*
 g:iced#popup#time
