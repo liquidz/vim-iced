@@ -107,14 +107,6 @@ function! iced#nrepl#debug#start(resp) abort
     call add(debug_texts, printf(' %' . max_key_len . 's: %s', k, v))
   endfor
 
-  let width = max(map(copy(debug_texts), {_, v -> len(v)})) - 2
-  let head = ' ;; Debugging'
-  let head = (width <= 10) ? head : printf('%s %s', head, iced#util#char_repeat(width-10, '-'))
-  let foot = printf(' ;; %s', iced#util#char_repeat(width, '-'))
-
-  call insert(debug_texts, head)
-  call add(debug_texts, foot)
-
   if iced#di#get('popup').is_supported()
     if s:debug_info_window_id != -1
       call iced#di#get('popup').close(s:debug_info_window_id)
@@ -123,6 +115,8 @@ function! iced#nrepl#debug#start(resp) abort
          \ 'filetype': 'clojure',
          \ 'line': line('.') + 1,
          \ 'col': col('.'),
+         \ 'border': [],
+         \ 'title': 'Debugging',
          \ 'auto_close': v:false})
   else
     for text in debug_texts

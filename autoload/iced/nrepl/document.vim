@@ -118,15 +118,18 @@ function! s:one_line_doc(resp) abort
       call iced#buffer#document#update(doc, 'help')
     endif
   else
+    let name = ''
+    let args = ''
     let msg = ''
     if has_key(a:resp, 'javadoc')
       let name = (has_key(a:resp, 'member'))
             \ ? printf('%s/%s', a:resp['class'], a:resp['member'])
             \ : a:resp['class']
+      let name = (has_key(a:resp, 'returns'))
+            \ ? printf('%s %s', a:resp['returns'], name)
+            \ : name
       let args = substitute(get(a:resp, 'arglists-str', ''), '\r\?\n', ' ', 'g')
-      let msg =  (has_key(a:resp, 'returns'))
-            \ ? printf('%s %s %s', a:resp['returns'], name, args)
-            \ : printf('%s %s', name, args)
+      let msg =  printf('%s %s', name, args)
     elseif has_key(a:resp, 'ns') && has_key(a:resp, 'name')
       let name = printf('%s/%s', a:resp['ns'], a:resp['name'])
       let args = substitute(get(a:resp, 'arglists-str', ''), '\r\?\n', ' ', 'g')
@@ -143,14 +146,13 @@ function! s:one_line_doc(resp) abort
             \ 'line': line('.')+1,
             \ 'col': col('.'),
             \ 'filetype': 'clojure',
+            \ 'border': [],
+            \ 'title': name,
             \ 'auto_close': v:false,
             \ }
 
-      let delm = printf(' ; %s ', iced#util#char_repeat(len(msg) - 2, '-'))
       let s:document_popup_winid = popup.open([
-            \ delm,
-            \ printf(' %s ', msg),
-            \ delm,
+            \ printf(' %s ', args),
             \ ], popup_opts)
       let s:document_target_line = line('.')
     endif
