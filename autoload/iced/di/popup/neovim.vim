@@ -65,31 +65,47 @@ function! s:popup.open(texts, ...) abort
 
   let view = winsaveview()
   let line = get(opts, 'line', view['lnum'])
-  let row = get(opts, 'row', line - view['topline'] + 1)
-  let col = get(opts, 'col', len(getline('.')) + 1) - 1
+  let org_row = get(opts, 'row', line - view['topline'] + 1)
+  let org_col = get(opts, 'col', len(getline('.')) + 1) - 1
 
   let wininfo = getwininfo(win_getid())[0]
-  let row = row + wininfo['winrow'] - 1
-  let col = col + wininfo['wincol']
+  let row = org_row + wininfo['winrow'] - 1
+  let col = org_col + wininfo['wincol']
 
-  let max_width = &columns - col - 5
-  let width = max(map(copy(a:texts), {_, v -> len(v)})) + 2
-  let width = (width > max_width) ? max_width : width
-  let height = len(a:texts)
-  let height = (height > g:iced#popup#max_height) ? g:iced#popup#max_height : height
+  let max_width = wininfo['width'] - org_col - 5
+  let title_width = len(get(opts, 'title', '')) + 3
+  let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 2
+  let width = min([width, max_width])
+
+  let texts = copy(a:texts)
+  if has_key(opts, 'border')
+    let pseudo_border = printf(' ; %s ', iced#util#char_repeat(width - 4, '-'))
+
+    if has_key(opts, 'title')
+      let border_head = printf(' ; %s %s ',
+            \           opts['title'],
+            \           iced#util#char_repeat(width - len(opts['title']) - 5,
+            \           '-'))
+      let texts = [border_head] + texts + [pseudo_border]
+    else
+      let texts = [pseudo_border] + texts + [pseudo_border]
+    endif
+  endif
 
   let win_opts = {
         \ 'relative': 'editor',
         \ 'row': row,
         \ 'col': col,
         \ 'width': width,
-        \ 'height': height}
+        \ 'height': min([len(texts), g:iced#popup#max_height]),
+        \ }
+
   call nvim_buf_set_lines(
         \ bufnr,
         \ index,
         \ index + g:iced#popup#max_height,
         \ 0,
-        \ s:ensure_array_length(a:texts, g:iced#popup#max_height))
+        \ s:ensure_array_length(texts, g:iced#popup#max_height))
   let winid = nvim_open_win(bufnr, v:false, win_opts)
   call s:init_win(winid)
 
