@@ -91,6 +91,10 @@ function! iced#nrepl#debug#start(resp) abort
     let s:saved_view = iced#util#save_cursor_position()
   endif
 
+  " NOTE: Disable temporarily.
+  "       Enable again at iced#nrepl#debug#quit.
+  let &eventignore = 'CursorHold,CursorHoldI,CursorMoved,CursorMovedI'
+
   let resp = s:ensure_dict(a:resp)
   call s:move_cursor_and_set_highlight(resp)
 
@@ -141,6 +145,9 @@ function! iced#nrepl#debug#start(resp) abort
 endfunction
 
 function! iced#nrepl#debug#quit() abort
+  " NOTE: Enable autocmds
+  let &eventignore = ''
+
   if type(s:saved_view) == v:t_dict
     let s:debug_key = ''
     if !iced#di#get('popup').is_supported()
