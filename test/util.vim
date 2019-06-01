@@ -107,4 +107,5 @@ endfunction
 function! s:suite.char_repeat_test() abort
   call s:assert.equals(iced#util#char_repeat(3, '.'), '...')
   call s:assert.equals(iced#util#char_repeat(0, '.'), '')
+  call s:assert.equals(iced#util#char_repeat(-3, '.'), '')
 endfunction

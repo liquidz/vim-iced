@@ -62,7 +62,9 @@ endfunction
 
 function! iced#util#char_repeat(n, c) abort
   let ret = ''
-  for _ in range(a:n) | let ret = ret . a:c | endfor
+  if a:n > 0
+    for _ in range(a:n) | let ret = ret . a:c | endfor
+  endif
   return ret
 endfunction
 
