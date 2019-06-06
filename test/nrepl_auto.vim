@@ -103,4 +103,12 @@ function! s:suite.bufenter_in_cljs_file_test() abort
   let g:iced#nrepl#auto#does_switch_session = v:false
 endfunction
 
+function! s:suite.leave_test() abort
+  call s:setup('clj')
+  call s:assert.equals(iced#nrepl#is_connected(), v:true)
+  call iced#nrepl#auto#leave()
+  call s:assert.equals(iced#nrepl#is_connected(), v:false)
+  call s:teardown()
+endfunction
+
 " vim:fdm=marker:fdl=0

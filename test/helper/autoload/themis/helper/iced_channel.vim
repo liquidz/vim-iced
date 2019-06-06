@@ -16,6 +16,7 @@ function! s:build_test_channel(opt) abort
   endfunction
 
   function! dummy.close(handle) abort
+    let self['status_value'] = 'fail'
     return
   endfunction
 
