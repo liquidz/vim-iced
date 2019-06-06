@@ -120,6 +120,7 @@ function! iced#nrepl#debug#start(resp) abort
          \ 'line': line('.') + 1,
          \ 'col': col('.'),
          \ 'border': [],
+         \ 'borderhighlight': ['Comment'],
          \ 'title': 'Debugging',
          \ 'auto_close': v:false})
   else
