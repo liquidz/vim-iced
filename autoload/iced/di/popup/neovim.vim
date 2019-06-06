@@ -10,12 +10,17 @@ let s:popup = {
       \ }
 
 function! s:init_win(winid, opts) abort
+  call setwinvar(a:winid, 'iced_context', get(a:opts, 'iced_context', {}))
   call setwinvar(a:winid, '&signcolumn', 'no')
 
   let bufnr = winbufnr(a:winid)
   if has_key(a:opts, 'filetype')
     call setbufvar(bufnr, '&filetype', a:opts['filetype'])
   endif
+endfunction
+
+function! s:popup.get_context(winid) abort
+  return getwinvar(a:winid, 'iced_context', {})
 endfunction
 
 function! s:is_supported() abort
@@ -112,7 +117,7 @@ function! s:popup.open(texts, ...) abort
         \ 0,
         \ s:ensure_array_length(texts, g:iced#popup#max_height))
   let winid = nvim_open_win(bufnr, v:false, win_opts)
-  call s:init_win(winid)
+  call s:init_win(winid, opts)
 
   let current_winid = win_getid()
   try
