@@ -382,7 +382,11 @@ function! s:default_key_mappings() abort
   endif
 
   if !hasmapto('<Plug>(iced_document_open)')
-    silent! nmap <buffer> K <Plug>(iced_document_open)
+    silent! nmap <buffer> <Leader>hb <Plug>(iced_document_open)
+  endif
+
+  if !hasmapto('<Plug>(iced_popup_document_open)')
+    silent! nmap <buffer> K <Plug>(iced_popup_document_open)
   endif
 
   if !hasmapto('<Plug>(iced_document_close)')
