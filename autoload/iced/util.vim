@@ -128,5 +128,14 @@ function! iced#util#shorten(msg) abort
         \ : msg
 endfunction
 
+function! iced#util#select_keys(d, ks) abort
+  let ret = {}
+  for k in a:ks
+    if !has_key(a:d, k) | continue | endif
+    let ret[k] = a:d[k]
+  endfor
+  return ret
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
