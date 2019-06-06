@@ -61,6 +61,7 @@ command! -nargs=?
       \ IcedFindVarDependencies call iced#nrepl#navigate#find_var_dependencies(<q-args>)
 
 command! -nargs=? IcedDocumentOpen          call iced#nrepl#document#open(<q-args>)
+command! -nargs=? IcedPopupDocumentOpen     call iced#nrepl#document#popup_open(<q-args>)
 command!          IcedFormDocument          call iced#nrepl#document#current_form()
 command!          IcedDocumentClose         call iced#buffer#document#close()
 command! -nargs=? IcedSourceShow            call iced#nrepl#source#show(<q-args>)
@@ -144,6 +145,7 @@ nnoremap <silent> <Plug>(iced_find_var_references)      :<C-u>IcedFindVarReferen
 nnoremap <silent> <Plug>(iced_find_var_dependencies)    :<C-u>IcedFindVarDependencies<CR>
 
 nnoremap <silent> <Plug>(iced_document_open)            :<C-u>IcedDocumentOpen<CR>
+nnoremap <silent> <Plug>(iced_popup_document_open)      :<C-u>IcedPopupDocumentOpen<CR>
 nnoremap <silent> <Plug>(iced_form_document)            :<C-u>IcedFormDocument<CR>
 nnoremap <silent> <Plug>(iced_document_close)           :<C-u>IcedDocumentClose<CR>
 nnoremap <silent> <Plug>(iced_source_show)              :<C-u>IcedSourceShow<CR>

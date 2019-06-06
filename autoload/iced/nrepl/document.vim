@@ -20,6 +20,13 @@ let g:iced#buffer#document#does_update_automatically =
 
 let s:subsection_sep = '------------------------------------------------------------------------------'
 
+function! s:popup_context(d) abort
+  return extend({
+        \ 'type': 'default',
+        \ 'curpos': getcurpos(),
+        \ }, a:d)
+endfunction
+
 function! s:generate_javadoc(resp) abort
   let doc = []
   let title = (has_key(a:resp, 'member'))
@@ -103,16 +110,48 @@ function! s:generate_doc(resp) abort
   return (empty(doc) ? '' : join(doc, "\n"))
 endfunction
 
-function! s:view_doc(resp) abort
+function! s:view_doc_on_buffer(resp) abort
   let doc = s:generate_doc(a:resp)
   if !empty(doc)
-    call iced#buffer#document#open(s:generate_doc(a:resp), 'help')
+    call iced#buffer#document#open(doc, 'help')
   endif
+endfunction
+
+function! s:view_doc_on_popup(resp) abort
+  let doc = printf(' %s', s:generate_doc(a:resp))
+  let popup = iced#di#get('popup')
+
+  if empty(doc) || !popup.is_supported()
+    return
+  endif
+
+  if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
+  let s:popup_winid = popup.open(split(doc, '\r\?\n'), {
+        \ 'iced_context': s:popup_context({'type': 'full document'}),
+        \ 'line': line('.') + 1,
+        \ 'col': col('.'),
+        \ 'filetype': 'help',
+        \ 'border': [],
+        \ 'borderhighlight': ['Comment'],
+        \ 'auto_close': v:false,
+        \ 'moved': [0, &columns],
+        \ })
 endfunction
 
 function! iced#nrepl#document#open(symbol) abort
   call iced#nrepl#ns#eval({_ ->
-        \ iced#nrepl#var#get(a:symbol, funcref('s:view_doc'))
+        \ iced#nrepl#var#get(a:symbol, funcref('s:view_doc_on_buffer'))
+        \ })
+endfunction
+
+function! iced#nrepl#document#popup_open(symbol) abort
+  if !iced#di#get('popup').is_supported()
+        \ || !s:enable_popup_full_document
+    return iced#nrepl#document#open(a:symbol)
+  endif
+
+  call iced#nrepl#ns#eval({_ ->
+        \ iced#nrepl#var#get(a:symbol, funcref('s:view_doc_on_popup'))
         \ })
 endfunction
 
@@ -144,52 +183,56 @@ function! s:one_line_doc(resp) abort
     if empty(msg) | return | endif
 
     let popup = iced#di#get('popup')
-    if popup.is_supported() && g:iced#buffer#document#does_use_popup
-      if s:document_popup_winid != -1 | call popup.close(s:document_popup_winid) | endif
+    if popup.is_supported() && s:enable_popup_one_line_document
+      if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
 
       let popup_opts = {
+            \ 'iced_context': s:popup_context({'type': 'one-line document'}),
             \ 'line': line('.')+1,
             \ 'col': col('.'),
             \ 'filetype': 'clojure',
             \ 'border': [],
+            \ 'borderhighlight': ['Comment'],
             \ 'title': name,
             \ 'auto_close': v:false,
+            \ 'moved': [0, &columns],
             \ }
 
-      let s:document_popup_winid = popup.open([
-            \ printf(' %s ', args),
-            \ ], popup_opts)
-      let s:document_target_line = line('.')
+      let popup_args = trim(get(a:resp, 'arglists-str', ''))
+      let popup_args = substitute(popup_args, '\r\?\n', " \n ", 'g')
+      let popup_args = printf(' %s ', popup_args)
+      let s:popup_winid = popup.open(split(popup_args, '\n'), popup_opts)
     endif
 
     echo iced#util#shorten(msg)
   endif
 endfunction
 
-function! iced#nrepl#document#clear_one_line_doc_popup() abort
+function! iced#nrepl#document#clear_doc_popup() abort
   let popup = iced#di#get('popup')
-  if !g:iced#buffer#document#does_use_popup
+  let context = popup.get_context(s:popup_winid)
+  if !s:enable_popup_one_line_document
         \ || !popup.is_supported()
-        \ || s:document_popup_winid == -1
-        \ || s:document_target_line == line('.')
+        \ || s:popup_winid == -1
+        \ || get(popup.get_context(s:popup_winid), 'curpos', [-1, -1])[1] == line('.')
     return
   endif
 
-  call popup.close(s:document_popup_winid)
+  call popup.close(s:popup_winid)
 
-  let s:document_popup_winid = -1
-  let s:document_target_line = -1
+  let s:popup_winid = -1
 endfunction
 
 function! iced#nrepl#document#current_form() abort
+  let context = iced#di#get('popup').get_context(s:popup_winid)
   if !iced#nrepl#is_connected()
+        \ || get(context, 'type', '') ==# 'full document'
+        \ || get(context, 'curpos', []) ==# getcurpos()
     return
   endif
 
-  let ns_name = iced#nrepl#ns#name()
   let view = winsaveview()
   let reg_save = @@
-
   try
     let @@ = ''
     silent normal! vi(y
