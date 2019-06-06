@@ -29,6 +29,9 @@ themis: .vim-themis .vim-sexp
 docker_themis: .vim-themis .vim-sexp
 	docker run --rm -v $(PWD):/root --entrypoint './.vim-themis/bin/themis' uochan/vim:latest
 
+docker_neovim_themis: .vim-themis .vim-sexp
+	docker run --rm -v $(PWD):/mnt/volume lambdalisue/neovim-themis:latest
+
 html: doc/vim-iced.txt
 	bash scripts/html.sh
 
