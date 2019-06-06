@@ -45,28 +45,12 @@ function! s:popup.open(texts, ...) abort
   let title_width = len(get(opts, 'title', '')) + 3
   let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
 
-  let texts = copy(a:texts)
-  if has_key(opts, 'border')
-    let l = min([width, max_width])
-    let pseudo_border = printf(' ; %s ', iced#util#char_repeat(l - 4, '-'))
-
-    if has_key(opts, 'title')
-      let border_head = printf(' ; %s %s ',
-            \           opts['title'],
-            \           iced#util#char_repeat(l - len(opts['title']) - 5,
-            \           '-'))
-      let texts = [border_head] + texts + [pseudo_border]
-    else
-      let texts = [pseudo_border] + texts + [pseudo_border]
-    endif
-  endif
-
   let win_opts = {
         \ 'line': row + 1,
         \ 'col': col + 1,
         \ 'minwidth': width,
         \ 'maxwidth': max_width,
-        \ 'minheight': len(texts),
+        \ 'minheight': len(a:texts),
         \ 'maxheight': g:iced#popup#max_height,
         \ }
 
