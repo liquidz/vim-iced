@@ -40,6 +40,8 @@ CONTENTS                                                    *vim-iced-contents*
     Key Mappings               |vim-iced-key-mappings|
   Customizing                  |vim-iced-customizing|
     Indent rules               |vim-iced-customizing-indents|
+    Documents                  |vim-iced-customizing-documents|
+      Auto document            |vim-iced-customizing-auto-document|
     Auto indent                |vim-iced-customizing-auto-indent|
     Linters                    |vim-iced-customizing-linters|
     Signs                      |vim-iced-customizing-signs|
@@ -110,6 +112,7 @@ LEININGEN~
                                       cider.nrepl/wrap-test
                                       cider.nrepl/wrap-trace
                                       cider.nrepl/wrap-undef
+                                      cider.nrepl/wrap-xref
                                       iced.nrepl/wrap-iced]}
     :plugins [[refactor-nrepl "2.4.0"]]}}
 <
@@ -139,6 +142,7 @@ BOOT~
       cider.nrepl/wrap-test
       cider.nrepl/wrap-trace
       cider.nrepl/wrap-undef
+      cider.nrepl/wrap-xref
       refactor-nrepl.middleware/wrap-refactor
       iced.nrepl/wrap-iced])
 <
@@ -167,6 +171,7 @@ SHADOW-CLJS~
                         cider.nrepl/wrap-test
                         cider.nrepl/wrap-trace
                         cider.nrepl/wrap-undef
+                        cider.nrepl/wrap-xref
                         refactor-nrepl.middleware/wrap-refactor
                         iced.nrepl/wrap-iced]}
   }
@@ -663,6 +668,13 @@ COMMANDS                                                    *vim-iced-commands*
   Open a window, and show documents for {symbol}.
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_document_open)|.
+  
+                                                       *:IcedPopupDocumentOpen*
+:IcedPopupDocumentOpen [{symbol}]
+  Open a popup window, and show documents for {symbol}.
+  If {symbol} is not passed, symbol under cursor is used.
+  If |popup| is not supported, |:IcedDocumentOpen| is called.
+  Key is mapped to |<Plug>(iced_popup_document_open)|.
 
                                                             *:IcedFormDocument*
 :IcedFormDocument
@@ -1024,14 +1036,20 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_document_open)
   Same as |:IcedDocumentOpen|.
 
+                                             *<Plug>(iced_popup_document_open)*
+<Plug>(iced_popup_document_open)
+  Same as |:IcedPopupDocumentOpen|.
+  Configurable options are:
+  - |g:iced_enable_popup_document|
+
                                                    *<Plug>(iced_form_document)*
 <Plug>(iced_form_document)
   Same as |:IcedFormDocument|.
   This is convenient to display documents about the form you are editing.
 
   Configurable options are:
-  - |g:iced#nrepl#auto#document|
-  - |g:iced#buffer#document#does_use_popup|
+  - |g:iced_enable_auto_document|
+  - |g:iced_enable_popup_document|
 
                                                   *<Plug>(iced_document_close)*
 <Plug>(iced_document_close)
@@ -1186,23 +1204,6 @@ g:iced#buffer#stdout#file
   If not empty, vim-iced write stdout buffer content to the file path.
   Default value is `''`.
 
-                                                *g:iced#buffer#document#height*
-g:iced#buffer#document#height
-  Document window height.
-  Default value is |'previewheight'|.
-
-                             *g:iced#buffer#document#does_update_automatically*
-g:iced#buffer#document#does_update_automatically
-  If {v:true} and document buffer is visible,
-  update document buffer with document for the form under cursor.
-  Default value is `v:false`.
-
-                                        *g:iced#buffer#document#does_use_popup*
-g:iced#buffer#document#does_use_popup
-  If {v:true}, display one-line document on popup window.
-  To enable this option, it is required to enable |g:iced#nrepl#auto#document|.
-  Default value is `v:false`.
-
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
@@ -1259,13 +1260,6 @@ g:iced#nrepl#auto#does_switch_session
   This will be done by |WinEnter| auto command.
   Default value is `v:false`.
 
-                                                   *g:iced#nrepl#auto#document*
-g:iced#nrepl#auto#document
-  If {v:true}, enable automatic displaying one-line document.
-  This will be done by |CursorHold| and |CursorHoldI| auto command.
-  Default value is `v:false`.
-  See also |g:iced#buffer#document#does_use_popup|.
-
                                                             *g:iced#popup#time*
 g:iced#popup#time
   Auto closing time(ms) for popup window.
@@ -1288,6 +1282,51 @@ g:iced#format#rule
         \ 'merr.core/let': '[[:block 2] [:inner 1]]',
         \ }
 <
+------------------------------------------------------------------------------
+DOCUMENTS                                      *vim-iced-customizing-documents*
+
+                                                *g:iced#buffer#document#height*
+g:iced#buffer#document#height
+  Document window height.
+  Default value is |'previewheight'|.
+
+                             *g:iced#buffer#document#does_update_automatically*
+g:iced#buffer#document#does_update_automatically
+  If {v:true} and document buffer is visible,
+  update document buffer with document for the form under cursor.
+  Default value is `v:false`.
+
+                                           *vim-iced-customizing-auto-document*
+AUTO DOCUMENT~
+
+                                                  *g:iced_enable_auto_document*
+g:iced_enable_auto_document
+  Enable automatic displaying one-line document.
+  This will be done by |CursorHold| and |CursorHoldI| auto command.
+
+  The value should be one of `'normal'`, `'insert'` or `'any'`.
+  Otherwise this option will be disabled.
+
+  `'normal'`: Enabled on only normal mode.
+  `'insert'`: Enabled on only insert mode.
+  `'every'` : Enabled on normal and insert mode.
+
+  Default value is `'none'`.
+  See also |g:iced_enable_popup_document|.
+
+                                                 *g:iced_enable_popup_document*
+g:iced_enable_popup_document
+  Display documents on popup window.
+  The value should be one of follows.
+  Otherwise this option will be disabled.
+
+  `'full'`    : Enabled on only full document.
+              |:IcedDocumentOpen| shows full document.
+  `'one-line'`: Enabled on only one-line document.
+  `'every'`   : Every enabled.
+
+  Default value is `'every'`.
+
 ------------------------------------------------------------------------------
 AUTO INDENT                                  *vim-iced-customizing-auto-indent*
 
@@ -1455,6 +1494,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>rtl  <Plug>(iced_thread_last)
   n       <Leader>ref  <Plug>(iced_extract_function)
   n       <Leader>rml  <Plug>(iced_move_to_let)
+  n       <Leader>hb   <Plug>(iced_document_open)
   n       <Leader>hs   <Plug>(iced_source_show)
   n       <Leader>hg   <Plug>(iced_grimoire_open)
   n       <Leader>hh   <Plug>(iced_command_palette)
@@ -1470,7 +1510,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>/    :<C-u>IcedGrep<Space>
   n       <C-]>        <Plug>(iced_def_jump)
   n       <C-t>        <Plug>(iced_def_back)
-  n       K            <Plug>(iced_document_open)
+  n       K            <Plug>(iced_popup_document_open)
   n       ==           <Plug>(iced_format)
 
 ==============================================================================
