@@ -10,8 +10,6 @@ let s:document_target_line = -1
 
 let g:iced#buffer#document#does_update_automatically =
       \ get(g:, 'iced#buffer#document#does_update_automatically', v:false)
-let g:iced#buffer#document#does_use_popup =
-      \ get(g:, 'iced#buffer#document#does_use_popup', v:false)
 
 let s:subsection_sep = '------------------------------------------------------------------------------'
 

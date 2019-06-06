@@ -2,7 +2,6 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let g:iced#nrepl#auto#does_switch_session = get(g:, 'iced#nrepl#auto#does_switch_session', v:false)
-let g:iced#nrepl#auto#document = get(g:, 'iced#nrepl#auto#document', v:false)
 let s:leaving = v:false
 let s:is_bufenter_enabled = v:false
 
@@ -59,16 +58,6 @@ endfunction
 function! iced#nrepl#auto#leave() abort
   let s:leaving = v:true
   call iced#nrepl#disconnect()
-endfunction
-
-function! iced#nrepl#auto#cursor_moved() abort
-  call iced#nrepl#document#clear_one_line_doc_popup()
-endfunction
-
-function! iced#nrepl#auto#cursor_hold() abort
-  if g:iced#nrepl#auto#document
-    call iced#nrepl#document#current_form()
-  endif
 endfunction
 
 function! iced#nrepl#auto#enable_bufenter(bool) abort

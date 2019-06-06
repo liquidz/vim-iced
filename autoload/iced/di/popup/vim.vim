@@ -58,11 +58,10 @@ function! s:popup.open(texts, ...) abort
     let win_opts['time'] = get(opts, 'close_time', g:iced#popup#time)
   endif
 
-  if has_key(opts, 'highlight')
-    let win_opts['highlight'] = opts['highlight']
-  endif
+  call extend(win_opts, iced#util#select_keys(opts,
+        \ ['highlight', 'border', 'borderhighlight', 'title', 'moved']))
 
-  let winid = popup_create(texts, win_opts)
+  let winid = popup_create(a:texts, win_opts)
   call s:init_win(winid, opts)
 
   return winid
