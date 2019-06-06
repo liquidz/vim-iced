@@ -9,8 +9,13 @@ let s:popup = {
       \ 'index': 0,
       \ }
 
-function! s:init_win(winid) abort
+function! s:init_win(winid, opts) abort
   call setwinvar(a:winid, '&signcolumn', 'no')
+
+  let bufnr = winbufnr(a:winid)
+  if has_key(a:opts, 'filetype')
+    call setbufvar(bufnr, '&filetype', a:opts['filetype'])
+  endif
 endfunction
 
 function! s:is_supported() abort
