@@ -5,7 +5,6 @@ let s:buf = themis#helper('iced_buffer')
 let s:ch = themis#helper('iced_channel')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl.vim')
 
-
 function! s:format_code_relay(msg) abort
   if a:msg['op'] ==# 'iced-format-code-with-indents'
     return {'status': ['done'], 'formatted': a:msg['code']}
