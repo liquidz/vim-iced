@@ -8,6 +8,14 @@ set cpo&vim
 
 scriptencoding utf-8
 
+if !exists('g:iced_enable_auto_document')
+  let g:iced_enable_auto_document = 'none'
+endif
+
+if !exists('g:iced_enable_popup_document')
+  let g:iced_enable_popup_document = 'every'
+endif
+
 "" Commands {{{
 command! -nargs=? IcedConnect               call iced#nrepl#connect(<q-args>)
 command!          IcedDisconnect            call iced#nrepl#disconnect()
@@ -190,6 +198,34 @@ if exists('g:iced_enable_auto_linting')
     au!
     au BufWritePost *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufwrite_post()
     au CursorMoved *.clj,*.cljs,*.cljc call iced#lint#echo_message()
+  aug END
+endif
+
+if g:iced_enable_auto_document ==# 'normal'
+      \ || g:iced_enable_auto_document ==# 'every'
+  aug vim_iced_auto_document_normal
+    au!
+    au CursorHold *.clj,*.cljs,*.cljc call iced#nrepl#document#current_form()
+  aug END
+endif
+
+if g:iced_enable_auto_document ==# 'insert'
+      \ || g:iced_enable_auto_document ==# 'every'
+  aug vim_iced_auto_document_insert
+    au!
+    au CursorHoldI *.clj,*.cljs,*.cljc call iced#nrepl#document#current_form()
+  aug END
+endif
+
+" NOTE: Neovim does not have `moved` option for floating window.
+"       So vim-iced must close floating window explicitly.
+if has('nvim')
+      \ && (g:iced_enable_popup_document ==# 'full'
+      \     || g:iced_enable_popup_document ==# 'one-line'
+      \     || g:iced_enable_popup_document ==# 'every')
+  aug vim_iced_close_document_popup
+    au!
+    au CursorMoved *.clj,*.cljs,*.cljc call iced#nrepl#document#clear_doc_popup()
   aug END
 endif
 "" }}}

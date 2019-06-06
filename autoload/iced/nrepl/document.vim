@@ -5,8 +5,15 @@ let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 let s:D = s:V.import('Data.Dict')
 
-let s:document_popup_winid = -1
-let s:document_target_line = -1
+let s:popup_winid = -1
+
+let s:enable_popup_one_line_document =
+      \ g:iced_enable_popup_document ==# 'one-line'
+      \ || g:iced_enable_popup_document ==# 'every'
+
+let s:enable_popup_full_document =
+      \ g:iced_enable_popup_document ==# 'full'
+      \ || g:iced_enable_popup_document ==# 'every'
 
 let g:iced#buffer#document#does_update_automatically =
       \ get(g:, 'iced#buffer#document#does_update_automatically', v:false)
