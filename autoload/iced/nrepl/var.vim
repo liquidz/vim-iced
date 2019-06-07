@@ -48,5 +48,29 @@ function! iced#nrepl#var#get(...) abort
   call iced#nrepl#op#cider#info(ns_name, symbol, Callback)
 endfunction
 
+function! s:extract_var_name(eval_resp, callback) abort
+  if has_key(a:eval_resp, 'err') | return iced#nrepl#eval#err(a:eval_resp['err']) | endif
+  if !has_key(a:eval_resp, 'value') | return iced#message#error('not_found') | endif
+
+  let var = a:eval_resp['value']
+  let var = substitute(var, '^#''', '', '')
+  let i = stridx(var, '/')
+  let ns = var[0:i-1]
+  let var_name = strpart(var, i+1)
+
+  call a:callback({'qualified_var': var, 'ns': ns, 'var': var_name})
+endfunction
+
+function! iced#nrepl#var#extract_by_current_top_list(callback) abort
+  let ret = iced#paredit#get_current_top_list()
+  let code = ret['code']
+  if empty(code) | return iced#message#error('finding_code_error') | endif
+
+  let pos = ret['curpos']
+  let option = {'line': pos[1], 'column': pos[2]}
+  call iced#nrepl#eval(code, {resp ->
+        \ s:extract_var_name(resp, a:callback)}, option)
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
