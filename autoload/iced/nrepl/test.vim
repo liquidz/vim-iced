@@ -228,6 +228,9 @@ endfunction " }}}
 function! s:spec_check(var, resp) abort
   if !has_key(a:resp, 'result') | return iced#message#error('spec_check_error') | endif
   let num_tests = a:resp['num-tests']
+  if type(num_tests) != v:t_number
+    let num_tests = 0
+  endif
 
   if a:resp['result'] ==# 'OK'
     if num_tests == 0
