@@ -13,15 +13,16 @@ let s:default_palette = [
       \ 'StdoutBufferOpen', 'StdoutBufferClear', 'StdoutBufferClose',
       \ 'DocumentClose',
       \ 'ToggleSrcAndTest',
-      \ 'RelatedNamespace', 'BrowseSpec', 'BrowseTestUnderCursor',
+      \ 'BrowseRelatedNamespace', 'BrowseSpec', 'BrowseTestUnderCursor',
+      \ 'BrowseReferences', 'BrowseDependencies',
+      \ 'BrowseVarReferences', 'BrowseVarDependencies',
       \ 'CleanNs', 'AddNs',
       \ 'ExtractFunction', 'MoveToLet',
       \ 'ToggleTraceVar', 'ToggleTraceNs',
       \ 'InReplNs',
       \ 'LintCurrentFile', 'LintToggle',
       \ 'JumpToNextSign', 'JumpToPrevSign',
-      \ 'GotoLet',
-      \ 'FindVarReferences', 'FindVarReferences!',
+      \ 'JumpToLet',
       \ ]
 
 function! s:build_palette() abort
