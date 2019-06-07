@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! iced#let#goto() abort
+function! iced#let#jump_to_let() abort
   let view = winsaveview()
   let reg_save = @@
 
@@ -48,7 +48,7 @@ function! iced#let#move_to_let(...) abort
       return iced#message#echom('canceled')
     endif
 
-    if iced#let#goto() == 0
+    if iced#let#jump_to_let() == 0
       " 6 means `len('(let [')`
       let form = iced#util#add_indent(len(name)+1+6, form)
       let @@ = iced#util#add_indent(
