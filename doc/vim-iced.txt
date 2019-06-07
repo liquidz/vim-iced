@@ -606,6 +606,9 @@ COMMANDS                                                    *vim-iced-commands*
                                                            *:IcedTestSpecCheck*
 :IcedTestSpecCheck [{num-tests}]
   Run `clojure.spec.test.alpha/check` for the function under cursor.
+  NOTE: Adding `test.check` dependency is required.
+        https://github.com/clojure/test.check
+
   If {num-tests} is not passed, |g:iced#test#spec_num_tests| is used.
   Key is mapped to |<Plug>(iced_test_spec_check)|.
 
