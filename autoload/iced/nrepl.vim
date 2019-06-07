@@ -128,11 +128,11 @@ function! s:get_message_ids(x) abort
 endfunction
 
 function! iced#nrepl#merge_response_handler(resp, last_result) abort
-  let result = empty(a:last_result) ? {'value': ''} : a:last_result
+  let result = empty(a:last_result) ? {} : a:last_result
   for resp in iced#util#ensure_array(a:resp)
     for k in keys(resp)
       if k ==# 'value'
-        let result[k] = result[k] . resp[k]
+        let result[k] = get(result, 'value', '') . resp[k]
       else
         let result[k] = resp[k]
       endif
