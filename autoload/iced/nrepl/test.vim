@@ -152,20 +152,15 @@ function! s:test_ns_required(ns_name, var_name) abort
     call s:run_test_vars(a:ns_name, target_test_vars)
 endfunction
 
-function! s:extract_var_name(eval_resp) abort
-  if has_key(a:eval_resp, 'err') | return iced#nrepl#eval#err(a:eval_resp['err']) | endif
-  if !has_key(a:eval_resp, 'value') | return iced#message#error('not_found') | endif
-
-  let var = a:eval_resp['value']
-  let var = substitute(var, '^#''', '', '')
-  let i = stridx(var, '/')
-  let ns = var[0:i-1]
-  let var_name = strpart(var, i+1)
-
+function! s:distribute_tests(var_info) abort
+  let qualified_var = a:var_info['qualified_var']
+  let ns = a:var_info['ns']
+  let var_name = a:var_info['var']
   let test_vars = iced#nrepl#test#test_vars_by_ns_name(ns)
+
   if index(test_vars, var_name) != -1
     " Form under the cursor is a test
-    call s:run_test_vars(ns, [var])
+    call s:run_test_vars(ns, [qualified_var])
   elseif s:S.ends_with(ns, '-test')
     " Form under the cursor is not a test, and current ns is ns for test
     return iced#message#error('not_found')
@@ -177,13 +172,7 @@ function! s:extract_var_name(eval_resp) abort
 endfunction
 
 function! iced#nrepl#test#under_cursor() abort
-  let ret = iced#paredit#get_current_top_list()
-  let code = ret['code']
-  if empty(code) | return iced#message#error('finding_code_error') | endif
-
-  let pos = ret['curpos']
-  let option = {'line': pos[1], 'column': pos[2]}
-  call iced#nrepl#eval(code, {resp -> s:extract_var_name(resp)}, option)
+  call iced#nrepl#var#extract_by_current_top_list(funcref('s:distribute_tests'))
 endfunction "}}}
 
 " iced#nrepl#test#ns {{{
