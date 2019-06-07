@@ -167,6 +167,9 @@ function! s:set_xref_resp_to_quickfix(key, resp) abort
   call iced#di#get('ex_cmd').silent_exe(':cwindow')
 endfunction
 
+let s:fn_refs_callback = function('s:set_xref_resp_to_quickfix', ['fn-refs'])
+let s:fn_deps_callback = function('s:set_xref_resp_to_quickfix', ['fn-deps'])
+
 function! s:got_var_info(resp, callback) abort
   if !has_key(a:resp, 'ns') || !has_key(a:resp, 'name')
     return iced#message#error('not_found')
@@ -174,19 +177,17 @@ function! s:got_var_info(resp, callback) abort
   call a:callback(a:resp['ns'], a:resp['name'])
 endfunction
 
-function! iced#nrepl#navigate#find_var_references(symbol) abort
-  let Callback = function('s:set_xref_resp_to_quickfix', ['fn-refs'])
+function! iced#nrepl#navigate#browse_var_references(symbol) abort
   call iced#nrepl#ns#eval({_ -> iced#nrepl#var#get(a:symbol, {resp ->
         \ s:got_var_info(resp, {ns, symbol ->
-        \     iced#nrepl#op#cider#fn_refs(ns, symbol, Callback)
+        \     iced#nrepl#op#cider#fn_refs(ns, symbol, s:fn_refs_callback)
         \ })})})
 endfunction
 
-function! iced#nrepl#navigate#find_var_dependencies(symbol) abort
-  let Callback = function('s:set_xref_resp_to_quickfix', ['fn-deps'])
+function! iced#nrepl#navigate#browse_var_dependencies(symbol) abort
   call iced#nrepl#ns#eval({_ -> iced#nrepl#var#get(a:symbol, {resp ->
         \ s:got_var_info(resp, {ns, symbol ->
-        \     iced#nrepl#op#cider#fn_deps(ns, symbol, Callback)
+        \     iced#nrepl#op#cider#fn_deps(ns, symbol, s:fn_deps_callback)
         \ })})})
 endfunction
 

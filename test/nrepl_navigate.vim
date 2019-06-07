@@ -155,7 +155,7 @@ function! s:suite.test_test() abort
   call s:teardown()
 endfunction
 
-function! s:find_var_references_relay(msg) abort
+function! s:browse_var_references_relay(msg) abort
   let op = a:msg['op']
   if op ==# 'info'
     return {'status': ['done'], 'ns': 'foo', 'name': 'bar'}
@@ -169,10 +169,10 @@ function! s:find_var_references_relay(msg) abort
   endif
 endfunction
 
-function! s:suite.find_var_references_test() abort
-  call s:setup({'channel': funcref('s:find_var_references_relay')})
+function! s:suite.browse_var_references_test() abort
+  call s:setup({'channel': funcref('s:browse_var_references_relay')})
 
-  call iced#nrepl#navigate#find_var_references('foo/bar')
+  call iced#nrepl#navigate#browse_var_references('foo/bar')
   let qf_list = s:qf.get_last_args()['list']
   call s:assert.equals(qf_list, [
         \ {'filename': '/path/to/foo.txt', 'lnum': 12, 'text': 'hello: doc hello'},
@@ -181,7 +181,7 @@ function! s:suite.find_var_references_test() abort
   call s:teardown()
 endfunction
 
-function! s:find_var_dependencies_relay(msg) abort
+function! s:browse_var_dependencies_relay(msg) abort
   let op = a:msg['op']
   if op ==# 'info'
     return {'status': ['done'], 'ns': 'foo', 'name': 'bar'}
@@ -195,10 +195,10 @@ function! s:find_var_dependencies_relay(msg) abort
   endif
 endfunction
 
-function! s:suite.find_var_dependencies_test() abort
-  call s:setup({'channel': funcref('s:find_var_dependencies_relay')})
+function! s:suite.browse_var_dependencies_test() abort
+  call s:setup({'channel': funcref('s:browse_var_dependencies_relay')})
 
-  call iced#nrepl#navigate#find_var_dependencies('foo/bar')
+  call iced#nrepl#navigate#browse_var_dependencies('foo/bar')
   let qf_list = s:qf.get_last_args()['list']
   call s:assert.equals(qf_list, [
         \ {'filename': '/path/to/bar.txt', 'lnum': 56, 'text': 'world: doc world'},
