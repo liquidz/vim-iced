@@ -128,10 +128,14 @@ function! s:get_message_ids(x) abort
 endfunction
 
 function! iced#nrepl#merge_response_handler(resp, last_result) abort
-  let result = empty(a:last_result) ? {} : a:last_result
+  let result = empty(a:last_result) ? {'value': ''} : a:last_result
   for resp in iced#util#ensure_array(a:resp)
     for k in keys(resp)
-      let result[k] = resp[k]
+      if k ==# 'value'
+        let result[k] = result[k] . resp[k]
+      else
+        let result[k] = resp[k]
+      endif
     endfor
   endfor
 
@@ -423,6 +427,7 @@ function! iced#nrepl#eval(code, ...) abort
         \ 'file': get(option, 'file', expand('%:p')),
         \ 'line': get(option, 'line', pos[1]),
         \ 'column': get(option, 'column', pos[2]),
+        \ 'nrepl.middleware.print/stream?': 1,
         \ 'callback': Callback,
         \ }
 
