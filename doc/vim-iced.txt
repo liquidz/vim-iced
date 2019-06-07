@@ -656,15 +656,26 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedDefBack
   Jump back cursor.
   Key is mapped to |<Plug>(iced_def_back)|.
-
-                                                       *:IcedFindVarReferences*
-:IcedFindVarReferences
-  Find positions referencing the var under cursor.
+  
+                                                        *:IcedBrowseReferences*
+:IcedBrowseReferences
+  Browse positions referencing the form under cursor.
   Results are set to |quickfix|.
 
-                                                      *:IcedFindVarReferences!*
-:IcedFindVarReferences!
-  Work as same as |:IcedFindVarReferences| ignoring cache file.
+                                                      *:IcedBrowseDependencies*
+:IcedBrowseDependencies
+  Browse positions depending the form under cursor.
+  Results are set to |quickfix|.
+
+                                                     *:IcedBrowseVarReferences*
+:IcedBrowseVarReferences
+  Browse positions referencing the var under cursor.
+  Results are set to |quickfix|.
+
+                                                   *:IcedBrowseVarDependencies*
+:IcedBrowseVarDependencies
+  Browse positions depending the var under cursor.
+  Results are set to |quickfix|.
 
                                                             *:IcedDocumentOpen*
 :IcedDocumentOpen [{symbol}]
@@ -847,11 +858,11 @@ COMMANDS                                                    *vim-iced-commands*
   searching sign continues at BOTTOM.
   Key is mapped to |<Plug>(iced_jump_to_prev_sign)|.
 
-                                                                 *:IcedGotoLet*
-:IcedGotoLet
-  Move cursor to nearest `let` form.
+                                                               *:IcedJumpToLet*
+:IcedJumpToLet
+  Jump cursor to nearest `let` form.
   If `let` form is not found in current top list, cursor is not moved.
-  Key is mapped to |<Plug>(iced_goto_let)|.
+  Key is mapped to |<Plug>(iced_jump_to_let)|.
 
 ------------------------------------------------------------------------------
 FUNCTIONS                                                  *vim-iced-functions*
@@ -1026,14 +1037,22 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                         *<Plug>(iced_def_back)*
 <Plug>(iced_def_back)
   Same as |:IcedDefBack|.
+  
+                                               *<Plug>(iced_browse_references)*
+<Plug>(iced_browse_references)
+  Same as |:IcedBrowseReferences|.
+  
+                                             *<Plug>(iced_browse_dependencies)*
+<Plug>(iced_browse_dependencies)
+  Same as |:IcedBrowseDependencies|.
 
-                                             *<Plug>(iced_find_var_references)*
-<Plug>(iced_find_var_references)
-  Same as |:IcedFindVarReferences|.
-
-                                            *<Plug>(iced_find_var_references!)*
-<Plug>(iced_find_var_references!)
-  Same as |:IcedFindVarReferences!|.
+                                           *<Plug>(iced_browse_var_references)*
+<Plug>(iced_browse_var_references)
+  Same as |:IcedBrowseVarReferences|.
+  
+                                         *<Plug>(iced_browse_var_dependencies)*
+<Plug>(iced_browse_var_dependencies)
+  Same as |:IcedBrowseVarDependencies|.
 
                                                    *<Plug>(iced_document_open)*
 <Plug>(iced_document_open)
@@ -1162,9 +1181,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_jump_to_prev_sign)
   Same as |:IcedJumpToPrevSign|.
 
-                                                        *<Plug>(iced_goto_let)*
-<Plug>(iced_goto_let)
-  Same as |:IcedGotoLet|.
+                                                     *<Plug>(iced_jump_to_let)*
+<Plug>(iced_jump_to_let)
+  Same as |:IcedJumpToLet|.
 
 ==============================================================================
 CUSTOMIZING                                              *vim-iced-customizing*
@@ -1460,6 +1479,15 @@ SESSION SWITCHED                                   *hook_kind_session_switched*
 ------------------------------------------------------------------------------
 DEFAULT KEYS                                *vim-iced-customizing-default-keys*
 
+PREFIXES~
+  - <Leader>e: Evaluating
+  - <Leader>t: Testing
+  - <Leader>s: Stdout buffer
+  - <Leader>r: Refactoring
+  - <Leader>h: Help/Document
+  - <Leader>b: Browsing
+  - <Leader>j: Jumping cursor
+
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
   If {v:true}, apply following mappings.
@@ -1497,23 +1525,23 @@ g:iced_enable_default_key_mappings
   n       <Leader>rtl  <Plug>(iced_thread_last)
   n       <Leader>ref  <Plug>(iced_extract_function)
   n       <Leader>rml  <Plug>(iced_move_to_let)
+  n       K            <Plug>(iced_popup_document_open)
   n       <Leader>hb   <Plug>(iced_document_open)
   n       <Leader>hs   <Plug>(iced_source_show)
   n       <Leader>hg   <Plug>(iced_grimoire_open)
   n       <Leader>hh   <Plug>(iced_command_palette)
-  n       <Leader>br   <Plug>(iced_related_namespace)
+  n       <Leader>bn   <Plug>(iced_browse_related_namespace)
   n       <Leader>bs   <Plug>(iced_browse_spec)
   n       <Leader>bt   <Plug>(iced_browse_test_under_cursor)
-  n       <Leader>jn   <Plug>(iced_jump_to_next_sign)
-  n       <Leader>jN   <Plug>(iced_jump_to_prev_sign)
-  n       <Leader>gl   <Plug>(iced_goto_let)
-  n       <Leader>fr   <Plug>(iced_find_var_references)
-  n       <Leader>fR   <Plug>(iced_find_var_references!)
-  n       <Leader>*    <Plug>(iced_grep)
-  n       <Leader>/    :<C-u>IcedGrep<Space>
+  n       <Leader>br   <Plug>(iced_browse_references)
+  n       <Leader>bd   <Plug>(iced_browse_dependencies)
   n       <C-]>        <Plug>(iced_def_jump)
   n       <C-t>        <Plug>(iced_def_back)
-  n       K            <Plug>(iced_popup_document_open)
+  n       <Leader>jn   <Plug>(iced_jump_to_next_sign)
+  n       <Leader>jN   <Plug>(iced_jump_to_prev_sign)
+  n       <Leader>jl   <Plug>(iced_jump_to_let)
+  n       <Leader>*    <Plug>(iced_grep)
+  n       <Leader>/    :<C-u>IcedGrep<Space>
   n       ==           <Plug>(iced_format)
 
 ==============================================================================

@@ -55,10 +55,6 @@ command!          IcedStdoutBufferClose     call iced#buffer#stdout#close()
 
 command! -nargs=? IcedDefJump               call iced#nrepl#navigate#jump_to_def(<q-args>)
 command!          IcedDefBack               call iced#nrepl#navigate#jump_back()
-command! -nargs=?
-      \ IcedFindVarReferences call iced#nrepl#navigate#find_var_references(<q-args>)
-command! -nargs=?
-      \ IcedFindVarDependencies call iced#nrepl#navigate#find_var_dependencies(<q-args>)
 
 command! -nargs=? IcedDocumentOpen          call iced#nrepl#document#open(<q-args>)
 command! -nargs=? IcedPopupDocumentOpen     call iced#nrepl#document#popup_open(<q-args>)
@@ -74,12 +70,14 @@ command!          IcedFormat                call iced#format#form()
 command!          IcedToggleSrcAndTest      call iced#nrepl#navigate#toggle_src_and_test()
 command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
 
-command!          IcedRelatedNamespace      call iced#nrepl#navigate#related_ns()
-command!          IcedBrowseSpec            call iced#nrepl#spec#list()
-command!          IcedBrowseTestUnderCursor call iced#nrepl#navigate#test()
-command!          IcedClearCtrlpCache       call ctrlp#iced#cache#clear()
+command!          IcedBrowseRelatedNamespace call iced#nrepl#navigate#related_ns()
+command!          IcedBrowseSpec             call iced#nrepl#spec#list()
+command!          IcedBrowseTestUnderCursor  call iced#nrepl#navigate#test()
 command!          IcedBrowseReferences       call iced#nrepl#navigate#browse_references()
 command!          IcedBrowseDependencies     call iced#nrepl#navigate#browse_dependencies()
+command! -nargs=? IcedBrowseVarReferences    call iced#nrepl#navigate#browse_var_references(<q-args>)
+command! -nargs=? IcedBrowseVarDependencies  call iced#nrepl#navigate#browse_var_dependencies(<q-args>)
+command!          IcedClearCtrlpCache        call ctrlp#iced#cache#clear()
 
 command!          IcedCleanNs               call iced#nrepl#refactor#clean_ns()
 command! -nargs=? IcedAddMissing            call iced#nrepl#refactor#add_missing_ns(<q-args>)
@@ -99,8 +97,7 @@ command!          IcedLintToggle            call iced#lint#toggle()
 
 command!          IcedJumpToNextSign        call iced#sign#jump_to_next()
 command!          IcedJumpToPrevSign        call iced#sign#jump_to_prev()
-
-command!          IcedGotoLet               call iced#let#goto()
+command!          IcedJumpToLet             call iced#let#jump_to_let()
 
 "" }}}
 
@@ -143,8 +140,6 @@ nnoremap <silent> <Plug>(iced_stdout_buffer_close)      :<C-u>IcedStdoutBufferCl
 
 nnoremap <silent> <Plug>(iced_def_jump)                 :<C-u>IcedDefJump<CR>
 nnoremap <silent> <Plug>(iced_def_back)                 :<C-u>IcedDefBack<CR>
-nnoremap <silent> <Plug>(iced_find_var_references)      :<C-u>IcedFindVarReferences<CR>
-nnoremap <silent> <Plug>(iced_find_var_dependencies)    :<C-u>IcedFindVarDependencies<CR>
 
 nnoremap <silent> <Plug>(iced_document_open)            :<C-u>IcedDocumentOpen<CR>
 nnoremap <silent> <Plug>(iced_popup_document_open)      :<C-u>IcedPopupDocumentOpen<CR>
@@ -160,9 +155,13 @@ nnoremap <silent> <Plug>(iced_format)                   :<C-u>IcedFormat<CR>
 nnoremap <silent> <Plug>(iced_toggle_src_and_test)      :<C-u>IcedToggleSrcAndTest<CR>
 nnoremap <silent> <Plug>(iced_grep)                     :<C-u>IcedGrep<CR>
 
-nnoremap <silent> <Plug>(iced_related_namespace)        :<C-u>IcedRelatedNamespace<CR>
+nnoremap <silent> <Plug>(iced_browse_related_namespace) :<C-u>IcedBrowseRelatedNamespace<CR>
 nnoremap <silent> <Plug>(iced_browse_spec)              :<C-u>IcedBrowseSpec<CR>
 nnoremap <silent> <Plug>(iced_browse_test_under_cursor) :<C-u>IcedBrowseTestUnderCursor<CR>
+nnoremap <silent> <Plug>(iced_browse_references)        :<C-u>IcedBrowseReferences<CR>
+nnoremap <silent> <Plug>(iced_browse_dependencies)      :<C-u>IcedBrowseDependencies<CR>
+nnoremap <silent> <Plug>(iced_browse_var_references)    :<C-u>IcedBrowseVarReferences<CR>
+nnoremap <silent> <Plug>(iced_browse_var_dependencies)  :<C-u>IcedBrowseVarDependencies<CR>
 nnoremap <silent> <Plug>(iced_clear_ctrlp_cache)        :<C-u>IcedClearCtrlpCache<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)                 :<C-u>IcedCleanNs<CR>
@@ -183,7 +182,7 @@ nnoremap <silent> <Plug>(iced_lint_toggle)              :<C-u>IcedLintToggle<CR>
 
 nnoremap <silent> <Plug>(iced_jump_to_next_sign)        :<C-u>IcedJumpToNextSign<CR>
 nnoremap <silent> <Plug>(iced_jump_to_prev_sign)        :<C-u>IcedJumpToPrevSign<CR>
-nnoremap <silent> <Plug>(iced_goto_let)                 :<C-u>IcedGotoLet<CR>
+nnoremap <silent> <Plug>(iced_jump_to_let)              :<C-u>IcedJumpToLet<CR>
 "" }}}
 
 "" Auto commands {{{
@@ -240,6 +239,8 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>' <Plug>(iced_connect)
   endif
 
+  "" Evaluating (<Leader>e)
+  "" ------------------------------------------------------------------------
   if !hasmapto('<Plug>(iced_interrupt)')
     silent! nmap <buffer> <Leader>eq <Plug>(iced_interrupt)
   endif
@@ -290,6 +291,8 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>em <Plug>(iced_macroexpand_1_outer_list)
   endif
 
+  "" Testing (<Leader>t)
+  "" ------------------------------------------------------------------------
   if !hasmapto('<Plug>(iced_test_under_cursor)')
     silent! nmap <buffer> <Leader>tt <Plug>(iced_test_under_cursor)
   endif
@@ -318,6 +321,8 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>tr <Plug>(iced_test_redo)
   endif
 
+  "" Stdout buffer (<Leader>s)
+  "" ------------------------------------------------------------------------
   if !hasmapto('<Plug>(iced_stdout_buffer_open)')
     silent! nmap <buffer> <Leader>ss <Plug>(iced_stdout_buffer_open)
   endif
@@ -330,22 +335,8 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>sq <Plug>(iced_stdout_buffer_close)
   endif
 
-  if !hasmapto('<Plug>(iced_def_jump)')
-    silent! nmap <buffer> <C-]> <Plug>(iced_def_jump)
-  endif
-
-  if !hasmapto('<Plug>(iced_def_back)')
-    silent! nmap <buffer> <C-t> <Plug>(iced_def_back)
-  endif
-
-  if !hasmapto('<Plug>(iced_find_var_references)')
-    silent! nmap <buffer> <Leader>fr <Plug>(iced_find_var_references)
-  endif
-
-  if !hasmapto('<Plug>(iced_find_var_dependencies)')
-    silent! nmap <buffer> <Leader>fd <Plug>(iced_find_var_dependencies)
-  endif
-
+  "" Refactoring (<Leader>r)
+  "" ------------------------------------------------------------------------
   if !hasmapto('<Plug>(iced_clean_ns)')
     silent! nmap <buffer> <Leader>rcn <Plug>(iced_clean_ns)
   endif
@@ -374,21 +365,14 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>rml <Plug>(iced_move_to_let)
   endif
 
-  if !hasmapto('<Plug>(iced_format)')
-    silent! nmap <buffer> == <Plug>(iced_format)
-  endif
-
-  if !hasmapto('<Plug>(iced_grep)')
-    silent! nmap <buffer> <Leader>* <Plug>(iced_grep)
-    silent! nmap <buffer> <Leader>/ :<C-u>IcedGrep<Space>
+  "" Help/Document (<Leader>h)
+  "" ------------------------------------------------------------------------
+  if !hasmapto('<Plug>(iced_popup_document_open)')
+    silent! nmap <buffer> K <Plug>(iced_popup_document_open)
   endif
 
   if !hasmapto('<Plug>(iced_document_open)')
     silent! nmap <buffer> <Leader>hb <Plug>(iced_document_open)
-  endif
-
-  if !hasmapto('<Plug>(iced_popup_document_open)')
-    silent! nmap <buffer> K <Plug>(iced_popup_document_open)
   endif
 
   if !hasmapto('<Plug>(iced_document_close)')
@@ -407,8 +391,10 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>hh <Plug>(iced_command_palette)
   endif
 
-  if !hasmapto('<Plug>(iced_related_namespace)')
-    silent! nmap <buffer> <Leader>br <Plug>(iced_related_namespace)
+  "" Browsing (<Leader>b)
+  "" ------------------------------------------------------------------------
+  if !hasmapto('<Plug>(iced_browse_related_namespace)')
+    silent! nmap <buffer> <Leader>bn <Plug>(iced_browse_related_namespace)
   endif
 
   if !hasmapto('<Plug>(iced_browse_spec)')
@@ -419,6 +405,24 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>bt <Plug>(iced_browse_test_under_cursor)
   endif
 
+  if !hasmapto('<Plug>(iced_browse_references)')
+    silent! nmap <buffer> <Leader>br <Plug>(iced_browse_references)
+  endif
+
+  if !hasmapto('<Plug>(iced_browse_dependencies)')
+    silent! nmap <buffer> <Leader>bd <Plug>(iced_browse_dependencies)
+  endif
+
+  "" Jumping cursor (<Leader>j)
+  "" ------------------------------------------------------------------------
+  if !hasmapto('<Plug>(iced_def_jump)')
+    silent! nmap <buffer> <C-]> <Plug>(iced_def_jump)
+  endif
+
+  if !hasmapto('<Plug>(iced_def_back)')
+    silent! nmap <buffer> <C-t> <Plug>(iced_def_back)
+  endif
+
   if !hasmapto('<Plug>(iced_jump_to_next_sign)')
     silent! nmap <buffer> <Leader>jn <Plug>(iced_jump_to_next_sign)
   endif
@@ -427,8 +431,19 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>jN <Plug>(iced_jump_to_prev_sign)
   endif
 
-  if !hasmapto('<Plug>(iced_goto_let)')
-    silent! nmap <buffer> <Leader>gl <Plug>(iced_goto_let)
+  if !hasmapto('<Plug>(iced_jump_to_let)')
+    silent! nmap <buffer> <Leader>jl <Plug>(iced_jump_to_let)
+  endif
+
+  "" Misc
+  "" ------------------------------------------------------------------------
+  if !hasmapto('<Plug>(iced_format)')
+    silent! nmap <buffer> == <Plug>(iced_format)
+  endif
+
+  if !hasmapto('<Plug>(iced_grep)')
+    silent! nmap <buffer> <Leader>* <Plug>(iced_grep)
+    silent! nmap <buffer> <Leader>/ :<C-u>IcedGrep<Space>
   endif
 endfunction
 
