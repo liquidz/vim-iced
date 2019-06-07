@@ -78,6 +78,8 @@ command!          IcedRelatedNamespace      call iced#nrepl#navigate#related_ns(
 command!          IcedBrowseSpec            call iced#nrepl#spec#list()
 command!          IcedBrowseTestUnderCursor call iced#nrepl#navigate#test()
 command!          IcedClearCtrlpCache       call ctrlp#iced#cache#clear()
+command!          IcedBrowseReferences       call iced#nrepl#navigate#browse_references()
+command!          IcedBrowseDependencies     call iced#nrepl#navigate#browse_dependencies()
 
 command!          IcedCleanNs               call iced#nrepl#refactor#clean_ns()
 command! -nargs=? IcedAddMissing            call iced#nrepl#refactor#add_missing_ns(<q-args>)

@@ -163,6 +163,8 @@ function! s:set_xref_resp_to_quickfix(key, resp) abort
           \ 'text': printf('%s: %s', ref['name'], ref['doc']),
           \ 'lnum': ref['line']})
   endfor
+  if empty(list) | return iced#message#info('not_found') | endif
+
   call iced#di#get('quickfix').setlist(list, 'r')
   call iced#di#get('ex_cmd').silent_exe(':cwindow')
 endfunction
@@ -175,6 +177,18 @@ function! s:got_var_info(resp, callback) abort
     return iced#message#error('not_found')
   endif
   call a:callback(a:resp['ns'], a:resp['name'])
+endfunction
+
+function! iced#nrepl#navigate#browse_references() abort
+  call iced#nrepl#var#extract_by_current_top_list({res ->
+        \ iced#nrepl#op#cider#fn_refs(res.ns, res.var, s:fn_refs_callback)
+        \ })
+endfunction
+
+function! iced#nrepl#navigate#browse_dependencies() abort
+  call iced#nrepl#var#extract_by_current_top_list({res ->
+        \ iced#nrepl#op#cider#fn_deps(res.ns, res.var, s:fn_deps_callback)
+        \ })
 endfunction
 
 function! iced#nrepl#navigate#browse_var_references(symbol) abort
