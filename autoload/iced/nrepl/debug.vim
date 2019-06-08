@@ -61,7 +61,7 @@ function! s:move_cursor_and_set_highlight(resp) abort
   let ncol = max([a:resp['column'], 1])
 
   if expand('%:p') !=# a:resp['file']
-    silent exe printf(':edit %s', a:resp['file'])
+    call iced#di#get('ex_cmd').silent_exe(printf(':edit %s', a:resp['file']))
   endif
   call cursor(nrow, ncol)
   call s:apply_coordination(a:resp['coor'])
@@ -138,7 +138,7 @@ function! iced#nrepl#debug#start(resp) abort
   endif
 
   redraw
-  let in = trim(input(prompt . "\n: "))
+  let in = trim(iced#di#get('io').input(prompt . "\n: "))
   if type(input_type) == v:t_dict
     let in = ':'.get(input_type, in, 'quit')
   endif
