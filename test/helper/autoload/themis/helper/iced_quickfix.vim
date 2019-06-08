@@ -7,6 +7,10 @@ function! s:helper.setlist(list, action) abort
   let self.last_args = {'list': a:list, 'action': a:action}
 endfunction
 
+function! s:helper.setloclist(nr, list, action) abort
+  let self.last_args = {'nr': a:nr, 'loclist': a:list, 'action': a:action}
+endfunction
+
 function! s:helper.register_test_builder() abort
   call iced#di#register('quickfix', {_ -> self})
 endfunction
