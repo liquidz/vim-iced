@@ -11,6 +11,22 @@ let g:iced#related_ns#tail_patterns =
 
 let g:iced#var_references#cache_dir = get(g:, 'iced#var_references#cache_dir', '/tmp')
 
+function! s:add_curpos_to_tagstack() abort
+  let pos = getcurpos()
+  let pos[0] = bufnr('%')
+  call s:L.push(s:tagstack, pos)
+endfunction
+
+function! s:normalize_path(path) abort
+  let path = substitute(a:path, '^file:', '', '')
+  " NOTE: jar:file:/path/to/jarfile.jar!/path/to/file.clj
+  if stridx(path, 'jar:') == 0
+    let path = substitute(path, '^jar:file:', 'zipfile:', '')
+    let path = substitute(path, '!/', '::', '')
+  endif
+  return path
+endfunction
+
 function! s:apply_mode_to_file(mode, file) abort
   let cmd = ':edit'
   if a:mode ==# 'v'
@@ -34,7 +50,8 @@ endfunction " }}}
 " s:open_var {{{
 function! s:open_var_info(mode, resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('not_found') | endif
-  let path = substitute(a:resp['file'], '^file:', '', '')
+  let path = s:normalize_path(a:resp['file'])
+
   if expand('%:p') !=# path
     call s:apply_mode_to_file(a:mode, path)
   endif
@@ -46,10 +63,17 @@ function! s:open_var_info(mode, resp) abort
   redraw!
 endfunction
 
-function! s:open_var(mode, var_name) abort
-  let arr = split(a:var_name, '/')
-  if len(arr) != 2 | return iced#message#error('invalid_format', a:var_name) | endif
-  call iced#nrepl#op#cider#info(arr[0], arr[1], {resp -> s:open_var_info(a:mode, resp)})
+function! s:open_var(mode, candidate) abort
+  let var_name = split(a:candidate, '\t')[0]
+  let arr = split(var_name, '/')
+  if len(arr) != 2 | return iced#message#error('invalid_format', var_name) | endif
+
+  let ns = arr[0]
+  let symbol = arr[1]
+
+  call s:add_curpos_to_tagstack()
+  call iced#nrepl#ns#require(ns, {_ ->
+       \ iced#nrepl#op#cider#info(ns, symbol, {resp -> s:open_var_info(a:mode, resp)})})
 endfunction " }}}
 
 " iced#nrepl#navigate#cycle_ns {{{
@@ -95,15 +119,9 @@ endfunction " }}}
 " iced#nrepl#navigate#jump_to_def {{{
 function! s:jump(resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('jump_not_found') | endif
-  let path = substitute(a:resp['file'], '^file:', '', '')
+  let path = s:normalize_path(a:resp['file'])
   let line = a:resp['line']
   let column = get(a:resp, 'column', '0')
-
-  " NOTE: jar:file:/path/to/jarfile.jar!/path/to/file.clj
-  if stridx(path, 'jar:') == 0
-    let path = substitute(path, '^jar:file:', 'zipfile:', '')
-    let path = substitute(path, '!/', '::', '')
-  endif
 
   if expand('%:p') !=# path
     call iced#di#get('ex_cmd').exe(printf(':edit %s', path))
@@ -115,9 +133,7 @@ function! s:jump(resp) abort
 endfunction
 
 function! iced#nrepl#navigate#jump_to_def(symbol) abort
-  let pos = getcurpos()
-  let pos[0] = bufnr('%')
-  call s:L.push(s:tagstack, pos)
+  call s:add_curpos_to_tagstack()
   call iced#nrepl#var#get(a:symbol, funcref('s:jump'))
 endfunction " }}}
 
@@ -156,17 +172,17 @@ function! s:set_xref_resp_to_quickfix(key, resp) abort
     return iced#message#error('not_found')
   endif
 
-  let list = []
-  for ref in a:resp[a:key]
-    call add(list, {
-          \ 'filename': ref['file'],
-          \ 'text': printf('%s: %s', ref['name'], ref['doc']),
-          \ 'lnum': ref['line']})
-  endfor
-  if empty(list) | return iced#message#info('not_found') | endif
+  let xrefs = copy(a:resp[a:key])
+  call filter(xrefs, {_, v -> filereadable(v['file'])})
+  call map(xrefs, {_, v -> {
+        \ 'filename': v['file'],
+        \ 'text': printf('%s: %s', v['name'], v['doc']),
+        \ 'lnum': v['line'],
+        \ }})
+  if empty(xrefs) | return iced#message#info('not_found') | endif
 
-  call iced#di#get('quickfix').setlist(list, 'r')
-  call iced#di#get('ex_cmd').silent_exe(':cwindow')
+  call iced#di#get('quickfix').setloclist(win_getid(), xrefs, 'r')
+  call iced#di#get('ex_cmd').silent_exe(':lwindow')
 endfunction
 
 let s:fn_refs_callback = function('s:set_xref_resp_to_quickfix', ['fn-refs'])

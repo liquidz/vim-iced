@@ -161,8 +161,8 @@ function! s:browse_var_references_relay(msg) abort
     return {'status': ['done'], 'ns': 'foo', 'name': 'bar'}
   elseif op ==# 'fn-refs'
     return {'status': ['done'], 'fn-refs': [
-          \ {'file': '/path/to/foo.txt', 'name': 'hello', 'doc': 'doc hello', 'line': 12},
-          \ {'file': '/path/to/bar.txt', 'name': 'world', 'doc': 'doc world', 'line': 34},
+          \ {'file': s:temp_file, 'name': 'hello', 'doc': 'doc hello', 'line': 12},
+          \ {'file': 'non_existing.txt', 'name': 'world', 'doc': 'doc world', 'line': 34},
           \ ]}
   else
     return {'status': ['done']}
@@ -173,10 +173,10 @@ function! s:suite.browse_var_references_test() abort
   call s:setup({'channel': funcref('s:browse_var_references_relay')})
 
   call iced#nrepl#navigate#browse_var_references('foo/bar')
-  let qf_list = s:qf.get_last_args()['list']
-  call s:assert.equals(qf_list, [
-        \ {'filename': '/path/to/foo.txt', 'lnum': 12, 'text': 'hello: doc hello'},
-        \ {'filename': '/path/to/bar.txt', 'lnum': 34, 'text': 'world: doc world'}])
+  let loc_list = s:qf.get_last_args()['loclist']
+  call s:assert.equals(loc_list, [
+        \ {'filename': s:temp_file, 'lnum': 12, 'text': 'hello: doc hello'},
+        \ ])
 
   call s:teardown()
 endfunction
@@ -187,8 +187,8 @@ function! s:browse_var_dependencies_relay(msg) abort
     return {'status': ['done'], 'ns': 'foo', 'name': 'bar'}
   elseif op ==# 'fn-deps'
     return {'status': ['done'], 'fn-deps': [
-          \ {'file': '/path/to/bar.txt', 'name': 'world', 'doc': 'doc world', 'line': 56},
-          \ {'file': '/path/to/baz.txt', 'name': 'neko', 'doc': 'doc neko', 'line': 78},
+          \ {'file': s:temp_file, 'name': 'world', 'doc': 'doc world', 'line': 56},
+          \ {'file': 'non_existing.txt', 'name': 'neko', 'doc': 'doc neko', 'line': 78},
           \ ]}
   else
     return {'status': ['done']}
@@ -199,10 +199,9 @@ function! s:suite.browse_var_dependencies_test() abort
   call s:setup({'channel': funcref('s:browse_var_dependencies_relay')})
 
   call iced#nrepl#navigate#browse_var_dependencies('foo/bar')
-  let qf_list = s:qf.get_last_args()['list']
+  let qf_list = s:qf.get_last_args()['loclist']
   call s:assert.equals(qf_list, [
-        \ {'filename': '/path/to/bar.txt', 'lnum': 56, 'text': 'world: doc world'},
-        \ {'filename': '/path/to/baz.txt', 'lnum': 78, 'text': 'neko: doc neko'}])
+        \ {'filename': s:temp_file, 'lnum': 56, 'text': 'world: doc world'}])
 
   call s:teardown()
 endfunction

@@ -660,22 +660,22 @@ COMMANDS                                                    *vim-iced-commands*
                                                         *:IcedBrowseReferences*
 :IcedBrowseReferences
   Browse positions referencing the form under cursor.
-  Results are set to |quickfix|.
+  Results are set to |location-list|.
 
                                                       *:IcedBrowseDependencies*
 :IcedBrowseDependencies
   Browse positions depending the form under cursor.
-  Results are set to |quickfix|.
+  Results are set to |location-list|.
 
                                                      *:IcedBrowseVarReferences*
 :IcedBrowseVarReferences
   Browse positions referencing the var under cursor.
-  Results are set to |quickfix|.
+  Results are set to |location-list|.
 
                                                    *:IcedBrowseVarDependencies*
 :IcedBrowseVarDependencies
   Browse positions depending the var under cursor.
-  Results are set to |quickfix|.
+  Results are set to |location-list|.
 
                                                             *:IcedDocumentOpen*
 :IcedDocumentOpen [{symbol}]
