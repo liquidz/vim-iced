@@ -12,7 +12,7 @@ function! s:vim(container) abort
           \ }
 
     if get(opt, 'auto_clear', v:false)
-      let popup_opts['time'] = get(opt, 'clear_time', 3000)
+      let popup_opts['moved'] = 'any'
     endif
 
     call self.container.get('popup').open([a:text], popup_opts)
