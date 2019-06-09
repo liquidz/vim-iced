@@ -1,7 +1,7 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:helper = {}
+let s:helper = {'last_args': {}}
 
 function! s:helper.exe(str) abort
   let self.last_args = {'exe': a:str}

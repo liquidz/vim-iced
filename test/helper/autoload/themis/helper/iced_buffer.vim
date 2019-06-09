@@ -1,7 +1,7 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:helper = {}
+let s:helper = {'started': v:false}
 
 function! s:helper.start_dummy(lines) abort
   vnew

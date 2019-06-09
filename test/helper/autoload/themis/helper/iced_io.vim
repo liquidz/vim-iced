@@ -17,12 +17,8 @@ function! s:helper.register_test_builder(opt) abort
   call iced#di#register('io', {_ -> s:build(a:opt)})
 endfunction
 
-" function! s:helper.get_last_args() abort
-"   return self.last_args
-" endfunction
-
 function! themis#helper#iced_io#new(runner) abort
-  return  deepcopy(s:helper)
+  return deepcopy(s:helper)
 endfunction
 
 let &cpoptions = s:save_cpo
