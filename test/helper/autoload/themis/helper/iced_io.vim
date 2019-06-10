@@ -1,20 +1,28 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:helper = {}
+let s:helper = {
+      \ 'value': {},
+      \ 'last_args': {},
+      \ }
 
-function! s:build(opt) abort
-  let io = {'value': a:opt}
-
-  function! io.input(prompt) abort
-    return self.value.input
-  endfunction
-
-  return io
+function! s:helper.input(prompt) abort
+  let self.last_args = {'input': {'prompt': a:prompt}}
+  return get(self.value, 'input', '')
 endfunction
 
-function! s:helper.register_test_builder(opt) abort
-  call iced#di#register('io', {_ -> s:build(a:opt)})
+function! s:helper.echomsg(hl, text) abort
+  let self.last_args = {'echomsg': {'hl': a:hl, 'text': a:text}}
+  return ''
+endfunction
+
+function! s:helper.get_last_args() abort
+  return self.last_args
+endfunction
+
+function! s:helper.register_test_builder(...) abort
+  let self.value = get(a:, 1, {})
+  call iced#di#register('io', {_ -> self})
 endfunction
 
 function! themis#helper#iced_io#new(runner) abort
