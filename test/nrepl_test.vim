@@ -6,6 +6,7 @@ let s:ch = themis#helper('iced_channel')
 let s:qf = themis#helper('iced_quickfix')
 let s:ex = themis#helper('iced_ex_cmd')
 let s:holder = themis#helper('iced_holder')
+let s:io = themis#helper('iced_io')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl/test.vim')
 
 let s:temp_foo = tempname()
@@ -255,6 +256,203 @@ function! s:suite.under_cursor_with_non_test_var_and_non_test_ns_test() abort
 
   call s:buf.stop_dummy()
   call s:teardown()
+endfunction
+
+function! s:suite.ns_test() abort
+  call s:setup()
+
+  let r = s:build_under_cursor_relay()
+  let opts = {'test-results': [{
+        \ 'context': 'dummy context',
+        \ 'ns': 'foo.bar-test',
+        \ 'file': s:temp_foo,
+        \ 'expected': "true\n",
+        \ 'actual': "false\n",
+        \ 'line': 1,
+        \ 'index': 0, 'message': '',
+        \ 'type': 'fail',
+        \ 'var': 'dummy-var'}],
+        \ }
+
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
+  call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
+
+  call iced#nrepl#test#ns()
+
+  call s:assert.equals(s:qf.get_last_args()['list'], [{
+        \ 'lnum': 1,
+        \ 'actual': 'false',
+        \ 'expected': 'true',
+        \ 'type': 'E',
+        \ 'text': 'dummy-var: dummy context',
+        \ 'filename': s:temp_foo,
+        \ }])
+  call s:assert.equals(r.get_last_var_query(), {
+        \ 'ns-query': {'exactly': ['foo.bar-test']},
+        \ })
+
+  call s:buf.stop_dummy()
+  call s:teardown()
+endfunction
+
+function! s:suite.ns_with_non_test_ns_test() abort
+  call s:setup({'no_temp_files': v:true})
+
+  let r = s:build_under_cursor_relay()
+  let opts = {
+        \ 'test-results': [{'context': 'dummy context',
+        \                   'ns': 'foo.bar-test',
+        \                   'index': 0, 'message': '',
+        \                   'type': 'pass',
+        \                   'var': 'dummy-var'}],
+        \ 'ns-vars-with-meta': {},
+        \ }
+
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
+  "" NOTE: the ns name does not end with '-test'
+  call s:buf.start_dummy(['(ns bar.baz)', '(some codes|)'])
+
+  call iced#nrepl#test#ns()
+
+  call s:assert.equals(s:qf.get_last_args()['list'], [])
+  call s:assert.equals(r.get_last_var_query(), {
+        \ 'ns-query': {'exactly': ['bar.baz-test']}})
+
+  call s:buf.stop_dummy()
+  call s:teardown()
+endfunction
+
+function! s:suite.all_test() abort
+  call s:setup()
+  let r = s:build_under_cursor_relay()
+  let opts = {'test-results': [{
+        \ 'context': 'dummy context',
+        \ 'ns': 'dummy-ns',
+        \ 'file': s:temp_foo,
+        \ 'expected': "true\n",
+        \ 'actual': "false\n",
+        \ 'line': 1,
+        \ 'index': 0, 'message': '',
+        \ 'type': 'fail',
+        \ 'var': 'dummy-var'}]}
+
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
+  call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
+
+  call iced#nrepl#test#all()
+
+  call s:assert.equals(s:qf.get_last_args()['list'], [{
+        \ 'lnum': 1,
+        \ 'actual': 'false',
+        \ 'expected': 'true',
+        \ 'type': 'E',
+        \ 'text': 'dummy-var: dummy context',
+        \ 'filename': s:temp_foo,
+        \ }])
+  call s:assert.equals(r.get_last_var_query(), {
+        \ 'ns-query': {'load-project-ns?': 'true', 'project?': 'true'}})
+
+  call s:buf.stop_dummy()
+  call s:teardown()
+endfunction
+
+function! s:suite.redo_test() abort
+  call s:setup()
+
+  let test = {'redo_msg': {}}
+  function! test.relay(msg) abort
+    if a:msg.op ==# 'retest'
+      let self.redo_msg = a:msg
+      return {'status': ['done'], 'results': {
+            \ 'foo.bar-test': {
+            \   'baz-test': [{'context': 'dummy context',
+            \                 'ns': 'dummy-ns',
+            \                 'file': s:temp_foo,
+            \                 'expected': "true\n",
+            \                 'actual': "false\n",
+            \                 'line': 1,
+            \                 'index': 0, 'message': '',
+            \                 'type': 'fail',
+            \                 'var': 'dummy-var'}],
+            \ }}}
+    elseif a:msg.op ==# 'ns-path'
+      return {'status': ['done'], 'path': s:temp_foo}
+    endif
+    return {'status': ['done']}
+  endfunction
+  function! test.get_redo_msg() abort
+    return self.redo_msg
+  endfunction
+
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> test.relay(v)}})
+  call iced#nrepl#set_session('clj', 'clj-session')
+  call iced#nrepl#change_current_session('clj')
+
+  call iced#nrepl#test#redo()
+
+  call s:assert.equals(s:qf.get_last_args()['list'], [{
+        \ 'lnum': 1,
+        \ 'actual': 'false',
+        \ 'expected': 'true',
+        \ 'type': 'E',
+        \ 'text': 'dummy-var: dummy context',
+        \ 'filename': s:temp_foo,
+        \ }])
+  let redo_msg = test.get_redo_msg()
+  call s:assert.equals(redo_msg['session'], 'clj-session')
+  call s:assert.equals(redo_msg['op'], 'retest')
+
+  call s:teardown()
+endfunction
+
+function! s:suite.spec_check_test() abort
+  let test = {}
+  function! test.relay(msg) abort
+    if a:msg.op ==# 'eval'
+      return {'status': ['done'], 'value': '#''foo.bar/baz'}
+    elseif a:msg.op ==# 'iced-spec-check'
+      return {'status': ['done'], 'result': 'OK', 'num-tests': a:msg['num-tests']}
+    endif
+    return {'status': ['done']}
+  endfunction
+
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
+  call s:io.register_test_builder()
+  call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
+
+  call iced#nrepl#test#spec_check(123)
+  call s:assert.equals(s:io.get_last_args(), {
+        \ 'echomsg': {'hl': 'MoreMsg', 'text': 'foo.bar/baz: Ran 123 tests. Passed.'},
+        \ })
+
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:suite.spec_check_failure_test() abort
+  let test = {}
+  function! test.relay(msg) abort
+    if a:msg.op ==# 'eval'
+      return {'status': ['done'], 'value': '#''foo.bar/baz'}
+    elseif a:msg.op ==# 'iced-spec-check'
+      return {'status': ['done'],
+            \ 'result': 'NG',
+            \ 'message': 'dummy message',
+            \ 'fail': 'dummy fail',
+            \ 'num-tests': a:msg['num-tests']}
+    endif
+    return {'status': ['done']}
+  endfunction
+
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
+  call s:io.register_test_builder()
+  call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
+
+  call iced#nrepl#test#spec_check(123)
+  call s:assert.equals(s:io.get_last_args(), {
+        \ 'echomsg': {'hl': 'ErrorMsg', 'text': 'foo.bar/baz: Ran 123 tests. Failed because ''dummy message'' with dummy fail args.'},
+        \ })
+
+  call s:buf.stop_dummy()
 endfunction
 
 " vim:fdm=marker:fdl=0
