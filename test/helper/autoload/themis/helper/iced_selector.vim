@@ -16,7 +16,7 @@ function! s:helper.get_last_config() abort
 endfunction
 
 function! themis#helper#iced_selector#new(runner) abort
-  return  deepcopy(s:helper)
+  return deepcopy(s:helper)
 endfunction
 
 let &cpoptions = s:save_cpo

@@ -3,10 +3,6 @@ set cpoptions&vim
 
 let s:helper = {'args': []}
 
-function! s:helper.register_test_builder(opt) abort
-  call iced#di#register('io', {_ -> s:build(a:opt)})
-endfunction
-
 function! s:helper.run(...) abort
   call add(self.args, a:000)
 endfunction

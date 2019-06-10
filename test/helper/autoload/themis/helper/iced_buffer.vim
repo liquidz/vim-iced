@@ -36,7 +36,7 @@ function! s:helper.stop_dummy() abort
 endfunction
 
 function! themis#helper#iced_buffer#new(runner) abort
-  return  deepcopy(s:helper)
+  return deepcopy(s:helper)
 endfunction
 
 let &cpoptions = s:save_cpo

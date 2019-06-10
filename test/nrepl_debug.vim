@@ -71,7 +71,7 @@ function! s:suite.start_test() abort
         \ 'status_value': 'open',
         \ 'relay': {msg -> test.relay(msg)}})
 
-  call iced#nrepl#set_session('clj',  'clj-session')
+  call iced#nrepl#set_session('clj', 'clj-session')
   call iced#nrepl#change_current_session('clj')
 
   call s:assert.equals(s:popup.is_opening(), v:false)

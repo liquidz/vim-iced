@@ -44,7 +44,7 @@ function! s:helper.register_test_builder() abort
 endfunction
 
 function! themis#helper#iced_popup#new(runner) abort
-  return  deepcopy(s:helper)
+  return deepcopy(s:helper)
 endfunction
 
 let &cpoptions = s:save_cpo
