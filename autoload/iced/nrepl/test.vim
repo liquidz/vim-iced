@@ -240,16 +240,14 @@ function! s:spec_check(var, resp) abort
   endif
 endfunction
 
-function! s:current_var(num_tests, resp) abort
-  if has_key(a:resp, 'err')
-    call iced#nrepl#eval#err(a:resp['err'])
-  elseif has_key(a:resp, 'value')
-    let var = a:resp['value']
-    let s:last_test = {'type': 'spec-check', 'var': var, 'num_tests': a:num_tests}
+function! s:run_spec_check_by_current_var(num_tests, var_info) abort
+  let s:last_test = {
+        \ 'type': 'spec-check',
+        \ 'var_info': a:var_info,
+        \ 'num_tests': a:num_tests}
+  let var = a:var_info['qualified_var']
 
-    let var = substitute(var, '^#''', '', '')
-    call iced#nrepl#op#iced#spec_check(var, a:num_tests, {resp -> s:spec_check(var, resp)})
-  endif
+  call iced#nrepl#op#iced#spec_check(var, a:num_tests, {resp -> s:spec_check(var, resp)})
 endfunction
 
 function! iced#nrepl#test#spec_check(...) abort
@@ -260,13 +258,8 @@ function! iced#nrepl#test#spec_check(...) abort
     let num_tests = g:iced#test#spec_num_tests
   endif
 
-  let ret = iced#paredit#get_current_top_list()
-  let code = ret['code']
-  if empty(code)
-    call iced#message#error('finding_code_error')
-  else
-    call iced#nrepl#eval(code, {resp -> s:current_var(num_tests, resp)})
-  endif
+  call iced#nrepl#var#extract_by_current_top_list({v ->
+        \ s:run_spec_check_by_current_var(num_tests, v)})
 endfunction " }}}
 
 " iced#nrepl#test#rerun_last {{{
@@ -286,8 +279,8 @@ function! iced#nrepl#test#rerun_last() abort
     call iced#nrepl#test#redo()
   elseif test_type ==# 'spec-check'
     let num_tests = s:last_test['num_tests']
-    let var = s:last_test['var']
-    call s:current_var(num_tests, {'value': var})
+    let var_info = s:last_test['var_info']
+    call s:run_spec_check_by_current_var(num_tests, var_info)
   endif
 endfunction " }}}
 
