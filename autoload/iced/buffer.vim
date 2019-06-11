@@ -12,18 +12,17 @@ function! s:focus_window(bufwin_num) abort
   execute a:bufwin_num . 'wincmd w'
 endfunction
 
-function! s:bufnr(bufname) abort
-  let info = get(s:info, a:bufname, {})
-  return get(info, 'bufnr', -1)
-endfunction
-
 function! iced#buffer#nr(bufname) abort
   let info = get(s:info, a:bufname, {})
   return get(info, 'bufnr', -1)
 endfunction
 
 function! s:bufwinnr(bufname) abort
-  return bufwinnr(s:bufnr(a:bufname))
+  return bufwinnr(iced#buffer#nr(a:bufname))
+endfunction
+
+function! iced#buffer#focus(bufname) abort
+  call s:focus_window(s:bufwinnr(a:bufname))
 endfunction
 
 function! iced#buffer#is_initialized(bufname) abort
@@ -40,7 +39,7 @@ endfunction
 
 function! iced#buffer#init(bufname, ...) abort
   if iced#buffer#is_initialized(a:bufname)
-    return
+    return s:info[a:bufname]
   endif
 
   let manager = s:buffer_manager()
@@ -48,9 +47,10 @@ function! iced#buffer#init(bufname, ...) abort
 
   let InitFn = get(a:, 1, '')
   if type(InitFn) == v:t_func
-    call InitFn(s:bufnr(a:bufname))
+    call InitFn(iced#buffer#nr(a:bufname))
   endif
   silent execute ':q'
+  return s:info[a:bufname]
 endfunction
 
 function! iced#buffer#is_visible(bufname) abort
@@ -66,13 +66,13 @@ function! s:apply_option(opt) abort
 endfunction
 
 function! iced#buffer#set_var(bufname, k, v) abort
-  let nr = s:bufnr(a:bufname)
+  let nr = iced#buffer#nr(a:bufname)
   if nr < 0 | return | endif
   silent call setbufvar(nr, a:k, a:v)
 endfunction
 
 function! iced#buffer#open(bufname, ...) abort
-  let nr = s:bufnr(a:bufname)
+  let nr = iced#buffer#nr(a:bufname)
   if nr < 0 | return | endif
   let current_window = winnr()
   let opt = get(a:, 1, {})
@@ -93,7 +93,7 @@ function! iced#buffer#open(bufname, ...) abort
 endfunction
 
 function! iced#buffer#append(bufname, s, ...) abort
-  let nr = s:bufnr(a:bufname)
+  let nr = iced#buffer#nr(a:bufname)
   if nr < 0 | return | endif
   let opt = get(a:, 1, {})
 
@@ -115,7 +115,7 @@ function! iced#buffer#append(bufname, s, ...) abort
 endfunction
 
 function! iced#buffer#set_contents(bufname, s) abort
-  let nr = s:bufnr(a:bufname)
+  let nr = iced#buffer#nr(a:bufname)
 
   silent call iced#compat#deletebufline(nr, 1, '$')
   for line in split(a:s, '\r\?\n')
@@ -125,7 +125,7 @@ function! iced#buffer#set_contents(bufname, s) abort
 endfunction
 
 function! iced#buffer#clear(bufname, ...) abort
-  let nr = s:bufnr(a:bufname)
+  let nr = iced#buffer#nr(a:bufname)
   silent call iced#compat#deletebufline(nr, 1, '$')
   let InitFn = get(a:, 1, '')
   if type(InitFn) == v:t_func
