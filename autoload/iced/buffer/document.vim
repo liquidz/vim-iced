@@ -44,5 +44,9 @@ function! iced#buffer#document#close() abort
   call iced#buffer#close(s:bufname)
 endfunction
 
+function! iced#buffer#document#focus() abort
+  call iced#buffer#focus(s:bufname)
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
