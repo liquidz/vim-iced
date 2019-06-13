@@ -118,7 +118,9 @@ function! iced#buffer#set_contents(bufname, s) abort
   let nr = iced#buffer#nr(a:bufname)
 
   silent call iced#compat#deletebufline(nr, 1, '$')
-  for line in split(a:s, '\r\?\n')
+
+  let lines = (type(a:s) == v:t_string ? split(a:s, '\r\?\n') : a:s)
+  for line in lines
     silent call iced#compat#appendbufline(nr, '$', line)
   endfor
   silent call iced#compat#deletebufline(nr, 1)
