@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:sync_resp = ''
 let s:default_timeout_ms = 3000
@@ -72,5 +72,22 @@ function! iced#nrepl#sync#eval(code, ...) abort
         \ 'session': session})
 endfunction
 
-let &cpo = s:save_cpo
+function! iced#nrepl#sync#call(fn, args, ...) abort
+  let resp = {'result': ''}
+  function! resp.callback(v) abort
+    let self.result = a:v
+  endfunction
+
+  let args = copy(a:args) + [{v -> resp.callback(v)}]
+  call call(a:fn, args)
+  if !iced#util#wait({-> empty(resp.result)}, g:iced#nrepl#sync#timeout_ms)
+    let session = get(a:, 1, iced#nrepl#current_session())
+    call iced#nrepl#interrupt(session)
+    return iced#message#error('timeout')
+  endif
+
+  return copy(resp.result)
+endfunction
+
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
