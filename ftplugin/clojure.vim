@@ -59,6 +59,9 @@ command!          IcedDefBack               call iced#nrepl#navigate#jump_back()
 command! -nargs=? IcedDocumentOpen          call iced#nrepl#document#open(<q-args>)
 command! -nargs=? IcedPopupDocumentOpen     call iced#nrepl#document#popup_open(<q-args>)
 command!          IcedFormDocument          call iced#nrepl#document#current_form()
+command! -nargs=? IcedUseCaseOpen           call iced#nrepl#document#usecase(<q-args>)
+command!          IcedNextUseCase           call iced#nrepl#document#next_usecase()
+command!          IcedPrevUseCase           call iced#nrepl#document#prev_usecase()
 command!          IcedDocumentClose         call iced#buffer#document#close()
 command! -nargs=? IcedSourceShow            call iced#nrepl#source#show(<q-args>)
 command! -nargs=? IcedGrimoireOpen          call iced#grimoire#open(<q-args>)
@@ -144,6 +147,9 @@ nnoremap <silent> <Plug>(iced_def_back)                 :<C-u>IcedDefBack<CR>
 nnoremap <silent> <Plug>(iced_document_open)            :<C-u>IcedDocumentOpen<CR>
 nnoremap <silent> <Plug>(iced_popup_document_open)      :<C-u>IcedPopupDocumentOpen<CR>
 nnoremap <silent> <Plug>(iced_form_document)            :<C-u>IcedFormDocument<CR>
+nnoremap <silent> <Plug>(iced_use_case_open)            :<C-u>IcedUseCaseOpen<CR>
+nnoremap <silent> <Plug>(iced_next_use_case)            :<C-u>IcedNextUseCase<CR>
+nnoremap <silent> <Plug>(iced_prev_use_case)            :<C-u>IcedPrevUseCase<CR>
 nnoremap <silent> <Plug>(iced_document_close)           :<C-u>IcedDocumentClose<CR>
 nnoremap <silent> <Plug>(iced_source_show)              :<C-u>IcedSourceShow<CR>
 nnoremap <silent> <Plug>(iced_grimoire_open)            :<C-u>IcedGrimoireOpen<CR>
@@ -373,6 +379,18 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_document_open)')
     silent! nmap <buffer> <Leader>hb <Plug>(iced_document_open)
+  endif
+
+  if !hasmapto('<Plug>(iced_use_case_open)')
+    silent! nmap <buffer> <Leader>hu <Plug>(iced_use_case_open)
+  endif
+
+  if !hasmapto('<Plug>(iced_next_use_case)')
+    silent! nmap <buffer> <Leader>hn <Plug>(iced_next_use_case)
+  endif
+
+  if !hasmapto('<Plug>(iced_prev_use_case)')
+    silent! nmap <buffer> <Leader>hN <Plug>(iced_prev_use_case)
   endif
 
   if !hasmapto('<Plug>(iced_document_close)')

@@ -69,6 +69,8 @@
   'argument_missing':   'Argument missing: %s',
   'test_summary':       '%s: Ran %d assertions, in %d test functions. %d failures, %d errors.',
   'no_test_summary':    'No tests to run.',
+  'no_last_use_cases':  'No last use cases.',
+  'no_more_use_cases':  'No more use cases.',
   'hit_var_reference_cache': 'Hit var references cache.',
   'finding_var_references':  'Finding var references...',
   'var_references_found':    'Found %d references.',

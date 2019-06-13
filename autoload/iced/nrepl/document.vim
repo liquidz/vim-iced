@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
@@ -27,7 +27,7 @@ function! s:popup_context(d) abort
         \ }, a:d)
 endfunction
 
-function! s:generate_javadoc(resp) abort
+function! s:generate_javadoc(resp) abort " {{{
   let doc = []
   let title = (has_key(a:resp, 'member'))
         \ ? printf('%s/%s', a:resp['class'], a:resp['member'])
@@ -54,15 +54,9 @@ function! s:generate_javadoc(resp) abort
   endif
 
   return doc
-endfunction
+endfunction " }}}
 
-function! s:add_indent(n, s) abort
-  let spc = ''
-  for _ in range(a:n) | let spc = spc . ' ' | endfor
-  return substitute(a:s, '\r\?\n', "\n".spc, 'g')
-endfunction
-
-function! s:generate_cljdoc(resp) abort
+function! s:generate_cljdoc(resp) abort " {{{
   let doc = []
   if !has_key(a:resp, 'name') | return doc | endif
 
@@ -90,13 +84,13 @@ function! s:generate_cljdoc(resp) abort
 
       let v = specs[k]
       let formatted = iced#nrepl#spec#format(v)
-      let formatted = s:add_indent(9, formatted)
+      let formatted = iced#util#add_indent(9, formatted)
       call add(doc, printf('  %-5s  %s', k, formatted))
     endfor
   endif
 
   return doc
-endfunction
+endfunction " }}}
 
 function! s:generate_doc(resp) abort
   if !has_key(a:resp, 'status') || a:resp['status'] != ['done']
@@ -183,11 +177,13 @@ function! s:one_line_doc(resp) abort
     if empty(msg) | return | endif
 
     let popup = iced#di#get('popup')
-    if popup.is_supported() && s:enable_popup_one_line_document
+    if popup.is_supported()
+          \ && s:enable_popup_one_line_document
+          \ && get(popup.get_context(s:popup_winid), 'name', '') !=# name
       if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
 
       let popup_opts = {
-            \ 'iced_context': s:popup_context({'type': 'one-line document'}),
+            \ 'iced_context': s:popup_context({'type': 'one-line document', 'name': name}),
             \ 'line': line('.')+1,
             \ 'col': col('.'),
             \ 'filetype': 'clojure',
@@ -251,5 +247,143 @@ function! iced#nrepl#document#current_form() abort
   endtry
 endfunction
 
-let &cpo = s:save_cpo
+let s:last_usecase_info = {}
+
+function! s:show_usecase(info) abort
+  if !has_key(a:info, 'index')
+        \ || !has_key(a:info, 'refs')
+        \ || !has_key(a:info, 'ns')
+        \ || !has_key(a:info, 'symbol')
+    return iced#message#error('invalid_format', a:info)
+  endif
+
+  let index = a:info['index']
+  let ref = a:info['refs'][index]
+  let ns = a:info['ns']
+  let symbol = a:info['symbol']
+  let current_window = winnr()
+
+  " Open document buffer with ref file contents
+  let contents = readfile(ref['file'])
+  if iced#buffer#document#is_visible()
+    call iced#buffer#document#update(contents, 'text')
+  else
+    call iced#buffer#document#open(contents, 'text')
+  endif
+  call iced#buffer#document#focus()
+
+  " Detect ns alias in the ref file
+  let ref_ns = iced#nrepl#ns#name()
+  call iced#nrepl#sync#call(function('iced#nrepl#ns#require'), [ref_ns])
+  let resp = iced#nrepl#op#cider#sync#ns_aliases(ref_ns)
+  if !has_key(resp, 'ns-aliases')
+    execute current_window . 'wincmd w'
+    call iced#buffer#document#close()
+    return iced#message#info('not_found')
+  endif
+
+  let alias = keys(filter(resp['ns-aliases'], {_, v -> v ==# ns}))
+
+  " Search ref's concrete position
+  let names = [
+        \ empty(alias) ? symbol : printf('%s/%s', alias[0], symbol),
+        \ printf('%s/%s', ns, symbol),
+        \ ]
+  let pos = [0, 0]
+
+  call cursor(ref['line'], 1)
+  for name in names
+    if pos != [0, 0] | break | endif
+
+    let pos = searchpos(printf('(%s ', name))
+    if pos == [0, 0]
+      let pos = searchpos(printf("(%s\n", name))
+    endif
+    if pos == [0, 0]
+      let pos = searchpos(printf('(%s)', name))
+    endif
+  endfor
+
+  if pos == [0, 0]
+    execute current_window . 'wincmd w'
+    call iced#buffer#document#close()
+    return iced#message#info('not_found')
+  endif
+  call cursor(pos[0], pos[1])
+
+  let reg_save = @@
+  try
+    silent normal! vaby
+    let texts = join([
+          \ printf(';; Use case for %s/%s (%d/%d)', ns, symbol, index+1, len(a:info['refs'])),
+          \ printf(';; %s:%d:%d', ref['file'], pos[0], pos[1]),
+          \ iced#util#del_indent(pos[1]-1, @@),
+          \ ], "\n")
+    call iced#buffer#document#update(texts, 'clojure')
+  finally
+    let @@ = reg_save
+    execute current_window . 'wincmd w'
+  endtry
+endfunction
+
+function! s:find_usecase(var_resp) abort
+  if !has_key(a:var_resp, 'ns') || !has_key(a:var_resp, 'name')
+    return iced#message#error('not_found')
+  endif
+
+  let ns = a:var_resp['ns']
+  let name = a:var_resp['name']
+  let resp = iced#nrepl#sync#call(
+       \ function('iced#nrepl#op#cider#fn_refs'),
+       \ [ns, name])
+
+  let refs = filter(copy(resp['fn-refs']), {_, v -> filereadable(v['file'])})
+  if empty(refs) | return iced#message#info('not_found') | endif
+
+  let s:last_usecase_info = {
+        \ 'refs': refs,
+        \ 'ns': ns,
+        \ 'symbol': name,
+        \ 'index': 0,
+        \ }
+
+  call s:show_usecase(s:last_usecase_info)
+endfunction
+
+function! iced#nrepl#document#usecase(symbol) abort
+  call iced#nrepl#ns#eval({_ ->
+        \ iced#nrepl#var#get(a:symbol, funcref('s:find_usecase'))})
+endfunction
+
+function! s:move_usecase(i) abort
+  if empty(s:last_usecase_info)
+    return iced#message#error('no_last_use_cases')
+  endif
+
+  let ref_count = len(s:last_usecase_info['refs'])
+  if ref_count == 1
+    return iced#message#warning('no_more_use_cases')
+  endif
+
+  let new_index = s:last_usecase_info['index'] + a:i
+  if new_index < 0
+    let new_index = ref_count-1
+  elseif new_index >= ref_count
+    let new_index = 0
+  endif
+
+  let s:last_usecase_info['index'] = new_index
+  call s:show_usecase(s:last_usecase_info)
+endfunction
+
+function! iced#nrepl#document#next_usecase() abort
+  call s:move_usecase(1)
+endfunction
+
+function! iced#nrepl#document#prev_usecase() abort
+  call s:move_usecase(-1)
+endfunction
+
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
+" vim:fdm=marker:fdl=0
