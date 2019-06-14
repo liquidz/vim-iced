@@ -179,7 +179,10 @@ function! s:one_line_doc(resp) abort
     let popup = iced#di#get('popup')
     if popup.is_supported()
           \ && s:enable_popup_one_line_document
-          \ && get(popup.get_context(s:popup_winid), 'name', '') !=# name
+
+      if get(popup.get_context(s:popup_winid), 'name', '') ==# name
+        return popup.move(s:popup_winid, {'col': col('.') })
+      endif
       if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
 
       let popup_opts = {
@@ -220,7 +223,8 @@ function! iced#nrepl#document#clear_doc_popup() abort
 endfunction
 
 function! iced#nrepl#document#current_form() abort
-  let context = iced#di#get('popup').get_context(s:popup_winid)
+  let popup = iced#di#get('popup')
+  let context = popup.get_context(s:popup_winid)
   if !iced#nrepl#is_connected()
         \ || get(context, 'type', '') ==# 'full document'
         \ || get(context, 'curpos', []) ==# getcurpos()
@@ -295,12 +299,12 @@ function! s:show_usecase(info) abort
   for name in names
     if pos != [0, 0] | break | endif
 
-    let pos = searchpos(printf('(%s ', name))
+    let pos = searchpos(printf('(%s ', name), 'n')
     if pos == [0, 0]
-      let pos = searchpos(printf("(%s\n", name))
+      let pos = searchpos(printf("(%s\n", name), 'n')
     endif
     if pos == [0, 0]
-      let pos = searchpos(printf('(%s)', name))
+      let pos = searchpos(printf('(%s)', name), 'n')
     endif
   endfor
 
@@ -320,6 +324,7 @@ function! s:show_usecase(info) abort
           \ iced#util#del_indent(pos[1]-1, @@),
           \ ], "\n")
     call iced#buffer#document#update(texts, 'clojure')
+    call cursor(1, 1)
   finally
     let @@ = reg_save
     execute current_window . 'wincmd w'
