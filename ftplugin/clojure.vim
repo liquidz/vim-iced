@@ -431,6 +431,14 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>bd <Plug>(iced_browse_dependencies)
   endif
 
+  if !hasmapto('<Plug>(iced_browse_var_references)')
+    silent! nmap <buffer> <Leader>bvr <Plug>(iced_browse_var_references)
+  endif
+
+  if !hasmapto('<Plug>(iced_browse_var_dependencies)')
+    silent! nmap <buffer> <Leader>bvd <Plug>(iced_browse_var_dependencies)
+  endif
+
   "" Jumping cursor (<Leader>j)
   "" ------------------------------------------------------------------------
   if !hasmapto('<Plug>(iced_def_jump)')
