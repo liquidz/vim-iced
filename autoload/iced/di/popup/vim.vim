@@ -67,6 +67,10 @@ function! s:popup.open(texts, ...) abort
   return winid
 endfunction
 
+function! s:popup.move(window_id, options) abort
+  call popup_move(a:window_id, a:options)
+endfunction
+
 function! s:popup.close(window_id) abort
   if !self.is_supported() | return | endif
   call popup_close(a:window_id)

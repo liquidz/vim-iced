@@ -1,7 +1,6 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:bufname = 'iced_floating'
 let s:default_filetype = 'clojure'
 
 let s:popup = {
@@ -14,9 +13,10 @@ function! s:init_win(winid, opts) abort
   call setwinvar(a:winid, '&signcolumn', 'no')
 
   let bufnr = winbufnr(a:winid)
-  if has_key(a:opts, 'filetype')
-    call setbufvar(bufnr, '&filetype', a:opts['filetype'])
-  endif
+  call setbufvar(bufnr, '&filetype', get(a:opts, 'filetype', s:default_filetype))
+  call setbufvar(bufnr, '&swapfile', 0)
+  call setbufvar(bufnr, '&wrap', 0)
+  call setbufvar(bufnr, '&winhl', 'Normal:Folded')
 endfunction
 
 function! s:popup.get_context(winid) abort
@@ -25,15 +25,6 @@ endfunction
 
 function! s:is_supported() abort
   return exists('*nvim_open_win')
-endfunction
-
-function! s:initialize(bufnr) abort
-  call setbufvar(a:bufnr, '&buflisted', 0)
-  call setbufvar(a:bufnr, '&buftype', 'nofile')
-  call setbufvar(a:bufnr, '&filetype', s:default_filetype)
-  call setbufvar(a:bufnr, '&swapfile', 0)
-  call setbufvar(a:bufnr, '&wrap', 0)
-  call setbufvar(a:bufnr, '&winhl', 'Normal:Folded')
 endfunction
 
 function! s:ensure_array_length(arr, n) abort
@@ -63,7 +54,7 @@ endfunction
 function! s:popup.open(texts, ...) abort
   if !s:is_supported() | return | endif
 
-  let bufnr = iced#buffer#nr(s:bufname)
+  let bufnr = nvim_create_buf(0, 1)
   if bufnr < 0 | return | endif
   if type(a:texts) != v:t_list || empty(a:texts)
     return
@@ -143,6 +134,19 @@ function! s:popup.open(texts, ...) abort
   return winid
 endfunction
 
+function! s:popup.move(window_id, options) abort
+  let win_opts = nvim_win_get_config(a:window_id)
+
+  if has_key(a:options, 'line')
+    let win_opts['row'] = a:options['line']
+  endif
+  if has_key(a:options, 'col')
+    let win_opts['col'] = a:options['col']
+  endif
+
+  call nvim_win_set_config(a:window_id, win_opts)
+endfunction
+
 function! s:popup.close(window_id) abort
   if !s:is_supported() | return | endif
   if win_gotoid(a:window_id)
@@ -151,9 +155,6 @@ function! s:popup.close(window_id) abort
 endfunction
 
 function! iced#di#popup#neovim#build(container) abort
-  if s:is_supported()
-    call iced#buffer#init(s:bufname, funcref('s:initialize'))
-  endif
   return s:popup
 endfunction
 
