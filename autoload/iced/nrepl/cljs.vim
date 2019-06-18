@@ -1,16 +1,27 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:set_cljs_session() abort
+let g:iced#cljs#default_env = get(g:, 'iced#cljs#default_env', 'figwheel-sidecar')
+let s:using_env = {}
+let s:env_options = []
+
+let s:env = {
+    \ 'figwheel-sidecar': function('iced#nrepl#cljs#figwheel_sidecar#get_env'),
+    \ 'figwheel-main': function('iced#nrepl#cljs#figwheel_main#get_env'),
+    \ 'nashorn': function('iced#nrepl#cljs#nashorn#get_env'),
+    \ 'graaljs': function('iced#nrepl#cljs#graaljs#get_env'),
+    \ 'shadow-cljs': function('iced#nrepl#cljs#shadow_cljs#get_env'),
+    \ }
+
+function! s:set_cljs_session(temporary_session) abort
   " WARN: An exception occurs if an evaluation error occurs in the CLONED cljs session.
   "       c.f. https://github.com/liquidz/vim-iced/issues/91
   "       So `original_cljs_session` must be setted to cljs session.
   let original_cljs_session = iced#nrepl#repl_session()
   let cljs_repl_session = iced#nrepl#sync#clone(original_cljs_session)
-
-  let repl_session = iced#nrepl#sync#clone(original_cljs_session)
-  " make repl_session to be CLJ
-  call iced#nrepl#sync#eval(':cljs/quit', {'session_id': repl_session})
+  " NOTE: Temporary session is CLJ
+  "       because it is cloned before switching to cljs repl.
+  let repl_session = a:temporary_session
 
   call iced#nrepl#set_session('cljs', original_cljs_session)
   call iced#nrepl#set_session('cljs_repl', cljs_repl_session)
@@ -24,7 +35,7 @@ function! s:unset_cljs_session() abort
   call iced#nrepl#set_session('cljs_repl', '')
 endfunction
 
-function! iced#nrepl#cljs#check_switching_session(resp) abort
+function! iced#nrepl#cljs#check_switching_session(resp, temporary_session) abort
   if !has_key(a:resp, 'ns') || !has_key(a:resp, 'session') | return | endif
 
   let session = a:resp['session']
@@ -36,7 +47,7 @@ function! iced#nrepl#cljs#check_switching_session(resp) abort
   let ext = expand('%:e')
 
   if eq_to_repl_session && ns ==# 'cljs.user'
-    call s:set_cljs_session()
+    call s:set_cljs_session(a:temporary_session)
     if ext !=# 'clj'
       call iced#nrepl#change_current_session('cljs')
       call iced#nrepl#ns#in()
@@ -44,7 +55,12 @@ function! iced#nrepl#cljs#check_switching_session(resp) abort
     endif
 
     call iced#message#info('started_cljs_repl')
-  elseif eq_to_cljs_repl_session && ns !=# 'cljs.user'
+    " NOTE: Must not close temporary session
+    "       In this case, temporary session is setted to 'repl' session
+    return 'skip_to_close_temporary_session'
+  elseif eq_to_cljs_repl_session
+        \ && ns !=# 'cljs.user'
+        \ && !get(s:using_env, 'ignore-quit-detecting', v:false)
     call s:unset_cljs_session()
     call iced#nrepl#change_current_session('clj')
     if ext !=# 'cljs'
@@ -108,18 +124,6 @@ function! iced#nrepl#cljs#stop_repl(...) abort
   endif
   return v:false
 endfunction
-
-let g:iced#cljs#default_env = get(g:, 'iced#cljs#default_env', 'figwheel-sidecar')
-let s:using_env = {}
-let s:env_options = []
-
-let s:env = {
-    \ 'figwheel-sidecar': function('iced#nrepl#cljs#figwheel_sidecar#get_env'),
-    \ 'figwheel-main': function('iced#nrepl#cljs#figwheel_main#get_env'),
-    \ 'nashorn': function('iced#nrepl#cljs#nashorn#get_env'),
-    \ 'graaljs': function('iced#nrepl#cljs#graaljs#get_env'),
-    \ 'shadow-cljs': function('iced#nrepl#cljs#shadow_cljs#get_env'),
-    \ }
 
 function! iced#nrepl#cljs#reset() abort
   let s:using_env = {}
