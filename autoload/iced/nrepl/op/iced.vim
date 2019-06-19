@@ -22,7 +22,7 @@ function! iced#nrepl#op#iced#lint_file(file, opt, callback) abort
   let msg = {
       \ 'id': iced#nrepl#id(),
       \ 'op': 'iced-lint-file',
-      \ 'sesion': iced#nrepl#current_session(),
+      \ 'session': iced#nrepl#current_session(),
       \ 'env': iced#nrepl#current_session_key(),
       \ 'file': a:file,
       \ 'callback': a:callback,
@@ -41,7 +41,7 @@ function! iced#nrepl#op#iced#grimoire(platform, ns_name, symbol, callback) abort
 
   call iced#nrepl#send({
         \ 'op': 'iced-grimoire',
-        \ 'sesion': iced#nrepl#current_session(),
+        \ 'session': iced#nrepl#current_session(),
         \ 'platform': a:platform,
         \ 'ns': a:ns_name,
         \ 'symbol': a:symbol,
@@ -55,7 +55,7 @@ function! iced#nrepl#op#iced#spec_check(symbol, num_tests, callback) abort
   call iced#nrepl#send({
         \ 'id': iced#nrepl#id(),
         \ 'op': 'iced-spec-check',
-        \ 'sesion': iced#nrepl#current_session(),
+        \ 'session': iced#nrepl#current_session(),
         \ 'symbol': a:symbol,
         \ 'num-tests': a:num_tests,
         \ 'callback': a:callback,
@@ -68,7 +68,7 @@ function! iced#nrepl#op#iced#project_ns_list(callback) abort
   call iced#nrepl#send({
         \ 'id': iced#nrepl#id(),
         \ 'op': 'iced-project-ns-list',
-        \ 'sesion': iced#nrepl#current_session(),
+        \ 'session': iced#nrepl#current_session(),
         \ 'callback': a:callback,
         \ })
 endfunction " }}}
@@ -79,7 +79,7 @@ function! iced#nrepl#op#iced#find_var_references(ns_name, symbol, callback) abor
   call iced#nrepl#send({
         \ 'id': iced#nrepl#id(),
         \ 'op': 'iced-find-var-references',
-        \ 'sesion': iced#nrepl#current_session(),
+        \ 'session': iced#nrepl#current_session(),
         \ 'ns': a:ns_name,
         \ 'symbol': a:symbol,
         \ 'callback': a:callback,

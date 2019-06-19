@@ -7,7 +7,7 @@ function! iced#nrepl#op#iced#sync#set_indentation_rules(rules, does_overwrite) a
   let msg = {
         \ 'id': iced#nrepl#id(),
         \ 'op': 'iced-set-indentation-rules',
-        \ 'sesion': iced#nrepl#current_session(),
+        \ 'session': iced#nrepl#current_session(),
         \ 'rules': a:rules,
         \ }
 
@@ -24,7 +24,7 @@ function! iced#nrepl#op#iced#sync#format_code(code, alias_map) abort
   return iced#nrepl#sync#send({
         \ 'id': iced#nrepl#id(),
         \ 'op': 'iced-format-code-with-indents',
-        \ 'sesion': iced#nrepl#current_session(),
+        \ 'session': iced#nrepl#current_session(),
         \ 'code': a:code,
         \ 'alias-map': a:alias_map,
         \ })
@@ -36,7 +36,7 @@ function! iced#nrepl#op#iced#sync#calculate_indent_level(code, line_num, alias_m
   return iced#nrepl#sync#send({
         \ 'id': iced#nrepl#id(),
         \ 'op': 'iced-calculate-indent-level',
-        \ 'sesion': iced#nrepl#current_session(),
+        \ 'session': iced#nrepl#current_session(),
         \ 'code': a:code,
         \ 'line-number': a:line_num,
         \ 'alias-map': a:alias_map,
@@ -49,7 +49,7 @@ function! iced#nrepl#op#iced#sync#refactor_thread_first(code) abort
   return iced#nrepl#sync#send({
         \ 'id': iced#nrepl#id(),
         \ 'op': 'iced-refactor-thread-first',
-        \ 'sesion': iced#nrepl#current_session(),
+        \ 'session': iced#nrepl#current_session(),
         \ 'code': a:code,
         \ })
 endfunction
@@ -60,7 +60,7 @@ function! iced#nrepl#op#iced#sync#refactor_thread_last(code) abort
   return iced#nrepl#sync#send({
         \ 'id': iced#nrepl#id(),
         \ 'op': 'iced-refactor-thread-last',
-        \ 'sesion': iced#nrepl#current_session(),
+        \ 'session': iced#nrepl#current_session(),
         \ 'code': a:code,
         \ })
 endfunction
