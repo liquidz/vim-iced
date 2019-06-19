@@ -12,7 +12,7 @@ function! iced#nrepl#op#refactor#clean_ns(callback) abort
       \ 'op': 'clean-ns',
       \ 'path': path,
       \ 'prefix-rewriting': prefix_rewriting,
-      \ 'sesion': iced#nrepl#current_session(),
+      \ 'session': iced#nrepl#current_session(),
       \ 'callback': a:callback,
       \ })
 endfunction
@@ -25,7 +25,7 @@ function! iced#nrepl#op#refactor#add_missing(symbol, callback) abort
   call iced#nrepl#send({
         \ 'op': 'resolve-missing',
         \ 'symbol': symbol,
-        \ 'sesion': iced#nrepl#current_session(),
+        \ 'session': iced#nrepl#current_session(),
         \ 'callback': a:callback,
         \ })
 endfunction
@@ -36,7 +36,7 @@ function! iced#nrepl#op#refactor#find_used_locals(filepath, line, column, callba
   call iced#nrepl#send({
         \ 'op': 'find-used-locals',
         \ 'id': iced#nrepl#id(),
-        \ 'sesion': iced#nrepl#current_session(),
+        \ 'session': iced#nrepl#current_session(),
         \ 'file': a:filepath,
         \ 'line': a:line,
         \ 'column': a:column,
