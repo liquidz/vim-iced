@@ -21,7 +21,7 @@ endfunction
 function! s:suite.check_switching_session_switch_to_cljs_test() abort
   call s:clj_session_fixture()
 
-  let test = {'session_patterns': ['cljs-repl-session', 'new-repl-session']}
+  let test = {'session_patterns': ['cljs-repl-session']}
   function! test.relay(msg) abort
     let op = a:msg['op']
     if op ==# 'clone'
@@ -33,15 +33,16 @@ function! s:suite.check_switching_session_switch_to_cljs_test() abort
   call s:ch.register_test_builder({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
 
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
-  call iced#nrepl#cljs#check_switching_session({
+  let res = iced#nrepl#cljs#check_switching_session({
        \ 'ns': 'cljs.user',
        \ 'session': 'original-repl-session',
-       \ })
+       \ }, 'temp-repl-session')
 
+  call s:assert.equals(res, 'skip_to_close_temporary_session')
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')
   call s:assert.equals(iced#nrepl#current_session(), 'original-repl-session')
   call s:assert.equals(iced#nrepl#clj_session(), 'original-clj-session')
-  call s:assert.equals(iced#nrepl#repl_session(), 'new-repl-session')
+  call s:assert.equals(iced#nrepl#repl_session(), 'temp-repl-session')
   call s:assert.equals(iced#nrepl#cljs_repl_session(), 'cljs-repl-session')
 endfunction
 
@@ -52,9 +53,11 @@ function! s:suite.check_switching_session_switch_to_clj_test() abort
         \ 'relay': {msg -> {'status': ['done']}}})
 
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')
-  call iced#nrepl#cljs#check_switching_session({
+  let res = iced#nrepl#cljs#check_switching_session({
        \ 'ns': 'foo.bar',
-       \ 'session': 'original-cljs-repl-session'})
+       \ 'session': 'original-cljs-repl-session'}, '')
+
+  call s:assert.true(empty(res))
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
   call s:assert.equals(iced#nrepl#current_session(), 'original-clj-session')
   call s:assert.equals(iced#nrepl#clj_session(), 'original-clj-session')
@@ -68,34 +71,42 @@ function! s:suite.check_switching_session_do_not_switch_test() abort
   call s:clj_session_fixture()
   call iced#nrepl#change_current_session('clj')
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
-  call iced#nrepl#cljs#check_switching_session({
+  let res = iced#nrepl#cljs#check_switching_session({
       \ 'ns': 'cljs.user',
-      \ 'session': 'original-clj-session'})
+      \ 'session': 'original-clj-session'}, 'temp_session')
+
+  call s:assert.true(empty(res))
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
 
   "" clj session && ns is not cljs.user
   call s:clj_session_fixture()
   call iced#nrepl#change_current_session('clj')
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
-  call iced#nrepl#cljs#check_switching_session({
+  let res = iced#nrepl#cljs#check_switching_session({
       \ 'ns': 'foo.bar',
-      \ 'session': 'original-repl-session'})
+      \ 'session': 'original-repl-session'}, 'temp_session')
+
+  call s:assert.true(empty(res))
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
 
   "" cljs session && session is not 'cljs_repl'
   call s:cljs_session_fixture()
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')
-  call iced#nrepl#cljs#check_switching_session({
+  let res = iced#nrepl#cljs#check_switching_session({
       \ 'ns': 'foo.bar',
-      \ 'session': 'original-repl-session'})
+      \ 'session': 'original-repl-session'}, '')
+
+  call s:assert.true(empty(res))
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')
 
   "" cljs session && ns is cljs.user
   call s:cljs_session_fixture()
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')
-  call iced#nrepl#cljs#check_switching_session({
+  let res = iced#nrepl#cljs#check_switching_session({
       \ 'ns': 'cljs.user',
-      \ 'session': 'original-cljs-repl-session'})
+      \ 'session': 'original-cljs-repl-session'}, '')
+
+  call s:assert.true(empty(res))
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')
 endfunction
 

@@ -58,9 +58,14 @@ function! iced#nrepl#eval#out(resp) abort
   call iced#nrepl#eval#err(get(a:resp, 'err', ''))
 endfunction
 
-function! s:repl_out(resp) abort
+function! s:repl_out(resp, temporary_session) abort
   call iced#nrepl#eval#out(a:resp)
-  call iced#nrepl#cljs#check_switching_session(a:resp)
+  let res = iced#nrepl#cljs#check_switching_session(a:resp, a:temporary_session)
+
+  if res !=# 'skip_to_close_temporary_session'
+        \ && !empty(a:temporary_session)
+    call iced#nrepl#sync#close(a:temporary_session)
+  endif
 endfunction
 
 function! s:is_comment_form(code) abort
@@ -101,9 +106,20 @@ function! iced#nrepl#eval#code(code, ...) abort
 endfunction
 
 function! iced#nrepl#eval#repl(code, ...) abort
-  let default_session = iced#nrepl#current_session_key() ==# 'cljs' ? 'cljs_repl' : 'repl'
-  let session = get(a:, 1, default_session)
-  call iced#nrepl#eval(a:code, funcref('s:repl_out'), {'session': session})
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  let default_session_key = iced#nrepl#current_session_key() ==# 'cljs'
+        \ ? 'cljs_repl'
+        \ : 'repl'
+  let session_key = get(a:, 1, default_session_key)
+
+  " NOTE: clone target session for switching repl from CLJ to CLJS
+  let temporary_session = (session_key !=# 'cljs_repl')
+        \ ? iced#nrepl#sync#clone(iced#nrepl#get_session(session_key))
+        \ : ''
+  call iced#nrepl#eval(
+        \ a:code,
+        \ {resp -> s:repl_out(resp, temporary_session)},
+        \ {'session': session_key})
 endfunction
 
 function! s:undefined(resp, symbol) abort

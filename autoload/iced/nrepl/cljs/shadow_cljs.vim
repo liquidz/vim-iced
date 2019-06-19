@@ -9,9 +9,13 @@ function! iced#nrepl#cljs#shadow_cljs#get_env(options) abort
   endif
 
   let s:build_id = trim(a:options[0], ' :')
+  " HACK: For shadow-cljs, vim-iced ignores quit detecting
+  "       because shadow-cljs returns exact current ns instead of 'cljs.user'
   return {'does_use_piggieback': v:false,
         \ 'pre-code': {-> '(require ''shadow.cljs.devtools.api)'},
-        \ 'env-code': {-> {'raw': printf('(shadow.cljs.devtools.api/repl :%s)', s:build_id)}}}
+        \ 'env-code': {-> {'raw': printf('(shadow.cljs.devtools.api/repl :%s)', s:build_id)}},
+        \ 'ignore-quit-detecting': v:true,
+        \ }
 endfunction
 
 let &cpo = s:save_cpo

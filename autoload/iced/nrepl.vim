@@ -56,6 +56,14 @@ function! iced#nrepl#set_session(k, v) abort
   endif
 endfunction
 
+function! iced#nrepl#get_session(k) abort
+  if a:k =~# '\(cljs\?\|repl\|cljs_repl\)'
+    return s:nrepl['sessions'][a:k]
+  else
+    throw printf('Invalid session-key to get: %s', a:k)
+  endif
+endfunction
+
 function! iced#nrepl#current_session_key() abort
   return get(s:nrepl, 'current_session_key', '')
 endfunction
