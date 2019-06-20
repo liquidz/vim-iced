@@ -24,7 +24,7 @@ command!          IcedInterrupt             call iced#nrepl#interrupt()
 
 command! -nargs=? IcedCljsRepl              call iced#nrepl#cljs#start_repl(<q-args>)
 command! -nargs=+ -complete=custom,iced#nrepl#cljs#env_complete
-    \ IcedStartCljsRepl    call iced#nrepl#cljs#start_repl_via_env(<f-args>)
+      \ IcedStartCljsRepl    call iced#nrepl#cljs#start_repl_via_env(<f-args>)
 command!          IcedQuitCljsRepl          call iced#nrepl#cljs#stop_repl_via_env()
 command!          IcedCycleSession          call iced#nrepl#cljs#cycle_session()
 
@@ -202,7 +202,7 @@ aug vim_iced_initial_setting
 aug END
 
 if exists('g:iced_enable_auto_linting')
-    \ && g:iced_enable_auto_linting
+      \ && g:iced_enable_auto_linting
   aug iced_auto_linting
     au!
     au BufWritePost *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufwrite_post()
@@ -474,7 +474,7 @@ function! s:default_key_mappings() abort
 endfunction
 
 if exists('g:iced_enable_default_key_mappings')
-    \ && g:iced_enable_default_key_mappings
+      \ && g:iced_enable_default_key_mappings
   silent! call s:default_key_mappings()
   aug iced_default_key_mappings
     au!

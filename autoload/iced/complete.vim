@@ -86,9 +86,9 @@ function! s:ns_alias_candidates(aliases, base) abort
   for alias in a:aliases
     if stridx(alias, a:base) == 0
       call add(result, {
-          \ 'candidate': alias,
-          \ 'type': 'namespace',
-          \ })
+            \ 'candidate': alias,
+            \ 'type': 'namespace',
+            \ })
     endif
   endfor
   return result
