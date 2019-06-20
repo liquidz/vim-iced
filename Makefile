@@ -14,6 +14,7 @@ VITAL_MODULES = Data.Dict \
 all: vital bin test
 
 vital:
+	\rm -rf autoload/vital*
 	vim -c "Vitalize . --name=$(PLUGIN_NAME) $(VITAL_MODULES)" -c q
 
 test: themis lint python_doctest
