@@ -62,7 +62,7 @@ command!          IcedFormDocument          call iced#nrepl#document#current_for
 command! -nargs=? IcedUseCaseOpen           call iced#nrepl#document#usecase(<q-args>)
 command!          IcedNextUseCase           call iced#nrepl#document#next_usecase()
 command!          IcedPrevUseCase           call iced#nrepl#document#prev_usecase()
-command!          IcedDocumentClose         call iced#buffer#document#close()
+command!          IcedDocumentClose         call iced#nrepl#document#close()
 command! -nargs=? IcedSourceShow            call iced#nrepl#source#show(<q-args>)
 command! -nargs=? IcedGrimoireOpen          call iced#grimoire#open(<q-args>)
 command!          IcedCommandPalette        call iced#palette#show()

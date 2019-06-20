@@ -389,6 +389,15 @@ function! iced#nrepl#document#prev_usecase() abort
   call s:move_usecase(-1)
 endfunction
 
+function! iced#nrepl#document#close() abort
+  if s:popup_winid != -1
+    call iced#di#get('popup').close(s:popup_winid)
+    let s:popup_winid = -1
+  endif
+
+  call iced#buffer#document#close()
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
 " vim:fdm=marker:fdl=0
