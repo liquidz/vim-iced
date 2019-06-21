@@ -278,7 +278,7 @@ function! s:show_usecase(info) abort
 
   " Detect ns alias in the ref file
   let ref_ns = iced#nrepl#ns#name()
-  call iced#nrepl#sync#call(function('iced#nrepl#ns#require'), [ref_ns])
+  call iced#promise#sync('iced#nrepl#ns#require', [ref_ns])
   let resp = iced#nrepl#op#cider#sync#ns_aliases(ref_ns)
   if !has_key(resp, 'ns-aliases')
     execute current_window . 'wincmd w'
@@ -338,9 +338,7 @@ function! s:find_usecase(var_resp) abort
 
   let ns = a:var_resp['ns']
   let name = a:var_resp['name']
-  let resp = iced#nrepl#sync#call(
-       \ function('iced#nrepl#op#cider#fn_refs'),
-       \ [ns, name])
+  let resp = iced#promise#sync('iced#nrepl#op#cider#fn_refs', [ns, name])
 
   let refs = filter(copy(resp['fn-refs']), {_, v -> filereadable(v['file'])})
   if empty(refs) | return iced#message#info('not_found') | endif
