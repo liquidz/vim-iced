@@ -3,7 +3,9 @@
 PWD=$(shell pwd)
 
 PLUGIN_NAME = iced
-VITAL_MODULES = Data.Dict \
+VITAL_MODULES = \
+		Async.Promise \
+		Data.Dict \
 		Data.List \
 		Data.String \
 		Locale.Message \
