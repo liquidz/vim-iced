@@ -1237,9 +1237,10 @@ g:iced#debug#value_max_length
   Negative value means no limitation.
   Default value is `-1`.
 
-                                                 *g:iced#nrepl#sync#timeout_ms*
-g:iced#nrepl#sync#timeout_ms
-  Time to timeout (unit: milli sec).
+                                                    *g:iced#promise#timeout_ms*
+g:iced#promise#timeout_ms
+  Timeout time for waiting promises.
+  Unit is milli sec.
   Default value is `3000`.
 
                                               *g:iced#related_ns#tail_patterns*
