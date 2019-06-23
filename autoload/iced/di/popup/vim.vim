@@ -38,16 +38,16 @@ function! s:popup.open(texts, ...) abort
   let org_col = get(opts, 'col', len(getline('.')) + 1) - 1
 
   let wininfo = getwininfo(win_getid())[0]
-  let row = org_row + wininfo['winrow'] - 2
-  let col = org_col + wininfo['wincol'] - 1
+  let row = org_row + wininfo['winrow'] - 1
+  let col = org_col + wininfo['wincol']
 
   let max_width = wininfo['width'] - org_col - 5
   let title_width = len(get(opts, 'title', '')) + 3
   let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
 
   let win_opts = {
-        \ 'line': row + 1,
-        \ 'col': col + 1,
+        \ 'line': row,
+        \ 'col': col,
         \ 'minwidth': width,
         \ 'maxwidth': max_width,
         \ 'minheight': len(a:texts),
@@ -68,7 +68,18 @@ function! s:popup.open(texts, ...) abort
 endfunction
 
 function! s:popup.move(window_id, options) abort
-  call popup_move(a:window_id, a:options)
+  let options = copy(a:options)
+  let wininfo = getwininfo(win_getid())[0]
+
+  if has_key(options, 'line')
+    let options['line'] = options['line'] + wininfo['winrow'] - 1
+  endif
+
+  if has_key(options, 'col')
+    let options['col'] = options['col'] + wininfo['wincol']
+  endif
+
+  call popup_move(a:window_id, options)
 endfunction
 
 function! s:popup.close(window_id) abort

@@ -136,12 +136,14 @@ endfunction
 
 function! s:popup.move(window_id, options) abort
   let win_opts = nvim_win_get_config(a:window_id)
+  let wininfo = getwininfo(win_getid())[0]
 
   if has_key(a:options, 'line')
-    let win_opts['row'] = a:options['line']
+    let win_opts['row'] = a:options['line'] + wininfo['winrow'] - 1
   endif
+
   if has_key(a:options, 'col')
-    let win_opts['col'] = a:options['col']
+    let win_opts['col'] = a:options['col'] + wininfo['wincol']
   endif
 
   call nvim_win_set_config(a:window_id, win_opts)
