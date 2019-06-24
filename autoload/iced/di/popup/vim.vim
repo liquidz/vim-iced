@@ -41,7 +41,7 @@ function! s:popup.open(texts, ...) abort
   let row = org_row + wininfo['winrow'] - 1
   let col = org_col + wininfo['wincol']
 
-  let max_width = wininfo['width'] - org_col - 5
+  let max_width = &columns - wininfo['wincol'] - org_col
   let title_width = len(get(opts, 'title', '')) + 3
   let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
 
