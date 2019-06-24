@@ -347,6 +347,7 @@ function! iced#nrepl#connect(port, ...) abort
   call iced#buffer#stdout#init()
   call iced#buffer#document#init()
   call iced#buffer#error#init()
+  call iced#buffer#temporary#init()
 
   if empty(a:port)
     return iced#nrepl#connect#auto()
