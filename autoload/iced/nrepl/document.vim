@@ -265,69 +265,55 @@ function! s:show_usecase(info) abort
   let ref = a:info['refs'][index]
   let ns = a:info['ns']
   let symbol = a:info['symbol']
-  let current_window = winnr()
-
-  " Open document buffer with ref file contents
-  let contents = readfile(ref['file'])
-  if iced#buffer#document#is_visible()
-    call iced#buffer#document#update(contents, 'text')
-  else
-    call iced#buffer#document#open(contents, 'text')
-  endif
-  call iced#buffer#document#focus()
-
-  " Detect ns alias in the ref file
-  let ref_ns = iced#nrepl#ns#name()
-  call iced#promise#sync('iced#nrepl#ns#require', [ref_ns])
-  let resp = iced#nrepl#op#cider#sync#ns_aliases(ref_ns)
-  if !has_key(resp, 'ns-aliases')
-    execute current_window . 'wincmd w'
-    call iced#buffer#document#close()
-    return iced#message#info('not_found')
-  endif
-
-  let alias = keys(filter(resp['ns-aliases'], {_, v -> v ==# ns}))
-
-  " Search ref's concrete position
-  let names = [
-        \ empty(alias) ? symbol : printf('%s/%s', alias[0], symbol),
-        \ printf('%s/%s', ns, symbol),
-        \ ]
-  let pos = [0, 0]
-
-  call cursor(ref['line'], 1)
-  for name in names
-    if pos != [0, 0] | break | endif
-
-    let pos = searchpos(printf('(%s ', name), 'n')
-    if pos == [0, 0]
-      let pos = searchpos(printf("(%s\n", name), 'n')
-    endif
-    if pos == [0, 0]
-      let pos = searchpos(printf('(%s)', name), 'n')
-    endif
-  endfor
-
-  if pos == [0, 0]
-    execute current_window . 'wincmd w'
-    call iced#buffer#document#close()
-    return iced#message#info('not_found')
-  endif
-  call cursor(pos[0], pos[1])
 
   let reg_save = @@
   try
+    " Open temporary buffer with ref file contents
+    call iced#buffer#temporary#begin()
+    call iced#di#get('ex_cmd').silent_exe(printf(':read %s', ref['file']))
+
+    " Detect ns alias in the ref file
+    let ref_ns = iced#nrepl#ns#name()
+    call iced#promise#sync('iced#nrepl#ns#require', [ref_ns])
+    let resp = iced#nrepl#op#cider#sync#ns_aliases(ref_ns)
+    if !has_key(resp, 'ns-aliases') | return iced#message#info('not_found') | endif
+
+    let alias = keys(filter(resp['ns-aliases'], {_, v -> v ==# ns}))
+
+    " Search ref's concrete position
+    let names = [
+          \ empty(alias) ? symbol : printf('%s/%s', alias[0], symbol),
+          \ printf('%s/%s', ns, symbol),
+          \ ]
+    let pos = [0, 0]
+
+    call cursor(ref['line']+1, 1)
+    for name in names
+      if pos != [0, 0] | break | endif
+
+      let pos = searchpos(printf('(%s ', name), 'n')
+      if pos == [0, 0]
+        let pos = searchpos(printf("(%s\n", name), 'n')
+      endif
+      if pos == [0, 0]
+        let pos = searchpos(printf('(%s)', name), 'n')
+      endif
+    endfor
+
+    if pos == [0, 0] | return iced#message#info('not_found') | endif
+    call cursor(pos[0], pos[1])
+
     silent normal! vaby
     let texts = join([
           \ printf(';; Use case for %s/%s (%d/%d)', ns, symbol, index+1, len(a:info['refs'])),
           \ printf(';; %s:%d:%d', ref['file'], pos[0], pos[1]),
           \ iced#util#del_indent(pos[1]-1, @@),
           \ ], "\n")
-    call iced#buffer#document#update(texts, 'clojure')
+    call iced#buffer#document#open(texts, 'clojure')
     call cursor(1, 1)
   finally
+    call iced#buffer#temporary#end()
     let @@ = reg_save
-    execute current_window . 'wincmd w'
   endtry
 endfunction
 
