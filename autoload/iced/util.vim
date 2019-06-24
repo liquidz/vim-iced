@@ -137,5 +137,15 @@ function! iced#util#select_keys(d, ks) abort
   return ret
 endfunction
 
+function! iced#util#normalize_path(path) abort
+  let path = substitute(a:path, '^file:', '', '')
+  " NOTE: jar:file:/path/to/jarfile.jar!/path/to/file.clj
+  if stridx(path, 'jar:') == 0
+    let path = substitute(path, '^jar:file:', 'zipfile:', '')
+    let path = substitute(path, '!/', '::', '')
+  endif
+  return path
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

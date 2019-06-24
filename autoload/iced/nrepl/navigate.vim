@@ -17,16 +17,6 @@ function! s:add_curpos_to_tagstack() abort
   call s:L.push(s:tagstack, pos)
 endfunction
 
-function! s:normalize_path(path) abort
-  let path = substitute(a:path, '^file:', '', '')
-  " NOTE: jar:file:/path/to/jarfile.jar!/path/to/file.clj
-  if stridx(path, 'jar:') == 0
-    let path = substitute(path, '^jar:file:', 'zipfile:', '')
-    let path = substitute(path, '!/', '::', '')
-  endif
-  return path
-endfunction
-
 function! s:apply_mode_to_file(mode, file) abort
   let cmd = ':edit'
   if a:mode ==# 'v'
@@ -50,7 +40,7 @@ endfunction " }}}
 " s:open_var {{{
 function! s:open_var_info(mode, resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('not_found') | endif
-  let path = s:normalize_path(a:resp['file'])
+  let path = iced#util#normalize_path(a:resp['file'])
 
   if expand('%:p') !=# path
     call s:apply_mode_to_file(a:mode, path)
@@ -119,7 +109,7 @@ endfunction " }}}
 " iced#nrepl#navigate#jump_to_def {{{
 function! s:jump(resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('jump_not_found') | endif
-  let path = s:normalize_path(a:resp['file'])
+  let path = iced#util#normalize_path(a:resp['file'])
   let line = a:resp['line']
   let column = get(a:resp, 'column', '0')
 

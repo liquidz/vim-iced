@@ -117,3 +117,10 @@ function! s:suite.select_keys_test() abort
   call s:assert.equals(iced#util#select_keys(d, ['c', 'd']), {'c': 3})
   call s:assert.equals(iced#util#select_keys(d, ['d']), {})
 endfunction
+
+function! s:suite.normalize_path_test() abort
+  call s:assert.equals(iced#util#normalize_path('/foo/bar.txt'),
+        \ '/foo/bar.txt')
+  call s:assert.equals(iced#util#normalize_path('jar:file:/path/to/jarfile.jar!/path/to/file.clj'),
+        \ 'zipfile:/path/to/jarfile.jar::path/to/file.clj')
+endfunction
