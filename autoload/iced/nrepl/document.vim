@@ -207,21 +207,6 @@ function! s:one_line_doc(resp) abort
   endif
 endfunction
 
-function! iced#nrepl#document#clear_doc_popup() abort
-  let popup = iced#di#get('popup')
-  let context = popup.get_context(s:popup_winid)
-  if !s:enable_popup_one_line_document
-        \ || !popup.is_supported()
-        \ || s:popup_winid == -1
-        \ || get(popup.get_context(s:popup_winid), 'curpos', [-1, -1])[1] == line('.')
-    return
-  endif
-
-  call popup.close(s:popup_winid)
-
-  let s:popup_winid = -1
-endfunction
-
 function! iced#nrepl#document#current_form() abort
   let popup = iced#di#get('popup')
   let context = popup.get_context(s:popup_winid)

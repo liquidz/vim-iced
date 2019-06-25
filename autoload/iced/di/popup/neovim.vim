@@ -2,14 +2,20 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:default_filetype = 'clojure'
+let s:last_winid = -1
 
 let s:popup = {
       \ 'env': 'neovim',
-      \ 'index': 0,
       \ }
 
 function! s:init_win(winid, opts) abort
-  call setwinvar(a:winid, 'iced_context', get(a:opts, 'iced_context', {}))
+  let context = get(a:opts, 'iced_context', {})
+  let context['__lnum'] = line('.')
+  if has_key(a:opts, 'moved')
+    let context['__moved'] = a:opts['moved']
+  endif
+
+  call setwinvar(a:winid, 'iced_context', context)
   call setwinvar(a:winid, '&signcolumn', 'no')
 
   let bufnr = winbufnr(a:winid)
@@ -45,14 +51,9 @@ function! s:popup.is_supported() abort
   return s:is_supported()
 endfunction
 
-function! s:popup.next_index() abort
-  let t = self.index
-  let self['index'] = (t > 10) ? 0 : t + 1
-
-endfunction
-
 function! s:popup.open(texts, ...) abort
   if !s:is_supported() | return | endif
+  call iced#di#popup#neovim#moved()
 
   let bufnr = nvim_create_buf(0, 1)
   if bufnr < 0 | return | endif
@@ -62,8 +63,6 @@ function! s:popup.open(texts, ...) abort
 
   " TODO: support 'highlight' option
   let opts = get(a:, 1, {})
-  let index = self.next_index()
-
   let view = winsaveview()
   let line = get(opts, 'line', view['lnum'])
   let org_row = get(opts, 'row', line - view['topline'] + 1)
@@ -101,26 +100,9 @@ function! s:popup.open(texts, ...) abort
         \ 'height': min([len(texts), g:iced#popup#max_height]),
         \ }
 
-  call nvim_buf_set_lines(
-        \ bufnr,
-        \ index,
-        \ index + g:iced#popup#max_height,
-        \ 0,
-        \ s:ensure_array_length(texts, g:iced#popup#max_height))
+  call nvim_buf_set_lines(bufnr, 0, len(texts), 0, texts)
   let winid = nvim_open_win(bufnr, v:false, win_opts)
   call s:init_win(winid, opts)
-
-  let current_winid = win_getid()
-  try
-    if win_gotoid(winid)
-      let v = winsaveview()
-      let v['lnum'] = index + 1
-      let v['topline'] = index + 1
-      call winrestview(v)
-    endif
-  finally
-    call win_gotoid(current_winid)
-  endtry
 
   if has_key(opts, 'filetyoe')
     call setbufvar(bufnr, '&filetype', opts['filetype'])
@@ -131,6 +113,7 @@ function! s:popup.open(texts, ...) abort
     call timer_start(time, {-> iced#di#get('popup').close(winid)})
   endif
 
+  let s:last_winid = winid
   return winid
 endfunction
 
@@ -153,6 +136,26 @@ function! s:popup.close(window_id) abort
   if !s:is_supported() | return | endif
   if win_gotoid(a:window_id)
     silent execute ':q'
+  endif
+  let s:last_winid = -1
+endfunction
+
+function! iced#di#popup#neovim#moved() abort
+  if s:last_winid == -1 | return | endif
+  let popup = iced#di#get('popup')
+  let context = popup.get_context(s:last_winid)
+  let moved = get(context, '__moved', '')
+  let base_line = get(context, '__lnum', 0)
+  let line = line('.')
+  let col = col('.')
+
+  " WARN: only supports 'any' and column list
+  if empty(moved)
+    return
+  elseif type(moved) == v:t_string && moved ==# 'any'
+    return popup.close(s:last_winid)
+  elseif type(moved) == v:t_list && (line != base_line || col < moved[0] || col > moved[1])
+    return popup.close(s:last_winid)
   endif
 endfunction
 

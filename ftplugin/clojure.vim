@@ -228,13 +228,10 @@ endif
 
 " NOTE: Neovim does not have `moved` option for floating window.
 "       So vim-iced must close floating window explicitly.
-if has('nvim')
-      \ && (g:iced_enable_popup_document ==# 'full'
-      \     || g:iced_enable_popup_document ==# 'one-line'
-      \     || g:iced_enable_popup_document ==# 'every')
+if has('nvim') && exists('*nvim_open_win')
   aug vim_iced_close_document_popup
     au!
-    au CursorMoved *.clj,*.cljs,*.cljc call iced#nrepl#document#clear_doc_popup()
+    au CursorMoved *.clj,*.cljs,*.cljc call iced#di#popup#neovim#moved()
   aug END
 endif
 "" }}}
