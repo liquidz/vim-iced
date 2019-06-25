@@ -1,33 +1,41 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
-function! s:show_source(resp) abort
-  if !has_key(a:resp, 'out') || trim(a:resp['out']) ==# 'Source not found'
-    call iced#message#error('not_found')
-    return
-  endif
+function! s:extract_source(resp) abort
+  let path = get(a:resp, 'file', '')
+  if empty(path) | return '' | endif
 
-  call iced#buffer#document#open(a:resp['out'], 'clojure')
+  let code = ''
+  let reg_save = @@
+  try
+    call iced#buffer#temporary#begin()
+    call iced#di#get('ex_cmd').silent_exe(
+          \ printf(':read %s', iced#util#normalize_path(path)))
+    call cursor(a:resp['line']+1, get(a:resp, 'column', 0))
+    silent normal! vaby
+    let code = @@
+  finally
+    let @@ = reg_save
+    call iced#buffer#temporary#end()
+  endtry
+
+  return code
+endfunction
+
+function! s:fetch_source(symbol) abort
+  return iced#promise#call('iced#nrepl#var#get', [a:symbol])
+        \.then(funcref('s:extract_source'))
 endfunction
 
 function! iced#nrepl#source#show(symbol) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
-  let source_ns = (iced#nrepl#current_session_key() ==# 'clj')
-      \ ? 'clojure.repl'
-      \ : 'cljs.repl'
-
-  let code = printf('(%s/source %s)', source_ns, symbol)
-  call iced#nrepl#send({
-      \ 'id': iced#nrepl#id(),
-      \ 'op': 'eval',
-      \ 'code': code,
-      \ 'session': iced#nrepl#repl_session(),
-      \ 'verbose': v:false,
-      \ 'callback': funcref('s:show_source'),
-      \ })
+  call s:fetch_source(symbol)
+       \.then({code -> empty(code)
+       \       ? iced#message#error('not_found')
+       \       : iced#buffer#document#open(code, 'clojure')})
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
