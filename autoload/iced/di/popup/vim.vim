@@ -33,7 +33,7 @@ function! s:popup.open(texts, ...) abort
   endif
 
   let view = winsaveview()
-  let line = get(opts, 'line', view['lnum'])
+  let line = get(opts, 'line', winline())
   let org_row = get(opts, 'row', line - view['topline'] + 1)
   let org_col = get(opts, 'col', len(getline('.')) + 1) - 1
 

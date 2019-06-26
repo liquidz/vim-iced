@@ -117,7 +117,7 @@ function! iced#nrepl#debug#start(resp) abort
     endif
     let s:debug_info_window_id = iced#di#get('popup').open(debug_texts, {
          \ 'filetype': 'clojure',
-         \ 'line': line('.') + 1,
+         \ 'line': winline() + 1,
          \ 'col': col('.'),
          \ 'border': [],
          \ 'borderhighlight': ['Comment'],

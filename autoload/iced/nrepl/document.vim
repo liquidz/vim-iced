@@ -122,7 +122,7 @@ function! s:view_doc_on_popup(resp) abort
   if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
   let s:popup_winid = popup.open(split(doc, '\r\?\n'), {
         \ 'iced_context': s:popup_context({'type': 'full document'}),
-        \ 'line': line('.') + 1,
+        \ 'line': winline() + 1,
         \ 'col': col('.'),
         \ 'filetype': 'help',
         \ 'border': [],
@@ -187,7 +187,7 @@ function! s:one_line_doc(resp) abort
 
       let popup_opts = {
             \ 'iced_context': s:popup_context({'type': 'one-line document', 'name': name}),
-            \ 'line': line('.')+1,
+            \ 'line': winline() + 1,
             \ 'col': col('.'),
             \ 'filetype': 'clojure',
             \ 'border': [],
