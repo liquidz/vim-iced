@@ -32,13 +32,12 @@ function! s:popup.open(texts, ...) abort
     return
   endif
 
-  let view = winsaveview()
-  let line = get(opts, 'line', winline())
-  let org_row = get(opts, 'row', line - view['topline'] + 1)
-  let org_col = get(opts, 'col', len(getline('.')) + 1) - 1
-
   let wininfo = getwininfo(win_getid())[0]
-  let row = org_row + wininfo['winrow'] - 1
+
+  let line = get(opts, 'line', winline())
+  let line = line + wininfo['winrow'] - 1
+
+  let org_col = get(opts, 'col', len(getline('.')) + 1) - 1
   let col = org_col + wininfo['wincol']
 
   let max_width = &columns - wininfo['wincol'] - org_col
@@ -46,7 +45,7 @@ function! s:popup.open(texts, ...) abort
   let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
 
   let win_opts = {
-        \ 'line': row,
+        \ 'line': line,
         \ 'col': col,
         \ 'minwidth': width,
         \ 'maxwidth': max_width,

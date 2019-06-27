@@ -63,13 +63,12 @@ function! s:popup.open(texts, ...) abort
 
   " TODO: support 'highlight' option
   let opts = get(a:, 1, {})
-  let view = winsaveview()
-  let line = get(opts, 'line', view['lnum'])
-  let org_row = get(opts, 'row', line - view['topline'] + 1)
-  let org_col = get(opts, 'col', len(getline('.')) + 1) - 1
-
   let wininfo = getwininfo(win_getid())[0]
-  let row = org_row + wininfo['winrow'] - 1
+
+  let line = get(opts, 'line', winline())
+  let line = get(opts, 'row', line + wininfo['winrow'] - 1)
+
+  let org_col = get(opts, 'col', len(getline('.')) + 1) - 1
   let col = org_col + wininfo['wincol']
 
   let max_width = wininfo['width'] - org_col - 5
@@ -94,7 +93,7 @@ function! s:popup.open(texts, ...) abort
 
   let win_opts = {
         \ 'relative': 'editor',
-        \ 'row': row,
+        \ 'row': line,
         \ 'col': col,
         \ 'width': width,
         \ 'height': min([len(texts), g:iced#popup#max_height]),
