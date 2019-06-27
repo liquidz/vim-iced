@@ -7,7 +7,6 @@ let s:popup = {
 
 function! s:init_win(winid, opts) abort
   call setwinvar(a:winid, 'iced_context', get(a:opts, 'iced_context', {}))
-  call setwinvar(a:winid, '&signcolumn', 'no')
   call setwinvar(a:winid, '&breakindent', 1)
 
   let bufnr = winbufnr(a:winid)
