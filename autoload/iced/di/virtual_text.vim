@@ -13,6 +13,7 @@ function! s:vim(container) abort
 
     if get(opt, 'auto_clear', v:false)
       let popup_opts['moved'] = 'any'
+      let popup_opts['auto_close'] = v:false
     endif
 
     call self.container.get('popup').open([a:text], popup_opts)
