@@ -3,8 +3,8 @@ if exists('g:loaded_vim_iced')
 endif
 let g:loaded_vim_iced = 1
 
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 scriptencoding utf-8
 
@@ -66,6 +66,8 @@ command!          IcedDocumentClose         call iced#nrepl#document#close()
 command! -nargs=? IcedSourceShow            call iced#nrepl#source#show(<q-args>)
 command! -nargs=? IcedGrimoireOpen          call iced#grimoire#open(<q-args>)
 command!          IcedCommandPalette        call iced#palette#show()
+command! -nargs=? IcedSpecForm              call iced#nrepl#spec#form(<q-args>)
+command! -nargs=? IcedSpecExample           call iced#nrepl#spec#example(<q-args>)
 
 command!          IcedSlurp                 call iced#paredit#deep_slurp()
 command!          IcedBarf                  call iced#paredit#barf()
@@ -154,6 +156,8 @@ nnoremap <silent> <Plug>(iced_document_close)           :<C-u>IcedDocumentClose<
 nnoremap <silent> <Plug>(iced_source_show)              :<C-u>IcedSourceShow<CR>
 nnoremap <silent> <Plug>(iced_grimoire_open)            :<C-u>IcedGrimoireOpen<CR>
 nnoremap <silent> <Plug>(iced_command_palette)          :<C-u>IcedCommandPalette<CR>
+nnoremap <silent> <Plug>(iced_spec_form)                :<C-u>IcedSpecForm<CR>
+nnoremap <silent> <Plug>(iced_spec_example)             :<C-u>IcedSpecExample<CR>
 
 nnoremap <silent> <Plug>(iced_slurp)                    :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                     :<C-u>IcedBarf<CR>
@@ -501,6 +505,6 @@ for key in ['error', 'trace', 'lint']
 endfor
 "" }}}
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
 
