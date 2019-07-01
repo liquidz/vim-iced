@@ -160,6 +160,17 @@ function! iced#nrepl#op#cider#spec_form(spec_name, callback) abort
       \ })
 endfunction " }}}
 
+""" spec-example {{{
+function! iced#nrepl#op#cider#spec_example(spec_name, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+      \ 'op': 'spec-example',
+      \ 'spec-name': a:spec_name,
+      \ 'session': iced#nrepl#current_session(),
+      \ 'callback': a:callback,
+      \ })
+endfunction " }}}
+
 """ fn-refs {{{
 function! iced#nrepl#op#cider#fn_refs(ns_name, symbol, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
