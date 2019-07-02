@@ -85,6 +85,13 @@ ICED COMMAND                                         *vim-iced-install-command*
   vim-iced provides `iced` command to use vim-iced easily.
 
   Add `$PATH` environment variable to `/path/to/vim-iced/bin`.
+  E.g. export PATH=$PATH:~/src/github.com/liquidz/vim-iced/bin
+
+  WARNING:
+    Do not copy `bin/iced` file to your `$PATH`.
+    `iced` command references `/path/to/vim-iced/deps.edn` for Clojure CLI.
+    So the copied `iced` command cannot reference it.
+
   To show help, run `iced help` .
 
 ------------------------------------------------------------------------------
