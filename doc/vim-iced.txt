@@ -719,6 +719,18 @@ COMMANDS                                                    *vim-iced-commands*
   `ctrlp.vim` or `fzf` is required to select namespace.
   Key is mapped to |<Plug>(iced_command_palette)|.
 
+                                                                *:IcedSpecForm*
+:IcedSpecForm [{keyword}]
+  Open a window, and show the form of the spec.
+  If {keyword} is not passed, keyword under cursor is used.
+  Key is mapped to |<Plug>(iced_spec_form)|.
+
+                                                             *:IcedSpecExample*
+:IcedSpecExample [{keyword}]
+  Open a window, and show the example of the spec.
+  If {keyword} is not passed, keyword under cursor is used.
+  Key is mapped to |<Plug>(iced_spec_example)|.
+
                                                                    *:IcedSlurp*
 :IcedSlurp
   Slurp next element.
@@ -1088,6 +1100,14 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                  *<Plug>(iced_command_palette)*
 <Plug>(iced_command_palette)
   Same as |:IcedCommandPalette|.
+
+                                                       *<Plug>(iced_spec_form)*
+<Plug>(iced_spec_form)
+  Same as |:IcedSpecForm|.
+  
+                                                    *<Plug>(iced_spec_example)*
+<Plug>(iced_spec_example)
+  Same as |:IcedSpecExample|.
 
                                                            *<Plug>(iced_slurp)*
 <Plug>(iced_slurp)
