@@ -219,6 +219,12 @@ function! iced#nrepl#navigate#browse_var_dependencies(symbol) abort
         \ })})})
 endfunction
 
+function! iced#nrepl#navigate#ns_complete(arg_lead, cmd_line, cursor_pos) abort
+  if !iced#nrepl#is_connected() | return [] | endif
+  let resp = iced#promise#sync('iced#nrepl#op#iced#project_ns_list', [])
+  return join(get(resp, 'project-ns-list', []), "\n")
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
 " vim:fdm=marker:fdl=0

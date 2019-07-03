@@ -55,6 +55,8 @@ command!          IcedStdoutBufferClose     call iced#buffer#stdout#close()
 
 command! -nargs=? IcedDefJump               call iced#nrepl#navigate#jump_to_def(<q-args>)
 command!          IcedDefBack               call iced#nrepl#navigate#jump_back()
+command! -nargs=1 -complete=custom,iced#nrepl#navigate#ns_complete
+      \ IcedOpenNs                          call iced#nrepl#navigate#open_ns('e', <q-args>)
 
 command! -nargs=? IcedDocumentOpen          call iced#nrepl#document#open(<q-args>)
 command! -nargs=? IcedPopupDocumentOpen     call iced#nrepl#document#popup_open(<q-args>)
