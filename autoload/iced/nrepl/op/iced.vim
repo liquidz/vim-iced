@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 function! s:concat_handler(key, resp, last_result) abort
   let result = empty(a:last_result) ? [] : a:last_result
@@ -73,8 +73,20 @@ function! iced#nrepl#op#iced#project_ns_list(callback) abort
         \ })
 endfunction " }}}
 
+""" pseudo-ns-path {{{
+function! iced#nrepl#op#iced#pseudo_ns_path(ns, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'iced-pseudo-ns-path',
+        \ 'ns': a:ns,
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
 call iced#nrepl#register_handler('iced-lint-file', function('s:concat_handler', ['lint-warnings']))
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
 " vim:fdm=marker:fdl=0
