@@ -668,7 +668,7 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedOpenNs {ns-name}
   Open a file corresponding to the specified {ns-name}.
   If {ns-name} does not exist, make sure you open a file with a pseudo path.
-  
+
                                                         *:IcedBrowseReferences*
 :IcedBrowseReferences
   Browse positions referencing the form under cursor.
@@ -763,6 +763,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                         *:IcedToggleSrcAndTest*
 :IcedToggleSrcAndTest
   Switch between source file and test file.
+  If the file does not exist, make sure you open a file with a pseudo path.
   Key is mapped to |<Plug>(iced_toggle_src_and_test)|.
 
                                                                     *:IcedGrep*
