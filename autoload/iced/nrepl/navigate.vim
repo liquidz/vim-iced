@@ -27,14 +27,22 @@ function! s:apply_mode_to_file(mode, file) abort
   call iced#di#get('ex_cmd').exe(printf('%s %s', cmd, a:file))
 endfunction
 
-" s:open_ns {{{
-function! s:open_ns(mode, ns_name) abort
-  let resp = iced#nrepl#op#cider#sync#ns_path(a:ns_name)
-  if !has_key(resp, 'path') || empty(resp['path']) || !filereadable(resp['path'])
+" iced#nrepl#navigate#open_ns {{{
+function! iced#nrepl#navigate#open_ns(mode, ns_name) abort
+  let resp = iced#promise#sync('iced#nrepl#op#iced#pseudo_ns_path', [a:ns_name])
+  if !has_key(resp, 'path') || empty(resp['path'])
     return iced#message#error('not_found')
   endif
 
-  call s:apply_mode_to_file(a:mode, resp['path'])
+  let path = resp['path']
+  if !filereadable(path)
+    let prompt = printf('%s: ', iced#message#get('confirm_opening_file'))
+    let path = iced#di#get('io').input(prompt, path)
+  endif
+
+  if !empty(path)
+    call s:apply_mode_to_file(a:mode, path)
+  endif
 endfunction " }}}
 
 " s:open_var {{{
@@ -81,7 +89,7 @@ function! iced#nrepl#navigate#toggle_src_and_test() abort
 
   let ns = iced#nrepl#ns#name()
   let toggle_ns = iced#nrepl#navigate#cycle_ns(ns)
-  call s:open_ns('e', toggle_ns)
+  call iced#nrepl#navigate#open_ns('e', toggle_ns)
 endfunction " }}}
 
 " iced#nrepl#navigate#related_ns {{{
@@ -99,7 +107,7 @@ function! s:ns_list(resp) abort
 
   let related = filter(copy(a:resp['project-ns-list']), {_, v -> (v !=# ns && match(v, pattern) != -1)})
   if empty(related) | return iced#message#error('not_found') | endif
-  call iced#selector({'candidates': related, 'accept': funcref('s:open_ns')})
+  call iced#selector({'candidates': related, 'accept': function('iced#nrepl#navigate#open_ns')})
 endfunction
 
 function! iced#nrepl#navigate#related_ns() abort

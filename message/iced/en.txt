@@ -75,5 +75,6 @@
   'finding_var_references':  'Finding var references...',
   'var_references_found':    'Found %d references.',
   'no_var_references':       'No %s/%s references.',
+  'confirm_opening_file':    'Open this file?',
 }
 #vim:ft=ruby

@@ -50,7 +50,7 @@ let s:related_ns_test_ns_list = [
 function! s:related_ns_relay(msg) abort
   if a:msg['op'] ==# 'iced-project-ns-list'
     return {'status': ['done'], 'project-ns-list': s:related_ns_test_ns_list}
-  elseif a:msg['op'] ==# 'ns-path'
+  elseif a:msg['op'] ==# 'iced-pseudo-ns-path'
     return {'status': ['done'], 'path': s:temp_file}
   else
     return {'status': ['done']}
