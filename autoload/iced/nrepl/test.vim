@@ -229,12 +229,12 @@ function! s:spec_check(var, resp) abort
     endif
     return iced#message#info_str(msg)
   else
-    if has_key(a:resp, 'message')
+    if has_key(a:resp, 'error')
       let msg = printf('%s: Ran %d tests. Failed because ''%s'' with %s args.',
-            \ a:var, num_tests, a:resp['message'], a:resp['fail'])
+            \ a:var, num_tests, a:resp['error'], a:resp['failed-input'])
     else
       let msg = printf('%s: Ran %d tests. Failed with %s args.',
-            \ a:var, num_tests, a:resp['fail'])
+            \ a:var, num_tests, a:resp['failed-input'])
     endif
     return iced#message#error_str(msg)
   endif

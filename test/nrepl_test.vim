@@ -436,8 +436,8 @@ function! s:suite.spec_check_failure_test() abort
     elseif a:msg.op ==# 'iced-spec-check'
       return {'status': ['done'],
             \ 'result': 'NG',
-            \ 'message': 'dummy message',
-            \ 'fail': 'dummy fail',
+            \ 'error': 'dummy message',
+            \ 'failed-input': 'dummy fail',
             \ 'num-tests': a:msg['num-tests']}
     endif
     return {'status': ['done']}
