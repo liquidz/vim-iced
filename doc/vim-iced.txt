@@ -664,6 +664,11 @@ COMMANDS                                                    *vim-iced-commands*
   Jump back cursor.
   Key is mapped to |<Plug>(iced_def_back)|.
   
+                                                                  *:IcedOpenNs*
+:IcedOpenNs {ns-name}
+  Open a file corresponding to the specified {ns-name}.
+  If {ns-name} does not exist, make sure you open a file with a pseudo path.
+  
                                                         *:IcedBrowseReferences*
 :IcedBrowseReferences
   Browse positions referencing the form under cursor.
@@ -1057,10 +1062,14 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_def_back)
   Same as |:IcedDefBack|.
   
+                                                         *<Plug>(iced_open_ns)*
+<Plug>(iced_open_ns)
+  Same as |:IcedOpenNs|.
+
                                                *<Plug>(iced_browse_references)*
 <Plug>(iced_browse_references)
   Same as |:IcedBrowseReferences|.
-  
+
                                              *<Plug>(iced_browse_dependencies)*
 <Plug>(iced_browse_dependencies)
   Same as |:IcedBrowseDependencies|.
@@ -1068,7 +1077,7 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                            *<Plug>(iced_browse_var_references)*
 <Plug>(iced_browse_var_references)
   Same as |:IcedBrowseVarReferences|.
-  
+
                                          *<Plug>(iced_browse_var_dependencies)*
 <Plug>(iced_browse_var_dependencies)
   Same as |:IcedBrowseVarDependencies|.
