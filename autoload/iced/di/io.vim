@@ -5,8 +5,8 @@ let s:V = vital#iced#new()
 let s:M = s:V.import('Vim.Message')
 let s:io = {}
 
-function! s:io.input(prompt) abort
-  return input(a:prompt)
+function! s:io.input(...) abort
+  return call(function('input'), a:000)
 endfunction
 
 function! s:io.echomsg(hl, text) abort

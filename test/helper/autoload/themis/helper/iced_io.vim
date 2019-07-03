@@ -6,8 +6,8 @@ let s:helper = {
       \ 'last_args': {},
       \ }
 
-function! s:helper.input(prompt) abort
-  let self.last_args = {'input': {'prompt': a:prompt}}
+function! s:helper.input(...) abort
+  let self.last_args = {'input': {'prompt': get(a:, 1, ''), 'text': get(a:, 2, '')}}
   return get(self.value, 'input', '')
 endfunction
 
