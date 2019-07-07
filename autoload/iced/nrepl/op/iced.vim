@@ -85,6 +85,52 @@ function! iced#nrepl#op#iced#pseudo_ns_path(ns, callback) abort
         \ })
 endfunction " }}}
 
+""" list-tapped {{{
+function! iced#nrepl#op#iced#list_tapped(callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'iced-list-tapped',
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
+""" clear-tapped {{{
+function! iced#nrepl#op#iced#clear_tapped(callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'iced-clear-tapped',
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
+""" browse-tapped {{{
+function! iced#nrepl#op#iced#browse_tapped(keys, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'iced-browse-tapped',
+        \ 'keys': a:keys,
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
+""" complete-tapped {{{
+function! iced#nrepl#op#iced#complete_tapped(keys, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'iced-complete-tapped',
+        \ 'keys': a:keys,
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
 call iced#nrepl#register_handler('iced-lint-file', function('s:concat_handler', ['lint-warnings']))
 
 let &cpoptions = s:save_cpo
