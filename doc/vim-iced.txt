@@ -735,12 +735,6 @@ COMMANDS                                                    *vim-iced-commands*
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_source_show)|.
 
-                                                            *:IcedGrimoireOpen*
-:IcedGrimoireOpen [{symbol}]
-  Open a window, and show grimoire for {symbol}
-  If {symbol} is not passed, symbol under cursor is used.
-  Key is mapped to |<Plug>(iced_grimoire_open)|.
-
                                                           *:IcedCommandPalette*
 :IcedCommandPalette
   Select command from palette.
@@ -1147,10 +1141,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                      *<Plug>(iced_source_show)*
 <Plug>(iced_source_show)
   Same as |:IcedSourceShow|.
-
-                                                   *<Plug>(iced_grimoire_open)*
-<Plug>(iced_grimoire_open)
-  Same as |:IcedGrimoireOpen|.
 
                                                  *<Plug>(iced_command_palette)*
 <Plug>(iced_command_palette)
@@ -1616,7 +1606,6 @@ g:iced_enable_default_key_mappings
   n       K            <Plug>(iced_popup_document_open)
   n       <Leader>hb   <Plug>(iced_document_open)
   n       <Leader>hs   <Plug>(iced_source_show)
-  n       <Leader>hg   <Plug>(iced_grimoire_open)
   n       <Leader>hh   <Plug>(iced_command_palette)
   n       <Leader>bn   <Plug>(iced_browse_related_namespace)
   n       <Leader>bs   <Plug>(iced_browse_spec)

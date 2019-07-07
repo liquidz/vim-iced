@@ -35,20 +35,6 @@ function! iced#nrepl#op#iced#lint_file(file, opt, callback) abort
   call iced#nrepl#send(msg)
 endfunction " }}}
 
-""" grimoire {{{
-function! iced#nrepl#op#iced#grimoire(platform, ns_name, symbol, callback) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-
-  call iced#nrepl#send({
-        \ 'op': 'iced-grimoire',
-        \ 'session': iced#nrepl#current_session(),
-        \ 'platform': a:platform,
-        \ 'ns': a:ns_name,
-        \ 'symbol': a:symbol,
-        \ 'callback': a:callback,
-        \ })
-endfunction " }}}
-
 """ spec-check {{{
 function! iced#nrepl#op#iced#spec_check(symbol, num_tests, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif

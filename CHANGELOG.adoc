@@ -73,6 +73,9 @@ All notable changes to this project will be documented in this file. This change
 * (BREAKING) Remove `IcedFindVarReferences!` command.
 * (BREAKING) Remove `g:iced#var_references#cache_dir` option.
 * Remove `iced#nrepl#op#iced#find_var_references` function.
+* (BREAKING) Remove `IcedGrimoireOpen` command.
+** Sadly grimoire is deprecated...
+*** https://twitter.com/arrdem/status/1144065851370299392
 // }}}
 
 == 0.10.5 (2019-06-19)
