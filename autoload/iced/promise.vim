@@ -35,5 +35,9 @@ function! iced#promise#sync(fn, args) abort
   return result
 endfunction
 
+function! iced#promise#reject(x) abort
+  return s:Promise.reject(a:x)
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
