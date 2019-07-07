@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:saved_view = ''
 
@@ -165,5 +165,64 @@ function! iced#nrepl#debug#quit() abort
   endif
 endfunction
 
-let &cpo = s:save_cpo
+function! s:accept_tapped_value(_, x) abort
+  let i = stridx(a:x, ': ')
+  if i < 0 | return | endif
+
+  let k = a:x[:i-1]
+  call iced#nrepl#debug#browse_tapped(k)
+endfunction
+
+function! iced#nrepl#debug#list_tapped() abort
+  call iced#promise#call('iced#nrepl#op#iced#list_tapped', [])
+        \.then({resp -> has_key(resp, 'error') ? iced#promise#reject(resp['error']) : resp})
+        \.then({resp -> map(get(resp, 'tapped', []), {i, v -> printf("%d: %s", i, v)})})
+        \.then({candidates -> empty(candidates)
+        \                     ? iced#message#warning('not_found')
+        \                     : iced#selector({'candidates': candidates,
+        \                                      'accept': funcref('s:accept_tapped_value')})})
+        \.catch({error -> iced#message#error_str(error)})
+endfunction
+
+function! iced#nrepl#debug#browse_tapped(key_str) abort
+  let keys = split(a:key_str, '\s\+')
+  let keys = map(keys, {_, v ->
+        \ (type(v) == v:t_string && match(v, '^\d\+$') == 0) ? str2nr(v) : v})
+
+  let resp = iced#promise#sync('iced#nrepl#op#iced#browse_tapped', [keys])
+  if has_key(resp, 'error') | return iced#message#error_str(resp['error']) | endif
+
+  let value = get(resp, 'value', '')
+  if empty(value) | return iced#message#warning('not_found') | endif
+  call iced#buffer#document#open(value, 'clojure')
+
+  " continue to browse the tapped value in command mode
+  let cmd = printf(':IcedBrowseTapped %s ', a:key_str)
+  let cmd = substitute(cmd, '\s\+', ' ', 'g')
+  call feedkeys(cmd, 'n')
+endfunction
+
+function! iced#nrepl#debug#complete_tapped(arg_lead, cmd_line, cursor_pos) abort
+  if !iced#nrepl#is_connected() | return '' | endif
+
+  let end = a:cursor_pos - (len(a:arg_lead) + 1)
+  let cmd = trim(a:cmd_line[:end])
+
+  let keys = split(cmd, '\s\+')[1:]
+  let keys = map(keys, {_, v ->
+        \ (type(v) == v:t_string && match(v, '^\d\+$') == 0) ? str2nr(v) : v})
+  let resp = iced#promise#sync('iced#nrepl#op#iced#complete_tapped', [keys])
+  return join(get(resp, 'complete', []), "\n")
+endfunction
+
+function! iced#nrepl#debug#clear_tapped() abort
+  call iced#promise#call('iced#nrepl#op#iced#clear_tapped', [])
+        \.then({resp -> has_key(resp, 'error')
+        \               ? iced#promise#reject(resp['error'])
+        \               : resp})
+        \.then({_ -> iced#message#info('cleared')})
+        \.catch({error -> iced#message#error_str(error)})
+endfunction
+
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

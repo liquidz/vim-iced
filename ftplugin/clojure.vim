@@ -94,6 +94,11 @@ command!          IcedThreadLast            call iced#nrepl#refactor#thread_last
 command!          IcedExtractFunction       call iced#nrepl#refactor#extract_function()
 command!          IcedMoveToLet             call iced#let#move_to_let()
 
+command           IcedListTapped            call iced#nrepl#debug#list_tapped()
+command           IcedClearTapped           call iced#nrepl#debug#clear_tapped()
+command! -nargs=1 -complete=custom,iced#nrepl#debug#complete_tapped
+      \ IcedBrowseTapped                    call iced#nrepl#debug#browse_tapped(<q-args>)
+
 command! -nargs=? IcedToggleTraceVar        call iced#nrepl#trace#toggle_var(<q-args>)
 command! -nargs=? IcedToggleTraceNs         call iced#nrepl#trace#toggle_ns(<q-args>)
 
@@ -183,6 +188,10 @@ nnoremap <silent> <Plug>(iced_thread_first)             :<C-u>IcedThreadFirst<CR
 nnoremap <silent> <Plug>(iced_thread_last)              :<C-u>IcedThreadLast<CR>
 nnoremap <silent> <Plug>(iced_extract_function)         :<C-u>IcedExtractFunction<CR>
 nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
+
+nnoremap <silent> <Plug>(iced_list_tapped)              :<C-u>IcedListTapped<CR>
+nnoremap <silent> <Plug>(iced_clear_tapped)              :<C-u>IcedClearTapped<CR>
+nnoremap <silent> <Plug>(iced_browse_tapped)              :<C-u>IcedBrowseTapped<CR>
 
 nnoremap <silent> <Plug>(iced_toggle_trace_ns)          :<C-u>IcedToggleTraceNs<CR>
 nnoremap <silent> <Plug>(iced_toggle_trace_var)         :<C-u>IcedToggleTraceVar<CR>
@@ -462,6 +471,16 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_jump_to_let)')
     silent! nmap <buffer> <Leader>jl <Plug>(iced_jump_to_let)
+  endif
+
+  "" Debugging (<Leader>d)
+  "" ------------------------------------------------------------------------
+  if !hasmapto('<Plug>(iced_list_tapped)')
+    silent! nmap <buffer> <Leader>dtl <Plug>(iced_list_tapped)
+  endif
+
+  if !hasmapto('<Plug>(iced_clear_tapped)')
+    silent! nmap <buffer> <Leader>dtc <Plug>(iced_clear_tapped)
   endif
 
   "" Misc
