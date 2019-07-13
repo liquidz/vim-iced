@@ -217,23 +217,29 @@ function! iced#nrepl#document#current_form() abort
   endif
 
   let view = winsaveview()
+  let code = ''
+  let code_lnum = 0
   let reg_save = @@
   try
     let @@ = ''
     silent normal! vi(y
+    let code_lnum = line('.')
     let code = trim(@@)
-    if empty(code)
-      exe "normal! \<Esc>"
-    else
-      let symbol = trim(split(code, ' ')[0])
-      if stridx(symbol, ':') != 0
-        call iced#nrepl#var#get(symbol, funcref('s:one_line_doc'))
-      endif
-    endif
   finally
+    silent exe "normal! \<Esc>"
     let @@ = reg_save
     call winrestview(view)
   endtry
+
+  let distance = line('.') - code_lnum
+  if empty(code) || distance > g:iced_max_distance_for_auto_document
+    return
+  endif
+
+  let symbol = trim(split(code, ' ')[0])
+  if stridx(symbol, ':') != 0
+    call iced#nrepl#var#get(symbol, funcref('s:one_line_doc'))
+  endif
 endfunction
 
 let s:last_usecase_info = {}

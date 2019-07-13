@@ -16,6 +16,10 @@ if !exists('g:iced_enable_popup_document')
   let g:iced_enable_popup_document = 'every'
 endif
 
+if !exists('g:iced_max_distance_for_auto_document')
+  let g:iced_max_distance_for_auto_document = 2
+endif
+
 "" Commands {{{
 command! -nargs=? IcedConnect               call iced#nrepl#connect(<q-args>)
 command!          IcedDisconnect            call iced#nrepl#disconnect()

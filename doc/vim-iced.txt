@@ -1427,6 +1427,13 @@ g:iced_enable_popup_document
 
   Default value is `'every'`.
 
+                                        *g:iced_max_distance_for_auto_document*
+g:iced_max_distance_for_auto_document
+  Max line distance to display one-line document.
+  See also |g:iced_enable_auto_document|.
+
+  Default value is `2`.
+
 ------------------------------------------------------------------------------
 AUTO INDENT                                  *vim-iced-customizing-auto-indent*
 
