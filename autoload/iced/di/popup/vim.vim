@@ -32,16 +32,27 @@ function! s:popup.open(texts, ...) abort
   endif
 
   let wininfo = getwininfo(win_getid())[0]
+  let title_width = len(get(opts, 'title', '')) + 3
+  let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
 
   let line = get(opts, 'line', winline())
   let line = line + wininfo['winrow'] - 1
 
-  let org_col = get(opts, 'col', len(getline('.')) + 1) - 1
+  let org_col = get(opts, 'col', len(getline('.')) + 1)
+  if type(org_col) == v:t_string
+    if org_col ==# 'right'
+      let org_col = wininfo['width'] - width
+    else
+      return iced#message#error('unexpected_error', printf('invalid column "%s"', org_col))
+    endif
+  else
+    let org_col = org_col - 1
+  endif
   let col = org_col + wininfo['wincol']
 
   let max_width = &columns - wininfo['wincol'] - org_col
-  let title_width = len(get(opts, 'title', '')) + 3
-  let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
+  " let title_width = len(get(opts, 'title', '')) + 3
+  " let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
 
   let win_opts = {
         \ 'line': line,
