@@ -187,20 +187,23 @@ function! s:one_line_doc(resp) abort
 
       let popup_opts = {
             \ 'iced_context': s:popup_context({'type': 'one-line document', 'name': name}),
-            \ 'line': winline() + 1,
-            \ 'col': col('.'),
-            \ 'filetype': 'clojure',
-            \ 'border': [],
-            \ 'borderhighlight': ['Comment'],
-            \ 'title': name,
+            \ 'line': winline() - 1,
+            \ 'col': 'right',
             \ 'auto_close': v:false,
             \ 'moved': [0, &columns],
+            \ 'highlight': 'Title',
             \ }
 
       let popup_args = trim(get(a:resp, 'arglists-str', ''))
       let popup_args = substitute(popup_args, '\r\?\n', " \n ", 'g')
       let popup_args = printf(' %s ', popup_args)
-      let s:popup_winid = popup.open(split(popup_args, '\n'), popup_opts)
+      let popup_args = split(popup_args, '\n')
+
+      let max_len = max(map(copy(popup_args), {_, v -> len(v)}))
+      let fmt = printf('%%%ds', max_len)
+      call map(popup_args, {_, v -> printf(fmt, v)})
+
+      let s:popup_winid = popup.open(popup_args, popup_opts)
     endif
 
     echo iced#util#shorten(msg)
