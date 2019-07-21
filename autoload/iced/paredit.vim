@@ -3,15 +3,6 @@ set cpo&vim
 
 let g:iced#paredit#slurp_max_depth = get(g:, 'iced#paredit#slurp_max_depth', 5)
 
-function! s:search_pos(pattern, flags) abort
-  let view = winsaveview()
-  try
-    return searchpos(a:pattern, a:flags)
-  finally
-    call winrestview(view)
-  endtry
-endfunction
-
 function! s:is_pos_before(pos1, pos2) abort
   if a:pos1[0] < a:pos2[0]
     return v:true
@@ -59,8 +50,8 @@ function! iced#paredit#move_to_current_element_head() abort
   else
     let view = winsaveview()
     while v:true
-      let start = s:search_pos('(', 'bW')
-      let end = s:search_pos(')', 'bW')
+      let start = searchpos('(', 'bWn')
+      let end = searchpos(')', 'bWn')
 
       if start == [0, 0] && end == [0, 0]
         call winrestview(view)
