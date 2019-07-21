@@ -95,6 +95,7 @@ command! -nargs=? IcedAddNs                 call iced#nrepl#refactor#add_ns(<q-a
 command!          IcedThreadFirst           call iced#nrepl#refactor#thread_first()
 command!          IcedThreadLast            call iced#nrepl#refactor#thread_last()
 command!          IcedExtractFunction       call iced#nrepl#refactor#extract_function()
+command!          IcedAddArity              call iced#nrepl#refactor#add_arity()
 command!          IcedMoveToLet             call iced#let#move_to_let()
 
 command           IcedListTapped            call iced#nrepl#debug#list_tapped()

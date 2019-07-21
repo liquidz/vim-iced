@@ -244,6 +244,65 @@ function! iced#nrepl#refactor#thread_last() abort
   call s:threading({code -> iced#nrepl#op#iced#sync#refactor_thread_last(code)})
 endfunction " }}}
 
+" iced#nrepl#refactor#add_arity {{{
+function! iced#nrepl#refactor#add_arity() abort
+  let view = winsaveview()
+  let reg_save = @@
+  try
+    let res = iced#paredit#get_current_top_list_raw()
+    if stridx(res['code'], '(defn') != 0
+      call winrestview(view)
+      return iced#message#error('not_found')
+    endif
+    let beginning_of_defn = res['curpos']
+
+    " Move to next element head
+    silent normal! l
+    call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+
+    " Skip metadata part
+    let p = getcurpos()
+    if searchpos('\^{', 'cn') == [p[1], p[2]]
+      call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+    endif
+
+    let beginning_var_name = getcurpos()
+
+    " Move to the beginning of arity
+    call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+
+    let beginning_of_arity = getcurpos()
+    if searchpos('(', 'cn') == [beginning_of_arity[1], beginning_of_arity[2]]
+      " For multi arity
+      let @@ = "([])\n"
+      silent normal! P
+    else
+      " For single arity
+      silent normal! v
+      call setpos('.', beginning_of_defn)
+      silent normal! %hy
+      let arity_and_body = @@
+      if beginning_var_name[1] == beginning_of_arity[1]
+        let @@ = printf("\n  ([])\n  (%s)", arity_and_body)
+        silent normal! gvpj
+      else
+        let @@ = printf("([])\n  (%s)", arity_and_body)
+        silent normal! gvp
+      endif
+    endif
+
+    " Format new defn code
+    let p = getcurpos()
+    call setpos('.', beginning_of_defn)
+    call iced#format#minimal()
+    call setpos('.', p)
+    " Move cursor to the new arity
+    call search(']')
+  finally
+    let @@ = reg_save
+  endtry
+endfunction " }}}
+
 let s:save_cpo = &cpo
 set cpo&vim
 " vim:fdm=marker:fdl=0
