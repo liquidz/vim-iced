@@ -5,8 +5,13 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 PROJECT_DIR=$(cd $SCRIPT_DIR; cd ..; pwd)
 VERSION=$(grep 'Version: ' ${SCRIPT_DIR}/../doc/vim-iced.txt | cut -d' ' -f2)
 
-DEPENDENCIES=( 'nrepl:0.6.0 refactor-nrepl:2.4.0 cider/cider-nrepl:0.22.0-beta6 iced-nrepl:0.6.0-SNAPSHOT' 'nrepl:0.6.0 refactor-nrepl:2.4.0 cider/cider-nrepl:0.22.0-beta6 iced-nrepl:0.6.0-SNAPSHOT cider/piggieback:0.4.1' )
-MIDDLEWARES=( 'cider.nrepl/wrap-classpath cider.nrepl/wrap-complete cider.nrepl/wrap-debug cider.nrepl/wrap-format cider.nrepl/wrap-info cider.nrepl/wrap-macroexpand cider.nrepl/wrap-ns cider.nrepl/wrap-out cider.nrepl/wrap-spec cider.nrepl/wrap-test cider.nrepl/wrap-trace cider.nrepl/wrap-undef cider.nrepl/wrap-xref refactor-nrepl.middleware/wrap-refactor iced.nrepl/wrap-iced' 'cider.nrepl/wrap-classpath cider.nrepl/wrap-complete cider.nrepl/wrap-debug cider.nrepl/wrap-format cider.nrepl/wrap-info cider.nrepl/wrap-macroexpand cider.nrepl/wrap-ns cider.nrepl/wrap-out cider.nrepl/wrap-spec cider.nrepl/wrap-test cider.nrepl/wrap-trace cider.nrepl/wrap-undef cider.nrepl/wrap-xref refactor-nrepl.middleware/wrap-refactor iced.nrepl/wrap-iced cider.piggieback/wrap-cljs-repl' )
+BASE_DEPENDENCIES='nrepl:0.6.0 refactor-nrepl:2.4.0 cider/cider-nrepl:0.22.0-beta8 iced-nrepl:0.6.0-SNAPSHOT'
+BASE_MIDDLEWARES='cider.nrepl/wrap-classpath cider.nrepl/wrap-complete cider.nrepl/wrap-debug cider.nrepl/wrap-format cider.nrepl/wrap-info cider.nrepl/wrap-macroexpand cider.nrepl/wrap-ns cider.nrepl/wrap-out cider.nrepl/wrap-spec cider.nrepl/wrap-test cider.nrepl/wrap-trace cider.nrepl/wrap-undef cider.nrepl/wrap-xref refactor-nrepl.middleware/wrap-refactor iced.nrepl/wrap-iced'
+
+CLJS_DEPENDENCIES='cider/piggieback:0.4.1'
+CLJS_MIDDLEWARES='cider.piggieback/wrap-cljs-repl'
+KAOCHA_DEPENDENCIES='kaocha-nrepl:0.1.2-SNAPSHOT'
+KAOCHA_MIDDLEWARES='kaocha-nrepl.core/wrap-kaocha'
 
 IS_LEININGEN=0
 IS_BOOT=0
@@ -32,6 +37,7 @@ function iced_usage() {
 function iced_repl_usage() {
     echo "Usage:"
     echo "  iced repl [options] [--with-cljs] [--without-cljs]"
+    echo "            [--with-kaocha]"
     echo "            [--dependencies=VALUE] [--middleware=VALUE]"
     echo "            [--force-boot] [--force-clojure-cli]"
     echo ""
@@ -40,6 +46,8 @@ function iced_repl_usage() {
     echo "The --with-cljs option enables ClojureScript features."
     echo "This option is enabled automatically when project configuration"
     echo "file(eg. project.clj) contains 'org.clojure/clojurescript' dependency."
+    echo ""
+    echo "The --with-kaocha option enables testing with Kaocha features."
     echo ""
     echo "On the other hand, the --without-cljs option disables ClojureScript features."
     echo ""
@@ -142,6 +150,7 @@ ARGV=("${ARGV[@]:1}")
 
 IS_HELP=0
 IS_CLJS=0
+IS_KAOCHA=0
 FORCE_BOOT=0
 FORCE_CLOJURE_CLI=0
 DISABLE_CLJS_DETECTOR=0
@@ -159,6 +168,8 @@ for x in ${ARGV[@]}; do
         IS_CLJS=1
     elif [ $key = '--without-cljs' ]; then
         DISABLE_CLJS_DETECTOR=1
+    elif [ $key = '--with-kaocha' ]; then
+        IS_KAOCHA=1
     elif [ $key = '--force-boot' ]; then
         FORCE_BOOT=1
     elif [ $key = '--force-clojure-cli' ]; then
@@ -242,17 +253,24 @@ elif [ $FORCE_CLOJURE_CLI -eq 1 ]; then
     IS_BOOT=0
 fi
 
+TARGET_DEPENDENCIES=$BASE_DEPENDENCIES
+TARGET_MIDDLEWARES=$BASE_MIDDLEWARES
+INJECTING_OPTIONS=( 'CLJS' 'KAOCHA' )
 
-# cljs = 1
-# next = 2
-# nnext = 4
-CONFIG_INDEX=0
-if [ $IS_CLJS -eq 1 ]; then
-    CONFIG_INDEX=$((CONFIG_INDEX+1))
-fi
+for k in ${INJECTING_OPTIONS[@]}; do
+    eval FLAG=\$IS_${k}
+    if [ $FLAG -eq 1 ]; then
+        echo_info "${k} option is enabled."
+        eval SUB_DEP=\"\$${k}_DEPENDENCIES\"
+        eval SUB_MID=\"\$${k}_MIDDLEWARES\"
 
-TARGET_DEPENDENCIES="${DEPENDENCIES[$CONFIG_INDEX]} ${EXTRA_DEPENDENCIES}"
-TARGET_MIDDLEWARES="${MIDDLEWARES[$CONFIG_INDEX]} ${EXTRA_MIDDLEWARES}"
+        TARGET_DEPENDENCIES="${TARGET_DEPENDENCIES} ${SUB_DEP}"
+        TARGET_MIDDLEWARES="${TARGET_MIDDLEWARES} ${SUB_MID}"
+    fi
+done
+
+TARGET_DEPENDENCIES="${TARGET_DEPENDENCIES} ${EXTRA_DEPENDENCIES}"
+TARGET_MIDDLEWARES="${TARGET_MIDDLEWARES} ${EXTRA_MIDDLEWARES}"
 
 case "$1" in
     "repl")

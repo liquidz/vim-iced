@@ -5,8 +5,13 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 PROJECT_DIR=$(cd $SCRIPT_DIR; cd ..; pwd)
 VERSION=$(grep 'Version: ' ${SCRIPT_DIR}/../doc/vim-iced.txt | cut -d' ' -f2)
 
-DEPENDENCIES=( {{#dependencies}}{{{.}}} {{/dependencies}})
-MIDDLEWARES=( {{#middlewares}}{{{.}}} {{/middlewares}})
+BASE_DEPENDENCIES={{{base-dependencies}}}
+BASE_MIDDLEWARES={{{base-middlewares}}}
+
+{{#option-configs}}
+{{{name}}}_DEPENDENCIES={{{dependencies}}}
+{{{name}}}_MIDDLEWARES={{{middlewares}}}
+{{/option-configs}}
 
 IS_LEININGEN=0
 IS_BOOT=0
@@ -32,6 +37,7 @@ function iced_usage() {
 function iced_repl_usage() {
     echo "Usage:"
     echo "  iced repl [options] [--with-cljs] [--without-cljs]"
+    echo "            [--with-kaocha]"
     echo "            [--dependencies=VALUE] [--middleware=VALUE]"
     echo "            [--force-boot] [--force-clojure-cli]"
     echo ""
@@ -40,6 +46,8 @@ function iced_repl_usage() {
     echo "The --with-cljs option enables ClojureScript features."
     echo "This option is enabled automatically when project configuration"
     echo "file(eg. project.clj) contains 'org.clojure/clojurescript' dependency."
+    echo ""
+    echo "The --with-kaocha option enables testing with Kaocha features."
     echo ""
     echo "On the other hand, the --without-cljs option disables ClojureScript features."
     echo ""
@@ -142,6 +150,7 @@ ARGV=("${ARGV[@]:1}")
 
 IS_HELP=0
 IS_CLJS=0
+IS_KAOCHA=0
 FORCE_BOOT=0
 FORCE_CLOJURE_CLI=0
 DISABLE_CLJS_DETECTOR=0
@@ -159,6 +168,8 @@ for x in ${ARGV[@]}; do
         IS_CLJS=1
     elif [ $key = '--without-cljs' ]; then
         DISABLE_CLJS_DETECTOR=1
+    elif [ $key = '--with-kaocha' ]; then
+        IS_KAOCHA=1
     elif [ $key = '--force-boot' ]; then
         FORCE_BOOT=1
     elif [ $key = '--force-clojure-cli' ]; then
@@ -242,17 +253,24 @@ elif [ $FORCE_CLOJURE_CLI -eq 1 ]; then
     IS_BOOT=0
 fi
 
+TARGET_DEPENDENCIES=$BASE_DEPENDENCIES
+TARGET_MIDDLEWARES=$BASE_MIDDLEWARES
+INJECTING_OPTIONS=( {{#option-configs}}'{{{name}}}' {{/option-configs}})
 
-# cljs = 1
-# next = 2
-# nnext = 4
-CONFIG_INDEX=0
-if [ $IS_CLJS -eq 1 ]; then
-    CONFIG_INDEX=$((CONFIG_INDEX+1))
-fi
+for k in ${INJECTING_OPTIONS[@]}; do
+    eval FLAG=\$IS_${k}
+    if [ $FLAG -eq 1 ]; then
+        echo_info "${k} option is enabled."
+        eval SUB_DEP=\"\$${k}_DEPENDENCIES\"
+        eval SUB_MID=\"\$${k}_MIDDLEWARES\"
 
-TARGET_DEPENDENCIES="${DEPENDENCIES[$CONFIG_INDEX]} ${EXTRA_DEPENDENCIES}"
-TARGET_MIDDLEWARES="${MIDDLEWARES[$CONFIG_INDEX]} ${EXTRA_MIDDLEWARES}"
+        TARGET_DEPENDENCIES="${TARGET_DEPENDENCIES} ${SUB_DEP}"
+        TARGET_MIDDLEWARES="${TARGET_MIDDLEWARES} ${SUB_MID}"
+    fi
+done
+
+TARGET_DEPENDENCIES="${TARGET_DEPENDENCIES} ${EXTRA_DEPENDENCIES}"
+TARGET_MIDDLEWARES="${TARGET_MIDDLEWARES} ${EXTRA_MIDDLEWARES}"
 
 case "$1" in
     "repl")
