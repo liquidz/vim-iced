@@ -73,6 +73,8 @@ command! -nargs=? IcedSourceShow            call iced#nrepl#source#show(<q-args>
 command!          IcedCommandPalette        call iced#palette#show()
 command! -nargs=? IcedSpecForm              call iced#nrepl#spec#form(<q-args>)
 command! -nargs=? IcedSpecExample           call iced#nrepl#spec#example(<q-args>)
+command! -nargs=? IcedClojureDocsOpen       call iced#clojuredocs#open(<q-args>)
+command!          IcedClojureDocsRefresh    call iced#clojuredocs#refresh()
 
 command!          IcedSlurp                 call iced#paredit#deep_slurp()
 command!          IcedBarf                  call iced#paredit#barf()
@@ -168,6 +170,8 @@ nnoremap <silent> <Plug>(iced_source_show)              :<C-u>IcedSourceShow<CR>
 nnoremap <silent> <Plug>(iced_command_palette)          :<C-u>IcedCommandPalette<CR>
 nnoremap <silent> <Plug>(iced_spec_form)                :<C-u>IcedSpecForm<CR>
 nnoremap <silent> <Plug>(iced_spec_example)             :<C-u>IcedSpecExample<CR>
+nnoremap <silent> <Plug>(iced_clojuredocs_open)         :<C-u>IcedClojureDocsOpen<CR>
+nnoremap <silent> <Plug>(iced_clojuredocs_refresh)      :<C-u>IcedClojureDocsRefresh<CR>
 
 nnoremap <silent> <Plug>(iced_slurp)                    :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                     :<C-u>IcedBarf<CR>
@@ -414,6 +418,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_source_show)')
     silent! nmap <buffer> <Leader>hs <Plug>(iced_source_show)
+  endif
+
+  if !hasmapto('<Plug>(iced_clojuredocs_open)')
+    silent! nmap <buffer> <Leader>hc <Plug>(iced_clojuredocs_open)
   endif
 
   if !hasmapto('<Plug>(iced_command_palette)')
