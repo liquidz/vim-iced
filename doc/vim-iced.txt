@@ -753,6 +753,25 @@ COMMANDS                                                    *vim-iced-commands*
   If {keyword} is not passed, keyword under cursor is used.
   Key is mapped to |<Plug>(iced_spec_example)|.
 
+                                                         *:IcedClojureDocsOpen*
+:IcedClojureDocsOpen [{symbol}]
+  Open a window, and show documents for {symbol} in ClojureDocs.
+  If {symbol} is not passed, symbol under cursor is used.
+
+  A cache file will be created at the following path.
+  - macOS  : $HOME/Library/Caches/orchard/clojuredocs/export.edn
+  - Windows: FOLDERID_LocalAppData\\cache\orchard\clojuredocs\export.edn
+  - Others : $XDG_CACHE_HOME or $HOME/.cache/orchard/clojuredocs/export.edn
+
+  See also |g:iced#clojuredocs#export_edn_url|.
+  Key is mapped to |<Plug>(iced_clojuredocs_open)|.
+
+                                                      *:IcedClojureDocsRefresh*
+:IcedClojureDocsRefresh
+  Clean a ClojureDocs cache file, and reload documents.
+  See also |g:iced#clojuredocs#export_edn_url|.
+  Key is mapped to |<Plug>(iced_clojuredocs_refresh)|.
+
                                                                    *:IcedSlurp*
 :IcedSlurp
   Slurp next element.
@@ -1154,6 +1173,14 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_spec_example)
   Same as |:IcedSpecExample|.
 
+                                                *<Plug>(iced_clojuredocs_open)*
+<Plug>(iced_clojuredocs_open)
+  Same as |:IcedClojureDocsOpen|.
+
+                                             *<Plug>(iced_clojuredocs_refresh)*
+<Plug>(iced_clojuredocs_refresh)
+  Same as |:IcedClojureDocsRefresh|.
+
                                                            *<Plug>(iced_slurp)*
 <Plug>(iced_slurp)
   Same as |:IcedSlurp|.
@@ -1396,6 +1423,12 @@ g:iced#buffer#document#does_update_automatically
   update document buffer with document for the form under cursor.
   Default value is `v:false`.
 
+                                            *g:iced#clojuredocs#export_edn_url*
+g:iced#clojuredocs#export_edn_url
+  The URL exported from ClojureDocs.
+  EDN format file is expected.
+  Default value is `https://clojuredocs-edn.netlify.com/export.edn`.
+
                                            *vim-iced-customizing-auto-document*
 AUTO DOCUMENT~
 
@@ -1613,6 +1646,7 @@ g:iced_enable_default_key_mappings
   n       K            <Plug>(iced_popup_document_open)
   n       <Leader>hb   <Plug>(iced_document_open)
   n       <Leader>hs   <Plug>(iced_source_show)
+  n       <Leader>hc   <Plug>(iced_clojuredocs_open)
   n       <Leader>hh   <Plug>(iced_command_palette)
   n       <Leader>bn   <Plug>(iced_browse_related_namespace)
   n       <Leader>bs   <Plug>(iced_browse_spec)
