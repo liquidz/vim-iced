@@ -180,9 +180,6 @@ function! s:one_line_doc(resp) abort
     if popup.is_supported()
           \ && s:enable_popup_one_line_document
 
-      if get(popup.get_context(s:popup_winid), 'name', '') ==# name
-        return popup.move(s:popup_winid, {'col': col('.') })
-      endif
       if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
 
       let popup_opts = {
