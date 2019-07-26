@@ -75,11 +75,16 @@ endfunction
 
 function! iced#clojuredocs#open(symbol) abort
   call iced#promise#call('iced#nrepl#ns#eval', [])
-        \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
-        \.then({resp -> iced#promise#call('iced#nrepl#op#cider#clojuredocs_lookup',
-        \                 [resp['ns'], resp['name'], g:iced#clojuredocs#export_edn_url])})
-        \.then({resp -> s:show_doc(resp)})
-        \.catch({err -> iced#message#error('unexpected_error', err)})
+       \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
+       \.then({resp -> iced#util#has_status(resp, 'no-info')
+       \               ? iced#promise#reject('not-found')
+       \               : iced#promise#call('iced#nrepl#op#cider#clojuredocs_lookup',
+       \                   [resp['ns'], resp['name'], g:iced#clojuredocs#export_edn_url])})
+       \.then({resp -> iced#util#has_status(resp, 'no-document')
+       \               ? iced#message#error('not_found')
+       \               : s:show_doc(resp)},
+       \      {err -> iced#message#error('not_found')})
+       \.catch({err -> iced#message#error('unexpected_error', err)})
 endfunction
 
 let &cpoptions = s:save_cpo
