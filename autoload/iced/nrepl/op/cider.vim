@@ -197,6 +197,32 @@ function! iced#nrepl#op#cider#fn_deps(ns_name, symbol, callback) abort
         \ })
 endfunction " }}}
 
+""" clojuredocs-lookup {{{
+function! iced#nrepl#op#cider#clojuredocs_lookup(ns, name, export_edn_url, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'clojuredocs-lookup',
+        \ 'ns': a:ns,
+        \ 'symbol': a:name,
+        \ 'export-edn-url': a:export_edn_url,
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
+""" clojuredocs-refresh-cache {{{
+function! iced#nrepl#op#cider#clojuredocs_refresh_cache(export_edn_url, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'clojuredocs-refresh-cache',
+        \ 'export-edn-url': a:export_edn_url,
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
 call iced#nrepl#register_handler('info', function('iced#nrepl#merge_response_handler'))
 call iced#nrepl#register_handler('test-var-query', function('iced#nrepl#extend_responses_handler'))
 call iced#nrepl#register_handler('retest', function('iced#nrepl#extend_responses_handler'))
