@@ -62,7 +62,7 @@ Move to let
 
 |:mag:
 |Reference
-|Docs, Javadoc, and https://www.conj.io[Grimoire]
+|Docs, Javadoc, and https://clojuredocs.org[ClojureDocs]
 
 |:ant:
 |Debugging
