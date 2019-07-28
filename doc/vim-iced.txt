@@ -444,6 +444,7 @@ REFACTORING                                              *vim-iced-refactoring*
   - |:IcedThreadFirst| (|<Plug>(iced_thread_first)|)
   - |:IcedThreadLast| (|<Plug>(iced_thread_last)|)
   - |:IcedExtractFunction| (|<Plug>(iced_extract_function)|)
+  - |:IcedAddArity| (|<Plug>(iced_add_arity)|)
   - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
 
 ------------------------------------------------------------------------------
@@ -865,6 +866,10 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedExtractFunction
   Extract the form under cursor as a function.
 
+                                                                *:IcedAddArity*
+:IcedAddArity
+  Add an arity to `defn`, `fn`, `defmacro`, or `defmethod`.
+
                                                                *:IcedMoveToLet*
 :IcedMoveToLet
   Move the form under cursor to nearest `let` binding.
@@ -1240,6 +1245,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                 *<Plug>(iced_extract_function)*
 <Plug>(iced_extract_function)
   Same as |:IcedExtractFunction|.
+
+                                                       *<Plug>(iced_add_arity)*
+<Plug>(iced_add_arity)
+  Same as |:IcedAddArity|.
 
                                                      *<Plug>(iced_move_to_let)*
 <Plug>(iced_move_to_let)
@@ -1637,6 +1646,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>sl   <Plug>(iced_stdout_buffer_clear)
   n       <Leader>sq   <Plug>(iced_stdout_buffer_close)
   n       <Leader>rcn  <Plug>(iced_clean_ns)
+  n       <Leader>raa  <Plug>(iced_add_arity)
   n       <Leader>ram  <Plug>(iced_add_missing)
   n       <Leader>ran  <Plug>(iced_add_ns)
   n       <Leader>rtf  <Plug>(iced_thread_first)
