@@ -194,6 +194,7 @@ nnoremap <silent> <Plug>(iced_add_ns)                   :<C-u>IcedAddNs<CR>
 nnoremap <silent> <Plug>(iced_thread_first)             :<C-u>IcedThreadFirst<CR>
 nnoremap <silent> <Plug>(iced_thread_last)              :<C-u>IcedThreadLast<CR>
 nnoremap <silent> <Plug>(iced_extract_function)         :<C-u>IcedExtractFunction<CR>
+nnoremap <silent> <Plug>(iced_add_arity)                :<C-u>IcedAddArity<CR>
 nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
 
 nnoremap <silent> <Plug>(iced_list_tapped)              :<C-u>IcedListTapped<CR>
@@ -384,6 +385,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_extract_function)')
     silent! nmap <buffer> <Leader>ref <Plug>(iced_extract_function)
+  endif
+
+  if !hasmapto('<Plug>(iced_add_arity)')
+    silent! nmap <buffer> <Leader>raa <Plug>(iced_add_arity)
   endif
 
   if !hasmapto('<Plug>(iced_move_to_let)')
