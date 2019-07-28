@@ -249,8 +249,9 @@ function! iced#nrepl#refactor#add_arity() abort
   let view = winsaveview()
   let reg_save = @@
   try
-    let res = iced#paredit#get_current_top_list_raw()
-    if stridx(res['code'], '(defn') != 0
+    let res = iced#paredit#find_parent_form_raw([
+          \ 'defn', 'fn', 'defmacro', 'defmethod'])
+    if !has_key(res, 'code')
       call winrestview(view)
       return iced#message#error('not_found')
     endif
@@ -262,14 +263,31 @@ function! iced#nrepl#refactor#add_arity() abort
 
     " Skip metadata part
     let p = getcurpos()
-    if searchpos('\^{', 'cn') == [p[1], p[2]]
+    if searchpos('\^', 'cn') == [p[1], p[2]]
       call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
     endif
 
     let beginning_var_name = getcurpos()
 
     " Move to the beginning of arity
-    call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+    if stridx(res['code'], '(defn') == 0 || stridx(res['code'], '(defmacro') == 0
+      call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+
+      " Skip doc-string
+      let p = getcurpos()
+      if searchpos('"', 'cn') == [p[1], p[2]]
+        call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+      endif
+
+      " Skip attr-map
+      let p = getcurpos()
+      if searchpos('{', 'cn') == [p[1], p[2]]
+        call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+      endif
+    elseif stridx(res['code'], '(defmethod') == 0
+      " Skip dispatch-val (move to next next element head)
+      call sexp#move_to_adjacent_element('n', 2, 1, 0, 0)
+    endif
 
     let beginning_of_arity = getcurpos()
     if searchpos('(', 'cn') == [beginning_of_arity[1], beginning_of_arity[2]]
