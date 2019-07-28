@@ -17,14 +17,6 @@ let s:type_to_kind_dict = {
       \ 'var':           'v',
       \ }
 
-function! s:ns_candidate(ns_name) abort
-  return {
-      \ 'word':  a:ns_name,
-      \ 'kind':  s:type_to_kind_dict['namespace'],
-      \ 'icase': 1,
-      \}
-endfunction
-
 function! s:format_arglist(arglist) abort
   if stridx(a:arglist, '(quote ') != -1
     return strpart(a:arglist, 7, len(a:arglist)-8)
