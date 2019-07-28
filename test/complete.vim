@@ -68,3 +68,27 @@ function! s:suite.omni_findstart_test() abort
   call s:assert.equals(iced#complete#omni(v:true, 'base'), 7)
   call s:buf.stop_dummy()
 endfunction
+
+function! s:complete_relay(msg) abort
+  if a:msg['op'] ==# 'complete'
+    return {'status': ['done'], 'completions': [
+          \ {'candidate': 'foo', 'arglists': ['bar'], 'doc': 'baz', 'type': 'function'},
+          \ {'candidate': 'hello', 'type': 'namespace'},
+          \ ]}
+  endif
+  return {'status': ['done']}
+endfunction
+
+function! s:suite.omni_test() abort
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:complete_relay')})
+  call s:buf.start_dummy([])
+
+  call s:assert.equals(
+        \ iced#complete#omni(v:false, 'base'),
+        \ [
+        \   {'word': 'foo', 'menu': 'bar', 'info': 'baz', 'kind': 'f', 'icase': 1},
+        \   {'word': 'hello', 'menu': '', 'info': '', 'kind': 'n', 'icase': 1},
+        \ ])
+
+  call s:buf.stop_dummy()
+endfunction
