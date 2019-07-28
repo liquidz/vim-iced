@@ -50,11 +50,13 @@ function! s:suite.context_test() abort
         \ '  (let [y 1]',
         \ '    (+ __prefix__ y)))',
         \ ], "\n"))
+  call s:buf.stop_dummy()
 endfunction
 
 function! s:suite.context_failure_test() abort
   call s:buf.start_dummy(['invalid| text'])
   call s:assert.equals(s:funcs.context(), '')
+  call s:buf.stop_dummy()
 endfunction
 
 function! s:suite.omni_findstart_test() abort
@@ -64,4 +66,5 @@ function! s:suite.omni_findstart_test() abort
         \ '    (+ | y)))',
         \ ])
   call s:assert.equals(iced#complete#omni(v:true, 'base'), 7)
+  call s:buf.stop_dummy()
 endfunction
