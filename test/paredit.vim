@@ -140,3 +140,32 @@ function! s:suite.move_to_parent_element_no_parent_test() abort
   call s:assert.equals(getcurpos(), pos)
   call s:buf.stop_dummy()
 endfunction
+
+function! s:suite.find_parent_form_raw_test() abort
+  call s:buf.start_dummy([
+       \ '(foo',
+       \ ' (bar',
+       \ '  (baz|)))',
+       \ ])
+  let pos = getcurpos()
+
+  let res = iced#paredit#find_parent_form_raw(['bar'])
+  call s:assert.equals(res['code'], "(bar\n  (baz))")
+  call s:assert.equals([res['curpos'][1], res['curpos'][2]], [2, 2])
+
+  call setpos('.', pos)
+  let res = iced#paredit#find_parent_form_raw(['foo'])
+  call s:assert.equals(res['code'], "(foo\n (bar\n  (baz)))")
+  call s:assert.equals([res['curpos'][1], res['curpos'][2]], [1, 1])
+
+  call setpos('.', pos)
+  let res = iced#paredit#find_parent_form_raw(['foo', 'bar', 'baz'])
+  call s:assert.equals(res['code'], '(baz)')
+  call s:assert.equals([res['curpos'][1], res['curpos'][2]], [3, 3])
+
+  call setpos('.', pos)
+  let res = iced#paredit#find_parent_form_raw(['non_existing'])
+  call s:assert.equals(res, {})
+
+  call s:buf.stop_dummy()
+endfunction

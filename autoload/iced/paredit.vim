@@ -126,6 +126,38 @@ function! iced#paredit#get_current_top_list_raw(...) abort
   return {'code': code, 'curpos': pos}
 endfunction
 
+function! iced#paredit#find_parent_form_raw(prefixes) abort
+  let reg_save = @@
+  let prefixes = map(copy(a:prefixes), {_, s -> printf('(%s', s)})
+
+  try
+    while v:true
+      let @@ = ''
+      silent exe 'normal! vaby'
+      if empty(@@) | break | endif
+
+      let code = @@
+      for p in prefixes
+        if stridx(code, p) == 0
+          return {'code': code, 'curpos': getcurpos()}
+        endif
+      endfor
+
+      " not found
+      if col('.') == 1 || stridx(getline('.'), '#') == 0
+        return {}
+      endif
+
+      silent normal! h
+    endwhile
+  finally
+    let @@ = reg_save
+    silent exe "normal! \<Esc>"
+  endtry
+
+  return {}
+endfunction
+
 function! iced#paredit#get_current_top_list(...) abort
   let target_level = get(a:, 1, -1)
   let view = winsaveview()
