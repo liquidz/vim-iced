@@ -44,7 +44,7 @@ function! iced#nrepl#refactor#extract_function() abort
 
     try
       let locals = a:resp['used-locals']
-      let func_name = trim(input('Function name: '))
+      let func_name = trim(iced#di#get('io').input('Function name: '))
       if empty(func_name)
         return iced#message#echom('canceled')
       endif
