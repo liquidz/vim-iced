@@ -48,7 +48,9 @@ function! s:found_used_locals(resp) abort
 
     let func_body = iced#paredit#get_outer_list_raw()
 
-    let @@ = printf('(%s %s)', func_name, join(locals, ' '))
+    let @@ = empty(locals)
+          \ ? printf('(%s)', func_name)
+          \ : printf('(%s %s)', func_name, join(locals, ' '))
     silent normal! gvp
 
     let code = printf("(defn- %s [%s]\n  %s)\n\n",

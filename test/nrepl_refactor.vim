@@ -5,15 +5,15 @@ let s:ch = themis#helper('iced_channel')
 let s:io = themis#helper('iced_io')
 
 " extract_function {{{
-function! s:extract_function_relay(msg) abort
+function! s:extract_function_relay(locals, msg) abort
   if a:msg['op'] ==# 'find-used-locals'
-    return {'status': ['done'], 'used-locals': ['a', 'b']}
+    return {'status': ['done'], 'used-locals': a:locals}
   endif
   return {'status': ['done']}
 endfunction
 
 function! s:suite.extract_function_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:extract_function_relay')})
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': function('s:extract_function_relay', [['a', 'b']])})
   call s:io.register_test_builder({'input': 'extracted'})
   call s:buf.start_dummy(['(foo (bar a b|))'])
 
@@ -24,6 +24,23 @@ function! s:suite.extract_function_test() abort
         \ '  (bar a b))',
         \ '',
         \ '(foo (extracted a b))',
+        \ ])
+
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:suite.extract_function_with_no_args_test() abort
+  call s:ch.register_test_builder({'status_value': 'open', 'relay': function('s:extract_function_relay', [[]])})
+  call s:io.register_test_builder({'input': 'extracted'})
+  call s:buf.start_dummy(['(foo (bar|))'])
+
+  call iced#nrepl#refactor#extract_function()
+
+  call s:assert.equals(s:buf.get_lines(), [
+        \ '(defn- extracted []',
+        \ '  (bar))',
+        \ '',
+        \ '(foo (extracted))',
         \ ])
 
   call s:buf.stop_dummy()
