@@ -324,6 +324,11 @@ function! s:connected(resp, initial_session) abort
     call iced#nrepl#set_session(a:initial_session, new_session)
     call iced#nrepl#change_current_session(a:initial_session)
 
+    " Check if nREPL middlewares are enabled
+    if !iced#nrepl#is_supported_op('iced-version')
+      return iced#message#error('no_iced_nrepl')
+    endif
+
     silent call s:warm_up()
 
     call iced#nrepl#auto#enable_bufenter(v:true)
