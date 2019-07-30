@@ -92,12 +92,11 @@ jobs:
       - attach_workspace:
           at: target
       - run:
-          name: Install and configure dependencies
+          name: Install and deploy dev docs to netlify
           command: |
             npm install -g --silent netlify-cli
-      - run:
-          name: Deploy dev docs to netlify
-          command: netlify deploy --auth=${NETLIFY_PERSONAL_ACCESS_TOKEN} --site=${NETLIFY_SITE_ID} --dir=target/html --prod
+            sleep 3
+            netlify deploy --auth=${NETLIFY_PERSONAL_ACCESS_TOKEN} --site=${NETLIFY_SITE_ID} --dir=target/html --prod
 
   docs-deploy:
     docker:
