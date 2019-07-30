@@ -475,6 +475,33 @@ function! iced#nrepl#interrupt(...) abort
 endfunction
 " }}}
 
+" DESCRIBE {{{
+function! iced#nrepl#describe(callback) abort
+  call iced#nrepl#send({
+        \ 'op': 'describe',
+        \ 'id': iced#nrepl#id(),
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction
+
+let s:supported_ops = {}
+function! iced#nrepl#is_supported_op(op) abort " {{{
+  if empty(s:supported_ops)
+    let resp = iced#promise#sync('iced#nrepl#describe', [])
+    let resp = (type(resp) == v:t_list) ? resp[0] : resp
+
+    if !has_key(resp, 'ops')
+      return iced#message#error('unexpected_error', 'Invalid :describe op response')
+    endif
+
+    let s:supported_ops = resp['ops']
+  endif
+
+  return has_key(s:supported_ops, a:op)
+endfunction " }}}
+" }}}
+
 call iced#nrepl#register_handler('eval', funcref('iced#nrepl#merge_response_handler'))
 call iced#nrepl#register_handler('load-file', funcref('iced#nrepl#merge_response_handler'))
 
