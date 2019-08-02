@@ -122,7 +122,7 @@ function! s:view_doc_on_popup(resp) abort
   if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
   let s:popup_winid = popup.open(split(doc, '\r\?\n'), {
         \ 'iced_context': s:popup_context({'type': 'full document'}),
-        \ 'line': winline() + 1,
+        \ 'line': 'near-cursor',
         \ 'col': col('.'),
         \ 'filetype': 'help',
         \ 'border': [],
