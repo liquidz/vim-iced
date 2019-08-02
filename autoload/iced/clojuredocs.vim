@@ -74,6 +74,7 @@ function! s:show_doc(resp) abort
 endfunction
 
 function! iced#clojuredocs#open(symbol) abort
+  call iced#message#echom('fetching')
   call iced#promise#call('iced#nrepl#ns#eval', [])
        \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
        \.then({resp -> iced#util#has_status(resp, 'no-info')
