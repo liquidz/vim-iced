@@ -70,9 +70,6 @@ function! s:popup.open(texts, ...) abort
   let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 2
   let width = min([width, max_width])
 
-  let line = get(opts, 'line', winline())
-  let line = get(opts, 'row', line + wininfo['winrow'] - 1)
-
   let org_col = get(opts, 'col', len(getline('.')) + 1)
   if type(org_col) == v:t_string
     if org_col ==# 'right'
@@ -100,12 +97,27 @@ function! s:popup.open(texts, ...) abort
     endif
   endif
 
+  let height = min([len(texts), g:iced#popup#max_height])
+
+  let line = get(opts, 'line', winline())
+  let line_type = type(line)
+  if line_type == v:t_number
+    let line = line + wininfo['winrow'] - 1
+  elseif line_type == v:t_string && line ==# 'near-cursor'
+    " NOTE: `+ 5` make the popup window not too low
+    if winline() + height + 5 > &lines
+      let line = winline() - height - 1
+    else
+      let line = winline() + wininfo['winrow'] - 1
+    endif
+  endif
+
   let win_opts = {
         \ 'relative': 'editor',
         \ 'row': line,
         \ 'col': col,
         \ 'width': width,
-        \ 'height': min([len(texts), g:iced#popup#max_height]),
+        \ 'height': height,
         \ }
 
   call nvim_buf_set_lines(bufnr, 0, len(texts), 0, texts)

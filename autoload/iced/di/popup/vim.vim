@@ -34,10 +34,23 @@ function! s:popup.open(texts, ...) abort
   let wininfo = getwininfo(win_getid())[0]
   let title_width = len(get(opts, 'title', '')) + 3
   let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
+  let min_height = len(a:texts)
 
+  " line
   let line = get(opts, 'line', winline())
-  let line = line + wininfo['winrow'] - 1
+  let line_type = type(line)
+  if line_type == v:t_number
+    let line = line + wininfo['winrow'] - 1
+  elseif line_type == v:t_string && line ==# 'near-cursor'
+    " NOTE: `+ 5` make the popup window not too low
+    if winline() + min_height + 5 > &lines
+      let line = winline() - min_height - 1
+    else
+      let line = winline() + wininfo['winrow']
+    endif
+  endif
 
+  " col
   let org_col = get(opts, 'col', len(getline('.')) + 1)
   if type(org_col) == v:t_string
     if org_col ==# 'right'
@@ -51,15 +64,13 @@ function! s:popup.open(texts, ...) abort
   let col = org_col + wininfo['wincol']
 
   let max_width = &columns - wininfo['wincol'] - org_col
-  " let title_width = len(get(opts, 'title', '')) + 3
-  " let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
 
   let win_opts = {
         \ 'line': line,
         \ 'col': col,
         \ 'minwidth': width,
         \ 'maxwidth': max_width,
-        \ 'minheight': len(a:texts),
+        \ 'minheight': min_height,
         \ 'maxheight': g:iced#popup#max_height,
         \ }
 
