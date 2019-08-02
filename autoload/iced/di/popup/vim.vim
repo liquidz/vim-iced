@@ -36,6 +36,10 @@ function! s:popup.open(texts, ...) abort
   let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
   let min_height = len(a:texts)
 
+  if min_height + 5 >= &lines - &cmdheight
+    throw 'vim-iced: too long texts to show in popup'
+  endif
+
   " line
   let line = get(opts, 'line', winline())
   let line_type = type(line)
