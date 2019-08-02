@@ -37,5 +37,43 @@ function! iced#nrepl#source#show(symbol) abort
        \       : iced#buffer#document#open(code, 'clojure')})
 endfunction
 
+function! s:try_to_fallback(symbol, err) abort
+  if type(a:err) != v:t_dict
+        \ || !has_key(a:err, 'exception')
+    return iced#message#error('unexpected_error', string(a:err))
+  endif
+
+  let ex = a:err['exception']
+  if stridx(ex, 'vim-iced: too long texts to show in popup') == 0
+    call iced#nrepl#source#show(a:symbol)
+  endif
+
+  return iced#message#error_str(ex)
+endfunction
+
+function! iced#nrepl#source#popup_show(symbol) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  if !iced#di#get('popup').is_supported()
+    return iced#nrepl#source#show(a:symbol)
+  endif
+
+  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  call s:fetch_source(symbol)
+       \.then({code -> empty(code)
+       \       ? iced#message#error('not_found')
+       \       : iced#di#get('popup').open(
+       \           split(code, '\r\?\n'), {
+       \           'line': 'near-cursor',
+       \           'col': col('.'),
+       \           'filetype': 'clojure',
+       \           'border': [],
+       \           'borderhighlight': ['Comment'],
+       \           'auto_close': v:false,
+       \           'moved': 'any',
+       \           })})
+       \.catch({err -> s:try_to_fallback(a:symbol, err)})
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
