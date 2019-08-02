@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.10.5
+Version: 0.11.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -287,7 +287,7 @@ EVALUATING                                                *vim-iced-evaluating*
   But working with {vim-sexp} is the best.
   See details to work with {vim-sexp}: |<Plug>(iced_eval)|
 
-  There are 3 default key bingings to evaluate s-expression.
+  There are 3 default key bindings to evaluate s-expression.
   - `<Leader>ei` : Evaluate inner element
   - `<Leader>ee` : Evaluate outer list
   - `<Leader>et` : Evaluate outer top list

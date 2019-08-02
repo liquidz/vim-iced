@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 0.11.0 (2019-08-03)
 // {{{
 === Added
 * Add support vim8's popup window.
@@ -73,7 +75,7 @@ All notable changes to this project will be documented in this file. This change
 |===
 
 === Fixed
-* Fix floating window position on splitted windows.
+* Fix floating window position on split windows.
 
 === Removed
 * (BREAKING) Remove `IcedFindVarReferences!` command.

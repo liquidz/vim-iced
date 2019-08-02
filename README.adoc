@@ -158,7 +158,7 @@ See link:https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-customizing[c
 == External plugins
 
  * https://github.com/liquidz/vim-iced-kaocha[vim-iced-kaocha]
- ** Provices some commands for testing with https://github.com/lambdaisland/kaocha[kaocha].
+ ** Provides some commands for testing with https://github.com/lambdaisland/kaocha[kaocha].
  * https://github.com/liquidz/vim-iced-project-namespaces[vim-iced-project-namespaces]
  ** Provides `:IcedBrowseNamespace` command for jumping to namespace in your project.
  * https://github.com/liquidz/vim-iced-function-list[vim-iced-function-list]
