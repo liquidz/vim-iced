@@ -62,12 +62,15 @@ Move to let
 
 |:mag:
 |Reference
-|Docs, Javadoc, and https://clojuredocs.org[ClojureDocs]
+|[%hardbreaks]
+Docs, Javadoc, and https://clojuredocs.org[ClojureDocs] https://twitter.com/uochan/status/1154792252167741440[:movie_camera:]
+Function dependencies and references https://twitter.com/uochan/status/1139540878853206017[:movie_camera:]
 
 |:ant:
 |Debugging
-|Supports cider-nrepl's debugger
-https://twitter.com/uochan/status/1034404572368842752[:movie_camera:]
+|[%hardbreaks]
+Supports cider-nrepl's debugger https://twitter.com/uochan/status/1034404572368842752[:movie_camera:]
+Browsing tapped values https://twitter.com/uochan/status/1146982101662572544[:movie_camera:]
 
 |:eyes:
 |Linting
