@@ -48,6 +48,8 @@ OPTIONS                                                  *iced-command-options*
     Enables ClojureScript features.
     This option is enabled automatically when project configuration
     file(eg. project.clj) contains 'org.clojure/clojurescript' dependency.
+  `--with-kaocha`:
+    Enables features for testing with kaocha.
   `--force-boot`:
     Force to use Boot.
   `--force-clojure-cli`:
