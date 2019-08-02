@@ -112,13 +112,13 @@ function! s:view_doc_on_buffer(resp) abort
 endfunction
 
 function! s:view_doc_on_popup(resp) abort
-  let doc = printf(' %s', s:generate_doc(a:resp))
+  let doc = s:generate_doc(a:resp)
   let popup = iced#di#get('popup')
-
   if empty(doc) || !popup.is_supported()
     return
   endif
 
+  let doc = printf(' %s', doc)
   if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
   let s:popup_winid = popup.open(split(doc, '\r\?\n'), {
         \ 'iced_context': s:popup_context({'type': 'full document'}),
