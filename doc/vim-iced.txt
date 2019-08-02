@@ -106,9 +106,10 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.6.0"]
-                   [iced-nrepl "0.4.1"]
-                   [cider/cider-nrepl "0.21.1"]]
+                   [iced-nrepl "0.6.0"]
+                   [cider/cider-nrepl "0.22.0-beta9"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
+                                      cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
                                       cider.nrepl/wrap-format
@@ -134,11 +135,12 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
-      [cider/cider-nrepl "0.21.1"]
-      [iced-nrepl "0.4.1"]])
+      [cider/cider-nrepl "0.22.0-beta9"]
+      [iced-nrepl "0.6.0"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
+      cider.nrepl/wrap-clojuredocs
       cider.nrepl/wrap-complete
       cider.nrepl/wrap-debug
       cider.nrepl/wrap-format
@@ -163,11 +165,12 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "2.4.0"]
-                  [cider/cider-nrepl "0.21.1"]
-                  [iced-nrepl "0.4.1"]]
+                  [cider/cider-nrepl "0.22.0-beta9"]
+                  [iced-nrepl "0.6.0"]]
 
    :nrepl {:cider false
            :middleware [cider.nrepl/wrap-classpath
+                        cider.nrepl/wrap-clojuredocs
                         cider.nrepl/wrap-complete
                         cider.nrepl/wrap-debug
                         cider.nrepl/wrap-format
@@ -889,7 +892,7 @@ COMMANDS                                                    *vim-iced-commands*
   Select one of tapped values, and start browsing.
   `ctrlp.vim` or `fzf` is required to select tapped values.
   Key is mapped to |<Plug>(iced_list_tapped)|.
-  
+
                                                              *:IcedClearTapped*
 :IcedClearTapped
   Clear all tapped values.
