@@ -107,4 +107,20 @@ endfunction
 function! s:suite.char_repeat_test() abort
   call s:assert.equals(iced#util#char_repeat(3, '.'), '...')
   call s:assert.equals(iced#util#char_repeat(0, '.'), '')
+  call s:assert.equals(iced#util#char_repeat(-3, '.'), '')
+endfunction
+
+function! s:suite.select_keys_test() abort
+  let d = {'a': 1, 'b': 2, 'c': 3}
+
+  call s:assert.equals(iced#util#select_keys(d, ['a', 'b']), {'a': 1, 'b': 2})
+  call s:assert.equals(iced#util#select_keys(d, ['c', 'd']), {'c': 3})
+  call s:assert.equals(iced#util#select_keys(d, ['d']), {})
+endfunction
+
+function! s:suite.normalize_path_test() abort
+  call s:assert.equals(iced#util#normalize_path('/foo/bar.txt'),
+        \ '/foo/bar.txt')
+  call s:assert.equals(iced#util#normalize_path('jar:file:/path/to/jarfile.jar!/path/to/file.clj'),
+        \ 'zipfile:/path/to/jarfile.jar::path/to/file.clj')
 endfunction

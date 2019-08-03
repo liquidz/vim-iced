@@ -16,6 +16,7 @@ function! s:build_test_channel(opt) abort
   endfunction
 
   function! dummy.close(handle) abort
+    let self['status_value'] = 'fail'
     return
   endfunction
 
@@ -68,7 +69,7 @@ function! s:helper.register_test_builder(opt) abort
 endfunction
 
 function! themis#helper#iced_channel#new(runner) abort
-  return  deepcopy(s:helper)
+  return deepcopy(s:helper)
 endfunction
 
 let &cpoptions = s:save_cpo

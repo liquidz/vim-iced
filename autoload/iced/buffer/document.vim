@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:bufname = 'iced_document'
 let s:default_filetype = 'markdown'
@@ -14,7 +14,7 @@ function! s:initialize(bufnr) abort
 endfunction
 
 function! iced#buffer#document#init() abort
-  call iced#buffer#init(s:bufname, funcref('s:initialize'))
+  return iced#buffer#init(s:bufname, funcref('s:initialize'))
 endfunction
 
 function! iced#buffer#document#is_visible() abort
@@ -44,5 +44,9 @@ function! iced#buffer#document#close() abort
   call iced#buffer#close(s:bufname)
 endfunction
 
-let &cpo = s:save_cpo
+function! iced#buffer#document#focus() abort
+  call iced#buffer#focus(s:bufname)
+endfunction
+
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

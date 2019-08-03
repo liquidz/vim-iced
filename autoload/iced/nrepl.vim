@@ -131,7 +131,11 @@ function! iced#nrepl#merge_response_handler(resp, last_result) abort
   let result = empty(a:last_result) ? {} : a:last_result
   for resp in iced#util#ensure_array(a:resp)
     for k in keys(resp)
-      let result[k] = resp[k]
+      if k ==# 'value'
+        let result[k] = get(result, 'value', '') . resp[k]
+      else
+        let result[k] = resp[k]
+      endif
     endfor
   endfor
 
@@ -219,7 +223,7 @@ function! s:dispatcher(ch, resp) abort
     endif
 
     if iced#util#has_status(resp, 'need-debug-input')
-      if !iced#buffer#stdout#is_visible() && !iced#buffer#floating#is_supported()
+      if !iced#buffer#stdout#is_visible() && !iced#di#get('popup').is_supported()
         call iced#buffer#stdout#open()
       endif
       call iced#nrepl#debug#start(resp)
@@ -320,6 +324,11 @@ function! s:connected(resp, initial_session) abort
     call iced#nrepl#set_session(a:initial_session, new_session)
     call iced#nrepl#change_current_session(a:initial_session)
 
+    " Check if nREPL middlewares are enabled
+    if !iced#nrepl#is_supported_op('iced-version')
+      return iced#message#error('no_iced_nrepl')
+    endif
+
     silent call s:warm_up()
 
     call iced#nrepl#auto#enable_bufenter(v:true)
@@ -343,7 +352,7 @@ function! iced#nrepl#connect(port, ...) abort
   call iced#buffer#stdout#init()
   call iced#buffer#document#init()
   call iced#buffer#error#init()
-  call iced#buffer#floating#init()
+  call iced#buffer#temporary#init()
 
   if empty(a:port)
     return iced#nrepl#connect#auto()
@@ -424,6 +433,7 @@ function! iced#nrepl#eval(code, ...) abort
         \ 'file': get(option, 'file', expand('%:p')),
         \ 'line': get(option, 'line', pos[1]),
         \ 'column': get(option, 'column', pos[2]),
+        \ 'nrepl.middleware.print/stream?': 1,
         \ 'callback': Callback,
         \ }
 
@@ -468,6 +478,33 @@ function! iced#nrepl#interrupt(...) abort
       \ 'callback': {_ -> s:interrupted()},
       \ })
 endfunction
+" }}}
+
+" DESCRIBE {{{
+function! iced#nrepl#describe(callback) abort
+  call iced#nrepl#send({
+        \ 'op': 'describe',
+        \ 'id': iced#nrepl#id(),
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction
+
+let s:supported_ops = {}
+function! iced#nrepl#is_supported_op(op) abort " {{{
+  if empty(s:supported_ops)
+    let resp = iced#promise#sync('iced#nrepl#describe', [])
+    let resp = (type(resp) == v:t_list) ? resp[0] : resp
+
+    if !has_key(resp, 'ops')
+      return iced#message#error('unexpected_error', 'Invalid :describe op response')
+    endif
+
+    let s:supported_ops = resp['ops']
+  endif
+
+  return has_key(s:supported_ops, a:op)
+endfunction " }}}
 " }}}
 
 call iced#nrepl#register_handler('eval', funcref('iced#nrepl#merge_response_handler'))

@@ -56,7 +56,6 @@ NAVIGATION                                         *iced-cheatsheet-navigation*
 REFERENCE                                           *iced-cheatsheet-reference*
 
   `K`  Show documents for the symbol under cursor
-  `<Leader>hq`  Show grimoire documents for the symbol under cursor
   `<Leader>hs`  Show source for the symbol under cursor
   `<Leader>hq`  Close document buffer
   `<Leader>bs`  Browse specs

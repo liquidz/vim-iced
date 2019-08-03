@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.10.5
+Version: 0.11.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -26,6 +26,7 @@ CONTENTS                                                    *vim-iced-contents*
   Testing                      |vim-iced-testing|
   Debugging                    |vim-iced-debugging|
     Tracing function calls     |vim-iced-debugging-tracing-function-calls|
+    Browsing tapped values     |vim-iced-debugging-browsing-tapped-values|
     Floating Window            |vim-iced-debugging-floating-window|
   Skeleton                     |vim-iced-skeleton|
   Tag Jump                     |vim-iced-tag-jump|
@@ -40,6 +41,8 @@ CONTENTS                                                    *vim-iced-contents*
     Key Mappings               |vim-iced-key-mappings|
   Customizing                  |vim-iced-customizing|
     Indent rules               |vim-iced-customizing-indents|
+    Documents                  |vim-iced-customizing-documents|
+      Auto document            |vim-iced-customizing-auto-document|
     Auto indent                |vim-iced-customizing-auto-indent|
     Linters                    |vim-iced-customizing-linters|
     Signs                      |vim-iced-customizing-signs|
@@ -83,6 +86,13 @@ ICED COMMAND                                         *vim-iced-install-command*
   vim-iced provides `iced` command to use vim-iced easily.
 
   Add `$PATH` environment variable to `/path/to/vim-iced/bin`.
+  E.g. export PATH=$PATH:~/src/github.com/liquidz/vim-iced/bin
+
+  WARNING:
+    Do not copy `bin/iced` file to your `$PATH`.
+    `iced` command references `/path/to/vim-iced/deps.edn` for Clojure CLI.
+    So the copied `iced` command cannot reference it.
+
   To show help, run `iced help` .
 
 ------------------------------------------------------------------------------
@@ -96,9 +106,10 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.6.0"]
-                   [iced-nrepl "0.4.1"]
-                   [cider/cider-nrepl "0.21.1"]]
+                   [iced-nrepl "0.6.0"]
+                   [cider/cider-nrepl "0.22.0-beta9"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
+                                      cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
                                       cider.nrepl/wrap-debug
                                       cider.nrepl/wrap-format
@@ -110,6 +121,7 @@ LEININGEN~
                                       cider.nrepl/wrap-test
                                       cider.nrepl/wrap-trace
                                       cider.nrepl/wrap-undef
+                                      cider.nrepl/wrap-xref
                                       iced.nrepl/wrap-iced]}
     :plugins [[refactor-nrepl "2.4.0"]]}}
 <
@@ -123,11 +135,12 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
-      [cider/cider-nrepl "0.21.1"]
-      [iced-nrepl "0.4.1"]])
+      [cider/cider-nrepl "0.22.0-beta9"]
+      [iced-nrepl "0.6.0"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
+      cider.nrepl/wrap-clojuredocs
       cider.nrepl/wrap-complete
       cider.nrepl/wrap-debug
       cider.nrepl/wrap-format
@@ -139,6 +152,7 @@ BOOT~
       cider.nrepl/wrap-test
       cider.nrepl/wrap-trace
       cider.nrepl/wrap-undef
+      cider.nrepl/wrap-xref
       refactor-nrepl.middleware/wrap-refactor
       iced.nrepl/wrap-iced])
 <
@@ -151,11 +165,12 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "2.4.0"]
-                  [cider/cider-nrepl "0.21.1"]
-                  [iced-nrepl "0.4.1"]]
+                  [cider/cider-nrepl "0.22.0-beta9"]
+                  [iced-nrepl "0.6.0"]]
 
    :nrepl {:cider false
            :middleware [cider.nrepl/wrap-classpath
+                        cider.nrepl/wrap-clojuredocs
                         cider.nrepl/wrap-complete
                         cider.nrepl/wrap-debug
                         cider.nrepl/wrap-format
@@ -167,6 +182,7 @@ SHADOW-CLJS~
                         cider.nrepl/wrap-test
                         cider.nrepl/wrap-trace
                         cider.nrepl/wrap-undef
+                        cider.nrepl/wrap-xref
                         refactor-nrepl.middleware/wrap-refactor
                         iced.nrepl/wrap-iced]}
   }
@@ -271,7 +287,7 @@ EVALUATING                                                *vim-iced-evaluating*
   But working with {vim-sexp} is the best.
   See details to work with {vim-sexp}: |<Plug>(iced_eval)|
 
-  There are 3 default key bingings to evaluate s-expression.
+  There are 3 default key bindings to evaluate s-expression.
   - `<Leader>ei` : Evaluate inner element
   - `<Leader>ee` : Evaluate outer list
   - `<Leader>et` : Evaluate outer top list
@@ -350,16 +366,35 @@ TRACING FUNCTION CALLS              *vim-iced-debugging-tracing-function-calls*
   - |vim-iced-stdout-buffer|
 
 ------------------------------------------------------------------------------
+BROWSING TAPPED VALUES              *vim-iced-debugging-browsing-tapped-values*
+
+  WARNING: To use `tap>`, Clojure 1.10.0 or later is required
+
+  If you have a big data structure and want to dig into it,
+  browsing tapped values is useful.
+
+  When you evaluate `(tap> YOUR_DATA)`, |:IcedListTapped| shows tapped values.
+  Select the value you want to dig into, then browsing value start.
+  See |:IcedBrowseTapped| for browsing key details.
+
+  All tapped values are stored in memory.
+  So if you would like to delete them, execute |:IcedClearTapped| command.
+
+------------------------------------------------------------------------------
 FLOATING WINDOW                            *vim-iced-debugging-floating-window*
 
-  vim-iced supports floating window for Neovim.
+  vim-iced supports both of popup window in Vim
+  and floating window in Neovim.
   This feature is very experimental, but works.
 
-  If your neovim's version is 0.4.0 or later,
+  If your environment meets followings, 
   debugging information will be shown in floating window automatically.
+  - Vim 8.1 patch 1-1408 or later
+  - Neovim 0.4.0 or later
 
   Related options:
-  - |g:iced#buffer#floating#time|
+  - |g:iced#popup#time|
+  - |g:iced#popup#max_height|
 
 ==============================================================================
 SKELETON                                                    *vim-iced-skeleton*
@@ -412,6 +447,7 @@ REFACTORING                                              *vim-iced-refactoring*
   - |:IcedThreadFirst| (|<Plug>(iced_thread_first)|)
   - |:IcedThreadLast| (|<Plug>(iced_thread_last)|)
   - |:IcedExtractFunction| (|<Plug>(iced_extract_function)|)
+  - |:IcedAddArity| (|<Plug>(iced_add_arity)|)
   - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
 
 ------------------------------------------------------------------------------
@@ -597,6 +633,9 @@ COMMANDS                                                    *vim-iced-commands*
                                                            *:IcedTestSpecCheck*
 :IcedTestSpecCheck [{num-tests}]
   Run `clojure.spec.test.alpha/check` for the function under cursor.
+  NOTE: Adding `test.check` dependency is required.
+        https://github.com/clojure/test.check
+
   If {num-tests} is not passed, |g:iced#test#spec_num_tests| is used.
   Key is mapped to |<Plug>(iced_test_spec_check)|.
 
@@ -644,25 +683,44 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedDefBack
   Jump back cursor.
   Key is mapped to |<Plug>(iced_def_back)|.
+  
+                                                                  *:IcedOpenNs*
+:IcedOpenNs {ns-name}
+  Open a file corresponding to the specified {ns-name}.
+  If {ns-name} does not exist, make sure you open a file with a pseudo path.
 
-                                                       *:IcedFindVarReferences*
-:IcedFindVarReferences
-  Find positions referencing the var under cursor.
-  Results are set to |quickfix|,
-  and saved as cache to |g:iced#var_references#cache_dir|.
+                                                        *:IcedBrowseReferences*
+:IcedBrowseReferences
+  Browse positions referencing the form under cursor.
+  Results are set to |location-list|.
 
-  If cache file exists, vim-iced use it as a priority.
-  See also |:IcedFindVarReferences!|
+                                                      *:IcedBrowseDependencies*
+:IcedBrowseDependencies
+  Browse positions depending the form under cursor.
+  Results are set to |location-list|.
 
-                                                      *:IcedFindVarReferences!*
-:IcedFindVarReferences!
-  Work as same as |:IcedFindVarReferences| ignoring cache file.
+                                                     *:IcedBrowseVarReferences*
+:IcedBrowseVarReferences
+  Browse positions referencing the var under cursor.
+  Results are set to |location-list|.
+
+                                                   *:IcedBrowseVarDependencies*
+:IcedBrowseVarDependencies
+  Browse positions depending the var under cursor.
+  Results are set to |location-list|.
 
                                                             *:IcedDocumentOpen*
 :IcedDocumentOpen [{symbol}]
   Open a window, and show documents for {symbol}.
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_document_open)|.
+  
+                                                       *:IcedPopupDocumentOpen*
+:IcedPopupDocumentOpen [{symbol}]
+  Open a popup window, and show documents for {symbol}.
+  If {symbol} is not passed, symbol under cursor is used.
+  If |popup| is not supported, |:IcedDocumentOpen| is called.
+  Key is mapped to |<Plug>(iced_popup_document_open)|.
 
                                                             *:IcedFormDocument*
 :IcedFormDocument
@@ -681,17 +739,50 @@ COMMANDS                                                    *vim-iced-commands*
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_source_show)|.
 
-                                                            *:IcedGrimoireOpen*
-:IcedGrimoireOpen [{symbol}]
-  Open a window, and show grimoire for {symbol}
+                                                         *:IcedPopupSourceShow*
+:IcedPopupSourceShow [{symbol}]
+  Open a popup window, and show source codes for {symbol}
   If {symbol} is not passed, symbol under cursor is used.
-  Key is mapped to |<Plug>(iced_grimoire_open)|.
+  If |popup| is not supported or codes are too long to show in popup window,
+  |:IcedSourceShow| is called.
+  Key is mapped to |<Plug>(iced_popup_source_show)|.
 
                                                           *:IcedCommandPalette*
 :IcedCommandPalette
   Select command from palette.
   `ctrlp.vim` or `fzf` is required to select namespace.
   Key is mapped to |<Plug>(iced_command_palette)|.
+
+                                                                *:IcedSpecForm*
+:IcedSpecForm [{keyword}]
+  Open a window, and show the form of the spec.
+  If {keyword} is not passed, keyword under cursor is used.
+  Key is mapped to |<Plug>(iced_spec_form)|.
+
+                                                             *:IcedSpecExample*
+:IcedSpecExample [{keyword}]
+  Open a window, and show the example of the spec.
+  If {keyword} is not passed, keyword under cursor is used.
+  Key is mapped to |<Plug>(iced_spec_example)|.
+
+                                                         *:IcedClojureDocsOpen*
+:IcedClojureDocsOpen [{symbol}]
+  Open a window, and show documents for {symbol} in ClojureDocs.
+  If {symbol} is not passed, symbol under cursor is used.
+
+  A cache file will be created at the following path.
+  - macOS  : $HOME/Library/Caches/orchard/clojuredocs/export.edn
+  - Windows: FOLDERID_LocalAppData\\cache\orchard\clojuredocs\export.edn
+  - Others : $XDG_CACHE_HOME or $HOME/.cache/orchard/clojuredocs/export.edn
+
+  See also |g:iced#clojuredocs#export_edn_url|.
+  Key is mapped to |<Plug>(iced_clojuredocs_open)|.
+
+                                                      *:IcedClojureDocsRefresh*
+:IcedClojureDocsRefresh
+  Clean a ClojureDocs cache file, and reload documents.
+  See also |g:iced#clojuredocs#export_edn_url|.
+  Key is mapped to |<Plug>(iced_clojuredocs_refresh)|.
 
                                                                    *:IcedSlurp*
 :IcedSlurp
@@ -713,6 +804,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                         *:IcedToggleSrcAndTest*
 :IcedToggleSrcAndTest
   Switch between source file and test file.
+  If the file does not exist, make sure you open a file with a pseudo path.
   Key is mapped to |<Plug>(iced_toggle_src_and_test)|.
 
                                                                     *:IcedGrep*
@@ -785,11 +877,37 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedExtractFunction
   Extract the form under cursor as a function.
 
+                                                                *:IcedAddArity*
+:IcedAddArity
+  Add an arity to `defn`, `fn`, `defmacro`, or `defmethod`.
+
                                                                *:IcedMoveToLet*
 :IcedMoveToLet
   Move the form under cursor to nearest `let` binding.
   If there is no `let` form in current top list,
   wrap the form with `let`.
+
+                                                              *:IcedListTapped*
+:IcedListTapped
+  Select one of tapped values, and start browsing.
+  `ctrlp.vim` or `fzf` is required to select tapped values.
+  Key is mapped to |<Plug>(iced_list_tapped)|.
+
+                                                             *:IcedClearTapped*
+:IcedClearTapped
+  Clear all tapped values.
+  Key is mapped to |<Plug>(iced_clear_tapped)|.
+
+                                                            *:IcedBrowseTapped*
+:IcedBrowseTapped {keys}
+  Dig into tapped values.
+  For example, when there are following tapped values:
+    1st tapped value: {:foo [{:bar "baz"}]}
+    2nd tapped value: {:hello "world"}
+  The key to browse `"baz"` is `0 :foo 0 :bar` .
+  (The first `0` means "browse 1st tapped value")
+
+  Key is mapped to |<Plug>(iced_browse_tapped)|.
 
                                                           *:IcedToggleTraceVar*
 :IcedToggleTraceVar [{symbol}]
@@ -832,11 +950,11 @@ COMMANDS                                                    *vim-iced-commands*
   searching sign continues at BOTTOM.
   Key is mapped to |<Plug>(iced_jump_to_prev_sign)|.
 
-                                                                 *:IcedGotoLet*
-:IcedGotoLet
-  Move cursor to nearest `let` form.
+                                                               *:IcedJumpToLet*
+:IcedJumpToLet
+  Jump cursor to nearest `let` form.
   If `let` form is not found in current top list, cursor is not moved.
-  Key is mapped to |<Plug>(iced_goto_let)|.
+  Key is mapped to |<Plug>(iced_jump_to_let)|.
 
 ------------------------------------------------------------------------------
 FUNCTIONS                                                  *vim-iced-functions*
@@ -1011,30 +1129,46 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                         *<Plug>(iced_def_back)*
 <Plug>(iced_def_back)
   Same as |:IcedDefBack|.
+  
+                                                         *<Plug>(iced_open_ns)*
+<Plug>(iced_open_ns)
+  Same as |:IcedOpenNs|.
 
-                                             *<Plug>(iced_find_var_references)*
-<Plug>(iced_find_var_references)
-  Same as |:IcedFindVarReferences|.
+                                               *<Plug>(iced_browse_references)*
+<Plug>(iced_browse_references)
+  Same as |:IcedBrowseReferences|.
 
-                                            *<Plug>(iced_find_var_references!)*
-<Plug>(iced_find_var_references!)
-  Same as |:IcedFindVarReferences!|.
+                                             *<Plug>(iced_browse_dependencies)*
+<Plug>(iced_browse_dependencies)
+  Same as |:IcedBrowseDependencies|.
+
+                                           *<Plug>(iced_browse_var_references)*
+<Plug>(iced_browse_var_references)
+  Same as |:IcedBrowseVarReferences|.
+
+                                         *<Plug>(iced_browse_var_dependencies)*
+<Plug>(iced_browse_var_dependencies)
+  Same as |:IcedBrowseVarDependencies|.
 
                                                    *<Plug>(iced_document_open)*
 <Plug>(iced_document_open)
   Same as |:IcedDocumentOpen|.
 
+                                             *<Plug>(iced_popup_document_open)*
+<Plug>(iced_popup_document_open)
+  Same as |:IcedPopupDocumentOpen|.
+  Configurable options are:
+  - |g:iced_enable_popup_document|
+
                                                    *<Plug>(iced_form_document)*
 <Plug>(iced_form_document)
   Same as |:IcedFormDocument|.
   This is convenient to display documents about the form you are editing.
->
-  aug vim_iced_echo_document_setting
-    au!
-    au FileType clojure setl updatetime=1000
-    au CursorHoldI *.clj,*.cljs,*.cljc call iced#nrepl#document#current_form()
-  aug END
-<
+
+  Configurable options are:
+  - |g:iced_enable_auto_document|
+  - |g:iced_enable_popup_document|
+
                                                   *<Plug>(iced_document_close)*
 <Plug>(iced_document_close)
   Same as |:IcedDocumentClose|.
@@ -1043,13 +1177,29 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_source_show)
   Same as |:IcedSourceShow|.
 
-                                                   *<Plug>(iced_grimoire_open)*
-<Plug>(iced_grimoire_open)
-  Same as |:IcedGrimoireOpen|.
+                                               *<Plug>(iced_popup_source_show)*
+<Plug>(iced_popup_source_show)
+  Same as |:IcedPopupSourceShow|.
 
                                                  *<Plug>(iced_command_palette)*
 <Plug>(iced_command_palette)
   Same as |:IcedCommandPalette|.
+
+                                                       *<Plug>(iced_spec_form)*
+<Plug>(iced_spec_form)
+  Same as |:IcedSpecForm|.
+  
+                                                    *<Plug>(iced_spec_example)*
+<Plug>(iced_spec_example)
+  Same as |:IcedSpecExample|.
+
+                                                *<Plug>(iced_clojuredocs_open)*
+<Plug>(iced_clojuredocs_open)
+  Same as |:IcedClojureDocsOpen|.
+
+                                             *<Plug>(iced_clojuredocs_refresh)*
+<Plug>(iced_clojuredocs_refresh)
+  Same as |:IcedClojureDocsRefresh|.
 
                                                            *<Plug>(iced_slurp)*
 <Plug>(iced_slurp)
@@ -1111,9 +1261,25 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_extract_function)
   Same as |:IcedExtractFunction|.
 
+                                                       *<Plug>(iced_add_arity)*
+<Plug>(iced_add_arity)
+  Same as |:IcedAddArity|.
+
                                                      *<Plug>(iced_move_to_let)*
 <Plug>(iced_move_to_let)
   Same as |:IcedMoveToLet|.
+
+                                                     *<Plug>(iced_list_tapped)*
+<Plug>(iced_list_tapped)
+  Same as |:IcedListTapped|.
+
+                                                    *<Plug>(iced_clear_tapped)*
+<Plug>(iced_clear_tapped)
+  Same as |:IcedClearTapped|.
+
+                                                   *<Plug>(iced_browse_tapped)*
+<Plug>(iced_browse_tapped)
+  Same as |:IcedBrowseTapped|.
 
                                                 *<Plug>(iced_toggle_trace_var)*
 <Plug>(iced_toggle_trace_var)
@@ -1143,9 +1309,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_jump_to_prev_sign)
   Same as |:IcedJumpToPrevSign|.
 
-                                                        *<Plug>(iced_goto_let)*
-<Plug>(iced_goto_let)
-  Same as |:IcedGotoLet|.
+                                                     *<Plug>(iced_jump_to_let)*
+<Plug>(iced_jump_to_let)
+  Same as |:IcedJumpToLet|.
 
 ==============================================================================
 CUSTOMIZING                                              *vim-iced-customizing*
@@ -1155,7 +1321,7 @@ g:iced#nrepl#host
   Connection host name.
   Default value is `'127.0.0.1'`.
 
-                                               *g:iced#paredit#slurp_max_depth*
+                                               s*g:iced#paredit#slurp_max_depth*
 g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
   Default value is `5`.
@@ -1188,17 +1354,6 @@ g:iced#buffer#stdout#file
   If not empty, vim-iced write stdout buffer content to the file path.
   Default value is `''`.
 
-                                                *g:iced#buffer#document#height*
-g:iced#buffer#document#height
-  Document window height.
-  Default value is |'previewheight'|.
-
-                             *g:iced#buffer#document#does_update_automatically*
-g:iced#buffer#document#does_update_automatically
-  If {v:true} and document buffer is visible,
-  update document buffer with document for the form under cursor.
-  Default value is `v:false`.
-
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
@@ -1210,9 +1365,10 @@ g:iced#debug#value_max_length
   Negative value means no limitation.
   Default value is `-1`.
 
-                                                 *g:iced#nrepl#sync#timeout_ms*
-g:iced#nrepl#sync#timeout_ms
-  Time to timeout (unit: milli sec).
+                                                    *g:iced#promise#timeout_ms*
+g:iced#promise#timeout_ms
+  Timeout time for waiting promises.
+  Unit is milli sec.
   Default value is `3000`.
 
                                               *g:iced#related_ns#tail_patterns*
@@ -1249,21 +1405,21 @@ g:iced#refactor#prefix_rewriting
   c.f. https://github.com/clojure-emacs/refactor-nrepl#available-features
   Default value is `v:false`.
 
-                                              *g:iced#var_references#cache_dir*
-g:iced#var_references#cache_dir
-  Directory to save var references result.
-  Default value is `'/tmp'`.
-
                                         *g:iced#nrepl#auto#does_switch_session*
 g:iced#nrepl#auto#does_switch_session
   If {v:true}, enable automatic switching CLJ/CLJS session.
   This will be done by |WinEnter| auto command.
   Default value is `v:false`.
 
-                                                  *g:iced#buffer#floating#time*
-g:iced#buffer#floating#time
-  Auto closing time(ms) for floating window.
+                                                            *g:iced#popup#time*
+g:iced#popup#time
+  Auto closing time(ms) for popup window.
   Default value is `3000`.
+
+                                                      *g:iced#popup#max_height*
+g:iced#popup#max_height
+  Max height for popup window.
+  Default value is `50`.
 
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*
@@ -1277,6 +1433,64 @@ g:iced#format#rule
         \ 'merr.core/let': '[[:block 2] [:inner 1]]',
         \ }
 <
+------------------------------------------------------------------------------
+DOCUMENTS                                      *vim-iced-customizing-documents*
+
+                                                *g:iced#buffer#document#height*
+g:iced#buffer#document#height
+  Document window height.
+  Default value is |'previewheight'|.
+
+                             *g:iced#buffer#document#does_update_automatically*
+g:iced#buffer#document#does_update_automatically
+  If {v:true} and document buffer is visible,
+  update document buffer with document for the form under cursor.
+  Default value is `v:false`.
+
+                                            *g:iced#clojuredocs#export_edn_url*
+g:iced#clojuredocs#export_edn_url
+  The URL exported from ClojureDocs.
+  EDN format file is expected.
+  Default value is `https://clojuredocs-edn.netlify.com/export.edn`.
+
+                                           *vim-iced-customizing-auto-document*
+AUTO DOCUMENT~
+
+                                                  *g:iced_enable_auto_document*
+g:iced_enable_auto_document
+  Enable automatic displaying one-line document.
+  This will be done by |CursorHold| and |CursorHoldI| auto command.
+
+  The value should be one of `'normal'`, `'insert'` or `'any'`.
+  Otherwise this option will be disabled.
+
+  `'normal'`: Enabled on only normal mode.
+  `'insert'`: Enabled on only insert mode.
+  `'every'` : Enabled on normal and insert mode.
+
+  Default value is `'none'`.
+  See also |g:iced_enable_popup_document|.
+
+                                                 *g:iced_enable_popup_document*
+g:iced_enable_popup_document
+  Display documents on popup window.
+  The value should be one of follows.
+  Otherwise this option will be disabled.
+
+  `'full'`    : Enabled on only full document.
+              |:IcedDocumentOpen| shows full document.
+  `'one-line'`: Enabled on only one-line document.
+  `'every'`   : Every enabled.
+
+  Default value is `'every'`.
+
+                                        *g:iced_max_distance_for_auto_document*
+g:iced_max_distance_for_auto_document
+  Max line distance to display one-line document.
+  See also |g:iced_enable_auto_document|.
+
+  Default value is `2`.
+
 ------------------------------------------------------------------------------
 AUTO INDENT                                  *vim-iced-customizing-auto-indent*
 
@@ -1306,8 +1520,6 @@ g:iced#eastwood#option
 <
                                                 *g:iced#lint#use_virtual_text*
 g:iced#lint#use_virtual_text
-  WARNING: Neovim only
-
   If {v:true}, use virtual text to show lint warning text.
   Default value is `v:false`.
 
@@ -1409,6 +1621,15 @@ SESSION SWITCHED                                   *hook_kind_session_switched*
 ------------------------------------------------------------------------------
 DEFAULT KEYS                                *vim-iced-customizing-default-keys*
 
+PREFIXES~
+  - <Leader>e: Evaluating
+  - <Leader>t: Testing
+  - <Leader>s: Stdout buffer
+  - <Leader>r: Refactoring
+  - <Leader>h: Help/Document
+  - <Leader>b: Browsing
+  - <Leader>j: Jumping cursor
+
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
   If {v:true}, apply following mappings.
@@ -1440,28 +1661,33 @@ g:iced_enable_default_key_mappings
   n       <Leader>sl   <Plug>(iced_stdout_buffer_clear)
   n       <Leader>sq   <Plug>(iced_stdout_buffer_close)
   n       <Leader>rcn  <Plug>(iced_clean_ns)
+  n       <Leader>raa  <Plug>(iced_add_arity)
   n       <Leader>ram  <Plug>(iced_add_missing)
   n       <Leader>ran  <Plug>(iced_add_ns)
   n       <Leader>rtf  <Plug>(iced_thread_first)
   n       <Leader>rtl  <Plug>(iced_thread_last)
   n       <Leader>ref  <Plug>(iced_extract_function)
   n       <Leader>rml  <Plug>(iced_move_to_let)
-  n       <Leader>hs   <Plug>(iced_source_show)
-  n       <Leader>hg   <Plug>(iced_grimoire_open)
+  n       K            <Plug>(iced_popup_document_open)
+  n       <Leader>hb   <Plug>(iced_document_open)
+  n       <Leader>hs   <Plug>(iced_popup_source_show)
+  n       <Leader>hS   <Plug>(iced_source_show)
+  n       <Leader>hc   <Plug>(iced_clojuredocs_open)
   n       <Leader>hh   <Plug>(iced_command_palette)
-  n       <Leader>br   <Plug>(iced_related_namespace)
+  n       <Leader>bn   <Plug>(iced_browse_related_namespace)
   n       <Leader>bs   <Plug>(iced_browse_spec)
   n       <Leader>bt   <Plug>(iced_browse_test_under_cursor)
-  n       <Leader>jn   <Plug>(iced_jump_to_next_sign)
-  n       <Leader>jN   <Plug>(iced_jump_to_prev_sign)
-  n       <Leader>gl   <Plug>(iced_goto_let)
-  n       <Leader>fr   <Plug>(iced_find_var_references)
-  n       <Leader>fR   <Plug>(iced_find_var_references!)
-  n       <Leader>*    <Plug>(iced_grep)
-  n       <Leader>/    :<C-u>IcedGrep<Space>
+  n       <Leader>br   <Plug>(iced_browse_references)
+  n       <Leader>bd   <Plug>(iced_browse_dependencies)
   n       <C-]>        <Plug>(iced_def_jump)
   n       <C-t>        <Plug>(iced_def_back)
-  n       K            <Plug>(iced_document_open)
+  n       <Leader>jn   <Plug>(iced_jump_to_next_sign)
+  n       <Leader>jN   <Plug>(iced_jump_to_prev_sign)
+  n       <Leader>jl   <Plug>(iced_jump_to_let)
+  n       <Leader>dtl  <Plug>(iced_list_tapped)
+  n       <Leader>dtc  <Plug>(iced_clear_tapped)
+  n       <Leader>*    <Plug>(iced_grep)
+  n       <Leader>/    :<C-u>IcedGrep<Space>
   n       ==           <Plug>(iced_format)
 
 ==============================================================================

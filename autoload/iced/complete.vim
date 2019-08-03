@@ -17,14 +17,6 @@ let s:type_to_kind_dict = {
       \ 'var':           'v',
       \ }
 
-function! s:ns_candidate(ns_name) abort
-  return {
-      \ 'word':  a:ns_name,
-      \ 'kind':  s:type_to_kind_dict['namespace'],
-      \ 'icase': 1,
-      \}
-endfunction
-
 function! s:format_arglist(arglist) abort
   if stridx(a:arglist, '(quote ') != -1
     return strpart(a:arglist, 7, len(a:arglist)-8)
@@ -43,55 +35,6 @@ function! s:candidate(c) abort
       \ 'info': doc,
       \ 'icase': 1,
       \}
-endfunction
-
-function! s:ns_var_candidates(ns_name, base, alias) abort
-  let result = []
-  if a:ns_name =~# '^[A-Z]'
-    return result
-  endif
-
-  let resp = iced#nrepl#op#cider#sync#ns_vars(a:ns_name)
-  if empty(resp) || resp['status'][0] !=# 'done'
-    return []
-  endif
-
-  let dict = get(resp, 'ns-vars-with-meta', {})
-  for k in keys(dict)
-    if stridx(k, a:base) == 0
-      let arglists = get(dict[k], 'arglists', '')
-      let doc = get(dict[k], 'doc', '')
-      let doc = strpart(doc, 1, len(doc)-2)
-      let doc = substitute(doc, '\\n', "\n", 'g')
-      let doc = '  ' . doc
-      let doc = join([
-            \ printf('%s/%s', a:ns_name, k),
-            \ s:format_arglist(arglists),
-            \ doc,
-            \ ], "\n")
-      call add(result, {
-          \ 'candidate': (empty(a:alias) ? k : printf('%s/%s', a:alias, k)),
-          \ 'arglists': [arglists],
-          \ 'doc': doc,
-          \ 'type': 'var',
-          \ })
-    endif
-  endfor
-
-  return result
-endfunction
-
-function! s:ns_alias_candidates(aliases, base) abort
-  let result = []
-  for alias in a:aliases
-    if stridx(alias, a:base) == 0
-      call add(result, {
-          \ 'candidate': alias,
-          \ 'type': 'namespace',
-          \ })
-    endif
-  endfor
-  return result
 endfunction
 
 " c.f. https://github.com/alexander-yakushev/compliment/wiki/Context
@@ -129,37 +72,11 @@ function! iced#complete#omni(findstart, base) abort
     let ns_name = iced#nrepl#ns#name()
     let candidates = []
 
-    if iced#nrepl#ns#does_exist(ns_name)
-      " vars in current namespace
-      let tmp = s:ns_var_candidates(ns_name, a:base, '')
-      if !empty(tmp)
-        let candidates = candidates + tmp
-      endif
-
-      " namespace aliases
-      let alias_dict = iced#nrepl#ns#alias_dict(ns_name)
-      if !empty(alias_dict)
-        let candidates = candidates + s:ns_alias_candidates(keys(alias_dict), a:base)
-      endif
-
-      " vars in aliased namespace
-      let i = stridx(a:base, '/')
-      if i != -1 && a:base[0] !=# ':'
-        let org_base_ns = a:base[0:i-1]
-        let base_ns = get(alias_dict, org_base_ns, org_base_ns)
-        let base_sym = a:base[i+1:]
-        let tmp = s:ns_var_candidates(base_ns, base_sym, org_base_ns)
-        if !empty(tmp)
-          let candidates = candidates + tmp
-        endif
-      endif
-    endif
-
-    " cider completions
     let ctx = s:context()
     let resp = iced#nrepl#op#cider#sync#complete(a:base, ns_name, ctx)
+    let resp = (type(resp) == v:t_list) ? resp[0] : resp
     if type(resp) == v:t_dict && has_key(resp, 'completions')
-      let candidates = candidates + resp['completions']
+      let candidates = resp['completions']
     endif
 
     return sort(map(candidates, {_, v -> s:candidate(v)}),

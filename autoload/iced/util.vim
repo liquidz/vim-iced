@@ -62,7 +62,9 @@ endfunction
 
 function! iced#util#char_repeat(n, c) abort
   let ret = ''
-  for _ in range(a:n) | let ret = ret . a:c | endfor
+  if a:n > 0
+    for _ in range(a:n) | let ret = ret . a:c | endfor
+  endif
   return ret
 endfunction
 
@@ -124,6 +126,25 @@ function! iced#util#shorten(msg) abort
   return (max_length >= 3 && len(msg) > max_length)
         \ ? strpart(msg, 0, max_length - 3).'...'
         \ : msg
+endfunction
+
+function! iced#util#select_keys(d, ks) abort
+  let ret = {}
+  for k in a:ks
+    if !has_key(a:d, k) | continue | endif
+    let ret[k] = a:d[k]
+  endfor
+  return ret
+endfunction
+
+function! iced#util#normalize_path(path) abort
+  let path = substitute(a:path, '^file:', '', '')
+  " NOTE: jar:file:/path/to/jarfile.jar!/path/to/file.clj
+  if stridx(path, 'jar:') == 0
+    let path = substitute(path, '^jar:file:', 'zipfile:', '')
+    let path = substitute(path, '!/', '::', '')
+  endif
+  return path
 endfunction
 
 let &cpo = s:save_cpo

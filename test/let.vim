@@ -2,7 +2,7 @@ let s:suite  = themis#suite('iced.let')
 let s:assert = themis#helper('assert')
 let s:buf = themis#helper('iced_buffer')
 
-function! s:suite.goto_test() abort
+function! s:suite.jump_to_let_test() abort
   call s:buf.start_dummy([
         \ '(let [foo 123]',
         \ '  (println foo)',
@@ -10,7 +10,7 @@ function! s:suite.goto_test() abort
         \ ])
 
   call s:assert.equals(line('.'), 3)
-  call iced#let#goto()
+  call iced#let#jump_to_let()
   call s:assert.equals(line('.'), 1)
   call s:assert.equals(col('.'), 6)
 
@@ -22,27 +22,27 @@ function! s:suite.goto_test() abort
         \ '  (bar|))',
         \ ])
 
-  call iced#let#goto()
+  call iced#let#jump_to_let()
   call s:assert.equals(line('.'), 1)
   call s:assert.equals(col('.'), 6)
 
   call s:buf.stop_dummy()
 endfunction
 
-function! s:suite.goto_no_let_test() abort
+function! s:suite.jump_to_let_no_let_test() abort
   call s:buf.start_dummy([
         \ '(list 123',
         \ '      456|)',
         \ ])
 
   let pos = getcurpos()
-  call iced#let#goto()
+  call iced#let#jump_to_let()
   call s:assert.equals(getcurpos(), pos)
 
   call s:buf.stop_dummy()
 endfunction
 
-function! s:suite.goto_no_matched_let_test() abort
+function! s:suite.jump_to_let_no_matched_let_test() abort
   call s:buf.start_dummy([
         \ '(do',
         \ '  (let [foo 123]',
@@ -51,7 +51,7 @@ function! s:suite.goto_no_matched_let_test() abort
         \ ])
 
   let pos = getcurpos()
-  call iced#let#goto()
+  call iced#let#jump_to_let()
   call s:assert.equals(getcurpos(), pos)
 
   call s:buf.stop_dummy()

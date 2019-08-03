@@ -40,9 +40,11 @@ if !exists('g:iced#di#container')
   call iced#di#register('channel',  function('iced#di#channel#build'))
   call iced#di#register('bencode',  function('iced#di#bencode#build'))
   call iced#di#register('ex_cmd',   function('iced#di#ex_cmd#build'))
+  call iced#di#register('io',       function('iced#di#io#build'))
   call iced#di#register('quickfix', function('iced#di#quickfix#build'))
   call iced#di#register('selector', function('iced#di#selector#build'))
   call iced#di#register('virtual_text', function('iced#di#virtual_text#build'))
+  call iced#di#register('popup', function('iced#di#popup#build'))
 endif " }}}
 
 let &cpo = s:save_cpo

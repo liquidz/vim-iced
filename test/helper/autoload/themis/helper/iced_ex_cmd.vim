@@ -1,7 +1,7 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:helper = {}
+let s:helper = {'last_args': {}}
 
 function! s:helper.exe(str) abort
   let self.last_args = {'exe': a:str}
@@ -20,7 +20,7 @@ function! s:helper.get_last_args() abort
 endfunction
 
 function! themis#helper#iced_ex_cmd#new(runner) abort
-  return  deepcopy(s:helper)
+  return deepcopy(s:helper)
 endfunction
 
 let &cpoptions = s:save_cpo

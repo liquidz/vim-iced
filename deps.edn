@@ -2,10 +2,11 @@
  :paths ["clj"]
  :deps {nrepl {:mvn/version "0.6.0"}
         refactor-nrepl {:mvn/version "2.4.0"}
-        cider/cider-nrepl {:mvn/version "0.21.1"}
-        iced-nrepl {:mvn/version "0.4.3"}}
+        cider/cider-nrepl {:mvn/version "0.22.0-beta9"}
+        iced-nrepl {:mvn/version "0.6.0"}}
  :__middlewares__
  ["cider.nrepl/wrap-classpath"
+  "cider.nrepl/wrap-clojuredocs"
   "cider.nrepl/wrap-complete"
   "cider.nrepl/wrap-debug"
   "cider.nrepl/wrap-format"
@@ -17,16 +18,20 @@
   "cider.nrepl/wrap-test"
   "cider.nrepl/wrap-trace"
   "cider.nrepl/wrap-undef"
+  "cider.nrepl/wrap-xref"
   "refactor-nrepl.middleware/wrap-refactor"
   "iced.nrepl/wrap-iced"]
 
  :aliases
- {:cljs {:extra-deps {cider/piggieback {:mvn/version "0.4.0"}}
+ {:cljs {:__command_option__ true
+         :extra-deps {cider/piggieback {:mvn/version "0.4.1"}}
          :__middlewares__ ["cider.piggieback/wrap-cljs-repl"]}
+  :kaocha {:__command_option__ true
+           :extra-deps {kaocha-nrepl {:mvn/version "0.1.2-SNAPSHOT"}}
+           :__middlewares__ ["kaocha-nrepl.core/wrap-kaocha"]}
 
-  :jackin {:extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}
-                        org.clojure/math.combinatorics {:mvn/version "0.1.5"}}}
-  :ancient {:extra-deps {olical/depot {:mvn/version "1.7.0"}}
+  :jackin {:extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}}}
+  :ancient {:extra-deps {olical/depot {:mvn/version "1.8.4"}}
             :main-opts ["-m" "depot.outdated.main"]}
   :doc {:extra-deps {liquidz/clj-vimhelp {:git/url "https://github.com/liquidz/clj-vimhelp"
                                           :sha "38dea58d0516f8f6bbc424da14300c831a824242"}}

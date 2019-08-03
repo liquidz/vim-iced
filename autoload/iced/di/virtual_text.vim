@@ -1,21 +1,37 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
+function! s:vim(container) abort
+  let d = {'container': a:container}
+
+  function! d.set(text, ...) abort
+    let opt = get(a:, 1, {})
+    let popup_opts = {
+          \ 'col': get(opt, 'col', col('$') + 3),
+          \ 'highlight': get(opt, 'highlight', 'Comment'),
+          \ }
+
+    if get(opt, 'auto_clear', v:false)
+      let popup_opts['moved'] = 'any'
+      let popup_opts['auto_close'] = v:false
+    endif
+
+    call self.container.get('popup').open([a:text], popup_opts)
+  endfunction
+
+  function! d.clear(...) abort
+    call self.container.get('ex_cmd').silent_exe(':popupclear')
+  endfunction
+
+  return d
+endfunction
+
+let s:neovim = {}
 let s:ns_name = 'iced_virtual_text_namespace'
 let s:ns = has('nvim')
       \ ? nvim_create_namespace(s:ns_name)
       \ : -1
 
-let s:vim = {}
-function! s:vim.set(...) abort
-  return v:false
-endfunction
-
-function! s:vim.clear(...) abort
-  return v:false
-endfunction
-
-let s:neovim = {}
 function! s:neovim.set(text, ...) abort
   let opt = get(a:, 1, {})
   let buf = get(opt, 'buffer', bufnr('%'))
@@ -37,8 +53,8 @@ function! s:neovim.clear(...) abort
 endfunction
 
 function! iced#di#virtual_text#build(container) abort
-  return has('nvim') ? s:neovim : s:vim
+  return has('nvim') ? s:neovim : s:vim(a:container)
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

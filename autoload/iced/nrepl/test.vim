@@ -152,20 +152,15 @@ function! s:test_ns_required(ns_name, var_name) abort
     call s:run_test_vars(a:ns_name, target_test_vars)
 endfunction
 
-function! s:extract_var_name(eval_resp) abort
-  if has_key(a:eval_resp, 'err') | return iced#nrepl#eval#err(a:eval_resp['err']) | endif
-  if !has_key(a:eval_resp, 'value') | return iced#message#error('not_found') | endif
-
-  let var = a:eval_resp['value']
-  let var = substitute(var, '^#''', '', '')
-  let i = stridx(var, '/')
-  let ns = var[0:i-1]
-  let var_name = strpart(var, i+1)
-
+function! s:distribute_tests(var_info) abort
+  let qualified_var = a:var_info['qualified_var']
+  let ns = a:var_info['ns']
+  let var_name = a:var_info['var']
   let test_vars = iced#nrepl#test#test_vars_by_ns_name(ns)
+
   if index(test_vars, var_name) != -1
     " Form under the cursor is a test
-    call s:run_test_vars(ns, [var])
+    call s:run_test_vars(ns, [qualified_var])
   elseif s:S.ends_with(ns, '-test')
     " Form under the cursor is not a test, and current ns is ns for test
     return iced#message#error('not_found')
@@ -177,13 +172,7 @@ function! s:extract_var_name(eval_resp) abort
 endfunction
 
 function! iced#nrepl#test#under_cursor() abort
-  let ret = iced#paredit#get_current_top_list()
-  let code = ret['code']
-  if empty(code) | return iced#message#error('finding_code_error') | endif
-
-  let pos = ret['curpos']
-  let option = {'line': pos[1], 'column': pos[2]}
-  call iced#nrepl#eval(code, {resp -> s:extract_var_name(resp)}, option)
+  call iced#nrepl#var#extract_by_current_top_list(funcref('s:distribute_tests'))
 endfunction "}}}
 
 " iced#nrepl#test#ns {{{
@@ -228,6 +217,9 @@ endfunction " }}}
 function! s:spec_check(var, resp) abort
   if !has_key(a:resp, 'result') | return iced#message#error('spec_check_error') | endif
   let num_tests = a:resp['num-tests']
+  if type(num_tests) != v:t_number
+    let num_tests = 0
+  endif
 
   if a:resp['result'] ==# 'OK'
     if num_tests == 0
@@ -237,27 +229,25 @@ function! s:spec_check(var, resp) abort
     endif
     return iced#message#info_str(msg)
   else
-    if has_key(a:resp, 'message')
+    if has_key(a:resp, 'error')
       let msg = printf('%s: Ran %d tests. Failed because ''%s'' with %s args.',
-            \ a:var, num_tests, a:resp['message'], a:resp['fail'])
+            \ a:var, num_tests, a:resp['error'], a:resp['failed-input'])
     else
       let msg = printf('%s: Ran %d tests. Failed with %s args.',
-            \ a:var, num_tests, a:resp['fail'])
+            \ a:var, num_tests, a:resp['failed-input'])
     endif
     return iced#message#error_str(msg)
   endif
 endfunction
 
-function! s:current_var(num_tests, resp) abort
-  if has_key(a:resp, 'err')
-    call iced#nrepl#eval#err(a:resp['err'])
-  elseif has_key(a:resp, 'value')
-    let var = a:resp['value']
-    let s:last_test = {'type': 'spec-check', 'var': var, 'num_tests': a:num_tests}
+function! s:run_spec_check_by_current_var(num_tests, var_info) abort
+  let s:last_test = {
+        \ 'type': 'spec-check',
+        \ 'var_info': a:var_info,
+        \ 'num_tests': a:num_tests}
+  let var = a:var_info['qualified_var']
 
-    let var = substitute(var, '^#''', '', '')
-    call iced#nrepl#op#iced#spec_check(var, a:num_tests, {resp -> s:spec_check(var, resp)})
-  endif
+  call iced#nrepl#op#iced#spec_check(var, a:num_tests, {resp -> s:spec_check(var, resp)})
 endfunction
 
 function! iced#nrepl#test#spec_check(...) abort
@@ -268,13 +258,8 @@ function! iced#nrepl#test#spec_check(...) abort
     let num_tests = g:iced#test#spec_num_tests
   endif
 
-  let ret = iced#paredit#get_current_top_list()
-  let code = ret['code']
-  if empty(code)
-    call iced#message#error('finding_code_error')
-  else
-    call iced#nrepl#eval(code, {resp -> s:current_var(num_tests, resp)})
-  endif
+  call iced#nrepl#var#extract_by_current_top_list({v ->
+        \ s:run_spec_check_by_current_var(num_tests, v)})
 endfunction " }}}
 
 " iced#nrepl#test#rerun_last {{{
@@ -294,8 +279,8 @@ function! iced#nrepl#test#rerun_last() abort
     call iced#nrepl#test#redo()
   elseif test_type ==# 'spec-check'
     let num_tests = s:last_test['num_tests']
-    let var = s:last_test['var']
-    call s:current_var(num_tests, {'value': var})
+    let var_info = s:last_test['var_info']
+    call s:run_spec_check_by_current_var(num_tests, var_info)
   endif
 endfunction " }}}
 

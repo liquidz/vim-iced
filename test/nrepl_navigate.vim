@@ -50,7 +50,7 @@ let s:related_ns_test_ns_list = [
 function! s:related_ns_relay(msg) abort
   if a:msg['op'] ==# 'iced-project-ns-list'
     return {'status': ['done'], 'project-ns-list': s:related_ns_test_ns_list}
-  elseif a:msg['op'] ==# 'ns-path'
+  elseif a:msg['op'] ==# 'iced-pseudo-ns-path'
     return {'status': ['done'], 'path': s:temp_file}
   else
     return {'status': ['done']}
@@ -155,46 +155,53 @@ function! s:suite.test_test() abort
   call s:teardown()
 endfunction
 
-function! s:find_var_references_relay(msg) abort
+function! s:browse_var_references_relay(msg) abort
   let op = a:msg['op']
   if op ==# 'info'
     return {'status': ['done'], 'ns': 'foo', 'name': 'bar'}
-  elseif op ==# 'iced-find-var-references'
-    return {'status': ['done'], 'var-references': [
-          \ {'filename': '/path/to/foo.txt', 'lnum': 12, 'text': 'hello'},
-          \ {'filename': '/path/to/bar.txt', 'lnum': 34, 'text': 'world'}]}
-  elseif op ==# 'eval'
-    return {'status': ['done'], 'value': json_encode({
-          \ 'user-dir': '/path/to/user/dir',
-          \ 'file-separator': '/'})}
+  elseif op ==# 'fn-refs'
+    return {'status': ['done'], 'fn-refs': [
+          \ {'file': s:temp_file, 'name': 'hello', 'doc': 'doc hello', 'line': 12},
+          \ {'file': 'non_existing.txt', 'name': 'world', 'doc': 'doc world', 'line': 34},
+          \ ]}
   else
     return {'status': ['done']}
   endif
 endfunction
 
-function! s:suite.find_var_references_test() abort
-  let g:iced#var_references#cache_dir = fnamemodify(s:temp_file, ':h')
-  call s:setup({'channel': funcref('s:find_var_references_relay')})
-  let cache_path = s:funcs.reference_cache_path('foo', 'bar')
+function! s:suite.browse_var_references_test() abort
+  call s:setup({'channel': funcref('s:browse_var_references_relay')})
 
-  call s:assert.false(filereadable(cache_path))
+  call iced#nrepl#navigate#browse_var_references('foo/bar')
+  let loc_list = s:qf.get_last_args()['loclist']
+  call s:assert.equals(loc_list, [
+        \ {'filename': s:temp_file, 'lnum': 12, 'text': 'hello: doc hello'},
+        \ ])
 
-  call iced#nrepl#navigate#find_var_references('foo/bar', '')
-  let qf_list = s:qf.get_last_args()['list']
+  call s:teardown()
+endfunction
+
+function! s:browse_var_dependencies_relay(msg) abort
+  let op = a:msg['op']
+  if op ==# 'info'
+    return {'status': ['done'], 'ns': 'foo', 'name': 'bar'}
+  elseif op ==# 'fn-deps'
+    return {'status': ['done'], 'fn-deps': [
+          \ {'file': s:temp_file, 'name': 'world', 'doc': 'doc world', 'line': 56},
+          \ {'file': 'non_existing.txt', 'name': 'neko', 'doc': 'doc neko', 'line': 78},
+          \ ]}
+  else
+    return {'status': ['done']}
+  endif
+endfunction
+
+function! s:suite.browse_var_dependencies_test() abort
+  call s:setup({'channel': funcref('s:browse_var_dependencies_relay')})
+
+  call iced#nrepl#navigate#browse_var_dependencies('foo/bar')
+  let qf_list = s:qf.get_last_args()['loclist']
   call s:assert.equals(qf_list, [
-        \ {'filename': '/path/to/foo.txt', 'lnum': 12, 'text': 'hello'},
-        \ {'filename': '/path/to/bar.txt', 'lnum': 34, 'text': 'world'}])
-
-  " cache file existence
-  call s:assert.true(filereadable(cache_path))
-  call s:assert.equals(iced#util#read_var(cache_path), qf_list)
-
-  " find var references with cache file
-  let cache_test_data = [
-        \ {'filename': '/path/to/baz.txt', 'lnum': 56, 'text': 'zzz'}]
-  call iced#util#save_var(cache_test_data, cache_path)
-  call iced#nrepl#navigate#find_var_references('foo/bar', '')
-  call s:assert.equals(s:qf.get_last_args()['list'], cache_test_data)
+        \ {'filename': s:temp_file, 'lnum': 56, 'text': 'world: doc world'}])
 
   call s:teardown()
 endfunction

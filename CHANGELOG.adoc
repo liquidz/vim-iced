@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 0.11.0 (2019-08-03)
+// {{{
+=== Added
+* Add support vim8's popup window.
+** https://github.com/vim/vim/blob/master/runtime/doc/popup.txt
+** Enables virtual text for evaluation and floating window for debugging.
+** Add `g:iced_enable_popup_document` option.
+** Add `g:iced_enable_auto_document` option.
+** Add `g:iced_max_distance_for_auto_document` option.
+*** Enables full/one-line document on popup/floating window.
+** Add `IcedPopupDocumentOpen` command.
+** Add `IcedPopupSourceShow` command.
+* Add support cross references
+** Add `IcedBrowseReferences` command.
+** Add `IcedBrowseDependencies` command.
+** Add `IcedBrowseVarDependencies` command.
+** Add `IcedUseCaseOpen` command.
+* Enhance spec supports
+** Add `IcedSpecForm` command.
+** Add `IcedSpecExample` command.
+* Support debugging tapped value.
+** Add `IcedListTapped` command.
+** Add `IcedClearTapped` command.
+** Add `IcedBrowseTapped` command.
+* Integrate with ClojureDocs.
+** Add `IcedClojureDocsOpen` command.
+** Add `IcedClojureDocsRefresh` command.
+** Add `g:iced#clojuredocs#export_edn_url` option.
+* Misc
+** Add `IcedOpenNs` command.
+** Add `--with-kaocha` option to `iced` command.
+
+=== Changed
+* Bump cider-nrepl to 0.22.0-beta9.
+* Bump piggieback to 0.4.1.
+* Bump https://github.com/liquidz/iced-nrepl[iced-nrepl] to 0.6.0.
+* Update vital.vim to latest.
+* Update `:IcedToggleSrcAndTest` to confirm opening a new file with a pseudo path if the file does not exist.
+* (BREAKING) Rename `g:iced#buffer#floating#time` to `g:iced#popup#time`.
+* (BREAKING) Rename `g:iced#nrepl#sync#timeout_ms` to `g:iced#promise#timeout_ms`.
+** Add `cider.nrepl/wrap-xref` to required middlewares.
+* (BREAKING) Change default `K` mapping to `IcedPopupDocumentOpen` command.
+* (BREAKING) Change default `<Leader>hs` mapping to `IcedPopupSourceShow` command.
+** Until now it was `IcedDocumentOpen` command.
+* (BREAKING) Commands/Key mappings maintenance.
+
+[title="Commands"]
+|===
+| Before | After
+| IcedGotoLet | IcedJumpToLet
+| IcedRelatedNamespace | IcedBrowseRelatedNamespace
+| IcedFindVarReferences | IcedBrowseVarReferences
+|===
+
+[title="Key mappings"]
+|===
+| Before | After
+| <Plug>(iced_related_namespace) | <Plug>(iced_browse_related_namespace)
+| <Plug>(iced_goto_let) | <Plug>(iced_jump_to_let)
+| <Plug>(iced_find_var_references) | <Plug>(iced_browse_var_references)
+|===
+
+[title="Default keys"]
+|===
+| Mapping | Before | After
+| <Plug>(iced_browse_related_namespace) | <Leader>br | <Leader>bn
+| <Plug>(iced_jump_to_let) | <Leader>gl | <Leader>jl
+| <Plug>(iced_browse_references) | <Leader>fr | <Leader>br
+|===
+
+=== Fixed
+* Fix floating window position on split windows.
+
+=== Removed
+* (BREAKING) Remove `IcedFindVarReferences!` command.
+* (BREAKING) Remove `g:iced#var_references#cache_dir` option.
+* Remove `iced#nrepl#op#iced#find_var_references` function.
+* (BREAKING) Remove `IcedGrimoireOpen` command.
+** Sadly grimoire is deprecated...
+*** https://twitter.com/arrdem/status/1144065851370299392
+*** Use `:IcedClojureDocsOpen` instead.
+// }}}
+
 == 0.10.5 (2019-06-19)
 // {{{
 === Fixed

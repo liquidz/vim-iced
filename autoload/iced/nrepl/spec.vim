@@ -69,6 +69,27 @@ function! s:browse_spec(spec_name) abort
   call iced#nrepl#op#cider#spec_form(a:spec_name, funcref('s:spec_form'))
 endfunction
 
+function! s:cword() abort
+  let isk = &iskeyword
+  try
+    let &iskeyword = printf('%s,:,.,-,/,?', isk)
+    return expand('<cword>')
+  finally
+    let &iskeyword = isk
+  endtry
+endfunction
+
+function! iced#nrepl#spec#form(spec_name) abort
+  let spec_name = empty(a:spec_name)
+        \ ? s:cword()
+        \ : a:spec_name
+
+  call iced#promise#call('iced#nrepl#eval', [spec_name])
+       \.then({resp -> get(resp, 'value', '')})
+       \.then({kw -> iced#promise#call('iced#nrepl#op#cider#spec_form', [kw])})
+       \.then({resp -> s:spec_form(resp)})
+endfunction
+
 function! s:spec_list(resp) abort
   if !has_key(a:resp, 'spec-list') || empty(a:resp['spec-list'])
     return iced#message#error('spec_list_error')
@@ -76,17 +97,41 @@ function! s:spec_list(resp) abort
 
   let list = a:resp['spec-list']
   if len(list) == 1
-    call s:browse_spec(list[0])
+    call iced#nrepl#spec#form(list[0])
   else
     call iced#selector({
         \ 'candidates': list,
-        \ 'accept': {_, spec_name -> s:browse_spec(spec_name)},
+        \ 'accept': {_, spec_name -> iced#nrepl#spec#form(spec_name)},
         \ })
   endif
 endfunction
 
 function! iced#nrepl#spec#list() abort
   call iced#nrepl#op#cider#spec_list(funcref('s:spec_list'))
+endfunction
+
+function! s:show_example(resp) abort
+  if !has_key(a:resp, 'spec-example')
+    return iced#message#error('not_found')
+  endif
+
+  call iced#buffer#document#open(
+        \ trim(a:resp['spec-example']),
+        \ 'clojure')
+endfunction
+
+function! iced#nrepl#spec#example(spec_name) abort
+  let spec_name = empty(a:spec_name)
+        \ ? s:cword()
+        \ : a:spec_name
+  let spec_name = (stridx(spec_name, ':') == 0)
+        \ ? spec_name
+        \ : printf(':%s', spec_name)
+
+  call iced#promise#call('iced#nrepl#eval', [spec_name])
+        \.then({resp -> get(resp, 'value', '')})
+        \.then({kw -> iced#promise#call('iced#nrepl#op#cider#spec_example', [kw])})
+        \.then({resp -> s:show_example(resp)})
 endfunction
 
 let &cpo = s:save_cpo

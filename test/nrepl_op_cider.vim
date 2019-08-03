@@ -1,5 +1,6 @@
 let s:suite = themis#suite('iced.nrepl.op.cider')
 let s:assert = themis#helper('assert')
+let s:buf = themis#helper('iced_buffer')
 let s:ch = themis#helper('iced_channel')
 
 let s:callback = {'result': ''}
@@ -20,6 +21,11 @@ function! s:setup() abort
   call iced#nrepl#set_session('repl', 'repl-session')
   call iced#nrepl#change_current_session('clj')
   call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:relay')})
+  call s:buf.start_dummy([printf('(ns %s)', s:default_ns)])
+endfunction
+
+function! s:teardown() abort
+  call s:buf.stop_dummy()
 endfunction
 
 function! s:suite.info_test() abort
@@ -30,6 +36,7 @@ function! s:suite.info_test() abort
         \ 'ns': 'foo.core',
         \ 'symbol': 'bar-sym',
         \ 'op': 'info'})
+  call s:teardown()
 endfunction
 
 function! s:suite.ns_path_test() abort
@@ -39,6 +46,7 @@ function! s:suite.ns_path_test() abort
         \ 'session': 'clj-session',
         \ 'ns': 'foo.core',
         \ 'op': 'ns-path'})
+  call s:teardown()
 endfunction
 
 function! s:suite.ns_list_test() abort
@@ -47,6 +55,7 @@ function! s:suite.ns_list_test() abort
   call s:assert.equals(s:callback.result['message'], {
         \ 'session': 'clj-session',
         \ 'op': 'ns-list'})
+  call s:teardown()
 endfunction
 
 function! s:suite.ns_load_all_test() abort
@@ -55,6 +64,7 @@ function! s:suite.ns_load_all_test() abort
   call s:assert.equals(s:callback.result['message'], {
         \ 'session': 'clj-session',
         \ 'op': 'ns-load-all'})
+  call s:teardown()
 endfunction
 
 function! s:suite.retest_test() abort
@@ -68,6 +78,7 @@ function! s:suite.retest_test() abort
         \ 'session': 'clj-session',
         \ 'id': id,
         \ 'op': 'retest'})
+  call s:teardown()
 endfunction
 
 function! s:suite.undef_test() abort
@@ -78,6 +89,7 @@ function! s:suite.undef_test() abort
         \ 'ns': s:default_ns,
         \ 'symbol': 'bar-sym',
         \ 'op': 'undef'})
+  call s:teardown()
 endfunction
 
 function! s:suite.macroexpand_1_test() abort
@@ -93,6 +105,7 @@ function! s:suite.macroexpand_1_test() abort
         \ 'code': '(foo bar)',
         \ 'expander': 'macroexpand-1',
         \ 'op': 'macroexpand'})
+  call s:teardown()
 endfunction
 
 function! s:suite.macroexpand_all_test() abort
@@ -108,6 +121,7 @@ function! s:suite.macroexpand_all_test() abort
         \ 'code': '(foo bar)',
         \ 'expander': 'macroexpand-all',
         \ 'op': 'macroexpand'})
+  call s:teardown()
 endfunction
 
 function! s:suite.toggle_trace_ns_test() abort
@@ -117,6 +131,7 @@ function! s:suite.toggle_trace_ns_test() abort
         \ 'session': 'clj-session',
         \ 'ns': 'foo.core',
         \ 'op': 'toggle-trace-ns'})
+  call s:teardown()
 endfunction
 
 function! s:suite.toggle_trace_var_test() abort
@@ -127,6 +142,7 @@ function! s:suite.toggle_trace_var_test() abort
         \ 'ns': 'foo.core',
         \ 'sym': 'bar-sym',
         \ 'op': 'toggle-trace-var'})
+  call s:teardown()
 endfunction
 
 function! s:suite.spec_list_test() abort
@@ -135,6 +151,7 @@ function! s:suite.spec_list_test() abort
   call s:assert.equals(s:callback.result['message'], {
         \ 'session': 'clj-session',
         \ 'op': 'spec-list'})
+  call s:teardown()
 endfunction
 
 function! s:suite.spec_form_test() abort
@@ -144,4 +161,5 @@ function! s:suite.spec_form_test() abort
         \ 'session': 'clj-session',
         \ 'spec-name': 'spec-name',
         \ 'op': 'spec-form'})
+  call s:teardown()
 endfunction

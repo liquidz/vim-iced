@@ -100,13 +100,21 @@ function! s:summary(resp) abort
   for resp in iced#util#ensure_array(a:resp)
     if has_key(resp, 'summary')
       let summary = resp['summary']
-      return {
-          \ 'summary': printf('%s: Ran %d assertions, in %d test functions. %d failures, %d errors.',
-          \                   get(resp, 'testing-ns', ''),
-          \                   summary['test'], summary['var'],
-          \                   summary['fail'], summary['error']),
-          \ 'is_success': ((summary['fail'] + summary['error']) == 0),
-          \ }
+
+      if summary['test'] == 0
+        return {
+              \ 'summary': iced#message#get('no_test_summary'),
+              \ 'is_success': 1,
+              \ }
+      else
+        return {
+              \ 'summary': iced#message#get('test_summary',
+              \              get(resp, 'testing-ns', ''),
+              \              summary['test'], summary['var'],
+              \              summary['fail'], summary['error']),
+              \ 'is_success': ((summary['fail'] + summary['error']) == 0),
+              \ }
+      endif
     endif
   endfor
 

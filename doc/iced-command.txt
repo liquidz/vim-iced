@@ -48,10 +48,20 @@ OPTIONS                                                  *iced-command-options*
     Enables ClojureScript features.
     This option is enabled automatically when project configuration
     file(eg. project.clj) contains 'org.clojure/clojurescript' dependency.
+  `--with-kaocha`:
+    Enables features for testing with kaocha.
   `--force-boot`:
     Force to use Boot.
   `--force-clojure-cli`:
     Force to use Clojure CLI.
+
+  `--dependency=VALUE`:
+    Adds extra dependency.
+    `VALUE` format is 'PACKAGE_NAME:VERSION'.
+    For example: `--dependency=iced-nrepl:0.4.3`
+  `--middleware=VALUE`:
+    Adds extra nrepl middleware.
+    For example: `--middleware=iced.nrepl/wrap-iced`
 
   Other options are passed to each programs.
 

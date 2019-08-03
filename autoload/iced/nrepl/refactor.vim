@@ -33,45 +33,45 @@ let g:iced#ns#favorites
       \ = get(g:, 'iced#ns#favorites', s:default_ns_favorites) " }}}
 
 " iced#nrepl#refactor#extract_function {{{
+function! s:found_used_locals(resp) abort
+  if !has_key(a:resp, 'used-locals') | return iced#message#error('used_locals_error') | endif
+
+  let view = winsaveview()
+  let reg_save = @@
+
+  try
+    let locals = a:resp['used-locals']
+    let func_name = trim(iced#di#get('io').input('Function name: '))
+    if empty(func_name)
+      return iced#message#echom('canceled')
+    endif
+
+    let func_body = iced#paredit#get_outer_list_raw()
+
+    let @@ = empty(locals)
+          \ ? printf('(%s)', func_name)
+          \ : printf('(%s %s)', func_name, join(locals, ' '))
+    silent normal! gvp
+
+    let code = printf("(defn- %s [%s]\n  %s)\n\n",
+          \ func_name, join(locals, ' '),
+          \ iced#util#add_indent(2, func_body))
+    let codes = split(code, '\r\?\n')
+
+    call iced#paredit#move_to_prev_top_element()
+    call append(line('.')-1, codes)
+    let view['lnum'] = view['lnum'] + len(codes)
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+  endtry
+endfunction
+
 function! iced#nrepl#refactor#extract_function() abort
-  let private = {}
-
-  function! private.used_locals(resp) abort
-    if !has_key(a:resp, 'used-locals') | return iced#message#error('used_locals_error') | endif
-
-    let view = winsaveview()
-    let reg_save = @@
-
-    try
-      let locals = a:resp['used-locals']
-      let func_name = trim(input('Function name: '))
-      if empty(func_name)
-        return iced#message#echom('canceled')
-      endif
-
-      let func_body = iced#paredit#get_outer_list_raw()
-
-      let @@ = printf('(%s %s)', func_name, join(locals, ' '))
-      silent normal! gvp
-
-      let code = printf("(defn- %s [%s]\n  %s)\n\n",
-            \ func_name, join(locals, ' '),
-            \ iced#util#add_indent(2, func_body))
-      let codes = split(code, '\r\?\n')
-
-      call iced#paredit#move_to_prev_top_element()
-      call append(line('.')-1, codes)
-      let view['lnum'] = view['lnum'] + len(codes)
-    finally
-      let @@ = reg_save
-      call winrestview(view)
-    endtry
-  endfunction
-
   let path = expand('%:p')
   let pos = getcurpos()
   call iced#nrepl#op#refactor#find_used_locals(
-        \ path, pos[1], pos[2], private.used_locals)
+        \ path, pos[1], pos[2], funcref('s:found_used_locals'))
 endfunction " }}}
 
 " iced#nrepl#refactor#clean_ns {{{
@@ -242,6 +242,83 @@ endfunction
 
 function! iced#nrepl#refactor#thread_last() abort
   call s:threading({code -> iced#nrepl#op#iced#sync#refactor_thread_last(code)})
+endfunction " }}}
+
+" iced#nrepl#refactor#add_arity {{{
+function! iced#nrepl#refactor#add_arity() abort
+  let view = winsaveview()
+  let reg_save = @@
+  try
+    let res = iced#paredit#find_parent_form_raw([
+          \ 'defn', 'fn', 'defmacro', 'defmethod'])
+    if !has_key(res, 'code')
+      call winrestview(view)
+      return iced#message#error('not_found')
+    endif
+    let beginning_of_defn = res['curpos']
+
+    " Move to next element head
+    silent normal! l
+    call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+
+    " Skip metadata part
+    let p = getcurpos()
+    if searchpos('\^', 'cn') == [p[1], p[2]]
+      call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+    endif
+
+    let beginning_var_name = getcurpos()
+
+    " Move to the beginning of arity
+    if stridx(res['code'], '(defn') == 0 || stridx(res['code'], '(defmacro') == 0
+      call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+
+      " Skip doc-string
+      let p = getcurpos()
+      if searchpos('"', 'cn') == [p[1], p[2]]
+        call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+      endif
+
+      " Skip attr-map
+      let p = getcurpos()
+      if searchpos('{', 'cn') == [p[1], p[2]]
+        call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+      endif
+    elseif stridx(res['code'], '(defmethod') == 0
+      " Skip dispatch-val (move to next next element head)
+      call sexp#move_to_adjacent_element('n', 2, 1, 0, 0)
+    endif
+
+    let beginning_of_arity = getcurpos()
+    if searchpos('(', 'cn') == [beginning_of_arity[1], beginning_of_arity[2]]
+      " For multi arity
+      let @@ = "([])\n"
+      silent normal! P
+    else
+      " For single arity
+      silent normal! v
+      call setpos('.', beginning_of_defn)
+      silent normal! %hy
+      let arity_and_body = @@
+      if beginning_var_name[1] == beginning_of_arity[1]
+        let @@ = printf("\n  ([])\n  (%s)", arity_and_body)
+        silent normal! gvpj
+      else
+        let @@ = printf("([])\n  (%s)", arity_and_body)
+        silent normal! gvp
+      endif
+    endif
+
+    " Format new defn code
+    let p = getcurpos()
+    call setpos('.', beginning_of_defn)
+    call iced#format#minimal()
+    call setpos('.', p)
+    " Move cursor to the new arity
+    call search(']')
+  finally
+    let @@ = reg_save
+  endtry
 endfunction " }}}
 
 let s:save_cpo = &cpo

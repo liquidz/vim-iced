@@ -11,6 +11,12 @@ let g:iced#related_ns#tail_patterns =
 
 let g:iced#var_references#cache_dir = get(g:, 'iced#var_references#cache_dir', '/tmp')
 
+function! s:add_curpos_to_tagstack() abort
+  let pos = getcurpos()
+  let pos[0] = bufnr('%')
+  call s:L.push(s:tagstack, pos)
+endfunction
+
 function! s:apply_mode_to_file(mode, file) abort
   let cmd = ':edit'
   if a:mode ==# 'v'
@@ -21,20 +27,29 @@ function! s:apply_mode_to_file(mode, file) abort
   call iced#di#get('ex_cmd').exe(printf('%s %s', cmd, a:file))
 endfunction
 
-" s:open_ns {{{
-function! s:open_ns(mode, ns_name) abort
-  let resp = iced#nrepl#op#cider#sync#ns_path(a:ns_name)
-  if !has_key(resp, 'path') || empty(resp['path']) || !filereadable(resp['path'])
+" iced#nrepl#navigate#open_ns {{{
+function! iced#nrepl#navigate#open_ns(mode, ns_name) abort
+  let resp = iced#promise#sync('iced#nrepl#op#iced#pseudo_ns_path', [a:ns_name])
+  if !has_key(resp, 'path') || empty(resp['path'])
     return iced#message#error('not_found')
   endif
 
-  call s:apply_mode_to_file(a:mode, resp['path'])
+  let path = resp['path']
+  if !filereadable(path)
+    let prompt = printf('%s: ', iced#message#get('confirm_opening_file'))
+    let path = iced#di#get('io').input(prompt, path)
+  endif
+
+  if !empty(path)
+    call s:apply_mode_to_file(a:mode, path)
+  endif
 endfunction " }}}
 
 " s:open_var {{{
 function! s:open_var_info(mode, resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('not_found') | endif
-  let path = substitute(a:resp['file'], '^file:', '', '')
+  let path = iced#util#normalize_path(a:resp['file'])
+
   if expand('%:p') !=# path
     call s:apply_mode_to_file(a:mode, path)
   endif
@@ -46,10 +61,17 @@ function! s:open_var_info(mode, resp) abort
   redraw!
 endfunction
 
-function! s:open_var(mode, var_name) abort
-  let arr = split(a:var_name, '/')
-  if len(arr) != 2 | return iced#message#error('invalid_format', a:var_name) | endif
-  call iced#nrepl#op#cider#info(arr[0], arr[1], {resp -> s:open_var_info(a:mode, resp)})
+function! s:open_var(mode, candidate) abort
+  let var_name = split(a:candidate, '\t')[0]
+  let arr = split(var_name, '/')
+  if len(arr) != 2 | return iced#message#error('invalid_format', var_name) | endif
+
+  let ns = arr[0]
+  let symbol = arr[1]
+
+  call s:add_curpos_to_tagstack()
+  call iced#nrepl#ns#require(ns, {_ ->
+       \ iced#nrepl#op#cider#info(ns, symbol, {resp -> s:open_var_info(a:mode, resp)})})
 endfunction " }}}
 
 " iced#nrepl#navigate#cycle_ns {{{
@@ -67,7 +89,7 @@ function! iced#nrepl#navigate#toggle_src_and_test() abort
 
   let ns = iced#nrepl#ns#name()
   let toggle_ns = iced#nrepl#navigate#cycle_ns(ns)
-  call s:open_ns('e', toggle_ns)
+  call iced#nrepl#navigate#open_ns('e', toggle_ns)
 endfunction " }}}
 
 " iced#nrepl#navigate#related_ns {{{
@@ -85,7 +107,7 @@ function! s:ns_list(resp) abort
 
   let related = filter(copy(a:resp['project-ns-list']), {_, v -> (v !=# ns && match(v, pattern) != -1)})
   if empty(related) | return iced#message#error('not_found') | endif
-  call iced#selector({'candidates': related, 'accept': funcref('s:open_ns')})
+  call iced#selector({'candidates': related, 'accept': function('iced#nrepl#navigate#open_ns')})
 endfunction
 
 function! iced#nrepl#navigate#related_ns() abort
@@ -95,15 +117,9 @@ endfunction " }}}
 " iced#nrepl#navigate#jump_to_def {{{
 function! s:jump(resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('jump_not_found') | endif
-  let path = substitute(a:resp['file'], '^file:', '', '')
+  let path = iced#util#normalize_path(a:resp['file'])
   let line = a:resp['line']
   let column = get(a:resp, 'column', '0')
-
-  " NOTE: jar:file:/path/to/jarfile.jar!/path/to/file.clj
-  if stridx(path, 'jar:') == 0
-    let path = substitute(path, '^jar:file:', 'zipfile:', '')
-    let path = substitute(path, '!/', '::', '')
-  endif
 
   if expand('%:p') !=# path
     call iced#di#get('ex_cmd').exe(printf(':edit %s', path))
@@ -115,9 +131,7 @@ function! s:jump(resp) abort
 endfunction
 
 function! iced#nrepl#navigate#jump_to_def(symbol) abort
-  let pos = getcurpos()
-  let pos[0] = bufnr('%')
-  call s:L.push(s:tagstack, pos)
+  call s:add_curpos_to_tagstack()
   call iced#nrepl#var#get(a:symbol, funcref('s:jump'))
 endfunction " }}}
 
@@ -151,71 +165,64 @@ function! iced#nrepl#navigate#test() abort
   call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, funcref('s:test_vars'))
 endfunction " }}}
 
-function! s:set_references_to_quickfix(references) abort
-  call iced#qf#set(a:references)
-  call iced#di#get('ex_cmd').silent_exe(':cwindow')
-endfunction
-
-function! s:reference_cache_path(ns_name, var_name) abort
-  if empty(g:iced#var_references#cache_dir)
-    return ''
-  else
-    let sep = iced#nrepl#system#separator()
-    let name = s:S.hash(printf('%s:%s/%s',
-          \ iced#nrepl#system#user_dir(),
-          \ a:ns_name,
-          \ a:var_name))
-    return g:iced#var_references#cache_dir . sep . name
-  endif
-endfunction
-
-function! s:find_var_references(resp, ns_name, var_name) abort
-  if !has_key(a:resp, 'var-references') || empty(a:resp['var-references'])
-    return iced#message#warning('no_var_references', a:ns_name, a:var_name)
-  endif
-
-  let references = a:resp['var-references']
-  call iced#message#info('var_references_found', len(references))
-
-  let cache_path = s:reference_cache_path(a:ns_name, a:var_name)
-  if !empty(cache_path)
-    call iced#util#save_var(references, cache_path)
-  endif
-
-  call s:set_references_to_quickfix(references)
-endfunction
-
-function! s:find_var_references_info(info_resp, ignore_cache) abort
-  if !has_key(a:info_resp, 'ns') || !has_key(a:info_resp, 'name')
+function! s:set_xref_resp_to_quickfix(key, resp) abort
+  if !has_key(a:resp, a:key)
     return iced#message#error('not_found')
   endif
 
-  let ns_name = a:info_resp['ns']
-  let var_name = a:info_resp['name']
+  let xrefs = copy(a:resp[a:key])
+  call filter(xrefs, {_, v -> filereadable(v['file'])})
+  call map(xrefs, {_, v -> {
+        \ 'filename': v['file'],
+        \ 'text': printf('%s: %s', v['name'], v['doc']),
+        \ 'lnum': v['line'],
+        \ }})
+  if empty(xrefs) | return iced#message#info('not_found') | endif
 
-  let cache_path = s:reference_cache_path(ns_name, var_name)
-  if !a:ignore_cache && filereadable(cache_path)
-    call iced#message#info('hit_var_reference_cache')
-    let references = iced#util#read_var(cache_path)
-    call s:set_references_to_quickfix(references)
-  else
-    call iced#message#echom('finding_var_references')
-    call iced#nrepl#op#iced#find_var_references(ns_name, var_name,
-          \ {resp -> s:find_var_references(resp, ns_name, var_name)})
-  endif
+  call iced#di#get('quickfix').setloclist(win_getid(), xrefs, 'r')
+  call iced#di#get('ex_cmd').silent_exe(':lwindow')
 endfunction
 
-function! iced#nrepl#navigate#find_var_references(symbol, bang) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  if iced#nrepl#current_session_key() !=# 'clj'
-    return iced#message#error('invalid_session', 'clj')
-  endif
+let s:fn_refs_callback = function('s:set_xref_resp_to_quickfix', ['fn-refs'])
+let s:fn_deps_callback = function('s:set_xref_resp_to_quickfix', ['fn-deps'])
 
-  let ignore_cache = !empty(a:bang)
-  call iced#nrepl#var#get(
-        \ a:symbol,
-        \ {resp -> s:find_var_references_info(resp, ignore_cache)},
-        \ )
+function! s:got_var_info(resp, callback) abort
+  if !has_key(a:resp, 'ns') || !has_key(a:resp, 'name')
+    return iced#message#error('not_found')
+  endif
+  call a:callback(a:resp['ns'], a:resp['name'])
+endfunction
+
+function! iced#nrepl#navigate#browse_references() abort
+  call iced#nrepl#var#extract_by_current_top_list({res ->
+        \ iced#nrepl#op#cider#fn_refs(res.ns, res.var, s:fn_refs_callback)
+        \ })
+endfunction
+
+function! iced#nrepl#navigate#browse_dependencies() abort
+  call iced#nrepl#var#extract_by_current_top_list({res ->
+        \ iced#nrepl#op#cider#fn_deps(res.ns, res.var, s:fn_deps_callback)
+        \ })
+endfunction
+
+function! iced#nrepl#navigate#browse_var_references(symbol) abort
+  call iced#nrepl#ns#eval({_ -> iced#nrepl#var#get(a:symbol, {resp ->
+        \ s:got_var_info(resp, {ns, symbol ->
+        \     iced#nrepl#op#cider#fn_refs(ns, symbol, s:fn_refs_callback)
+        \ })})})
+endfunction
+
+function! iced#nrepl#navigate#browse_var_dependencies(symbol) abort
+  call iced#nrepl#ns#eval({_ -> iced#nrepl#var#get(a:symbol, {resp ->
+        \ s:got_var_info(resp, {ns, symbol ->
+        \     iced#nrepl#op#cider#fn_deps(ns, symbol, s:fn_deps_callback)
+        \ })})})
+endfunction
+
+function! iced#nrepl#navigate#ns_complete(arg_lead, cmd_line, cursor_pos) abort
+  if !iced#nrepl#is_connected() | return [] | endif
+  let resp = iced#promise#sync('iced#nrepl#op#iced#project_ns_list', [])
+  return join(get(resp, 'project-ns-list', []), "\n")
 endfunction
 
 let &cpo = s:save_cpo

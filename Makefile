@@ -3,7 +3,9 @@
 PWD=$(shell pwd)
 
 PLUGIN_NAME = iced
-VITAL_MODULES = Data.Dict \
+VITAL_MODULES = \
+		Async.Promise \
+		Data.Dict \
 		Data.List \
 		Data.String \
 		Locale.Message \
@@ -14,6 +16,7 @@ VITAL_MODULES = Data.Dict \
 all: vital bin test
 
 vital:
+	\rm -rf autoload/vital*
 	vim -c "Vitalize . --name=$(PLUGIN_NAME) $(VITAL_MODULES)" -c q
 
 test: themis lint python_doctest
@@ -28,6 +31,9 @@ themis: .vim-themis .vim-sexp
 
 docker_themis: .vim-themis .vim-sexp
 	docker run --rm -v $(PWD):/root --entrypoint './.vim-themis/bin/themis' uochan/vim:latest
+
+docker_neovim_themis: .vim-themis .vim-sexp
+	docker run --rm -v $(PWD):/mnt/volume lambdalisue/neovim-themis:latest
 
 html: doc/vim-iced.txt
 	bash scripts/html.sh
