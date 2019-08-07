@@ -65,10 +65,12 @@ function! iced#nrepl#ns#eval(callback) abort
   endif
 endfunction
 
-function! iced#nrepl#ns#in() abort
+function! iced#nrepl#ns#in(...) abort
+  let Callback = get(a:, 1, {_ -> ''})
+  let Callback = (type(Callback) == v:t_func) ? Callback : {_ -> ''}
   let ns_name = iced#nrepl#ns#name()
   if empty(ns_name) | return | endif
-  call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), {_ -> ''})
+  call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), Callback)
 endfunction
 
 function! iced#nrepl#ns#require(ns_name, callback) abort
@@ -106,8 +108,9 @@ function! s:required(resp) abort
   call iced#hook#run('ns_required', {'response': a:resp})
 endfunction
 
-function! iced#nrepl#ns#load_current_file() abort
-  let Cb = funcref('s:required')
+function! iced#nrepl#ns#load_current_file(...) abort
+  let Cb = get(a:, 1, funcref('s:required'))
+  let Cb = (type(Cb) == v:t_func) ? Cb : funcref('s:required')
   if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#current_session_key() ==# 'clj'
