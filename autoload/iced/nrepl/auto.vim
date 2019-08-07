@@ -34,7 +34,8 @@ function! iced#nrepl#auto#bufread() abort
   call s:auto_switching_session()
   if !iced#nrepl#check_session_validity(v:false) | return | endif
 
-  call iced#nrepl#ns#eval({_ -> ''})
+  let ns_name = iced#nrepl#ns#name()
+  call iced#nrepl#ns#require(ns_name, {_ -> ''})
   call iced#format#set_indentexpr()
 endfunction
 

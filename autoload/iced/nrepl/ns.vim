@@ -100,7 +100,7 @@ function! s:loaded(resp, callback) abort
     return iced#nrepl#eval#err(a:resp['err'])
   endif
   call iced#qf#clear()
-  call iced#nrepl#ns#eval(a:callback)
+  call iced#nrepl#ns#in(a:callback)
 endfunction
 
 function! s:required(resp) abort

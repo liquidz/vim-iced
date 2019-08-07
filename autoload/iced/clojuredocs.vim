@@ -75,7 +75,7 @@ endfunction
 
 function! iced#clojuredocs#open(symbol) abort
   call iced#message#echom('fetching')
-  call iced#promise#call('iced#nrepl#ns#eval', [])
+  call iced#promise#call('iced#nrepl#ns#in', [])
        \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
        \.then({resp -> iced#util#has_status(resp, 'no-info')
        \               ? iced#promise#reject('not-found')

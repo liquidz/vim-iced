@@ -133,7 +133,7 @@ function! s:view_doc_on_popup(resp) abort
 endfunction
 
 function! iced#nrepl#document#open(symbol) abort
-  call iced#nrepl#ns#eval({_ ->
+  call iced#nrepl#ns#in({_ ->
         \ iced#nrepl#var#get(a:symbol, funcref('s:view_doc_on_buffer'))
         \ })
 endfunction
@@ -144,7 +144,7 @@ function! iced#nrepl#document#popup_open(symbol) abort
     return iced#nrepl#document#open(a:symbol)
   endif
 
-  call iced#nrepl#ns#eval({_ ->
+  call iced#nrepl#ns#in({_ ->
         \ iced#nrepl#var#get(a:symbol, funcref('s:view_doc_on_popup'))
         \ })
 endfunction
@@ -331,7 +331,7 @@ function! s:find_usecase(var_resp) abort
 endfunction
 
 function! iced#nrepl#document#usecase(symbol) abort
-  call iced#nrepl#ns#eval({_ ->
+  call iced#nrepl#ns#in({_ ->
         \ iced#nrepl#var#get(a:symbol, funcref('s:find_usecase'))})
 endfunction
 
