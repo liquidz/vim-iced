@@ -3,7 +3,16 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* Add `g:vim_iced_version` variable for detecting the vim-iced version from other plugins.
+* Add `iced#complete#candidates` function to fetch completions.
 
+=== Fixed
+* https://github.com/liquidz/vim-iced/pull/134[#134]: Fix to work with nvim 0.4.0(nightly).
+* https://github.com/liquidz/vim-iced/pull/135[#135]: Fix `:IcedDocumentOpen` to work correctly.
+
+// }}}
 == 0.11.0 (2019-08-03)
 // {{{
 === Added
