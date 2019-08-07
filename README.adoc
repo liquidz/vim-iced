@@ -131,7 +131,7 @@ NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim] or https://github.com/jun
 === Manual setting (not recommended)
 
 * See link:https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-install-manually[manual install] section in vim-iced.txt.
-** To work with https://github.com/thheller/shadow-cljs[shadow-cljs], you need to set up manually.
+** To work with https://github.com/thheller/shadow-cljs[shadow-cljs], you need to set up https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-manual-shadow-cljs[manually].
 
 == Usage
 
