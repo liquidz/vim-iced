@@ -8,9 +8,13 @@ All notable changes to this project will be documented in this file. This change
 * Add `g:vim_iced_version` variable for detecting the vim-iced version from other plugins.
 * Add `iced#complete#candidates` function to fetch completions.
 
+=== Changed
+* https://github.com/liquidz/vim-iced/pull/135[#135]: Update `:IcedDocumentOpen` to work with qualified symbols..
+
 === Fixed
 * https://github.com/liquidz/vim-iced/pull/134[#134]: Fix to work with nvim 0.4.0(nightly).
 * https://github.com/liquidz/vim-iced/pull/135[#135]: Fix `:IcedDocumentOpen` to work correctly.
+* Fix to show documents for special forms such as `try`.
 
 // }}}
 == 0.11.0 (2019-08-03)
