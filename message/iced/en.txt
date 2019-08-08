@@ -81,5 +81,6 @@
   'var_references_found':    'Found %d references.',
   'no_var_references':       'No %s/%s references.',
   'confirm_opening_file':    'Open this file?',
+  'clojuredocs_not_found':   'Not found "%s" in ClojureDocs.',
 }
 #vim:ft=ruby

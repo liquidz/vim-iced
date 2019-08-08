@@ -73,18 +73,45 @@ function! s:show_doc(resp) abort
   call iced#buffer#document#open(join(res, "\n"), 'markdown')
 endfunction
 
+function! s:parse_qualified_symbol(qualified_symbol) abort
+  let i = stridx(a:qualified_symbol, '/')
+  if i < 0 | return {} | endif
+
+  return {
+        \ 'ns': a:qualified_symbol[0:i-1],
+        \ 'name': a:qualified_symbol[i+1:],
+        \ }
+endfunction
+
+function! s:construct_error_message() abort
+  let resp = iced#cache#get('clojuredocs-lookuping', {})
+  if has_key(resp, 'ns') && has_key(resp, 'name')
+    let sym = printf('%s/%s', resp['ns'], resp['name'])
+    return iced#message#get('clojuredocs_not_found', sym)
+  else
+    return iced#message#get('not_found')
+  endif
+endfunction
+
+function! s:lookup(resp) abort
+  call iced#cache#set('clojuredocs-lookuping', a:resp)
+  return iced#promise#call('iced#nrepl#op#cider#clojuredocs_lookup',
+        \ [a:resp['ns'], a:resp['name'], g:iced#clojuredocs#export_edn_url])
+endfunction
+
 function! iced#clojuredocs#open(symbol) abort
   call iced#message#echom('fetching')
   call iced#promise#call('iced#nrepl#ns#in', [])
-       \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
+       \.then({_ -> (stridx(a:symbol, '/') > 0)
+       \            ? s:parse_qualified_symbol(a:symbol)
+       \            : iced#promise#call('iced#nrepl#var#get', [a:symbol])})
        \.then({resp -> iced#util#has_status(resp, 'no-info')
        \               ? iced#promise#reject('not-found')
-       \               : iced#promise#call('iced#nrepl#op#cider#clojuredocs_lookup',
-       \                   [resp['ns'], resp['name'], g:iced#clojuredocs#export_edn_url])})
+       \               : s:lookup(resp)})
        \.then({resp -> iced#util#has_status(resp, 'no-document')
-       \               ? iced#message#error('not_found')
+       \               ? iced#message#error_str(s:construct_error_message())
        \               : s:show_doc(resp)},
-       \      {err -> iced#message#error('not_found')})
+       \      {err -> iced#message#error_str(s:construct_error_message())})
        \.catch({err -> iced#message#error('unexpected_error', err)})
 endfunction
 
