@@ -106,6 +106,8 @@ command           IcedListTapped            call iced#nrepl#debug#list_tapped()
 command           IcedClearTapped           call iced#nrepl#debug#clear_tapped()
 command! -nargs=1 -complete=custom,iced#nrepl#debug#complete_tapped
       \ IcedBrowseTapped                    call iced#nrepl#debug#browse_tapped(<q-args>)
+command!
+      \ IcedToggleWarnOnReflection          call iced#nrepl#debug#toggle_warn_on_reflection()
 
 command! -nargs=? IcedToggleTraceVar        call iced#nrepl#trace#toggle_var(<q-args>)
 command! -nargs=? IcedToggleTraceNs         call iced#nrepl#trace#toggle_ns(<q-args>)
@@ -203,6 +205,8 @@ nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
 nnoremap <silent> <Plug>(iced_list_tapped)              :<C-u>IcedListTapped<CR>
 nnoremap <silent> <Plug>(iced_clear_tapped)              :<C-u>IcedClearTapped<CR>
 nnoremap <silent> <Plug>(iced_browse_tapped)              :<C-u>IcedBrowseTapped<CR>
+nnoremap <silent>
+      \ <Plug>(iced_toggle_warn_on_reflection)          :<C-u>IcedToggleWarnOnReflection<CR>
 
 nnoremap <silent> <Plug>(iced_toggle_trace_ns)          :<C-u>IcedToggleTraceNs<CR>
 nnoremap <silent> <Plug>(iced_toggle_trace_var)         :<C-u>IcedToggleTraceVar<CR>

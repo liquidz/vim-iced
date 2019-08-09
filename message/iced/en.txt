@@ -82,5 +82,6 @@
   'no_var_references':       'No %s/%s references.',
   'confirm_opening_file':    'Open this file?',
   'clojuredocs_not_found':   'Not found "%s" in ClojureDocs.',
+  'toggle_warn_on_reflection': 'Toggled *warn-on-reflection* to %s.'
 }
 #vim:ft=ruby

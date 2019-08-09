@@ -224,5 +224,17 @@ function! iced#nrepl#debug#clear_tapped() abort
         \.catch({error -> iced#message#error_str(error)})
 endfunction
 
+function! s:toggled_warn_on_reflection(resp) abort
+  if !has_key(a:resp, 'value')
+    return iced#message#error('unexpected_error', string(a:resp))
+  endif
+  return iced#message#info('toggle_warn_on_reflection', a:resp['value'])
+endfunction
+
+function! iced#nrepl#debug#toggle_warn_on_reflection() abort
+  let code = '(set! *warn-on-reflection* (not (true? *warn-on-reflection*)))'
+  call iced#nrepl#eval(code, funcref('s:toggled_warn_on_reflection'))
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
