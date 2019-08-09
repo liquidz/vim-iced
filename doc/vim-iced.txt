@@ -421,6 +421,10 @@ EDITING S-EXP                                          *vim-iced-editing-s-exp*
 ------------------------------------------------------------------------------
 FORMATTING                                                *vim-iced-formatting*
 
+  Provides following functions.
+  - |:IcedFormat|
+  - |:IcedFormatAll|
+
   vim-sexp also provides formatting codes function.
   If you want to use vim-iced's formatting function,
   you should define {g:sexp_mappings} as follows.
@@ -443,6 +447,7 @@ REFACTORING                                              *vim-iced-refactoring*
 
   Provides following functions powered by refactor-nrepl.
   - |:IcedCleanNs| (|<Plug>(iced_clean_ns)|)
+  - |:IcedCleanAll| (|<Plug>(iced_clean_all)|)
   - |:IcedAddMissing| (|<Plug>(iced_add_missing)|)
   - |:IcedThreadFirst| (|<Plug>(iced_thread_first)|)
   - |:IcedThreadLast| (|<Plug>(iced_thread_last)|)
@@ -801,6 +806,11 @@ COMMANDS                                                    *vim-iced-commands*
   Reformat current form.
   Key is mapped to |<Plug>(iced_format)|.
 
+                                                               *:IcedFormatAll*
+:IcedFormatAll
+  Reformat current buffer.
+  Key is mapped to |<Plug>(iced_format_all)|.
+
                                                         *:IcedToggleSrcAndTest*
 :IcedToggleSrcAndTest
   Switch between source file and test file.
@@ -843,6 +853,12 @@ COMMANDS                                                    *vim-iced-commands*
   Cleanup ns form.
   See https://github.com/clojure-emacs/refactor-nrepl#clean-ns
   Key is mapped to |<Plug>(iced_clean_ns)|.
+
+                                                                *:IcedCleanAll*
+:IcedCleanAll
+  Cleanup buffer and ns form.
+  Concretely |:IcedCleanNs| and |:IcedFormatAll| are executed.
+  Key is mapped to |<Plug>(iced_clean_all)|.
 
                                                               *:IcedAddMissing*
 :IcedAddMissing [{symbol}]
@@ -908,6 +924,11 @@ COMMANDS                                                    *vim-iced-commands*
   (The first `0` means "browse 1st tapped value")
 
   Key is mapped to |<Plug>(iced_browse_tapped)|.
+
+                                                  *:IcedToggleWarnOnReflection*
+:IcedToggleWarnOnReflection
+  Toggle `*warn-on-reflection*` in current project.
+  Key is mapped to |<Plug>(iced_toggle_warn_on_reflection)|.
 
                                                           *:IcedToggleTraceVar*
 :IcedToggleTraceVar [{symbol}]
@@ -1213,6 +1234,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_format)
   Same as |:IcedFormat|.
 
+                                                      *<Plug>(iced_format_all)*
+<Plug>(iced_format_all)
+  Same as |:IcedFormatAll|.
+
                                              *<Plug>(iced_toggle_src_and_test)*
 <Plug>(iced_toggle_src_and_test)
   Same as |:IcedToggleSrcAndTest|.
@@ -1240,6 +1265,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
+
+                                                       *<Plug>(iced_clean_all)*
+<Plug>(iced_clean_all)
+  Same as |:IcedCleanAll|.
 
                                                      *<Plug>(iced_add_missing)*
 <Plug>(iced_add_missing)
@@ -1661,6 +1690,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>sl   <Plug>(iced_stdout_buffer_clear)
   n       <Leader>sq   <Plug>(iced_stdout_buffer_close)
   n       <Leader>rcn  <Plug>(iced_clean_ns)
+  n       <Leader>rca  <Plug>(iced_clean_all)
   n       <Leader>raa  <Plug>(iced_add_arity)
   n       <Leader>ram  <Plug>(iced_add_missing)
   n       <Leader>ran  <Plug>(iced_add_ns)
@@ -1689,6 +1719,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>*    <Plug>(iced_grep)
   n       <Leader>/    :<C-u>IcedGrep<Space>
   n       ==           <Plug>(iced_format)
+  n       =G           <Plug>(iced_format_all)
 
 ==============================================================================
 CHANGELOG                                                  *vim-iced-changelog*
