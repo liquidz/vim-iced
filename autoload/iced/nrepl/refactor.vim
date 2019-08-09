@@ -93,6 +93,13 @@ function! iced#nrepl#refactor#clean_ns() abort
   call iced#nrepl#op#refactor#clean_ns(funcref('s:clean_ns'))
 endfunction " }}}
 
+" iced#nrepl#refactor#clean_all {{{
+function! iced#nrepl#refactor#clean_all() abort
+  let resp = iced#promise#sync('iced#nrepl#op#refactor#clean_ns', [])
+  call s:clean_ns(resp)
+  call iced#format#all()
+endfunction " }}}
+
 " iced#nrepl#refactor#add_missing_ns {{{
 function! s:parse_candidates(candidates) abort
   let res = []
