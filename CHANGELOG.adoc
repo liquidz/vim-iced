@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file. This change
 === Added
 * Add `g:vim_iced_version` variable for detecting the vim-iced version from other plugins.
 * Add `iced#complete#candidates` function to fetch completions.
+* Add `:IcedToggleWarnOnReflection` command.
+* Add `:IcedFormatAll` command.
+* Add `:IcedCleanAll` command.
 
 === Changed
 * https://github.com/liquidz/vim-iced/pull/135[#135]: Update `:IcedDocumentOpen` to work with qualified symbols..
