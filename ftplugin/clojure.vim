@@ -81,6 +81,7 @@ command!          IcedClojureDocsRefresh    call iced#clojuredocs#refresh()
 command!          IcedSlurp                 call iced#paredit#deep_slurp()
 command!          IcedBarf                  call iced#paredit#barf()
 command!          IcedFormat                call iced#format#form()
+command!          IcedFormatAll             call iced#format#all()
 command!          IcedToggleSrcAndTest      call iced#nrepl#navigate#toggle_src_and_test()
 command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
 
@@ -181,6 +182,7 @@ nnoremap <silent> <Plug>(iced_clojuredocs_refresh)      :<C-u>IcedClojureDocsRef
 nnoremap <silent> <Plug>(iced_slurp)                    :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                     :<C-u>IcedBarf<CR>
 nnoremap <silent> <Plug>(iced_format)                   :<C-u>IcedFormat<CR>
+nnoremap <silent> <Plug>(iced_format_all)               :<C-u>IcedFormatAll<CR>
 nnoremap <silent> <Plug>(iced_toggle_src_and_test)      :<C-u>IcedToggleSrcAndTest<CR>
 nnoremap <silent> <Plug>(iced_grep)                     :<C-u>IcedGrep<CR>
 
@@ -510,6 +512,10 @@ function! s:default_key_mappings() abort
   "" ------------------------------------------------------------------------
   if !hasmapto('<Plug>(iced_format)')
     silent! nmap <buffer> == <Plug>(iced_format)
+  endif
+
+  if !hasmapto('<Plug>(iced_format_all)')
+    silent! nmap <buffer> =G <Plug>(iced_format_all)
   endif
 
   if !hasmapto('<Plug>(iced_grep)')
