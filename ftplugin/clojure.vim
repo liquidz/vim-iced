@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 1100
+let g:vim_iced_version = 1101
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
