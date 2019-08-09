@@ -104,8 +104,8 @@ command!          IcedExtractFunction       call iced#nrepl#refactor#extract_fun
 command!          IcedAddArity              call iced#nrepl#refactor#add_arity()
 command!          IcedMoveToLet             call iced#let#move_to_let()
 
-command           IcedListTapped            call iced#nrepl#debug#list_tapped()
-command           IcedClearTapped           call iced#nrepl#debug#clear_tapped()
+command!          IcedListTapped            call iced#nrepl#debug#list_tapped()
+command!          IcedClearTapped           call iced#nrepl#debug#clear_tapped()
 command! -nargs=1 -complete=custom,iced#nrepl#debug#complete_tapped
       \ IcedBrowseTapped                    call iced#nrepl#debug#browse_tapped(<q-args>)
 command!
@@ -207,8 +207,8 @@ nnoremap <silent> <Plug>(iced_add_arity)                :<C-u>IcedAddArity<CR>
 nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
 
 nnoremap <silent> <Plug>(iced_list_tapped)              :<C-u>IcedListTapped<CR>
-nnoremap <silent> <Plug>(iced_clear_tapped)              :<C-u>IcedClearTapped<CR>
-nnoremap <silent> <Plug>(iced_browse_tapped)              :<C-u>IcedBrowseTapped<CR>
+nnoremap <silent> <Plug>(iced_clear_tapped)             :<C-u>IcedClearTapped<CR>
+nnoremap <silent> <Plug>(iced_browse_tapped)            :<C-u>IcedBrowseTapped<CR>
 nnoremap <silent>
       \ <Plug>(iced_toggle_warn_on_reflection)          :<C-u>IcedToggleWarnOnReflection<CR>
 
