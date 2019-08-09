@@ -84,7 +84,7 @@ function! s:parse_qualified_symbol(qualified_symbol) abort
 endfunction
 
 function! s:construct_error_message() abort
-  let resp = iced#cache#get('clojuredocs-lookuping', {})
+  let resp = iced#cache#get('___clojuredocs-lookuping___', {})
   if has_key(resp, 'ns') && has_key(resp, 'name')
     let sym = printf('%s/%s', resp['ns'], resp['name'])
     return iced#message#get('clojuredocs_not_found', sym)
@@ -94,7 +94,8 @@ function! s:construct_error_message() abort
 endfunction
 
 function! s:lookup(resp) abort
-  call iced#cache#set('clojuredocs-lookuping', a:resp)
+  " NOTE: store ns-name and symbol-name for error message
+  call iced#cache#set('___clojuredocs-lookuping___', a:resp)
   return iced#promise#call('iced#nrepl#op#cider#clojuredocs_lookup',
         \ [a:resp['ns'], a:resp['name'], g:iced#clojuredocs#export_edn_url])
 endfunction
