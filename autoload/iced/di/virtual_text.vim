@@ -2,12 +2,18 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 function! s:vim(container) abort
-  let d = {'container': a:container}
+  let d = {
+        \ 'container': a:container,
+        \ 'last_winid': v:null,
+        \ }
 
   function! d.set(text, ...) abort
     let opt = get(a:, 1, {})
+    let col = get(opt, 'col', col('$') + 3)
+    let popup = self.container.get('popup')
     let popup_opts = {
-          \ 'col': get(opt, 'col', col('$') + 3),
+          \ 'iced_context': {'last_col': col},
+          \ 'col': col,
           \ 'highlight': get(opt, 'highlight', 'Comment'),
           \ }
 
@@ -16,7 +22,14 @@ function! s:vim(container) abort
       let popup_opts['auto_close'] = v:false
     endif
 
-    call self.container.get('popup').open([a:text], popup_opts)
+    " Close last virtual text window if same position
+    let ctx = popup.get_context(self.last_winid)
+    if has_key(ctx, 'last_col') && col == ctx['last_col']
+      call popup.close(self.last_winid)
+    endif
+
+    let self.last_winid = self.container.get('popup').open([a:text], popup_opts)
+    return self.last_winid
   endfunction
 
   function! d.clear(...) abort
