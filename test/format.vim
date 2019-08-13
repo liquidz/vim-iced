@@ -19,6 +19,23 @@ function! s:format_code_relay(msg, formatted) abort
   endif
 endfunction
 
+function! s:suite.all_test() abort
+  call s:buf.start_dummy([
+        \ '(list :foo)',
+        \ '(list 123 456|)',
+        \ '', '', '', '',
+        \ ])
+  call s:ch.register_test_builder({
+        \ 'status_value': 'open',
+        \ 'relay': {msg -> s:format_code_relay(msg, ":dummy\n:formatted")}})
+
+  call iced#format#all()
+  call s:assert.equals(s:buf.get_texts(),
+        \ ":dummy\n:formatted")
+
+  call s:buf.stop_dummy()
+endfunction
+
 function! s:suite.form_test() abort
   call s:buf.start_dummy([
         \ '(list :foo)',
