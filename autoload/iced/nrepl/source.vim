@@ -48,7 +48,7 @@ function! s:try_to_fallback(symbol, err) abort
     call iced#nrepl#source#show(a:symbol)
   endif
 
-  return iced#message#error_str(ex)
+  return iced#message#warning('popup_error', string(ex))
 endfunction
 
 function! iced#nrepl#source#popup_show(symbol) abort
