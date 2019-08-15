@@ -211,6 +211,7 @@ function! iced#nrepl#document#current_form() abort
   let popup = iced#di#get('popup')
   let context = popup.get_context(s:popup_winid)
   if !iced#nrepl#is_connected()
+        \ || !iced#nrepl#check_session_validity(v:false)
         \ || get(context, 'type', '') ==# 'full document'
         \ || get(context, 'curpos', []) ==# getcurpos()
     return
