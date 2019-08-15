@@ -120,16 +120,22 @@ function! s:view_doc_on_popup(resp) abort
 
   let doc = printf(' %s', doc)
   if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
-  let s:popup_winid = popup.open(split(doc, '\r\?\n'), {
-        \ 'iced_context': s:popup_context({'type': 'full document'}),
-        \ 'line': 'near-cursor',
-        \ 'col': col('.'),
-        \ 'filetype': 'help',
-        \ 'border': [],
-        \ 'borderhighlight': ['Comment'],
-        \ 'auto_close': v:false,
-        \ 'moved': [0, &columns],
-        \ })
+  try
+    let s:popup_winid = popup.open(split(doc, '\r\?\n'), {
+          \ 'iced_context': s:popup_context({'type': 'full document'}),
+          \ 'line': 'near-cursor',
+          \ 'col': col('.'),
+          \ 'filetype': 'help',
+          \ 'border': [],
+          \ 'borderhighlight': ['Comment'],
+          \ 'auto_close': v:false,
+          \ 'moved': [0, &columns],
+          \ })
+  catch
+    call iced#message#warning('popup_error', string(v:exception))
+    " fallback to iced#nrepl#document#open
+    call s:view_doc_on_buffer(a:resp)
+  endtry
 endfunction
 
 function! iced#nrepl#document#open(symbol) abort
