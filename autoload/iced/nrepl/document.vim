@@ -182,15 +182,6 @@ function! s:one_line_doc(resp) abort
 
       if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
 
-      let popup_opts = {
-            \ 'iced_context': s:popup_context({'type': 'one-line document', 'name': name}),
-            \ 'line': winline() - 1,
-            \ 'col': 'right',
-            \ 'auto_close': v:false,
-            \ 'moved': [0, &columns],
-            \ 'highlight': 'Title',
-            \ }
-
       let popup_args = trim(get(a:resp, 'arglists-str', ''))
       let popup_args = substitute(popup_args, '\r\?\n', " \n ", 'g')
       let popup_args = printf(' %s ', popup_args)
@@ -200,7 +191,20 @@ function! s:one_line_doc(resp) abort
       let fmt = printf('%%%ds', max_len)
       call map(popup_args, {_, v -> printf(fmt, v)})
 
-      let s:popup_winid = popup.open(popup_args, popup_opts)
+      let popup_opts = {
+            \ 'iced_context': s:popup_context({'type': 'one-line document', 'name': name}),
+            \ 'line': winline() - len(popup_args),
+            \ 'col': 'right',
+            \ 'auto_close': v:false,
+            \ 'moved': [0, &columns],
+            \ 'highlight': 'Title',
+            \ }
+
+      try
+        let s:popup_winid = popup.open(popup_args, popup_opts)
+      catch
+        call iced#message#warning('popup_error', string(v:exception))
+      endtry
     endif
 
     echo iced#util#shorten(msg)
