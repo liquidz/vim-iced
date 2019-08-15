@@ -70,5 +70,9 @@ function! iced#buffer#stdout#is_visible() abort
   return iced#buffer#is_visible(s:bufname)
 endfunction
 
+function! iced#buffer#stdout#focus() abort
+  call iced#buffer#focus(s:bufname)
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
