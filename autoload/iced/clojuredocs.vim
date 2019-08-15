@@ -2,7 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let g:iced#clojuredocs#export_edn_url = get(g:, 'iced#clojuredocs#export_edn_url',
-    \ 'https://clojuredocs-edn.netlify.com/export.edn')
+    \ 'https://clojuredocs-edn.netlify.com/export.compact.edn')
 
 function! s:refreshed(resp) abort
   if has_key(a:resp, 'err')
@@ -37,23 +37,21 @@ function! s:show_doc(resp) abort
     call add(res, printf('## %d %s', egnum, (egnum == 1) ? 'example' : 'examples'))
     call add(res, '')
 
+    let cnt = 1
     for eg in doc['examples']
-      let editors = get(eg, 'editors', [])
-      let editors = [eg['author']['login']] + map(copy(editors), {_, v -> v['login']})
-      call add(res, printf('* %s', join(uniq(editors), ', ')))
-
+      call add(res, printf('* Example %d', cnt))
       call add(res, '```clojure')
-      call add(res, eg['body'])
+      call add(res, trim(eg))
       call add(res, '```')
 
       call add(res, '')
+      let cnt = cnt + 1
     endfor
   endif
 
   if !empty(doc['see-alsos'])
     call add(res, '## See also')
-    let see_alsos = map(copy(doc['see-alsos']), {_, v -> v['to-var']})
-    call map(see_alsos, {_, v -> printf('* %s/%s', v['ns'], v['name'])})
+    let see_alsos = map(copy(doc['see-alsos']), {_, v -> printf('* %s', v)})
     call extend(res, see_alsos)
     call add(res, '')
   endif
@@ -63,10 +61,13 @@ function! s:show_doc(resp) abort
     call add(res, printf('## %d %s', notenum, (notenum == 1) ? 'note' : 'notes'))
     call add(res, '')
 
+    let cnt = 1
     for note in doc['notes']
-      call add(res, printf('* %s', note['author']['login']))
-      call add(res, printf('  %s', note['body']))
+      call add(res, printf('* Note %d', cnt))
+      call add(res, printf('  %s', trim(note)))
+
       call add(res, '')
+      let cnt = cnt + 1
     endfor
   endif
 
