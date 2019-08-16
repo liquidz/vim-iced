@@ -5,6 +5,7 @@ let s:ch = themis#helper('iced_channel')
 let s:qf = themis#helper('iced_quickfix')
 let s:vt = themis#helper('iced_virtual_text')
 let s:io = themis#helper('iced_io')
+let s:holder = themis#helper('iced_holder')
 
 let s:test_1_9_error =
       \ 'CompilerException java.lang.RuntimeException: Unable to resolve symbol: a in this context, compiling:(/path/to/src.clj:12:34)'
@@ -116,6 +117,105 @@ function! s:suite.print_last_test() abort
     silent exe ':q'
   endtry
 
+endfunction
+" }}}
+
+" iced#nrepl#eval#outer_top_list {{{
+function! s:suite.outer_top_list_test() abort
+  call s:ch.register_test_builder({
+        \ 'status_value': 'open',
+        \ 'relay': {resp -> s:holder.relay(resp)},
+        \ })
+  call s:buf.start_dummy([
+        \ '(foo)',
+        \ '(bar',
+        \ '  (hello',
+        \ '    (world|)))',
+        \ '(baz)',
+        \ ])
+  call s:holder.clear()
+
+  call iced#nrepl#eval#outer_top_list()
+  let msg = s:holder.get_args()[0]
+  call s:assert.equals(get(msg, 'code', ''), join([
+        \ '(bar',
+        \ '  (hello',
+        \ '    (world)))',
+        \ ], "\n"))
+
+  call s:buf.stop_dummy()
+endfunction
+" }}}
+
+" iced#nrepl#eval#ns {{{
+function! s:suite.ns_test() abort
+  call s:ch.register_test_builder({
+        \ 'status_value': 'open',
+        \ 'relay': {resp -> s:holder.relay(resp)},
+        \ })
+  call s:buf.start_dummy([
+        \ '(ns foo',
+        \ '  (:gen-class))',
+        \ '',
+        \ '(foo (bar|))',
+        \ ])
+  call s:holder.clear()
+
+  call iced#nrepl#eval#ns()
+  let msg = s:holder.get_args()[0]
+  call s:assert.equals(get(msg, 'code', ''), join([
+        \ '(ns foo',
+        \ '  (:gen-class))',
+        \ ], "\n"))
+
+  call s:buf.stop_dummy()
+endfunction
+" }}}
+
+" iced#nrepl#eval#visual {{{
+function! s:suite.visual_test() abort
+  call s:ch.register_test_builder({
+        \ 'status_value': 'open',
+        \ 'relay': {msg -> s:holder.relay(msg)},
+        \ })
+  call s:buf.start_dummy(['(foo (bar|) (baz))'])
+  call s:holder.clear()
+  call iced#nrepl#change_current_session('clj')
+  call iced#nrepl#set_session('clj',  'clj-session')
+  call iced#nrepl#set_session('repl', 'repl-session')
+
+  silent exe "normal! vab\<Esc>"
+  call iced#nrepl#eval#visual()
+
+  let msg = s:holder.get_args()[0]
+  call s:assert.equals(get(msg, 'code', ''), '(bar)')
+  call s:assert.equals(get(msg, 'session', ''), 'clj-session')
+
+  call s:buf.stop_dummy()
+endfunction
+" }}}
+
+" iced#nrepl#eval#repl_visual {{{
+function! s:suite.repl_visual_test() abort
+  call s:ch.register_test_builder({
+        \ 'status_value': 'open',
+        \ 'relay': {msg -> s:holder.relay(msg)},
+        \ })
+  call s:buf.start_dummy(['(foo (bar|) (baz))'])
+  call s:holder.clear()
+  call iced#nrepl#change_current_session('clj')
+  call iced#nrepl#set_session('clj',  'clj-session')
+  call iced#nrepl#set_session('repl', 'repl-session')
+
+  silent exe "normal! vab\<Esc>"
+  call iced#nrepl#eval#repl_visual()
+
+  let msg = filter(copy(s:holder.get_args()),
+        \ {_, v -> get(v, 'op') ==# 'eval'})[0]
+  call s:assert.equals(get(msg, 'code', ''), '(bar)')
+  call s:assert.equals(get(msg, 'session', ''), 'repl-session')
+
+  call s:buf.stop_dummy()
 endfunction
 " }}}
 

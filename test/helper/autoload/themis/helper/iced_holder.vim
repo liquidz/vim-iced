@@ -7,6 +7,11 @@ function! s:helper.run(...) abort
   call add(self.args, a:000)
 endfunction
 
+function! s:helper.relay(msg) abort
+  call add(self.args, a:msg)
+  return {'status': ['done'], 'value': ':dummy/value'}
+endfunction
+
 function! s:helper.clear() abort
   let self.args = []
 endfunction
