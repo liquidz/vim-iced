@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let g:iced#debug = v:false
 
@@ -147,5 +147,9 @@ function! iced#util#normalize_path(path) abort
   return path
 endfunction
 
-let &cpo = s:save_cpo
+function! iced#util#future(fn) abort
+  call timer_start(10, {_ -> a:fn()})
+endfunction
+
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
