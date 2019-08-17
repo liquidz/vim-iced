@@ -58,14 +58,18 @@ function! iced#nrepl#eval#out(resp) abort
   call iced#nrepl#eval#err(get(a:resp, 'err', ''))
 endfunction
 
-function! s:repl_out(resp, temporary_session) abort
-  call iced#nrepl#eval#out(a:resp)
+function! s:check_switching_session(resp, temporary_session) abort
   let res = iced#nrepl#cljs#check_switching_session(a:resp, a:temporary_session)
 
   if res !=# 'skip_to_close_temporary_session'
-        \ && !empty(a:temporary_session)
+       \ && !empty(a:temporary_session)
     call iced#nrepl#sync#close(a:temporary_session)
   endif
+endfunction
+
+function! s:repl_out(resp, temporary_session) abort
+  call iced#nrepl#eval#out(a:resp)
+  call iced#util#future({-> s:check_switching_session(a:resp, a:temporary_session)})
 endfunction
 
 function! s:is_comment_form(code) abort
