@@ -46,7 +46,7 @@ MINIMAL                                       *iced-tips-configuration-minimal*
 
   set packpath=/tmp/vim-iced-test
 <
-  LAUNCING VIM/NVIM~
+  LAUNCHING VIM/NVIM~
   - Vim
     - `vim -u /path/to/test_config.vim /path/to/your/project/code.clj`
   - Neovim
@@ -72,7 +72,7 @@ EVAL INSIDE COMMENT                             *iced-tips-eval-inside-comment*
   ;; => 6
 <
 ------------------------------------------------------------------------------
-MOTION COMBINATIONT                              *iced-tips-motion-combination*
+MOTION COMBINATION                               *iced-tips-motion-combination*
 
   vim-iced has some evaluation |operator|s.
   - |<Plug>(iced_eval)|

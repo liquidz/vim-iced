@@ -5,7 +5,7 @@ Main manual is here: |vim-iced.txt|.
 CONTENTS                                                *iced-command-contents*
 
   Introduction                 |iced-command-introduction|
-  Supportng Tools              |iced-command-supporting-tools|
+  Supporting Tools             |iced-command-supporting-tools|
   Usage                        |iced-command-usage|
     Options                    |iced-command-options|
     Examples                   |iced-command-examples|
@@ -20,7 +20,7 @@ INTRODUCTION                                        *iced-command-introduction*
   See |vim-iced-install-command| to install `iced` command.
 
 ==============================================================================
-SUPPORTNG TOOLS                                 *iced-command-supporting-tools*
+SUPPORTING TOOLS                                *iced-command-supporting-tools*
 
   `iced` command currently supports:
   - Leiningen
