@@ -1,6 +1,16 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+function! s:cword() abort
+  let isk = &iskeyword
+  try
+    let &iskeyword = printf('%s,39', isk)
+    return expand('<cword>')
+  finally
+    let &iskeyword = isk
+  endtry
+endfunction
+
 function! s:expand_ns_alias(ns_name, symbol) abort
   let i = stridx(a:symbol, '/')
   if i == -1 || a:symbol[0] ==# ':'
@@ -30,7 +40,7 @@ function! iced#nrepl#var#get(...) abort
     let Callback = get(a:, 1, '')
   elseif a:0 == 2
     let symbol = get(a:, 1, '')
-    let symbol = empty(symbol) ? expand('<cword>') : symbol
+    let symbol = empty(symbol) ? s:cword() : symbol
     let Callback = get(a:, 2, '')
   else
     return
