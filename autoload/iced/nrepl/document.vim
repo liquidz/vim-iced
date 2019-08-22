@@ -204,6 +204,7 @@ function! s:one_line_doc(resp) abort
             \ 'auto_close': v:false,
             \ 'moved': [0, &columns],
             \ 'highlight': 'Title',
+            \ 'wrap': v:false,
             \ }
 
       try

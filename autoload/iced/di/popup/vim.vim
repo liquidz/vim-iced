@@ -83,7 +83,7 @@ function! s:popup.open(texts, ...) abort
   endif
 
   call extend(win_opts, iced#util#select_keys(opts,
-        \ ['highlight', 'border', 'borderhighlight', 'title', 'moved']))
+        \ ['highlight', 'border', 'borderhighlight', 'title', 'moved', 'wrap']))
 
   let winid = popup_create(a:texts, win_opts)
   call s:init_win(winid, opts)
