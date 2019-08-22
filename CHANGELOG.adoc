@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file. This change
 === Fixed
 * https://github.com/liquidz/vim-iced/pull/134[#134]: Fix to work with nvim 0.4.0(nightly).
 * https://github.com/liquidz/vim-iced/pull/135[#135]: Fix `:IcedDocumentOpen` to work correctly.
+* https://github.com/liquidz/vim-iced/pull/139[#139]: Fix jumping to var that includes single quote.
 * Fix to show documents for special forms such as `try`.
 * Fix to hide virtual text if the last one has same position.
 
