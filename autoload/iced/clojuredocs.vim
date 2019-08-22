@@ -87,8 +87,14 @@ endfunction
 function! s:construct_error_message() abort
   let resp = iced#cache#get('___clojuredocs-lookuping___', {})
   if has_key(resp, 'ns') && has_key(resp, 'name')
-    let sym = printf('%s/%s', resp['ns'], resp['name'])
-    return iced#message#get('clojuredocs_not_found', sym)
+    let ns = resp['ns']
+    let sym = printf('%s/%s', ns, resp['name'])
+
+    if stridx(ns, 'cljs') == -1
+      return iced#message#get('clojuredocs_not_found', sym)
+    else
+      return iced#message#get('clojuredocs_cljs_error', sym)
+    endif
   else
     return iced#message#get('not_found')
   endif
