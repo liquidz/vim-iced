@@ -199,7 +199,7 @@ function! s:one_line_doc(resp) abort
 
       let popup_opts = {
             \ 'iced_context': s:popup_context({'type': 'one-line document', 'name': name}),
-            \ 'line': winline() - len(popup_args),
+            \ 'line': max([0, winline() - len(popup_args)]),
             \ 'col': 'right',
             \ 'auto_close': v:false,
             \ 'moved': [0, &columns],
