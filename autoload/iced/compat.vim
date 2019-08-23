@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 function! iced#compat#appendbufline(expr, lnum, text) abort
   if has('nvim')
@@ -43,5 +43,17 @@ function! iced#compat#deletebufline(expr, first, ...) abort
   endif
 endfunction
 
-let &cpo = s:save_cpo
+function! iced#compat#job_start(command, options) abort
+  if has('nvim')
+    let options = {}
+    if has_key(a:options, 'out_cb')
+      let options['on_stdout'] = {j,d,e -> a:options['out_cb'](e, join(d, ''))}
+    endif
+    return jobstart(a:command, options)
+  else
+    return job_start(a:command, a:options)
+  endif
+endfunction
+
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
