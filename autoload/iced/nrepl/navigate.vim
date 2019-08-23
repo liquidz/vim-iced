@@ -206,14 +206,14 @@ function! iced#nrepl#navigate#browse_dependencies() abort
 endfunction
 
 function! iced#nrepl#navigate#browse_var_references(symbol) abort
-  call iced#nrepl#ns#eval({_ -> iced#nrepl#var#get(a:symbol, {resp ->
+  call iced#nrepl#ns#in({_ -> iced#nrepl#var#get(a:symbol, {resp ->
         \ s:got_var_info(resp, {ns, symbol ->
         \     iced#nrepl#op#cider#fn_refs(ns, symbol, s:fn_refs_callback)
         \ })})})
 endfunction
 
 function! iced#nrepl#navigate#browse_var_dependencies(symbol) abort
-  call iced#nrepl#ns#eval({_ -> iced#nrepl#var#get(a:symbol, {resp ->
+  call iced#nrepl#ns#in({_ -> iced#nrepl#var#get(a:symbol, {resp ->
         \ s:got_var_info(resp, {ns, symbol ->
         \     iced#nrepl#op#cider#fn_deps(ns, symbol, s:fn_deps_callback)
         \ })})})

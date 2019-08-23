@@ -1,28 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" complete {{{
-function! iced#nrepl#op#cider#sync#complete(base, ns_name, context) abort
-  if !iced#nrepl#is_connected()
-    call iced#message#error('not_connected')
-    return ''
-  endif
-
-  let msg = {
-        \ 'op': 'complete',
-        \ 'session': iced#nrepl#current_session(),
-        \ 'ns': a:ns_name,
-        \ 'symbol': a:base,
-        \ 'extra-metadata': ['arglists', 'doc'],
-        \ }
-
-  if !empty(a:context)
-    let msg['context'] = a:context
-  endif
-
-  return iced#nrepl#sync#send(msg)
-endfunction " }}}
-
 " ns-list {{{
 function! iced#nrepl#op#cider#sync#ns_list() abort
   if !iced#nrepl#is_connected()

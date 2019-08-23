@@ -13,6 +13,31 @@ function! s:set_indentation_rule() abort
         \   'done')})
 endfunction
 
+function! iced#format#all() abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call s:set_indentation_rule()
+
+  let view = winsaveview()
+  let reg_save = @@
+  let ns_name = iced#nrepl#ns#name()
+  try
+    let codes = trim(join(getline(1, '$'), "\n"))
+    if empty(codes) | return | endif
+
+    let resp = iced#nrepl#op#iced#sync#format_code(codes, iced#nrepl#ns#alias_dict(ns_name))
+    if has_key(resp, 'formatted') && !empty(resp['formatted'])
+      %del
+      call setline(1, split(resp['formatted'], '\r\?\n'))
+    elseif has_key(resp, 'error')
+      call iced#message#error_str(resp['error'])
+    endif
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+    call iced#sign#refresh()
+  endtry
+endfunction
+
 function! iced#format#form() abort
   if !iced#nrepl#is_connected()
     silent exe "normal \<Plug>(sexp_indent)"

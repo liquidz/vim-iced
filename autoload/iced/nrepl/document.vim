@@ -120,20 +120,26 @@ function! s:view_doc_on_popup(resp) abort
 
   let doc = printf(' %s', doc)
   if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
-  let s:popup_winid = popup.open(split(doc, '\r\?\n'), {
-        \ 'iced_context': s:popup_context({'type': 'full document'}),
-        \ 'line': 'near-cursor',
-        \ 'col': col('.'),
-        \ 'filetype': 'help',
-        \ 'border': [],
-        \ 'borderhighlight': ['Comment'],
-        \ 'auto_close': v:false,
-        \ 'moved': [0, &columns],
-        \ })
+  try
+    let s:popup_winid = popup.open(split(doc, '\r\?\n'), {
+          \ 'iced_context': s:popup_context({'type': 'full document'}),
+          \ 'line': 'near-cursor',
+          \ 'col': col('.'),
+          \ 'filetype': 'help',
+          \ 'border': [],
+          \ 'borderhighlight': ['Comment'],
+          \ 'auto_close': v:false,
+          \ 'moved': [0, &columns],
+          \ })
+  catch
+    call iced#message#warning('popup_error', string(v:exception))
+    " fallback to iced#nrepl#document#open
+    call s:view_doc_on_buffer(a:resp)
+  endtry
 endfunction
 
 function! iced#nrepl#document#open(symbol) abort
-  call iced#nrepl#ns#eval({_ ->
+  call iced#nrepl#ns#in({_ ->
         \ iced#nrepl#var#get(a:symbol, funcref('s:view_doc_on_buffer'))
         \ })
 endfunction
@@ -144,7 +150,7 @@ function! iced#nrepl#document#popup_open(symbol) abort
     return iced#nrepl#document#open(a:symbol)
   endif
 
-  call iced#nrepl#ns#eval({_ ->
+  call iced#nrepl#ns#in({_ ->
         \ iced#nrepl#var#get(a:symbol, funcref('s:view_doc_on_popup'))
         \ })
 endfunction
@@ -182,15 +188,6 @@ function! s:one_line_doc(resp) abort
 
       if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
 
-      let popup_opts = {
-            \ 'iced_context': s:popup_context({'type': 'one-line document', 'name': name}),
-            \ 'line': winline() - 1,
-            \ 'col': 'right',
-            \ 'auto_close': v:false,
-            \ 'moved': [0, &columns],
-            \ 'highlight': 'Title',
-            \ }
-
       let popup_args = trim(get(a:resp, 'arglists-str', ''))
       let popup_args = substitute(popup_args, '\r\?\n', " \n ", 'g')
       let popup_args = printf(' %s ', popup_args)
@@ -200,7 +197,22 @@ function! s:one_line_doc(resp) abort
       let fmt = printf('%%%ds', max_len)
       call map(popup_args, {_, v -> printf(fmt, v)})
 
-      let s:popup_winid = popup.open(popup_args, popup_opts)
+      let lnum = winline() - len(popup_args)
+      let popup_opts = {
+            \ 'iced_context': s:popup_context({'type': 'one-line document', 'name': name}),
+            \ 'line': (lnum < 0) ? winline() + 1 : lnum,
+            \ 'col': 'right',
+            \ 'auto_close': v:false,
+            \ 'moved': [0, &columns],
+            \ 'highlight': 'Title',
+            \ 'wrap': v:false,
+            \ }
+
+      try
+        let s:popup_winid = popup.open(popup_args, popup_opts)
+      catch
+        call iced#message#warning('popup_error', string(v:exception))
+      endtry
     endif
 
     echo iced#util#shorten(msg)
@@ -211,6 +223,7 @@ function! iced#nrepl#document#current_form() abort
   let popup = iced#di#get('popup')
   let context = popup.get_context(s:popup_winid)
   if !iced#nrepl#is_connected()
+        \ || !iced#nrepl#check_session_validity(v:false)
         \ || get(context, 'type', '') ==# 'full document'
         \ || get(context, 'curpos', []) ==# getcurpos()
     return
@@ -331,7 +344,7 @@ function! s:find_usecase(var_resp) abort
 endfunction
 
 function! iced#nrepl#document#usecase(symbol) abort
-  call iced#nrepl#ns#eval({_ ->
+  call iced#nrepl#ns#in({_ ->
         \ iced#nrepl#var#get(a:symbol, funcref('s:find_usecase'))})
 endfunction
 

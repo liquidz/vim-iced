@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:type_to_kind_dict = {
       \ 'class':         'c',
@@ -37,6 +37,16 @@ function! s:candidate(c) abort
       \}
 endfunction
 
+function! s:candidates(resp) abort
+  let resp = (type(a:resp) == v:t_list) ? a:resp[0] : a:resp
+  let candidates = (type(resp) == v:t_dict && has_key(resp, 'completions'))
+        \ ? resp['completions']
+        \ : []
+
+  return sort(map(candidates, {_, v -> s:candidate(v)}),
+        \ {a, b -> a['word'] > b['word']})
+endfunction
+
 " c.f. https://github.com/alexander-yakushev/compliment/wiki/Context
 function! s:context() abort
   let view = winsaveview()
@@ -62,29 +72,30 @@ function! s:context() abort
   endtry
 endfunction
 
+function! iced#complete#candidates(base, callback) abort
+  if empty(a:base) || !iced#nrepl#is_connected() || !iced#nrepl#check_session_validity()
+    return a:callback([])
+  endif
+
+  call iced#nrepl#op#cider#complete(
+        \ a:base,
+        \ iced#nrepl#ns#name(),
+        \ s:context(),
+        \ {resp -> a:callback(s:candidates(resp))})
+endfunction
+
 function! iced#complete#omni(findstart, base) abort
   if a:findstart
     let line = getline('.')
     let ncol = col('.')
     let s = line[0:ncol-2]
     return ncol - strlen(matchstr(s, '\k\+$')) - 1
-  elseif len(a:base) > 1 && iced#nrepl#is_connected() && iced#nrepl#check_session_validity()
-    let ns_name = iced#nrepl#ns#name()
-    let candidates = []
-
-    let ctx = s:context()
-    let resp = iced#nrepl#op#cider#sync#complete(a:base, ns_name, ctx)
-    let resp = (type(resp) == v:t_list) ? resp[0] : resp
-    if type(resp) == v:t_dict && has_key(resp, 'completions')
-      let candidates = resp['completions']
-    endif
-
-    return sort(map(candidates, {_, v -> s:candidate(v)}),
-          \ {a, b -> a['word'] > b['word']})
+  else
+    return iced#promise#sync('iced#complete#candidates', [a:base])
   endif
 
   return []
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

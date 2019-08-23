@@ -63,6 +63,10 @@ OPTIONS                                                  *iced-command-options*
     Adds extra nrepl middleware.
     For example: `--middleware=iced.nrepl/wrap-iced`
 
+  `--instant`:
+    Launch instant REPL via Clojure CLI.
+    Instant REPL requires no project/config file.
+
   Other options are passed to each programs.
 
 ------------------------------------------------------------------------------

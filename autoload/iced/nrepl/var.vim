@@ -24,6 +24,15 @@ function! s:expand_ns_alias(ns_name, symbol) abort
   return printf('%s/%s', ns, strpart(a:symbol, i+1))
 endfunction
 
+function! s:assoc_ns_for_special_form(resp) abort
+  if get(a:resp, 'special-form', '') ==# 'true'
+    let resp = copy(a:resp)
+    let resp['ns'] = 'clojure.core'
+    return resp
+  endif
+  return a:resp
+endfunction
+
 ""
 " If a:0 == 1, first argument is a callback function.
 " If a:0 == 2, first argument is a symbol string and second is a callback function.
@@ -55,7 +64,7 @@ function! iced#nrepl#var#get(...) abort
     let symbol = s:expand_ns_alias(ns_name, symbol)
   endif
 
-  call iced#nrepl#op#cider#info(ns_name, symbol, Callback)
+  call iced#nrepl#op#cider#info(ns_name, symbol, {resp -> Callback(s:assoc_ns_for_special_form(resp))})
 endfunction
 
 function! s:extract_var_name(eval_resp, callback) abort

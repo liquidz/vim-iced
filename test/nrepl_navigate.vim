@@ -164,6 +164,8 @@ function! s:browse_var_references_relay(msg) abort
           \ {'file': s:temp_file, 'name': 'hello', 'doc': 'doc hello', 'line': 12},
           \ {'file': 'non_existing.txt', 'name': 'world', 'doc': 'doc world', 'line': 34},
           \ ]}
+  elseif op ==# 'eval'
+    return {'status': ['done'], 'value': '#namespace[foo.core]'}
   else
     return {'status': ['done']}
   endif
@@ -190,6 +192,8 @@ function! s:browse_var_dependencies_relay(msg) abort
           \ {'file': s:temp_file, 'name': 'world', 'doc': 'doc world', 'line': 56},
           \ {'file': 'non_existing.txt', 'name': 'neko', 'doc': 'doc neko', 'line': 78},
           \ ]}
+  elseif op ==# 'eval'
+    return {'status': ['done'], 'value': '#namespace[foo.core]'}
   else
     return {'status': ['done']}
   endif

@@ -13,7 +13,7 @@ function! iced#nrepl#cljs#shadow_cljs#get_env(options) abort
   "       because shadow-cljs returns exact current ns instead of 'cljs.user'
   return {'does_use_piggieback': v:false,
         \ 'pre-code': {-> '(require ''shadow.cljs.devtools.api)'},
-        \ 'env-code': {-> {'raw': printf('(shadow.cljs.devtools.api/repl :%s)', s:build_id)}},
+        \ 'env-code': {-> {'raw': printf('(do (shadow/watch :%s) (shadow/nrepl-select :%s))', s:build_id, s:build_id) }},
         \ 'ignore-quit-detecting': v:true,
         \ }
 endfunction

@@ -2,6 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
+let g:vim_iced_version = 1101
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -25,6 +26,7 @@ command! -nargs=? IcedConnect               call iced#nrepl#connect(<q-args>)
 command!          IcedDisconnect            call iced#nrepl#disconnect()
 command!          IcedReconnect             call iced#nrepl#reconnect()
 command!          IcedInterrupt             call iced#nrepl#interrupt()
+command!          IcedInstantConnect        call iced#nrepl#connect#instant()
 
 command! -nargs=? IcedCljsRepl              call iced#nrepl#cljs#start_repl(<q-args>)
 command! -nargs=+ -complete=custom,iced#nrepl#cljs#env_complete
@@ -80,6 +82,7 @@ command!          IcedClojureDocsRefresh    call iced#clojuredocs#refresh()
 command!          IcedSlurp                 call iced#paredit#deep_slurp()
 command!          IcedBarf                  call iced#paredit#barf()
 command!          IcedFormat                call iced#format#form()
+command!          IcedFormatAll             call iced#format#all()
 command!          IcedToggleSrcAndTest      call iced#nrepl#navigate#toggle_src_and_test()
 command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
 
@@ -93,6 +96,7 @@ command! -nargs=? IcedBrowseVarDependencies  call iced#nrepl#navigate#browse_var
 command!          IcedClearCtrlpCache        call ctrlp#iced#cache#clear()
 
 command!          IcedCleanNs               call iced#nrepl#refactor#clean_ns()
+command!          IcedCleanAll              call iced#nrepl#refactor#clean_all()
 command! -nargs=? IcedAddMissing            call iced#nrepl#refactor#add_missing_ns(<q-args>)
 command! -nargs=? IcedAddNs                 call iced#nrepl#refactor#add_ns(<q-args>)
 command!          IcedThreadFirst           call iced#nrepl#refactor#thread_first()
@@ -101,10 +105,12 @@ command!          IcedExtractFunction       call iced#nrepl#refactor#extract_fun
 command!          IcedAddArity              call iced#nrepl#refactor#add_arity()
 command!          IcedMoveToLet             call iced#let#move_to_let()
 
-command           IcedListTapped            call iced#nrepl#debug#list_tapped()
-command           IcedClearTapped           call iced#nrepl#debug#clear_tapped()
+command!          IcedListTapped            call iced#nrepl#debug#list_tapped()
+command!          IcedClearTapped           call iced#nrepl#debug#clear_tapped()
 command! -nargs=1 -complete=custom,iced#nrepl#debug#complete_tapped
       \ IcedBrowseTapped                    call iced#nrepl#debug#browse_tapped(<q-args>)
+command!
+      \ IcedToggleWarnOnReflection          call iced#nrepl#debug#toggle_warn_on_reflection()
 
 command! -nargs=? IcedToggleTraceVar        call iced#nrepl#trace#toggle_var(<q-args>)
 command! -nargs=? IcedToggleTraceNs         call iced#nrepl#trace#toggle_ns(<q-args>)
@@ -125,6 +131,7 @@ nnoremap <silent> <Plug>(iced_connect)                  :<C-u>IcedConnect<CR>
 nnoremap <silent> <Plug>(iced_disconnect)               :<C-u>IcedDisconnect<CR>
 nnoremap <silent> <Plug>(iced_reconnect)                :<C-u>IcedReconnect<CR>
 nnoremap <silent> <Plug>(iced_interrupt)                :<C-u>IcedInterrupt<CR>
+nnoremap <silent> <Plug>(iced_instant_connect)          :<C-u>IcedInstantConnect<CR>
 
 nnoremap <silent> <Plug>(iced_start_cljs_repl)          :<C-u>IcedStartCljsRepl<CR>
 nnoremap <silent> <Plug>(iced_quit_cljs_repl)           :<C-u>IcedQuitCljsRepl<CR>
@@ -178,6 +185,7 @@ nnoremap <silent> <Plug>(iced_clojuredocs_refresh)      :<C-u>IcedClojureDocsRef
 nnoremap <silent> <Plug>(iced_slurp)                    :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                     :<C-u>IcedBarf<CR>
 nnoremap <silent> <Plug>(iced_format)                   :<C-u>IcedFormat<CR>
+nnoremap <silent> <Plug>(iced_format_all)               :<C-u>IcedFormatAll<CR>
 nnoremap <silent> <Plug>(iced_toggle_src_and_test)      :<C-u>IcedToggleSrcAndTest<CR>
 nnoremap <silent> <Plug>(iced_grep)                     :<C-u>IcedGrep<CR>
 
@@ -191,6 +199,7 @@ nnoremap <silent> <Plug>(iced_browse_var_dependencies)  :<C-u>IcedBrowseVarDepen
 nnoremap <silent> <Plug>(iced_clear_ctrlp_cache)        :<C-u>IcedClearCtrlpCache<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)                 :<C-u>IcedCleanNs<CR>
+nnoremap <silent> <Plug>(iced_clean_all)                :<C-u>IcedCleanAll<CR>
 nnoremap <silent> <Plug>(iced_add_missing)              :<C-u>IcedAddMissing<CR>
 nnoremap <silent> <Plug>(iced_add_ns)                   :<C-u>IcedAddNs<CR>
 nnoremap <silent> <Plug>(iced_thread_first)             :<C-u>IcedThreadFirst<CR>
@@ -200,8 +209,10 @@ nnoremap <silent> <Plug>(iced_add_arity)                :<C-u>IcedAddArity<CR>
 nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
 
 nnoremap <silent> <Plug>(iced_list_tapped)              :<C-u>IcedListTapped<CR>
-nnoremap <silent> <Plug>(iced_clear_tapped)              :<C-u>IcedClearTapped<CR>
-nnoremap <silent> <Plug>(iced_browse_tapped)              :<C-u>IcedBrowseTapped<CR>
+nnoremap <silent> <Plug>(iced_clear_tapped)             :<C-u>IcedClearTapped<CR>
+nnoremap <silent> <Plug>(iced_browse_tapped)            :<C-u>IcedBrowseTapped<CR>
+nnoremap <silent>
+      \ <Plug>(iced_toggle_warn_on_reflection)          :<C-u>IcedToggleWarnOnReflection<CR>
 
 nnoremap <silent> <Plug>(iced_toggle_trace_ns)          :<C-u>IcedToggleTraceNs<CR>
 nnoremap <silent> <Plug>(iced_toggle_trace_var)         :<C-u>IcedToggleTraceVar<CR>
@@ -369,6 +380,10 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>rcn <Plug>(iced_clean_ns)
   endif
 
+  if !hasmapto('<Plug>(iced_clean_all)')
+    silent! nmap <buffer> <Leader>rca <Plug>(iced_clean_all)
+  endif
+
   if !hasmapto('<Plug>(iced_add_missing)')
     silent! nmap <buffer> <Leader>ram <Plug>(iced_add_missing)
   endif
@@ -505,6 +520,10 @@ function! s:default_key_mappings() abort
   "" ------------------------------------------------------------------------
   if !hasmapto('<Plug>(iced_format)')
     silent! nmap <buffer> == <Plug>(iced_format)
+  endif
+
+  if !hasmapto('<Plug>(iced_format_all)')
+    silent! nmap <buffer> =G <Plug>(iced_format_all)
   endif
 
   if !hasmapto('<Plug>(iced_grep)')

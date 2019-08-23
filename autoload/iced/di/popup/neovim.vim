@@ -63,30 +63,16 @@ function! s:popup.open(texts, ...) abort
 
   " TODO: support 'highlight' option
   let opts = get(a:, 1, {})
+  if type(a:texts) != v:t_list || empty(a:texts)
+    return
+  endif
+
   let wininfo = getwininfo(win_getid())[0]
-
-  let min_height = len(texts)
-  if min_height + 5 >= &lines - &cmdheight
-    throw 'vim-iced: too long texts to show in popup'
-  endif
-
-  let max_width = wininfo['width'] - org_col - 5
   let title_width = len(get(opts, 'title', '')) + 3
+  let eol_col = len(getline('.')) + 1
   let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 2
-  let width = min([width, max_width])
 
-  let org_col = get(opts, 'col', len(getline('.')) + 1)
-  if type(org_col) == v:t_string
-    if org_col ==# 'right'
-      let org_col = wininfo['width'] - width
-    else
-      return iced#message#error('unexpected_error', printf('invalid column "%s"', org_col))
-    endif
-  else
-    let org_col = org_col - 1
-  endif
-  let col = org_col + wininfo['wincol']
-
+  let max_width = wininfo['width'] - eol_col - 5
   let texts = copy(a:texts)
   if has_key(opts, 'border')
     let pseudo_border = printf(' ; %s ', iced#util#char_repeat(width - 4, '-'))
@@ -102,8 +88,14 @@ function! s:popup.open(texts, ...) abort
     endif
   endif
 
+  let min_height = len(texts)
   let height = min([min_height, g:iced#popup#max_height])
 
+  if min_height + 5 >= &lines - &cmdheight
+    throw 'vim-iced: too long texts to show in popup'
+  endif
+
+  " line
   let line = get(opts, 'line', winline())
   let line_type = type(line)
   if line_type == v:t_number
@@ -111,11 +103,24 @@ function! s:popup.open(texts, ...) abort
   elseif line_type == v:t_string && line ==# 'near-cursor'
     " NOTE: `+ 5` make the popup window not too low
     if winline() + height + 5 > &lines
-      let line = winline() - height - 1
+      let line = winline() - height
     else
-      let line = winline() + wininfo['winrow'] - 1
+      let line = winline() + wininfo['winrow']
     endif
   endif
+
+  " col
+  let org_col = get(opts, 'col', eol_col)
+  if type(org_col) == v:t_string
+    if org_col ==# 'right'
+      let org_col = wininfo['width'] - width
+    else
+      return iced#message#error('unexpected_error', printf('invalid column "%s"', org_col))
+    endif
+  else
+    let org_col = org_col - 1
+  endif
+  let col = org_col + wininfo['wincol']
 
   let win_opts = {
         \ 'relative': 'editor',

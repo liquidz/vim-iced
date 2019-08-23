@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 function! s:common_replace(s) abort
   let s = substitute(a:s, 'clojure.spec.alpha', 's', 'g')
@@ -84,10 +84,12 @@ function! iced#nrepl#spec#form(spec_name) abort
         \ ? s:cword()
         \ : a:spec_name
 
-  call iced#promise#call('iced#nrepl#eval', [spec_name])
-       \.then({resp -> get(resp, 'value', '')})
-       \.then({kw -> iced#promise#call('iced#nrepl#op#cider#spec_form', [kw])})
-       \.then({resp -> s:spec_form(resp)})
+  let resp = iced#promise#sync('iced#nrepl#eval', [spec_name])
+  let kw = get(resp, 'value', '')
+  if empty(kw)
+    return iced#message#error('unexpected_error', string(resp))
+  endif
+  call iced#nrepl#op#cider#spec_form(kw, funcref('s:spec_form'))
 endfunction
 
 function! s:spec_list(resp) abort
@@ -128,11 +130,13 @@ function! iced#nrepl#spec#example(spec_name) abort
         \ ? spec_name
         \ : printf(':%s', spec_name)
 
-  call iced#promise#call('iced#nrepl#eval', [spec_name])
-        \.then({resp -> get(resp, 'value', '')})
-        \.then({kw -> iced#promise#call('iced#nrepl#op#cider#spec_example', [kw])})
-        \.then({resp -> s:show_example(resp)})
+  let resp = iced#promise#sync('iced#nrepl#eval', [spec_name])
+  let kw = get(resp, 'value', '')
+  if empty(kw)
+    return iced#message#error('unexpected_error', string(resp))
+  endif
+  call iced#nrepl#op#cider#spec_example(kw, funcref('s:show_example'))
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

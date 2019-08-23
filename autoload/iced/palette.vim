@@ -2,7 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:default_palette = [
-      \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt',
+      \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt', 'InstantConnect',
       \ 'StartCljsRepl figwheel-sidecar', 'StartCljsRepl graaljs', 'StartCljsRepl nashorn',
       \ 'QuitCljsRepl', 'CycleSession',
       \ 'EvalNs',
@@ -12,14 +12,15 @@ let s:default_palette = [
       \ 'TestBufferOpen',
       \ 'StdoutBufferOpen', 'StdoutBufferClear', 'StdoutBufferClose',
       \ 'DocumentClose', 'ClojureDocsRefresh',
+      \ 'FormatAll',
       \ 'ToggleSrcAndTest',
       \ 'BrowseRelatedNamespace', 'BrowseSpec', 'BrowseTestUnderCursor',
       \ 'BrowseReferences', 'BrowseDependencies',
       \ 'BrowseVarReferences', 'BrowseVarDependencies',
-      \ 'CleanNs', 'AddNs',
+      \ 'CleanNs', 'CleanAll', 'AddNs',
       \ 'ExtractFunction', 'AddArity', 'MoveToLet',
       \ 'ListTapped', 'ClearTapped', 'MoveToLet',
-      \ 'ToggleTraceVar', 'ToggleTraceNs',
+      \ 'ToggleWarnOnReflection', 'ToggleTraceVar', 'ToggleTraceNs',
       \ 'InReplNs',
       \ 'LintCurrentFile', 'LintToggle',
       \ 'JumpToNextSign', 'JumpToPrevSign',

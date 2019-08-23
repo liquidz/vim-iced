@@ -375,9 +375,17 @@ function! iced#nrepl#connect(port, ...) abort
   endif
 
   let initial_session = get(a:, 1, 'clj')
-  call iced#nrepl#send({'op': 'clone', 'callback': {resp -> s:connected(resp, initial_session)}})
+  let resp = iced#promise#sync('iced#nrepl#clone', [])
+  call s:connected(resp, initial_session)
   return v:true
 endfunction
+
+function! iced#nrepl#clone(callback) abort " {{{
+  call iced#nrepl#send({
+        \ 'op': 'clone',
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
 
 function! iced#nrepl#is_connected() abort " {{{
   return (s:status(s:nrepl['channel']) ==# 'open')

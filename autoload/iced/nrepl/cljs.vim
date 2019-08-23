@@ -36,12 +36,12 @@ function! s:unset_cljs_session() abort
 endfunction
 
 function! iced#nrepl#cljs#check_switching_session(resp, temporary_session) abort
-  if !has_key(a:resp, 'ns') || !has_key(a:resp, 'session') | return | endif
+  if !has_key(a:resp, 'ns') || !has_key(a:resp, 'session') | return '' | endif
 
   let session = a:resp['session']
   let eq_to_repl_session = (session ==# iced#nrepl#repl_session())
   let eq_to_cljs_repl_session = (session ==# iced#nrepl#cljs_repl_session())
-  if !eq_to_repl_session && !eq_to_cljs_repl_session | return | endif
+  if !eq_to_repl_session && !eq_to_cljs_repl_session | return '' | endif
 
   let ns = a:resp['ns']
   let ext = expand('%:e')
@@ -70,6 +70,7 @@ function! iced#nrepl#cljs#check_switching_session(resp, temporary_session) abort
     call iced#message#info('quitted_cljs_repl')
     call iced#hook#run('session_switched', {'session': 'clj'})
   endif
+  return ''
 endfunction
 
 function! iced#nrepl#cljs#cycle_session() abort

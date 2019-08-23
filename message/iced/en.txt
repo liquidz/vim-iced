@@ -76,10 +76,15 @@
   'failed_to_refresh':  'Failed to refresh %s: %s.',
   'unexpected_error':   'Unexpected error: %s',
   'no_iced_nrepl':      'iced-nrepl is not enabled. Please launch repl with `iced repl` command.',
+  'popup_error':        'Failed to open popup: %s.',
+  'not_executable':     '"%s" is not executable.',
   'hit_var_reference_cache': 'Hit var references cache.',
   'finding_var_references':  'Finding var references...',
   'var_references_found':    'Found %d references.',
   'no_var_references':       'No %s/%s references.',
   'confirm_opening_file':    'Open this file?',
+  'clojuredocs_not_found':   'Not found "%s" in ClojureDocs.',
+  'clojuredocs_cljs_error':  'Tried searching for "%s", but ClojureDocs does not have docs for ClojureScript.',
+  'toggle_warn_on_reflection': 'Toggled *warn-on-reflection* to %s.'
 }
 #vim:ft=ruby

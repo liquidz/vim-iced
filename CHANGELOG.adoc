@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 0.11.1 (2019-08-24)
+// {{{
+=== Added
+* Add `g:vim_iced_version` variable for detecting the vim-iced version from other plugins.
+* Add `iced#complete#candidates` function to fetch completions.
+* Add `:IcedToggleWarnOnReflection` command.
+* Add `:IcedFormatAll` command.
+* Add `:IcedCleanAll` command.
+* Add `:IcedInstantConnect` command.
+** Add `--instant` option to `iced repl` sub command.
+
+=== Changed
+* https://github.com/liquidz/vim-iced/pull/135[#135]: Update `:IcedDocumentOpen` to work with qualified symbols..
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/pull/134[#134]: Fix to work with nvim 0.4.0(nightly).
+* https://github.com/liquidz/vim-iced/pull/135[#135]: Fix `:IcedDocumentOpen` to work correctly.
+* https://github.com/liquidz/vim-iced/pull/139[#139]: Fix jumping to var that includes single quote.
+* Fix to show documents for special forms such as `try`.
+* Fix to hide virtual text if the last one has same position.
+
+// }}}
 == 0.11.0 (2019-08-03)
 // {{{
 === Added
