@@ -151,5 +151,9 @@ function! iced#util#future(fn) abort
   call timer_start(10, {_ -> a:fn()})
 endfunction
 
+function! iced#util#delete_color_code(s) abort
+  return substitute(a:s, '\[[0-9;]*m', '', 'g')
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

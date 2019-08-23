@@ -31,10 +31,6 @@ function! s:initialize(bufnr) abort
   endif
 endfunction
 
-function! s:delete_color_code(s) abort
-  return substitute(a:s, '\[[0-9;]*m', '', 'g')
-endfunction
-
 function! iced#buffer#stdout#init() abort
   return iced#buffer#init(s:bufname, funcref('s:initialize'))
 endfunction
@@ -47,7 +43,7 @@ function! iced#buffer#stdout#open() abort
 endfunction
 
 function! iced#buffer#stdout#append(s) abort
-  let s = s:delete_color_code(a:s)
+  let s = iced#util#delete_color_code(a:s)
   if !empty(g:iced#buffer#stdout#file)
     call writefile(split(s, '\r\?\n'), g:iced#buffer#stdout#file, 'a')
   endif
