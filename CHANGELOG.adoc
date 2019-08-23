@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 0.11.1 (2019-08-24)
 // {{{
 === Added
 * Add `g:vim_iced_version` variable for detecting the vim-iced version from other plugins.
@@ -10,6 +12,8 @@ All notable changes to this project will be documented in this file. This change
 * Add `:IcedToggleWarnOnReflection` command.
 * Add `:IcedFormatAll` command.
 * Add `:IcedCleanAll` command.
+* Add `:IcedInstantConnect` command.
+** Add `--instant` option to `iced repl` sub command.
 
 === Changed
 * https://github.com/liquidz/vim-iced/pull/135[#135]: Update `:IcedDocumentOpen` to work with qualified symbols..
