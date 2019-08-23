@@ -511,6 +511,11 @@ COMMANDS                                                    *vim-iced-commands*
   Interrupt some code evaluation in current session.
   Key is mapped to |<Plug>(iced_interrupt)|.
 
+                                                          *:IcedInstantConnect*
+:IcedInstantConnect
+  Start instant REPL and connect to it.
+  Key is mapped to |<Plug>(iced_instant_connect)|.
+
                                                                 *:IcedCljsRepl*
 :IcedCljsRepl {form}
   Start CLJS REPL via user specified code.
@@ -1011,6 +1016,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                        *<Plug>(iced_interrupt)*
 <Plug>(iced_interrupt)
   Same as |:IcedInterrupt|.
+
+                                                 *<Plug>(iced_instant_connect)*
+<Plug>(iced_instant_connect)
+  Same as |:IcedInstantConnect|.
 
                                                  *<Plug>(iced_start_cljs_repl)*
 <Plug>(iced_start_cljs_repl)
