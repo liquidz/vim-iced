@@ -77,6 +77,7 @@
   'unexpected_error':   'Unexpected error: %s',
   'no_iced_nrepl':      'iced-nrepl is not enabled. Please launch repl with `iced repl` command.',
   'popup_error':        'Failed to open popup: %s.',
+  'not_executable':     '"%s" is not executable.',
   'hit_var_reference_cache': 'Hit var references cache.',
   'finding_var_references':  'Finding var references...',
   'var_references_found':    'Found %d references.',
