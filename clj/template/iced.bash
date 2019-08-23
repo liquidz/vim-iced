@@ -18,6 +18,7 @@ IS_BOOT=0
 IS_CLOJURE_CLI=0
 IS_SHADOW_CLJS=0
 IS_DRYRUN=0
+IS_INSTANT=0
 
 function iced_usage() {
     echo "vim-iced ${VERSION}"
@@ -40,6 +41,7 @@ function iced_repl_usage() {
     echo "            [--with-kaocha]"
     echo "            [--dependencies=VALUE] [--middleware=VALUE]"
     echo "            [--force-boot] [--force-clojure-cli]"
+    echo "            [--instant]"
     echo ""
     echo "Start repl. Leiningen, Boot, and Clojure CLI are supported."
     echo ""
@@ -59,6 +61,9 @@ function iced_repl_usage() {
     echo "For example: --middleware=iced.nrepl/wrap-iced"
     echo ""
     echo "The --force-boot and --force-clojure-cli option enable you to start specified repl."
+    echo ""
+    echo "The --instant option launch instant REPL via Clojure CLI."
+    echo "Instant REPL requires no project/config file."
     echo ""
     echo "Other options are passed to each programs."
     echo "To specify Leiningen profile:"
@@ -178,6 +183,8 @@ for x in ${ARGV[@]}; do
         EXTRA_DEPENDENCIES="${EXTRA_DEPENDENCIES} ${value}"
     elif [ $key = '--middleware' ]; then
         EXTRA_MIDDLEWARES="${EXTRA_MIDDLEWARES} ${value}"
+    elif [ $x = '--instant' ]; then
+        IS_INSTANT=1
     elif [ $x = '--dryrun' ]; then
         IS_DRYRUN=1
     else
@@ -186,6 +193,13 @@ for x in ${ARGV[@]}; do
 done
 
 IS_DETECTED=0
+
+# For instant repl, vim-iced uses Clojure CLI
+if [ $IS_INSTANT -eq 1 ]; then
+    IS_DETECTED=1
+    IS_CLOJURE_CLI=1
+fi
+
 while :
 do
     ls project.clj > /dev/null 2>&1
@@ -287,7 +301,11 @@ case "$1" in
                       $(boot_middleware_args ${TARGET_MIDDLEWARES}) \
                       -- $OPTIONS repl"
         elif [ $IS_CLOJURE_CLI -eq 1 ]; then
-            echo_info "Clojure CLI project is detected"
+            if [ $IS_INSTANT -eq 1 ]; then
+                echo_info "Starting instant REPL via Clojure CLI"
+            else
+                echo_info "Clojure CLI project is detected"
+            fi
 
             run "clojure $OPTIONS -Sdeps '{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
                          -m nrepl.cmdline $(cli_middleware_args ${TARGET_MIDDLEWARES})"
