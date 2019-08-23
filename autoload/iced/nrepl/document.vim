@@ -197,9 +197,10 @@ function! s:one_line_doc(resp) abort
       let fmt = printf('%%%ds', max_len)
       call map(popup_args, {_, v -> printf(fmt, v)})
 
+      let lnum = winline() - len(popup_args)
       let popup_opts = {
             \ 'iced_context': s:popup_context({'type': 'one-line document', 'name': name}),
-            \ 'line': max([0, winline() - len(popup_args)]),
+            \ 'line': (lnum < 0) ? winline() + 1 : lnum,
             \ 'col': 'right',
             \ 'auto_close': v:false,
             \ 'moved': [0, &columns],
