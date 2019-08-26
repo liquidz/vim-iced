@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+== 0.11.2 (2019-08-26)
+// {{{
+=== Changed
+* Bump cider-nrepl to 0.22.0-beta12.
+** Fix completion bugs with ClojureScript.
+// }}}
 
 == 0.11.1 (2019-08-24)
 // {{{
@@ -26,6 +32,7 @@ All notable changes to this project will be documented in this file. This change
 * Fix to hide virtual text if the last one has same position.
 
 // }}}
+
 == 0.11.0 (2019-08-03)
 // {{{
 === Added

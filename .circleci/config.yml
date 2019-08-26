@@ -41,7 +41,7 @@ jobs:
     working_directory: /mnt/volume
     steps:
       - run:
-          command: apk add --no-cache --virtual git
+          command: apk update && apk upgrade && apk add --no-cache git
       - checkout
       - run:
           command: |
