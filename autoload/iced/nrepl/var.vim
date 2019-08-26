@@ -4,7 +4,7 @@ set cpoptions&vim
 function! s:cword() abort
   let isk = &iskeyword
   try
-    let &iskeyword = printf('%s,39', isk)
+    let &iskeyword = printf('%s,#,%%,&,39', isk)
     return expand('<cword>')
   finally
     let &iskeyword = isk
