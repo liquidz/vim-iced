@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Fixed
+* https://github.com/liquidz/vim-iced/pull/142[#142]: Fix jumping to all Clojure's Symbols.
+// }}}
+
 == 0.11.2 (2019-08-26)
 // {{{
 === Changed
