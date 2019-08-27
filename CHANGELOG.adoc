@@ -3,7 +3,12 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+== 0.11.3 (2019-08-27)
 // {{{
+=== Added
+* https://github.com/liquidz/vim-iced/pull/140[#140]: Add dependencies and middlewares validation for shadow-cljs.edn.
+** vim-iced will validate shadow-cljs.edn when you start cljs REPL.
+
 === Fixed
 * https://github.com/liquidz/vim-iced/pull/142[#142]: Fix jumping to all Clojure's Symbols.
 // }}}
