@@ -141,6 +141,15 @@ function! iced#nrepl#cljs#start_repl_via_env(env_key, ...) abort
     let env = s:env[env_key](a:000)
     if type(env) != v:t_dict | return iced#message#error_str(env) | endif
 
+    let warning = get(env, 'warning', '')
+    if !empty(warning)
+      call iced#message#warning_str(warning)
+      let res = iced#di#get('io').input(iced#message#get('confirm_proceeding'))
+      if res !=# '' && res !=# 'y' && res !=# 'Y'
+        return iced#message#error('canceled_cljs_repl')
+      endif
+    endif
+
     let Pre_code_f = get(env, 'pre-code', '')
     let Env_code_f = get(env, 'env-code', '')
 

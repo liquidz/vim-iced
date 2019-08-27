@@ -1,7 +1,23 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:build_id = ''
+
+function! s:validate_config() abort
+  let file = findfile('shadow-cljs.edn', '.;')
+  if empty(file) | return | endif
+
+  let code = printf('(vim-iced.loaded.shadow-cljs/validate-config "%s" "%s")',
+        \ g:vim_iced_home, file)
+
+  let resp = iced#promise#sync('iced#nrepl#eval', [code])
+  if !has_key(resp, 'value') | return '' | endif
+  let value = trim(resp.value, '"')
+  if empty(value) | return '' | endif
+  return printf("%s\n%s",
+        \ substitute(value, '\\n', '\n', 'g'),
+        \ iced#message#get('missing_config'))
+endfunction
 
 function! iced#nrepl#cljs#shadow_cljs#get_env(options) abort
   if len(a:options) <= 0
@@ -15,8 +31,9 @@ function! iced#nrepl#cljs#shadow_cljs#get_env(options) abort
         \ 'pre-code': {-> '(require ''shadow.cljs.devtools.api)'},
         \ 'env-code': {-> {'raw': printf('(do (shadow/watch :%s) (shadow/nrepl-select :%s))', s:build_id, s:build_id) }},
         \ 'ignore-quit-detecting': v:true,
+        \ 'warning': s:validate_config(),
         \ }
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
