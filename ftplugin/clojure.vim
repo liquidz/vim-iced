@@ -4,6 +4,8 @@ endif
 let g:loaded_vim_iced = 1
 let g:vim_iced_version = 1102
 
+let g:vim_iced_home = expand('<sfile>:p:h:h')
+
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
