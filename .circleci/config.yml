@@ -27,6 +27,9 @@ jobs:
             bash scripts/version_check.sh
       - run:
           command: |
+            bash scripts/deps_check.sh
+      - run:
+          command: |
             git clone https://github.com/thinca/vim-themis .vim-themis
             git clone https://github.com/guns/vim-sexp .vim-sexp
             ./.vim-themis/bin/themis

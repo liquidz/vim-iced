@@ -1,4 +1,4 @@
-.PHONY: all vital test themis docker_themis html pip_install lint python_doctest version_check clean clean-all bin ancient aspell repl circleci
+.PHONY: all vital test themis docker_themis html pip_install lint python_doctest version_check deps_check clean clean-all bin ancient aspell repl circleci
 
 PWD=$(shell pwd)
 
@@ -19,7 +19,7 @@ vital:
 	\rm -rf autoload/vital*
 	vim -c "Vitalize . --name=$(PLUGIN_NAME) $(VITAL_MODULES)" -c q
 
-test: themis lint python_doctest version_check
+test: themis lint python_doctest version_check deps_check
 
 .vim-themis:
 	git clone https://github.com/thinca/vim-themis .vim-themis
@@ -49,6 +49,9 @@ python_doctest:
 
 version_check:
 	bash scripts/version_check.sh
+
+deps_check:
+	bash scripts/deps_check.sh
 
 coverage: themis
 	bash scripts/coverage.sh
