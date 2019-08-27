@@ -304,6 +304,20 @@ function! s:warm_up() abort
     call iced#nrepl#ns#in()
   endif
   call iced#format#set_indentexpr()
+
+  " load util files
+  let load_dir = printf('%s/clj/load_files', g:vim_iced_home)
+  for path in glob(printf('%s/*.clj', load_dir), v:true, v:true)
+    echom printf('FIXME %s', path)
+    call iced#nrepl#send({
+          \ 'id': iced#nrepl#id(),
+          \ 'op': 'load-file',
+          \ 'session': iced#nrepl#current_session(),
+          \ 'file': join(readfile(path), "\n"),
+          \ 'file-name': path,
+          \ 'file-path': load_dir,
+          \ })
+  endfor
 endfunction
 
 function! s:status(ch) abort

@@ -36,5 +36,8 @@
   :doc {:extra-deps {liquidz/clj-vimhelp {:git/url "https://github.com/liquidz/clj-vimhelp"
                                           :sha "38dea58d0516f8f6bbc424da14300c831a824242"}}
         :main-opts ["-m" "vimhelp.core"]}
+  :load-files-test {:extra-paths ["test/clj"]
+                    :extra-deps {lambdaisland/kaocha {:mvn/version "0.0-529"}}
+                    :main-opts ["-m" "kaocha.runner"]}
   :dev {}}
  }
