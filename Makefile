@@ -1,4 +1,4 @@
-.PHONY: all vital test themis docker_themis html pip_install lint python_doctest version_check deps_check clean clean-all bin ancient aspell repl circleci
+.PHONY: all vital test themis docker_themis html pip_install lint python_doctest load_files_test version_check deps_check clean clean-all bin ancient aspell repl circleci
 
 PWD=$(shell pwd)
 
@@ -46,6 +46,9 @@ lint:
 
 python_doctest:
 	python3 -m doctest python/bencode.py
+
+load_files_test:
+	clojure -A:load-files-test
 
 version_check:
 	bash scripts/version_check.sh

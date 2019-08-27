@@ -90,6 +90,24 @@ jobs:
           root: target
           paths: html
 
+  load-files-build:
+    docker:
+      - image: circleci/clojure:tools-deps
+    working_directory: /tmp/workspace
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v2-dependencies-{{ checksum "deps.edn" }}
+      - run:
+          command: |
+            clojure -A:load-files-test
+      - save_cache:
+          paths:
+            - ~/.clojure/.cpcache
+            - ~/.m2
+          key: v2-dependencies-{{ checksum "deps.edn" }}
+
   nightly-docs-deploy:
     docker:
       - image: node:8.10.0
@@ -134,6 +152,7 @@ workflows:
       - build
       - neovim-build
       - docs-build
+      - load-files-build
       - nightly-docs-deploy:
           requires:
             - docs-build
@@ -145,6 +164,7 @@ workflows:
             - build
             - neovim-build
             - docs-build
+            - load-files-build
           filters:
             branches:
               only: master
