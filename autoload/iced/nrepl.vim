@@ -167,7 +167,7 @@ function! s:dispatcher(ch, resp) abort
 
   try
     let original_resp = iced#di#get('bencode').decode(text)
-  catch /Failed to parse bencode/
+  catch /Failed to parse/
     let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
     return
   endtry
