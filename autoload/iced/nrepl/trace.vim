@@ -46,7 +46,7 @@ function! iced#nrepl#trace#toggle_var(symbol) abort
   let symbol = a:symbol
   let opts = {}
   if empty(symbol)
-    let symbol = expand('<cword>')
+    let symbol = iced#nrepl#var#cword()
     let opts['lnum'] = getcurpos()[1]
     let opts['file'] = expand('%:p')
   endif

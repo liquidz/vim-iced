@@ -20,7 +20,7 @@ endfunction
 function! iced#nrepl#op#refactor#add_missing(symbol, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
-  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  let symbol = empty(a:symbol) ? iced#nrepl#var#cword() : a:symbol
   call iced#message#echom('resolving_missing')
   call iced#nrepl#send({
         \ 'op': 'resolve-missing',

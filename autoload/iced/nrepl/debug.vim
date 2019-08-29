@@ -69,9 +69,9 @@ function! s:move_cursor_and_set_highlight(resp) abort
   let pos = getcurpos()
   if iced#util#char() ==# '('
     normal! l
-    let l = max([len(expand('<cword>')), 1])
+    let l = max([len(iced#nrepl#var#cword()), 1])
   else
-    let l = max([len(expand('<cword>'))-1, 0])
+    let l = max([len(iced#nrepl#var#cword())-1, 0])
   endif
   call iced#highlight#clear()
   call iced#highlight#set_by_line('DiffText', pos[1])

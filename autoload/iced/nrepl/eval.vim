@@ -142,7 +142,7 @@ endfunction
 function! iced#nrepl#eval#undef(symbol) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
-  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  let symbol = empty(a:symbol) ? iced#nrepl#var#cword() : a:symbol
   call iced#nrepl#op#cider#undef(symbol, {resp -> s:undefined(resp, symbol)})
 endfunction
 

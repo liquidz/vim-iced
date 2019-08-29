@@ -30,7 +30,7 @@ endfunction
 function! iced#nrepl#source#show(symbol) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
-  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  let symbol = empty(a:symbol) ? iced#nrepl#var#cword() : a:symbol
   call s:fetch_source(symbol)
        \.then({code -> empty(code)
        \       ? iced#message#error('not_found')
@@ -58,7 +58,7 @@ function! iced#nrepl#source#popup_show(symbol) abort
     return iced#nrepl#source#show(a:symbol)
   endif
 
-  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  let symbol = empty(a:symbol) ? iced#nrepl#var#cword() : a:symbol
   call s:fetch_source(symbol)
        \.then({code -> empty(code)
        \       ? iced#message#error('not_found')
