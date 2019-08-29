@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Bump cider-nrepl to 0.22.0.
+* Make `:IcedGrep` async.
+** Add `g:iced#grep#prg` option.
+** Add `g:iced#grep#format` option.
+
+=== Fixed
+* Fix checking shadow-cljs dependency process.
+
+=== Removed
+* (Breaking) Remove `g:iced#grep#target` option.
+// }}}
+
 == 0.11.3 (2019-08-27)
 // {{{
 === Added
