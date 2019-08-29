@@ -167,12 +167,20 @@ function! s:distribute_tests(var_info) abort
   else
     " Form under the cursor is not a test, and current ns is NOT ns for test
     let ns = iced#nrepl#navigate#cycle_ns(ns)
-    call iced#nrepl#ns#require(ns, {_ -> s:test_ns_required(ns, var_name)})
+    " HACK: for neovim
+    "call iced#nrepl#ns#require(ns, {_ -> s:test_ns_required(ns, var_name)})
+    call iced#nrepl#ns#require(ns, {_ ->
+          \ iced#util#future({-> s:test_ns_required(ns, var_name)})
+          \ })
   endif
 endfunction
 
 function! iced#nrepl#test#under_cursor() abort
-  call iced#nrepl#var#extract_by_current_top_list(funcref('s:distribute_tests'))
+  " HACK: for neovim
+  "call iced#nrepl#var#extract_by_current_top_list(funcref('s:distribute_tests'))
+  call iced#nrepl#var#extract_by_current_top_list({resp ->
+        \ iced#util#future({-> s:distribute_tests(resp)})
+        \ })
 endfunction "}}}
 
 " iced#nrepl#test#ns {{{
