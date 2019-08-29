@@ -824,8 +824,9 @@ COMMANDS                                                    *vim-iced-commands*
 
                                                                     *:IcedGrep*
 :IcedGrep [{keyword}]
-  Execute |:grep| command with |g:iced#grep#target|.
+  Execute |g:iced#grep#prg| command asynchronously.
   If {keyword} is not passed, keyword under cursor is used.
+  Configurable option are |g:iced#grep#prg| and |g:iced#grep#format|.
   Key is mapped to |<Plug>(iced_grep)|.
 
                                                         *:IcedRelatedNamespace*
@@ -1425,17 +1426,17 @@ g:iced#qf#height
   Quickfix window height.
   Default value is `5`.
 
-                                                           *g:iced#grep#target*
-g:iced#grep#target
-  Grep path target.
-  Following keywords are replaced.
-  - `{{user.dir}}`
-    Project root directory.
-  - `{{separator}}`
-    File path separator.
+                                                              *g:iced#grep#prg*
+g:iced#grep#prg
+  Program to use for the |:IcedGrep| command.
+  Format is same as |'grepprg'|.
+  Default value is `'git grep --no-index -I --line-number --no-color'` .
 
-  Default value is
-    `'{{user.dir}}{{separator}}**{{separator}}*.{clj,cljs,cljc}'`.
+                                                           *g:iced#grep#format*
+g:iced#grep#format
+  Format to recognize for the |:IcedGrep| command output.
+  Format is same as |'grepformat'|.
+  Default value is `'%f:%l:%m,%f:%l%m,%f  %l%m'` .
 
                                              *g:iced#refactor#prefix_rewriting*
 g:iced#refactor#prefix_rewriting
