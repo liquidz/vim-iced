@@ -65,7 +65,7 @@ function iced_repl_usage() {
     echo "The --instant option launch instant REPL via Clojure CLI."
     echo "Instant REPL requires no project/config file."
     echo ""
-    echo "Other options are passed to each programs."
+    echo "Other options are passed to each program."
     echo "To specify Leiningen profile:"
     echo "  $ iced repl with-profile +foo"
     echo "To specify Clojure CLI alias:"
