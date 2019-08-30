@@ -7,6 +7,7 @@ let s:qf = themis#helper('iced_quickfix')
 let s:ex = themis#helper('iced_ex_cmd')
 let s:holder = themis#helper('iced_holder')
 let s:io = themis#helper('iced_io')
+let s:timer = themis#helper('iced_timer')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl/test.vim')
 
 let s:temp_foo = tempname()
@@ -16,6 +17,7 @@ function s:setup(...) abort " {{{
   let opts = get(a:, 1, {})
   call s:ex.register_test_builder()
   call s:qf.register_test_builder()
+  call s:timer.register_test_builder()
 
   call s:qf.setlist([], 'r')
   call s:holder.clear()
