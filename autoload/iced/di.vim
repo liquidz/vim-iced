@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 function! iced#di#new_container() abort
   let container = {}
@@ -45,7 +45,8 @@ if !exists('g:iced#di#container')
   call iced#di#register('selector', function('iced#di#selector#build'))
   call iced#di#register('virtual_text', function('iced#di#virtual_text#build'))
   call iced#di#register('popup', function('iced#di#popup#build'))
+  call iced#di#register('timer', function('iced#di#timer#build'))
 endif " }}}
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
