@@ -6,12 +6,15 @@ All notable changes to this project will be documented in this file. This change
 // {{{
 === Changed
 * Bump cider-nrepl to 0.22.0.
+* Bump iced-nrepl to 0.6.2.
 * Make `:IcedGrep` async.
 ** Add `g:iced#grep#prg` option.
 ** Add `g:iced#grep#format` option.
 
 === Fixed
 * Fix checking shadow-cljs dependency process.
+* Fix to work `IcedTestUnderCursor` with neovim 0.4.0(nightly).
+* Fix for rare reading bencode error.
 
 === Removed
 * (Breaking) Remove `g:iced#grep#target` option.
