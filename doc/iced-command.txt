@@ -67,7 +67,7 @@ OPTIONS                                                  *iced-command-options*
     Launch instant REPL via Clojure CLI.
     Instant REPL requires no project/config file.
 
-  Other options are passed to each programs.
+  Other options are passed to each program.
 
 ------------------------------------------------------------------------------
 EXAMPLES                                                *iced-command-examples*

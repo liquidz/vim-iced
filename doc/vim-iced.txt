@@ -344,7 +344,7 @@ TESTING                                                      *vim-iced-testing*
 DEBUGGING                                                  *vim-iced-debugging*
 
   vim-iced supports cider's `#dbg` and `#break` reader literals.
-  Easiest way is to put `#dbg` to your code, and evaluate it.
+  The easiest way is to put `#dbg` to your code, and evaluate it.
 >
   (defn fib [n]
     #dbg (loop [a 0 b 1 n n]
@@ -558,7 +558,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                             *:IcedCycleSession*
 :IcedCycleSession
   Cycle clj/cljs session.
-  Error occurs when CLJS session does not exists.
+  Error occurs when CLJS session does not exist.
 
                                                                     *:IcedEval*
 :IcedEval {form}
@@ -628,8 +628,8 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedTestUnderCursor
   Run test under cursor.
 
-  If the var under cursor does not contains `:test` metadata
-  and current ns doesn't ends with "-test",
+  If the var under cursor does not contain `:test` metadata
+  and current ns doesn't end with "-test",
   vim-iced searches test vars in corresponding test ns and run them.
   Target test vars include original var name in its name.
 
@@ -706,7 +706,7 @@ COMMANDS                                                    *vim-iced-commands*
 
                                                       *:IcedBrowseDependencies*
 :IcedBrowseDependencies
-  Browse positions depending the form under cursor.
+  Browse positions depending on the form under cursor.
   Results are set to |location-list|.
 
                                                      *:IcedBrowseVarReferences*
@@ -716,7 +716,7 @@ COMMANDS                                                    *vim-iced-commands*
 
                                                    *:IcedBrowseVarDependencies*
 :IcedBrowseVarDependencies
-  Browse positions depending the var under cursor.
+  Browse positions depending on the var under cursor.
   Results are set to |location-list|.
 
                                                             *:IcedDocumentOpen*
@@ -1500,7 +1500,7 @@ g:iced_enable_auto_document
   This will be done by |CursorHold| and |CursorHoldI| auto command.
 
   The value should be one of `'normal'`, `'insert'` or `'any'`.
-  Otherwise this option will be disabled.
+  Otherwise, this option will be disabled.
 
   `'normal'`: Enabled on only normal mode.
   `'insert'`: Enabled on only insert mode.
@@ -1513,7 +1513,7 @@ g:iced_enable_auto_document
 g:iced_enable_popup_document
   Display documents on popup window.
   The value should be one of follows.
-  Otherwise this option will be disabled.
+  Otherwise, this option will be disabled.
 
   `'full'`    : Enabled on only full document.
               |:IcedDocumentOpen| shows full document.
@@ -1578,7 +1578,7 @@ g:iced_sign
   - iced_trace (for tracing var position)
   - iced_lint  (for lint warning position)
 
-  Each signs have default setting as follows. >
+  Each sign has default setting as follows. >
   {
     'error':   '🔥',
     'trace':   '👁',
