@@ -826,6 +826,9 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedGrep [{keyword}]
   Execute |g:iced#grep#prg| command asynchronously.
   If {keyword} is not passed, keyword under cursor is used.
+
+  NOTE: This command will change the current directory globally.
+
   Configurable option are |g:iced#grep#prg| and |g:iced#grep#format|.
   Key is mapped to |<Plug>(iced_grep)|.
 
