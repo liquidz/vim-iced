@@ -226,7 +226,7 @@ function! iced#nrepl#op#cider#clojuredocs_lookup(ns, name, export_edn_url, callb
         \ 'id': iced#nrepl#id(),
         \ 'op': 'clojuredocs-lookup',
         \ 'ns': a:ns,
-        \ 'symbol': a:name,
+        \ 'sym': a:name,
         \ 'export-edn-url': a:export_edn_url,
         \ 'session': iced#nrepl#current_session(),
         \ 'callback': a:callback,

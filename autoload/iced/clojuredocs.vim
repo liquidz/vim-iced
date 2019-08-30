@@ -116,7 +116,7 @@ function! iced#clojuredocs#open(symbol) abort
        \.then({resp -> iced#util#has_status(resp, 'no-info')
        \               ? iced#promise#reject('not-found')
        \               : s:lookup(resp)})
-       \.then({resp -> iced#util#has_status(resp, 'no-document')
+       \.then({resp -> iced#util#has_status(resp, 'no-doc')
        \               ? iced#message#error_str(s:construct_error_message())
        \               : s:show_doc(resp)},
        \      {err -> iced#message#error_str(s:construct_error_message())})
