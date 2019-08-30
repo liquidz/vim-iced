@@ -58,5 +58,13 @@ function! iced#compat#job_start(command, options) abort
   endif
 endfunction
 
+function! iced#compat#job_stop(job_id) abort
+  if has('nvim')
+    return jobstop(a:job_id)
+  else
+    return job_stop(a:job_id)
+  endif
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
