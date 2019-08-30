@@ -3,7 +3,7 @@
  :deps {nrepl {:mvn/version "0.6.0"}
         refactor-nrepl {:mvn/version "2.4.0"}
         cider/cider-nrepl {:mvn/version "0.22.0"}
-        iced-nrepl {:mvn/version "0.6.1"}}
+        iced-nrepl {:mvn/version "0.6.2"}}
  :__middlewares__
  ["cider.nrepl/wrap-classpath"
   "cider.nrepl/wrap-clojuredocs"
