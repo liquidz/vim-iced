@@ -87,6 +87,7 @@ command!          IcedFormat                call iced#format#form()
 command!          IcedFormatAll             call iced#format#all()
 command!          IcedToggleSrcAndTest      call iced#nrepl#navigate#toggle_src_and_test()
 command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
+command!          IcedLiveGrep              call iced#grep#live()
 
 command!          IcedBrowseRelatedNamespace call iced#nrepl#navigate#related_ns()
 command!          IcedBrowseSpec             call iced#nrepl#spec#list()
@@ -190,6 +191,7 @@ nnoremap <silent> <Plug>(iced_format)                   :<C-u>IcedFormat<CR>
 nnoremap <silent> <Plug>(iced_format_all)               :<C-u>IcedFormatAll<CR>
 nnoremap <silent> <Plug>(iced_toggle_src_and_test)      :<C-u>IcedToggleSrcAndTest<CR>
 nnoremap <silent> <Plug>(iced_grep)                     :<C-u>IcedGrep<CR>
+nnoremap <silent> <Plug>(iced_live_grep)                :<C-u>IcedLiveGrep<CR>
 
 nnoremap <silent> <Plug>(iced_browse_related_namespace) :<C-u>IcedBrowseRelatedNamespace<CR>
 nnoremap <silent> <Plug>(iced_browse_spec)              :<C-u>IcedBrowseSpec<CR>

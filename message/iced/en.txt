@@ -83,6 +83,8 @@
   'start_to_grep':      'Start to grep: %s',
   'finish_to_grep':     'Finish to grep: %s',
   'grep_not_found':     'Not found "%s" in this project.',
+  'grep_running':       'The job to grep is running yet.',
+  'no_quickpick':       'quickpick.vim is not installed.',
   'confirm_proceeding': 'Do you proceed? (Y/n): ',
   'hit_var_reference_cache': 'Hit var references cache.',
   'finding_var_references':  'Finding var references...',
