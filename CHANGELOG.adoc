@@ -10,11 +10,14 @@ All notable changes to this project will be documented in this file. This change
 * Make `:IcedGrep` async.
 ** Add `g:iced#grep#prg` option.
 ** Add `g:iced#grep#format` option.
+* Change `IcedBrowseReferences` and `:IcedBrowseDependencies` to show results in quickfix.
 
 === Fixed
 * Fix checking shadow-cljs dependency process.
 * Fix to work `IcedTestUnderCursor` with neovim 0.4.0(nightly).
 * Fix for rare reading bencode error.
+* Fix browsing references/dependencies to work.
+* Fix test error result to show file path correctly.
 
 === Removed
 * (Breaking) Remove `g:iced#grep#target` option.
