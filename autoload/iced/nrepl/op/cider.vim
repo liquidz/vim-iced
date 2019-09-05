@@ -200,7 +200,7 @@ function! iced#nrepl#op#cider#fn_refs(ns_name, symbol, callback) abort
         \ 'op': 'fn-refs',
         \ 'id': iced#nrepl#id(),
         \ 'ns': a:ns_name,
-        \ 'symbol': a:symbol,
+        \ 'sym': a:symbol,
         \ 'session': iced#nrepl#current_session(),
         \ 'callback': a:callback,
         \ })
@@ -213,7 +213,7 @@ function! iced#nrepl#op#cider#fn_deps(ns_name, symbol, callback) abort
         \ 'op': 'fn-deps',
         \ 'id': iced#nrepl#id(),
         \ 'ns': a:ns_name,
-        \ 'symbol': a:symbol,
+        \ 'sym': a:symbol,
         \ 'session': iced#nrepl#current_session(),
         \ 'callback': a:callback,
         \ })
