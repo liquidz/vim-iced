@@ -3,10 +3,12 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 0.12.0 (2019-09-07)
 // {{{
 === Changed
-* Bump cider-nrepl to 0.22.0.
-* Bump iced-nrepl to 0.6.2.
+* Bump cider-nrepl to 0.22.2.
+* Bump iced-nrepl to 0.6.3.
 * Make `:IcedGrep` async.
 ** Add `g:iced#grep#prg` option.
 ** Add `g:iced#grep#format` option.
