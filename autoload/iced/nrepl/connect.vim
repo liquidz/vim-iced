@@ -37,11 +37,13 @@ function! iced#nrepl#connect#auto() abort
 endfunction
 
 function! s:instant_repl_callback(_, out) abort
-  let line = iced#util#delete_color_code(a:out)
-  echo line
-  if stridx(line, 'nREPL server started') != -1 && !iced#nrepl#is_connected()
-    call iced#util#future(function('iced#nrepl#connect#auto'))
-  endif
+  for line in iced#util#ensure_array(a:out)
+    let line = iced#util#delete_color_code(line)
+    echo line
+    if stridx(line, 'nREPL server started') != -1 && !iced#nrepl#is_connected()
+      call iced#util#future(function('iced#nrepl#connect#auto'))
+    endif
+  endfor
 endfunction
 
 function! iced#nrepl#connect#instant() abort

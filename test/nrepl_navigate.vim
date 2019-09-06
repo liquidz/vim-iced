@@ -175,8 +175,8 @@ function! s:suite.browse_var_references_test() abort
   call s:setup({'channel': funcref('s:browse_var_references_relay')})
 
   call iced#nrepl#navigate#browse_var_references('foo/bar')
-  let loc_list = s:qf.get_last_args()['loclist']
-  call s:assert.equals(loc_list, [
+  let qf_list = s:qf.get_last_args()['list']
+  call s:assert.equals(qf_list, [
         \ {'filename': s:temp_file, 'lnum': 12, 'text': 'hello: doc hello'},
         \ ])
 
@@ -203,9 +203,10 @@ function! s:suite.browse_var_dependencies_test() abort
   call s:setup({'channel': funcref('s:browse_var_dependencies_relay')})
 
   call iced#nrepl#navigate#browse_var_dependencies('foo/bar')
-  let qf_list = s:qf.get_last_args()['loclist']
+  let qf_list = s:qf.get_last_args()['list']
   call s:assert.equals(qf_list, [
-        \ {'filename': s:temp_file, 'lnum': 56, 'text': 'world: doc world'}])
+        \ {'filename': s:temp_file, 'lnum': 56, 'text': 'world: doc world'}
+        \ ])
 
   call s:teardown()
 endfunction

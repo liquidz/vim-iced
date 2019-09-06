@@ -1,7 +1,7 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-function! s:cword() abort
+function! iced#nrepl#var#cword() abort
   let isk = &iskeyword
   try
     let &iskeyword = printf('%s,#,%%,&,39', isk)
@@ -45,11 +45,11 @@ function! iced#nrepl#var#get(...) abort
   let Callback = ''
 
   if a:0 == 1
-    let symbol = expand('<cword>')
+    let symbol = iced#nrepl#var#cword()
     let Callback = get(a:, 1, '')
   elseif a:0 == 2
     let symbol = get(a:, 1, '')
-    let symbol = empty(symbol) ? s:cword() : symbol
+    let symbol = empty(symbol) ? iced#nrepl#var#cword() : symbol
     let Callback = get(a:, 2, '')
   else
     return

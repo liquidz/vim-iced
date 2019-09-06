@@ -71,6 +71,9 @@ function! s:collect_errors(resp) abort
                   \ test['file'])
           else
             let filename = ns_path_resp['path']
+            if stridx(filename, 'file:') == 0
+              let filename = filename[5:]
+            endif
           endif
 
           let err = {

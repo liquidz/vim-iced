@@ -200,7 +200,7 @@ function! iced#nrepl#op#cider#fn_refs(ns_name, symbol, callback) abort
         \ 'op': 'fn-refs',
         \ 'id': iced#nrepl#id(),
         \ 'ns': a:ns_name,
-        \ 'symbol': a:symbol,
+        \ 'sym': a:symbol,
         \ 'session': iced#nrepl#current_session(),
         \ 'callback': a:callback,
         \ })
@@ -213,7 +213,7 @@ function! iced#nrepl#op#cider#fn_deps(ns_name, symbol, callback) abort
         \ 'op': 'fn-deps',
         \ 'id': iced#nrepl#id(),
         \ 'ns': a:ns_name,
-        \ 'symbol': a:symbol,
+        \ 'sym': a:symbol,
         \ 'session': iced#nrepl#current_session(),
         \ 'callback': a:callback,
         \ })
@@ -226,7 +226,7 @@ function! iced#nrepl#op#cider#clojuredocs_lookup(ns, name, export_edn_url, callb
         \ 'id': iced#nrepl#id(),
         \ 'op': 'clojuredocs-lookup',
         \ 'ns': a:ns,
-        \ 'symbol': a:name,
+        \ 'sym': a:name,
         \ 'export-edn-url': a:export_edn_url,
         \ 'session': iced#nrepl#current_session(),
         \ 'callback': a:callback,

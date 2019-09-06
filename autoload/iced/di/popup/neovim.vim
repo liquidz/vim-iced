@@ -140,7 +140,7 @@ function! s:popup.open(texts, ...) abort
 
   if get(opts, 'auto_close', v:true)
     let time = get(opts, 'close_time', g:iced#popup#time)
-    call timer_start(time, {-> iced#di#get('popup').close(winid)})
+    call iced#di#get('timer').start(time, {-> iced#di#get('popup').close(winid)})
   endif
 
   let s:last_winid = winid

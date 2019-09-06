@@ -15,12 +15,13 @@ function! iced#nrepl#system#info() abort
   if !iced#nrepl#is_connected() | return result | endif
   let resp = iced#eval_and_read(s:system_info_code)
 
-  if has_key(resp, 'value')
+  if type(resp) == v:t_dict && has_key(resp, 'value')
     let result = resp['value']
   endif
 
   let cp_resp = iced#nrepl#op#cider#sync#classpath()
-  if has_key(cp_resp, 'classpath')
+  let cp_resp = (type(cp_resp) == v:t_list) ? cp_resp[0] : cp_resp
+  if type(cp_resp) == v:t_dict && has_key(cp_resp, 'classpath')
     for path in cp_resp['classpath']
       if stridx(path, 'cider/piggieback') != -1
         let result['piggieback-enabled?'] = 1

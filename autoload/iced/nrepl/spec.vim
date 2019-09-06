@@ -69,19 +69,9 @@ function! s:browse_spec(spec_name) abort
   call iced#nrepl#op#cider#spec_form(a:spec_name, funcref('s:spec_form'))
 endfunction
 
-function! s:cword() abort
-  let isk = &iskeyword
-  try
-    let &iskeyword = printf('%s,:,.,-,/,?', isk)
-    return expand('<cword>')
-  finally
-    let &iskeyword = isk
-  endtry
-endfunction
-
 function! iced#nrepl#spec#form(spec_name) abort
   let spec_name = empty(a:spec_name)
-        \ ? s:cword()
+        \ ? iced#nrepl#var#cword()
         \ : a:spec_name
 
   let resp = iced#promise#sync('iced#nrepl#eval', [spec_name])
@@ -124,7 +114,7 @@ endfunction
 
 function! iced#nrepl#spec#example(spec_name) abort
   let spec_name = empty(a:spec_name)
-        \ ? s:cword()
+        \ ? iced#nrepl#var#cword()
         \ : a:spec_name
   let spec_name = (stridx(spec_name, ':') == 0)
         \ ? spec_name

@@ -54,7 +54,7 @@ function! s:neovim.set(text, ...) abort
 
   if get(opt, 'auto_clear', v:false)
     let time = get(opt, 'clear_time', 3000)
-    call timer_start(time, {-> nvim_buf_clear_namespace(buf, s:ns, line, line + 1)})
+    call iced#di#get('timer').start(time, {-> nvim_buf_clear_namespace(buf, s:ns, line, line + 1)})
   endif
 endfunction
 

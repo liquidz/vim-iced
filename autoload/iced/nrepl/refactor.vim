@@ -177,7 +177,7 @@ function! s:resolve_missing(symbol, resp) abort
 endfunction
 
 function! iced#nrepl#refactor#add_missing_ns(symbol) abort
-  let symbol = empty(a:symbol) ? expand('<cword>') : a:symbol
+  let symbol = empty(a:symbol) ? iced#nrepl#var#cword() : a:symbol
   call iced#nrepl#op#refactor#add_missing(symbol, {resp -> s:resolve_missing(symbol, resp)})
 endfunction " }}}
 
