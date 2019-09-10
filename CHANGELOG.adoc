@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* Add `g:iced#buffer#stdout#max_line` option.
+** This option is a limit of line count in stdout buffer.
+* Add `g:iced#buffer#stdout#deleting_line_delay` option.
+// }}}
 
 == 0.12.0 (2019-09-07)
 // {{{

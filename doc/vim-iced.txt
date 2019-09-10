@@ -40,6 +40,7 @@ CONTENTS                                                    *vim-iced-contents*
     Functions                  |vim-iced-functions|
     Key Mappings               |vim-iced-key-mappings|
   Customizing                  |vim-iced-customizing|
+    Stdout buffer              |vim-iced-customizing-stdout-buffer|
     Indent rules               |vim-iced-customizing-indents|
     Documents                  |vim-iced-customizing-documents|
       Auto document            |vim-iced-customizing-auto-document|
@@ -1379,23 +1380,6 @@ g:iced#eval#inside_comment
   Default value is `v:true`.
   See |iced-tips-eval-inside-comment| for more information.
 
-                                                    *g:iced#buffer#stdout#mods*
-g:iced#buffer#stdout#mods
-  Buffer position definition.
-  Following values are supported.
-  - {vertical}
-  - {leftabove}
-  - {aboveleft}
-  - {rightbelow}
-  - {belowright}
-  - {topleft}
-  - {botright}
-
-                                                    *g:iced#buffer#stdout#file*
-g:iced#buffer#stdout#file
-  If not empty, vim-iced write stdout buffer content to the file path.
-  Default value is `''`.
-
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
@@ -1462,6 +1446,40 @@ g:iced#popup#time
 g:iced#popup#max_height
   Max height for popup window.
   Default value is `50`.
+
+------------------------------------------------------------------------------
+STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
+
+                                                    *g:iced#buffer#stdout#mods*
+g:iced#buffer#stdout#mods
+  Buffer position definition.
+  Following values are supported.
+  - {vertical}
+  - {leftabove}
+  - {aboveleft}
+  - {rightbelow}
+  - {belowright}
+  - {topleft}
+  - {botright}
+
+                                                    *g:iced#buffer#stdout#file*
+g:iced#buffer#stdout#file
+  If not empty, vim-iced write stdout buffer content to the file path.
+  Default value is `''`.
+
+                                                *g:iced#buffer#stdout#max_line*
+g:iced#buffer#stdout#max_line
+  Max line count to keep in stdout buffer.
+  If negative number is setted, it means no limit.
+  Default value is `-1`.
+
+                                     *g:iced#buffer#stdout#deleting_line_delay*
+g:iced#buffer#stdout#deleting_line_delay
+  Delay time for deleting excess lines in stdout buffer.
+  Unit is milli sec.
+  This option is enabled when |g:iced#buffer#stdout#max_line| is a positive
+  number.
+  Default value is `1000`.
 
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*
