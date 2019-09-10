@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file. This change
 * Add `g:iced#buffer#stdout#max_line` option.
 ** This option is a limit of line count in stdout buffer.
 * Add `g:iced#buffer#stdout#deleting_line_delay` option.
+* Add operation to evaluate codes and tap its results.
+** `<Plug>(iced_eval_and_tap)`
 // }}}
 
 == 0.12.0 (2019-09-07)
