@@ -308,7 +308,6 @@ function! s:warm_up() abort
   " load util files
   let load_dir = printf('%s/clj/load_files', g:vim_iced_home)
   for path in glob(printf('%s/*.clj', load_dir), v:true, v:true)
-    echom printf('FIXME %s', path)
     call iced#nrepl#send({
           \ 'id': iced#nrepl#id(),
           \ 'op': 'load-file',
