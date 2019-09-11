@@ -31,4 +31,12 @@ for TARGET in ${TARGETS[@]}; do
     fi
 done
 
+echo 'bin/iced: Expected to newer than deps.edn'
+if [ ${SCRIPT_DIR}/../deps.edn -nt ${SCRIPT_DIR}/../bin/iced ]; then
+    echo '=> NG: iced command seems not up-to-date'
+    exit 1
+else
+    echo '=> OK'
+fi
+
 exit 0
