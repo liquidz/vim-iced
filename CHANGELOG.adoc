@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file. This change
 * Add `g:iced#buffer#stdout#deleting_line_delay` option.
 * Add operation to evaluate codes and tap its results.
 ** `<Plug>(iced_eval_and_tap)`
+* Add `:IcedInterruptAll` command.
 // }}}
 
 == 0.12.0 (2019-09-07)

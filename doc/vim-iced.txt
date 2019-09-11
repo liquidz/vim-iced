@@ -512,6 +512,11 @@ COMMANDS                                                    *vim-iced-commands*
   Interrupt some code evaluation in current session.
   Key is mapped to |<Plug>(iced_interrupt)|.
 
+                                                            *:IcedInterruptAll*
+:IcedInterruptAll
+  Interrupt code evaluation in all sessions.
+  Key is mapped to |<Plug>(iced_interrupt_all)|.
+
                                                           *:IcedInstantConnect*
 :IcedInstantConnect
   Start instant REPL and connect to it.

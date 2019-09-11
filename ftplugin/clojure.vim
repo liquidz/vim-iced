@@ -28,6 +28,7 @@ command! -nargs=? IcedConnect               call iced#nrepl#connect(<q-args>)
 command!          IcedDisconnect            call iced#nrepl#disconnect()
 command!          IcedReconnect             call iced#nrepl#reconnect()
 command!          IcedInterrupt             call iced#nrepl#interrupt()
+command!          IcedInterruptAll          call iced#nrepl#interrupt_all()
 command!          IcedInstantConnect        call iced#nrepl#connect#instant()
 
 command! -nargs=? IcedCljsRepl              call iced#nrepl#cljs#start_repl(<q-args>)
@@ -133,6 +134,7 @@ nnoremap <silent> <Plug>(iced_connect)                  :<C-u>IcedConnect<CR>
 nnoremap <silent> <Plug>(iced_disconnect)               :<C-u>IcedDisconnect<CR>
 nnoremap <silent> <Plug>(iced_reconnect)                :<C-u>IcedReconnect<CR>
 nnoremap <silent> <Plug>(iced_interrupt)                :<C-u>IcedInterrupt<CR>
+nnoremap <silent> <Plug>(iced_interrupt_all)            :<C-u>IcedInterruptAll<CR>
 nnoremap <silent> <Plug>(iced_instant_connect)          :<C-u>IcedInstantConnect<CR>
 
 nnoremap <silent> <Plug>(iced_start_cljs_repl)          :<C-u>IcedStartCljsRepl<CR>
@@ -285,6 +287,10 @@ function! s:default_key_mappings() abort
   "" ------------------------------------------------------------------------
   if !hasmapto('<Plug>(iced_interrupt)')
     silent! nmap <buffer> <Leader>eq <Plug>(iced_interrupt)
+  endif
+
+  if !hasmapto('<Plug>(iced_interrupt_all)')
+    silent! nmap <buffer> <Leader>eQ <Plug>(iced_interrupt_all)
   endif
 
   if !hasmapto('<Plug>(iced_eval)')

@@ -489,6 +489,18 @@ function! s:interrupted() abort
   call iced#message#info('interrupted')
 endfunction
 
+function! iced#nrepl#interrupt_all() abort
+  let ids = iced#nrepl#sync#session_list()
+  if type(ids) != v:t_list | return | endif
+  for id in ids
+    call iced#nrepl#sync#send({'op': 'interrupt', 'session': id})
+  endfor
+
+  " NOTE: ignore reading error
+  let s:response_buffer = ''
+  call s:clear_messages()
+endfunction
+
 function! iced#nrepl#interrupt(...) abort
   if ! iced#nrepl#is_connected() | return iced#message#warning('not_connected') | endif
   let session = get(a:, 1, iced#nrepl#current_session())
