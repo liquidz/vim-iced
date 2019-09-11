@@ -25,8 +25,16 @@ function! iced#nrepl#auto#bufenter() abort
   if !iced#nrepl#is_connected() | return | endif
   call s:auto_switching_session()
   " eval `in-ns` automatically
+  " NOTE: Do not use `iced#nrepl#ns#in` here
+  "       because ns-name by `*in*` var may be different in new buffer.
   if ! iced#nrepl#check_session_validity(v:false) | return | endif
-  call iced#nrepl#ns#in()
+  let ns_name = iced#nrepl#ns#name_by_buf()
+  let ns_name = (empty(ns_name))
+        \ ? iced#nrepl#ns#name_by_var(iced#nrepl#repl_session())
+        \ : ns_name
+  if !empty(ns_name)
+    call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), {_ -> ''})
+  endif
 endfunction
 
 function! iced#nrepl#auto#bufread() abort
