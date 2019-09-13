@@ -415,6 +415,7 @@ function! iced#nrepl#disconnect() abort " {{{
   let s:nrepl = s:initialize_nrepl()
   call iced#cache#clear()
   call iced#nrepl#cljs#reset()
+  call iced#nrepl#connect#reset()
   call iced#message#info('disconnected')
 endfunction " }}}
 
