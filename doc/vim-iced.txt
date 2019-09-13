@@ -207,6 +207,11 @@ NREPL CONNECTION                                    *vim-iced-nrepl-connection*
     `iced` command must be installed.
     See |vim-iced-install-command|.
 
+  If you don't want to launch REPL externally,
+  vim-iced provides following ways to lancun REPL internally.
+  - |:IcedJackIn| to launch `iced repl` internally
+  - |:IcedInstantConnect| to launch `iced repl --instant` internally
+
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
   vim-iced will connect automatically using '.nrepl-port' file.
@@ -517,9 +522,18 @@ COMMANDS                                                    *vim-iced-commands*
   Interrupt code evaluation in all sessions.
   Key is mapped to |<Plug>(iced_interrupt_all)|.
 
+                                                                  *:IcedJackIn*
+:IcedJackIn
+  Start REPL and connect to it.
+  REPL is launched as job internally.
+  See |g:iced#nrepl#connect#jack_in_command| for the concrete command
+  to start REPL.
+  Key is mapped to |<Plug>(iced_jack_in)|.
+
                                                           *:IcedInstantConnect*
 :IcedInstantConnect
   Start instant REPL and connect to it.
+  REPL is launched as job internally.
   Key is mapped to |<Plug>(iced_instant_connect)|.
 
                                                                 *:IcedCljsRepl*
@@ -1027,6 +1041,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_interrupt)
   Same as |:IcedInterrupt|.
 
+                                                         *<Plug>(iced_jack_in)*
+<Plug>(iced_jack_in)
+  Same as |:IcedJackIn|.
+
                                                  *<Plug>(iced_instant_connect)*
 <Plug>(iced_instant_connect)
   Same as |:IcedInstantConnect|.
@@ -1378,6 +1396,11 @@ g:iced#nrepl#host
   Connection host name.
   Default value is `'127.0.0.1'`.
 
+                                         *g:iced#nrepl#connect#jack_in_command*
+g:iced#nrepl#connect#jack_in_command
+  Command to start REPL in |:IcedJackIn|.
+  Default value is `'iced repl'` .
+
                                                s*g:iced#paredit#slurp_max_depth*
 g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
@@ -1711,6 +1734,7 @@ g:iced_enable_default_key_mappings
   {mode}  {lhs}        {rhs}
   ------  -----------  ---------------------------------------------------
   n       <Leader>'    <Plug>(iced_connect)
+  n       <Leader>"    <Plug>(iced_jack_in)
   n       <Leader>ei   <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   n       <Leader>ee   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   n       <Leader>et   <Plug>(iced_eval_outer_top_list)
@@ -1722,6 +1746,8 @@ g:iced_enable_default_key_mappings
   n       <Leader>eb   <Plug>(iced_require)
   n       <Leader>eB   <Plug>(iced_require_all)
   n       <Leader>eu   <Plug>(iced_undef)
+  n       <Leader>eq   <Plug>(iced_interrupt)
+  n       <Leader>eQ   <Plug>(iced_interrupt_all)
   n       <Leader>eM   <Plug>(iced_macroexpand_outer_list)
   n       <Leader>em   <Plug>(iced_macroexpand_1_outer_list)
   n       <Leader>tt   <Plug>(iced_test_under_cursor)

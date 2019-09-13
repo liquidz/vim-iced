@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file. This change
 * Add operation to evaluate codes and tap its results.
 ** `<Plug>(iced_eval_and_tap)`
 * Add `:IcedInterruptAll` command.
+* Add `:IcedJackIn` command.
+** Add `g:iced#nrepl#connect#jack_in_command` option.
+*** This option enables you to customize jack-in command.
 
 === Changed
 * Bump cider-nrepl to 0.22.3.
