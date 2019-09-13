@@ -66,5 +66,13 @@ function! iced#compat#job_stop(job_id) abort
   endif
 endfunction
 
+function! iced#compat#is_job_id(x) abort
+  if has('nvim')
+    return type(a:x) == v:t_number && a:x > 0
+  else
+    return type(a:x) == v:t_job
+  endif
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
