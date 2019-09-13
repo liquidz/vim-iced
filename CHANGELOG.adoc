@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file. This change
 
 === Changed
 * Bump cider-nrepl to 0.22.3.
+* Bump iced-nrepl to 0.6.4.
 
 === Fixed
 * Fix to extract ns-name correctly.
