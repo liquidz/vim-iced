@@ -34,6 +34,10 @@ function! iced#operation#eval_and_print(type) abort
   return s:eval({code -> iced#nrepl#eval#code(code, opt)})
 endfunction
 
+function! iced#operation#eval_and_tap(type) abort
+  return s:eval({code -> iced#nrepl#eval#code(printf('(clojure.core/tap> %s)', code))})
+endfunction
+
 function! iced#operation#eval_repl(type) abort
   let view = winsaveview()
   let reg_save = @@

@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 1200
+let g:vim_iced_version = 1201
 
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 
@@ -28,7 +28,9 @@ command! -nargs=? IcedConnect               call iced#nrepl#connect(<q-args>)
 command!          IcedDisconnect            call iced#nrepl#disconnect()
 command!          IcedReconnect             call iced#nrepl#reconnect()
 command!          IcedInterrupt             call iced#nrepl#interrupt()
+command!          IcedInterruptAll          call iced#nrepl#interrupt_all()
 command!          IcedInstantConnect        call iced#nrepl#connect#instant()
+command!          IcedJackIn                call iced#nrepl#connect#jack_in()
 
 command! -nargs=? IcedCljsRepl              call iced#nrepl#cljs#start_repl(<q-args>)
 command! -nargs=+ -complete=custom,iced#nrepl#cljs#env_complete
@@ -133,7 +135,9 @@ nnoremap <silent> <Plug>(iced_connect)                  :<C-u>IcedConnect<CR>
 nnoremap <silent> <Plug>(iced_disconnect)               :<C-u>IcedDisconnect<CR>
 nnoremap <silent> <Plug>(iced_reconnect)                :<C-u>IcedReconnect<CR>
 nnoremap <silent> <Plug>(iced_interrupt)                :<C-u>IcedInterrupt<CR>
+nnoremap <silent> <Plug>(iced_interrupt_all)            :<C-u>IcedInterruptAll<CR>
 nnoremap <silent> <Plug>(iced_instant_connect)          :<C-u>IcedInstantConnect<CR>
+nnoremap <silent> <Plug>(iced_jack_in)                  :<C-u>IcedJackIn<CR>
 
 nnoremap <silent> <Plug>(iced_start_cljs_repl)          :<C-u>IcedStartCljsRepl<CR>
 nnoremap <silent> <Plug>(iced_quit_cljs_repl)           :<C-u>IcedQuitCljsRepl<CR>
@@ -141,6 +145,7 @@ nnoremap <silent> <Plug>(iced_quit_cljs_repl)           :<C-u>IcedQuitCljsRepl<C
 nnoremap <silent> <Plug>(iced_eval)                     :<C-u>set opfunc=iced#operation#eval<CR>g@
 nnoremap <silent> <Plug>(iced_eval_repl)                :<C-u>set opfunc=iced#operation#eval_repl<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_print)           :<C-u>set opfunc=iced#operation#eval_and_print<CR>g@
+nnoremap <silent> <Plug>(iced_eval_and_tap)             :<C-u>set opfunc=iced#operation#eval_and_tap<CR>g@
 nnoremap <silent> <Plug>(iced_eval_ns)                  :<C-u>IcedEvalNs<CR>
 vnoremap <silent> <Plug>(iced_eval_visual)              :<C-u>IcedEvalVisual<CR>
 vnoremap <silent> <Plug>(iced_eval_repl_visual)         :<C-u>IcedEvalReplVisual<CR>
@@ -284,6 +289,14 @@ function! s:default_key_mappings() abort
   "" ------------------------------------------------------------------------
   if !hasmapto('<Plug>(iced_interrupt)')
     silent! nmap <buffer> <Leader>eq <Plug>(iced_interrupt)
+  endif
+
+  if !hasmapto('<Plug>(iced_interrupt_all)')
+    silent! nmap <buffer> <Leader>eQ <Plug>(iced_interrupt_all)
+  endif
+
+  if !hasmapto('<Plug>(iced_jack_in)')
+    silent! nmap <buffer> <Leader>" <Plug>(iced_jack_in)
   endif
 
   if !hasmapto('<Plug>(iced_eval)')

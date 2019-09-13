@@ -308,7 +308,6 @@ function! s:warm_up() abort
   " load util files
   let load_dir = printf('%s/clj/load_files', g:vim_iced_home)
   for path in glob(printf('%s/*.clj', load_dir), v:true, v:true)
-    echom printf('FIXME %s', path)
     call iced#nrepl#send({
           \ 'id': iced#nrepl#id(),
           \ 'op': 'load-file',
@@ -416,6 +415,7 @@ function! iced#nrepl#disconnect() abort " {{{
   let s:nrepl = s:initialize_nrepl()
   call iced#cache#clear()
   call iced#nrepl#cljs#reset()
+  call iced#nrepl#connect#reset()
   call iced#message#info('disconnected')
 endfunction " }}}
 
@@ -487,6 +487,18 @@ endfunction " }}}
 function! s:interrupted() abort
   call s:clear_messages()
   call iced#message#info('interrupted')
+endfunction
+
+function! iced#nrepl#interrupt_all() abort
+  let ids = iced#nrepl#sync#session_list()
+  if type(ids) != v:t_list | return | endif
+  for id in ids
+    call iced#nrepl#sync#send({'op': 'interrupt', 'session': id})
+  endfor
+
+  " NOTE: ignore reading error
+  let s:response_buffer = ''
+  call s:clear_messages()
 endfunction
 
 function! iced#nrepl#interrupt(...) abort

@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:V = vital#iced#new()
 let s:D = s:V.import('Data.Dict')
@@ -23,7 +23,7 @@ function! iced#nrepl#ns#get() abort
   return code
 endfunction
 
-function! s:ns_name_by_var(...) abort
+function! iced#nrepl#ns#name_by_var(...) abort
   let session = get(a:, 1, iced#nrepl#current_session())
   let resp = iced#nrepl#sync#eval('*ns*', {'session_id': session})
   if type(resp) != v:t_dict || !has_key(resp, 'value')
@@ -32,28 +32,37 @@ function! s:ns_name_by_var(...) abort
   return iced#nrepl#ns#util#extract_ns(resp['value'])
 endfunction
 
-function! iced#nrepl#ns#name() abort
+function! iced#nrepl#ns#name_by_buf() abort
   let view = winsaveview()
   let reg_save = @@
 
   try
     if iced#nrepl#ns#util#search() == 0
-      let ns_name = s:ns_name_by_var()
-      if empty(ns_name)
-        call iced#message#error('ns_not_found')
-        return
-      endif
-      return ns_name
+      return ''
     endif
-    let start = line('.')
-    let line = trim(join(getline(start, start+1), ' '))
-    let line = substitute(line, '(ns ', '', '')
-    return matchstr(line, '[a-z0-9.\-]\+',
-          \ (stridx(line, '^') == 0 ? stridx(line, ' ') : 0))
+
+    " Move to next element head
+    silent normal! l
+    call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+
+    " skip meta
+    let p = getcurpos()
+    if searchpos('\^', 'cn') == [p[1], p[2]]
+      call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
+    endif
+
+    return matchstr(getline('.'), '[a-z0-9.\-]\+', col('.') - 1)
   finally
     let @@ = reg_save
     call winrestview(view)
   endtry
+endfunction
+
+function! iced#nrepl#ns#name() abort
+  let ns_name = iced#nrepl#ns#name_by_buf()
+  return (empty(ns_name))
+        \ ? iced#nrepl#ns#name_by_var()
+        \ : ns_name
 endfunction
 
 function! iced#nrepl#ns#eval(callback) abort
@@ -144,7 +153,7 @@ function! iced#nrepl#ns#in_repl_session_ns() abort
     return iced#message#error('invalid_session', 'clj')
   endif
 
-  let ns_name = s:ns_name_by_var(iced#nrepl#repl_session())
+  let ns_name = iced#nrepl#ns#name_by_var(iced#nrepl#repl_session())
   if empty(ns_name)
     call iced#message#warn('not_found')
     return
@@ -192,5 +201,5 @@ function! iced#nrepl#ns#find_existing_alias(ns_name) abort
   return ''
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

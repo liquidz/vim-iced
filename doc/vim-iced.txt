@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.12.0
+Version: 0.12.1
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -40,6 +40,7 @@ CONTENTS                                                    *vim-iced-contents*
     Functions                  |vim-iced-functions|
     Key Mappings               |vim-iced-key-mappings|
   Customizing                  |vim-iced-customizing|
+    Stdout buffer              |vim-iced-customizing-stdout-buffer|
     Indent rules               |vim-iced-customizing-indents|
     Documents                  |vim-iced-customizing-documents|
       Auto document            |vim-iced-customizing-auto-document|
@@ -106,8 +107,8 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.6.0"]
-                   [iced-nrepl "0.6.3"]
-                   [cider/cider-nrepl "0.22.2"]]
+                   [iced-nrepl "0.6.4"]
+                   [cider/cider-nrepl "0.22.3"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -135,8 +136,8 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
-      [cider/cider-nrepl "0.22.2"]
-      [iced-nrepl "0.6.3"]])
+      [cider/cider-nrepl "0.22.3"]
+      [iced-nrepl "0.6.4"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -165,8 +166,8 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "2.4.0"]
-                  [cider/cider-nrepl "0.22.2"]
-                  [iced-nrepl "0.6.3"]]
+                  [cider/cider-nrepl "0.22.3"]
+                  [iced-nrepl "0.6.4"]]
 
    :nrepl {:cider false
            :middleware [cider.nrepl/wrap-classpath
@@ -205,6 +206,11 @@ NREPL CONNECTION                                    *vim-iced-nrepl-connection*
   - `iced repl` to start REPL
     `iced` command must be installed.
     See |vim-iced-install-command|.
+
+  If you don't want to launch REPL externally,
+  vim-iced provides following ways to lancun REPL internally.
+  - |:IcedJackIn| to launch `iced repl` internally
+  - |:IcedInstantConnect| to launch `iced repl --instant` internally
 
   |:IcedConnect| to connect nREPL.
   If not connected at the time of evaluation,
@@ -511,9 +517,23 @@ COMMANDS                                                    *vim-iced-commands*
   Interrupt some code evaluation in current session.
   Key is mapped to |<Plug>(iced_interrupt)|.
 
+                                                            *:IcedInterruptAll*
+:IcedInterruptAll
+  Interrupt code evaluation in all sessions.
+  Key is mapped to |<Plug>(iced_interrupt_all)|.
+
+                                                                  *:IcedJackIn*
+:IcedJackIn
+  Start REPL and connect to it.
+  REPL is launched as job internally.
+  See |g:iced#nrepl#connect#jack_in_command| for the concrete command
+  to start REPL.
+  Key is mapped to |<Plug>(iced_jack_in)|.
+
                                                           *:IcedInstantConnect*
 :IcedInstantConnect
   Start instant REPL and connect to it.
+  REPL is launched as job internally.
   Key is mapped to |<Plug>(iced_instant_connect)|.
 
                                                                 *:IcedCljsRepl*
@@ -1021,6 +1041,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_interrupt)
   Same as |:IcedInterrupt|.
 
+                                                         *<Plug>(iced_jack_in)*
+<Plug>(iced_jack_in)
+  Same as |:IcedJackIn|.
+
                                                  *<Plug>(iced_instant_connect)*
 <Plug>(iced_instant_connect)
   Same as |:IcedInstantConnect|.
@@ -1059,6 +1083,15 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   <Plug>(iced_eval_and_print)<Plug>(sexp_inner_element)``
   <Plug>(iced_eval_and_print)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval_and_print)<Plug>(sexp_outer_top_list)``
+<
+                                                    *<Plug>(iced_eval_and_tap)*
+<Plug>(iced_eval_and_tap)
+  Evaluate code and tap result by `clojure.core/tap>`.
+  Followings are examples for working with {vim-sexp}.
+>
+  <Plug>(iced_eval_and_tap)<Plug>(sexp_inner_element)``
+  <Plug>(iced_eval_and_tap)<Plug>(sexp_outer_list)``
+  <Plug>(iced_eval_and_tap)<Plug>(sexp_outer_top_list)``
 <
                                                          *<Plug>(iced_eval_ns)*
 <Plug>(iced_eval_ns)
@@ -1363,6 +1396,11 @@ g:iced#nrepl#host
   Connection host name.
   Default value is `'127.0.0.1'`.
 
+                                         *g:iced#nrepl#connect#jack_in_command*
+g:iced#nrepl#connect#jack_in_command
+  Command to start REPL in |:IcedJackIn|.
+  Default value is `'iced repl'` .
+
                                                s*g:iced#paredit#slurp_max_depth*
 g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
@@ -1378,23 +1416,6 @@ g:iced#eval#inside_comment
   If {v:true}, evaluate inside comment form.
   Default value is `v:true`.
   See |iced-tips-eval-inside-comment| for more information.
-
-                                                    *g:iced#buffer#stdout#mods*
-g:iced#buffer#stdout#mods
-  Buffer position definition.
-  Following values are supported.
-  - {vertical}
-  - {leftabove}
-  - {aboveleft}
-  - {rightbelow}
-  - {belowright}
-  - {topleft}
-  - {botright}
-
-                                                    *g:iced#buffer#stdout#file*
-g:iced#buffer#stdout#file
-  If not empty, vim-iced write stdout buffer content to the file path.
-  Default value is `''`.
 
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
@@ -1462,6 +1483,40 @@ g:iced#popup#time
 g:iced#popup#max_height
   Max height for popup window.
   Default value is `50`.
+
+------------------------------------------------------------------------------
+STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
+
+                                                    *g:iced#buffer#stdout#mods*
+g:iced#buffer#stdout#mods
+  Buffer position definition.
+  Following values are supported.
+  - {vertical}
+  - {leftabove}
+  - {aboveleft}
+  - {rightbelow}
+  - {belowright}
+  - {topleft}
+  - {botright}
+
+                                                    *g:iced#buffer#stdout#file*
+g:iced#buffer#stdout#file
+  If not empty, vim-iced write stdout buffer content to the file path.
+  Default value is `''`.
+
+                                                *g:iced#buffer#stdout#max_line*
+g:iced#buffer#stdout#max_line
+  Max line count to keep in stdout buffer.
+  If negative number is setted, it means no limit.
+  Default value is `-1`.
+
+                                     *g:iced#buffer#stdout#deleting_line_delay*
+g:iced#buffer#stdout#deleting_line_delay
+  Delay time for deleting excess lines in stdout buffer.
+  Unit is milli sec.
+  This option is enabled when |g:iced#buffer#stdout#max_line| is a positive
+  number.
+  Default value is `1000`.
 
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*
@@ -1679,6 +1734,7 @@ g:iced_enable_default_key_mappings
   {mode}  {lhs}        {rhs}
   ------  -----------  ---------------------------------------------------
   n       <Leader>'    <Plug>(iced_connect)
+  n       <Leader>"    <Plug>(iced_jack_in)
   n       <Leader>ei   <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   n       <Leader>ee   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   n       <Leader>et   <Plug>(iced_eval_outer_top_list)
@@ -1690,6 +1746,8 @@ g:iced_enable_default_key_mappings
   n       <Leader>eb   <Plug>(iced_require)
   n       <Leader>eB   <Plug>(iced_require_all)
   n       <Leader>eu   <Plug>(iced_undef)
+  n       <Leader>eq   <Plug>(iced_interrupt)
+  n       <Leader>eQ   <Plug>(iced_interrupt_all)
   n       <Leader>eM   <Plug>(iced_macroexpand_outer_list)
   n       <Leader>em   <Plug>(iced_macroexpand_1_outer_list)
   n       <Leader>tt   <Plug>(iced_test_under_cursor)

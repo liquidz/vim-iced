@@ -119,8 +119,7 @@ jobs:
           name: Install and deploy dev docs to netlify
           command: |
             npm install -g --silent netlify-cli
-            sleep 3
-            netlify deploy --auth=${NETLIFY_PERSONAL_ACCESS_TOKEN} --site=${NETLIFY_SITE_ID} --dir=target/html --prod
+            .circleci/scripts/deploy_to_netlify
 
   docs-deploy:
     docker:

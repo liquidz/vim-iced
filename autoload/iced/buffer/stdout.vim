@@ -12,8 +12,30 @@ let s:default_init_text = join([
 
 let g:iced#buffer#stdout#init_text = get(g:, 'iced#buffer#stdout#init_text', s:default_init_text)
 let g:iced#buffer#stdout#mods = get(g:, 'iced#buffer#stdout#mods', '')
-let g:iced#buffer#stdout#max_line = get(g:, 'iced#buffer#stdout#max_line', 512)
+let g:iced#buffer#stdout#max_line = get(g:, 'iced#buffer#stdout#max_line', -1)
+let g:iced#buffer#stdout#deleting_line_delay = get(g:, 'iced#buffer#stdout#deleting_line_delay', 1000)
 let g:iced#buffer#stdout#file = get(g:, 'iced#buffer#stdout#file', '')
+
+function! s:delete_old_lines(_) abort
+  let bufnr = iced#buffer#nr(s:bufname)
+  let buflen = len(getbufline(bufnr, 0, '$'))
+  if g:iced#buffer#stdout#max_line > 0 && buflen > g:iced#buffer#stdout#max_line
+    let line_diff = buflen - g:iced#buffer#stdout#max_line
+    call iced#compat#deletebufline(bufnr, 1, line_diff)
+
+    if iced#buffer#stdout#is_visible()
+      let current_window = winnr()
+      try
+        call iced#buffer#stdout#focus()
+        let view = winsaveview()
+        let view['topline'] = max([1, view['topline'] - line_diff])
+        call winrestview(view)
+      finally
+        execute current_window . 'wincmd w'
+      endtry
+    endif
+  endif
+endfunction
 
 function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&buflisted', 0)
@@ -42,6 +64,7 @@ function! iced#buffer#stdout#open() abort
       \  'scroll_to_bottom': v:true})
 endfunction
 
+let s:delete_timer_id = -1
 function! iced#buffer#stdout#append(s) abort
   let s = iced#util#delete_color_code(a:s)
   if !empty(g:iced#buffer#stdout#file)
@@ -52,6 +75,11 @@ function! iced#buffer#stdout#append(s) abort
       \ s:bufname,
       \ s,
       \ {'scroll_to_bottom': v:true})
+
+  if s:delete_timer_id != -1 | call timer_stop(s:delete_timer_id) | endif
+  let s:delete_timer_id = timer_start(
+        \ g:iced#buffer#stdout#deleting_line_delay,
+        \ funcref('s:delete_old_lines'))
 endfunction
 
 function! iced#buffer#stdout#clear() abort
