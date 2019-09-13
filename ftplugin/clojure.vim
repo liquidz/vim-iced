@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 1200
+let g:vim_iced_version = 1201
 
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 
