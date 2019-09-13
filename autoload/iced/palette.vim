@@ -2,7 +2,8 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let s:default_palette = [
-      \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt', 'InterruptAll', 'InstantConnect',
+      \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt', 'InterruptAll',
+      \ 'InstantConnect', 'JackIn',
       \ 'StartCljsRepl figwheel-sidecar', 'StartCljsRepl graaljs', 'StartCljsRepl nashorn',
       \ 'QuitCljsRepl', 'CycleSession',
       \ 'EvalNs',
