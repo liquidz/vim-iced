@@ -110,8 +110,9 @@ endfunction " }}}
 
 " iced#nrepl#test#under_cursor {{{
 function! s:clojure_test_out(resp) abort
-  call iced#nrepl#test#done(
-        \ iced#nrepl#test#clojure_test#parse(a:resp))
+  call iced#util#future({->
+        \ iced#nrepl#test#done(iced#nrepl#test#clojure_test#parse(a:resp))
+        \ })
 endfunction
 
 function! s:echo_testing_message(query) abort
