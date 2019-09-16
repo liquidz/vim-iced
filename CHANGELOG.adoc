@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 0.12.2 (2019-09-16)
+// {{{
+=== Fixed
+* Fix to show test error correctly in neovim 0.4.0.
+// }}}
+
 == 0.12.1 (2019-09-14)
 // {{{
 === Added
