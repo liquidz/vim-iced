@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* Add `g:iced#buffer#stdout#file_buffer_size` option.
+
+=== Changed
+* Make `iced#buffer#append` to scroll down asynchronously.
+* Make `iced#buffer#stdout#append` to buffer lines for writing to `g:iced#buffer#stdout#file`.
+// }}}
 
 == 0.12.2 (2019-09-16)
 // {{{

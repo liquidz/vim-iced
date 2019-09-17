@@ -15,6 +15,7 @@ let g:iced#buffer#stdout#mods = get(g:, 'iced#buffer#stdout#mods', '')
 let g:iced#buffer#stdout#max_line = get(g:, 'iced#buffer#stdout#max_line', -1)
 let g:iced#buffer#stdout#deleting_line_delay = get(g:, 'iced#buffer#stdout#deleting_line_delay', 1000)
 let g:iced#buffer#stdout#file = get(g:, 'iced#buffer#stdout#file', '')
+let g:iced#buffer#stdout#file_buffer_size = get(g:, 'iced#buffer#stdout#file_buffer_size', 256)
 
 function! s:delete_old_lines(_) abort
   let bufnr = iced#buffer#nr(s:bufname)
@@ -64,11 +65,24 @@ function! iced#buffer#stdout#open() abort
       \  'scroll_to_bottom': v:true})
 endfunction
 
-let s:delete_timer_id = -1
+let s:write_file_buffer = []
+function! s:flush_writing_file(_) abort
+  let tmp = copy(s:write_file_buffer)
+  let s:write_file_buffer = []
+  call writefile(tmp, g:iced#buffer#stdout#file, 'a')
+endfunction
+
 function! iced#buffer#stdout#append(s) abort
   let s = iced#util#delete_color_code(a:s)
+  let timer = iced#di#get('timer')
+
   if !empty(g:iced#buffer#stdout#file)
-    call writefile(split(s, '\r\?\n'), g:iced#buffer#stdout#file, 'a')
+    call extend(s:write_file_buffer, split(s, '\r\?\n'))
+    if len(s:write_file_buffer) > g:iced#buffer#stdout#file_buffer_size
+      call writefile(copy(s:write_file_buffer), g:iced#buffer#stdout#file, 'a')
+      call timer.start_lazily('flush_writing_file', 500, funcref('s:flush_writing_file'))
+      let s:write_file_buffer = []
+    endif
   endif
 
   call iced#buffer#append(
@@ -76,10 +90,11 @@ function! iced#buffer#stdout#append(s) abort
       \ s,
       \ {'scroll_to_bottom': v:true})
 
-  if s:delete_timer_id != -1 | call timer_stop(s:delete_timer_id) | endif
-  let s:delete_timer_id = timer_start(
+  call timer.start_lazily(
+        \ 'delete_old_lines',
         \ g:iced#buffer#stdout#deleting_line_delay,
-        \ funcref('s:delete_old_lines'))
+        \ funcref('s:delete_old_lines'),
+        \ )
 endfunction
 
 function! iced#buffer#stdout#clear() abort

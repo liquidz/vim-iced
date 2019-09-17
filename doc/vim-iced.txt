@@ -1503,6 +1503,12 @@ g:iced#buffer#stdout#mods
 g:iced#buffer#stdout#file
   If not empty, vim-iced write stdout buffer content to the file path.
   Default value is `''`.
+  See also |g:iced#buffer#stdout#file_buffer_size|.
+
+                                        *g:iced#buffer#stdout#file_buffer_size*
+g:iced#buffer#stdout#file_buffer_size
+  Max line count to buffer for |g:iced#buffer#stdout#file|.
+  Default value is `256`.
 
                                                 *g:iced#buffer#stdout#max_line*
 g:iced#buffer#stdout#max_line
