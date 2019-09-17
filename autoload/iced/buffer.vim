@@ -92,6 +92,18 @@ function! iced#buffer#open(bufname, ...) abort
   endif
 endfunction
 
+function! s:scroll_to_bottom(nr, _) abort
+  let current_window = winnr()
+  try
+    call iced#nrepl#auto#enable_bufenter(v:false)
+    call s:focus_window(bufwinnr(a:nr))
+    silent normal! G
+  finally
+    call s:focus_window(current_window)
+    call iced#nrepl#auto#enable_bufenter(v:true)
+  endtry
+endfunction
+
 function! iced#buffer#append(bufname, s, ...) abort
   let nr = iced#buffer#nr(a:bufname)
   if nr < 0 | return | endif
@@ -101,17 +113,9 @@ function! iced#buffer#append(bufname, s, ...) abort
     silent call iced#compat#appendbufline(nr, '$', line)
   endfor
 
-  call iced#nrepl#auto#enable_bufenter(v:false)
-  try
-    if get(opt, 'scroll_to_bottom', v:false) && iced#buffer#is_visible(a:bufname)
-      let current_window = winnr()
-      call s:focus_window(bufwinnr(nr))
-      silent normal! G
-      call s:focus_window(current_window)
-    endif
-  finally
-    call iced#nrepl#auto#enable_bufenter(v:true)
-  endtry
+  if get(opt, 'scroll_to_bottom', v:false) && iced#buffer#is_visible(a:bufname)
+    call iced#di#get('timer').start_lazily('scroll_to_bottom', 500, funcref('s:scroll_to_bottom', [nr]))
+  endif
 endfunction
 
 function! iced#buffer#set_contents(bufname, s) abort
