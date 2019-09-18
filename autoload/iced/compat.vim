@@ -43,36 +43,5 @@ function! iced#compat#deletebufline(expr, first, ...) abort
   endif
 endfunction
 
-function! iced#compat#job_start(command, options) abort
-  if has('nvim')
-    let options = {}
-    if has_key(a:options, 'out_cb')
-      let options['on_stdout'] = {j,d,e -> a:options['out_cb'](j, d)}
-    endif
-    if has_key(a:options, 'close_cb')
-      let options['on_exit'] = {j,d,e -> a:options['close_cb'](j)}
-    endif
-    return jobstart(a:command, options)
-  else
-    return job_start(a:command, a:options)
-  endif
-endfunction
-
-function! iced#compat#job_stop(job_id) abort
-  if has('nvim')
-    return jobstop(a:job_id)
-  else
-    return job_stop(a:job_id)
-  endif
-endfunction
-
-function! iced#compat#is_job_id(x) abort
-  if has('nvim')
-    return type(a:x) == v:t_number && a:x > 0
-  else
-    return type(a:x) == v:t_job
-  endif
-endfunction
-
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
