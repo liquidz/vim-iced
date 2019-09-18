@@ -59,6 +59,13 @@ function! s:build_test_channel(opt) abort
     endif
   endfunction
 
+  function! dummy.get_opened_args() abort
+    return {
+          \ 'address': self['address'],
+          \ 'options': self['options'],
+          \ }
+	endfunction
+
   return dummy
 endfunction
 
