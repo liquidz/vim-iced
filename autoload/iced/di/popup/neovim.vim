@@ -22,7 +22,7 @@ function! s:init_win(winid, opts) abort
   call setbufvar(bufnr, '&filetype', get(a:opts, 'filetype', s:default_filetype))
   call setbufvar(bufnr, '&swapfile', 0)
   call setbufvar(bufnr, '&wrap', 0)
-  call setbufvar(bufnr, '&winhl', 'Normal:Folded')
+  call setbufvar(bufnr, '&winhl', get(g:, 'iced_nvim_popup_winhl', 'Normal:Folded'))
 endfunction
 
 function! s:popup.get_context(winid) abort
@@ -129,6 +129,17 @@ function! s:popup.open(texts, ...) abort
         \ 'width': width,
         \ 'height': height,
         \ }
+
+  if get(g:, 'iced_nvim_popup_minimal_style', v:false)
+    let win_opts = {
+          \ 'relative': 'editor',
+          \ 'row': line,
+          \ 'col': col,
+          \ 'width': width,
+          \ 'height': height,
+          \ 'style': 'minimal',
+          \ }
+  endif
 
   call nvim_buf_set_lines(bufnr, 0, len(texts), 0, texts)
   let winid = nvim_open_win(bufnr, v:false, win_opts)
