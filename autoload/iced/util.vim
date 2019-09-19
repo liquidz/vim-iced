@@ -156,5 +156,9 @@ function! iced#util#delete_color_code(s) abort
   return substitute(a:s, '\[[0-9;]*m', '', 'g')
 endfunction
 
+function! iced#util#first_resp(resp) abort
+  return (type(a:resp) == v:t_list) ? a:resp[0] : a:resp
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
