@@ -22,7 +22,7 @@ function! s:init_win(winid, opts) abort
   call setbufvar(bufnr, '&filetype', get(a:opts, 'filetype', s:default_filetype))
   call setbufvar(bufnr, '&swapfile', 0)
   call setbufvar(bufnr, '&wrap', 0)
-  call setbufvar(bufnr, '&winhl', get(g:, 'iced_nvim_popup_winhl', 'Normal:Folded'))
+  call setbufvar(bufnr, '&winhl', get(g:, 'iced_nvim_popup_winhl', 'Normal:NormalFloat'))
 endfunction
 
 function! s:popup.get_context(winid) abort
