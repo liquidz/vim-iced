@@ -38,7 +38,7 @@ function! s:candidate(c) abort
 endfunction
 
 function! s:candidates(resp) abort
-  let resp = (type(a:resp) == v:t_list) ? a:resp[0] : a:resp
+  let resp = iced#util#first_resp(a:resp)
   let candidates = (type(resp) == v:t_dict && has_key(resp, 'completions'))
         \ ? resp['completions']
         \ : []
@@ -91,7 +91,7 @@ function! iced#complete#omni(findstart, base) abort
     let s = line[0:ncol-2]
     return ncol - strlen(matchstr(s, '\k\+$')) - 1
   else
-    return iced#promise#sync('iced#complete#candidates', [a:base])
+    return iced#promise#sync('iced#complete#candidates', [a:base], 10000)
   endif
 
   return []
