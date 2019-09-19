@@ -145,7 +145,7 @@ function! s:popup.open(texts, ...) abort
   let winid = nvim_open_win(bufnr, v:false, win_opts)
   call s:init_win(winid, opts)
 
-  if has_key(opts, 'filetyoe')
+  if has_key(opts, 'filetype')
     call setbufvar(bufnr, '&filetype', opts['filetype'])
   endif
 
