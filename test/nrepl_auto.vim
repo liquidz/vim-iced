@@ -2,7 +2,6 @@ let s:suite = themis#suite('iced.nrepl.auto')
 let s:assert = themis#helper('assert')
 let s:ch = themis#helper('iced_channel')
 
-let s:last_bufnr = -1
 let s:clj_tempfile = printf('%s.clj', tempname())
 let s:cljs_tempfile = printf('%s.cljs', tempname())
 
@@ -35,16 +34,15 @@ function! s:setup(edit_file) abort " {{{
         \ 'relay': {msg -> s:test.relay(msg)},
         \ })
 
-  let s:last_bufnr = bufnr('%')
   if a:edit_file ==# 'cljs'
-    exec printf(':e %s', s:cljs_tempfile)
+    exec printf(':sp %s', s:cljs_tempfile)
   else
-    exec printf(':e %s', s:clj_tempfile)
+    exec printf(':sp %s', s:clj_tempfile)
   endif
 endfunction " }}}
 
 function! s:teardown() abort " {{{
-  exec printf(':b %d', s:last_bufnr)
+  exec ':close'
   call delete(s:clj_tempfile)
   call delete(s:cljs_tempfile)
   call iced#nrepl#auto#enable_bufenter(v:false)
