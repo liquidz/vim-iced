@@ -4,7 +4,10 @@ set cpoptions&vim
 let s:nrepl_port_file = '.nrepl-port'
 let s:jack_in_job = -1
 
-let g:iced#nrepl#connect#jack_in_command = get(g:, 'iced#nrepl#connect#jack_in_command', 'iced repl')
+let g:iced#nrepl#connect#iced_command = get(g:, 'iced#nrepl#connect#iced_command', 'iced')
+let g:iced#nrepl#connect#clj_command = get(g:, 'iced#nrepl#connect#clj_command', 'clojure')
+let g:iced#nrepl#connect#jack_in_command = get(g:, 'iced#nrepl#connect#jack_in_command',
+      \ printf('%s repl', g:iced#nrepl#connect#iced_command))
 
 function! s:detect_port_from_nrepl_port_file() abort
   let path = findfile(s:nrepl_port_file, '.;')
@@ -78,8 +81,8 @@ function! iced#nrepl#connect#jack_in(...) abort
     return iced#message#info('already_connected')
   endif
 
-  if !executable('iced')
-    return iced#message#error('not_executable', 'iced')
+  if !executable(g:iced#nrepl#connect#iced_command)
+    return iced#message#error('not_executable', g:iced#nrepl#connect#iced_command)
   endif
 
   let job = iced#di#get('job')
@@ -94,12 +97,12 @@ function! iced#nrepl#connect#jack_in(...) abort
 endfunction
 
 function! iced#nrepl#connect#instant() abort
-  if !executable('clojure')
-    return iced#message#error('not_executable', 'clojure')
+  if !executable(g:iced#nrepl#connect#clj_command)
+    return iced#message#error('not_executable', g:iced#nrepl#connect#clj_command)
   endif
 
-
-  call iced#nrepl#connect#jack_in('iced repl --instant')
+  let cmd = printf('%s repl --instant', g:iced#nrepl#connect#iced_command)
+  call iced#nrepl#connect#jack_in(cmd)
 endfunction
 
 function! iced#nrepl#connect#reset() abort

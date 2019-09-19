@@ -14,11 +14,17 @@ function! s:auto_relay(msg) abort
   return {'status': ['done']}
 endfunction
 
+function! s:setup() abort
+  let g:iced#nrepl#connect#iced_command = 'ls'
+  let g:iced#nrepl#connect#clj_command = 'ls'
+  let g:iced#nrepl#connect#jack_in_command = 'ls -ltr'
+endfunction
+
 function! s:suite.auto_test() abort
   call s:ch.register_test_builder({
-     \ 'status_value': ['fail', 'fail', 'open'],
-     \ 'relay': funcref('s:auto_relay'),
-     \ })
+    \ 'status_value': ['fail', 'fail', 'open'],
+    \ 'relay': funcref('s:auto_relay'),
+    \ })
   let cwd = getcwd()
 
   try
@@ -35,9 +41,9 @@ endfunction
 
 function! s:suite.auto_with_shadow_cljs_test() abort
   call s:ch.register_test_builder({
-     \ 'status_value': ['fail', 'fail', 'open'],
-     \ 'relay': funcref('s:auto_relay'),
-     \ })
+    \ 'status_value': ['fail', 'fail', 'open'],
+    \ 'relay': funcref('s:auto_relay'),
+    \ })
   let cwd = getcwd()
 
   try
@@ -53,6 +59,7 @@ function! s:suite.auto_with_shadow_cljs_test() abort
 endfunction
 
 function! s:suite.jack_in_test() abort
+  call s:setup()
   call s:timer.register_test_builder()
   call s:job.register_test_builder({'outs': ['nREPL server started']})
   call s:ch.register_test_builder({
@@ -70,7 +77,7 @@ function! s:suite.jack_in_test() abort
 
     let opened_args = iced#di#get('channel').get_opened_args()
     call s:assert.equals(opened_args['address'], '127.0.0.1:123456')
-    call s:assert.equals(s:job.get_last_command(), 'iced repl')
+    call s:assert.equals(s:job.get_last_command(), 'ls -ltr')
   finally
     silent execute printf(':lcd %s', cwd)
     call iced#nrepl#connect#reset()
@@ -78,13 +85,14 @@ function! s:suite.jack_in_test() abort
 endfunction
 
 function! s:suite.instant_test() abort
+  call s:setup()
   call s:timer.register_test_builder()
   call s:job.register_test_builder({'outs': ['nREPL server started']})
   call s:ch.register_test_builder({
-     \ 'status_value': ['fail', 'fail',
-     \                  'fail', 'fail',  'open'],
-     \ 'relay': funcref('s:auto_relay'),
-     \ })
+    \ 'status_value': ['fail', 'fail',
+    \                  'fail', 'fail',  'open'],
+    \ 'relay': funcref('s:auto_relay'),
+    \ })
   let cwd = getcwd()
 
   try
@@ -95,7 +103,7 @@ function! s:suite.instant_test() abort
 
     let opened_args = iced#di#get('channel').get_opened_args()
     call s:assert.equals(opened_args['address'], '127.0.0.1:123456')
-    call s:assert.equals(s:job.get_last_command(), 'iced repl --instant')
+    call s:assert.equals(s:job.get_last_command(), 'ls repl --instant')
   finally
     silent execute printf(':lcd %s', cwd)
     call iced#nrepl#connect#reset()
