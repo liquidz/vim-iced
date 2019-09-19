@@ -139,6 +139,7 @@ function! s:view_doc_on_popup(resp) abort
 endfunction
 
 function! iced#nrepl#document#open(symbol) abort
+  if !iced#nrepl#check_session_validity() | return | endif
   call iced#nrepl#ns#in({_ ->
         \ iced#nrepl#var#get(a:symbol, funcref('s:view_doc_on_buffer'))
         \ })
@@ -150,6 +151,7 @@ function! iced#nrepl#document#popup_open(symbol) abort
     return iced#nrepl#document#open(a:symbol)
   endif
 
+  if !iced#nrepl#check_session_validity() | return | endif
   call iced#nrepl#ns#in({_ ->
         \ iced#nrepl#var#get(a:symbol, funcref('s:view_doc_on_popup'))
         \ })
