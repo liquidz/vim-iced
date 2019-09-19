@@ -67,6 +67,8 @@ function! s:suite.open_with_scroll_to_bottom_test() abort
   call iced#buffer#open(s:bufname, {'scroll_to_bottom': v:true})
   call iced#buffer#focus(s:bufname)
   call s:assert.equals(line('.'), 7)
+
+  call iced#buffer#close(s:bufname)
 endfunction
 
 function! s:suite.open_with_scroll_to_top_test() abort
@@ -86,6 +88,8 @@ function! s:suite.open_with_scroll_to_top_test() abort
   call iced#buffer#open(s:bufname, {'scroll_to_top': v:true})
   call iced#buffer#focus(s:bufname)
   call s:assert.equals(line('.'), 1)
+
+  call iced#buffer#close(s:bufname)
 endfunction
 
 function! s:suite.set_contents_and_clear_test() abort
@@ -113,4 +117,6 @@ function! s:suite.append_test() abort
   call s:assert.equals(getbufline(nr, 1, '$'), ['', 'foo', 'bar', 'baz'])
   call iced#buffer#focus(s:bufname)
   call s:assert.equals(line('.'), 4)
+
+  call iced#buffer#close(s:bufname)
 endfunction
