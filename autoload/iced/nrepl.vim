@@ -362,10 +362,10 @@ function! iced#nrepl#connect(port, ...) abort
 
   " NOTE: Initialize buffers here to avoid firing `bufenter` autocmd
   "       after connection established
-  call iced#buffer#stdout#init()
-  call iced#buffer#document#init()
-  call iced#buffer#error#init()
-  call iced#buffer#temporary#init()
+  silent call iced#buffer#stdout#init()
+  silent call iced#buffer#document#init()
+  silent call iced#buffer#error#init()
+  silent call iced#buffer#temporary#init()
 
   if empty(a:port)
     return iced#nrepl#connect#auto()
