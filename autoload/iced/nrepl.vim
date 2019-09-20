@@ -527,8 +527,7 @@ endfunction
 let s:supported_ops = {}
 function! iced#nrepl#is_supported_op(op) abort " {{{
   if empty(s:supported_ops)
-    let resp = iced#promise#sync('iced#nrepl#describe', [])
-    let resp = (type(resp) == v:t_list) ? resp[0] : resp
+    let resp = iced#util#first_resp(iced#promise#sync('iced#nrepl#describe', []))
 
     if !has_key(resp, 'ops')
       return iced#message#error('unexpected_error', 'Invalid :describe op response')

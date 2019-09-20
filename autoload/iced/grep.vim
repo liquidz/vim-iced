@@ -69,7 +69,7 @@ function! iced#grep#exe(kw) abort
   call iced#di#get('quickfix').setlist([], 'r')
   call iced#di#get('ex_cmd').silent_exe(':copen')
   let s:job.keyword = kw
-  let s:job.id = iced#compat#job_start(['sh', '-c', command], {
+  let s:job.id = iced#di#get('job').start(['sh', '-c', command], {
         \ 'out_cb': funcref('s:on_grep_out'),
         \ 'close_cb': funcref('s:on_grep_exit'),
         \ })

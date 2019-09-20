@@ -4,7 +4,10 @@ set cpoptions&vim
 let s:nrepl_port_file = '.nrepl-port'
 let s:jack_in_job = -1
 
-let g:iced#nrepl#connect#jack_in_command = get(g:, 'iced#nrepl#connect#jack_in_command', 'iced repl')
+let g:iced#nrepl#connect#iced_command = get(g:, 'iced#nrepl#connect#iced_command', 'iced')
+let g:iced#nrepl#connect#clj_command = get(g:, 'iced#nrepl#connect#clj_command', 'clojure')
+let g:iced#nrepl#connect#jack_in_command = get(g:, 'iced#nrepl#connect#jack_in_command',
+      \ printf('%s repl', g:iced#nrepl#connect#iced_command))
 
 function! s:detect_port_from_nrepl_port_file() abort
   let path = findfile(s:nrepl_port_file, '.;')
@@ -63,7 +66,7 @@ function! s:jack_in_callback(_, out) abort
     else
       echo line
       "" NOTE: Leiningen, Boot and Clojure CLI print the same text like below.
-      if stridx(line, 'nREPL server started') != -1 && !iced#nrepl#is_connected()
+      if stridx(line, 'nREPL server started') != -1
         call iced#di#get('timer').start(
               \ 500,
               \ funcref('s:wait_for_auto_connection'),
@@ -78,31 +81,34 @@ function! iced#nrepl#connect#jack_in(...) abort
     return iced#message#info('already_connected')
   endif
 
-  if !executable('iced')
-    return iced#message#error('not_executable', 'iced')
+  if !executable(g:iced#nrepl#connect#iced_command)
+    return iced#message#error('not_executable', g:iced#nrepl#connect#iced_command)
   endif
 
-  if iced#compat#is_job_id(s:jack_in_job)
+  let job = iced#di#get('job')
+  if job.is_job_id(s:jack_in_job)
     return iced#message#error('already_running')
   endif
 
   let command = get(a:, 1, g:iced#nrepl#connect#jack_in_command)
-  let s:jack_in_job = iced#compat#job_start(command, {
+  let s:jack_in_job = job.start(command, {
         \ 'out_cb': funcref('s:jack_in_callback'),
         \ })
 endfunction
 
 function! iced#nrepl#connect#instant() abort
-  if !executable('clojure')
-    return iced#message#error('not_executable', 'clojure')
+  if !executable(g:iced#nrepl#connect#clj_command)
+    return iced#message#error('not_executable', g:iced#nrepl#connect#clj_command)
   endif
 
-  call iced#nrepl#connect#jack_in('iced repl --instant')
+  let cmd = printf('%s repl --instant', g:iced#nrepl#connect#iced_command)
+  call iced#nrepl#connect#jack_in(cmd)
 endfunction
 
 function! iced#nrepl#connect#reset() abort
-  if iced#compat#is_job_id(s:jack_in_job)
-    call iced#compat#job_stop(s:jack_in_job)
+  let job = iced#di#get('job')
+  if job.is_job_id(s:jack_in_job)
+    call job.stop(s:jack_in_job)
   endif
 
   let s:jack_in_job = -1

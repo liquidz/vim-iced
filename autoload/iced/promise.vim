@@ -19,19 +19,22 @@ function! iced#promise#call(fn, args) abort
   throw iced#message#get('invalid_format', a:args)
 endfunction
 
-function! iced#promise#wait(x) abort
+function! iced#promise#wait(x, ...) abort
+  let timeout = get(a:, 1, g:iced#promise#timeout_ms)
   let p = (type(a:x) == v:t_list) ? s:Promise.all(a:x) : a:x
   return s:Promise.wait(p, {
-        \ 'timeout': g:iced#promise#timeout_ms,
+        \ 'timeout': timeout,
         \ 'interval': 1,
         \ })
 endfunction
 
-function! iced#promise#sync(fn, args) abort
-  let [result, error] = iced#promise#wait(iced#promise#call(a:fn, a:args))
+function! iced#promise#sync(fn, args, ...) abort
+  let timeout = get(a:, 1, g:iced#promise#timeout_ms)
+  let [result, error] = iced#promise#wait(iced#promise#call(a:fn, a:args), timeout)
   if error isnot# v:null
     throw string(error)
   endif
+
   return result
 endfunction
 

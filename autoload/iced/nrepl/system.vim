@@ -20,7 +20,6 @@ function! iced#nrepl#system#info() abort
   endif
 
   let cp_resp = iced#nrepl#op#cider#sync#classpath()
-  let cp_resp = (type(cp_resp) == v:t_list) ? cp_resp[0] : cp_resp
   if type(cp_resp) == v:t_dict && has_key(cp_resp, 'classpath')
     for path in cp_resp['classpath']
       if stridx(path, 'cider/piggieback') != -1

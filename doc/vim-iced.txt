@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.12.2
+Version: 0.12.3
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -49,6 +49,7 @@ CONTENTS                                                    *vim-iced-contents*
     Signs                      |vim-iced-customizing-signs|
     Command palettes           |vim-iced-customizing-palette|
     Hooks                      |vim-iced-customizing-hooks|
+    Popup window               |vim-iced-customizing-popup-window|
     Default keys               |vim-iced-customizing-default-keys|
   Changelog                    |vim-iced-changelog|
 
@@ -401,6 +402,8 @@ FLOATING WINDOW                            *vim-iced-debugging-floating-window*
   Related options:
   - |g:iced#popup#time|
   - |g:iced#popup#max_height|
+  - |g:iced#popup#neovim#winhighlight|
+  - |g:iced#popup#neovim#style|
 
 ==============================================================================
 SKELETON                                                    *vim-iced-skeleton*
@@ -1474,16 +1477,6 @@ g:iced#nrepl#auto#does_switch_session
   This will be done by |WinEnter| auto command.
   Default value is `v:false`.
 
-                                                            *g:iced#popup#time*
-g:iced#popup#time
-  Auto closing time(ms) for popup window.
-  Default value is `3000`.
-
-                                                      *g:iced#popup#max_height*
-g:iced#popup#max_height
-  Max height for popup window.
-  Default value is `50`.
-
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
 
@@ -1503,6 +1496,12 @@ g:iced#buffer#stdout#mods
 g:iced#buffer#stdout#file
   If not empty, vim-iced write stdout buffer content to the file path.
   Default value is `''`.
+  See also |g:iced#buffer#stdout#file_buffer_size|.
+
+                                        *g:iced#buffer#stdout#file_buffer_size*
+g:iced#buffer#stdout#file_buffer_size
+  Max line count to buffer for |g:iced#buffer#stdout#file|.
+  Default value is `256`.
 
                                                 *g:iced#buffer#stdout#max_line*
 g:iced#buffer#stdout#max_line
@@ -1714,6 +1713,31 @@ SESSION SWITCHED                                   *hook_kind_session_switched*
 
   - session
     Destination session type. "clj" or "cljs".
+
+------------------------------------------------------------------------------
+POPUP WINDOW                                *vim-iced-customizing-popup-window*
+
+                                                            *g:iced#popup#time*
+g:iced#popup#time
+  Auto closing time(ms) for popup window.
+  Default value is `3000`.
+
+                                                      *g:iced#popup#max_height*
+g:iced#popup#max_height
+  Max height for popup window.
+  Default value is `50`.
+
+                                             *g:iced#popup#neovim#winhighlight*
+g:iced#popup#neovim#winhighlight
+  `winhighlight` option for floating window in Neovim.
+  - https://neovim.io/doc/user/options.html#'winhighlight'
+  Default value is `'Normal:NormalFloat'`.
+
+                                                    *g:iced#popup#neovim#style*
+g:iced#popup#neovim#style
+  `style` option for floating window in Neovim.
+  - https://neovim.io/doc/user/api.html#nvim_open_win()
+  Default value is `'minimal'`.
 
 ------------------------------------------------------------------------------
 DEFAULT KEYS                                *vim-iced-customizing-default-keys*

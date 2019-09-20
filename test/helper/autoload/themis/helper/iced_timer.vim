@@ -11,6 +11,10 @@ function! s:helper.stop(timer) abort
   return ''
 endfunction
 
+function! s:helper.start_lazily(id, timer, callback, ...) abort
+  return a:callback(-1)
+endfunction
+
 function! s:helper.register_test_builder() abort
   call iced#di#register('timer', {_ -> self})
 endfunction

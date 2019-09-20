@@ -20,7 +20,9 @@ function! iced#nrepl#sync#send(data) abort
     return iced#message#error('unexpected_error', string(error))
   endif
 
-  return result
+  " NOTE: Since this is a synchronized process,
+  "       so multiple responses will not be mixed.
+  return iced#util#first_resp(result)
 endfunction
 
 function! iced#nrepl#sync#clone(session) abort

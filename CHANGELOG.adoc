@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 0.12.3 (2019-09-21)
+// {{{
+=== Added
+* Add `g:iced#buffer#stdout#file_buffer_size` option.
+* https://github.com/liquidz/vim-iced/pull/151[#151] Add `g:iced#popup#neovim#winhighlight` option.
+* https://github.com/liquidz/vim-iced/pull/151[#151] Add `g:iced#popup#neovim#style` option.
+
+=== Changed
+* Make `iced#buffer#append` to scroll down asynchronously.
+* Make `iced#buffer#stdout#append` to buffer lines for writing to `g:iced#buffer#stdout#file`.
+* https://github.com/liquidz/vim-iced/pull/149[#149] Make buffer initialization silently.
+* Update `:IcedDocumentOpen` to check session validily.
+// }}}
+
 == 0.12.2 (2019-09-16)
 // {{{
 === Fixed
