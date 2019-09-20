@@ -49,6 +49,7 @@ CONTENTS                                                    *vim-iced-contents*
     Signs                      |vim-iced-customizing-signs|
     Command palettes           |vim-iced-customizing-palette|
     Hooks                      |vim-iced-customizing-hooks|
+    Popup window               |vim-iced-customizing-popup-window|
     Default keys               |vim-iced-customizing-default-keys|
   Changelog                    |vim-iced-changelog|
 
@@ -401,6 +402,8 @@ FLOATING WINDOW                            *vim-iced-debugging-floating-window*
   Related options:
   - |g:iced#popup#time|
   - |g:iced#popup#max_height|
+  - |g:iced#popup#neovim#winhighlight|
+  - |g:iced#popup#neovim#style|
 
 ==============================================================================
 SKELETON                                                    *vim-iced-skeleton*
@@ -1474,16 +1477,6 @@ g:iced#nrepl#auto#does_switch_session
   This will be done by |WinEnter| auto command.
   Default value is `v:false`.
 
-                                                            *g:iced#popup#time*
-g:iced#popup#time
-  Auto closing time(ms) for popup window.
-  Default value is `3000`.
-
-                                                      *g:iced#popup#max_height*
-g:iced#popup#max_height
-  Max height for popup window.
-  Default value is `50`.
-
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
 
@@ -1720,6 +1713,31 @@ SESSION SWITCHED                                   *hook_kind_session_switched*
 
   - session
     Destination session type. "clj" or "cljs".
+
+------------------------------------------------------------------------------
+POPUP WINDOW                                *vim-iced-customizing-popup-window*
+
+                                                            *g:iced#popup#time*
+g:iced#popup#time
+  Auto closing time(ms) for popup window.
+  Default value is `3000`.
+
+                                                      *g:iced#popup#max_height*
+g:iced#popup#max_height
+  Max height for popup window.
+  Default value is `50`.
+
+                                             *g:iced#popup#neovim#winhighlight*
+g:iced#popup#neovim#winhighlight
+  `winhighlight` option for floating window in Neovim.
+  - https://neovim.io/doc/user/options.html#'winhighlight'
+  Default value is `'Normal:NormalFloat'`.
+
+                                                    *g:iced#popup#neovim#style*
+g:iced#popup#neovim#style
+  `style` option for floating window in Neovim.
+  - https://neovim.io/doc/user/api.html#nvim_open_win()
+  Default value is `'minimal'`.
 
 ------------------------------------------------------------------------------
 DEFAULT KEYS                                *vim-iced-customizing-default-keys*

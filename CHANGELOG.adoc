@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file. This change
 // {{{
 === Added
 * Add `g:iced#buffer#stdout#file_buffer_size` option.
+* https://github.com/liquidz/vim-iced/pull/151[#151] Add `g:iced#popup#neovim#winhighlight` option.
+* https://github.com/liquidz/vim-iced/pull/151[#151] Add `g:iced#popup#neovim#style` option.
 
 === Changed
 * Make `iced#buffer#append` to scroll down asynchronously.
