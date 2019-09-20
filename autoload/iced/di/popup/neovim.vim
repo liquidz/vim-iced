@@ -8,6 +8,9 @@ let s:popup = {
       \ 'env': 'neovim',
       \ }
 
+let g:iced#popup#neovim#winhighlight = get(g:, 'iced#popup#neovim#winhighlight', 'Normal:NormalFloat')
+let g:iced#popup#neovim#style = get(g:, 'iced#popup#neovim#style', 'minimal')
+
 function! s:init_win(winid, opts) abort
   let context = get(a:opts, 'iced_context', {})
   let context['__lnum'] = line('.')
@@ -22,7 +25,7 @@ function! s:init_win(winid, opts) abort
   call setbufvar(bufnr, '&filetype', get(a:opts, 'filetype', s:default_filetype))
   call setbufvar(bufnr, '&swapfile', 0)
   call setbufvar(bufnr, '&wrap', 0)
-  call setbufvar(bufnr, '&winhl', get(g:, 'iced_nvim_popup_winhl', 'Normal:NormalFloat'))
+  call setbufvar(bufnr, '&winhl', g:iced#popup#neovim#winhighlight)
 endfunction
 
 function! s:popup.get_context(winid) abort
@@ -128,18 +131,8 @@ function! s:popup.open(texts, ...) abort
         \ 'col': col,
         \ 'width': width,
         \ 'height': height,
+        \ 'style': g:iced#popup#neovim#style,
         \ }
-
-  if get(g:, 'iced_nvim_popup_minimal_style', v:false)
-    let win_opts = {
-          \ 'relative': 'editor',
-          \ 'row': line,
-          \ 'col': col,
-          \ 'width': width,
-          \ 'height': height,
-          \ 'style': 'minimal',
-          \ }
-  endif
 
   call nvim_buf_set_lines(bufnr, 0, len(texts), 0, texts)
   let winid = nvim_open_win(bufnr, v:false, win_opts)
