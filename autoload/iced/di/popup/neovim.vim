@@ -8,6 +8,9 @@ let s:popup = {
       \ 'env': 'neovim',
       \ }
 
+let g:iced#popup#neovim#winhighlight = get(g:, 'iced#popup#neovim#winhighlight', 'Normal:NormalFloat')
+let g:iced#popup#neovim#style = get(g:, 'iced#popup#neovim#style', 'minimal')
+
 function! s:init_win(winid, opts) abort
   let context = get(a:opts, 'iced_context', {})
   let context['__lnum'] = line('.')
@@ -22,7 +25,7 @@ function! s:init_win(winid, opts) abort
   call setbufvar(bufnr, '&filetype', get(a:opts, 'filetype', s:default_filetype))
   call setbufvar(bufnr, '&swapfile', 0)
   call setbufvar(bufnr, '&wrap', 0)
-  call setbufvar(bufnr, '&winhl', 'Normal:Folded')
+  call setbufvar(bufnr, '&winhl', g:iced#popup#neovim#winhighlight)
 endfunction
 
 function! s:popup.get_context(winid) abort
@@ -128,13 +131,14 @@ function! s:popup.open(texts, ...) abort
         \ 'col': col,
         \ 'width': width,
         \ 'height': height,
+        \ 'style': g:iced#popup#neovim#style,
         \ }
 
   call nvim_buf_set_lines(bufnr, 0, len(texts), 0, texts)
   let winid = nvim_open_win(bufnr, v:false, win_opts)
   call s:init_win(winid, opts)
 
-  if has_key(opts, 'filetyoe')
+  if has_key(opts, 'filetype')
     call setbufvar(bufnr, '&filetype', opts['filetype'])
   endif
 
