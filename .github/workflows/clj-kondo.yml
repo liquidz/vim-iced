@@ -1,0 +1,11 @@
+name: clj-kondo
+on: [push]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    container:
+      image: borkdude/clj-kondo
+    steps:
+      - uses: actions/checkout@v1
+      - name: lint by clj-kondo
+        run: clj-kondo --lint clj:test/clj
