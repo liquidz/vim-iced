@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 // {{{
+=== Added
+* Add `g:iced_enable_enhanced_cljs_completion` option.
+
+=== Changed
+* Bump cider-nrepl to 0.22.4-SNAPSHOT.
+
 === Fixed
 * Fix to show exception error in test to error buffer.
 // }}}
