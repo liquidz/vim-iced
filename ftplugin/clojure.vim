@@ -23,6 +23,10 @@ if !exists('g:iced_max_distance_for_auto_document')
   let g:iced_max_distance_for_auto_document = 2
 endif
 
+if !exists('g:iced_enable_enhanced_cljs_completion')
+  let g:iced_enable_enhanced_cljs_completion = v:true
+endif
+
 "" Commands {{{
 command! -nargs=? IcedConnect               call iced#nrepl#connect(<q-args>)
 command!          IcedDisconnect            call iced#nrepl#disconnect()
