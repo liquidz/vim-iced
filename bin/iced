@@ -39,7 +39,7 @@ function iced_repl_usage() {
     echo "Usage:"
     echo "  iced repl [options] [--with-cljs] [--without-cljs]"
     echo "            [--with-kaocha]"
-    echo "            [--dependencies=VALUE] [--middleware=VALUE]"
+    echo "            [--dependency=VALUE] [--middleware=VALUE]"
     echo "            [--force-boot] [--force-clojure-cli]"
     echo "            [--instant]"
     echo ""
