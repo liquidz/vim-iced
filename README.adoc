@@ -50,6 +50,7 @@
 Run test under cursor
 Run tests in namespace
 Re run failed/last test
+Also supports https://github.com/lambdaisland/kaocha[kaocha] by https://github.com/liquidz/vim-iced-kaocha[vim-iced-kaocha]
 
 |:rocket:
 |Refactoring
@@ -59,6 +60,14 @@ Add missing
 Thread first/last
 Extract function
 Move to let
+
+|:thought_balloon:
+|Auto completion
+|[%hardbreaks]
+Provided by following external plugins.
+- https://github.com/liquidz/vim-iced-coc-source[vim-iced-coc-source] for https://github.com/neoclide/coc.nvim[coc.nvim]
+- https://github.com/liquidz/vim-iced-asyncomplete[vim-iced-asyncomplete] for https://github.com/prabirshrestha/asyncomplete.vim[asyncomplete.vim]
+Omni completion is provided by default.
 
 |:mag:
 |Reference
@@ -111,12 +120,14 @@ and https://github.com/liquidz/iced-nrepl[iced-nrepl].
 Plug 'ctrlpvim/ctrlp.vim'
 " or
 Plug 'junegunn/fzf'
+" or
+Plug 'liuchengxu/vim-clap'
 
 Plug 'guns/vim-sexp',    {'for': 'clojure'}
 Plug 'liquidz/vim-iced', {'for': 'clojure'}
 ----
 
-NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim] or https://github.com/junegunn/fzf[fzf] is required when selecting multiple candidates.
+NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim], https://github.com/junegunn/fzf[fzf] or https://github.com/liuchengxu/vim-clap[vim-clap] is required only when selecting multiple candidates.
 
 === iced command (recommended)
 
@@ -166,6 +177,10 @@ See link:https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-customizing[c
  ** Provides `:IcedBrowseNamespace` command for jumping to namespace in your project.
  * https://github.com/liquidz/vim-iced-function-list[vim-iced-function-list]
  ** Provides `:IcedBrowseFunction` command for jumping to functions in current namespace.
+ * https://github.com/liquidz/vim-iced-coc-source[vim-iced-coc-source]
+ ** Provides auto completion by https://github.com/neoclide/coc.nvim[coc.nvim].
+ * https://github.com/liquidz/vim-iced-asyncomplete[vim-iced-asyncomplete]
+ ** Provides auto completion by https://github.com/prabirshrestha/asyncomplete.vim[asyncomplete.vim].
 
 == License
 
