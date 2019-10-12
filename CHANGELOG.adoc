@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file. This change
 // {{{
 === Added
 * Add `g:iced_enable_enhanced_cljs_completion` option.
+* Add support for https://github.com/liuchengxu/vim-clap[vim-clap] as multiple candidates selector.
+** Add `g:iced#clap#options` option.
 
 === Changed
 * Bump cider-nrepl to 0.22.4.

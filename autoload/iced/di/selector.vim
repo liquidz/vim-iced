@@ -1,13 +1,15 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:selector = {}
 
 function! s:selector.select(config) abort
-  if globpath(&rtp, 'plugin/ctrlp.vim') !=# ''
+  if globpath(&runtimepath, 'plugin/ctrlp.vim') !=# ''
     return ctrlp#iced#start(a:config)
-  elseif globpath(&rtp, 'plugin/fzf.vim') !=# ''
+  elseif globpath(&runtimepath, 'plugin/fzf.vim') !=# ''
     return fzf#iced#start(a:config)
+  elseif globpath(&runtimepath, 'plugin/clap.vim') !=# ''
+    return clap#provider#iced#start(a:config)
   else
     return iced#message#error('no_selector')
   end
@@ -17,5 +19,5 @@ function! iced#di#selector#build(container) abort
   return s:selector
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
