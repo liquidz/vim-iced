@@ -44,6 +44,20 @@ function! iced#nrepl#test#done(parsed_response) abort
       call iced#sign#place(s:sign_name, err['lnum'], err['filename'])
     endif
 
+    if has_key(err, 'actual') && !empty(err['actual'])
+      if has_key(err, 'expected') && !empty(err['expected'])
+        let expected_and_actuals = expected_and_actuals + [
+              \ printf(';; %s', err['text']),
+              \ s:dict_to_str(err, ['expected', 'actual', 'diffs']),
+              \ '']
+      else
+        let expected_and_actuals = expected_and_actuals + [
+              \ printf(';; %s', err['text']),
+              \ err['actual'],
+              \ '']
+      endif
+    endif
+
     if has_key(err, 'expected') && has_key(err, 'actual')
           \ && !empty(err['expected']) && !empty(err['actual'])
       let expected_and_actuals = expected_and_actuals + [

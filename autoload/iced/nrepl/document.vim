@@ -89,6 +89,15 @@ function! s:generate_cljdoc(resp) abort " {{{
     endfor
   endif
 
+  if has_key(a:resp, 'see-also')
+    call add(doc, '')
+    call add(doc, s:subsection_sep)
+    call add(doc, '*see-also*')
+    for name in a:resp['see-also']
+      call add(doc, printf(' - %s', name))
+    endfor
+  endif
+
   return doc
 endfunction " }}}
 

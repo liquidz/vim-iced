@@ -20,6 +20,10 @@ function! iced#nrepl#op#cider#complete(base, ns_name, context, callback) abort
     let msg['context'] = a:context
   endif
 
+  if g:iced_enable_enhanced_cljs_completion
+    let msg['enhanced-cljs-completion?'] = 't'
+  endif
+
   return iced#nrepl#send(msg)
 endfunction " }}}
 

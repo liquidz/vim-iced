@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.12.3
+Version: 0.12.4
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -81,6 +81,8 @@ INSTALL                                                      *vim-iced-install*
       https://github.com/ctrlpvim/ctrlp.vim
     - fzf
       https://github.com/junegunn/fzf
+    - vim-clap
+      https://github.com/liuchengxu/vim-clap
 
 ------------------------------------------------------------------------------
 ICED COMMAND                                         *vim-iced-install-command*
@@ -108,8 +110,8 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.6.0"]
-                   [iced-nrepl "0.6.4"]
-                   [cider/cider-nrepl "0.22.3"]]
+                   [iced-nrepl "0.6.6"]
+                   [cider/cider-nrepl "0.22.4"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -137,8 +139,8 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
-      [cider/cider-nrepl "0.22.3"]
-      [iced-nrepl "0.6.4"]])
+      [cider/cider-nrepl "0.22.4"]
+      [iced-nrepl "0.6.6"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -167,8 +169,8 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "2.4.0"]
-                  [cider/cider-nrepl "0.22.3"]
-                  [iced-nrepl "0.6.4"]]
+                  [cider/cider-nrepl "0.22.4"]
+                  [iced-nrepl "0.6.6"]]
 
    :nrepl {:cider false
            :middleware [cider.nrepl/wrap-classpath
@@ -783,7 +785,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                           *:IcedCommandPalette*
 :IcedCommandPalette
   Select command from palette.
-  `ctrlp.vim` or `fzf` is required to select namespace.
+  `ctrlp.vim`, `fzf` or `vim-clap` is required to select namespace.
   Key is mapped to |<Plug>(iced_command_palette)|.
 
                                                                 *:IcedSpecForm*
@@ -858,20 +860,20 @@ COMMANDS                                                    *vim-iced-commands*
                                                         *:IcedRelatedNamespace*
 :IcedRelatedNamespace
   Browse namespaces relating to current namespace, and open selected one.
-  `ctrlp.vim` or `fzf` is required to select namespace.
+  `ctrlp.vim`, `fzf` or `vim-clap` is required to select namespace.
   Configurable option is |g:iced#related_ns#tail_patterns|.
   Key is mapped to |<Plug>(iced_related_namespace)|.
 
                                                               *:IcedBrowseSpec*
 :IcedBrowseSpec
   Browse specs, and show spec form in document buffer.
-  `ctrlp.vim` or `fzf` is required to select spec.
+  `ctrlp.vim`, `fzf` or `vim-clap` is required to select spec.
   Key is mapped to |<Plug>(iced_browse_spec)|.
 
                                                    *:IcedBrowseTestUnderCursor*
 :IcedBrowseTestUnderCursor
   Browse test vars, and jump to the selected var definition.
-  `ctrlp.vim` or `fzf` is required to select a test var.
+  `ctrlp.vim`, `fzf` or `vim-clap` is required to select a test var.
   Key is mapped to |<Plug>(iced_browse_test_under_cursor)|.
 
                                                          *:IcedClearCtrlpCache*
@@ -901,7 +903,7 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedAddNs [{ns}]
   Add require to `ns` form.
   If {ns} is not passed, select namespaces in your project
-  via `ctrlp.vim` or `fzf` interface.
+  via `ctrlp.vim`, `fzf` or `vim-clap` interface.
 
                                                              *:IcedThreadFirst*
 :IcedThreadFirst
@@ -938,7 +940,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                               *:IcedListTapped*
 :IcedListTapped
   Select one of tapped values, and start browsing.
-  `ctrlp.vim` or `fzf` is required to select tapped values.
+  `ctrlp.vim`, `fzf` or `vim-clap` is required to select tapped values.
   Key is mapped to |<Plug>(iced_list_tapped)|.
 
                                                              *:IcedClearTapped*
@@ -1476,6 +1478,17 @@ g:iced#nrepl#auto#does_switch_session
   If {v:true}, enable automatic switching CLJ/CLJS session.
   This will be done by |WinEnter| auto command.
   Default value is `v:false`.
+
+                                       *g:iced_enable_enhanced_cljs_completion*
+g:iced_enable_enhanced_cljs_completion
+  If {v:true}, enable enhanced ClojureScript completion.
+  Default value is `v:true`.
+
+                                                          *g:iced#clap#options*
+g:iced#clap#options
+  Options for starting `vim-clap` selector.
+  E.g. using `fzf` as an external filter: `['++externalfilter=fzf', '+async']`
+  Default value is `[]`.
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
