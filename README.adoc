@@ -171,16 +171,29 @@ See link:https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-customizing[c
 
 == External plugins
 
- * https://github.com/liquidz/vim-iced-kaocha[vim-iced-kaocha]
- ** Provides some commands for testing with https://github.com/lambdaisland/kaocha[kaocha].
- * https://github.com/liquidz/vim-iced-project-namespaces[vim-iced-project-namespaces]
- ** Provides `:IcedBrowseNamespace` command for jumping to namespace in your project.
- * https://github.com/liquidz/vim-iced-function-list[vim-iced-function-list]
- ** Provides `:IcedBrowseFunction` command for jumping to functions in current namespace.
- * https://github.com/liquidz/vim-iced-coc-source[vim-iced-coc-source]
- ** Provides auto completion by https://github.com/neoclide/coc.nvim[coc.nvim].
- * https://github.com/liquidz/vim-iced-asyncomplete[vim-iced-asyncomplete]
- ** Provides auto completion by https://github.com/prabirshrestha/asyncomplete.vim[asyncomplete.vim].
+[cols="2*,a"]
+|===
+
+|:fire:
+|https://github.com/liquidz/vim-iced-kaocha[vim-iced-kaocha]
+|Provides some commands for testing with https://github.com/lambdaisland/kaocha[kaocha].
+
+
+.2+|:mag:
+| https://github.com/liquidz/vim-iced-project-namespaces[vim-iced-project-namespaces]
+| Provides `:IcedBrowseNamespace` command for jumping to namespace in your project.
+
+| https://github.com/liquidz/vim-iced-function-list[vim-iced-function-list]
+| Provides `:IcedBrowseFunction` command for jumping to functions in current namespace.
+
+.2+|:thought_balloon:
+| https://github.com/liquidz/vim-iced-coc-source[vim-iced-coc-source]
+| Provides auto completion by https://github.com/neoclide/coc.nvim[coc.nvim].
+
+| https://github.com/liquidz/vim-iced-asyncomplete[vim-iced-asyncomplete]
+| Provides auto completion by https://github.com/prabirshrestha/asyncomplete.vim[asyncomplete.vim].
+
+|===
 
 == License
 
