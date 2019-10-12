@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file. This change
 
 === Changed
 * Bump cider-nrepl to 0.22.4.
-* Bump iced-nrepl to 0.6.5.
+* Bump iced-nrepl to 0.6.6.
 
 === Fixed
 * Fix to show exception error in test to error buffer.
