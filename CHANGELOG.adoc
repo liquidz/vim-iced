@@ -3,6 +3,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 0.12.4 (2019-10-12)
 // {{{
 === Added
 * Add `g:iced_enable_enhanced_cljs_completion` option.
@@ -12,6 +14,7 @@ All notable changes to this project will be documented in this file. This change
 === Changed
 * Bump cider-nrepl to 0.22.4.
 * Bump iced-nrepl to 0.6.6.
+* Update to show see-alsos in document lookup.
 
 === Fixed
 * Fix to show exception error in test to error buffer.
