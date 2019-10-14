@@ -177,6 +177,8 @@ function! s:dispatcher(ch, resp) abort
   let ids = s:get_message_ids(responses)
   let original_resp_type = type(original_resp)
 
+  let need_debug_input_response = ''
+
   for resp in responses
     if type(resp) != v:t_dict
       break
@@ -195,6 +197,12 @@ function! s:dispatcher(ch, resp) abort
     if has_key(resp, 'pprint-out')
       call iced#buffer#stdout#append(resp['pprint-out'])
     endif
+
+    for status in get(resp, 'status', [''])
+      if status ==# 'need-debug-input'
+        let need_debug_input_response = resp
+      endif
+    endfor
   endfor
 
   for id in ids
@@ -221,14 +229,14 @@ function! s:dispatcher(ch, resp) abort
         endif
       endif
     endif
-
-    if iced#util#has_status(resp, 'need-debug-input')
-      if !iced#buffer#stdout#is_visible() && !iced#di#get('popup').is_supported()
-        call iced#buffer#stdout#open()
-      endif
-      call iced#nrepl#debug#start(resp)
-    endif
   endfor
+
+  if !empty(need_debug_input_response)
+    if !iced#buffer#stdout#is_visible() && !iced#di#get('popup').is_supported()
+      call iced#buffer#stdout#open()
+    endif
+    call iced#nrepl#debug#start(need_debug_input_response)
+  endif
 endfunction
 " }}}
 
