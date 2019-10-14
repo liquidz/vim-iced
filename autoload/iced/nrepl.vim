@@ -208,7 +208,9 @@ function! s:dispatcher(ch, resp) abort
   for id in ids
     if has_key(s:messages, id)
       let resp = filter(copy(responses), {_, r -> s:get_message_id(r) == id})
-      if original_resp_type == v:t_dict && len(resp) == 1
+      " NOTE: Because streamed evaluation reponses are merged by `merge_response_handler`,
+      "       so multiple responses with the same ID will not be returned basically .
+      if len(resp) == 1
         let resp = resp[0]
       endif
 
@@ -535,7 +537,7 @@ endfunction
 let s:supported_ops = {}
 function! iced#nrepl#is_supported_op(op) abort " {{{
   if empty(s:supported_ops)
-    let resp = iced#util#first_resp(iced#promise#sync('iced#nrepl#describe', []))
+    let resp = iced#promise#sync('iced#nrepl#describe', [])
 
     if !has_key(resp, 'ops')
       return iced#message#error('unexpected_error', 'Invalid :describe op response')
