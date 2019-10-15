@@ -249,7 +249,7 @@ function! iced#nrepl#op#cider#clojuredocs_refresh_cache(export_edn_url, callback
         \ })
 endfunction " }}}
 
-call iced#nrepl#register_handler('info', function('iced#nrepl#merge_response_handler'))
+call iced#nrepl#register_handler('info', {resp, last_resp -> iced#nrepl#path_transformation_handler(['file'], iced#nrepl#merge_response_handler(resp, last_resp), '') })
 call iced#nrepl#register_handler('test-var-query', function('iced#nrepl#extend_responses_handler'))
 call iced#nrepl#register_handler('retest', function('iced#nrepl#extend_responses_handler'))
 
