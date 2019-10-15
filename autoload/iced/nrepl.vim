@@ -31,6 +31,7 @@ let s:L = s:V.import('Data.List')
 let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
+let g:iced#nrepl#path_transformation = get(g:, 'iced#nrepl#path_transformation', {})
 
 let s:id_counter = 1
 function! iced#nrepl#id() abort
@@ -140,6 +141,24 @@ function! iced#nrepl#merge_response_handler(resp, last_result) abort
   endfor
 
   return result
+endfunction
+
+function! iced#nrepl#path_transformation_handler(path_keys, resp, _) abort
+  if empty(g:iced#nrepl#path_transformation)
+    return a:resp
+  else
+    let resp = copy(a:resp)
+    for path_key in a:path_keys
+      let path = get(resp, path_key, '')
+      if empty(path) | continue | endif
+
+      for trans_key in keys(g:iced#nrepl#path_transformation)
+        let resp[path_key] = substitute(path, trans_key, g:iced#nrepl#path_transformation[trans_key], 'g')
+      endfor
+    endfor
+  endif
+
+  return resp
 endfunction
 
 function! iced#nrepl#extend_responses_handler(resp, last_result) abort
