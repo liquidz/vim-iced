@@ -153,8 +153,10 @@ function! iced#nrepl#path_transformation_handler(path_keys, resp, _) abort
       if empty(path) | continue | endif
 
       for trans_key in keys(g:iced#nrepl#path_transformation)
-        let resp[path_key] = substitute(path, trans_key, g:iced#nrepl#path_transformation[trans_key], 'g')
+        let path = iced#nrepl#path#replace(path, trans_key, g:iced#nrepl#path_transformation[trans_key])
       endfor
+
+      let resp[path_key] = path
     endfor
   endif
 
