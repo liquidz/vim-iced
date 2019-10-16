@@ -17,7 +17,7 @@ function! iced#nrepl#path#replace(s, from, to) abort
   endif
 
   let j = i + len(a:from)
-  return printf('%s%s%s', prefix, a:to, a:s[j:])
+  return printf('%s%s%s', prefix, a:to, strpart(a:s, j))
 endfunction
 
 let &cpoptions = s:save_cpo
