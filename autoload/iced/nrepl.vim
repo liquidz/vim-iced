@@ -149,11 +149,16 @@ function! iced#nrepl#path_transformation_handler(path_keys, resp, _) abort
   else
     let resp = copy(a:resp)
     for path_key in a:path_keys
-      let path = get(resp, path_key, '')
+      let path = copy(get(resp, path_key, ''))
       if empty(path) | continue | endif
+      let path_type = type(path)
 
       for trans_key in keys(g:iced#nrepl#path_transformation)
-        let path = iced#nrepl#path#replace(path, trans_key, g:iced#nrepl#path_transformation[trans_key])
+        if path_type == v:t_list
+          call map(path, {_, v -> iced#nrepl#path#replace(v, trans_key, g:iced#nrepl#path_transformation[trans_key])})
+        else
+          let path = iced#nrepl#path#replace(path, trans_key, g:iced#nrepl#path_transformation[trans_key])
+        endif
       endfor
 
       let resp[path_key] = path
