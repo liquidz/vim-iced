@@ -6,7 +6,7 @@ let s:default_mode = 'e'
 let g:iced#clap#options = get(g:, 'iced#clap#options', [])
 
 function! s:source() abort
-  return get(s:config, 'candidates', [])
+  return copy(get(s:config, 'candidates', []))
 endfunction
 
 function! s:accept(value) abort
