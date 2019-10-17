@@ -176,3 +176,39 @@ function! s:suite.multiple_different_ids_response_test() abort
 
   call s:funcs.clear_messages()
 endfunction
+
+function! s:suite.path_transformation_handler_test() abort
+  let g:iced#nrepl#path_transformation = {}
+  let resp = {'path': '/tmp/foo/bar', 'hello': '/tmp/world'}
+
+  call s:assert.equals(
+        \ iced#nrepl#path_transformation_handler(['path'], resp, ''),
+        \ resp,
+        \ )
+
+  let g:iced#nrepl#path_transformation = {'/tmp': '/src'}
+  call s:assert.equals(
+        \ iced#nrepl#path_transformation_handler(['path'], resp, ''),
+        \ {'path': '/src/foo/bar', 'hello': '/tmp/world'},
+        \ )
+
+  let g:iced#nrepl#path_transformation = {}
+endfunction
+
+function! s:suite.path_transformation_handler_path_list_test() abort
+  let g:iced#nrepl#path_transformation = {}
+  let resp = {'path': ['/tmp/foo', '/tmp/bar'], 'hello': '/tmp/world'}
+
+  call s:assert.equals(
+        \ iced#nrepl#path_transformation_handler(['path'], resp, ''),
+        \ resp,
+        \ )
+
+  let g:iced#nrepl#path_transformation = {'/tmp': '/src'}
+  call s:assert.equals(
+        \ iced#nrepl#path_transformation_handler(['path'], resp, ''),
+        \ {'path': ['/src/foo', '/src/bar'], 'hello': '/tmp/world'},
+        \ )
+
+  let g:iced#nrepl#path_transformation = {}
+endfunction
