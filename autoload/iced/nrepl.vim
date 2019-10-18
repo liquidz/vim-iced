@@ -168,6 +168,14 @@ function! iced#nrepl#path_transformation_handler(path_keys, resp, _) abort
   return resp
 endfunction
 
+function! iced#nrepl#comp_handler(handlers, resp, last_result) abort
+  let resp = a:resp
+  for Handler in a:handlers
+    let resp = Handler(resp, a:last_result)
+  endfor
+  return resp
+endfunction
+
 function! iced#nrepl#extend_responses_handler(resp, last_result) abort
   let responses = empty(a:last_result) ? [] : a:last_result
   call extend(responses, iced#util#ensure_array(a:resp))
