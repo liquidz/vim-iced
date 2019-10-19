@@ -251,10 +251,10 @@ endfunction " }}}
 
 call iced#nrepl#register_handler('info', function('iced#nrepl#comp_handler', [
       \ [function('iced#nrepl#merge_response_handler'),
-      \  function('iced#nrepl#path_transformation_handler', [['file']])]]))
+      \  function('iced#nrepl#path_translation_handler', [['file']])]]))
 call iced#nrepl#register_handler('test-var-query', function('iced#nrepl#extend_responses_handler'))
 call iced#nrepl#register_handler('retest', function('iced#nrepl#extend_responses_handler'))
-call iced#nrepl#register_handler('ns-path', function('iced#nrepl#path_transformation_handler', [['path']]))
+call iced#nrepl#register_handler('ns-path', function('iced#nrepl#path_translation_handler', [['path']]))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

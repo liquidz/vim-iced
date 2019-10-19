@@ -31,7 +31,7 @@ let s:L = s:V.import('Data.List')
 let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
-let g:iced#nrepl#path_transformation = get(g:, 'iced#nrepl#path_transformation', {})
+let g:iced#nrepl#path_translation = get(g:, 'iced#nrepl#path_translation', {})
 
 let s:id_counter = 1
 function! iced#nrepl#id() abort
@@ -143,8 +143,8 @@ function! iced#nrepl#merge_response_handler(resp, last_result) abort
   return result
 endfunction
 
-function! iced#nrepl#path_transformation_handler(path_keys, resp, _) abort
-  if empty(g:iced#nrepl#path_transformation)
+function! iced#nrepl#path_translation_handler(path_keys, resp, _) abort
+  if empty(g:iced#nrepl#path_translation)
     return a:resp
   else
     let resp = copy(a:resp)
@@ -153,11 +153,11 @@ function! iced#nrepl#path_transformation_handler(path_keys, resp, _) abort
       if empty(path) | continue | endif
       let path_type = type(path)
 
-      for trans_key in keys(g:iced#nrepl#path_transformation)
+      for trans_key in keys(g:iced#nrepl#path_translation)
         if path_type == v:t_list
-          call map(path, {_, v -> iced#nrepl#path#replace(v, trans_key, g:iced#nrepl#path_transformation[trans_key])})
+          call map(path, {_, v -> iced#nrepl#path#replace(v, trans_key, g:iced#nrepl#path_translation[trans_key])})
         else
-          let path = iced#nrepl#path#replace(path, trans_key, g:iced#nrepl#path_transformation[trans_key])
+          let path = iced#nrepl#path#replace(path, trans_key, g:iced#nrepl#path_translation[trans_key])
         endif
       endfor
 
