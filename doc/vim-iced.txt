@@ -208,14 +208,14 @@ DOCKER                                                *vim-iced-install-docker*
 
   When you are connecting to nREPL in docker container, various paths will be
   paths in the docker container.
-  There is a |g:iced#nrepl#path_transformation| option to transform these paths.
+  There is a |g:iced#nrepl#path_translation| option to translate these paths.
 
   In actual use, it is recommended to define the option
   in the project-specific configuration file by `vim-localrc`.
   https://github.com/thinca/vim-localrc
 
   E.g. /path/to/your/project/root/.local.vimrc >
-    let g:iced#nrepl#path_transformation = {
+    let g:iced#nrepl#path_translation = {
           \ '/tmp': expand('<sfile>:p:h'),
           \ '/root': $HOME,
           \ }
@@ -1508,12 +1508,12 @@ g:iced#clap#options
   E.g. using `fzf` as an external filter: `['++externalfilter=fzf', '+async']`
   Default value is `[]`.
 
-                                             *g:iced#nrepl#path_transformation*
-g:iced#nrepl#path_transformation
-  Path transformation rule dictionary.
+                                                *g:iced#nrepl#path_translation*
+g:iced#nrepl#path_translation
+  Path translation rule dictionary.
   It is useful when connecting to nREPL in docker container.
   E.g. >
-    let g:iced#nrepl#path_transformation = {
+    let g:iced#nrepl#path_translation = {
           \ '/root': $HOME,
           \ }
 <
