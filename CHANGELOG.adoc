@@ -3,10 +3,13 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 0.12.5 (2019-10-20)
 // {{{
 === Added
 * Add `g:iced#nrepl#path_transformation` option.
 ** It is useful for transforming paths in docker container.
+** https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-install-docker
 
 === Fixed
 * Fixed to process input-request from debugger correctly.
