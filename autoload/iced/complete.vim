@@ -38,9 +38,8 @@ function! s:candidate(c) abort
 endfunction
 
 function! s:candidates(resp) abort
-  let resp = iced#util#first_resp(a:resp)
-  let candidates = (type(resp) == v:t_dict && has_key(resp, 'completions'))
-        \ ? resp['completions']
+  let candidates = (type(a:resp) == v:t_dict && has_key(a:resp, 'completions'))
+        \ ? a:resp['completions']
         \ : []
 
   return sort(map(candidates, {_, v -> s:candidate(v)}),

@@ -118,6 +118,7 @@ function! iced#nrepl#op#iced#complete_tapped(keys, callback) abort
 endfunction " }}}
 
 call iced#nrepl#register_handler('iced-lint-file', function('s:concat_handler', ['lint-warnings']))
+call iced#nrepl#register_handler('iced-pseudo-ns-path', function('iced#nrepl#path_transformation_handler', [['path']]))
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

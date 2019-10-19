@@ -31,6 +31,7 @@ let s:L = s:V.import('Data.List')
 let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
+let g:iced#nrepl#path_transformation = get(g:, 'iced#nrepl#path_transformation', {})
 
 let s:id_counter = 1
 function! iced#nrepl#id() abort
@@ -142,6 +143,39 @@ function! iced#nrepl#merge_response_handler(resp, last_result) abort
   return result
 endfunction
 
+function! iced#nrepl#path_transformation_handler(path_keys, resp, _) abort
+  if empty(g:iced#nrepl#path_transformation)
+    return a:resp
+  else
+    let resp = copy(a:resp)
+    for path_key in a:path_keys
+      let path = copy(get(resp, path_key, ''))
+      if empty(path) | continue | endif
+      let path_type = type(path)
+
+      for trans_key in keys(g:iced#nrepl#path_transformation)
+        if path_type == v:t_list
+          call map(path, {_, v -> iced#nrepl#path#replace(v, trans_key, g:iced#nrepl#path_transformation[trans_key])})
+        else
+          let path = iced#nrepl#path#replace(path, trans_key, g:iced#nrepl#path_transformation[trans_key])
+        endif
+      endfor
+
+      let resp[path_key] = path
+    endfor
+  endif
+
+  return resp
+endfunction
+
+function! iced#nrepl#comp_handler(handlers, resp, last_result) abort
+  let resp = a:resp
+  for Handler in a:handlers
+    let resp = Handler(resp, a:last_result)
+  endfor
+  return resp
+endfunction
+
 function! iced#nrepl#extend_responses_handler(resp, last_result) abort
   let responses = empty(a:last_result) ? [] : a:last_result
   call extend(responses, iced#util#ensure_array(a:resp))
@@ -177,6 +211,8 @@ function! s:dispatcher(ch, resp) abort
   let ids = s:get_message_ids(responses)
   let original_resp_type = type(original_resp)
 
+  let need_debug_input_response = ''
+
   for resp in responses
     if type(resp) != v:t_dict
       break
@@ -195,12 +231,20 @@ function! s:dispatcher(ch, resp) abort
     if has_key(resp, 'pprint-out')
       call iced#buffer#stdout#append(resp['pprint-out'])
     endif
+
+    for status in get(resp, 'status', [''])
+      if status ==# 'need-debug-input'
+        let need_debug_input_response = resp
+      endif
+    endfor
   endfor
 
   for id in ids
     if has_key(s:messages, id)
       let resp = filter(copy(responses), {_, r -> s:get_message_id(r) == id})
-      if original_resp_type == v:t_dict && len(resp) == 1
+      " NOTE: Because streamed evaluation reponses are merged by `merge_response_handler`,
+      "       so multiple responses with the same ID will not be returned basically .
+      if len(resp) == 1
         let resp = resp[0]
       endif
 
@@ -221,14 +265,14 @@ function! s:dispatcher(ch, resp) abort
         endif
       endif
     endif
-
-    if iced#util#has_status(resp, 'need-debug-input')
-      if !iced#buffer#stdout#is_visible() && !iced#di#get('popup').is_supported()
-        call iced#buffer#stdout#open()
-      endif
-      call iced#nrepl#debug#start(resp)
-    endif
   endfor
+
+  if !empty(need_debug_input_response)
+    if !iced#buffer#stdout#is_visible() && !iced#di#get('popup').is_supported()
+      call iced#buffer#stdout#open()
+    endif
+    call iced#nrepl#debug#start(need_debug_input_response)
+  endif
 endfunction
 " }}}
 
@@ -527,7 +571,7 @@ endfunction
 let s:supported_ops = {}
 function! iced#nrepl#is_supported_op(op) abort " {{{
   if empty(s:supported_ops)
-    let resp = iced#util#first_resp(iced#promise#sync('iced#nrepl#describe', []))
+    let resp = iced#promise#sync('iced#nrepl#describe', [])
 
     if !has_key(resp, 'ops')
       return iced#message#error('unexpected_error', 'Invalid :describe op response')

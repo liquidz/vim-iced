@@ -66,6 +66,8 @@ function! iced#nrepl#op#cider#sync#classpath() abort
       \ })
 endfunction " }}}
 
+call iced#nrepl#register_handler('classpath', function('iced#nrepl#path_transformation_handler', [['classpath']]))
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
 " vim:fdm=marker:fdl=0
