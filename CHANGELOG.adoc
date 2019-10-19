@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* Add `g:iced#nrepl#path_transformation` option.
+** It is useful for transforming paths in docker container.
+
+=== Fixed
+* Fixed to process input-request from debugger correctly.
+* Fixed a bug that candidates gradually decreased with vim-clap.
+// }}}
 
 == 0.12.4 (2019-10-12)
 // {{{
