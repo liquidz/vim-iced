@@ -1,8 +1,10 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:id = 1
 let s:sign_list = []
+
+let s:default_group = 'default'
 
 function! s:next_id() abort
   let res = s:id
@@ -10,21 +12,27 @@ function! s:next_id() abort
   return res
 endfunction
 
-function! iced#sign#place(name, lnum, file) abort
+function! iced#sign#place(name, lnum, file, ...) abort
   if !filereadable(a:file) | return | endif
 
   let id = s:next_id()
   let ex = iced#di#get('ex_cmd')
+  let group = get(a:, 1, s:default_group)
   try
-    call ex.exe(printf(':sign place %d line=%d name=%s file=%s',
-          \ id, a:lnum, a:name, a:file))
+    call ex.exe(printf(':sign place %d line=%d name=%s group=%s file=%s',
+          \ id, a:lnum, a:name, group, a:file))
   catch /E158:/
     " Invalid buffer name
     let current_buf = bufnr('%')
     call ex.exe(printf(':edit %s | buffer %d | sign place %d line=%d name=%s file=%s',
           \ a:file, current_buf, id, a:lnum, a:name, a:file))
   endtry
-  call add(s:sign_list, {'id': id, 'line': a:lnum, 'name': a:name, 'file': a:file})
+  call add(s:sign_list, {
+        \ 'id': id,
+        \ 'line': a:lnum,
+        \ 'name': a:name,
+        \ 'group': group,
+        \ 'file': a:file})
   return id
 endfunction
 
@@ -88,9 +96,11 @@ function! iced#sign#jump_to_prev(...) abort
   endif
 endfunction
 
-function! iced#sign#unplace(id) abort
-  call iced#di#get('ex_cmd').exe(printf(':sign unplace %d', a:id))
-  call filter(s:sign_list, {_, v -> v['id'] !=# a:id })
+function! iced#sign#unplace(id, ...) abort
+  let group = get(a:, 1, s:default_group)
+  call iced#di#get('ex_cmd').exe(printf(':sign unplace %d group=%s',
+        \ a:id, group))
+  call filter(s:sign_list, {_, v -> v['id'] !=# a:id || v['group'] !=# group })
 endfunction
 
 function! iced#sign#unplace_all() abort
@@ -103,10 +113,23 @@ function! iced#sign#unplace_by_name(name) abort
   let file = get(a:, 1, expand('%:p'))
   for sign in s:sign_list
     if sign['name'] ==# a:name
-      call iced#di#get('ex_cmd').exe(printf(':sign unplace %d', sign['id']))
+      call iced#di#get('ex_cmd').exe(printf(':sign unplace %d group=%s',
+            \ sign['id'], sign['group']))
     endif
   endfor
   call filter(s:sign_list, {_, v -> v['name'] !=# a:name })
+endfunction
+
+function! iced#sign#unplace_by_group(group) abort
+  let unplace_ids = []
+  for sign in iced#sign#list_in_current_buffer()
+    if sign['group'] ==# a:group
+      call iced#di#get('ex_cmd').exe(printf(':sign unplace %d group=%s',
+            \ sign['id'], sign['group']))
+      call add(unplace_ids, sign['id'])
+    endif
+  endfor
+  call filter(s:sign_list, {_, v -> index(unplace_ids, v['id']) == -1})
 endfunction
 
 function! iced#sign#refresh() abort
@@ -117,5 +140,5 @@ function! iced#sign#refresh() abort
   endfor
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
