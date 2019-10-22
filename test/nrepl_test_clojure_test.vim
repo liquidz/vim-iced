@@ -40,90 +40,103 @@ function! s:ns_path_relay(msg) abort
         \ : {}
 endfunction
 
-function! s:suite.collect_errors_success_test() abort
+function! s:suite.collect_errors_and_passes_success_test() abort
   let dummy_resp = [{
         \ 'results': {
         \   'foo.core-test': {
         \     'err-test': [
-        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'pass', 'var': 'err-test'}]}}}]
+        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'pass', 'var': 'err-test-var'}]}}}]
   call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
 
-  call s:assert.equals(s:funcs.collect_errors(dummy_resp), [])
+  call s:assert.equals(s:funcs.collect_errors_and_passes(dummy_resp),
+        \ [[], [{'var': 'err-test-var'}]])
 endfunction
 
-function! s:suite.collect_errors_failed_without_diffs_test() abort
+function! s:suite.collect_errors_and_passes_failed_without_diffs_test() abort
   let dummy_resp = [{
         \ 'results': {
         \   'foo.core-test': {
         \     'err-test': [
-        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test',
+        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test-var',
         \        'line': 123, 'expected': 'expected-result', 'actual': 'actual-result'}]}}}]
   call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
 
-  call s:assert.equals(s:funcs.collect_errors(dummy_resp), [
-        \ {'type': 'E',
-        \  'lnum': 123,
-        \  'filename': '/path/to/file.clj',
-        \  'expected': 'expected-result',
-        \  'actual': 'actual-result',
-        \  'text': 'err-test'}])
+  call s:assert.equals(s:funcs.collect_errors_and_passes(dummy_resp), [
+        \ [{'type': 'E',
+        \   'lnum': 123,
+        \   'filename': '/path/to/file.clj',
+        \   'expected': 'expected-result',
+        \   'actual': 'actual-result',
+        \   'text': 'err-test-var',
+        \   'var': 'err-test-var'}],
+        \ [],
+        \ ])
 endfunction
 
-function! s:suite.collect_errors_failed_with_diffs_test() abort
+function! s:suite.collect_errors_and_passes_failed_with_diffs_test() abort
   let dummy_resp = [{
         \ 'results': {
         \   'foo.core-test': {
         \     'err-test': [
-        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test',
+        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test-var',
         \        'line': 123, 'expected': 'expected-result',
         \        'diffs': [['actual-result', ['foo', 'bar']]]}]}}}]
   call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
 
-  call s:assert.equals(s:funcs.collect_errors(dummy_resp), [
-        \ {'type': 'E',
-        \  'lnum': 123,
-        \  'filename': '/path/to/file.clj',
-        \  'expected': 'expected-result',
-        \  'actual': 'actual-result',
-        \  'diffs': "- foo\n+ bar",
-        \  'text': 'err-test'}])
+  call s:assert.equals(s:funcs.collect_errors_and_passes(dummy_resp), [
+        \ [{'type': 'E',
+        \   'lnum': 123,
+        \   'filename': '/path/to/file.clj',
+        \   'expected': 'expected-result',
+        \   'actual': 'actual-result',
+        \   'diffs': "- foo\n+ bar",
+        \   'text': 'err-test-var',
+        \   'var': 'err-test-var'}],
+        \ [],
+        \ ])
 endfunction
 
-function! s:suite.collect_errors_errored_test() abort
+function! s:suite.collect_errors_and_passes_errored_test() abort
   let dummy_resp = [{
         \ 'results': {
         \   'foo.core-test': {
         \     'err-test': [
-        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'error', 'var': 'err-test',
+        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'error', 'var': 'err-test-var',
         \        'line': 123, 'expected': 'expected-result', 'error': 'error-message'}]}}}]
   call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
 
-  call s:assert.equals(s:funcs.collect_errors(dummy_resp), [
-        \ {'type': 'E',
-        \  'lnum': 123,
-        \  'filename': '/path/to/file.clj',
-        \  'expected': 'expected-result',
-        \  'actual': 'error-message',
-        \  'text': 'err-test'}])
+  call s:assert.equals(s:funcs.collect_errors_and_passes(dummy_resp), [
+        \ [{'type': 'E',
+        \   'lnum': 123,
+        \   'filename': '/path/to/file.clj',
+        \   'expected': 'expected-result',
+        \   'actual': 'error-message',
+        \   'text': 'err-test-var',
+        \   'var': 'err-test-var'}],
+        \ [],
+        \ ])
 endfunction
 
-function! s:suite.collect_errors_could_not_find_ns_path_test() abort
+function! s:suite.collect_errors_and_passes_could_not_find_ns_path_test() abort
   let dummy_resp = [{
         \ 'results': {
         \   'foo.core-test': {
         \     'err-test': [
-        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test',
+        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test-var',
         \        'file': 'test/foo/core_test.clj', 'line': 123, 'expected': 'expected-result', 'actual': 'actual-result'}]}}}]
   call s:ch.register_test_builder({'status_value': 'open', 'relay': {msg ->
         \ (msg['op'] ==# 'ns-path') ? {'status': ['done'], 'path': []} : {}}})
   call iced#cache#set('user-dir', '/user/dir')
   call iced#cache#set('file-separator', '/')
 
-  call s:assert.equals(s:funcs.collect_errors(dummy_resp), [
-        \ {'type': 'E',
-        \  'lnum': 123,
-        \  'filename': '/user/dir/test/foo/core_test.clj',
-        \  'expected': 'expected-result',
-        \  'actual': 'actual-result',
-        \  'text': 'err-test'}])
+  call s:assert.equals(s:funcs.collect_errors_and_passes(dummy_resp), [
+        \ [{'type': 'E',
+        \   'lnum': 123,
+        \   'filename': '/user/dir/test/foo/core_test.clj',
+        \   'expected': 'expected-result',
+        \   'actual': 'actual-result',
+        \   'text': 'err-test-var',
+        \   'var': 'err-test-var'}],
+        \ [],
+        \ ])
 endfunction

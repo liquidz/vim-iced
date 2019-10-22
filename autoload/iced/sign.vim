@@ -122,7 +122,7 @@ endfunction
 
 function! iced#sign#unplace_by_group(group) abort
   let unplace_ids = []
-  for sign in iced#sign#list_in_current_buffer()
+  for sign in s:sign_list
     if sign['group'] ==# a:group
       call iced#di#get('ex_cmd').exe(printf(':sign unplace %d group=%s',
             \ sign['id'], sign['group']))

@@ -23,7 +23,20 @@ function! s:suite.place_test() abort
 
   let res = iced#sign#list_in_current_buffer(s:tempfile)
   call s:assert.equals(len(res), 1)
-  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id, 'name': 'iced_error', 'line': 123})
+  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id, 'name': 'iced_error', 'line': 123, 'group': 'default'})
+
+  call s:teardown()
+endfunction
+
+function! s:suite.place_with_group_test() abort
+  call s:setup()
+
+  let id = iced#sign#place('iced_error', 123, s:tempfile, 'mygroup')
+  call s:assert.true(type(id) == v:t_number)
+
+  let res = iced#sign#list_in_current_buffer(s:tempfile)
+  call s:assert.equals(len(res), 1)
+  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id, 'name': 'iced_error', 'line': 123, 'group': 'mygroup'})
 
   call s:teardown()
 endfunction
@@ -52,7 +65,7 @@ function! s:suite.unplace_test() abort
 
   let res = iced#sign#list_in_current_buffer(s:tempfile)
   call s:assert.equals(len(res), 1)
-  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id2, 'name': 'iced_error', 'line': 234})
+  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id2, 'name': 'iced_error', 'line': 234, 'group': 'default'})
 
   call s:teardown()
 endfunction
@@ -68,7 +81,23 @@ function! s:suite.unplace_by_name_test() abort
   call iced#sign#unplace_by_name('foo')
   let res = iced#sign#list_in_current_buffer(s:tempfile)
   call s:assert.equals(len(res), 1)
-  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id2, 'name': 'bar', 'line': 234})
+  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id2, 'name': 'bar', 'line': 234, 'group': 'default'})
+
+  call s:teardown()
+endfunction
+
+function! s:suite.unplace_by_group_test() abort
+  call s:setup()
+
+  let id1 = iced#sign#place('iced_error', 123, s:tempfile, 'foo')
+  let id2 = iced#sign#place('iced_error', 234, s:tempfile, 'bar')
+  let id3 = iced#sign#place('iced_error', 345, s:tempfile, 'foo')
+  call s:assert.equals(len(iced#sign#list_in_current_buffer(s:tempfile)), 3)
+
+  call iced#sign#unplace_by_group('foo')
+  let res = iced#sign#list_in_current_buffer(s:tempfile)
+  call s:assert.equals(len(res), 1)
+  call s:assert.equals(res[0], {'file': s:tempfile, 'id': id2, 'name': 'iced_error', 'line': 234, 'group': 'bar'})
 
   call s:teardown()
 endfunction

@@ -42,8 +42,8 @@ function! s:suite.done_test() abort
   let g:iced#hook = {'test_finished': {
         \ 'type': 'function', 'exec': {v -> s:holder.run(v)}}}
   let dummy_errors = [
-        \ {'lnum': 123, 'filename': s:temp_foo, 'expected': 'foo', 'actual': 'bar', 'text': 'foo test'},
-        \ {'lnum': 234, 'filename': s:temp_bar, 'expected': 'bar', 'actual': 'baz', 'text': 'bar test'},
+        \ {'lnum': 123, 'filename': s:temp_foo, 'expected': 'foo', 'actual': 'bar', 'text': 'foo test', 'var': 'foo_var'},
+        \ {'lnum': 234, 'filename': s:temp_bar, 'expected': 'bar', 'actual': 'baz', 'text': 'bar test', 'var': 'bar_var'},
         \ ]
 
   call iced#nrepl#test#done({
@@ -205,7 +205,8 @@ function! s:suite.under_cursor_with_test_var_failure_test() abort
        \  'expected': 'true',
        \  'type': 'E',
        \  'text': 'baz-test: dummy context',
-       \  'filename': s:temp_foo}
+       \  'filename': s:temp_foo,
+       \  'var': 'baz-test'}
        \ ])
   call s:assert.equals(stridx(s:ex.get_last_args()['exe'], ':sign place'), 0)
   call s:assert.equals(r.get_last_var_query(), {
@@ -288,6 +289,7 @@ function! s:suite.ns_test() abort
         \ 'type': 'E',
         \ 'text': 'dummy-var: dummy context',
         \ 'filename': s:temp_foo,
+        \ 'var': 'dummy-var',
         \ }])
   call s:assert.equals(r.get_last_var_query(), {
         \ 'ns-query': {'exactly': ['foo.bar-test']},
@@ -350,6 +352,7 @@ function! s:suite.all_test() abort
         \ 'type': 'E',
         \ 'text': 'dummy-var: dummy context',
         \ 'filename': s:temp_foo,
+        \ 'var': 'dummy-var',
         \ }])
   call s:assert.equals(r.get_last_var_query(), {
         \ 'ns-query': {'load-project-ns?': 'true', 'project?': 'true'}})
@@ -399,6 +402,7 @@ function! s:suite.redo_test() abort
         \ 'type': 'E',
         \ 'text': 'dummy-var: dummy context',
         \ 'filename': s:temp_foo,
+        \ 'var': 'dummy-var',
         \ }])
   let redo_msg = test.get_redo_msg()
   call s:assert.equals(redo_msg['session'], 'clj-session')

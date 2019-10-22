@@ -53,8 +53,8 @@ function! s:suite.current_file_test() abort
   call sort(res, funcref('s:compare_lint_warning'))
 
   call s:assert.equals(res, [
-        \ {'id': 1, 'line': 1, 'file': s:tempfile, 'name': 'iced_lint'},
-        \ {'id': 2, 'line': 3, 'file': s:tempfile, 'name': 'iced_lint'},
+        \ {'id': 1, 'line': 1, 'file': s:tempfile, 'name': 'iced_lint', 'group': 'default'},
+        \ {'id': 2, 'line': 3, 'file': s:tempfile, 'name': 'iced_lint', 'group': 'default'},
         \ ])
 
   call s:teardown()
