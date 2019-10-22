@@ -39,8 +39,9 @@ function! s:extract_actual_values(test) abort
       \ }
 endfunction
 
-function! s:collect_errors(resp) abort
+function! s:collect_errors_and_passes(resp) abort
   let errors  = []
+  let passes = []
 
   for response in iced#util#ensure_array(a:resp)
     let results = get(response, 'results', {})
@@ -53,6 +54,7 @@ function! s:collect_errors(resp) abort
 
         for test in test_results
           if test['type'] !=# 'fail' && test['type'] !=# 'error'
+            call add(passes, {'var': get(test, 'var', '')})
             continue
           endif
 
@@ -81,6 +83,7 @@ function! s:collect_errors(resp) abort
                   \ 'text': s:error_message(test),
                   \ 'expected': trim(get(test, 'expected', '')),
                   \ 'type': 'E',
+                  \ 'var': get(test, 'var', ''),
                   \ }
           if has_key(test, 'line') && type(test['line']) == v:t_number
             let err['lnum'] = test['line']
@@ -96,7 +99,7 @@ function! s:collect_errors(resp) abort
     endfor
   endfor
 
-  return errors
+  return [errors, passes]
 endfunction
 
 function! s:summary(resp) abort
@@ -129,8 +132,10 @@ function! iced#nrepl#test#clojure_test#parse(resp) abort
     return iced#message#error('not_found')
   endif
 
+  let [errors, passes] = s:collect_errors_and_passes(a:resp)
   return {
-        \ 'errors': s:collect_errors(a:resp),
+        \ 'errors': errors,
+        \ 'passes': passes,
         \ 'summary': s:summary(a:resp),
         \ }
 endfunction
