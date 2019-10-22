@@ -3,8 +3,23 @@ if exists('g:loaded_vim_iced')
 endif
 let g:loaded_vim_iced = 1
 let g:vim_iced_version = 1205
-
 let g:vim_iced_home = expand('<sfile>:p:h:h')
+" NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
+"       Add functions for defining and placing signs.
+"       Introduce a group name to avoid different plugins using the same signs.
+let g:vim_iced_required_vim_version = '8.1.0614'
+let g:vim_iced_required_nvim_version = '0.4'
+
+let s:required_version = has('nvim')
+      \ ? has(printf('nvim-%s', g:vim_iced_required_nvim_version))
+      \ : has(printf('patch-%s', g:vim_iced_required_vim_version))
+if !s:required_version
+  echoerr printf('vim-iced requires Vim %s+ or Neovim %s+',
+        \ g:vim_iced_required_vim_version,
+        \ g:vim_iced_required_nvim_version,
+        \ )
+  finish
+endif
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
