@@ -37,11 +37,18 @@ function! iced#nrepl#test#done(parsed_response) abort
   let summary = a:parsed_response['summary']
   let expected_and_actuals = []
 
-  call iced#sign#unplace_by_name(s:sign_name)
+  if has_key(a:parsed_response, 'passes')
+    let passes = a:parsed_response['passes']
+    for passed_var in uniq(map(copy(passes), {_, v -> v['var']}))
+      call iced#sign#unplace_by_group(passed_var)
+    endfor
+  else
+    call iced#sign#unplace_by_name(s:sign_name)
+  endif
 
   for err in errors
     if has_key(err, 'lnum')
-      call iced#sign#place(s:sign_name, err['lnum'], err['filename'])
+      call iced#sign#place(s:sign_name, err['lnum'], err['filename'], err['var'])
     endif
 
     if has_key(err, 'actual') && !empty(err['actual'])
