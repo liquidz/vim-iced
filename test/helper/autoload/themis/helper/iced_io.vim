@@ -20,9 +20,9 @@ function! s:helper.get_last_args() abort
   return self.last_args
 endfunction
 
-function! s:helper.register_test_builder(...) abort
+function! s:helper.mock(...) abort
   let self.value = get(a:, 1, {})
-  call iced#di#register('io', {_ -> self})
+  call iced#system#set_component('io', {'constructor': {_ -> self}})
 endfunction
 
 function! themis#helper#iced_io#new(runner) abort
