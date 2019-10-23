@@ -15,6 +15,7 @@ let s:system_map = {
       \ 'quickfix':     {'constructor': 'iced#component#quickfix#new'},
       \ 'selector':     {'constructor': 'iced#component#selector#new'},
       \ 'timer':        {'constructor': 'iced#component#timer#new'},
+      \ 'popup':        {'constructor': 'iced#component#popup#new'},
       \ 'virtual_text': {'constructor': 'iced#component#virtual_text#new',
       \                  'vim_requires': ['popup', 'ex_cmd'],
       \                  'nvim_requires': ['timer']},
@@ -23,7 +24,7 @@ let s:system_map = {
 function! s:requires(name) abort
   let specific_key = has('nvim') ? 'nvim_requires' : 'vim_requires'
   let requires = copy(get(s:system_map[a:name], 'requires', []))
-  call extend(requires, get(s:system_map[a:name], specific_key, []))
+  call extend(requires, copy(get(s:system_map[a:name], specific_key, [])))
   return requires
 endfunction
 
