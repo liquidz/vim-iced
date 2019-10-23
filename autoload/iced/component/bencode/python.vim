@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 python3 import vim
 py3file <sfile>:h:h:h:h:h/python/bencode.py
@@ -17,11 +17,11 @@ EOT
   return ret
 endfunction
 
-function! iced#di#bencode#python#build(container) abort
-  let bencode = iced#di#bencode#vim#build(a:container)
+function! iced#component#bencode#python#new(this) abort
+  let bencode = a:this.vim_bencode
   let bencode['decode'] = funcref('s:decode_via_python')
   return bencode
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

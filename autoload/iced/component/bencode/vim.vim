@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:bencode = {}
 
@@ -133,10 +133,10 @@ function! s:bencode.decode(s) abort
   endif
 endfunction " }}}
 
-function! iced#di#bencode#vim#build(container) abort
+function! iced#component#bencode#vim#new(_) abort
   return s:bencode
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
 " vim:fdm=marker:fdl=0
