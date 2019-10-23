@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:qf = {}
 
@@ -11,9 +11,9 @@ function! s:qf.setloclist(nr, list, action) abort
   silent call setloclist(a:nr, a:list, a:action)
 endfunction
 
-function! iced#di#quickfix#build(container) abort
+function! iced#component#quickfix#new(_) abort
   return s:qf
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
