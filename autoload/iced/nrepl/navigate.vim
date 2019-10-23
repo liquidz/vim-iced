@@ -24,7 +24,7 @@ function! s:apply_mode_to_file(mode, file) abort
   elseif a:mode ==# 't'
     let cmd = ':tabedit'
   endif
-  call iced#di#get('ex_cmd').exe(printf('%s %s', cmd, a:file))
+  call iced#system#get('ex_cmd').exe(printf('%s %s', cmd, a:file))
 endfunction
 
 " iced#nrepl#navigate#open_ns {{{
@@ -37,7 +37,7 @@ function! iced#nrepl#navigate#open_ns(mode, ns_name) abort
   let path = resp['path']
   if !filereadable(path)
     let prompt = printf('%s: ', iced#message#get('confirm_opening_file'))
-    let path = iced#di#get('io').input(prompt, path)
+    let path = iced#system#get('io').input(prompt, path)
   endif
 
   if !empty(path)
@@ -122,7 +122,7 @@ function! s:jump(resp) abort
   let column = get(a:resp, 'column', '0')
 
   if expand('%:p') !=# path
-    call iced#di#get('ex_cmd').exe(printf(':edit %s', path))
+    call iced#system#get('ex_cmd').exe(printf(':edit %s', path))
   endif
 
   call cursor(line, column)
@@ -179,8 +179,8 @@ function! s:set_xref_resp_to_quickfix(key, resp) abort
         \ }})
   if empty(xrefs) | return iced#message#info('not_found') | endif
 
-  call iced#di#get('quickfix').setlist(xrefs, 'r')
-  call iced#di#get('ex_cmd').silent_exe(':cwindow')
+  call iced#system#get('quickfix').setlist(xrefs, 'r')
+  call iced#system#get('ex_cmd').silent_exe(':cwindow')
 endfunction
 
 let s:fn_refs_callback = function('s:set_xref_resp_to_quickfix', ['fn-refs'])

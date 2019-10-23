@@ -120,8 +120,8 @@ function! s:suite.eval_test() abort
   function! test.relay_raw(msg) abort
     if a:msg['op'] !=# 'eval' | return '' | endif
 
-    let resp1 = iced#di#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': '6'})
-    let resp2 = iced#di#get('bencode').encode({'id': 123, 'status': ['done']})
+    let resp1 = iced#system#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': '6'})
+    let resp2 = iced#system#get('bencode').encode({'id': 123, 'status': ['done']})
     return (s:split_half(resp1) + s:split_half(resp2))
   endfunction
 
@@ -154,8 +154,8 @@ function! s:suite.multiple_different_ids_response_test() abort
   let test = {}
   function! test.relay_raw(msg) abort
     if a:msg['op'] !=# 'eval' | return '' | endif
-    let resp1 = iced#di#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': '6', 'status': ['done']})
-    let resp2 = iced#di#get('bencode').encode({'id': 234, 'ns': 'bar.core', 'value': 'baaaarrrr', 'status': ['done']})
+    let resp1 = iced#system#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': '6', 'status': ['done']})
+    let resp2 = iced#system#get('bencode').encode({'id': 234, 'ns': 'bar.core', 'value': 'baaaarrrr', 'status': ['done']})
     return printf('%s%s', resp1, resp2)
   endfunction
 

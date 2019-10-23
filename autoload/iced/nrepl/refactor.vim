@@ -41,7 +41,7 @@ function! s:found_used_locals(resp) abort
 
   try
     let locals = a:resp['used-locals']
-    let func_name = trim(iced#di#get('io').input('Function name: '))
+    let func_name = trim(iced#system#get('io').input('Function name: '))
     if empty(func_name)
       return iced#message#echom('canceled')
     endif

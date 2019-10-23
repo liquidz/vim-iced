@@ -16,7 +16,7 @@ function! iced#sign#place(name, lnum, file, ...) abort
   if !filereadable(a:file) | return | endif
 
   let id = s:next_id()
-  let ex = iced#di#get('ex_cmd')
+  let ex = iced#system#get('ex_cmd')
   let group = get(a:, 1, s:default_group)
   try
     call ex.exe(printf(':sign place %d line=%d name=%s group=%s file=%s',
@@ -98,13 +98,13 @@ endfunction
 
 function! iced#sign#unplace(id, ...) abort
   let group = get(a:, 1, s:default_group)
-  call iced#di#get('ex_cmd').exe(printf(':sign unplace %d group=%s',
+  call iced#system#get('ex_cmd').exe(printf(':sign unplace %d group=%s',
         \ a:id, group))
   call filter(s:sign_list, {_, v -> v['id'] !=# a:id || v['group'] !=# group })
 endfunction
 
 function! iced#sign#unplace_all() abort
-  call iced#di#get('ex_cmd').exe(':sign unplace *')
+  call iced#system#get('ex_cmd').exe(':sign unplace *')
   let s:sign_list = []
   let s:id = 1
 endfunction
@@ -113,7 +113,7 @@ function! iced#sign#unplace_by_name(name) abort
   let file = get(a:, 1, expand('%:p'))
   for sign in s:sign_list
     if sign['name'] ==# a:name
-      call iced#di#get('ex_cmd').exe(printf(':sign unplace %d group=%s',
+      call iced#system#get('ex_cmd').exe(printf(':sign unplace %d group=%s',
             \ sign['id'], sign['group']))
     endif
   endfor
@@ -124,7 +124,7 @@ function! iced#sign#unplace_by_group(group) abort
   let unplace_ids = []
   for sign in s:sign_list
     if sign['group'] ==# a:group
-      call iced#di#get('ex_cmd').exe(printf(':sign unplace %d group=%s',
+      call iced#system#get('ex_cmd').exe(printf(':sign unplace %d group=%s',
             \ sign['id'], sign['group']))
       call add(unplace_ids, sign['id'])
     endif

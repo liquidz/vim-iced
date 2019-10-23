@@ -27,7 +27,7 @@ function! iced#di#register(name, builder) abort
   return g:iced#di#container.register(a:name, a:builder)
 endfunction
 
-function! iced#di#get(name) abort
+function! iced#system#get(name) abort
   if !has_key(s:container_cache, a:name)
     let s:container_cache[a:name] = g:iced#di#container.get(a:name)
   endif

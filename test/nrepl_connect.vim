@@ -32,7 +32,7 @@ function! s:suite.auto_test() abort
     silent execute printf(':lcd %s', s:default_dir)
     call s:assert.equals(iced#nrepl#connect#auto(), v:true)
 
-    let opened_args = iced#di#get('channel').get_opened_args()
+    let opened_args = iced#system#get('channel').get_opened_args()
     call s:assert.equals(opened_args['address'], '127.0.0.1:123456')
   finally
     silent execute printf(':lcd %s', cwd)
@@ -51,7 +51,7 @@ function! s:suite.auto_with_shadow_cljs_test() abort
     silent execute printf(':lcd %s', s:shadow_cljs_dir)
     call s:assert.equals(iced#nrepl#connect#auto(), v:true)
 
-    let opened_args = iced#di#get('channel').get_opened_args()
+    let opened_args = iced#system#get('channel').get_opened_args()
     call s:assert.equals(opened_args['address'], '127.0.0.1:234567')
   finally
     silent execute printf(':lcd %s', cwd)
@@ -75,7 +75,7 @@ function! s:suite.jack_in_test() abort
 
     call iced#nrepl#connect#jack_in()
 
-    let opened_args = iced#di#get('channel').get_opened_args()
+    let opened_args = iced#system#get('channel').get_opened_args()
     call s:assert.equals(opened_args['address'], '127.0.0.1:123456')
     call s:assert.equals(s:job.get_last_command(), 'ls -ltr')
   finally
@@ -101,7 +101,7 @@ function! s:suite.instant_test() abort
 
     call iced#nrepl#connect#instant()
 
-    let opened_args = iced#di#get('channel').get_opened_args()
+    let opened_args = iced#system#get('channel').get_opened_args()
     call s:assert.equals(opened_args['address'], '127.0.0.1:123456')
     call s:assert.equals(s:job.get_last_command(), 'ls repl --instant')
   finally

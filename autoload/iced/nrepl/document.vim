@@ -122,7 +122,7 @@ endfunction
 
 function! s:view_doc_on_popup(resp) abort
   let doc = s:generate_doc(a:resp)
-  let popup = iced#di#get('popup')
+  let popup = iced#system#get('popup')
   if empty(doc) || !popup.is_supported()
     return
   endif
@@ -155,7 +155,7 @@ function! iced#nrepl#document#open(symbol) abort
 endfunction
 
 function! iced#nrepl#document#popup_open(symbol) abort
-  if !iced#di#get('popup').is_supported()
+  if !iced#system#get('popup').is_supported()
         \ || !s:enable_popup_full_document
     return iced#nrepl#document#open(a:symbol)
   endif
@@ -193,7 +193,7 @@ function! s:one_line_doc(resp) abort
 
     if empty(msg) | return | endif
 
-    let popup = iced#di#get('popup')
+    let popup = iced#system#get('popup')
     if popup.is_supported()
           \ && s:enable_popup_one_line_document
 
@@ -231,7 +231,7 @@ function! s:one_line_doc(resp) abort
 endfunction
 
 function! iced#nrepl#document#current_form() abort
-  let popup = iced#di#get('popup')
+  let popup = iced#system#get('popup')
   let context = popup.get_context(s:popup_winid)
   if !iced#nrepl#is_connected()
         \ || !iced#nrepl#check_session_validity(v:false)
@@ -285,7 +285,7 @@ function! s:show_usecase(info) abort
   try
     " Open temporary buffer with ref file contents
     call iced#buffer#temporary#begin()
-    call iced#di#get('ex_cmd').silent_exe(printf(':read %s', ref['file']))
+    call iced#system#get('ex_cmd').silent_exe(printf(':read %s', ref['file']))
 
     " Detect ns alias in the ref file
     let ref_ns = iced#nrepl#ns#name()
@@ -390,7 +390,7 @@ endfunction
 
 function! iced#nrepl#document#close() abort
   if s:popup_winid != -1
-    call iced#di#get('popup').close(s:popup_winid)
+    call iced#system#get('popup').close(s:popup_winid)
     let s:popup_winid = -1
   endif
 

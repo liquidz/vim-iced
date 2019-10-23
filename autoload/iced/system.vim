@@ -3,12 +3,12 @@ set cpoptions&vim
 
 let s:component_cache = {}
 
+      "\ 'nrepl':        {'constructor': 'iced#component#nrepl#new', 'requires': ['bencode', 'channel']},
+      "\ 'session':      {'constructor': 'iced#component#session#new', 'requires': ['nrepl']},
 let s:system_map = {
       \ 'vim_bencode':  {'constructor': 'iced#component#bencode#vim#new'},
       \ 'bencode':      {'constructor': 'iced#component#bencode#new', 'requires': ['vim_bencode']},
-      \ 'channel':      {'constructor': 'iced#component#channel#new', 'requires': ['bencode']},
-      \ 'nrepl':        {'constructor': 'iced#component#nrepl#new', 'requires': ['channel']},
-      \ 'session':      {'constructor': 'iced#component#session#new', 'requires': ['nrepl']},
+      \ 'channel':      {'constructor': 'iced#component#channel#new'},
       \ 'ex_cmd':       {'constructor': 'iced#component#ex_cmd#new'},
       \ 'io':           {'constructor': 'iced#component#io#new'},
       \ 'job':          {'constructor': 'iced#component#job#new'},
@@ -27,7 +27,7 @@ function! s:requires(name) abort
   return requires
 endfunction
 
-function! iced#system#set_component_map(name, component_map) abort
+function! iced#system#set_component(name, component_map) abort
   if has_key(s:component_cache, a:name)
     unlet s:component_cache[a:name]
   endif
