@@ -64,7 +64,7 @@ function! iced#nrepl#auto#bufwrite_post() abort
     endif
   endfunction
 
-  call iced#di#get('timer').start(500, timer.callback)
+  call iced#system#get('timer').start(500, timer.callback)
 endfunction
 
 function! iced#nrepl#auto#newfile() abort

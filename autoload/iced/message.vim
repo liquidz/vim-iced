@@ -20,7 +20,7 @@ function! iced#message#get(k, ...) abort
 endfunction
 
 function! s:echom(hl, s) abort
-  let io = iced#di#get('io')
+  let io = iced#system#get('io')
   for line in split(a:s, '\r\?\n')
     call io.echomsg(a:hl, line)
   endfor

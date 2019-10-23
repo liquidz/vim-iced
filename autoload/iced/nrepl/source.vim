@@ -9,7 +9,7 @@ function! s:extract_source(resp) abort
   let reg_save = @@
   try
     call iced#buffer#temporary#begin()
-    call iced#di#get('ex_cmd').silent_exe(
+    call iced#system#get('ex_cmd').silent_exe(
           \ printf(':read %s', iced#util#normalize_path(path)))
     call cursor(a:resp['line']+1, get(a:resp, 'column', 0))
     silent normal! vaby
@@ -54,7 +54,7 @@ endfunction
 function! iced#nrepl#source#popup_show(symbol) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
-  if !iced#di#get('popup').is_supported()
+  if !iced#system#get('popup').is_supported()
     return iced#nrepl#source#show(a:symbol)
   endif
 
@@ -62,7 +62,7 @@ function! iced#nrepl#source#popup_show(symbol) abort
   call s:fetch_source(symbol)
        \.then({code -> empty(code)
        \       ? iced#message#error('not_found')
-       \       : iced#di#get('popup').open(
+       \       : iced#system#get('popup').open(
        \           split(code, '\r\?\n'), {
        \           'line': 'near-cursor',
        \           'col': col('.'),

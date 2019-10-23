@@ -50,7 +50,7 @@ endfunction
 
 function! s:wait_for_auto_connection(id) abort
   if iced#nrepl#connect#auto(v:false)
-    call iced#di#get('timer').stop(a:id)
+    call iced#system#get('timer').stop(a:id)
   endif
 endfunction
 
@@ -67,7 +67,7 @@ function! s:jack_in_callback(_, out) abort
       echo line
       "" NOTE: Leiningen, Boot and Clojure CLI print the same text like below.
       if stridx(line, 'nREPL server started') != -1
-        call iced#di#get('timer').start(
+        call iced#system#get('timer').start(
               \ 500,
               \ funcref('s:wait_for_auto_connection'),
               \ {'repeat': 10})
@@ -85,7 +85,7 @@ function! iced#nrepl#connect#jack_in(...) abort
     return iced#message#error('not_executable', g:iced#nrepl#connect#iced_command)
   endif
 
-  let job = iced#di#get('job')
+  let job = iced#system#get('job')
   if job.is_job_id(s:jack_in_job)
     return iced#message#error('already_running')
   endif
@@ -106,7 +106,7 @@ function! iced#nrepl#connect#instant() abort
 endfunction
 
 function! iced#nrepl#connect#reset() abort
-  let job = iced#di#get('job')
+  let job = iced#system#get('job')
   if job.is_job_id(s:jack_in_job)
     call job.stop(s:jack_in_job)
   endif

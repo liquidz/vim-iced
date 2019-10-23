@@ -51,7 +51,7 @@ function! iced#lint#echo_message() abort
   if !empty(msg)
     call s:M.echo('WarningMsg', iced#util#shorten(msg))
     if g:iced#lint#use_virtual_text
-      call iced#di#get('virtual_text').set(
+      call iced#system#get('virtual_text').set(
             \ printf('=> %s', msg),
             \ {'auto_clear': v:true, 'highlight': 'WarningMsg'})
     endif
