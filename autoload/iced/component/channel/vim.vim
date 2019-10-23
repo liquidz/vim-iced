@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:ch = {
     \ 'env': 'vim',
@@ -21,9 +21,9 @@ function! s:ch.sendraw(handler, string) abort
   return ch_sendraw(a:handler, a:string)
 endfunction
 
-function! iced#di#channel#vim#build(container) abort
+function! iced#component#channel#vim#new(_) abort
   return s:ch
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

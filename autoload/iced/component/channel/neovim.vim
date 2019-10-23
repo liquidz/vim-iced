@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:ch = {
     \ 'env': 'neovim',
@@ -64,9 +64,9 @@ function! s:ch.sendraw(handler, string) abort
   return ret
 endfunction
 
-function! iced#di#channel#neovim#build(container) abort
+function! iced#component#channel#neovim#new(_) abort
   return s:ch
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

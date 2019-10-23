@@ -1,13 +1,13 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
-function! iced#di#channel#build(container) abort
+function! iced#component#channel#new(this) abort
   if has('nvim')
-    return iced#di#channel#neovim#build(a:container)
+    return iced#component#channel#neovim#new(a:this)
   else
-    return iced#di#channel#vim#build(a:container)
+    return iced#component#channel#vim#new(a:this)
   endif
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
