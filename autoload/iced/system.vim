@@ -15,7 +15,9 @@ let s:system_map = {
       \ 'quickfix':     {'constructor': 'iced#component#quickfix#new'},
       \ 'selector':     {'constructor': 'iced#component#selector#new'},
       \ 'timer':        {'constructor': 'iced#component#timer#new'},
-      \ 'virtual_text': {'constructor': 'iced#component#virtual_text#new', 'vim_requires': ['popup']},
+      \ 'virtual_text': {'constructor': 'iced#component#virtual_text#new',
+      \                  'vim_requires': ['popup', 'ex_cmd'],
+      \                  'nvim_requires': ['timer']},
       \ }
 
 function! s:requires(name) abort
