@@ -15,7 +15,7 @@ let s:test_1_10_error =
 
 " iced#nrepl#eval#err {{{
 function! s:suite.err_with_1_9_or_above_test() abort
-  call s:qf.register_test_builder()
+  call s:qf.mock()
   call s:qf.setlist([], 'r')
   call iced#nrepl#eval#err(s:test_1_9_error)
   call s:assert.equals(s:qf.get_last_args()['list'],
@@ -25,7 +25,7 @@ function! s:suite.err_with_1_9_or_above_test() abort
 endfunction
 
 function! s:suite.err_with_1_10_or_later_test() abort
-  call s:qf.register_test_builder()
+  call s:qf.mock()
   call s:qf.setlist([], 'r')
   call iced#nrepl#eval#err(s:test_1_10_error)
   call s:assert.equals(s:qf.get_last_args()['list'],
@@ -35,7 +35,7 @@ function! s:suite.err_with_1_10_or_later_test() abort
 endfunction
 
 function! s:suite.err_with_invalid_message_test() abort
-  call s:qf.register_test_builder()
+  call s:qf.mock()
   call s:qf.setlist([], 'r')
   call iced#nrepl#eval#err('invalid message')
   call s:assert.true(empty(s:qf.get_last_args()['list']))
@@ -52,8 +52,8 @@ function! s:code_relay(msg) abort
 endfunction
 
 function! s:suite.code_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:code_relay')})
-  call s:vt.register_test_builder()
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:code_relay')})
+  call s:vt.mock()
 
   let g:iced#eval#inside_comment = v:false
   call iced#nrepl#eval#code('(comment (+ 1 2 3))')
@@ -72,7 +72,7 @@ function! s:suite.code_with_callback_test() abort
     let self.resp = a:resp
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:code_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:code_relay')})
   call iced#nrepl#eval#code('(+ 1 2 3)', {'callback': {v -> test.callback(v)}})
 
   call s:assert.equals(test.resp.status, ['done'])
@@ -85,8 +85,8 @@ function! s:undef_relay(msg) abort
 endfunction
 
 function! s:suite.undef_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:undef_relay')})
-  call s:io.register_test_builder()
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:undef_relay')})
+  call s:io.mock()
 
   let sym = 'dummy/symbol'
   call iced#nrepl#eval#undef(sym)
@@ -104,7 +104,7 @@ function! s:print_last_relay(msg) abort
 endfunction
 
 function! s:suite.print_last_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:print_last_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:print_last_relay')})
   call iced#buffer#stdout#init()
 
   try
@@ -122,7 +122,7 @@ endfunction
 
 " iced#nrepl#eval#outer_top_list {{{
 function! s:suite.outer_top_list_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {resp -> s:holder.relay(resp)},
         \ })
@@ -149,7 +149,7 @@ endfunction
 
 " iced#nrepl#eval#ns {{{
 function! s:suite.ns_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {resp -> s:holder.relay(resp)},
         \ })
@@ -174,7 +174,7 @@ endfunction
 
 " iced#nrepl#eval#visual {{{
 function! s:suite.visual_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:holder.relay(msg)},
         \ })
@@ -197,7 +197,7 @@ endfunction
 
 " iced#nrepl#eval#repl_visual {{{
 function! s:suite.repl_visual_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:holder.relay(msg)},
         \ })

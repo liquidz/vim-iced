@@ -29,7 +29,7 @@ function! s:setup(...) abort
         \ '(ns foo.bar)',
         \ '(b|az)',
         \ ])
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': RelayFn})
+  call s:ch.mock({'status_value': 'open', 'relay': RelayFn})
 endfunction
 
 function! s:teardown() abort

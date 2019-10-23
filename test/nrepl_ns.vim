@@ -4,7 +4,7 @@ let s:ch = themis#helper('iced_channel')
 let s:buf = themis#helper('iced_buffer')
 
 function! s:suite.name_by_var_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {_ -> {'status': ['done'], 'value': '#namespace[foo.bar1]'}}})
 
@@ -50,7 +50,7 @@ function! s:suite.name_by_buf_without_ns_form_test() abort
 endfunction
 
 function! s:suite.name_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {_ -> {'status': ['done'], 'value': '#namespace[foo.bar7]'}}})
 

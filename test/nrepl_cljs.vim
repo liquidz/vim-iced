@@ -30,7 +30,7 @@ function! s:suite.check_switching_session_switch_to_cljs_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
 
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
   let res = iced#nrepl#cljs#check_switching_session({
@@ -48,7 +48,7 @@ endfunction
 
 function! s:suite.check_switching_session_switch_to_clj_test() abort
   call s:cljs_session_fixture()
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> {'status': ['done']}}})
 

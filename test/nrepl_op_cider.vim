@@ -20,7 +20,7 @@ function! s:setup() abort
   call iced#nrepl#set_session('clj', 'clj-session')
   call iced#nrepl#set_session('repl', 'repl-session')
   call iced#nrepl#change_current_session('clj')
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:relay')})
   call s:buf.start_dummy([printf('(ns %s)', s:default_ns)])
 endfunction
 

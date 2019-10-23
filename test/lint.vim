@@ -6,7 +6,7 @@ let s:ex_cmd = themis#helper('iced_ex_cmd')
 let s:tempfile = tempname()
 
 function! s:setup(lint_resp) abort " {{{
-  call s:ex_cmd.register_test_builder()
+  call s:ex_cmd.mock()
   call iced#sign#unplace_all()
   call writefile([''], s:tempfile)
 
@@ -19,7 +19,7 @@ function! s:setup(lint_resp) abort " {{{
     return res
   endfunction
 
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> test.relay(msg, a:lint_resp)}})
 endfunction " }}}

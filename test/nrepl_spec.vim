@@ -106,7 +106,7 @@ function! s:form_relay(msg) abort
 endfunction
 
 function! s:suite.form_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:form_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:form_relay')})
   call iced#buffer#document#init()
 
   try
@@ -133,8 +133,8 @@ function! s:list_relay(msg) abort
 endfunction
 
 function! s:suite.list_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:list_relay')})
-  call s:sel.register_test_builder()
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:list_relay')})
+  call s:sel.mock()
 
   call iced#nrepl#spec#list()
 
@@ -157,7 +157,7 @@ function! s:example_relay(msg) abort
 endfunction
 
 function! s:suite.example_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:example_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:example_relay')})
   call iced#buffer#document#init()
 
   try
