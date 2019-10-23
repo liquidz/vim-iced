@@ -18,7 +18,7 @@ function! s:timer.start_lazily(id, time, callback, ...) abort
   let self.ids[a:id] = self.start(a:time, a:callback, get(a:, 1, {}))
 endfunction
 
-function! iced#di#timer#build(container) abort
+function! iced#component#timer#new(_) abort
   return s:timer
 endfunction
 
