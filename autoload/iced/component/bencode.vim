@@ -1,11 +1,11 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
-function! iced#di#bencode#build(container) abort
+function! iced#component#bencode#new(this) abort
   return has('python3')
-        \ ? iced#di#bencode#python#build(a:container)
-        \ : iced#di#bencode#vim#build(a:container)
+        \ ? iced#component#bencode#python#new(a:this)
+        \ : a:this.vim_bencode
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
