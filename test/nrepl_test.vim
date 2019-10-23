@@ -15,9 +15,9 @@ let s:temp_bar = tempname()
 
 function s:setup(...) abort " {{{
   let opts = get(a:, 1, {})
-  call s:ex.register_test_builder()
-  call s:qf.register_test_builder()
-  call s:timer.register_test_builder()
+  call s:ex.mock()
+  call s:qf.mock()
+  call s:timer.mock()
 
   call s:qf.setlist([], 'r')
   call s:holder.clear()
@@ -63,7 +63,7 @@ endfunction
 
 function! s:suite.test_vars_by_ns_name_test() abort
   let test_vars = {'foo': {}, 'bar': {'test': ''}, 'baz': {'test': 'test'}}
-  call s:ch.register_test_builder({
+  call s:ch.mock({
        \ 'status_value': 'open',
        \ 'relay': {msg -> (msg['op'] ==# 'ns-vars-with-meta')
        \           ? {'status': ['done'], 'ns-vars-with-meta': test_vars}
@@ -74,7 +74,7 @@ function! s:suite.test_vars_by_ns_name_test() abort
 endfunction
 
 function! s:suite.test_vars_by_ns_name_error_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
        \ 'status_value': 'open',
        \ 'relay': {msg -> {'status': ['done']}}})
 
@@ -102,7 +102,7 @@ function! s:suite.fetch_test_vars_by_function_under_cursor_test() abort
     let self.result = {'var_name': a:var_name, 'test_vars': a:test_vars}
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
+  call s:ch.mock({'status_value': 'open', 'relay': test.relay})
   call s:buf.start_dummy([
       \ '(ns foo.bar)',
       \ '(defn baz [] "baz" |)'])
@@ -163,7 +163,7 @@ function! s:suite.under_cursor_with_test_var_success_test() abort
         \                   'var': 'baz-test'}]
         \ }
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#under_cursor()
@@ -194,7 +194,7 @@ function! s:suite.under_cursor_with_test_var_failure_test() abort
         \                   'var': 'baz-test'}]
         \ }
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#under_cursor()
@@ -223,7 +223,7 @@ function! s:suite.under_cursor_with_non_test_var_and_test_ns_test() abort
   let r = s:build_under_cursor_relay()
   let opts = {'eval': '#''foo.bar-test/non-existing'}
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#under_cursor()
@@ -247,7 +247,7 @@ function! s:suite.under_cursor_with_non_test_var_and_non_test_ns_test() abort
         \                   'var': 'dummy-var'}],
         \ }
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
 
   call iced#nrepl#test#under_cursor()
@@ -277,7 +277,7 @@ function! s:suite.ns_test() abort
         \ 'var': 'dummy-var'}],
         \ }
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#ns()
@@ -312,7 +312,7 @@ function! s:suite.ns_with_non_test_ns_test() abort
         \ 'ns-vars-with-meta': {},
         \ }
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   "" NOTE: the ns name does not end with '-test'
   call s:buf.start_dummy(['(ns bar.baz)', '(some codes|)'])
 
@@ -340,7 +340,7 @@ function! s:suite.all_test() abort
         \ 'type': 'fail',
         \ 'var': 'dummy-var'}]}
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
 
   call iced#nrepl#test#all()
@@ -389,7 +389,7 @@ function! s:suite.redo_test() abort
     return self.redo_msg
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> test.relay(v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> test.relay(v)}})
   call iced#nrepl#set_session('clj', 'clj-session')
   call iced#nrepl#change_current_session('clj')
 
@@ -422,8 +422,8 @@ function! s:suite.spec_check_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
-  call s:io.register_test_builder()
+  call s:ch.mock({'status_value': 'open', 'relay': test.relay})
+  call s:io.mock()
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#spec_check(123)
@@ -449,8 +449,8 @@ function! s:suite.spec_check_failure_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
-  call s:io.register_test_builder()
+  call s:ch.mock({'status_value': 'open', 'relay': test.relay})
+  call s:io.mock()
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#spec_check(123)

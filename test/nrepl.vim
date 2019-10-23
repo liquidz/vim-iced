@@ -45,10 +45,10 @@ function! s:suite.change_to_invalid_session_test() abort
 endfunction
 
 function! s:suite.is_connected_test() abort
-  call s:ch.register_test_builder({'status_value': 'open'})
+  call s:ch.mock({'status_value': 'open'})
   call s:assert.true(iced#nrepl#is_connected())
 
-  call s:ch.register_test_builder({'status_value': 'fail'})
+  call s:ch.mock({'status_value': 'fail'})
   call s:assert.false(iced#nrepl#is_connected())
 endfunction
 
@@ -67,7 +67,7 @@ function! s:suite.connect_test() abort
   "   1.fail means not connected yet
   "   2.fail means not connected by auto connection
   "   3.open means connection established
-  call s:ch.register_test_builder({
+  call s:ch.mock({
       \ 'status_value': ['fail', 'fail', 'open'],
       \ 'relay': {msg -> test.relay(msg)},
       \ })
@@ -83,7 +83,7 @@ function! s:suite.connect_test() abort
 endfunction
 
 function! s:suite.connect_failure_test() abort
-  call s:ch.register_test_builder({'status_value': 'fail'})
+  call s:ch.mock({'status_value': 'fail'})
   call s:assert.equals(iced#nrepl#connect(1234), v:false)
 endfunction
 
@@ -100,7 +100,7 @@ function! s:suite.disconnect_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({
+  call s:ch.mock({
       \ 'status_value': 'open',
       \ 'relay': {msg -> test.relay(msg)},
       \ })
@@ -129,7 +129,7 @@ function! s:suite.eval_test() abort
     let self['result'] = a:result
   endfunction
 
-  call s:ch.register_test_builder({
+  call s:ch.mock({
       \ 'status_value': 'open',
       \ 'relay_raw': {msg -> test.relay_raw(msg)},
       \ })
@@ -167,7 +167,7 @@ function! s:suite.multiple_different_ids_response_test() abort
     let self['result234'] = a:result
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay_raw': {msg -> test.relay_raw(msg)}})
+  call s:ch.mock({'status_value': 'open', 'relay_raw': {msg -> test.relay_raw(msg)}})
   call s:funcs.set_message(234, {'op': 'eval', 'callback': test.callback_for_234})
 
   call iced#nrepl#eval('(+ 1 2 3)', {result -> test.callback_for_123(result)}, {'id': 123})

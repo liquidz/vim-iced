@@ -26,7 +26,7 @@ endfunction
 
 function! s:suite.info_test() abort
   let test_resp = {'user-dir': '/path/to/project'}
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:info_relay(msg, test_resp)}})
 
@@ -34,7 +34,7 @@ function! s:suite.info_test() abort
 endfunction
 
 function! s:suite.info_error_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:info_relay(msg, '')}})
 
@@ -44,7 +44,7 @@ endfunction
 function! s:suite.user_dir_test() abort
   call iced#cache#clear()
   let test_resp = {'user-dir': '/path/to/project'}
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:info_relay(msg, test_resp)}})
 
@@ -55,7 +55,7 @@ endfunction
 function! s:suite.user_dir_cached_test() abort
   call iced#cache#set('user-dir', '/foo/bar')
   let test_resp = {'user-dir': '/path/to/project'}
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:info_relay(msg, test_resp)}})
 
@@ -65,7 +65,7 @@ endfunction
 
 function! s:suite.user_dir_error_test() abort
   call iced#cache#clear()
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:info_relay(msg, 'INVALID_RESPONSE')}})
 
@@ -80,7 +80,7 @@ function! s:suite.piggieback_enabled_falsy_test() abort
         \ 'user-dir': '/path/to/project',
         \ 'classpath': ['/path/to/foo', '/path/to/bar'],
         \ }
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:info_relay(msg, test_resp)}})
 
@@ -95,7 +95,7 @@ function! s:suite.piggieback_enabled_truthy_test() abort
         \ 'user-dir': '/path/to/project',
         \ 'classpath': ['/path/to/foo', '/path/to/cider/piggieback', '/path/to/bar'],
         \ }
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:info_relay(msg, test_resp)}})
 

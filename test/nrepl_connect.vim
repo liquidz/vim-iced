@@ -21,7 +21,7 @@ function! s:setup() abort
 endfunction
 
 function! s:suite.auto_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
     \ 'status_value': ['fail', 'fail', 'open'],
     \ 'relay': funcref('s:auto_relay'),
     \ })
@@ -40,7 +40,7 @@ function! s:suite.auto_test() abort
 endfunction
 
 function! s:suite.auto_with_shadow_cljs_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
     \ 'status_value': ['fail', 'fail', 'open'],
     \ 'relay': funcref('s:auto_relay'),
     \ })
@@ -60,9 +60,9 @@ endfunction
 
 function! s:suite.jack_in_test() abort
   call s:setup()
-  call s:timer.register_test_builder()
-  call s:job.register_test_builder({'outs': ['nREPL server started']})
-  call s:ch.register_test_builder({
+  call s:timer.mock()
+  call s:job.mock({'outs': ['nREPL server started']})
+  call s:ch.mock({
       \ 'status_value': ['fail', 'fail',
       \                  'fail', 'fail',  'open'],
       \ 'relay': funcref('s:auto_relay'),
@@ -86,9 +86,9 @@ endfunction
 
 function! s:suite.instant_test() abort
   call s:setup()
-  call s:timer.register_test_builder()
-  call s:job.register_test_builder({'outs': ['nREPL server started']})
-  call s:ch.register_test_builder({
+  call s:timer.mock()
+  call s:job.mock({'outs': ['nREPL server started']})
+  call s:ch.mock({
     \ 'status_value': ['fail', 'fail',
     \                  'fail', 'fail',  'open'],
     \ 'relay': funcref('s:auto_relay'),

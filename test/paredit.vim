@@ -18,7 +18,7 @@ function! s:format_code_relay(msg) abort
 endfunction
 
 function! s:suite.deep_slurp_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
       \ 'status_value': 'open',
       \ 'relay': funcref('s:format_code_relay'),
       \ })
