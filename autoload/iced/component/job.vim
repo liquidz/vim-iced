@@ -36,7 +36,7 @@ function! s:neovim.is_job_id(x) abort
 endfunction
 " }}}
 
-function! iced#di#job#build(container) abort
+function! iced#component#job#new(_) abort
   return has('nvim') ? s:neovim : s:vim
 endfunction
 
