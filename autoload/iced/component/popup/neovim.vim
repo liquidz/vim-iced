@@ -56,7 +56,7 @@ endfunction
 
 function! s:popup.open(texts, ...) abort
   if !s:is_supported() | return | endif
-  call iced#di#popup#neovim#moved()
+  call iced#component#popup#neovim#moved()
 
   let bufnr = nvim_create_buf(0, 1)
   if bufnr < 0 | return | endif
@@ -144,7 +144,7 @@ function! s:popup.open(texts, ...) abort
 
   if get(opts, 'auto_close', v:true)
     let time = get(opts, 'close_time', g:iced#popup#time)
-    call iced#di#get('timer').start(time, {-> iced#di#get('popup').close(winid)})
+    call iced#component#get('timer').start(time, {-> iced#component#get('popup').close(winid)})
   endif
 
   let s:last_winid = winid
@@ -174,10 +174,9 @@ function! s:popup.close(window_id) abort
   let s:last_winid = -1
 endfunction
 
-function! iced#di#popup#neovim#moved() abort
+function! iced#component#popup#neovim#moved() abort
   if s:last_winid == -1 | return | endif
-  let popup = iced#di#get('popup')
-  let context = popup.get_context(s:last_winid)
+  let context = s:popup.get_context(s:last_winid)
   let moved = get(context, '__moved', '')
   let base_line = get(context, '__lnum', 0)
   let line = line('.')
@@ -187,13 +186,13 @@ function! iced#di#popup#neovim#moved() abort
   if empty(moved)
     return
   elseif type(moved) == v:t_string && moved ==# 'any'
-    return popup.close(s:last_winid)
+    return s:popup.close(s:last_winid)
   elseif type(moved) == v:t_list && (line != base_line || col < moved[0] || col > moved[1])
-    return popup.close(s:last_winid)
+    return s:popup.close(s:last_winid)
   endif
 endfunction
 
-function! iced#di#popup#neovim#build(container) abort
+function! iced#component#popup#neovim#new(_) abort
   return s:popup
 endfunction
 
