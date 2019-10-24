@@ -38,6 +38,25 @@ function! iced#operation#eval_and_tap(type) abort
   return s:eval({code -> iced#nrepl#eval#code(printf('(clojure.core/tap> %s)', code))})
 endfunction
 
+function! s:replace_by_response_value(resp) abort
+  if has_key(a:resp, 'value')
+    let @@ = printf(';; %s', a:resp['value'])
+    silent normal! gvp
+  endif
+
+  if has_key(a:resp, 'ex') && !empty(a:resp['ex'])
+    call iced#message#error_str(a:resp['ex'])
+  endif
+
+  call iced#nrepl#eval#err(get(a:resp, 'err', ''))
+endfunction
+
+function! iced#operation#eval_and_replace(type) abort
+  return s:eval({code -> iced#nrepl#eval(
+        \ iced#nrepl#eval#normalize_code(code),
+        \ funcref('s:replace_by_response_value'))})
+endfunction
+
 function! iced#operation#eval_repl(type) abort
   let view = winsaveview()
   let reg_save = @@
