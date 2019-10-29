@@ -36,19 +36,20 @@ function! iced#nrepl#test#done(parsed_response) abort
   let errors = a:parsed_response['errors']
   let summary = a:parsed_response['summary']
   let expected_and_actuals = []
+  let sign = iced#system#get('sign')
 
   if has_key(a:parsed_response, 'passes')
     let passes = a:parsed_response['passes']
     for passed_var in uniq(map(copy(passes), {_, v -> v['var']}))
-      call iced#sign#unplace_by_group(passed_var)
+      call sign.unplace_by_group(passed_var)
     endfor
   else
-    call iced#sign#unplace_by_name(s:sign_name)
+    call sign.unplace_by_name(s:sign_name)
   endif
 
   for err in errors
     if has_key(err, 'lnum')
-      call iced#sign#place(s:sign_name, err['lnum'], err['filename'], err['var'])
+      call sign.place(s:sign_name, err['lnum'], err['filename'], err['var'])
     endif
 
     if has_key(err, 'actual') && !empty(err['actual'])

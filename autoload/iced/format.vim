@@ -34,7 +34,7 @@ function! iced#format#all() abort
   finally
     let @@ = reg_save
     call winrestview(view)
-    call iced#sign#refresh()
+    call iced#system#get('sign').refresh()
   endtry
 endfunction
 
@@ -66,7 +66,7 @@ function! iced#format#form() abort
   finally
     let @@ = reg_save
     call winrestview(view)
-    call iced#sign#refresh()
+    call iced#system#get('sign').refresh()
   endtry
 endfunction
 
