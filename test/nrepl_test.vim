@@ -7,6 +7,7 @@ let s:qf = themis#helper('iced_quickfix')
 let s:ex = themis#helper('iced_ex_cmd')
 let s:holder = themis#helper('iced_holder')
 let s:io = themis#helper('iced_io')
+let s:sign = themis#helper('iced_sign')
 let s:timer = themis#helper('iced_timer')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl/test.vim')
 
@@ -17,10 +18,12 @@ function s:setup(...) abort " {{{
   let opts = get(a:, 1, {})
   call s:ex.mock()
   call s:qf.mock()
+  call s:sign.mock()
   call s:timer.mock()
 
   call s:qf.setlist([], 'r')
   call s:holder.clear()
+  call s:sign.unplace_all()
 
   if !get(opts, 'no_temp_files', v:false)
     call writefile(['foo', 'bar', 'baz'], s:temp_foo)
@@ -51,7 +54,10 @@ function! s:suite.done_test() abort
         \ 'summary': {'is_success': v:false, 'summary': 'dummy summary'},
         \ })
 
-   call s:assert.equals(stridx(s:ex.get_last_args()['exe'], ':sign place'), 0)
+   call s:assert.equals(s:sign.all_list(), [
+         \ {'lnum': 123, 'file': s:temp_foo, 'name': 'iced_error', 'group': 'foo_var'},
+         \ {'lnum': 234, 'file': s:temp_bar, 'name': 'iced_error', 'group': 'bar_var'},
+         \ ])
    call s:assert.equals(s:qf.get_last_args()['list'], dummy_errors)
    call s:assert.equals(s:holder.get_args(), [[{
          \ 'result': 'failed',
@@ -208,7 +214,9 @@ function! s:suite.under_cursor_with_test_var_failure_test() abort
        \  'filename': s:temp_foo,
        \  'var': 'baz-test'}
        \ ])
-  call s:assert.equals(stridx(s:ex.get_last_args()['exe'], ':sign place'), 0)
+  call s:assert.equals(s:sign.all_list(), [
+        \ {'lnum': 1, 'file': s:temp_foo, 'name': 'iced_error', 'group': 'baz-test'},
+        \ ])
   call s:assert.equals(r.get_last_var_query(), {
         \ 'ns-query': {'exactly': ['foo.bar-test']},
         \ 'exactly': ['foo.bar-test/baz-test'],
