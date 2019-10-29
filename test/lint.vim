@@ -2,12 +2,14 @@ let s:suite  = themis#suite('iced.lint')
 let s:assert = themis#helper('assert')
 let s:ch = themis#helper('iced_channel')
 let s:ex_cmd = themis#helper('iced_ex_cmd')
+let s:sign = themis#helper('iced_sign')
 
 let s:tempfile = tempname()
 
 function! s:setup(lint_resp) abort " {{{
   call s:ex_cmd.mock()
-  call iced#sign#unplace_all()
+  call s:sign.mock()
+  call s:sign.unplace_all()
   call writefile([''], s:tempfile)
 
   let test = {}
@@ -29,8 +31,8 @@ function! s:teardown() abort " {{{
 endfunction " }}}
 
 function! s:compare_lint_warning(w1, w2) abort " {{{
-  let l1 = a:w1.line
-  let l2 = a:w2.line
+  let l1 = a:w1.lnum
+  let l2 = a:w2.lnum
 
   if l1 == l2
     return 0
@@ -49,12 +51,12 @@ function! s:suite.current_file_test() abort
   if !iced#lint#is_enabled() | call iced#lint#toggle() | endif
 
   call iced#lint#current_file()
-  let res = iced#sign#list_in_current_buffer(s:tempfile)
+  let res = s:sign.list_in_current_buffer(s:tempfile)
   call sort(res, funcref('s:compare_lint_warning'))
 
   call s:assert.equals(res, [
-        \ {'id': 1, 'line': 1, 'file': s:tempfile, 'name': 'iced_lint', 'group': 'default'},
-        \ {'id': 2, 'line': 3, 'file': s:tempfile, 'name': 'iced_lint', 'group': 'default'},
+        \ {'lnum': 1, 'file': s:tempfile, 'name': 'iced_lint', 'group': 'test_group'},
+        \ {'lnum': 3, 'file': s:tempfile, 'name': 'iced_lint', 'group': 'test_group'},
         \ ])
 
   call s:teardown()
@@ -65,7 +67,7 @@ function! s:suite.disabled_test() abort
   if iced#lint#is_enabled() | call iced#lint#toggle() | endif
 
   call iced#lint#current_file()
-  call s:assert.true(empty(iced#sign#list_in_current_buffer(s:tempfile)))
+  call s:assert.true(empty(s:sign.list_in_current_buffer(s:tempfile)))
 
   call s:teardown()
 endfunction
@@ -75,7 +77,7 @@ function! s:suite.find_message_test() abort
   if !iced#lint#is_enabled() | call iced#lint#toggle() | endif
 
   call iced#lint#current_file()
-  call s:assert.true(!empty(iced#sign#list_in_current_buffer(s:tempfile)))
+  call s:assert.true(!empty(s:sign.list_in_current_buffer(s:tempfile)))
 
   call s:assert.equals(iced#lint#find_message(1, s:tempfile), 'hello')
   call s:assert.equals(iced#lint#find_message(2, s:tempfile), '')
