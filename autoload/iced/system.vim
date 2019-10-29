@@ -14,6 +14,7 @@ let s:system_map = {
       \ 'job':          {'constructor': 'iced#component#job#new'},
       \ 'quickfix':     {'constructor': 'iced#component#quickfix#new'},
       \ 'selector':     {'constructor': 'iced#component#selector#new'},
+      \ 'sign':         {'constructor': 'iced#component#sign#new', 'requires': ['ex_cmd']},
       \ 'timer':        {'constructor': 'iced#component#timer#new'},
       \ 'popup':        {'constructor': 'iced#component#popup#new'},
       \ 'virtual_text': {'constructor': 'iced#component#virtual_text#new',
