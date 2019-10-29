@@ -98,11 +98,9 @@ function! iced#component#sign#new(this) abort
     let unplace_list = []
     for sign in self.list_in_current_buffer()
       if sign['name'] ==# a:name
-        call add(unplace_list, {'id': sign['id'], 'group': sign['group']})
+        call self.unplace(sign['id'], sign['group'])
       endif
     endfor
-
-    return sign_unplacelist(unplace_list)
   endfunction
 
   function! d.unplace_by_group(group) abort
