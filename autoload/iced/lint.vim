@@ -18,7 +18,7 @@ function! s:lint(warnings) abort
   let s:last_warnings = a:warnings
   for warn in s:last_warnings
     if !has_key(warn, 'line') || !has_key(warn, 'path') | continue | endif
-    call iced#sign#place(s:sign_name, warn['line'], warn['path'])
+    call iced#system#get('sign').place(s:sign_name, warn['line'], warn['path'])
   endfor
 endfunction
 
@@ -28,7 +28,7 @@ function! iced#lint#current_file() abort
   endif
 
   let s:last_warnings = []
-  call iced#sign#unplace_by_name(s:sign_name)
+  call iced#system#get('sign').unplace_by_name(s:sign_name)
   let file = expand('%:p')
 
   call iced#nrepl#op#iced#lint_file(file, g:iced#eastwood#option, funcref('s:lint'))
@@ -65,7 +65,7 @@ function! iced#lint#toggle() abort
     return iced#message#info('lint_enabled')
   endif
   call iced#message#info('lint_disabled')
-  call iced#sign#unplace_all()
+  call iced#system#get('sign').unplace_all()
 endfunction
 
 let &cpo = s:save_cpo

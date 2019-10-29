@@ -143,8 +143,8 @@ command!          IcedInReplNs              call iced#nrepl#ns#in_repl_session_n
 command!          IcedLintCurrentFile       call iced#lint#current_file()
 command!          IcedLintToggle            call iced#lint#toggle()
 
-command!          IcedJumpToNextSign        call iced#sign#jump_to_next()
-command!          IcedJumpToPrevSign        call iced#sign#jump_to_prev()
+command!          IcedJumpToNextSign        call iced#system#get('sign').jump_to_next()
+command!          IcedJumpToPrevSign        call iced#system#get('sign').jump_to_prev()
 command!          IcedJumpToLet             call iced#let#jump_to_let()
 
 "" }}}
