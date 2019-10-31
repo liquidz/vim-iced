@@ -21,7 +21,7 @@ function! iced#component#sign#new(this) abort
     endtry
   endfunction
 
-  function! d.list_in_current_buffer(...) abort
+  function! d.list_in_buffer(...) abort
     let file = get(a:, 1, expand('%:p'))
     let list = sign_getplaced(file, {'group': '*'})
     try
@@ -34,7 +34,7 @@ function! iced#component#sign#new(this) abort
   function! d.jump_to_next(...) abort
     let lnum = line('.')
     let file = get(a:, 1, expand('%:p'))
-    let sign_list = self.list_in_current_buffer(file)
+    let sign_list = self.list_in_buffer(file)
     let target = ''
 
     for sign in sign_list
@@ -61,7 +61,7 @@ function! iced#component#sign#new(this) abort
     let file = get(a:, 1, expand('%:p'))
     let tmp = ''
     let target = ''
-    let sign_list = self.list_in_current_buffer(file)
+    let sign_list = self.list_in_buffer(file)
 
     for sign in sign_list
       if sign['lnum'] < lnum
@@ -109,7 +109,7 @@ function! iced#component#sign#new(this) abort
 
   function! d.refresh(...) abort
     let file = get(a:, 1, expand('%:p'))
-    for sign in self.list_in_current_buffer()
+    for sign in self.list_in_buffer()
       call self.unplace(sign['id'])
       call self.place(sign['name'], sign['lnum'], file)
     endfor

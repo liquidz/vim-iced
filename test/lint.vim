@@ -51,7 +51,7 @@ function! s:suite.current_file_test() abort
   if !iced#lint#is_enabled() | call iced#lint#toggle() | endif
 
   call iced#lint#current_file()
-  let res = s:sign.list_in_current_buffer(s:tempfile)
+  let res = s:sign.list_in_buffer(s:tempfile)
   call sort(res, funcref('s:compare_lint_warning'))
 
   call s:assert.equals(res, [
@@ -67,7 +67,7 @@ function! s:suite.disabled_test() abort
   if iced#lint#is_enabled() | call iced#lint#toggle() | endif
 
   call iced#lint#current_file()
-  call s:assert.true(empty(s:sign.list_in_current_buffer(s:tempfile)))
+  call s:assert.true(empty(s:sign.list_in_buffer(s:tempfile)))
 
   call s:teardown()
 endfunction
@@ -77,7 +77,7 @@ function! s:suite.find_message_test() abort
   if !iced#lint#is_enabled() | call iced#lint#toggle() | endif
 
   call iced#lint#current_file()
-  call s:assert.true(!empty(s:sign.list_in_current_buffer(s:tempfile)))
+  call s:assert.true(!empty(s:sign.list_in_buffer(s:tempfile)))
 
   call s:assert.equals(iced#lint#find_message(1, s:tempfile), 'hello')
   call s:assert.equals(iced#lint#find_message(2, s:tempfile), '')

@@ -18,7 +18,7 @@ function! s:helper.place(name, lnum, file, ...) abort
   return id
 endfunction
 
-function! s:helper.list_in_current_buffer(...) abort
+function! s:helper.list_in_buffer(...) abort
   let file = get(a:, 1, expand('%:p'))
   return filter(copy(self.signs), {_, v -> v['file'] ==# file})
 endfunction
