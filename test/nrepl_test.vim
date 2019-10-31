@@ -23,7 +23,7 @@ function s:setup(...) abort " {{{
 
   call s:qf.setlist([], 'r')
   call s:holder.clear()
-  call s:sign.unplace_all()
+  call s:sign.clear()
 
   if !get(opts, 'no_temp_files', v:false)
     call writefile(['foo', 'bar', 'baz'], s:temp_foo)
