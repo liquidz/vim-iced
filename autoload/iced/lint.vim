@@ -28,7 +28,7 @@ function! iced#lint#current_file() abort
   endif
 
   let s:last_warnings = []
-  call iced#system#get('sign').unplace_by_name(s:sign_name)
+  call iced#system#get('sign').unplace_by({'name': s:sign_name, 'group': '*'})
   let file = expand('%:p')
 
   call iced#nrepl#op#iced#lint_file(file, g:iced#eastwood#option, funcref('s:lint'))
@@ -65,7 +65,7 @@ function! iced#lint#toggle() abort
     return iced#message#info('lint_enabled')
   endif
   call iced#message#info('lint_disabled')
-  call iced#system#get('sign').unplace_all()
+  call iced#system#get('sign').unplace_by({'group': '*'})
 endfunction
 
 let &cpo = s:save_cpo

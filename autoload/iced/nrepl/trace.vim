@@ -22,7 +22,7 @@ function! s:toggle_trace_var(resp, opts) abort
       " delete existing sign
       let existing_sign_id = iced#cache#get(cache_key, -1)
       if existing_sign_id != -1
-        call sign.unplace(existing_sign_id)
+        call sign.unplace_by({'id': existing_sign_id})
       endif
 
       let sign_id = sign.place('iced_trace', a:opts['lnum'], a:opts['file'])
@@ -33,7 +33,7 @@ function! s:toggle_trace_var(resp, opts) abort
     if !empty(cache_key)
       let sign_id = iced#cache#get(cache_key, -1)
       if sign_id != -1
-        call sign.unplace(sign_id)
+        call sign.unplace_by({'id': sign_id})
         call iced#cache#delete(cache_key)
       endif
     endif

@@ -41,10 +41,10 @@ function! iced#nrepl#test#done(parsed_response) abort
   if has_key(a:parsed_response, 'passes')
     let passes = a:parsed_response['passes']
     for passed_var in uniq(map(copy(passes), {_, v -> v['var']}))
-      call sign.unplace_by_group(passed_var)
+      call sign.unplace_by({'group': passed_var})
     endfor
   else
-    call sign.unplace_by_name(s:sign_name)
+    call sign.unplace_by({'name': s:sign_name, 'group': '*'})
   endif
 
   for err in errors

@@ -85,32 +85,32 @@ function! iced#component#sign#new(this) abort
     endif
   endfunction
 
-  function! d.unplace(id, ...) abort
-    let group = get(a:, 1, self.default_group)
-    return sign_unplace(group, {'id': a:id})
-  endfunction
+  function! d.unplace_by(opt) abort
+    let group = get(a:opt, 'group', self.default_group)
+    let file = get(a:opt, 'file', '')
+    let signs = sign_getplaced(file, {'group': '*'})[0]['signs']
 
-  function! d.unplace_all() abort
-    return sign_unplace('*')
-  endfunction
+    if group !=# '*'
+      call filter(signs, {_, v -> v['group'] ==# group})
+    endif
 
-  function! d.unplace_by_name(name) abort
-    let unplace_list = []
-    for sign in self.list_in_current_buffer()
-      if sign['name'] ==# a:name
-        call self.unplace(sign['id'], sign['group'])
-      endif
+    if has_key(a:opt, 'id')
+      call filter(signs, {_, v -> v['id'] ==# a:opt.id})
+    endif
+
+    if has_key(a:opt, 'name')
+      call filter(signs, {_, v -> v['name'] ==# a:opt.name})
+    endif
+
+    for sign in signs
+      call sign_unplace(sign['group'], {'id': sign['id']})
     endfor
-  endfunction
-
-  function! d.unplace_by_group(group) abort
-    return sign_unplace(a:group)
   endfunction
 
   function! d.refresh(...) abort
     let file = get(a:, 1, expand('%:p'))
     for sign in self.list_in_buffer()
-      call self.unplace(sign['id'])
+      call self.unplace_by({'id': sign['id'], 'group': sign['group']})
       call self.place(sign['name'], sign['lnum'], file)
     endfor
   endfunction
