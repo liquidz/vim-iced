@@ -212,3 +212,21 @@ function! s:suite.path_translation_handler_path_list_test() abort
 
   let g:iced#nrepl#path_translation = {}
 endfunction
+
+function! s:suite.path_translation_handler_with_normalize_path_test() abort
+  let g:iced#nrepl#path_translation = {}
+  let resp = {'path': 'file:/tmp/foo/bar', 'hello': ['/tmp/world', 'jar:file:/tmp/world.jar!/tmp/file.clj']}
+
+  call s:assert.equals(
+        \ iced#nrepl#path_translation_handler(['path', 'hello'], resp, ''),
+        \ {'path': '/tmp/foo/bar', 'hello': ['/tmp/world', 'zipfile:/tmp/world.jar::tmp/file.clj']},
+        \ )
+
+  let g:iced#nrepl#path_translation = {'/tmp': '/src'}
+  call s:assert.equals(
+        \ iced#nrepl#path_translation_handler(['path', 'hello'], resp, ''),
+        \ {'path': '/src/foo/bar', 'hello': ['/src/world', 'zipfile:/src/world.jar::tmp/file.clj']},
+        \ )
+
+  let g:iced#nrepl#path_translation = {}
+endfunction
