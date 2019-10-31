@@ -14,6 +14,7 @@ function! s:io.echomsg(hl, text) abort
 endfunction
 
 function! iced#component#io#new(_) abort
+  call iced#util#debug('start', 'io')
   return s:io
 endfunction
 

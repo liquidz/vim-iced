@@ -19,6 +19,7 @@ function! s:timer.start_lazily(id, time, callback, ...) abort
 endfunction
 
 function! iced#component#timer#new(_) abort
+  call iced#util#debug('start', 'timer')
   return s:timer
 endfunction
 

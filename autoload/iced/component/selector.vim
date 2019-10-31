@@ -16,6 +16,7 @@ function! s:selector.select(config) abort
 endfunction
 
 function! iced#component#selector#new(_) abort
+  call iced#util#debug('start', 'selector')
   return s:selector
 endfunction
 

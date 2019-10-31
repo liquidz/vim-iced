@@ -12,6 +12,7 @@ function! s:qf.setloclist(nr, list, action) abort
 endfunction
 
 function! iced#component#quickfix#new(_) abort
+  call iced#util#debug('start', 'quickfix')
   return s:qf
 endfunction
 

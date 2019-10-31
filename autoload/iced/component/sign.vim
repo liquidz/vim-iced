@@ -2,6 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 function! iced#component#sign#new(this) abort
+  call iced#util#debug('start', 'sign')
   let d = {
         \ 'default_group': 'default',
         \ 'ex_cmd': a:this.ex_cmd,
