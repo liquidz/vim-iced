@@ -71,8 +71,8 @@ endfunction
 
 function! s:helper.mock(opt) abort
   call iced#nrepl#auto#enable_bufenter(v:false)
-  call iced#system#set_component('bencode', {'constructor': 'iced#component#bencode#vim#new'})
-  call iced#system#set_component('channel', {'constructor': {_ -> s:build_test_channel(a:opt)}})
+  call iced#system#set_component('bencode', {'start': 'iced#component#bencode#vim#start'})
+  call iced#system#set_component('channel', {'start': {_ -> s:build_test_channel(a:opt)}})
 endfunction
 
 function! themis#helper#iced_channel#new(runner) abort

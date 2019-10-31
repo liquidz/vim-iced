@@ -44,7 +44,7 @@ function! s:helper.refresh(...) abort
 endfunction
 
 function! s:helper.mock() abort
-  call iced#system#set_component('sign', {'constructor': {_ -> self}})
+  call iced#system#set_component('sign', {'start': {_ -> self}})
 endfunction
 
 function! s:helper.clear() abort

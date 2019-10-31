@@ -111,7 +111,7 @@ function! s:popup.close(window_id) abort
   call popup_close(a:window_id)
 endfunction
 
-function! iced#component#popup#vim#new(_) abort
+function! iced#component#popup#vim#start(_) abort
   return s:popup
 endfunction
 

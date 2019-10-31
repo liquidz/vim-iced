@@ -1,12 +1,12 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-function! iced#component#channel#new(this) abort
+function! iced#component#channel#start(this) abort
   call iced#util#debug('start', 'channel')
   if has('nvim')
-    return iced#component#channel#neovim#new(a:this)
+    return iced#component#channel#neovim#start(a:this)
   else
-    return iced#component#channel#vim#new(a:this)
+    return iced#component#channel#vim#start(a:this)
   endif
 endfunction
 

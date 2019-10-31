@@ -13,7 +13,7 @@ function! s:io.echomsg(hl, text) abort
   call s:M.echomsg(a:hl, a:text)
 endfunction
 
-function! iced#component#io#new(_) abort
+function! iced#component#io#start(_) abort
   call iced#util#debug('start', 'io')
   return s:io
 endfunction

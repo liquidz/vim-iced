@@ -20,7 +20,7 @@ function! s:helper.get_last_args() abort
 endfunction
 
 function! s:helper.mock(...) abort
-  call iced#system#set_component('virtual_text', {'constructor': {_ -> self}})
+  call iced#system#set_component('virtual_text', {'start': {_ -> self}})
 endfunction
 
 function! themis#helper#iced_virtual_text#new(runner) abort

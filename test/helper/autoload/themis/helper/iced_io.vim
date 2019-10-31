@@ -22,7 +22,7 @@ endfunction
 
 function! s:helper.mock(...) abort
   let self.value = get(a:, 1, {})
-  call iced#system#set_component('io', {'constructor': {_ -> self}})
+  call iced#system#set_component('io', {'start': {_ -> self}})
 endfunction
 
 function! themis#helper#iced_io#new(runner) abort

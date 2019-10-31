@@ -192,7 +192,7 @@ function! iced#component#popup#neovim#moved() abort
   endif
 endfunction
 
-function! iced#component#popup#neovim#new(_) abort
+function! iced#component#popup#neovim#start(_) abort
   return s:popup
 endfunction
 

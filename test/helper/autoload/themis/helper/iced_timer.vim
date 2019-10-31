@@ -16,7 +16,7 @@ function! s:helper.start_lazily(id, timer, callback, ...) abort
 endfunction
 
 function! s:helper.mock() abort
-  call iced#system#set_component('timer', {'constructor': {_ -> self}})
+  call iced#system#set_component('timer', {'start': {_ -> self}})
 endfunction
 
 function! themis#helper#iced_timer#new(runner) abort

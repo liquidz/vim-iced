@@ -1,10 +1,10 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-function! iced#component#bencode#new(this) abort
+function! iced#component#bencode#start(this) abort
   call iced#util#debug('start', 'bencode')
   return has('python3')
-        \ ? iced#component#bencode#python#new(a:this)
+        \ ? iced#component#bencode#python#start(a:this)
         \ : a:this.vim_bencode
 endfunction
 

@@ -3,21 +3,23 @@ set cpoptions&vim
 
 let s:component_cache = {}
 
-      "\ 'nrepl':        {'constructor': 'iced#component#nrepl#new', 'requires': ['bencode', 'channel']},
-      "\ 'session':      {'constructor': 'iced#component#session#new', 'requires': ['nrepl']},
+      "\ 'nrepl':        {'start': 'iced#component#nrepl#start', 'requires': ['bencode', 'channel']},
+      "\ 'session':      {'start': 'iced#component#session#start', 'requires': ['nrepl']},
 let s:system_map = {
-      \ 'vim_bencode':  {'constructor': 'iced#component#bencode#vim#new'},
-      \ 'bencode':      {'constructor': 'iced#component#bencode#new', 'requires': ['vim_bencode']},
-      \ 'channel':      {'constructor': 'iced#component#channel#new'},
-      \ 'ex_cmd':       {'constructor': 'iced#component#ex_cmd#new'},
-      \ 'io':           {'constructor': 'iced#component#io#new'},
-      \ 'job':          {'constructor': 'iced#component#job#new'},
-      \ 'quickfix':     {'constructor': 'iced#component#quickfix#new'},
-      \ 'selector':     {'constructor': 'iced#component#selector#new'},
-      \ 'sign':         {'constructor': 'iced#component#sign#new', 'requires': ['ex_cmd']},
-      \ 'timer':        {'constructor': 'iced#component#timer#new'},
-      \ 'popup':        {'constructor': 'iced#component#popup#new'},
-      \ 'virtual_text': {'constructor': 'iced#component#virtual_text#new',
+      \ 'vim_bencode':  {'start': 'iced#component#bencode#vim#start'},
+      \ 'bencode':      {'start': 'iced#component#bencode#start',
+      \                  'requires': ['vim_bencode']},
+      \ 'channel':      {'start': 'iced#component#channel#start'},
+      \ 'ex_cmd':       {'start': 'iced#component#ex_cmd#start'},
+      \ 'io':           {'start': 'iced#component#io#start'},
+      \ 'job':          {'start': 'iced#component#job#start'},
+      \ 'quickfix':     {'start': 'iced#component#quickfix#start'},
+      \ 'selector':     {'start': 'iced#component#selector#start'},
+      \ 'sign':         {'start': 'iced#component#sign#start',
+      \                  'requires': ['ex_cmd']},
+      \ 'timer':        {'start': 'iced#component#timer#start'},
+      \ 'popup':        {'start': 'iced#component#popup#start'},
+      \ 'virtual_text': {'start': 'iced#component#virtual_text#start',
       \                  'vim_requires': ['popup', 'ex_cmd'],
       \                  'nvim_requires': ['timer']},
       \ }
@@ -56,11 +58,11 @@ function! iced#system#get(name) abort
     for required_component_name in s:requires(a:name)
       let params[required_component_name] = iced#system#get(required_component_name)
     endfor
-    let Ctor = s:system_map[a:name]['constructor']
-    if type(Ctor) == v:t_string
-      let Ctor = function(Ctor)
+    let StartFn = s:system_map[a:name]['start']
+    if type(StartFn) == v:t_string
+      let StartFn = function(StartFn)
     endif
-    let s:component_cache[a:name] = Ctor(params)
+    let s:component_cache[a:name] = StartFn(params)
     return s:component_cache[a:name]
   endif
 endfunction

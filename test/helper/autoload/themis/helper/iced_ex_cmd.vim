@@ -12,7 +12,7 @@ function! s:helper.silent_exe(str) abort
 endfunction
 
 function! s:helper.mock() abort
-  call iced#system#set_component('ex_cmd', {'constructor': {_ -> self}})
+  call iced#system#set_component('ex_cmd', {'start': {_ -> self}})
 endfunction
 
 function! s:helper.get_last_args() abort

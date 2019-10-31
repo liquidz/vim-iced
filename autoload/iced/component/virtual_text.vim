@@ -68,7 +68,7 @@ function! s:neovim(this) abort
   return d
 endfunction
 
-function! iced#component#virtual_text#new(this) abort
+function! iced#component#virtual_text#start(this) abort
   call iced#util#debug('start', 'virtual_text')
   return has('nvim') ? s:neovim(a:this) : s:vim(a:this)
 endfunction
