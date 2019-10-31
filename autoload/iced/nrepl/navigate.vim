@@ -48,7 +48,7 @@ endfunction " }}}
 " s:open_var {{{
 function! s:open_var_info(mode, resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('not_found') | endif
-  let path = iced#util#normalize_path(a:resp['file'])
+  let path = a:resp['file']
 
   if expand('%:p') !=# path
     call s:apply_mode_to_file(a:mode, path)
@@ -117,7 +117,7 @@ endfunction " }}}
 " iced#nrepl#navigate#jump_to_def {{{
 function! s:jump(resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('jump_not_found') | endif
-  let path = iced#util#normalize_path(a:resp['file'])
+  let path = a:resp['file']
   let line = a:resp['line']
   let column = get(a:resp, 'column', '0')
 
