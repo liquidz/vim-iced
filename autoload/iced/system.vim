@@ -67,5 +67,31 @@ function! iced#system#get(name) abort
   endif
 endfunction
 
+function! s:stop(name) abort
+  if !has_key(s:system_map, a:name) || !has_key(s:component_cache, a:name)
+    return ''
+  endif
+
+  for required_component_name in s:requires(a:name)
+    call s:stop(required_component_name)
+  endfor
+
+  if has_key(s:system_map[a:name], 'stop')
+    let StopFn = s:system_map[a:name]['stop']
+    if type(StopFn) == v:t_string
+      let StopFn = function(StopFn)
+    endif
+    call StopFn(s:component_cache[a:name])
+  endif
+
+  unlet s:component_cache[a:name]
+endfunction
+
+function! iced#system#stop() abort
+  for name in keys(s:system_map)
+    call s:stop(name)
+  endfor
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
