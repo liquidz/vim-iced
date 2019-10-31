@@ -59,6 +59,11 @@ function! s:helper.mock() abort
   call iced#system#set_component('sign', {'constructor': {_ -> self}})
 endfunction
 
+function! s:helper.clear() abort
+  let self.signs = []
+  return
+endfunction
+
 function! themis#helper#iced_sign#new(runner) abort
   return deepcopy(s:helper)
 endfunction

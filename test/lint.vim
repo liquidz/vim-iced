@@ -9,7 +9,7 @@ let s:tempfile = tempname()
 function! s:setup(lint_resp) abort " {{{
   call s:ex_cmd.mock()
   call s:sign.mock()
-  call s:sign.unplace_all()
+  call s:sign.clear()
   call writefile([''], s:tempfile)
 
   let test = {}
