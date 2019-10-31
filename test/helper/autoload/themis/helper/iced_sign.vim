@@ -35,20 +35,8 @@ function! s:helper.jump_to_prev(...) abort
   return
 endfunction
 
-function! s:helper.unplace(id, ...) abort
-  return
-endfunction
-
-function! s:helper.unplace_all() abort
+function! s:helper.unplace_by(opt) abort
   let self.signs = []
-  return
-endfunction
-
-function! s:helper.unplace_by_name(name) abort
-  return
-endfunction
-
-function! s:helper.unplace_by_group(group) abort
   return
 endfunction
 
