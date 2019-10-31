@@ -9,8 +9,7 @@ function! s:extract_source(resp) abort
   let reg_save = @@
   try
     call iced#buffer#temporary#begin()
-    call iced#system#get('ex_cmd').silent_exe(
-          \ printf(':read %s', iced#util#normalize_path(path)))
+    call iced#system#get('ex_cmd').silent_exe(printf(':read %s', path))
     call cursor(a:resp['line']+1, get(a:resp, 'column', 0))
     silent normal! vaby
     let code = @@

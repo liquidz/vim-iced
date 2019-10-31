@@ -144,15 +144,13 @@ function! iced#nrepl#merge_response_handler(resp, last_result) abort
 endfunction
 
 function! iced#nrepl#path_translation_handler(path_keys, resp, _) abort
-  if empty(g:iced#nrepl#path_translation)
-    return a:resp
-  else
-    let resp = copy(a:resp)
-    for path_key in a:path_keys
-      let path = copy(get(resp, path_key, ''))
-      if empty(path) | continue | endif
-      let path_type = type(path)
+  let resp = copy(a:resp)
+  for path_key in a:path_keys
+    let path = copy(get(resp, path_key, ''))
+    if empty(path) | continue | endif
+    let path_type = type(path)
 
+    if !empty(g:iced#nrepl#path_translation)
       for trans_key in keys(g:iced#nrepl#path_translation)
         if path_type == v:t_list
           call map(path, {_, v -> iced#nrepl#path#replace(v, trans_key, g:iced#nrepl#path_translation[trans_key])})
@@ -160,10 +158,12 @@ function! iced#nrepl#path_translation_handler(path_keys, resp, _) abort
           let path = iced#nrepl#path#replace(path, trans_key, g:iced#nrepl#path_translation[trans_key])
         endif
       endfor
+    endif
 
-      let resp[path_key] = path
-    endfor
-  endif
+    let resp[path_key] = (path_type == v:t_list)
+          \ ? map(copy(path), {_, v -> iced#util#normalize_path(v)})
+          \ : iced#util#normalize_path(path)
+  endfor
 
   return resp
 endfunction
