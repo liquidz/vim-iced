@@ -12,6 +12,7 @@ function! s:ex_cmd.silent_exe(str) abort
 endfunction
 
 function! iced#component#ex_cmd#new(_) abort
+  call iced#util#debug('start', 'ex_cmd')
   return s:ex_cmd
 endfunction
 

@@ -37,6 +37,7 @@ endfunction
 " }}}
 
 function! iced#component#job#new(_) abort
+  call iced#util#debug('start', 'job')
   return has('nvim') ? s:neovim : s:vim
 endfunction
 
