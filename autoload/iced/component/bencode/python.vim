@@ -17,7 +17,7 @@ EOT
   return ret
 endfunction
 
-function! iced#component#bencode#python#new(this) abort
+function! iced#component#bencode#python#start(this) abort
   let bencode = a:this.vim_bencode
   let bencode['decode'] = funcref('s:decode_via_python')
   return bencode

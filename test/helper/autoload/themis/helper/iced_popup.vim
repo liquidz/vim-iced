@@ -40,7 +40,7 @@ function! s:helper.get_last_opts() abort
 endfunction
 
 function! s:helper.mock() abort
-  call iced#system#set_component('popup', {'constructor': {_ -> self}})
+  call iced#system#set_component('popup', {'start': {_ -> self}})
 endfunction
 
 function! themis#helper#iced_popup#new(runner) abort

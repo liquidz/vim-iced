@@ -21,7 +21,7 @@ function! s:ch.sendraw(handler, string) abort
   return ch_sendraw(a:handler, a:string)
 endfunction
 
-function! iced#component#channel#vim#new(_) abort
+function! iced#component#channel#vim#start(_) abort
   return s:ch
 endfunction
 

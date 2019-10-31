@@ -31,7 +31,7 @@ endfunction
 function! s:helper.mock(...) abort
   let opts = get(a:, 1, {})
   let self.outs = get(opts, 'outs', [])
-  call iced#system#set_component('job', {'constructor': {_ -> self}})
+  call iced#system#set_component('job', {'start': {_ -> self}})
 endfunction
 
 function! s:helper.get_last_command() abort

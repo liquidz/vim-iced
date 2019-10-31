@@ -8,7 +8,7 @@ function! s:helper.select(config) abort
 endfunction
 
 function! s:helper.mock() abort
-  call iced#system#set_component('selector', {'constructor': {_ -> self}})
+  call iced#system#set_component('selector', {'start': {_ -> self}})
 endfunction
 
 function! s:helper.get_last_config() abort

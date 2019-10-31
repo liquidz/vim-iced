@@ -12,7 +12,7 @@ function! s:helper.setloclist(nr, list, action) abort
 endfunction
 
 function! s:helper.mock() abort
-  call iced#system#set_component('quickfix', {'constructor': {_ -> self}})
+  call iced#system#set_component('quickfix', {'start': {_ -> self}})
 endfunction
 
 function! s:helper.get_last_args() abort

@@ -12,7 +12,7 @@ function! s:assert_parse_failure(f) abort
   endtry
 endfunction
 
-let s:bencode = iced#component#bencode#vim#new({})
+let s:bencode = iced#component#bencode#vim#start({})
 
 "" ENCODING TEST
 

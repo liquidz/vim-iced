@@ -11,7 +11,7 @@ function! s:qf.setloclist(nr, list, action) abort
   silent call setloclist(a:nr, a:list, a:action)
 endfunction
 
-function! iced#component#quickfix#new(_) abort
+function! iced#component#quickfix#start(_) abort
   call iced#util#debug('start', 'quickfix')
   return s:qf
 endfunction

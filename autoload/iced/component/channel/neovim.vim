@@ -64,7 +64,7 @@ function! s:ch.sendraw(handler, string) abort
   return ret
 endfunction
 
-function! iced#component#channel#neovim#new(_) abort
+function! iced#component#channel#neovim#start(_) abort
   return s:ch
 endfunction
 
