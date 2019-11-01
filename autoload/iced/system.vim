@@ -48,6 +48,8 @@ let s:org_system_map = {
       \                         'requires': ['installer', 'format_native_image']},
       \ 'format_zprint':       {'start': 'iced#component#format#zprint#start',
       \                         'requires': ['installer', 'format_native_image']},
+      \ 'find':         {'start': 'iced#component#find#start',
+      \                  'requires': ['job']},
       \ }
 let s:system_map = copy(s:org_system_map)
 
