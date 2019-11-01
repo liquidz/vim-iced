@@ -28,10 +28,10 @@ function! s:helper.is_job_id(x) abort
   return (a:x == self.id)
 endfunction
 
-function! s:helper.register_test_builder(...) abort
+function! s:helper.mock(...) abort
   let opts = get(a:, 1, {})
   let self.outs = get(opts, 'outs', [])
-  call iced#di#register('job', {_ -> self})
+  call iced#system#set_component('job', {'start': {_ -> self}})
 endfunction
 
 function! s:helper.get_last_command() abort

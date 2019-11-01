@@ -144,15 +144,13 @@ function! iced#nrepl#merge_response_handler(resp, last_result) abort
 endfunction
 
 function! iced#nrepl#path_translation_handler(path_keys, resp, _) abort
-  if empty(g:iced#nrepl#path_translation)
-    return a:resp
-  else
-    let resp = copy(a:resp)
-    for path_key in a:path_keys
-      let path = copy(get(resp, path_key, ''))
-      if empty(path) | continue | endif
-      let path_type = type(path)
+  let resp = copy(a:resp)
+  for path_key in a:path_keys
+    let path = copy(get(resp, path_key, ''))
+    if empty(path) | continue | endif
+    let path_type = type(path)
 
+    if !empty(g:iced#nrepl#path_translation)
       for trans_key in keys(g:iced#nrepl#path_translation)
         if path_type == v:t_list
           call map(path, {_, v -> iced#nrepl#path#replace(v, trans_key, g:iced#nrepl#path_translation[trans_key])})
@@ -160,10 +158,12 @@ function! iced#nrepl#path_translation_handler(path_keys, resp, _) abort
           let path = iced#nrepl#path#replace(path, trans_key, g:iced#nrepl#path_translation[trans_key])
         endif
       endfor
+    endif
 
-      let resp[path_key] = path
-    endfor
-  endif
+    let resp[path_key] = (path_type == v:t_list)
+          \ ? map(copy(path), {_, v -> iced#util#normalize_path(v)})
+          \ : iced#util#normalize_path(path)
+  endfor
 
   return resp
 endfunction
@@ -200,7 +200,7 @@ function! s:dispatcher(ch, resp) abort
   call iced#util#debug('<<<', text)
 
   try
-    let original_resp = iced#di#get('bencode').decode(text)
+    let original_resp = iced#system#get('bencode').decode(text)
   catch /Failed to parse/
     let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
     return
@@ -268,7 +268,7 @@ function! s:dispatcher(ch, resp) abort
   endfor
 
   if !empty(need_debug_input_response)
-    if !iced#buffer#stdout#is_visible() && !iced#di#get('popup').is_supported()
+    if !iced#buffer#stdout#is_visible() && !iced#system#get('popup').is_supported()
       call iced#buffer#stdout#open()
     endif
     call iced#nrepl#debug#start(need_debug_input_response)
@@ -322,9 +322,9 @@ function! iced#nrepl#send(data) abort
     call s:set_message(id, message)
   endif
 
-  call iced#di#get('channel').sendraw(
+  call iced#system#get('channel').sendraw(
         \ s:nrepl['channel'],
-        \ iced#di#get('bencode').encode(data))
+        \ iced#system#get('bencode').encode(data))
 endfunction
 
 function! iced#nrepl#is_op_running(op) abort " {{{
@@ -365,7 +365,7 @@ endfunction
 
 function! s:status(ch) abort
   try
-    return iced#di#get('channel').status(a:ch)
+    return iced#system#get('channel').status(a:ch)
   catch
     return 'fail'
   endtry
@@ -418,7 +418,7 @@ function! iced#nrepl#connect(port, ...) abort
   if !iced#nrepl#is_connected()
     let address = printf('%s:%d', g:iced#nrepl#host, a:port)
     let s:nrepl['port'] = a:port
-    let s:nrepl['channel'] = iced#di#get('channel').open(address, {
+    let s:nrepl['channel'] = iced#system#get('channel').open(address, {
         \ 'mode': 'raw',
         \ 'callback': funcref('s:dispatcher'),
         \ 'drop': 'never',
@@ -455,7 +455,7 @@ function! iced#nrepl#disconnect() abort " {{{
     call iced#nrepl#sync#send({'op': 'interrupt', 'session': id})
     call iced#nrepl#sync#close(id)
   endfor
-  call iced#di#get('channel').close(s:nrepl['channel'])
+  call iced#system#get('channel').close(s:nrepl['channel'])
   let s:nrepl = s:initialize_nrepl()
   call iced#cache#clear()
   call iced#nrepl#cljs#reset()

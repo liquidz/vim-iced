@@ -13,8 +13,8 @@ function! s:extract_function_relay(locals, msg) abort
 endfunction
 
 function! s:suite.extract_function_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': function('s:extract_function_relay', [['a', 'b']])})
-  call s:io.register_test_builder({'input': 'extracted'})
+  call s:ch.mock({'status_value': 'open', 'relay': function('s:extract_function_relay', [['a', 'b']])})
+  call s:io.mock({'input': 'extracted'})
   call s:buf.start_dummy(['(foo (bar a b|))'])
 
   call iced#nrepl#refactor#extract_function()
@@ -30,8 +30,8 @@ function! s:suite.extract_function_test() abort
 endfunction
 
 function! s:suite.extract_function_with_no_args_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': function('s:extract_function_relay', [[]])})
-  call s:io.register_test_builder({'input': 'extracted'})
+  call s:ch.mock({'status_value': 'open', 'relay': function('s:extract_function_relay', [[]])})
+  call s:io.mock({'input': 'extracted'})
   call s:buf.start_dummy(['(foo (bar|))'])
 
   call iced#nrepl#refactor#extract_function()
@@ -56,7 +56,7 @@ function! s:clean_ns_relay(msg) abort
 endfunction
 
 function! s:suite.clean_ns_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:clean_ns_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:clean_ns_relay')})
   call s:buf.start_dummy([
         \ '(ns foo.bar)',
         \ '(baz hello|)',
@@ -83,7 +83,7 @@ function! s:thread_relay(msg) abort
 endfunction
 
 function! s:suite.thread_first_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:thread_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:thread_relay')})
   call s:buf.start_dummy(['(foo (bar (baz 1) 2)|)'])
   call iced#nrepl#refactor#thread_first()
   call s:assert.equals(s:buf.get_texts(), '(thread first refactored)')
@@ -91,7 +91,7 @@ function! s:suite.thread_first_test() abort
 endfunction
 
 function! s:suite.thread_last_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:thread_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:thread_relay')})
   call s:buf.start_dummy(['(foo (bar (baz 1) 2)|)'])
   call iced#nrepl#refactor#thread_last()
   call s:assert.equals(s:buf.get_texts(), '(thread last refactored)')
@@ -109,7 +109,7 @@ function! s:add_arity_relay(msg) abort
 endfunction
 
 function! s:suite.add_arity_defn_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
   " Single arity
   call s:buf.start_dummy([
         \ '(ns foo.core)',
@@ -141,7 +141,7 @@ function! s:suite.add_arity_defn_test() abort
 endfunction
 
 function! s:suite.add_arity_with_doc_string_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
   " Single arity
   call s:buf.start_dummy([
         \ '(ns foo.core)',
@@ -178,7 +178,7 @@ function! s:suite.add_arity_with_doc_string_test() abort
 endfunction
 
 function! s:suite.add_arity_with_meta_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
   " Single arity
   call s:buf.start_dummy([
         \ '(ns foo.core)',
@@ -219,7 +219,7 @@ function! s:suite.add_arity_with_meta_test() abort
 endfunction
 
 function! s:suite.add_arity_fn_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
   " Single arity
   call s:buf.start_dummy([
         \ '(ns foo.core)',
@@ -252,7 +252,7 @@ function! s:suite.add_arity_fn_test() abort
 endfunction
 
 function! s:suite.add_arity_defmacro_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
   " Single arity
   call s:buf.start_dummy([
         \ '(ns foo.core)',
@@ -284,7 +284,7 @@ function! s:suite.add_arity_defmacro_test() abort
 endfunction
 
 function! s:suite.add_arity_defmethod_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
   " Single arity
   call s:buf.start_dummy([
         \ '(ns foo.core)',

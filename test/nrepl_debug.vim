@@ -64,10 +64,10 @@ function! s:suite.start_test() abort
   endfunction
 
   call s:buf.start_dummy(['|(aaa (bbb (ccc) ddd) eee)'])
-  call s:ex_cmd.register_test_builder()
-  call s:io.register_test_builder({'input': 'dummy-input'})
-  call s:popup.register_test_builder()
-  call s:ch.register_test_builder({
+  call s:ex_cmd.mock()
+  call s:io.mock({'input': 'dummy-input'})
+  call s:popup.mock()
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> test.relay(msg)}})
 
@@ -110,10 +110,10 @@ endfunction
 
 function! s:suite.quit_test() abort
   call s:buf.start_dummy(['(aaa (bbb (ccc) ddd) eee)|'])
-  call s:ex_cmd.register_test_builder()
-  call s:io.register_test_builder({'input': 'dummy-input'})
-  call s:popup.register_test_builder()
-  call s:ch.register_test_builder({
+  call s:ex_cmd.mock()
+  call s:io.mock({'input': 'dummy-input'})
+  call s:popup.mock()
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {_ -> {'status': ['done']}}})
 

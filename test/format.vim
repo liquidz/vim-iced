@@ -25,7 +25,7 @@ function! s:suite.all_test() abort
         \ '(list 123 456|)',
         \ '', '', '', '',
         \ ])
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:format_code_relay(msg, ":dummy\n:formatted")}})
 
@@ -41,7 +41,7 @@ function! s:suite.form_test() abort
         \ '(list :foo)',
         \ '(list 123 456|)',
         \ ])
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:format_code_relay(msg, ':dummy-formatted')}})
 
@@ -65,7 +65,7 @@ function! s:calculate_indent_relay(msg, level) abort
 endfunction
 
 function! s:suite.calculate_indent_with_top_form_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:calculate_indent_relay(msg, 1)}})
   call s:buf.start_dummy([
@@ -79,7 +79,7 @@ function! s:suite.calculate_indent_with_top_form_test() abort
 endfunction
 
 function! s:suite.calculate_indent_with_nested_form_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:calculate_indent_relay(msg, 3)}})
   call s:buf.start_dummy([
@@ -95,7 +95,7 @@ function! s:suite.calculate_indent_with_nested_form_test() abort
 endfunction
 
 function! s:suite.calculate_indent_without_corresponding_form_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:calculate_indent_relay(msg, 99)}})
   call s:buf.start_dummy([

@@ -144,7 +144,7 @@ function! iced#nrepl#cljs#start_repl_via_env(env_key, ...) abort
     let warning = get(env, 'warning', '')
     if !empty(warning)
       call iced#message#warning_str(warning)
-      let res = iced#di#get('io').input(iced#message#get('confirm_proceeding'))
+      let res = iced#system#get('io').input(iced#message#get('confirm_proceeding'))
       if res !=# '' && res !=# 'y' && res !=# 'Y'
         return iced#message#error('canceled_cljs_repl')
       endif

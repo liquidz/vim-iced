@@ -46,7 +46,7 @@ function! iced#nrepl#eval#out(resp) abort
   if has_key(a:resp, 'value')
     echo iced#util#shorten(a:resp['value'])
 
-    call iced#di#get('virtual_text').set(
+    call iced#system#get('virtual_text').set(
           \ printf('=> %s', a:resp['value']),
           \ {'highlight': 'Comment', 'auto_clear': v:true})
   endif
@@ -85,17 +85,20 @@ function! s:extract_inside_form(code) abort
   return a:code
 endfunction
 
+function! iced#nrepl#eval#normalize_code(code) abort
+  if g:iced#eval#inside_comment && s:is_comment_form(a:code)
+    return s:extract_inside_form(a:code)
+  endif
+  return a:code
+endfunction
+
 function! iced#nrepl#eval#code(code, ...) abort
   if ! iced#nrepl#check_session_validity() | return | endif
   let view = winsaveview()
   let reg_save = @@
   let opt = get(a:, 1, {})
 
-  let code = a:code
-  if g:iced#eval#inside_comment && s:is_comment_form(code)
-    let code = s:extract_inside_form(code)
-  endif
-
+  let code = iced#nrepl#eval#normalize_code(a:code)
   let Callback = get(opt, 'callback', function('iced#nrepl#eval#out'))
   if has_key(opt, 'callback')
     unlet opt['callback']

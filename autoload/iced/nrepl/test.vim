@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
@@ -36,19 +36,20 @@ function! iced#nrepl#test#done(parsed_response) abort
   let errors = a:parsed_response['errors']
   let summary = a:parsed_response['summary']
   let expected_and_actuals = []
+  let sign = iced#system#get('sign')
 
   if has_key(a:parsed_response, 'passes')
     let passes = a:parsed_response['passes']
     for passed_var in uniq(map(copy(passes), {_, v -> v['var']}))
-      call iced#sign#unplace_by_group(passed_var)
+      call sign.unplace_by({'group': passed_var})
     endfor
   else
-    call iced#sign#unplace_by_name(s:sign_name)
+    call sign.unplace_by({'name': s:sign_name, 'group': '*'})
   endif
 
   for err in errors
     if has_key(err, 'lnum')
-      call iced#sign#place(s:sign_name, err['lnum'], err['filename'], err['var'])
+      call sign.place(s:sign_name, err['lnum'], err['filename'], err['var'])
     endif
 
     if has_key(err, 'actual') && !empty(err['actual'])
@@ -216,9 +217,22 @@ function! iced#nrepl#test#ns() abort
 
   let query = {'ns-query': {'exactly': [ns]}}
   let s:last_test = {'type': 'test-var', 'query': query}
+  let sign = iced#system#get('sign')
 
-  call s:echo_testing_message(query)
-  call iced#nrepl#ns#require(ns, {_ -> iced#nrepl#op#cider#test_var_query(query, funcref('s:clojure_test_out'))})
+  try
+    " Unplace all signs named `s:sign_name` in ns path
+    let ns_path_resp = iced#promise#sync('iced#nrepl#op#cider#ns_path', [ns])
+    if type(ns_path_resp) != v:t_dict || !has_key(ns_path_resp, 'path') || empty(ns_path_resp['path'])
+      call sign.unplace_by({'name': s:sign_name, 'group': '*'})
+    else
+      call sign.unplace_by({'name': s:sign_name, 'file': ns_path_resp['path'], 'group': '*'})
+    endif
+  catch
+    call sign.unplace_by({'name': s:sign_name, 'group': '*'})
+  finally
+    call s:echo_testing_message(query)
+    call iced#nrepl#ns#require(ns, {_ -> iced#nrepl#op#cider#test_var_query(query, funcref('s:clojure_test_out'))})
+  endtry
 endfunction " }}}
 
 " iced#nrepl#test#all {{{
@@ -230,6 +244,7 @@ function! iced#nrepl#test#all() abort
         \ }
   let s:last_test = {'type': 'test-var', 'query': query}
 
+  call iced#system#get('sign').unplace_by({'name': s:sign_name, 'group': '*'})
   call s:echo_testing_message(query)
   call iced#nrepl#op#cider#test_var_query(query, funcref('s:clojure_test_out'))
 endfunction " }}}
@@ -314,6 +329,6 @@ function! iced#nrepl#test#rerun_last() abort
   endif
 endfunction " }}}
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
 " vim:fdm=marker:fdl=0

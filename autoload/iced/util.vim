@@ -149,7 +149,7 @@ function! iced#util#normalize_path(path) abort
 endfunction
 
 function! iced#util#future(fn) abort
-  call iced#di#get('timer').start(10, {_ -> a:fn()})
+  call iced#system#get('timer').start(10, {_ -> a:fn()})
 endfunction
 
 function! iced#util#delete_color_code(s) abort

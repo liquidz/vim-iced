@@ -7,6 +7,7 @@ let s:qf = themis#helper('iced_quickfix')
 let s:ex = themis#helper('iced_ex_cmd')
 let s:holder = themis#helper('iced_holder')
 let s:io = themis#helper('iced_io')
+let s:sign = themis#helper('iced_sign')
 let s:timer = themis#helper('iced_timer')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl/test.vim')
 
@@ -15,12 +16,14 @@ let s:temp_bar = tempname()
 
 function s:setup(...) abort " {{{
   let opts = get(a:, 1, {})
-  call s:ex.register_test_builder()
-  call s:qf.register_test_builder()
-  call s:timer.register_test_builder()
+  call s:ex.mock()
+  call s:qf.mock()
+  call s:sign.mock()
+  call s:timer.mock()
 
   call s:qf.setlist([], 'r')
   call s:holder.clear()
+  call s:sign.clear()
 
   if !get(opts, 'no_temp_files', v:false)
     call writefile(['foo', 'bar', 'baz'], s:temp_foo)
@@ -51,7 +54,10 @@ function! s:suite.done_test() abort
         \ 'summary': {'is_success': v:false, 'summary': 'dummy summary'},
         \ })
 
-   call s:assert.equals(stridx(s:ex.get_last_args()['exe'], ':sign place'), 0)
+   call s:assert.equals(s:sign.all_list(), [
+         \ {'lnum': 123, 'file': s:temp_foo, 'name': 'iced_error', 'group': 'foo_var'},
+         \ {'lnum': 234, 'file': s:temp_bar, 'name': 'iced_error', 'group': 'bar_var'},
+         \ ])
    call s:assert.equals(s:qf.get_last_args()['list'], dummy_errors)
    call s:assert.equals(s:holder.get_args(), [[{
          \ 'result': 'failed',
@@ -63,7 +69,7 @@ endfunction
 
 function! s:suite.test_vars_by_ns_name_test() abort
   let test_vars = {'foo': {}, 'bar': {'test': ''}, 'baz': {'test': 'test'}}
-  call s:ch.register_test_builder({
+  call s:ch.mock({
        \ 'status_value': 'open',
        \ 'relay': {msg -> (msg['op'] ==# 'ns-vars-with-meta')
        \           ? {'status': ['done'], 'ns-vars-with-meta': test_vars}
@@ -74,7 +80,7 @@ function! s:suite.test_vars_by_ns_name_test() abort
 endfunction
 
 function! s:suite.test_vars_by_ns_name_error_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
        \ 'status_value': 'open',
        \ 'relay': {msg -> {'status': ['done']}}})
 
@@ -102,7 +108,7 @@ function! s:suite.fetch_test_vars_by_function_under_cursor_test() abort
     let self.result = {'var_name': a:var_name, 'test_vars': a:test_vars}
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
+  call s:ch.mock({'status_value': 'open', 'relay': test.relay})
   call s:buf.start_dummy([
       \ '(ns foo.bar)',
       \ '(defn baz [] "baz" |)'])
@@ -163,7 +169,7 @@ function! s:suite.under_cursor_with_test_var_success_test() abort
         \                   'var': 'baz-test'}]
         \ }
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#under_cursor()
@@ -194,7 +200,7 @@ function! s:suite.under_cursor_with_test_var_failure_test() abort
         \                   'var': 'baz-test'}]
         \ }
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#under_cursor()
@@ -208,7 +214,9 @@ function! s:suite.under_cursor_with_test_var_failure_test() abort
        \  'filename': s:temp_foo,
        \  'var': 'baz-test'}
        \ ])
-  call s:assert.equals(stridx(s:ex.get_last_args()['exe'], ':sign place'), 0)
+  call s:assert.equals(s:sign.all_list(), [
+        \ {'lnum': 1, 'file': s:temp_foo, 'name': 'iced_error', 'group': 'baz-test'},
+        \ ])
   call s:assert.equals(r.get_last_var_query(), {
         \ 'ns-query': {'exactly': ['foo.bar-test']},
         \ 'exactly': ['foo.bar-test/baz-test'],
@@ -223,7 +231,7 @@ function! s:suite.under_cursor_with_non_test_var_and_test_ns_test() abort
   let r = s:build_under_cursor_relay()
   let opts = {'eval': '#''foo.bar-test/non-existing'}
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#under_cursor()
@@ -247,7 +255,7 @@ function! s:suite.under_cursor_with_non_test_var_and_non_test_ns_test() abort
         \                   'var': 'dummy-var'}],
         \ }
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
 
   call iced#nrepl#test#under_cursor()
@@ -277,7 +285,7 @@ function! s:suite.ns_test() abort
         \ 'var': 'dummy-var'}],
         \ }
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#ns()
@@ -312,7 +320,7 @@ function! s:suite.ns_with_non_test_ns_test() abort
         \ 'ns-vars-with-meta': {},
         \ }
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   "" NOTE: the ns name does not end with '-test'
   call s:buf.start_dummy(['(ns bar.baz)', '(some codes|)'])
 
@@ -340,7 +348,7 @@ function! s:suite.all_test() abort
         \ 'type': 'fail',
         \ 'var': 'dummy-var'}]}
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
 
   call iced#nrepl#test#all()
@@ -389,7 +397,7 @@ function! s:suite.redo_test() abort
     return self.redo_msg
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {v -> test.relay(v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {v -> test.relay(v)}})
   call iced#nrepl#set_session('clj', 'clj-session')
   call iced#nrepl#change_current_session('clj')
 
@@ -422,8 +430,8 @@ function! s:suite.spec_check_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
-  call s:io.register_test_builder()
+  call s:ch.mock({'status_value': 'open', 'relay': test.relay})
+  call s:io.mock()
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#spec_check(123)
@@ -449,8 +457,8 @@ function! s:suite.spec_check_failure_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': test.relay})
-  call s:io.register_test_builder()
+  call s:ch.mock({'status_value': 'open', 'relay': test.relay})
+  call s:io.mock()
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
   call iced#nrepl#test#spec_check(123)

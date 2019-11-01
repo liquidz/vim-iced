@@ -45,10 +45,10 @@ function! s:suite.change_to_invalid_session_test() abort
 endfunction
 
 function! s:suite.is_connected_test() abort
-  call s:ch.register_test_builder({'status_value': 'open'})
+  call s:ch.mock({'status_value': 'open'})
   call s:assert.true(iced#nrepl#is_connected())
 
-  call s:ch.register_test_builder({'status_value': 'fail'})
+  call s:ch.mock({'status_value': 'fail'})
   call s:assert.false(iced#nrepl#is_connected())
 endfunction
 
@@ -67,7 +67,7 @@ function! s:suite.connect_test() abort
   "   1.fail means not connected yet
   "   2.fail means not connected by auto connection
   "   3.open means connection established
-  call s:ch.register_test_builder({
+  call s:ch.mock({
       \ 'status_value': ['fail', 'fail', 'open'],
       \ 'relay': {msg -> test.relay(msg)},
       \ })
@@ -83,7 +83,7 @@ function! s:suite.connect_test() abort
 endfunction
 
 function! s:suite.connect_failure_test() abort
-  call s:ch.register_test_builder({'status_value': 'fail'})
+  call s:ch.mock({'status_value': 'fail'})
   call s:assert.equals(iced#nrepl#connect(1234), v:false)
 endfunction
 
@@ -100,7 +100,7 @@ function! s:suite.disconnect_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({
+  call s:ch.mock({
       \ 'status_value': 'open',
       \ 'relay': {msg -> test.relay(msg)},
       \ })
@@ -120,8 +120,8 @@ function! s:suite.eval_test() abort
   function! test.relay_raw(msg) abort
     if a:msg['op'] !=# 'eval' | return '' | endif
 
-    let resp1 = iced#di#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': '6'})
-    let resp2 = iced#di#get('bencode').encode({'id': 123, 'status': ['done']})
+    let resp1 = iced#system#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': '6'})
+    let resp2 = iced#system#get('bencode').encode({'id': 123, 'status': ['done']})
     return (s:split_half(resp1) + s:split_half(resp2))
   endfunction
 
@@ -129,7 +129,7 @@ function! s:suite.eval_test() abort
     let self['result'] = a:result
   endfunction
 
-  call s:ch.register_test_builder({
+  call s:ch.mock({
       \ 'status_value': 'open',
       \ 'relay_raw': {msg -> test.relay_raw(msg)},
       \ })
@@ -154,8 +154,8 @@ function! s:suite.multiple_different_ids_response_test() abort
   let test = {}
   function! test.relay_raw(msg) abort
     if a:msg['op'] !=# 'eval' | return '' | endif
-    let resp1 = iced#di#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': '6', 'status': ['done']})
-    let resp2 = iced#di#get('bencode').encode({'id': 234, 'ns': 'bar.core', 'value': 'baaaarrrr', 'status': ['done']})
+    let resp1 = iced#system#get('bencode').encode({'id': 123, 'ns': 'foo.core', 'value': '6', 'status': ['done']})
+    let resp2 = iced#system#get('bencode').encode({'id': 234, 'ns': 'bar.core', 'value': 'baaaarrrr', 'status': ['done']})
     return printf('%s%s', resp1, resp2)
   endfunction
 
@@ -167,7 +167,7 @@ function! s:suite.multiple_different_ids_response_test() abort
     let self['result234'] = a:result
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay_raw': {msg -> test.relay_raw(msg)}})
+  call s:ch.mock({'status_value': 'open', 'relay_raw': {msg -> test.relay_raw(msg)}})
   call s:funcs.set_message(234, {'op': 'eval', 'callback': test.callback_for_234})
 
   call iced#nrepl#eval('(+ 1 2 3)', {result -> test.callback_for_123(result)}, {'id': 123})
@@ -208,6 +208,24 @@ function! s:suite.path_translation_handler_path_list_test() abort
   call s:assert.equals(
         \ iced#nrepl#path_translation_handler(['path'], resp, ''),
         \ {'path': ['/src/foo', '/src/bar'], 'hello': '/tmp/world'},
+        \ )
+
+  let g:iced#nrepl#path_translation = {}
+endfunction
+
+function! s:suite.path_translation_handler_with_normalize_path_test() abort
+  let g:iced#nrepl#path_translation = {}
+  let resp = {'path': 'file:/tmp/foo/bar', 'hello': ['/tmp/world', 'jar:file:/tmp/world.jar!/tmp/file.clj']}
+
+  call s:assert.equals(
+        \ iced#nrepl#path_translation_handler(['path', 'hello'], resp, ''),
+        \ {'path': '/tmp/foo/bar', 'hello': ['/tmp/world', 'zipfile:/tmp/world.jar::tmp/file.clj']},
+        \ )
+
+  let g:iced#nrepl#path_translation = {'/tmp': '/src'}
+  call s:assert.equals(
+        \ iced#nrepl#path_translation_handler(['path', 'hello'], resp, ''),
+        \ {'path': '/src/foo/bar', 'hello': ['/src/world', 'zipfile:/src/world.jar::tmp/file.clj']},
         \ )
 
   let g:iced#nrepl#path_translation = {}

@@ -143,8 +143,8 @@ command!          IcedInReplNs              call iced#nrepl#ns#in_repl_session_n
 command!          IcedLintCurrentFile       call iced#lint#current_file()
 command!          IcedLintToggle            call iced#lint#toggle()
 
-command!          IcedJumpToNextSign        call iced#sign#jump_to_next()
-command!          IcedJumpToPrevSign        call iced#sign#jump_to_prev()
+command!          IcedJumpToNextSign        call iced#system#get('sign').jump_to_next()
+command!          IcedJumpToPrevSign        call iced#system#get('sign').jump_to_prev()
 command!          IcedJumpToLet             call iced#let#jump_to_let()
 
 "" }}}
@@ -165,6 +165,7 @@ nnoremap <silent> <Plug>(iced_eval)                     :<C-u>set opfunc=iced#op
 nnoremap <silent> <Plug>(iced_eval_repl)                :<C-u>set opfunc=iced#operation#eval_repl<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_print)           :<C-u>set opfunc=iced#operation#eval_and_print<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_tap)             :<C-u>set opfunc=iced#operation#eval_and_tap<CR>g@
+nnoremap <silent> <Plug>(iced_eval_and_replace)         :<C-u>set opfunc=iced#operation#eval_and_replace<CR>g@
 nnoremap <silent> <Plug>(iced_eval_ns)                  :<C-u>IcedEvalNs<CR>
 vnoremap <silent> <Plug>(iced_eval_visual)              :<C-u>IcedEvalVisual<CR>
 vnoremap <silent> <Plug>(iced_eval_repl_visual)         :<C-u>IcedEvalReplVisual<CR>
@@ -293,7 +294,7 @@ endif
 if has('nvim') && exists('*nvim_open_win')
   aug vim_iced_close_document_popup
     au!
-    au CursorMoved *.clj,*.cljs,*.cljc call iced#di#popup#neovim#moved()
+    au CursorMoved *.clj,*.cljs,*.cljc call iced#component#popup#neovim#moved()
   aug END
 endif
 "" }}}

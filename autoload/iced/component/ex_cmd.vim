@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:ex_cmd = {}
 
@@ -11,9 +11,10 @@ function! s:ex_cmd.silent_exe(str) abort
   silent exe a:str
 endfunction
 
-function! iced#di#ex_cmd#build(container) abort
+function! iced#component#ex_cmd#start(_) abort
+  call iced#util#debug('start', 'ex_cmd')
   return s:ex_cmd
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

@@ -46,7 +46,7 @@ function! s:suite.collect_errors_and_passes_success_test() abort
         \   'foo.core-test': {
         \     'err-test': [
         \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'pass', 'var': 'err-test-var'}]}}}]
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
 
   call s:assert.equals(s:funcs.collect_errors_and_passes(dummy_resp),
         \ [[], [{'var': 'err-test-var'}]])
@@ -59,7 +59,7 @@ function! s:suite.collect_errors_and_passes_failed_without_diffs_test() abort
         \     'err-test': [
         \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test-var',
         \        'line': 123, 'expected': 'expected-result', 'actual': 'actual-result'}]}}}]
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
 
   call s:assert.equals(s:funcs.collect_errors_and_passes(dummy_resp), [
         \ [{'type': 'E',
@@ -81,7 +81,7 @@ function! s:suite.collect_errors_and_passes_failed_with_diffs_test() abort
         \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test-var',
         \        'line': 123, 'expected': 'expected-result',
         \        'diffs': [['actual-result', ['foo', 'bar']]]}]}}}]
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
 
   call s:assert.equals(s:funcs.collect_errors_and_passes(dummy_resp), [
         \ [{'type': 'E',
@@ -103,7 +103,7 @@ function! s:suite.collect_errors_and_passes_errored_test() abort
         \     'err-test': [
         \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'error', 'var': 'err-test-var',
         \        'line': 123, 'expected': 'expected-result', 'error': 'error-message'}]}}}]
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:ns_path_relay')})
 
   call s:assert.equals(s:funcs.collect_errors_and_passes(dummy_resp), [
         \ [{'type': 'E',
@@ -124,7 +124,7 @@ function! s:suite.collect_errors_and_passes_could_not_find_ns_path_test() abort
         \     'err-test': [
         \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test-var',
         \        'file': 'test/foo/core_test.clj', 'line': 123, 'expected': 'expected-result', 'actual': 'actual-result'}]}}}]
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {msg ->
+  call s:ch.mock({'status_value': 'open', 'relay': {msg ->
         \ (msg['op'] ==# 'ns-path') ? {'status': ['done'], 'path': []} : {}}})
   call iced#cache#set('user-dir', '/user/dir')
   call iced#cache#set('file-separator', '/')
