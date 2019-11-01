@@ -36,9 +36,32 @@ function! s:neovim.is_job_id(x) abort
 endfunction
 " }}}
 
+function! s:on_out_out(_, out) abort dict
+  for out in iced#util#ensure_array(a:out)
+    let self.result = self.result . out
+  endfor
+endfunction
+
+function! s:on_out_close(_) abort dict
+  call self.callback(self.result)
+endfunction
+
 function! iced#component#job#start(_) abort
   call iced#util#debug('start', 'job')
-  return has('nvim') ? s:neovim : s:vim
+  "return has('nvim') ? s:neovim : s:vim
+  let job =  has('nvim') ? s:neovim : s:vim
+
+  " common {{{
+  function! job.out(command, callback) abort
+    let d = {'result': '', 'callback': a:callback}
+    call self.start(a:command, {
+          \ 'out_cb': funcref('s:on_out_out', d),
+          \ 'close_cb': funcref('s:on_out_close', d),
+          \ })
+  endfunction
+  " }}}
+
+  return job
 endfunction
 
 let &cpoptions = s:save_cpo
