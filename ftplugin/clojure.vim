@@ -83,7 +83,6 @@ command!          IcedStdoutBufferClear     call iced#buffer#stdout#clear()
 command!          IcedStdoutBufferClose     call iced#buffer#stdout#close()
 
 command! -nargs=? IcedDefJump               call iced#nrepl#navigate#jump_to_def(<q-args>)
-command!          IcedDefBack               call iced#nrepl#navigate#jump_back()
 command! -nargs=1 -complete=custom,iced#nrepl#navigate#ns_complete
       \ IcedOpenNs                          call iced#nrepl#navigate#open_ns('e', <q-args>)
 
@@ -192,7 +191,6 @@ nnoremap <silent> <Plug>(iced_stdout_buffer_clear)      :<C-u>IcedStdoutBufferCl
 nnoremap <silent> <Plug>(iced_stdout_buffer_close)      :<C-u>IcedStdoutBufferClose<CR>
 
 nnoremap <silent> <Plug>(iced_def_jump)                 :<C-u>IcedDefJump<CR>
-nnoremap <silent> <Plug>(iced_def_back)                 :<C-u>IcedDefBack<CR>
 
 nnoremap <silent> <Plug>(iced_document_open)            :<C-u>IcedDocumentOpen<CR>
 nnoremap <silent> <Plug>(iced_popup_document_open)      :<C-u>IcedPopupDocumentOpen<CR>
@@ -523,10 +521,6 @@ function! s:default_key_mappings() abort
   "" ------------------------------------------------------------------------
   if !hasmapto('<Plug>(iced_def_jump)')
     silent! nmap <buffer> <C-]> <Plug>(iced_def_jump)
-  endif
-
-  if !hasmapto('<Plug>(iced_def_back)')
-    silent! nmap <buffer> <C-t> <Plug>(iced_def_back)
   endif
 
   if !hasmapto('<Plug>(iced_jump_to_next_sign)')

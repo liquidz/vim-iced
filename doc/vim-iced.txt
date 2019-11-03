@@ -438,7 +438,7 @@ SKELETON                                                    *vim-iced-skeleton*
 TAG JUMP                                                    *vim-iced-tag-jump*
 
   |:IcedDefJump| to jump to definition.
-  |:IcedDefBack| to jump back.
+  To jump back, you can use default key mapping(<C-t>).
 
 ==============================================================================
 EDITING S-EXP                                          *vim-iced-editing-s-exp*
@@ -732,11 +732,6 @@ COMMANDS                                                    *vim-iced-commands*
   Jump cursor to definition of symbol under cursor.
   Key is mapped to |<Plug>(iced_def_jump)|.
 
-                                                                 *:IcedDefBack*
-:IcedDefBack
-  Jump back cursor.
-  Key is mapped to |<Plug>(iced_def_back)|.
-  
                                                                   *:IcedOpenNs*
 :IcedOpenNs {ns-name}
   Open a file corresponding to the specified {ns-name}.
@@ -1225,10 +1220,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_def_jump)
   Same as |:IcedDefJump|.
 
-                                                        *<Plug>(iced_def_back)*
-<Plug>(iced_def_back)
-  Same as |:IcedDefBack|.
-  
                                                          *<Plug>(iced_open_ns)*
 <Plug>(iced_open_ns)
   Same as |:IcedOpenNs|.
@@ -1857,7 +1848,6 @@ g:iced_enable_default_key_mappings
   n       <Leader>br   <Plug>(iced_browse_references)
   n       <Leader>bd   <Plug>(iced_browse_dependencies)
   n       <C-]>        <Plug>(iced_def_jump)
-  n       <C-t>        <Plug>(iced_def_back)
   n       <Leader>jn   <Plug>(iced_jump_to_next_sign)
   n       <Leader>jN   <Plug>(iced_jump_to_prev_sign)
   n       <Leader>jl   <Plug>(iced_jump_to_let)
