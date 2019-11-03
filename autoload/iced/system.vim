@@ -17,6 +17,7 @@ let s:system_map = {
       \ 'selector':     {'start': 'iced#component#selector#start'},
       \ 'sign':         {'start': 'iced#component#sign#start',
       \                  'requires': ['ex_cmd']},
+      \ 'tagstack':     {'start': 'iced#component#tagstack#start'},
       \ 'timer':        {'start': 'iced#component#timer#start'},
       \ 'popup':        {'start': 'iced#component#popup#start'},
       \ 'virtual_text': {'start': 'iced#component#virtual_text#start',
