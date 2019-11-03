@@ -5,17 +5,10 @@ let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
-let s:tagstack = []
 let g:iced#related_ns#tail_patterns =
       \ get(g:, 'iced#related_ns#tail_patterns', ['', '-test', '-spec', '\.spec'])
 
 let g:iced#var_references#cache_dir = get(g:, 'iced#var_references#cache_dir', '/tmp')
-
-function! s:add_curpos_to_tagstack() abort
-  let pos = getcurpos()
-  let pos[0] = bufnr('%')
-  call s:L.push(s:tagstack, pos)
-endfunction
 
 function! s:apply_mode_to_file(mode, file) abort
   let cmd = ':edit'
@@ -69,7 +62,7 @@ function! s:open_var(mode, candidate) abort
   let ns = arr[0]
   let symbol = arr[1]
 
-  call s:add_curpos_to_tagstack()
+  call iced#system#get('tagstack').add_here()
   call iced#nrepl#ns#require(ns, {_ ->
        \ iced#nrepl#op#cider#info(ns, symbol, {resp -> s:open_var_info(a:mode, resp)})})
 endfunction " }}}
@@ -131,21 +124,8 @@ function! s:jump(resp) abort
 endfunction
 
 function! iced#nrepl#navigate#jump_to_def(symbol) abort
-  call s:add_curpos_to_tagstack()
+  call iced#system#get('tagstack').add_here()
   call iced#nrepl#var#get(a:symbol, funcref('s:jump'))
-endfunction " }}}
-
-" iced#nrepl#navigate#jump_back {{{
-function! iced#nrepl#navigate#jump_back() abort
-  if empty(s:tagstack)
-    echo 'Local tag stack is empty'
-  else
-    let last_position = s:L.pop(s:tagstack)
-    execute printf(':buffer %d', last_position[0])
-    call cursor(last_position[1], last_position[2])
-    normal! zz
-    redraw!
-  endif
 endfunction " }}}
 
 " iced#nrepl#navigate#test {{{
