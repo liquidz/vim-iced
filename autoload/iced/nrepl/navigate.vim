@@ -17,6 +17,7 @@ function! s:apply_mode_to_file(mode, file) abort
   elseif a:mode ==# 't'
     let cmd = ':tabedit'
   endif
+  call iced#system#get('tagstack').add_here()
   call iced#system#get('ex_cmd').exe(printf('%s %s', cmd, a:file))
 endfunction
 
