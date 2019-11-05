@@ -21,15 +21,21 @@ let s:system_map = {
       \ 'timer':        {'start': 'iced#component#timer#start'},
       \ 'popup':        {'start': 'iced#component#popup#start'},
       \ 'virtual_text': {'start': 'iced#component#virtual_text#start',
-      \                  'vim_requires': ['popup', 'ex_cmd'],
-      \                  'nvim_requires': ['timer']},
+      \                  'requires': {'vim': ['popup', 'ex_cmd'],
+      \                               'neovim': ['timer']}},
       \ }
 
+
+function! s:env() abort
+  return has('nvim') ? 'neovim' : 'vim'
+endfunction
+
 function! s:requires(name) abort
-  let specific_key = has('nvim') ? 'nvim_requires' : 'vim_requires'
-  let requires = copy(get(s:system_map[a:name], 'requires', []))
-  call extend(requires, copy(get(s:system_map[a:name], specific_key, [])))
-  return requires
+  let requires = get(s:system_map[a:name], 'requires', [])
+  if type(requires) == v:t_dict
+    let requires = get(requires, s:env(), [])
+  endif
+  return copy(requires)
 endfunction
 
 function! iced#system#set_component(name, component_map) abort
@@ -49,6 +55,17 @@ function! iced#system#set_component(name, component_map) abort
   let s:system_map[a:name] = copy(a:component_map)
 endfunction
 
+function! s:extract_function(x) abort
+  let t = type(a:x)
+  if t == v:t_func
+    return a:x
+  elseif t == v:t_string
+    return function(a:x)
+  elseif t == v:t_dict
+    return s:extract_function(get(a:x, s:env()))
+  endif
+endfunction
+
 function! iced#system#get(name) abort
   if has_key(s:component_cache, a:name)
     return s:component_cache[a:name]
@@ -59,10 +76,7 @@ function! iced#system#get(name) abort
     for required_component_name in s:requires(a:name)
       let params[required_component_name] = iced#system#get(required_component_name)
     endfor
-    let StartFn = s:system_map[a:name]['start']
-    if type(StartFn) == v:t_string
-      let StartFn = function(StartFn)
-    endif
+    let StartFn = s:extract_function(s:system_map[a:name]['start'])
     let s:component_cache[a:name] = StartFn(params)
     return s:component_cache[a:name]
   endif
