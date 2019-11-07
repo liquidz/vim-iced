@@ -261,7 +261,9 @@ function! s:dispatcher(ch, resp) abort
         call iced#nrepl#debug#quit()
 
         if !empty(handler_result) && type(Callback) == v:t_func
-          call Callback(handler_result)
+          " HACK: for neovim
+          let CB = deepcopy(Callback)
+          call iced#util#future({-> CB(handler_result)})
         endif
       endif
     endif
