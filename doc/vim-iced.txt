@@ -1714,6 +1714,7 @@ g:iced#hook
   Hook setting.
 
   - Hook kinds
+    - connected         |hook_kind_connected|
     - test_finished     |hook_kind_test_finished|
     - ns_required       |hook_kind_ns_required|
     - ns_all_reloaded   |hook_kind_ns_all_reloaded|

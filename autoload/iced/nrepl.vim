@@ -392,6 +392,7 @@ function! s:connected(resp, initial_session) abort
 
     call iced#nrepl#auto#enable_bufenter(v:true)
     call iced#message#info('connected')
+    call iced#hook#run('connected', {})
   endif
 endfunction
 
