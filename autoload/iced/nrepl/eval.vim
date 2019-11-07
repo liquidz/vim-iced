@@ -69,7 +69,7 @@ endfunction
 
 function! s:repl_out(resp, temporary_session) abort
   call iced#nrepl#eval#out(a:resp)
-  call iced#util#future({-> s:check_switching_session(a:resp, a:temporary_session)})
+  call s:check_switching_session(a:resp, a:temporary_session)
 endfunction
 
 function! s:is_comment_form(code) abort
