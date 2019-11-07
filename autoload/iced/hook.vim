@@ -40,6 +40,10 @@ function! s:run_by_function(exec, params) abort
         \ : iced#message#error('invalid_hook_exec', a:exec)
 endfunction
 
+function! s:run_by_command(exec) abort
+  return iced#system#get('ex_cmd').exe(a:exec)
+endfunction
+
 function! iced#hook#run(hook_kind, params) abort
   if !has_key(g:iced#hook, a:hook_kind) | return | endif
   let hook = g:iced#hook[a:hook_kind]
@@ -59,6 +63,8 @@ function! iced#hook#run(hook_kind, params) abort
     return s:run_by_evaluating_in_repl(Exec_body, a:params)
   elseif exec_type ==# 'function'
     return s:run_by_function(Exec_body, a:params)
+  elseif exec_type ==# 'command'
+    return s:run_by_command(Exec_body)
   else
     return iced#message#error('unknown_hook_type', exec_type)
   endif

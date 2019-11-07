@@ -1724,6 +1724,7 @@ g:iced#hook
     - eval              |hook_report_eval|
     - eval-repl         |hook_report_eval_repl|
     - function          |hook_report_function|
+    - command           |hook_report_command|
 
   Ex. >
   let g:iced#hook = {
@@ -1732,6 +1733,11 @@ g:iced#hook
       \  'exec': {v -> printf('tmux display-message "%s"', v.summary)}}
       \ }
 <
+CONNECTED                                                 *hook_kind_connected*
+
+  Hooked when vim-iced is connected to nREPL.
+  No parameters are passed to reporter.
+
 TEST FINISHED                                         *hook_kind_test_finished*
 
   Hooked when running test is finished.
