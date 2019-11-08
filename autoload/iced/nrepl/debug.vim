@@ -173,7 +173,7 @@ function! s:accept_tapped_value(_, x) abort
   call iced#nrepl#debug#browse_tapped(k)
 endfunction
 
-function! iced#nrepl#debug#list_tapped() abort
+function! s:show_tapped_list() abort
   call iced#promise#call('iced#nrepl#op#iced#list_tapped', [])
         \.then({resp -> has_key(resp, 'error') ? iced#promise#reject(resp['error']) : resp})
         \.then({resp -> map(get(resp, 'tapped', []), {i, v -> printf("%d: %s", i, v)})})
@@ -184,7 +184,7 @@ function! iced#nrepl#debug#list_tapped() abort
         \.catch({error -> iced#message#error_str(error)})
 endfunction
 
-function! iced#nrepl#debug#browse_tapped(key_str) abort
+function! s:browse_tapped_data(key_str) abort
   let keys = split(a:key_str, '\s\+')
   let keys = map(keys, {_, v ->
         \ (type(v) == v:t_string && match(v, '^\d\+$') == 0) ? str2nr(v) : v})
@@ -200,6 +200,14 @@ function! iced#nrepl#debug#browse_tapped(key_str) abort
   let cmd = printf(':IcedBrowseTapped %s ', a:key_str)
   let cmd = substitute(cmd, '\s\+', ' ', 'g')
   call feedkeys(cmd, 'n')
+endfunction
+
+function! iced#nrepl#debug#browse_tapped(key_str) abort
+  if empty(a:key_str)
+    return s:show_tapped_list()
+  endif
+
+  call s:browse_tapped_data(a:key_str)
 endfunction
 
 function! iced#nrepl#debug#complete_tapped(arg_lead, cmd_line, cursor_pos) abort

@@ -398,7 +398,7 @@ BROWSING TAPPED VALUES              *vim-iced-debugging-browsing-tapped-values*
   If you have a big data structure and want to dig into it,
   browsing tapped values is useful.
 
-  When you evaluate `(tap> YOUR_DATA)`, |:IcedListTapped| shows tapped values.
+  When you evaluate `(tap> YOUR_DATA)`, |:IcedBrowseTapped| shows tapped values.
   Select the value you want to dig into, then browsing value start.
   See |:IcedBrowseTapped| for browsing key details.
 
@@ -921,20 +921,13 @@ COMMANDS                                                    *vim-iced-commands*
   If there is no `let` form in current top list,
   wrap the form with `let`.
 
-                                                              *:IcedListTapped*
-:IcedListTapped
-  Select one of tapped values, and start browsing.
-  `ctrlp.vim`, `fzf` or `vim-clap` is required to select tapped values.
-  Key is mapped to |<Plug>(iced_list_tapped)|.
-
-                                                             *:IcedClearTapped*
-:IcedClearTapped
-  Clear all tapped values.
-  Key is mapped to |<Plug>(iced_clear_tapped)|.
-
                                                             *:IcedBrowseTapped*
-:IcedBrowseTapped {keys}
-  Dig into tapped values.
+:IcedBrowseTapped [{keys}]
+
+  If {keys} are not passed, select one of tapped values, and start browsing.
+  `ctrlp.vim`, `fzf` or `vim-clap` is required to select tapped values.
+
+  If {keys} are passed, dig into tapped values.
   For example, when there are following tapped values:
     1st tapped value: {:foo [{:bar "baz"}]}
     2nd tapped value: {:hello "world"}
@@ -942,6 +935,12 @@ COMMANDS                                                    *vim-iced-commands*
   (The first `0` means "browse 1st tapped value")
 
   Key is mapped to |<Plug>(iced_browse_tapped)|.
+
+                                                             *:IcedClearTapped*
+:IcedClearTapped
+  Clear all tapped values.
+  Key is mapped to |<Plug>(iced_clear_tapped)|.
+
 
                                                   *:IcedToggleWarnOnReflection*
 :IcedToggleWarnOnReflection
@@ -1328,17 +1327,13 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_move_to_let)
   Same as |:IcedMoveToLet|.
 
-                                                     *<Plug>(iced_list_tapped)*
-<Plug>(iced_list_tapped)
-  Same as |:IcedListTapped|.
+                                                   *<Plug>(iced_browse_tapped)*
+<Plug>(iced_browse_tapped)
+  Same as |:IcedBrowseTapped|.
 
                                                     *<Plug>(iced_clear_tapped)*
 <Plug>(iced_clear_tapped)
   Same as |:IcedClearTapped|.
-
-                                                   *<Plug>(iced_browse_tapped)*
-<Plug>(iced_browse_tapped)
-  Same as |:IcedBrowseTapped|.
 
                                                 *<Plug>(iced_toggle_trace_var)*
 <Plug>(iced_toggle_trace_var)
@@ -1779,8 +1774,8 @@ g:iced_enable_default_key_mappings
   n       <Leader>jn   <Plug>(iced_jump_to_next_sign)
   n       <Leader>jN   <Plug>(iced_jump_to_prev_sign)
   n       <Leader>jl   <Plug>(iced_jump_to_let)
-  n       <Leader>dtl  <Plug>(iced_list_tapped)
-  n       <Leader>dtc  <Plug>(iced_clear_tapped)
+  n       <Leader>dbt  <Plug>(iced_browse_tapped)
+  n       <Leader>dlt  <Plug>(iced_clear_tapped)
   n       <Leader>*    <Plug>(iced_grep)
   n       <Leader>/    :<C-u>IcedGrep<Space>
   n       ==           <Plug>(iced_format)
