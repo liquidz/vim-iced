@@ -124,7 +124,7 @@ function! s:suite.form_test() abort
 endfunction
 " }}}
 
-" iced#nrepl#spec#list {{{
+" iced#nrepl#spec#browse {{{
 function! s:list_relay(msg) abort
   if a:msg['op'] ==# 'spec-list'
     return {'status': ['done'], 'spec-list': [':foo/bar', ':bar/baz']}
@@ -136,7 +136,7 @@ function! s:suite.list_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': funcref('s:list_relay')})
   call s:sel.mock()
 
-  call iced#nrepl#spec#list()
+  call iced#nrepl#spec#browse()
 
   let config = s:sel.get_last_config()
   call s:assert.equals(sort(copy(config['candidates'])), [
