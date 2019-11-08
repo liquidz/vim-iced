@@ -6,6 +6,7 @@ let s:last_winid = -1
 
 let s:popup = {
       \ 'env': 'neovim',
+      \ 'config': {},
       \ }
 
 let g:iced#popup#neovim#winhighlight = get(g:, 'iced#popup#neovim#winhighlight', 'Normal:NormalFloat')
@@ -92,7 +93,7 @@ function! s:popup.open(texts, ...) abort
   endif
 
   let min_height = len(texts)
-  let height = min([min_height, g:iced#popup#max_height])
+  let height = min([min_height, self.config.max_height])
 
   if min_height + 5 >= &lines - &cmdheight
     throw 'vim-iced: too long texts to show in popup'
@@ -143,7 +144,7 @@ function! s:popup.open(texts, ...) abort
   endif
 
   if get(opts, 'auto_close', v:true)
-    let time = get(opts, 'close_time', g:iced#popup#time)
+    let time = get(opts, 'close_time', self.config.time)
     call iced#component#get('timer').start(time, {-> iced#component#get('popup').close(winid)})
   endif
 
@@ -192,8 +193,11 @@ function! iced#component#popup#neovim#moved() abort
   endif
 endfunction
 
-function! iced#component#popup#neovim#start(_) abort
-  return s:popup
+function! iced#component#popup#neovim#start(this) abort
+  call iced#util#debug('start', 'neovim popup')
+  let d = deepcopy(s:popup)
+  let d.config = a:this.popup_config
+  return d
 endfunction
 
 let &cpoptions = s:save_cpo
