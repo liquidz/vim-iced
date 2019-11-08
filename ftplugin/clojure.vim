@@ -109,7 +109,7 @@ command!          IcedCycleSrcAndTest       call iced#nrepl#navigate#cycle_src_a
 command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
 
 command!          IcedBrowseRelatedNamespace call iced#nrepl#navigate#related_ns()
-command!          IcedBrowseSpec             call iced#nrepl#spec#list()
+command!          IcedBrowseSpec             call iced#nrepl#spec#browse()
 command!          IcedBrowseTestUnderCursor  call iced#nrepl#navigate#test()
 command!          IcedBrowseReferences       call iced#nrepl#navigate#browse_references()
 command!          IcedBrowseDependencies     call iced#nrepl#navigate#browse_dependencies()

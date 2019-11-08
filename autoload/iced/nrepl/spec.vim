@@ -98,7 +98,7 @@ function! s:spec_list(resp) abort
   endif
 endfunction
 
-function! iced#nrepl#spec#list() abort
+function! iced#nrepl#spec#browse() abort
   call iced#nrepl#op#cider#spec_list(funcref('s:spec_list'))
 endfunction
 
