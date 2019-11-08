@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:default_palette = [
       \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt', 'InterruptAll',
@@ -14,7 +14,7 @@ let s:default_palette = [
       \ 'StdoutBufferOpen', 'StdoutBufferClear', 'StdoutBufferClose',
       \ 'DocumentClose', 'ClojureDocsRefresh',
       \ 'FormatAll',
-      \ 'ToggleSrcAndTest',
+      \ 'ToggleSrcAndTest', 'Grep',
       \ 'BrowseRelatedNamespace', 'BrowseSpec', 'BrowseTestUnderCursor',
       \ 'BrowseReferences', 'BrowseDependencies',
       \ 'BrowseVarReferences', 'BrowseVarDependencies',
@@ -58,5 +58,5 @@ function! iced#palette#show() abort
         \ })
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
