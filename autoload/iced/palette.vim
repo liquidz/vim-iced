@@ -20,7 +20,7 @@ let s:default_palette = [
       \ 'BrowseVarReferences', 'BrowseVarDependencies',
       \ 'CleanNs', 'CleanAll', 'AddNs',
       \ 'ExtractFunction', 'AddArity', 'MoveToLet',
-      \ 'ListTapped', 'ClearTapped', 'MoveToLet',
+      \ 'BrowseTapped', 'ClearTapped', 'MoveToLet',
       \ 'ToggleWarnOnReflection', 'ToggleTraceVar', 'ToggleTraceNs',
       \ 'InReplNs',
       \ 'LintCurrentFile', 'LintToggle',

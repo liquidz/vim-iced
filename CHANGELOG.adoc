@@ -15,6 +15,11 @@ All notable changes to this project will be documented in this file. This change
 ** Neovim `0.4` or later
 * Bump iced-nrepl to 0.7.0.
 * (Breaking) Rename `IcedToggleSrcAndTest` command to `IcedCycleSrcAndTest`.
+* (Breaking) Integrate `IcedListTapped` command to `IcedBrowseTapped`.
+** `IcedListTapped` command is removed.
+** If `IcedBrowseTapped` command is executed with no arguments, it works like `IcedListTapped`.
+** Add default key map `<Leader>dbt` for `IcedBrowseTapped`.
+** Change default key map `<Leader>dlt` for `IcedClearTapped`.
 
 === Fixed
 * Fixed clearing virtual text to work correctly in neovim.
