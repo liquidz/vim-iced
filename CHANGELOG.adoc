@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file. This change
 ** Vim `8.1.0614` or later
 ** Neovim `0.4` or later
 * Bump iced-nrepl to 0.7.0.
+* (Breaking) Rename `IcedToggleSrcAndTest` command to `IcedCycleSrcAndTest`.
 
 === Fixed
 * Fixed clearing virtual text to work correctly in neovim.

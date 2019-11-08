@@ -825,11 +825,11 @@ COMMANDS                                                    *vim-iced-commands*
   Reformat current buffer.
   Key is mapped to |<Plug>(iced_format_all)|.
 
-                                                        *:IcedToggleSrcAndTest*
-:IcedToggleSrcAndTest
+                                                         *:IcedCycleSrcAndTest*
+:IcedCycleSrcAndTest
   Switch between source file and test file.
   If the file does not exist, make sure you open a file with a pseudo path.
-  Key is mapped to |<Plug>(iced_toggle_src_and_test)|.
+  Key is mapped to |<Plug>(iced_cycle_src_and_test)|.
 
                                                                     *:IcedGrep*
 :IcedGrep [{keyword}]
@@ -1268,9 +1268,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_format_all)
   Same as |:IcedFormatAll|.
 
-                                             *<Plug>(iced_toggle_src_and_test)*
-<Plug>(iced_toggle_src_and_test)
-  Same as |:IcedToggleSrcAndTest|.
+                                              *<Plug>(iced_cycle_src_and_test)*
+<Plug>(iced_cycle_src_and_test)
+  Same as |:IcedCycleSrcAndTest|.
 
                                                             *<Plug>(iced_grep)*
 <Plug>(iced_grep)

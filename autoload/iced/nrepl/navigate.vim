@@ -75,15 +75,15 @@ function! iced#nrepl#navigate#cycle_ns(ns) abort
       \ : a:ns . '-test')
 endfunction " }}}
 
-" iced#nrepl#navigate#toggle_src_and_test {{{
-function! iced#nrepl#navigate#toggle_src_and_test() abort
+" iced#nrepl#navigate#cycle_src_and_test {{{
+function! iced#nrepl#navigate#cycle_src_and_test() abort
   if !iced#nrepl#is_connected()
     return iced#message#error('not_connected')
   endif
 
   let ns = iced#nrepl#ns#name()
-  let toggle_ns = iced#nrepl#navigate#cycle_ns(ns)
-  call iced#nrepl#navigate#open_ns('e', toggle_ns)
+  let cycle_ns = iced#nrepl#navigate#cycle_ns(ns)
+  call iced#nrepl#navigate#open_ns('e', cycle_ns)
 endfunction " }}}
 
 " iced#nrepl#navigate#related_ns {{{
