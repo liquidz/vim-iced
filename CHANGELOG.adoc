@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+=== Added
+* Add hook for `connected` event.
+* Add `command` hook reporter to execute a command simply.
+
+=== Changed
+* https://github.com/liquidz/vim-iced/issues/158[#158]: Clear test error sign only if the test passes.
+* (Breaking) Required vim/neovim version is changed.
+** Vim `8.1.0614` or later
+** Neovim `0.4` or later
+* Bump iced-nrepl to 0.6.7.
+
+=== Fixed
+* Fixed clearing virtual text to work correctly in neovim.
+
+=== Removed
+* (Breaking) Remove `:IcedDefBack` command.
+** You can use built-in https://vim-jp.org/vimdoc-en/tagsrch.html#CTRL-T[<C-t>] key mapping instead.
+
 == 0.12.5 (2019-10-20)
 // {{{
 === Added
