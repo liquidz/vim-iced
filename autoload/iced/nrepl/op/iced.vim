@@ -11,30 +11,6 @@ function! s:concat_handler(key, resp, last_result) abort
   return result
 endfunction
 
-""" lint-file {{{
-function! iced#nrepl#op#iced#is_lint_running() abort
-  return iced#nrepl#is_op_running('iced-lint-file')
-endfunction
-
-function! iced#nrepl#op#iced#lint_file(file, opt, callback) abort
-  if !iced#nrepl#is_connected() | return | endif
-
-  let msg = {
-      \ 'id': iced#nrepl#id(),
-      \ 'op': 'iced-lint-file',
-      \ 'session': iced#nrepl#current_session(),
-      \ 'env': iced#nrepl#current_session_key(),
-      \ 'file': a:file,
-      \ 'callback': a:callback,
-      \ }
-
-  if !empty(a:opt) && type(a:opt) == v:t_dict
-    let msg['opt'] = a:opt
-  endif
-
-  call iced#nrepl#send(msg)
-endfunction " }}}
-
 """ spec-check {{{
 function! iced#nrepl#op#iced#spec_check(symbol, num_tests, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
@@ -117,7 +93,6 @@ function! iced#nrepl#op#iced#complete_tapped(keys, callback) abort
         \ })
 endfunction " }}}
 
-call iced#nrepl#register_handler('iced-lint-file', function('s:concat_handler', ['lint-warnings']))
 call iced#nrepl#register_handler('iced-pseudo-ns-path', function('iced#nrepl#path_translation_handler', [['path']]))
 
 let &cpoptions = s:save_cpo

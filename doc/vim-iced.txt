@@ -35,7 +35,6 @@ CONTENTS                                                    *vim-iced-contents*
     Formatting                 |vim-iced-formatting|
     Indenting                  |vim-iced-indenting|
     Refactoring                |vim-iced-refactoring|
-    Linting                    |vim-iced-linting|
   Interface                    |vim-iced-interface|
     Commands                   |vim-iced-commands|
     Functions                  |vim-iced-functions|
@@ -46,7 +45,6 @@ CONTENTS                                                    *vim-iced-contents*
     Documents                  |vim-iced-customizing-documents|
       Auto document            |vim-iced-customizing-auto-document|
     Auto indent                |vim-iced-customizing-auto-indent|
-    Linters                    |vim-iced-customizing-linters|
     Signs                      |vim-iced-customizing-signs|
     Command palettes           |vim-iced-customizing-palette|
     Hooks                      |vim-iced-customizing-hooks|
@@ -111,7 +109,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.6.0"]
-                   [iced-nrepl "0.6.7-SNAPSHOT"]
+                   [iced-nrepl "0.7.0"]
                    [cider/cider-nrepl "0.22.4"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -141,7 +139,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.22.4"]
-      [iced-nrepl "0.6.7-SNAPSHOT"]])
+      [iced-nrepl "0.7.0"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -171,7 +169,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "2.4.0"]
                   [cider/cider-nrepl "0.22.4"]
-                  [iced-nrepl "0.6.7-SNAPSHOT"]]
+                  [iced-nrepl "0.7.0"]]
 
    :nrepl {:cider false
            :middleware [cider.nrepl/wrap-classpath
@@ -483,33 +481,6 @@ REFACTORING                                              *vim-iced-refactoring*
   - |:IcedExtractFunction| (|<Plug>(iced_extract_function)|)
   - |:IcedAddArity| (|<Plug>(iced_add_arity)|)
   - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
-
-------------------------------------------------------------------------------
-LINTING                                                      *vim-iced-linting*
-
-  vim-iced can collaborate with `jonase/eastwood` and `joker`.
-  - https://github.com/jonase/eastwood
-    - works for Clojure
-  - https://github.com/candid82/joker
-    - works for ClojureScript
-    - needs to be installed separately from vim-iced
-  - Command
-    - |:IcedLintCurrentFile| (|<Plug>(iced_lint_current_file)|)
-
-  To run linter automatically, set |g:iced_enable_auto_linting| to `v:true`.
->
-  let g:iced_enable_auto_linting = v:true
-<
-  If you would like to set manually, following autcmd is useful.
->
-  aug vim_iced_lint_setting
-    au!
-    au BufWritePost *.clj,*.cljs,*.cljc call iced#lint#current_file()
-    au CursorMoved  *.clj,*.cljs,*.cljc call iced#lint#echo_message()
-  aug END
-<
-  To define which linters to use, see |g:iced#eastwood#option|.
-  To show warnings as virtual text, see |g:iced#lint#use_virtual_text|.
 
 ==============================================================================
 INTERFACE                                                  *vim-iced-interface*
@@ -994,16 +965,6 @@ COMMANDS                                                    *vim-iced-commands*
   Sets `*ns*` to the REPL session's namespace name.
   Key is mapped to |<Plug>(iced_in_repl_ns)|.
 
-                                                         *:IcedLintCurrentFile*
-:IcedLintCurrentFile
-  Lint codes in current file.
-  Key is mapped to |<Plug>(iced_lint_current_file)|.
-
-                                                              *:IcedLintToggle*
-:IcedLintToggle
-  Toggle linting.
-  Key is mapped to |<Plug>(iced_lint_toggle)|.
-
                                                           *:IcedJumpToNextSign*
 :IcedJumpToNextSign
   Jump cursor to next sign in current buffer.
@@ -1391,14 +1352,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_in_repl_ns)
   Same as |:IcedInReplNs|.
 
-                                               *<Plug>(iced_lint_current_file)*
-<Plug>(iced_lint_current_file)
-  Same as |:IcedLintCurrentFile|.
-
-                                                     *<Plug>(iced_lint_toggle)*
-<Plug>(iced_lint_toggle)
-  Same as |:IcedLintToggle|.
-
                                                *<Plug>(iced_jump_to_next_sign)*
 <Plug>(iced_jump_to_next_sign)
   Same as |:IcedJumpToNextSign|.
@@ -1640,35 +1593,6 @@ g:iced_enable_auto_indent
   See details: |vim-iced-indenting|.
 
 ------------------------------------------------------------------------------
-LINTERS                                          *vim-iced-customizing-linters*
-
-                                                       *g:iced#eastwood#option*
-g:iced#eastwood#option
-  Linting option which is used by `jonase/eastwood`.
-  See details: |vim-iced-linting|
-
-  Specific linter names are shown at:
-  - https://github.com/jonase/eastwood#whats-there
-
-  Ex. enable all linters excluding `implicit-dependencies` linter
->
-  let g:iced#eastwood#option = {
-      \ 'linters': ['all'],
-      \ 'exclude-linters': ['implicit-dependencies'],
-      \ }
-<
-                                                *g:iced#lint#use_virtual_text*
-g:iced#lint#use_virtual_text
-  If {v:true}, use virtual text to show lint warning text.
-  Default value is `v:false`.
-
-                                                   *g:iced_enable_auto_linting*
-g:iced_enable_auto_linting
-  If {v:true}, enable linting automatically.
-  Linting is worked when |BufWritePost|.
-  See details: |vim-iced-linting|
-
-------------------------------------------------------------------------------
 SIGNS                                              *vim-iced-customizing-signs*
 
                                                                   *g:iced_sign*
@@ -1677,22 +1601,19 @@ g:iced_sign
   vim-iced provides following signs.
   - iced_error (for test failure position)
   - iced_trace (for tracing var position)
-  - iced_lint  (for lint warning position)
 
   Each sign has default setting as follows. >
   {
     'error':   '🔥',
     'trace':   '👁',
-    'lint':    '💔',
     'errorhl': 'ErrorMsg',
     'tracehl': 'Search',
-    'linthl':  'WarningMsg',
   }
 <
   You can change the setting by `g:iced_sign` variable.
   Ex. changing sign text
 >
-  let g:iced_sign = {'error': 'E', 'trace': 'T', 'lint': 'L'}
+  let g:iced_sign = {'error': 'E', 'trace': 'T'}
 <
 ------------------------------------------------------------------------------
 COMMAND PALETTES                                 *vim-iced-customizing-palette*

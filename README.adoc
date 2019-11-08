@@ -81,12 +81,6 @@ Function dependencies and references https://twitter.com/uochan/status/113954087
 Supports cider-nrepl's debugger https://twitter.com/uochan/status/1034404572368842752[:movie_camera:]
 Browsing tapped values https://twitter.com/uochan/status/1146982101662572544[:movie_camera:]
 
-|:eyes:
-|Linting
-|Powered by https://github.com/jonase/eastwood[jonase/eastwood]
-https://twitter.com/uochan/status/1038050122062413824[:movie_camera:]
-and https://github.com/candid82/joker[joker]
-
 |:notebook:
 |Skeleton
 |Provides code skeleton when you open new file
