@@ -13,12 +13,13 @@ All notable changes to this project will be documented in this file. This change
 * (Breaking) Required vim/neovim version is changed.
 ** Vim `8.1.0614` or later
 ** Neovim `0.4` or later
-* Bump iced-nrepl to 0.6.7.
+* Bump iced-nrepl to 0.7.0.
 
 === Fixed
 * Fixed clearing virtual text to work correctly in neovim.
 
 === Removed
+* (Breaking) https://github.com/liquidz/vim-iced/issues/159[#159]: Remove linting functionality.
 * (Breaking) Remove `:IcedDefBack` command.
 ** You can use built-in https://vim-jp.org/vimdoc-en/tagsrch.html#CTRL-T[<C-t>] key mapping instead.
 

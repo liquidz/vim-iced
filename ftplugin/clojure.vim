@@ -139,9 +139,6 @@ command! -nargs=? IcedToggleTraceNs         call iced#nrepl#trace#toggle_ns(<q-a
 
 command!          IcedInReplNs              call iced#nrepl#ns#in_repl_session_ns()
 
-command!          IcedLintCurrentFile       call iced#lint#current_file()
-command!          IcedLintToggle            call iced#lint#toggle()
-
 command!          IcedJumpToNextSign        call iced#system#get('sign').jump_to_next()
 command!          IcedJumpToPrevSign        call iced#system#get('sign').jump_to_prev()
 command!          IcedJumpToLet             call iced#let#jump_to_let()
@@ -244,9 +241,6 @@ nnoremap <silent> <Plug>(iced_toggle_trace_var)         :<C-u>IcedToggleTraceVar
 
 nnoremap <silent> <Plug>(iced_in_repl_ns)               :<C-u>IcedInReplNs<CR>
 
-nnoremap <silent> <Plug>(iced_lint_current_file)        :<C-u>IcedLintCurrentFile<CR>
-nnoremap <silent> <Plug>(iced_lint_toggle)              :<C-u>IcedLintToggle<CR>
-
 nnoremap <silent> <Plug>(iced_jump_to_next_sign)        :<C-u>IcedJumpToNextSign<CR>
 nnoremap <silent> <Plug>(iced_jump_to_prev_sign)        :<C-u>IcedJumpToPrevSign<CR>
 nnoremap <silent> <Plug>(iced_jump_to_let)              :<C-u>IcedJumpToLet<CR>
@@ -261,15 +255,6 @@ aug vim_iced_initial_setting
   au BufEnter *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufenter()
   au VimLeave * call iced#nrepl#auto#leave()
 aug END
-
-if exists('g:iced_enable_auto_linting')
-      \ && g:iced_enable_auto_linting
-  aug iced_auto_linting
-    au!
-    au BufWritePost *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufwrite_post()
-    au CursorMoved *.clj,*.cljs,*.cljc call iced#lint#echo_message()
-  aug END
-endif
 
 if g:iced_enable_auto_document ==# 'normal'
       \ || g:iced_enable_auto_document ==# 'every'
@@ -575,16 +560,14 @@ endif
 let s:default_signs = {
       \ 'error': '🔥',
       \ 'trace': '👁',
-      \ 'lint': '💔',
       \ 'errorhl': 'ErrorMsg',
       \ 'tracehl': 'Search',
-      \ 'linthl': 'WarningMsg',
       \ }
 
 let g:iced_sign = get(g:, 'iced_sign', {})
 let sign_setting = extend(copy(s:default_signs), g:iced_sign)
 
-for key in ['error', 'trace', 'lint']
+for key in ['error', 'trace']
   exe printf(':sign define %s text=%s texthl=%s',
         \ 'iced_'.key,
         \ sign_setting[key],
