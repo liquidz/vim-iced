@@ -2,39 +2,38 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:component_cache = {}
+let s:nvim = has('nvim')
 
-      "\ 'nrepl':        {'start': 'iced#component#nrepl#start', 'requires': ['bencode', 'channel']},
-      "\ 'session':      {'start': 'iced#component#session#start', 'requires': ['nrepl']},
 let s:system_map = {
       \ 'vim_bencode':  {'start': 'iced#component#bencode#vim#start'},
       \ 'bencode':      {'start': 'iced#component#bencode#start',
       \                  'requires': ['vim_bencode']},
-      \ 'channel':      {'start': 'iced#component#channel#start'},
+      \ 'channel':      {'start': (s:nvim ? 'iced#component#channel#neovim#start'
+      \                                   : 'iced#component#channel#vim#start')},
       \ 'ex_cmd':       {'start': 'iced#component#ex_cmd#start'},
       \ 'io':           {'start': 'iced#component#io#start'},
-      \ 'job':          {'start': 'iced#component#job#start'},
+      \ 'job':          {'start': (s:nvim ? 'iced#component#job#neovim#start'
+      \                                   : 'iced#component#job#vim#start')},
       \ 'quickfix':     {'start': 'iced#component#quickfix#start'},
       \ 'selector':     {'start': 'iced#component#selector#start'},
       \ 'sign':         {'start': 'iced#component#sign#start',
       \                  'requires': ['ex_cmd']},
       \ 'tagstack':     {'start': 'iced#component#tagstack#start'},
       \ 'timer':        {'start': 'iced#component#timer#start'},
-      \ 'popup':        {'start': 'iced#component#popup#start'},
-      \ 'virtual_text': {'start': 'iced#component#virtual_text#start',
-      \                  'requires': {'vim': ['popup', 'ex_cmd'],
-      \                               'neovim': ['timer']}},
+      \ 'future':       {'start': 'iced#component#future#timer#start',
+      \                  'requires': ['timer']},
+      \ 'popup_config': {'start': 'iced#component#popup#config#start'},
+      \ 'popup':        {'start': (s:nvim ? 'iced#component#popup#neovim#start'
+      \                                   : 'iced#component#popup#vim#start'),
+      \                  'requires': ['popup_config']},
+      \ 'virtual_text': (s:nvim ? {'start': 'iced#component#virtual_text#neovim#start',
+      \                            'requires': ['timer']}
+      \                         : {'start': 'iced#component#virtual_text#vim#start',
+      \                            'requires': ['popup', 'ex_cmd']}),
       \ }
-
-
-function! s:env() abort
-  return has('nvim') ? 'neovim' : 'vim'
-endfunction
 
 function! s:requires(name) abort
   let requires = get(s:system_map[a:name], 'requires', [])
-  if type(requires) == v:t_dict
-    let requires = get(requires, s:env(), [])
-  endif
   return copy(requires)
 endfunction
 
@@ -55,17 +54,6 @@ function! iced#system#set_component(name, component_map) abort
   let s:system_map[a:name] = copy(a:component_map)
 endfunction
 
-function! s:extract_function(x) abort
-  let t = type(a:x)
-  if t == v:t_func
-    return a:x
-  elseif t == v:t_string
-    return function(a:x)
-  elseif t == v:t_dict
-    return s:extract_function(get(a:x, s:env()))
-  endif
-endfunction
-
 function! iced#system#get(name) abort
   if has_key(s:component_cache, a:name)
     return s:component_cache[a:name]
@@ -76,7 +64,12 @@ function! iced#system#get(name) abort
     for required_component_name in s:requires(a:name)
       let params[required_component_name] = iced#system#get(required_component_name)
     endfor
-    let StartFn = s:extract_function(s:system_map[a:name]['start'])
+
+    let StartFn = s:system_map[a:name]['start']
+    if type(StartFn) == v:t_string
+      let StartFn = function(StartFn)
+    endif
+
     let s:component_cache[a:name] = StartFn(params)
     return s:component_cache[a:name]
   endif
