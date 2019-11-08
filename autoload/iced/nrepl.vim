@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 " NOTE: `current_session_key` must be 'clj' or 'cljs'
 function! s:initialize_nrepl() abort
@@ -210,6 +210,7 @@ function! s:dispatcher(ch, resp) abort
   let responses = iced#util#ensure_array(original_resp)
   let ids = s:get_message_ids(responses)
   let original_resp_type = type(original_resp)
+  let future = iced#system#get('future')
 
   let need_debug_input_response = ''
 
@@ -263,7 +264,7 @@ function! s:dispatcher(ch, resp) abort
         if !empty(handler_result) && type(Callback) == v:t_func
           " HACK: for neovim
           let CB = deepcopy(Callback)
-          call iced#util#future({-> CB(handler_result)})
+          call future.do({-> CB(handler_result)})
         endif
       endif
     endif
@@ -454,6 +455,10 @@ endfunction " }}}
 function! iced#nrepl#disconnect() abort " {{{
   if !iced#nrepl#is_connected() | return | endif
 
+  " NOTE: 'timer' feature seems not to work on VimLeave.
+  "       To receive response correctly, replace 'future' component not to use 'timer'.
+  call iced#system#set_component('future', {'start': 'iced#component#future#instant#start'})
+
   for id in iced#nrepl#sync#session_list()
     call iced#nrepl#sync#send({'op': 'interrupt', 'session': id})
     call iced#nrepl#sync#close(id)
@@ -590,6 +595,6 @@ endfunction " }}}
 call iced#nrepl#register_handler('eval', funcref('iced#nrepl#merge_response_handler'))
 call iced#nrepl#register_handler('load-file', funcref('iced#nrepl#merge_response_handler'))
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
 " vim:fdm=marker:fdl=0
