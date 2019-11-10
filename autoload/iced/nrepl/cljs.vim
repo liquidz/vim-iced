@@ -1,9 +1,10 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let g:iced#cljs#default_env = get(g:, 'iced#cljs#default_env', 'figwheel-sidecar')
 let s:using_env = {}
 let s:env_options = []
+let s:quit_code = ':cljs/quit'
 
 let s:env = {
     \ 'figwheel-sidecar': function('iced#nrepl#cljs#figwheel_sidecar#get_env'),
@@ -13,41 +14,36 @@ let s:env = {
     \ 'shadow-cljs': function('iced#nrepl#cljs#shadow_cljs#get_env'),
     \ }
 
-function! s:set_cljs_session(temporary_session) abort
+function! s:set_cljs_session(original_cljs_session) abort
   " WARN: An exception occurs if an evaluation error occurs in the CLONED cljs session.
   "       c.f. https://github.com/liquidz/vim-iced/issues/91
   "       So `original_cljs_session` must be setted to cljs session.
-  let original_cljs_session = iced#nrepl#repl_session()
-  let cljs_repl_session = iced#nrepl#sync#clone(original_cljs_session)
-  " NOTE: Temporary session is CLJ
-  "       because it is cloned before switching to cljs repl.
-  let repl_session = a:temporary_session
+  let cloned_cljs_session = iced#nrepl#sync#clone(a:original_cljs_session)
 
-  call iced#nrepl#set_session('cljs', original_cljs_session)
-  call iced#nrepl#set_session('cljs_repl', cljs_repl_session)
-  call iced#nrepl#set_session('repl', repl_session)
+  call iced#nrepl#set_session('cljs', a:original_cljs_session)
+  call iced#nrepl#set_session('clj', cloned_cljs_session)
+  call iced#nrepl#eval#code(s:quit_code, {'session': 'clj', 'ignore_session_validity': v:true})
 endfunction
 
 function! s:unset_cljs_session() abort
   call iced#nrepl#sync#close(iced#nrepl#cljs_session())
-  call iced#nrepl#sync#close(iced#nrepl#cljs_repl_session())
   call iced#nrepl#set_session('cljs', '')
-  call iced#nrepl#set_session('cljs_repl', '')
 endfunction
 
-function! iced#nrepl#cljs#check_switching_session(resp, temporary_session) abort
-  if !has_key(a:resp, 'ns') || !has_key(a:resp, 'session') | return '' | endif
+function! iced#nrepl#cljs#check_switching_session(eval_resp, evaluated_code) abort
+  if !has_key(a:eval_resp, 'ns') || !has_key(a:eval_resp, 'session') | return '' | endif
 
-  let session = a:resp['session']
-  let eq_to_repl_session = (session ==# iced#nrepl#repl_session())
-  let eq_to_cljs_repl_session = (session ==# iced#nrepl#cljs_repl_session())
-  if !eq_to_repl_session && !eq_to_cljs_repl_session | return '' | endif
+  let eval_session = a:eval_resp['session']
+  let eq_to_clj_session = (eval_session ==# iced#nrepl#clj_session())
+  let eq_to_cljs_session = (eval_session ==# iced#nrepl#cljs_session())
 
-  let ns = a:resp['ns']
+  if !eq_to_clj_session && !eq_to_cljs_session | return '' | endif
+
+  let ns = a:eval_resp['ns']
   let ext = expand('%:e')
 
-  if eq_to_repl_session && ns ==# 'cljs.user'
-    call s:set_cljs_session(a:temporary_session)
+  if eq_to_clj_session && ns ==# 'cljs.user'
+    call s:set_cljs_session(eval_session)
     if ext !=# 'clj'
       call iced#nrepl#change_current_session('cljs')
       call iced#nrepl#ns#in()
@@ -55,12 +51,9 @@ function! iced#nrepl#cljs#check_switching_session(resp, temporary_session) abort
     endif
 
     call iced#message#info('started_cljs_repl')
-    " NOTE: Must not close temporary session
-    "       In this case, temporary session is setted to 'repl' session
-    return 'skip_to_close_temporary_session'
-  elseif eq_to_cljs_repl_session
-        \ && ns !=# 'cljs.user'
-        \ && !get(s:using_env, 'ignore-quit-detecting', v:false)
+  elseif eq_to_cljs_session
+      \ && !get(s:using_env, 'ignore-quit-detecting', v:false)
+      \ && a:evaluated_code ==# s:quit_code
     call s:unset_cljs_session()
     call iced#nrepl#change_current_session('clj')
     if ext !=# 'cljs'
@@ -70,7 +63,6 @@ function! iced#nrepl#cljs#check_switching_session(resp, temporary_session) abort
     call iced#message#info('quitted_cljs_repl')
     call iced#hook#run('session_switched', {'session': 'clj'})
   endif
-  return ''
 endfunction
 
 function! iced#nrepl#cljs#cycle_session() abort
@@ -106,7 +98,7 @@ function! iced#nrepl#cljs#start_repl(code, ...) abort
     else
       let code = printf('(do %s (cider.piggieback/cljs-repl %s))', pre_code, a:code)
     endif
-    call iced#nrepl#eval#repl(code)
+    call iced#nrepl#eval#code(code, {'ignore_session_validity': v:true})
     return v:true
   endif
   return v:false
@@ -114,12 +106,12 @@ endfunction
 
 function! iced#nrepl#cljs#stop_repl(...) abort
   if iced#nrepl#cljs_session() !=# ''
-    call iced#nrepl#eval#repl(':cljs/quit', 'cljs_repl')
+    call iced#nrepl#eval#code(s:quit_code, {'session': 'cljs', 'ignore_session_validity': v:true})
 
     let opt = get(a:, 1, {})
     let post_code = get(opt, 'post', '')
     if !empty(post_code)
-      call iced#nrepl#eval#repl(post_code)
+      call iced#nrepl#eval#code(post_code, {'ignore_session_validity': v:true})
     endif
     return v:true
   endif
@@ -185,5 +177,5 @@ function! iced#nrepl#cljs#env_complete(arg_lead, cmd_line, cursor_pos) abort
   return join(keys(s:env), "\n")
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
