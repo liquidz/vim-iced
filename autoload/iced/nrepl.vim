@@ -6,6 +6,7 @@ function! s:initialize_nrepl() abort
   return {
       \ 'port': '',
       \ 'channel': v:false,
+      \ 'init_ns': '',
       \ 'current_session_key': '',
       \ 'sessions': {
       \   'repl': '',
@@ -38,6 +39,10 @@ function! iced#nrepl#id() abort
   let res = s:id_counter
   let s:id_counter = (res < 100) ? res + 1 : 1
   return res
+endfunction
+
+function! iced#nrepl#init_ns() abort
+  return get(s:nrepl, 'init_ns', '')
 endfunction
 
 function! s:set_message(id, msg) abort
@@ -342,6 +347,8 @@ endfunction " }}}
 
 " CONNECT {{{
 function! s:warm_up() abort
+  let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
+
   " FIXME init-debugger does not return response immediately
   call iced#nrepl#op#cider#debug#init()
   sleep 100m
