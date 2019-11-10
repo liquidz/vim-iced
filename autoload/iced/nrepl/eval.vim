@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let g:iced#eval#inside_comment = get(g:, 'iced#eval#inside_comment', v:true)
 
@@ -42,7 +42,7 @@ function! iced#nrepl#eval#err(err) abort
   endif
 endfunction
 
-function! iced#nrepl#eval#out(resp) abort
+function! iced#nrepl#eval#out(resp, ...) abort
   if has_key(a:resp, 'value')
     echo iced#util#shorten(a:resp['value'])
 
@@ -56,20 +56,10 @@ function! iced#nrepl#eval#out(resp) abort
   endif
 
   call iced#nrepl#eval#err(get(a:resp, 'err', ''))
-endfunction
 
-function! s:check_switching_session(resp, temporary_session) abort
-  let res = iced#nrepl#cljs#check_switching_session(a:resp, a:temporary_session)
-
-  if res !=# 'skip_to_close_temporary_session'
-       \ && !empty(a:temporary_session)
-    call iced#nrepl#sync#close(a:temporary_session)
+  if has_key(a:, 1)
+    call iced#nrepl#cljs#check_switching_session(a:resp, get(a:, 1))
   endif
-endfunction
-
-function! s:repl_out(resp, temporary_session) abort
-  call iced#nrepl#eval#out(a:resp)
-  call s:check_switching_session(a:resp, a:temporary_session)
 endfunction
 
 function! s:is_comment_form(code) abort
@@ -93,13 +83,15 @@ function! iced#nrepl#eval#normalize_code(code) abort
 endfunction
 
 function! iced#nrepl#eval#code(code, ...) abort
-  if ! iced#nrepl#check_session_validity() | return | endif
+  let opt = get(a:, 1, {})
+  if ! get(opt, 'ignore_session_validity', v:false) && ! iced#nrepl#check_session_validity()
+    return
+  endif
   let view = winsaveview()
   let reg_save = @@
-  let opt = get(a:, 1, {})
 
   let code = iced#nrepl#eval#normalize_code(a:code)
-  let Callback = get(opt, 'callback', function('iced#nrepl#eval#out'))
+  let Callback = get(opt, 'callback', {resp -> iced#nrepl#eval#out(resp, code)})
   if has_key(opt, 'callback')
     unlet opt['callback']
   endif
@@ -110,23 +102,6 @@ function! iced#nrepl#eval#code(code, ...) abort
     let @@ = reg_save
     call winrestview(view)
   endtry
-endfunction
-
-function! iced#nrepl#eval#repl(code, ...) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  let default_session_key = iced#nrepl#current_session_key() ==# 'cljs'
-        \ ? 'cljs_repl'
-        \ : 'repl'
-  let session_key = get(a:, 1, default_session_key)
-
-  " NOTE: clone target session for switching repl from CLJ to CLJS
-  let temporary_session = (session_key !=# 'cljs_repl')
-        \ ? iced#nrepl#sync#clone(iced#nrepl#get_session(session_key))
-        \ : ''
-  call iced#nrepl#eval(
-        \ a:code,
-        \ {resp -> s:repl_out(resp, temporary_session)},
-        \ {'session': session_key})
 endfunction
 
 function! s:undefined(resp, symbol) abort
@@ -192,9 +167,5 @@ function! iced#nrepl#eval#visual() abort " range
   call s:eval_visual(function('iced#nrepl#eval#code'))
 endfunction
 
-function! iced#nrepl#eval#repl_visual() abort " range
-  call s:eval_visual(function('iced#nrepl#eval#repl'))
-endfunction
-
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

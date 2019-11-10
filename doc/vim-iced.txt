@@ -325,13 +325,6 @@ EVALUATING                                                *vim-iced-evaluating*
   ;;            <-----ei----->
   ;;   <----------ee---------->
 <
-  If you would like to evaluate forms in REPL session,
-  |:IcedEvalRepl| will do.
-  See details: |<Plug>(iced_eval_repl)|
-
-  If you would like to evaluate in visual mode,
-  |:IcedEvalVisual| and |:IcedEvalReplVisual| will do.
-
   See |iced-tips-evaluating| for more information.
 
 ------------------------------------------------------------------------------
@@ -579,11 +572,6 @@ COMMANDS                                                    *vim-iced-commands*
   Evaluate {form} in current session.
   See details: |<Plug>(iced_eval)|
 
-                                                                *:IcedEvalRepl*
-:IcedEvalRepl {form}
-  Evaluate {form} in REPL session.
-  See details: |<Plug>(iced_eval_repl)|
-
                                                                   *:IcedEvalNs*
 :IcedEvalNs
   Evaluate `ns` form in current session.
@@ -593,11 +581,6 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedEvalVisual
   Evaluate selected form in current session.
   Key is mapped to |<Plug>(iced_eval_visual)|
-
-                                                          *:IcedEvalReplVisual*
-:IcedEvalReplVisual
-  Evaluate selected form in REPL session.
-  Key is mapped to |<Plug>(iced_eval_repl_visual)|
 
                                                                  *:IcedRequire*
 :IcedRequire
@@ -1044,15 +1027,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
 <
-                                                       *<Plug>(iced_eval_repl)*
-<Plug>(iced_eval_repl)
-  Evaluate codes in REPL session.
-  Followings are examples for working with {vim-sexp}.
->
-  <Plug>(iced_eval_repl)<Plug>(sexp_inner_element)``
-  <Plug>(iced_eval_repl)<Plug>(sexp_outer_list)``
-  <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
-<
                                                   *<Plug>(iced_eval_and_print)*
 <Plug>(iced_eval_and_print)
   Evaluate code and print result to stdout buffer.
@@ -1087,11 +1061,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                      *<Plug>(iced_eval_visual)*
 <Plug>(iced_eval_visual)
   Same as |:IcedEvalVisual|.
-  This is mapped to `vnoremap`.
-
-                                                *<Plug>(iced_eval_repl_visual)*
-<Plug>(iced_eval_repl_visual)
-  Same as |:IcedEvalReplVisual|.
   This is mapped to `vnoremap`.
 
                                                      *<Plug>(iced_macroexpand)*
@@ -1638,7 +1607,6 @@ g:iced#hook
   - Hook report types
     - shell             |hook_report_shell|
     - eval              |hook_report_eval|
-    - eval-repl         |hook_report_eval_repl|
     - function          |hook_report_function|
     - command           |hook_report_command|
 
@@ -1728,10 +1696,8 @@ g:iced_enable_default_key_mappings
   n       <Leader>ei   <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   n       <Leader>ee   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   n       <Leader>et   <Plug>(iced_eval_outer_top_list)
-  n       <Leader>er   <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
   n       <Leader>en   <Plug>(iced_eval_ns)
   v       <Leader>ee   <Plug>(iced_eval_visual)
-  v       <Leader>er   <Plug>(iced_eval_repl_visual)
   n       <Leader>ep   <Plug>(iced_print_last)
   n       <Leader>eb   <Plug>(iced_require)
   n       <Leader>eB   <Plug>(iced_require_all)

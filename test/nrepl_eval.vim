@@ -195,28 +195,4 @@ function! s:suite.visual_test() abort
 endfunction
 " }}}
 
-" iced#nrepl#eval#repl_visual {{{
-function! s:suite.repl_visual_test() abort
-  call s:ch.mock({
-        \ 'status_value': 'open',
-        \ 'relay': {msg -> s:holder.relay(msg)},
-        \ })
-  call s:buf.start_dummy(['(foo (bar|) (baz))'])
-  call s:holder.clear()
-  call iced#nrepl#change_current_session('clj')
-  call iced#nrepl#set_session('clj',  'clj-session')
-  call iced#nrepl#set_session('repl', 'repl-session')
-
-  silent exe "normal! vab\<Esc>"
-  call iced#nrepl#eval#repl_visual()
-
-  let msg = filter(copy(s:holder.get_args()),
-        \ {_, v -> get(v, 'op') ==# 'eval'})[0]
-  call s:assert.equals(get(msg, 'code', ''), '(bar)')
-  call s:assert.equals(get(msg, 'session', ''), 'repl-session')
-
-  call s:buf.stop_dummy()
-endfunction
-" }}}
-
 " vim:fdm=marker:fdl=0
