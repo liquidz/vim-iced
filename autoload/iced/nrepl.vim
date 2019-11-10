@@ -55,7 +55,8 @@ endfunction
 
 " SESSIONS {{{
 function! iced#nrepl#set_session(k, v) abort
-  if a:k =~# '\(cljs\?\|repl\|cljs_repl\)'
+  "if a:k =~# '\(cljs\?\|repl\|cljs_repl\)'
+  if a:k =~# 'cljs\?'
     let s:nrepl['sessions'][a:k] = a:v
   else
     throw printf('Invalid session-key to set: %s', a:k)
@@ -63,7 +64,8 @@ function! iced#nrepl#set_session(k, v) abort
 endfunction
 
 function! iced#nrepl#get_session(k) abort
-  if a:k =~# '\(cljs\?\|repl\|cljs_repl\)'
+  "if a:k =~# '\(cljs\?\|repl\|cljs_repl\)'
+  if a:k =~# 'cljs\?'
     return s:nrepl['sessions'][a:k]
   else
     throw printf('Invalid session-key to get: %s', a:k)
@@ -93,14 +95,6 @@ endfunction
 
 function! iced#nrepl#cljs_session() abort
   return s:nrepl['sessions']['cljs']
-endfunction
-
-function! iced#nrepl#cljs_repl_session() abort
-  return s:nrepl['sessions']['cljs_repl']
-endfunction
-
-function! iced#nrepl#repl_session() abort
-  return s:nrepl['sessions']['repl']
 endfunction
 
 function! iced#nrepl#check_session_validity(...) abort
@@ -384,11 +378,7 @@ endfunction
 function! s:connected(resp, initial_session) abort
   if has_key(a:resp, 'new-session')
     let session = a:resp['new-session']
-    let repl_session_key = (a:initial_session ==# 'cljs') ? 'cljs_repl' : 'repl'
-    call iced#nrepl#set_session(repl_session_key, session)
-
-    let new_session = iced#nrepl#sync#clone(session)
-    call iced#nrepl#set_session(a:initial_session, new_session)
+    call iced#nrepl#set_session(a:initial_session, session)
     call iced#nrepl#change_current_session(a:initial_session)
 
     " Check if nREPL middlewares are enabled

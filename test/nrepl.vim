@@ -7,7 +7,6 @@ let s:ch = themis#helper('iced_channel')
 function! s:fixture() abort
   call iced#nrepl#set_session('clj',  'clj-session')
   call iced#nrepl#set_session('cljs', 'cljs-session')
-  call iced#nrepl#set_session('repl', 'repl-session')
 endfunction
 
 function! s:suite.set_clj_session_test() abort
@@ -20,11 +19,6 @@ function! s:suite.set_cljs_session_test() abort
   call s:fixture()
   call iced#nrepl#change_current_session('cljs')
   call s:assert.equals(iced#nrepl#current_session(), 'cljs-session')
-endfunction
-
-function! s:suite.set_repl_session_test() abort
-  call s:fixture()
-  call s:assert.equals(iced#nrepl#repl_session(), 'repl-session')
 endfunction
 
 function! s:suite.set_invalid_session_test() abort
@@ -78,7 +72,6 @@ function! s:suite.connect_test() abort
   set hidden
   call s:assert.equals(iced#nrepl#connect(1234), v:true)
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
-  call s:assert.equals(iced#nrepl#repl_session(), 'foo-session')
   call s:assert.equals(iced#nrepl#current_session(), 'bar-session')
 endfunction
 
