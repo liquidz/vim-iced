@@ -134,7 +134,7 @@ command!
 command! -nargs=? IcedToggleTraceVar        call iced#nrepl#trace#toggle_var(<q-args>)
 command! -nargs=? IcedToggleTraceNs         call iced#nrepl#trace#toggle_ns(<q-args>)
 
-command!          IcedInReplNs              call iced#nrepl#ns#in_repl_session_ns()
+command!          IcedInInitNs              call iced#nrepl#ns#in_init_ns()
 
 command!          IcedJumpToNextSign        call iced#system#get('sign').jump_to_next()
 command!          IcedJumpToPrevSign        call iced#system#get('sign').jump_to_prev()
@@ -233,7 +233,7 @@ nnoremap <silent>
 nnoremap <silent> <Plug>(iced_toggle_trace_ns)          :<C-u>IcedToggleTraceNs<CR>
 nnoremap <silent> <Plug>(iced_toggle_trace_var)         :<C-u>IcedToggleTraceVar<CR>
 
-nnoremap <silent> <Plug>(iced_in_repl_ns)               :<C-u>IcedInReplNs<CR>
+nnoremap <silent> <Plug>(iced_in_init_ns)               :<C-u>IcedInInitNs<CR>
 
 nnoremap <silent> <Plug>(iced_jump_to_next_sign)        :<C-u>IcedJumpToNextSign<CR>
 nnoremap <silent> <Plug>(iced_jump_to_prev_sign)        :<C-u>IcedJumpToPrevSign<CR>

@@ -30,7 +30,7 @@ function! iced#nrepl#auto#bufenter() abort
   if ! iced#nrepl#check_session_validity(v:false) | return | endif
   let ns_name = iced#nrepl#ns#name_by_buf()
   let ns_name = (empty(ns_name))
-        \ ? iced#nrepl#ns#name_by_var(iced#nrepl#repl_session())
+        \ ? iced#nrepl#init_ns()
         \ : ns_name
   if !empty(ns_name)
     call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), {_ -> ''})
