@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. This change
 === Added
 * Add hook for `connected` event.
 * Add `command` hook reporter to execute a command simply.
+* Add `IcedInInitNs` instead of `IcedInReplNs`.
 
 === Changed
 * https://github.com/liquidz/vim-iced/issues/158[#158]: Clear test error sign only if the test passes.
@@ -28,6 +29,8 @@ All notable changes to this project will be documented in this file. This change
 * (Breaking) https://github.com/liquidz/vim-iced/issues/159[#159]: Remove linting functionality.
 * (Breaking) Remove `:IcedDefBack` command.
 ** You can use built-in https://vim-jp.org/vimdoc-en/tagsrch.html#CTRL-T[<C-t>] key mapping instead.
+* (Breaking) Remove `:IcedInReplNs` command.
+* (Breaking) Remove `eval-repl` hook kind.
 
 == 0.12.5 (2019-10-20)
 // {{{
