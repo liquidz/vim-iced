@@ -47,7 +47,7 @@ function! s:suite.is_connected_test() abort
 endfunction
 
 function! s:suite.connect_test() abort
-  let test = {'session_patterns': ['foo-session', 'bar-session']}
+  let test = {'session_patterns': ['foo-session', 'dummy-session']}
   function! test.relay(msg) abort
     if a:msg['op'] ==# 'clone'
       return {'status': ['done'], 'new-session': remove(self.session_patterns, 0)}
@@ -72,7 +72,7 @@ function! s:suite.connect_test() abort
   set hidden
   call s:assert.equals(iced#nrepl#connect(1234), v:true)
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
-  call s:assert.equals(iced#nrepl#current_session(), 'bar-session')
+  call s:assert.equals(iced#nrepl#current_session(), 'foo-session')
 endfunction
 
 function! s:suite.connect_failure_test() abort

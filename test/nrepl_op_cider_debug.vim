@@ -10,7 +10,6 @@ endfunction
 
 function! s:setup() abort
   call iced#nrepl#set_session('clj', 'clj-session')
-  call iced#nrepl#set_session('repl', 'repl-session')
   call iced#nrepl#change_current_session('clj')
   call s:ch.mock({'status_value': 'open', 'relay': {v -> s:test.relay(v)}})
 endfunction

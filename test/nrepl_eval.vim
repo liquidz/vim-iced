@@ -182,7 +182,6 @@ function! s:suite.visual_test() abort
   call s:holder.clear()
   call iced#nrepl#change_current_session('clj')
   call iced#nrepl#set_session('clj',  'clj-session')
-  call iced#nrepl#set_session('repl', 'repl-session')
 
   silent exe "normal! vab\<Esc>"
   call iced#nrepl#eval#visual()
