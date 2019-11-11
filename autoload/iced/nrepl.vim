@@ -33,6 +33,7 @@ let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
 let g:iced#nrepl#path_translation = get(g:, 'iced#nrepl#path_translation', {})
+let g:iced#nrepl#init_cljs_ns = get(g:, 'iced#nrepl#init_cljs_ns', 'cljs.user')
 
 let s:id_counter = 1
 function! iced#nrepl#id() abort
@@ -42,7 +43,9 @@ function! iced#nrepl#id() abort
 endfunction
 
 function! iced#nrepl#init_ns() abort
-  return get(s:nrepl, 'init_ns', '')
+  return (iced#nrepl#current_session_key() ==# 'clj')
+        \ ? get(s:nrepl, 'init_ns', '')
+        \ : g:iced#nrepl#init_cljs_ns
 endfunction
 
 function! s:set_message(id, msg) abort
