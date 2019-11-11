@@ -42,7 +42,7 @@ function! iced#nrepl#cljs#check_switching_session(eval_resp, evaluated_code) abo
   let ns = a:eval_resp['ns']
   let ext = expand('%:e')
 
-  if eq_to_clj_session && ns ==# 'cljs.user'
+  if eq_to_clj_session && ns ==# g:iced#nrepl#init_cljs_ns
     call s:set_cljs_session(eval_session)
     if ext !=# 'clj'
       call iced#nrepl#change_current_session('cljs')
