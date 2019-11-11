@@ -485,7 +485,7 @@ endfunction " }}}
 
 " EVAL {{{
 function! iced#nrepl#is_evaluating() abort
-  return !empty(s:messages) && len(s:messages) != 1
+  return !empty(s:messages)
 endfunction
 
 function! iced#nrepl#eval(code, ...) abort

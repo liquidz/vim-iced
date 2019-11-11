@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 function! iced#status() abort
   if !iced#nrepl#is_connected()
@@ -60,5 +60,5 @@ function! iced#selector(config) abort
   call iced#system#get('selector').select(a:config)
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
