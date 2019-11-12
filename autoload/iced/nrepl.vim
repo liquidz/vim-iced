@@ -469,6 +469,7 @@ function! iced#nrepl#disconnect() abort " {{{
   call iced#nrepl#cljs#reset()
   call iced#nrepl#connect#reset()
   call iced#message#info('disconnected')
+  call iced#hook#run('disconnected', {})
 endfunction " }}}
 
 function! iced#nrepl#reconnect() abort " {{{
