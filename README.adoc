@@ -2,7 +2,7 @@
 
 +++
 <h4 align="center">
-  <img src="logo.svg" alt="logo" /><br />
+  <img src="doc/pages/assets/logo.svg" alt="logo" /><br />
   Clojure Interactive Development Environment for Vim8/Neovim.
 </h4>
 <p align="center">
