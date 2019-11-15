@@ -1,0 +1,35 @@
+== Completion [[completion]]
+
+=== Omni completion [[omni_completion]]
+
+vim-iced provides only omni completion.
+It is set to https://vim-jp.org/vimdoc-en/options.html#'omnifunc'[omnifunc] for `clojure` filetype automatically by default.
+
+Vim has a https://vim-jp.org/vimdoc-en/insert.html#i_CTRL-X_CTRL-O[<C-x><C-o>] key mapping for omni completion.
+
+.Example (📍 means cursor position)
+[source,clojure]
+----
+(prin📍)    ;; Type `<C-x><C-o>` to show omni completion
+----
+
+=== Auto completion [[auto_completion]]
+
+vim-iced itself does not provide any auto completion methods.
+
+However, the following completion plugins are supported as external plugins.
+
+==== asyncomplete.vim
+
+https://github.com/prabirshrestha/asyncomplete.vim[asyncomplete.vim] is a async completion plugin in pure vim script for Vim8 and Neovim,
+and https://github.com/liquidz/vim-iced-asyncomplete[vim-iced-asyncomplete] is a vim-iced plugin to work with this plugin.
+
+See https://github.com/liquidz/vim-iced-asyncomplete#installation[here] for installation steps.
+
+==== coc.nvim
+
+https://github.com/neoclide/coc.nvim[coc.nvim] is a intellisense engine for Vim8 and Neovim,
+and https://github.com/liquidz/vim-iced-coc-source[vim-iced-coc-source] is a vim-iced plugin to work this plugin.
+
+See https://github.com/liquidz/vim-iced-coc-source#installation[here] for installation steps.
+
