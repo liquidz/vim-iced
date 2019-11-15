@@ -97,7 +97,12 @@ Open vim and execute `:IcedConnect` command.
 $ vim src/hello_iced/core.clj
 ----
 
-You succeeded to connect REPL if you see "Connected" message, so let's execute `:IcedEval (+ 1 2 3 4 5)`.
+You succeeded to connect REPL if you see "Connected" message, so let's execute the next command.
+
+[source,vim]
+----
+:IcedEval (+ 1 2 3 4 5)
+----
 
 Do you see `15` as a result?
 If so, your vim has started working with Clojure's REPL finally!
