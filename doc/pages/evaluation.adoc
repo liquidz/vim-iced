@@ -12,7 +12,7 @@ There are 3 main ranges to evaluation in vim-iced.
 
 See the following figure for the concrete ranges.
 
-FIXME
+image::assets/evaluation_range.png[Evaluation range]
 
 If you enable default key mappings, following key mappings are available.
 
@@ -21,20 +21,25 @@ If you enable default key mappings, following key mappings are available.
 |===
 
 | [reftext="evaluating inner element"]
-inner element [[evaluate_inner_element]]
+[[evaluate_inner_element]]
+inner element
 | `<Leader>ei`
 
 | [reftext="evaluating outer list"]
-outer list [[evaluate_outer_list]]
+[[evaluate_outer_list]]
+outer list
 | `<Leader>ee`
 
 | [reftext="evaluating outer top list"]
-outer top list [[evaluate_outer_top_list]]
+[[evaluate_outer_top_list]]
+outer top list
 | `<Leader>et`
 
 |===
 
 See https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-customizing-default-keys[help file] for other default key mappings.
+
+TIP: See also <<eval_inside_comment>>
 
 === Results [[evaluation_results]]
 
@@ -42,5 +47,3 @@ The evaluation result is echoed on command-line and displayed in a popup at the 
 However, the displayed result is only the returned value, so for example, the contents output by `println` are not diplayed.
 
 The contents output to standard output are displayed on the <<stdout_buffer>>.
-
-//==== Eval in comment [[evaluation_eval_in_comment]]
