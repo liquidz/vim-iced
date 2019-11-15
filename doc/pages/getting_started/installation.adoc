@@ -1,0 +1,103 @@
+=== Installation [[installation]]
+
+vim-iced itself and https://github.com/guns/vim-sexp[vim-sexp] are the minimul requirements.
+
+In addition, if there is one of follows, you can use interactive UI for selecting one from multiple candidates (e.g. selecting a ns which you'd like to add)
+
+- https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim]
+- https://github.com/junegunn/fzf[fzf]
+- https://github.com/liuchengxu/vim-clap[vim-clap]
+
+If anything is okay, ctrlp.vim is easy to install and stable.
+
+==== Installing plugins [[installing_plugins]]
+
+At first, if you don't have a plugin manager, please install https://github.com/junegunn/vim-plug[vim-plug].
+
+.vim
+[source,console]
+----
+$ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+----
+
+.neovim
+[source,console]
+----
+$ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+----
+
+Next, add a vim-plug section to your `~/.vimrc` (or `~/.config/nvim/init.vim` for Neovim)
+
+[source,vim]
+----
+" Specify a directory for plugins
+call plug#begin('~/.vim/plugged')
+
+" One of following
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf'
+Plug 'liuchengxu/vim-clap'
+
+" Requires
+Plug 'guns/vim-sexp',    {'for': 'clojure'}
+Plug 'liquidz/vim-iced', {'for': 'clojure'}
+
+call plug#end()
+
+" Enable vim-iced's default key mapping
+" This is recommended for newbies
+let g:iced_enable_default_key_mappings = v:true
+----
+
+==== iced command [[installation_iced_command]]
+
+`iced` is a a utility command to make you easy to use vim-iced, and it comes with vim-iced.
+Setup is easy, just add the `bin` directory under the installed vim-iced directory to `$PATH` environmental variable.
+With above vim-plug setting,  `~/.vim/plugged/vim-iced/bin` is the directory to add to `$PATH`.
+
+[source,console]
+----
+$ export PATH=$PATH:/path/to/repo/vim-iced/bin
+----
+
+To confirm setup, run the following command.
+
+[source,console]
+----
+$ iced version
+----
+
+// FIXME See <<iced_command>> for more information.
+
+=== Quick start
+
+Let's create a sample project for quick start.
+Here https://github.com/technomancy/leiningen[Leiningen] is used to create a project template.
+
+[source,console]
+----
+$ lein new hello-iced
+$ cd hello-iced
+----
+
+We use `iced` command to launch REPL instead of `lein` command.
+This allows `iced` command to take care of all the additional libraries and REPL settings you need.
+
+[source,console]
+----
+$ iced repl
+----
+
+Open vim and execute `:IcedConnect` command.
+
+[source,console]
+----
+$ vim src/hello_iced/core.clj
+----
+
+You succeeded to connect REPL if you see "Connected" message, so let's execute `:IcedEval (+ 1 2 3 4 5)`.
+
+Do you see `15` as a result?
+If so, your vim has started working with Clojure's REPL finally!

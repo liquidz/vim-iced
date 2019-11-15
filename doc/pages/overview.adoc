@@ -1,0 +1,9 @@
+== Overview
+
+https://github.com/liquidz/vim-iced[vim-iced] is a https://github.com/vim/vim[Vim8] / https://github.com/neovim/neovim[Neovim] plugin to provide a Clojure interactive development environment.
+
+This project is heavily inspired by https://github.com/clojure-emacs/cider[CIDER], and the goal of this project is to provide a Clojure development environment to Vim that is comparable(or more) to CIDER.
+
+
+The assumption of "comparable to CIDER" varies from person to person.
+Although it is subjective, I assume "comparable to CIDER" is that there is no obstacle to development *at work*.

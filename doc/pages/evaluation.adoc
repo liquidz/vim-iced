@@ -1,0 +1,46 @@
+== Evaluation [[evaluation]]
+
+The evaluation of S-expression is the most important element in REPL driven development.
+
+=== Ranges [[evaluation_ranges]]
+
+There are 3 main ranges to evaluation in vim-iced.
+
+- inner element
+- outer list
+- outer top list
+
+See the following figure for the concrete ranges.
+
+FIXME
+
+If you enable default key mappings, following key mappings are available.
+
+.Default key mappings
+[cols="a,a"]
+|===
+
+| [reftext="evaluating inner element"]
+inner element [[evaluate_inner_element]]
+| `<Leader>ei`
+
+| [reftext="evaluating outer list"]
+outer list [[evaluate_outer_list]]
+| `<Leader>ee`
+
+| [reftext="evaluating outer top list"]
+outer top list [[evaluate_outer_top_list]]
+| `<Leader>et`
+
+|===
+
+See https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-customizing-default-keys[help file] for other default key mappings.
+
+=== Results [[evaluation_results]]
+
+The evaluation result is echoed on command-line and displayed in a popup at the end of line.
+However, the displayed result is only the returned value, so for example, the contents output by `println` are not diplayed.
+
+The contents output to standard output are displayed on the <<stdout_buffer>>.
+
+//==== Eval in comment [[evaluation_eval_in_comment]]

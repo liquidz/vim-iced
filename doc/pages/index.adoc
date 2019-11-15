@@ -1,0 +1,25 @@
+= vim-iced
+:toc: left
+//:stylesheet: asciidoc.css
+//:webfonts: //fonts.googleapis.com/css?family=Roboto+Mono
+
+include::overview.adoc[]
+
+include::getting_started.adoc[]
+
+include::evaluation.adoc[]
+
+// include::completion.adoc[]
+
+// include::reference.adoc[]
+
+// include::navigation.adoc[]
+
+// include::testing.adoc[]
+
+include::buffer.adoc[]
+
+include::configuration.adoc[]
+
+// include::clojurescript.adoc[]
+

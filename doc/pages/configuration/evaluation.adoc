@@ -1,0 +1,26 @@
+=== Evaluation [[configuration_evaluation]]
+
+==== Eval inside comment [[eval_inside_comment]]
+
+`comment` form is useful for checking behavior.
+You can use <<evaluate_outer_list>> range to evaluate codes inside `comment` form, but
+
+
+`outer top list`
+
+
+https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23eval%23inside_comment[g:iced#eval#inside_comment] is a configuration that allow you to evaluate inside `comment` form.
+
+
+// If |g:iced#eval#inside_comment| is {v:true},
+// vim-iced evaluates the form inside comment.
+//
+// This function is enabled at followings:
+// - |:IcedEval|, |:IcedEvalOuterTopList| command
+// - |<Plug>(iced_eval)| operator
+//
+// Example(`📍` means cursor position): >
+// (comment📍
+//   (+ 1 2 3))
+// ; Execute :IcedEvalOuterTopList
+// ; => 6
