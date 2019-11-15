@@ -597,6 +597,12 @@ COMMANDS                                                    *vim-iced-commands*
   Undefine {symbol} in current namespace.
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_undef)|.
+  
+                                                            *:IcedUndefAllInNs*
+:IcedUndefAllInNs [{ns}]
+  Undefine all symbols in {ns}.
+  If {ns} is not passed, current namespace is used.
+  Key is mapped to |<Plug>(iced_undef_all_in_ns)|.
 
                                                         *:IcedEvalOuterTopList*
 :IcedEvalOuterTopList
@@ -1088,6 +1094,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                            *<Plug>(iced_undef)*
 <Plug>(iced_undef)
   Same as |:IcedUndef|.
+  
+                                                 *<Plug>(iced_undef_all_in_ns)*
+<Plug>(iced_undef_all_in_ns)
+  Same as |:IcedUndefAllInNs|.
 
                                              *<Plug>(iced_eval_outer_top_list)*
 <Plug>(iced_eval_outer_top_list)
@@ -1708,6 +1718,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>eb   <Plug>(iced_require)
   n       <Leader>eB   <Plug>(iced_require_all)
   n       <Leader>eu   <Plug>(iced_undef)
+  n       <Leader>eU   <Plug>(iced_undef_all_in_ns)
   n       <Leader>eq   <Plug>(iced_interrupt)
   n       <Leader>eQ   <Plug>(iced_interrupt_all)
   n       <Leader>eM   <Plug>(iced_macroexpand_outer_list)

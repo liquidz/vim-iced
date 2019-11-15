@@ -124,6 +124,22 @@ function! iced#nrepl#eval#undef(symbol) abort
   call iced#nrepl#op#cider#undef(symbol, {resp -> s:undefined(resp, symbol)})
 endfunction
 
+function! s:all_undefined_in_ns(ns, resp) abort
+  if has_key(a:resp, 'ex') && !empty(a:resp['ex'])
+    call iced#nrepl#eval#out(a:resp)
+  else
+    call iced#message#info('undefined', a:ns)
+  endif
+endfunction
+
+function! iced#nrepl#eval#undef_all_in_ns(...) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  let ns = get(a:, 1, '')
+  let ns = empty(ns) ? iced#nrepl#ns#name() : ns
+  let code = printf('(let [ns-sym ''%s] (doseq [x (keys (ns-interns ns-sym))] (ns-unmap ns-sym x)))', ns)
+  call iced#nrepl#eval#code(code, {'callback': funcref('s:all_undefined_in_ns', [ns])})
+endfunction
+
 function! iced#nrepl#eval#print_last() abort
   let m = {}
   function! m.callback(resp) abort

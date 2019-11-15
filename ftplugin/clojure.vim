@@ -63,6 +63,7 @@ command! -range   IcedEvalVisual            call iced#nrepl#eval#visual()
 command!          IcedRequire               call iced#nrepl#ns#load_current_file()
 command!          IcedRequireAll            call iced#nrepl#ns#reload_all()
 command! -nargs=? IcedUndef                 call iced#nrepl#eval#undef(<q-args>)
+command! -nargs=? IcedUndefAllInNs          call iced#nrepl#eval#undef_all_in_ns(<q-args>)
 command!          IcedEvalOuterTopList      call iced#nrepl#eval#outer_top_list()
 command!          IcedPrintLast             call iced#nrepl#eval#print_last()
 command!          IcedMacroExpandOuterList  call iced#nrepl#macro#expand_outer_list()
@@ -138,6 +139,8 @@ command!          IcedInInitNs              call iced#nrepl#ns#in_init_ns()
 
 command!          IcedJumpToNextSign        call iced#system#get('sign').jump_to_next()
 command!          IcedJumpToPrevSign        call iced#system#get('sign').jump_to_prev()
+command!          IcedJumpToNextError       call iced#system#get('sign').jump_to_next({'name': iced#nrepl#test#sign_name()})
+command!          IcedJumpToPrevError       call iced#system#get('sign').jump_to_next({'name': iced#nrepl#test#sign_name()})
 command!          IcedJumpToLet             call iced#let#jump_to_let()
 
 "" }}}
@@ -165,6 +168,7 @@ nnoremap <silent> <Plug>(iced_macroexpand_1)            :<C-u>set opfunc=iced#op
 nnoremap <silent> <Plug>(iced_require)                  :<C-u>IcedRequire<CR>
 nnoremap <silent> <Plug>(iced_require_all)              :<C-u>IcedRequireAll<CR>
 nnoremap <silent> <Plug>(iced_undef)                    :<C-u>IcedUndef<CR>
+nnoremap <silent> <Plug>(iced_undef_all_in_ns)          :<C-u>IcedUndefAllInNs<CR>
 nnoremap <silent> <Plug>(iced_eval_outer_top_list)      :<C-u>IcedEvalOuterTopList<CR>
 nnoremap <silent> <Plug>(iced_print_last)               :<C-u>IcedPrintLast<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_outer_list)   :<C-u>IcedMacroExpandOuterList<CR>
@@ -324,6 +328,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_undef)')
     silent! nmap <buffer> <Leader>eu <Plug>(iced_undef)
+  endif
+
+  if !hasmapto('<Plug>(iced_undef_all_in_ns)')
+    silent! nmap <buffer> <Leader>eU <Plug>(iced_undef_all_in_ns)
   endif
 
   if !hasmapto('<Plug>(iced_macroexpand_outer_list)')

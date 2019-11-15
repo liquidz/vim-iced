@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This change
 * Add hook for `connected` event.
 * Add `command` hook reporter to execute a command simply.
 * Add `IcedInInitNs` instead of `IcedInReplNs`.
+* Add `IcedUndefAllInNs` command.
 
 === Changed
 * https://github.com/liquidz/vim-iced/issues/158[#158]: Clear test error sign only if the test passes.
