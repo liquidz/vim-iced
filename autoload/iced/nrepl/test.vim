@@ -30,6 +30,10 @@ function! s:dict_to_str(d, ...) abort
   return join(res, "\n")
 endfunction
 
+function! iced#nrepl#test#sign_name() abort
+  return s:sign_name
+endfunction
+
 function! iced#nrepl#test#done(parsed_response) abort
   if empty(a:parsed_response) | return | endif
 
