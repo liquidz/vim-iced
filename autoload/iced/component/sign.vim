@@ -32,9 +32,15 @@ endfunction
 
 function! s:sign.jump_to_next(...) abort
   let lnum = line('.')
-  let file = get(a:, 1, expand('%:p'))
+  let opt = get(a:, 1, {})
+  let file = get(opt, 'file', expand('%:p'))
+  let name = get(opt, name, '')
   let sign_list = self.list_in_buffer(file)
   let target = ''
+
+  if !empty(name)
+    call filter(sign_list, {_, v -> v['name'] ==# name})
+  endif
 
   for sign in sign_list
     if sign['lnum'] > lnum
@@ -57,10 +63,16 @@ endfunction
 
 function! s:sign.jump_to_prev(...) abort
   let lnum = line('.')
-  let file = get(a:, 1, expand('%:p'))
+  let opt = get(a:, 1, {})
+  let file = get(opt, 'file', expand('%:p'))
+  let name = get(opt, name, '')
   let tmp = ''
   let target = ''
   let sign_list = self.list_in_buffer(file)
+
+  if !empty(name)
+    call filter(sign_list, {_, v -> v['name'] ==# name})
+  endif
 
   for sign in sign_list
     if sign['lnum'] < lnum
