@@ -34,7 +34,7 @@ function! s:sign.jump_to_next(...) abort
   let lnum = line('.')
   let opt = get(a:, 1, {})
   let file = get(opt, 'file', expand('%:p'))
-  let name = get(opt, name, '')
+  let name = get(opt, 'name', '')
   let sign_list = self.list_in_buffer(file)
   let target = ''
 
@@ -65,7 +65,7 @@ function! s:sign.jump_to_prev(...) abort
   let lnum = line('.')
   let opt = get(a:, 1, {})
   let file = get(opt, 'file', expand('%:p'))
-  let name = get(opt, name, '')
+  let name = get(opt, 'name', '')
   let tmp = ''
   let target = ''
   let sign_list = self.list_in_buffer(file)
