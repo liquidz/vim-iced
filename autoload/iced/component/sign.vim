@@ -119,10 +119,13 @@ function! s:sign.unplace_by(opt) abort
 endfunction
 
 function! s:sign.refresh(...) abort
-  let file = get(a:, 1, expand('%:p'))
-  for sign in self.list_in_buffer()
+  let opt = get(a:, 1, {})
+  let file = get(opt, 'file', expand('%:p'))
+  let signs = get(opt, 'signs', self.list_in_buffer())
+
+  for sign in signs
     call self.unplace_by({'id': sign['id'], 'group': sign['group']})
-    call self.place(sign['name'], sign['lnum'], file)
+    call self.place(sign['name'], sign['lnum'], file, sign['group'])
   endfor
 endfunction
 

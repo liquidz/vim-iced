@@ -20,6 +20,9 @@ function! iced#format#all() abort
   let view = winsaveview()
   let reg_save = @@
   let ns_name = iced#nrepl#ns#name()
+  let sign = iced#system#get('sign')
+  let before_signs = copy(sign.list_in_buffer())
+
   try
     let codes = trim(join(getline(1, '$'), "\n"))
     if empty(codes) | return | endif
@@ -34,7 +37,7 @@ function! iced#format#all() abort
   finally
     let @@ = reg_save
     call winrestview(view)
-    call iced#system#get('sign').refresh()
+    call sign.refresh({'signs': before_signs})
   endtry
 endfunction
 
@@ -49,6 +52,9 @@ function! iced#format#form() abort
   let view = winsaveview()
   let reg_save = @@
   let ns_name = iced#nrepl#ns#name()
+  let sign = iced#system#get('sign')
+  let before_signs = copy(sign.list_in_buffer())
+
   try
     let res = iced#paredit#get_current_top_list_raw()
     let code = res['code']
@@ -66,7 +72,7 @@ function! iced#format#form() abort
   finally
     let @@ = reg_save
     call winrestview(view)
-    call iced#system#get('sign').refresh()
+    call sign.refresh({'signs': before_signs})
   endtry
 endfunction
 
