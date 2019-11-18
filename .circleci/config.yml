@@ -152,12 +152,12 @@ workflows:
       - neovim-build
       - docs-build
       - load-files-build
-      - nightly-docs-deploy:
-          requires:
-            - docs-build
-          filters:
-            branches:
-              only: dev
+      # - nightly-docs-deploy:
+      #     requires:
+      #       - docs-build
+      #     filters:
+      #       branches:
+      #         only: dev
       - docs-deploy:
           requires:
             - build
