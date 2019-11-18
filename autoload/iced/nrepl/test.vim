@@ -95,20 +95,26 @@ endfunction
 " }}}
 
 " iced#nrepl#test#test_vars_by_ns_name {{{
-function! iced#nrepl#test#test_vars_by_ns_name(ns_name) abort
-  let resp = iced#nrepl#op#cider#sync#ns_vars(a:ns_name)
-  if !has_key(resp, 'ns-vars-with-meta')
+
+function! s:test_vars_by_ns_name_callback(resp) abort
+  if !has_key(a:resp, 'ns-vars-with-meta')
     call iced#message#error('ns_vars_error')
     return []
   endif
-  let var_dict = resp['ns-vars-with-meta']
+  let var_dict = a:resp['ns-vars-with-meta']
   return filter(copy(keys(var_dict)), {_, k -> has_key(var_dict[k], 'test')})
+endfunction
+
+function! iced#nrepl#test#test_vars_by_ns_name(ns_name, callback) abort
+  call iced#promise#call('iced#nrepl#ns#require', [a:ns_name])
+        \.then({_ -> iced#promise#call('iced#nrepl#op#cider#ns_vars_with_meta', [a:ns_name])})
+        \.then(funcref('s:test_vars_by_ns_name_callback'))
+        \.then(a:callback)
 endfunction " }}}
 
 " iced#nrepl#test#fetch_test_vars_by_function_under_cursor {{{
-function! s:test_vars(eval_resp, ns_name, callback) abort
-  let test_vars = iced#nrepl#test#test_vars_by_ns_name(a:ns_name)
-  if empty(test_vars)
+function! s:test_vars(eval_resp, ns_name, callback, test_vars) abort
+  if empty(a:test_vars)
     return iced#message#warning('no_test_vars')
   endif
 
@@ -127,11 +133,13 @@ function! iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, call
   let code = ret['code']
   if empty(code) | return iced#message#error('finding_code_error') | endif
 
-  call iced#nrepl#eval(code, {eval_resp ->
-        \   (has_key(eval_resp, 'value') && eval_resp['value'] !=# 'nil')
-        \   ? iced#nrepl#ns#require(a:ns_name, {_ ->
-        \       s:test_vars(eval_resp, a:ns_name, a:callback)})
-        \   : iced#message#error('not_found')})
+  call iced#promise#call('iced#nrepl#eval', [code])
+        \.then({eval_resp -> (has_key(eval_resp, 'value') && eval_resp['value'] !=# 'nil')
+        \                    ? eval_resp
+        \                    : iced#promise#reject('not_found')})
+        \.then({eval_resp -> funcref('s:test_vars', [eval_resp, a:ns_name, a:callback])})
+        \.then({callback -> iced#nrepl#test#test_vars_by_ns_name(a:ns_name, callback)})
+        \.catch({err -> iced#message#error(err)})
 endfunction " }}}
 
 " iced#nrepl#test#under_cursor {{{
@@ -162,13 +170,12 @@ function! s:run_test_vars(ns_name, vars) abort
   call iced#nrepl#op#cider#test_var_query(query, funcref('s:clojure_test_out'))
 endfunction
 
-function! s:test_ns_required(ns_name, var_name) abort
-    let test_vars = iced#nrepl#test#test_vars_by_ns_name(a:ns_name)
-    if empty(test_vars)
+function! s:test_ns_required(ns_name, var_name, test_vars) abort
+    if empty(a:test_vars)
       return iced#message#warning('no_test_vars_for', a:var_name)
     endif
 
-    let target_test_vars = filter(copy(test_vars), {_, v -> stridx(v, a:var_name) != -1})
+    let target_test_vars = filter(copy(a:test_vars), {_, v -> stridx(v, a:var_name) != -1})
     if empty(target_test_vars)
       return iced#message#warning('no_test_vars_for', a:var_name)
     endif
@@ -177,13 +184,12 @@ function! s:test_ns_required(ns_name, var_name) abort
     call s:run_test_vars(a:ns_name, target_test_vars)
 endfunction
 
-function! s:distribute_tests(var_info) abort
+function! s:dispatch_tests(var_info, test_vars) abort
   let qualified_var = a:var_info['qualified_var']
   let ns = a:var_info['ns']
   let var_name = a:var_info['var']
-  let test_vars = iced#nrepl#test#test_vars_by_ns_name(ns)
 
-  if index(test_vars, var_name) != -1
+  if index(a:test_vars, var_name) != -1
     " Form under the cursor is a test
     call s:run_test_vars(ns, [qualified_var])
   elseif s:S.ends_with(ns, '-test')
@@ -192,23 +198,24 @@ function! s:distribute_tests(var_info) abort
   else
     " Form under the cursor is not a test, and current ns is NOT ns for test
     let ns = iced#nrepl#navigate#cycle_ns(ns)
-    call iced#nrepl#ns#require(ns, {_ -> s:test_ns_required(ns, var_name)})
+    call iced#promise#call('iced#nrepl#ns#require', [ns])
+          \.then({_ -> iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [ns])})
+          \.then({test_vars -> s:test_ns_required(ns, var_name, test_vars)})
   endif
 endfunction
 
 function! iced#nrepl#test#under_cursor() abort
-  call iced#nrepl#var#extract_by_current_top_list({resp ->
-        \ s:distribute_tests(resp)})
+  call iced#promise#call('iced#nrepl#var#extract_by_current_top_list', [])
+        \.then({resp -> iced#cache#set('iced#nrepl#test#under_cursor', resp)})
+        \.then({resp -> iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [resp['ns']])})
+        \.then({test_vars -> s:dispatch_tests(iced#cache#get('iced#nrepl#test#under_cursor'), test_vars)})
 endfunction "}}}
 
 " iced#nrepl#test#ns {{{
-function! iced#nrepl#test#ns() abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  let ns = iced#nrepl#ns#name()
-  let test_vars = iced#nrepl#test#test_vars_by_ns_name(ns)
-  if empty(test_vars) && !s:S.ends_with(ns, '-test')
-    let ns = iced#nrepl#navigate#cycle_ns(ns)
-  endif
+function! s:test_ns_callback(ns, test_vars) abort
+  let ns = empty(a:test_vars) && !s:S.ends_with(a:ns, '-test')
+        \ ? iced#nrepl#navigate#cycle_ns(a:ns)
+        \ : a:ns
 
   let query = {'ns-query': {'exactly': [ns]}}
   let s:last_test = {'type': 'test-var', 'query': query}
@@ -228,6 +235,12 @@ function! iced#nrepl#test#ns() abort
     call s:echo_testing_message(query)
     call iced#nrepl#ns#require(ns, {_ -> iced#nrepl#op#cider#test_var_query(query, funcref('s:clojure_test_out'))})
   endtry
+endfunction
+
+function! iced#nrepl#test#ns() abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  let ns = iced#nrepl#ns#name()
+  call iced#nrepl#test#test_vars_by_ns_name(ns, funcref('s:test_ns_callback', [ns]))
 endfunction " }}}
 
 " iced#nrepl#test#all {{{
