@@ -18,7 +18,9 @@ function! iced#cache#has_key(k) abort
 endfunction
 
 function! iced#cache#delete(k) abort
+  let v = copy(s:cache[a:k])
   unlet s:cache[a:k]
+  return v
 endfunction
 
 function! iced#cache#merge(dict) abort
