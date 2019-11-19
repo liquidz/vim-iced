@@ -68,6 +68,7 @@ function! s:suite.done_test() abort
 endfunction
 
 function! s:suite.test_vars_by_ns_name_test() abort
+	call s:setup()
   let test_vars = {'foo': {}, 'bar': {'test': ''}, 'baz': {'test': 'test'}}
   call s:ch.mock({
        \ 'status_value': 'open',
@@ -75,17 +76,26 @@ function! s:suite.test_vars_by_ns_name_test() abort
        \           ? {'status': ['done'], 'ns-vars-with-meta': test_vars}
        \           : {'status': ['done']}}})
 
-  let ret = iced#nrepl#test#test_vars_by_ns_name('foo.core')
+  let p = iced#nrepl#test#test_vars_by_ns_name('foo.core', {v -> s:holder.run(v)})
+	call iced#promise#wait(p)
+
+	let ret = s:holder.get_args()[0][0]
   call s:assert.equals(copy(sort(ret)), ['bar', 'baz'])
+	call s:teardown()
 endfunction
 
 function! s:suite.test_vars_by_ns_name_error_test() abort
+  call s:setup()
   call s:ch.mock({
        \ 'status_value': 'open',
        \ 'relay': {msg -> {'status': ['done']}}})
 
-  let ret = iced#nrepl#test#test_vars_by_ns_name('foo.core')
+	let p = iced#nrepl#test#test_vars_by_ns_name('foo.core', {v -> s:holder.run(v)})
+	call iced#promise#wait(p)
+
+  let ret = s:holder.get_args()[0][0]
   call s:assert.true(empty(ret))
+	call s:teardown()
 endfunction
 
 function! s:suite.fetch_test_vars_by_function_under_cursor_test() abort
@@ -112,7 +122,9 @@ function! s:suite.fetch_test_vars_by_function_under_cursor_test() abort
   call s:buf.start_dummy([
       \ '(ns foo.bar)',
       \ '(defn baz [] "baz" |)'])
-  call iced#nrepl#test#fetch_test_vars_by_function_under_cursor('foo.bar', test.result_callback)
+  let p = iced#nrepl#test#fetch_test_vars_by_function_under_cursor('foo.bar', test.result_callback)
+	call iced#promise#wait(p)
+
   call s:assert.equals(test.result['var_name'], 'baz')
   call s:assert.equals(test.result['test_vars'], ['foo.bar/baz-test'])
   call s:buf.stop_dummy()
@@ -172,7 +184,9 @@ function! s:suite.under_cursor_with_test_var_success_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
-  call iced#nrepl#test#under_cursor()
+  let p = iced#nrepl#test#under_cursor()
+	call iced#promise#wait(p)
+
   call s:assert.equals(s:qf.get_last_args()['list'], [])
 
   call s:assert.equals(r.get_last_var_query(), {
@@ -203,7 +217,8 @@ function! s:suite.under_cursor_with_test_var_failure_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
-  call iced#nrepl#test#under_cursor()
+  let p = iced#nrepl#test#under_cursor()
+	call iced#promise#wait(p)
 
   call s:assert.equals(s:qf.get_last_args()['list'], [
        \ {'lnum': 1,
@@ -234,7 +249,9 @@ function! s:suite.under_cursor_with_non_test_var_and_test_ns_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts, v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
-  call iced#nrepl#test#under_cursor()
+  let p = iced#nrepl#test#under_cursor()
+	call iced#promise#wait(p)
+
   call s:assert.equals(s:qf.get_last_args()['list'], [])
   call s:assert.equals(r.get_last_var_query(), {})
 
@@ -258,7 +275,9 @@ function! s:suite.under_cursor_with_non_test_var_and_non_test_ns_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
 
-  call iced#nrepl#test#under_cursor()
+  let p = iced#nrepl#test#under_cursor()
+	call iced#promise#wait(p)
+
   call s:assert.equals(s:qf.get_last_args()['list'], [])
   call s:assert.equals(r.get_last_var_query(), {
         \ 'ns-query': {'exactly': ['foo.bar-test']},
@@ -288,7 +307,8 @@ function! s:suite.ns_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
-  call iced#nrepl#test#ns()
+  let p = iced#nrepl#test#ns()
+	call iced#promise#wait(p)
 
   call s:assert.equals(s:qf.get_last_args()['list'], [{
         \ 'lnum': 1,
@@ -324,7 +344,8 @@ function! s:suite.ns_with_non_test_ns_test() abort
   "" NOTE: the ns name does not end with '-test'
   call s:buf.start_dummy(['(ns bar.baz)', '(some codes|)'])
 
-  call iced#nrepl#test#ns()
+  let p = iced#nrepl#test#ns()
+	call iced#promise#wait(p)
 
   call s:assert.equals(s:qf.get_last_args()['list'], [])
   call s:assert.equals(r.get_last_var_query(), {
@@ -351,7 +372,8 @@ function! s:suite.all_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
 
-  call iced#nrepl#test#all()
+  let p = iced#nrepl#test#all()
+	call iced#promise#wait(p)
 
   call s:assert.equals(s:qf.get_last_args()['list'], [{
         \ 'lnum': 1,
@@ -401,7 +423,8 @@ function! s:suite.redo_test() abort
   call iced#nrepl#set_session('clj', 'clj-session')
   call iced#nrepl#change_current_session('clj')
 
-  call iced#nrepl#test#redo()
+  let p = iced#nrepl#test#redo()
+	call iced#promise#wait(p)
 
   call s:assert.equals(s:qf.get_last_args()['list'], [{
         \ 'lnum': 1,
@@ -434,7 +457,9 @@ function! s:suite.spec_check_test() abort
   call s:io.mock()
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
-  call iced#nrepl#test#spec_check(123)
+  let p = iced#nrepl#test#spec_check(123)
+	call iced#promise#wait(p)
+
   call s:assert.equals(s:io.get_last_args(), {
         \ 'echomsg': {'hl': 'MoreMsg', 'text': 'foo.bar/baz: Ran 123 tests. Passed.'},
         \ })
@@ -461,7 +486,9 @@ function! s:suite.spec_check_failure_test() abort
   call s:io.mock()
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
-  call iced#nrepl#test#spec_check(123)
+  let p = iced#nrepl#test#spec_check(123)
+	call iced#promise#wait(p)
+
   call s:assert.equals(s:io.get_last_args(), {
         \ 'echomsg': {'hl': 'ErrorMsg', 'text': 'foo.bar/baz: Ran 123 tests. Failed because ''dummy message'' with dummy fail args.'},
         \ })
