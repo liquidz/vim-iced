@@ -143,7 +143,7 @@ function! iced#nrepl#navigate#test() abort
   if s:S.ends_with(ns_name, '-test') | return iced#message#warning('already_in_test_ns') | endif
 
   let ns_name = iced#nrepl#navigate#cycle_ns(ns_name)
-  call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, funcref('s:test_vars'))
+  return iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, funcref('s:test_vars'))
 endfunction " }}}
 
 function! s:set_xref_resp_to_quickfix(key, resp) abort

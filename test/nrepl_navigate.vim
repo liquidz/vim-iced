@@ -143,7 +143,9 @@ function! s:suite.test_test() abort
         \ 'buffer': ['(ns foo.bar)', '(defn baz [] "dummy"|)'],
         \ })
 
-  call iced#nrepl#navigate#test()
+  let p = iced#nrepl#navigate#test()
+  call iced#promise#wait(p)
+
   let config = s:sel.get_last_config()
   call s:assert.equals(sort(copy(config['candidates'])), [
         \ 'foo.bar-test/baz-failure-test',
