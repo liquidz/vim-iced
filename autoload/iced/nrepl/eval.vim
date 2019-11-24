@@ -97,7 +97,8 @@ function! iced#nrepl#eval#code(code, ...) abort
   endif
 
   try
-    call iced#nrepl#eval(code, Callback, opt)
+    return iced#nrepl#ns#require_if_not_loaded_promise()
+          \.then({_ -> iced#nrepl#eval(code, Callback, opt)})
   finally
     let @@ = reg_save
     call winrestview(view)
@@ -137,7 +138,7 @@ function! iced#nrepl#eval#undef_all_in_ns(...) abort
   let ns = get(a:, 1, '')
   let ns = empty(ns) ? iced#nrepl#ns#name() : ns
   let code = printf('(let [ns-sym ''%s] (doseq [x (keys (ns-interns ns-sym))] (ns-unmap ns-sym x)))', ns)
-  call iced#nrepl#eval#code(code, {'callback': funcref('s:all_undefined_in_ns', [ns])})
+  return iced#nrepl#eval#code(code, {'callback': funcref('s:all_undefined_in_ns', [ns])})
 endfunction
 
 function! iced#nrepl#eval#print_last() abort
@@ -161,26 +162,26 @@ function! iced#nrepl#eval#outer_top_list() abort
 
   let pos = ret['curpos']
   let opt = {'line': pos[1], 'column': pos[2]}
-  call iced#nrepl#eval#code(code, opt)
+  return iced#nrepl#eval#code(code, opt)
 endfunction
 
 function! iced#nrepl#eval#ns() abort
   let ns_code = iced#nrepl#ns#get()
-  call iced#nrepl#eval#code(ns_code)
+  return iced#nrepl#eval#code(ns_code)
 endfunction
 
 function! s:eval_visual(evaluator) abort
   let reg_save = @@
   try
     silent normal! gvy
-    call a:evaluator(trim(@@))
+    return a:evaluator(trim(@@))
   finally
     let @@ = reg_save
   endtry
 endfunction
 
 function! iced#nrepl#eval#visual() abort " range
-  call s:eval_visual(function('iced#nrepl#eval#code'))
+  return s:eval_visual(function('iced#nrepl#eval#code'))
 endfunction
 
 let &cpoptions = s:save_cpo
