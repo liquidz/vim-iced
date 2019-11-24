@@ -33,7 +33,7 @@ function! iced#nrepl#auto#bufenter() abort
         \ ? iced#nrepl#init_ns()
         \ : ns_name
   if !empty(ns_name)
-    call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), {_ -> ''})
+    call iced#nrepl#ns#in(ns_name, {_ -> ''})
   endif
 endfunction
 

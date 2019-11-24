@@ -75,9 +75,19 @@ function! iced#nrepl#ns#eval(callback) abort
 endfunction
 
 function! iced#nrepl#ns#in(...) abort
-  let Callback = get(a:, 1, {_ -> ''})
+  let ns_name = ''
+  let Callback = ''
+
+  if a:0 == 1
+    let ns_name = iced#nrepl#ns#name()
+    let Callback = get(a:, 1, {_ -> ''})
+  elseif a:0 == 2
+    let ns_name = get(a:, 1, '')
+    let Callback = get(a:, 2, {_ -> ''})
+  endif
+
+  let ns_name = empty(ns_name) ? iced#nrepl#ns#name() : ns_name
   let Callback = (type(Callback) == v:t_func) ? Callback : {_ -> ''}
-  let ns_name = iced#nrepl#ns#name()
   if empty(ns_name) | return | endif
   call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), Callback)
 endfunction
