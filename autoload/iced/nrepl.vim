@@ -352,7 +352,11 @@ function! s:warm_up() abort
   call iced#nrepl#op#cider#debug#init()
 
   if iced#nrepl#check_session_validity(v:false)
-    call iced#nrepl#ns#in()
+    if iced#nrepl#ns#name() ==# s:nrepl['init_ns']
+      call iced#nrepl#ns#in()
+    else
+      call iced#nrepl#ns#load_current_file({_ -> ''})
+    endif
   endif
   call iced#format#set_indentexpr()
 
