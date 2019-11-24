@@ -105,7 +105,7 @@ function! iced#nrepl#check_session_validity(...) abort
   let sess_key = iced#nrepl#current_session_key()
   let is_verbose = get(a:, 1, v:true)
 
-  if !empty(ext) && ext !=# 'cljc' && sess_key !=# ext
+  if !empty(sess_key) && !empty(ext) && ext !=# 'cljc' && sess_key !=# ext
     if is_verbose
       call iced#message#error('invalid_session', ext)
     endif
