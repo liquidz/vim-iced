@@ -24,8 +24,7 @@ endfunction
 
 function! s:run_by_evaluating(exec, params) abort
   let code = s:extract_string(a:exec, a:params)
-  call iced#nrepl#eval#code(code)
-  return v:true
+  return iced#nrepl#eval#code(code)
 endfunction
 
 function! s:run_by_function(exec, params) abort

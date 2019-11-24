@@ -43,13 +43,17 @@ function! s:suite.run_eval_type_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
 
   let g:iced#hook = {'eval-test': {'type': 'eval', 'exec': '(simple form)'}}
-  call iced#hook#run('eval-test', 'bar')
+  let p = iced#hook#run('eval-test', 'bar')
+  call iced#promise#wait(p)
+
   call s:assert.equals(test.last_message['op'], 'eval')
   call s:assert.equals(test.last_message['code'], '(simple form)')
   call s:assert.equals(test.last_message['session'], 'clj-session')
 
   let g:iced#hook = {'eval-test': {'type': 'eval', 'exec': {v -> printf('(foo %s)', v)}}}
-  call iced#hook#run('eval-test', 'bar')
+  let p = iced#hook#run('eval-test', 'bar')
+  call iced#promise#wait(p)
+
   call s:assert.equals(test.last_message['op'], 'eval')
   call s:assert.equals(test.last_message['code'], '(foo bar)')
   call s:assert.equals(test.last_message['session'], 'clj-session')
