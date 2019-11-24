@@ -56,13 +56,17 @@ function! s:suite.code_test() abort
   call s:vt.mock()
 
   let g:iced#eval#inside_comment = v:false
-  call iced#nrepl#eval#code('(comment (+ 1 2 3))')
+  let p =  iced#nrepl#eval#code('(comment (+ 1 2 3))')
+  call iced#promise#wait(p)
+
   call s:assert.equals(s:last_evaluated_code, '(comment (+ 1 2 3))')
   let last_args = get(s:vt.get_last_args(), 'set', {})
   call s:assert.equals(last_args['text'], '=> 123')
 
   let g:iced#eval#inside_comment = v:true
-  call iced#nrepl#eval#code('(comment (+ 1 2 3))')
+  let p =  iced#nrepl#eval#code('(comment (+ 1 2 3))')
+  call iced#promise#wait(p)
+
   call s:assert.equals(s:last_evaluated_code, '(+ 1 2 3)')
 endfunction
 
@@ -73,7 +77,8 @@ function! s:suite.code_with_callback_test() abort
   endfunction
 
   call s:ch.mock({'status_value': 'open', 'relay': funcref('s:code_relay')})
-  call iced#nrepl#eval#code('(+ 1 2 3)', {'callback': {v -> test.callback(v)}})
+  let p = iced#nrepl#eval#code('(+ 1 2 3)', {'callback': {v -> test.callback(v)}})
+  call iced#promise#wait(p)
 
   call s:assert.equals(test.resp.status, ['done'])
 endfunction
@@ -135,8 +140,10 @@ function! s:suite.outer_top_list_test() abort
         \ ])
   call s:holder.clear()
 
-  call iced#nrepl#eval#outer_top_list()
-  let msg = s:holder.get_args()[0]
+  let p = iced#nrepl#eval#outer_top_list()
+  call iced#promise#wait(p)
+
+  let msg = s:holder.get_args()[-1]
   call s:assert.equals(get(msg, 'code', ''), join([
         \ '(bar',
         \ '  (hello',
@@ -161,8 +168,10 @@ function! s:suite.ns_test() abort
         \ ])
   call s:holder.clear()
 
-  call iced#nrepl#eval#ns()
-  let msg = s:holder.get_args()[0]
+  let p = iced#nrepl#eval#ns()
+  call iced#promise#wait(p)
+
+  let msg = s:holder.get_args()[-1]
   call s:assert.equals(get(msg, 'code', ''), join([
         \ '(ns foo',
         \ '  (:gen-class))',
@@ -184,9 +193,10 @@ function! s:suite.visual_test() abort
   call iced#nrepl#set_session('clj',  'clj-session')
 
   silent exe "normal! vab\<Esc>"
-  call iced#nrepl#eval#visual()
+  let p = iced#nrepl#eval#visual()
+  call iced#promise#wait(p)
 
-  let msg = s:holder.get_args()[0]
+  let msg = s:holder.get_args()[-1]
   call s:assert.equals(get(msg, 'code', ''), '(bar)')
   call s:assert.equals(get(msg, 'session', ''), 'clj-session')
 
