@@ -42,17 +42,7 @@ function! iced#nrepl#auto#bufread() abort
   call s:auto_switching_session()
   if !iced#nrepl#check_session_validity(v:false) | return | endif
 
-  if iced#nrepl#current_session_key() ==# 'clj'
-    " NOTE: For midje user, requiring ns leads running tests.
-    "       So vim-iced evaluates ns form in CLJ session.
-    call iced#nrepl#ns#eval({_ -> ''})
-  else
-    " NOTE: In shadow-cljs, evaluating only ns form clears all vars evaluated before.
-    "       So vim-iced requires ns in CLJS session.
-    let ns_name = iced#nrepl#ns#name()
-    call iced#nrepl#ns#require(ns_name, {_ -> ''})
-  endif
-
+  call iced#nrepl#ns#require_if_not_loaded_promise()
   call iced#format#set_indentexpr()
 endfunction
 
