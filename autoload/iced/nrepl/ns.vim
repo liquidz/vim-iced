@@ -118,6 +118,10 @@ function! s:required(resp) abort
 endfunction
 
 function! iced#nrepl#ns#load_current_file(...) abort
+  if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect()
+    return
+  endif
+
   let Cb = get(a:, 1, funcref('s:required'))
   let Cb = (type(Cb) == v:t_func) ? Cb : funcref('s:required')
   if ! iced#nrepl#check_session_validity() | return | endif
