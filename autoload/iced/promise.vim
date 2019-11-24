@@ -38,6 +38,10 @@ function! iced#promise#sync(fn, args, ...) abort
   return result
 endfunction
 
+function! iced#promise#resolve(x) abort
+  return s:Promise.resolve(a:x)
+endfunction
+
 function! iced#promise#reject(x) abort
   return s:Promise.reject(a:x)
 endfunction
