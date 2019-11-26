@@ -22,9 +22,12 @@ All notable changes to this project will be documented in this file. This change
 ** If `IcedBrowseTapped` command is executed with no arguments, it works like `IcedListTapped`.
 ** Add default key map `<Leader>dbt` for `IcedBrowseTapped`.
 ** Change default key map `<Leader>dlt` for `IcedClearTapped`.
+* Update to require ns automatically if the first ns-name on connecting REPL is not initial ns-name on REPL.
 
 === Fixed
 * Fixed clearing virtual text to work correctly in neovim.
+* Fixed not to clear quickfix when executing `IcedRequire` command.
+* Fixed to work auto connection correctly on evaluation.
 
 === Removed
 * (Breaking) https://github.com/liquidz/vim-iced/issues/159[#159]: Remove linting functionality.
