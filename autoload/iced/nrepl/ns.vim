@@ -145,7 +145,6 @@ function! s:loaded(resp, callback) abort
   elseif has_key(a:resp, 'err')
     return iced#nrepl#eval#err(a:resp['err'])
   endif
-  call iced#qf#clear()
   call iced#nrepl#ns#in(a:callback)
 endfunction
 
