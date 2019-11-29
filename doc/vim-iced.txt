@@ -830,12 +830,12 @@ COMMANDS                                                    *vim-iced-commands*
   Configurable option are |g:iced#grep#prg| and |g:iced#grep#format|.
   Key is mapped to |<Plug>(iced_grep)|.
 
-                                                        *:IcedRelatedNamespace*
-:IcedRelatedNamespace
+                                                  *:IcedBrowseRelatedNamespace*
+:IcedBrowseRelatedNamespace
   Browse namespaces relating to current namespace, and open selected one.
   `ctrlp.vim`, `fzf` or `vim-clap` is required to select namespace.
   Configurable option is |g:iced#related_ns#tail_patterns|.
-  Key is mapped to |<Plug>(iced_related_namespace)|.
+  Key is mapped to |<Plug>(iced_browse_related_namespace)|.
 
                                                               *:IcedBrowseSpec*
 :IcedBrowseSpec
@@ -1254,9 +1254,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_grep)
   Same as |:IcedGrep|.
 
-                                               *<Plug>(iced_related_namespace)*
-<Plug>(iced_related_namespace)
-  Same as |:IcedRelatedNamespace|.
+                                        *<Plug>(iced_browse_related_namespace)*
+<Plug>(iced_browse_related_namespace)
+  Same as |:IcedBrowseRelatedNamespace|.
 
                                                      *<Plug>(iced_browse_spec)*
 <Plug>(iced_browse_spec)
@@ -1387,7 +1387,7 @@ g:iced#promise#timeout_ms
                                               *g:iced#related_ns#tail_patterns*
 g:iced#related_ns#tail_patterns
   The namespace tailing pattern to decide the namespace is related or not.
-  This option is used by|:IcedRelatedNamespace| command.
+  This option is used by|:IcedBrowseRelatedNamespace| command.
   Default value is `['', '-test', '-spec', '\.spec']` .
 
                                                    *g:iced#test#spec_num_tests*
