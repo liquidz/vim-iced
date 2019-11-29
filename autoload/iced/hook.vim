@@ -18,26 +18,23 @@ function! s:run_by_shell(exec, params) abort
     let cmdstr = printf(':terminal ++hidden %s', cmdstr)
   endif
 
-  call iced#di#get('ex_cmd').silent_exe(cmdstr)
+  call iced#system#get('ex_cmd').silent_exe(cmdstr)
   return v:true
 endfunction
 
 function! s:run_by_evaluating(exec, params) abort
   let code = s:extract_string(a:exec, a:params)
-  call iced#nrepl#eval#code(code)
-  return v:true
-endfunction
-
-function! s:run_by_evaluating_in_repl(exec, params) abort
-  let code = s:extract_string(a:exec, a:params)
-  call iced#nrepl#eval#repl(code)
-  return v:true
+  return iced#nrepl#eval#code(code)
 endfunction
 
 function! s:run_by_function(exec, params) abort
   return (type(a:exec) == v:t_func)
         \ ? a:exec(a:params)
         \ : iced#message#error('invalid_hook_exec', a:exec)
+endfunction
+
+function! s:run_by_command(exec) abort
+  return iced#system#get('ex_cmd').exe(a:exec)
 endfunction
 
 function! iced#hook#run(hook_kind, params) abort
@@ -55,10 +52,10 @@ function! iced#hook#run(hook_kind, params) abort
     return s:run_by_shell(Exec_body, a:params)
   elseif exec_type ==# 'eval'
     return s:run_by_evaluating(Exec_body, a:params)
-  elseif exec_type ==# 'eval-repl'
-    return s:run_by_evaluating_in_repl(Exec_body, a:params)
   elseif exec_type ==# 'function'
     return s:run_by_function(Exec_body, a:params)
+  elseif exec_type ==# 'command'
+    return s:run_by_command(Exec_body)
   else
     return iced#message#error('unknown_hook_type', exec_type)
   endif

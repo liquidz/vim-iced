@@ -11,8 +11,8 @@ function! s:helper.setloclist(nr, list, action) abort
   let self.last_args = {'nr': a:nr, 'loclist': a:list, 'action': a:action}
 endfunction
 
-function! s:helper.register_test_builder() abort
-  call iced#di#register('quickfix', {_ -> self})
+function! s:helper.mock() abort
+  call iced#system#set_component('quickfix', {'start': {_ -> self}})
 endfunction
 
 function! s:helper.get_last_args() abort

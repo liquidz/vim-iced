@@ -4,6 +4,32 @@ set cpoptions&vim
 let s:V = vital#iced#new()
 let s:D = s:V.import('Data.Dict')
 
+function! s:buffer_ns_loaded() abort
+  let b:iced_ns_loaded = 1
+  return v:true
+endfunction
+
+function! iced#nrepl#ns#require_if_not_loaded_promise() abort
+  if exists('b:iced_ns_loaded')
+    return iced#promise#resolve(v:true)
+  endif
+
+  if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect()
+    return iced#promise#resolve(v:false)
+  endif
+
+  if iced#nrepl#current_session_key() ==# 'clj'
+    " NOTE: For midje user, requiring ns leads running tests.
+    "       So vim-iced evaluates ns form in CLJ session.
+    return iced#promise#call('iced#nrepl#ns#eval', [])
+  else
+    " NOTE: In shadow-cljs, evaluating only ns form clears all vars evaluated before.
+    "       So vim-iced requires ns in CLJS session.
+    let ns_name = iced#nrepl#ns#name()
+    return iced#promise#call('iced#nrepl#ns#require', [ns_name])
+  endif
+endfunction
+
 function! iced#nrepl#ns#get() abort
   let view = winsaveview()
   let reg_save = @@
@@ -70,22 +96,33 @@ function! iced#nrepl#ns#eval(callback) abort
   if empty(code)
     call a:callback('')
   else
-    call iced#nrepl#eval(code, a:callback)
+    call iced#nrepl#eval(code, {resp -> s:buffer_ns_loaded() && a:callback(resp)})
   endif
 endfunction
 
 function! iced#nrepl#ns#in(...) abort
-  let Callback = get(a:, 1, {_ -> ''})
+  let ns_name = ''
+  let Callback = ''
+
+  if a:0 == 1
+    let ns_name = iced#nrepl#ns#name()
+    let Callback = get(a:, 1, {_ -> ''})
+  elseif a:0 == 2
+    let ns_name = get(a:, 1, '')
+    let Callback = get(a:, 2, {_ -> ''})
+  endif
+
+  let ns_name = empty(ns_name) ? iced#nrepl#ns#name() : ns_name
   let Callback = (type(Callback) == v:t_func) ? Callback : {_ -> ''}
-  let ns_name = iced#nrepl#ns#name()
   if empty(ns_name) | return | endif
-  call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), Callback)
+  call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), {resp ->
+        \ s:buffer_ns_loaded() && Callback(resp)})
 endfunction
 
 function! iced#nrepl#ns#require(ns_name, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let code = printf('(clojure.core/require ''%s)', a:ns_name)
-  call iced#nrepl#eval(code, a:callback)
+  call iced#nrepl#eval(code, {resp -> s:buffer_ns_loaded() && a:callback(resp)})
 endfunction
 
 function! s:cljs_load_file(callback) abort
@@ -108,7 +145,6 @@ function! s:loaded(resp, callback) abort
   elseif has_key(a:resp, 'err')
     return iced#nrepl#eval#err(a:resp['err'])
   endif
-  call iced#qf#clear()
   call iced#nrepl#ns#in(a:callback)
 endfunction
 
@@ -118,14 +154,18 @@ function! s:required(resp) abort
 endfunction
 
 function! iced#nrepl#ns#load_current_file(...) abort
+  if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect()
+    return
+  endif
+
   let Cb = get(a:, 1, funcref('s:required'))
   let Cb = (type(Cb) == v:t_func) ? Cb : funcref('s:required')
   if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#current_session_key() ==# 'clj'
-    call iced#nrepl#load_file({resp -> s:loaded(resp, Cb)})
+    call iced#nrepl#load_file({resp -> s:buffer_ns_loaded() && s:loaded(resp, Cb)})
   else
-    call s:cljs_load_file(Cb)
+    call s:cljs_load_file({resp -> s:buffer_ns_loaded() && Cb(resp)})
   endif
 endfunction
 
@@ -148,19 +188,18 @@ function! iced#nrepl#ns#reload_all() abort
   endif
 endfunction
 
-function! iced#nrepl#ns#in_repl_session_ns() abort
+function! iced#nrepl#ns#in_init_ns() abort
   if iced#nrepl#current_session_key() ==# 'cljs'
     return iced#message#error('invalid_session', 'clj')
   endif
 
-  let ns_name = iced#nrepl#ns#name_by_var(iced#nrepl#repl_session())
+  let ns_name = iced#nrepl#init_ns()
   if empty(ns_name)
     call iced#message#warn('not_found')
     return
   endif
 
-  let code = printf('(in-ns ''%s)', ns_name)
-  call iced#nrepl#eval#code(code)
+  call iced#nrepl#ns#in(ns_name, {resp -> iced#nrepl#eval#out(resp)})
 endfunction
 
 function! iced#nrepl#ns#does_exist(ns_name) abort

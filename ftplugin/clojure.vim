@@ -2,9 +2,24 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 1205
-
+let g:vim_iced_version = 1300
 let g:vim_iced_home = expand('<sfile>:p:h:h')
+" NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
+"       Add functions for defining and placing signs.
+"       Introduce a group name to avoid different plugins using the same signs.
+let g:vim_iced_required_vim_version = '8.1.0614'
+let g:vim_iced_required_nvim_version = '0.4'
+
+let s:required_version = has('nvim')
+      \ ? has(printf('nvim-%s', g:vim_iced_required_nvim_version))
+      \ : has(printf('patch-%s', g:vim_iced_required_vim_version))
+if !s:required_version
+  echoerr printf('vim-iced requires Vim %s+ or Neovim %s+',
+        \ g:vim_iced_required_vim_version,
+        \ g:vim_iced_required_nvim_version,
+        \ )
+  finish
+endif
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -42,14 +57,13 @@ command! -nargs=+ -complete=custom,iced#nrepl#cljs#env_complete
 command!          IcedQuitCljsRepl          call iced#nrepl#cljs#stop_repl_via_env()
 command!          IcedCycleSession          call iced#nrepl#cljs#cycle_session()
 
-command! -nargs=1 IcedEval                  call iced#nrepl#eval#code(<q-args>)
-command! -nargs=1 IcedEvalRepl              call iced#nrepl#eval#repl(<q-args>)
+command! -nargs=1 IcedEval                  call iced#nrepl#eval#code(<q-args>, {'ignore_session_validity': v:true})
 command!          IcedEvalNs                call iced#nrepl#eval#ns()
 command! -range   IcedEvalVisual            call iced#nrepl#eval#visual()
-command! -range   IcedEvalReplVisual        call iced#nrepl#eval#repl_visual()
 command!          IcedRequire               call iced#nrepl#ns#load_current_file()
 command!          IcedRequireAll            call iced#nrepl#ns#reload_all()
 command! -nargs=? IcedUndef                 call iced#nrepl#eval#undef(<q-args>)
+command! -nargs=? IcedUndefAllInNs          call iced#nrepl#eval#undef_all_in_ns(<q-args>)
 command!          IcedEvalOuterTopList      call iced#nrepl#eval#outer_top_list()
 command!          IcedPrintLast             call iced#nrepl#eval#print_last()
 command!          IcedMacroExpandOuterList  call iced#nrepl#macro#expand_outer_list()
@@ -68,7 +82,6 @@ command!          IcedStdoutBufferClear     call iced#buffer#stdout#clear()
 command!          IcedStdoutBufferClose     call iced#buffer#stdout#close()
 
 command! -nargs=? IcedDefJump               call iced#nrepl#navigate#jump_to_def(<q-args>)
-command!          IcedDefBack               call iced#nrepl#navigate#jump_back()
 command! -nargs=1 -complete=custom,iced#nrepl#navigate#ns_complete
       \ IcedOpenNs                          call iced#nrepl#navigate#open_ns('e', <q-args>)
 
@@ -91,11 +104,11 @@ command!          IcedSlurp                 call iced#paredit#deep_slurp()
 command!          IcedBarf                  call iced#paredit#barf()
 command!          IcedFormat                call iced#format#form()
 command!          IcedFormatAll             call iced#format#all()
-command!          IcedToggleSrcAndTest      call iced#nrepl#navigate#toggle_src_and_test()
+command!          IcedCycleSrcAndTest       call iced#nrepl#navigate#cycle_src_and_test()
 command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
 
 command!          IcedBrowseRelatedNamespace call iced#nrepl#navigate#related_ns()
-command!          IcedBrowseSpec             call iced#nrepl#spec#list()
+command!          IcedBrowseSpec             call iced#nrepl#spec#browse()
 command!          IcedBrowseTestUnderCursor  call iced#nrepl#navigate#test()
 command!          IcedBrowseReferences       call iced#nrepl#navigate#browse_references()
 command!          IcedBrowseDependencies     call iced#nrepl#navigate#browse_dependencies()
@@ -113,23 +126,21 @@ command!          IcedExtractFunction       call iced#nrepl#refactor#extract_fun
 command!          IcedAddArity              call iced#nrepl#refactor#add_arity()
 command!          IcedMoveToLet             call iced#let#move_to_let()
 
-command!          IcedListTapped            call iced#nrepl#debug#list_tapped()
-command!          IcedClearTapped           call iced#nrepl#debug#clear_tapped()
-command! -nargs=1 -complete=custom,iced#nrepl#debug#complete_tapped
+command! -nargs=? -complete=custom,iced#nrepl#debug#complete_tapped
       \ IcedBrowseTapped                    call iced#nrepl#debug#browse_tapped(<q-args>)
+command!          IcedClearTapped           call iced#nrepl#debug#clear_tapped()
 command!
       \ IcedToggleWarnOnReflection          call iced#nrepl#debug#toggle_warn_on_reflection()
 
 command! -nargs=? IcedToggleTraceVar        call iced#nrepl#trace#toggle_var(<q-args>)
 command! -nargs=? IcedToggleTraceNs         call iced#nrepl#trace#toggle_ns(<q-args>)
 
-command!          IcedInReplNs              call iced#nrepl#ns#in_repl_session_ns()
+command!          IcedInInitNs              call iced#nrepl#ns#in_init_ns()
 
-command!          IcedLintCurrentFile       call iced#lint#current_file()
-command!          IcedLintToggle            call iced#lint#toggle()
-
-command!          IcedJumpToNextSign        call iced#sign#jump_to_next()
-command!          IcedJumpToPrevSign        call iced#sign#jump_to_prev()
+command!          IcedJumpToNextSign        call iced#system#get('sign').jump_to_next()
+command!          IcedJumpToPrevSign        call iced#system#get('sign').jump_to_prev()
+command!          IcedJumpToNextError       call iced#system#get('sign').jump_to_next({'name': iced#nrepl#test#sign_name()})
+command!          IcedJumpToPrevError       call iced#system#get('sign').jump_to_next({'name': iced#nrepl#test#sign_name()})
 command!          IcedJumpToLet             call iced#let#jump_to_let()
 
 "" }}}
@@ -147,17 +158,17 @@ nnoremap <silent> <Plug>(iced_start_cljs_repl)          :<C-u>IcedStartCljsRepl<
 nnoremap <silent> <Plug>(iced_quit_cljs_repl)           :<C-u>IcedQuitCljsRepl<CR>
 
 nnoremap <silent> <Plug>(iced_eval)                     :<C-u>set opfunc=iced#operation#eval<CR>g@
-nnoremap <silent> <Plug>(iced_eval_repl)                :<C-u>set opfunc=iced#operation#eval_repl<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_print)           :<C-u>set opfunc=iced#operation#eval_and_print<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_tap)             :<C-u>set opfunc=iced#operation#eval_and_tap<CR>g@
+nnoremap <silent> <Plug>(iced_eval_and_replace)         :<C-u>set opfunc=iced#operation#eval_and_replace<CR>g@
 nnoremap <silent> <Plug>(iced_eval_ns)                  :<C-u>IcedEvalNs<CR>
 vnoremap <silent> <Plug>(iced_eval_visual)              :<C-u>IcedEvalVisual<CR>
-vnoremap <silent> <Plug>(iced_eval_repl_visual)         :<C-u>IcedEvalReplVisual<CR>
 nnoremap <silent> <Plug>(iced_macroexpand)              :<C-u>set opfunc=iced#operation#macroexpand<CR>g@
 nnoremap <silent> <Plug>(iced_macroexpand_1)            :<C-u>set opfunc=iced#operation#macroexpand_1<CR>g@
 nnoremap <silent> <Plug>(iced_require)                  :<C-u>IcedRequire<CR>
 nnoremap <silent> <Plug>(iced_require_all)              :<C-u>IcedRequireAll<CR>
 nnoremap <silent> <Plug>(iced_undef)                    :<C-u>IcedUndef<CR>
+nnoremap <silent> <Plug>(iced_undef_all_in_ns)          :<C-u>IcedUndefAllInNs<CR>
 nnoremap <silent> <Plug>(iced_eval_outer_top_list)      :<C-u>IcedEvalOuterTopList<CR>
 nnoremap <silent> <Plug>(iced_print_last)               :<C-u>IcedPrintLast<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_outer_list)   :<C-u>IcedMacroExpandOuterList<CR>
@@ -176,7 +187,6 @@ nnoremap <silent> <Plug>(iced_stdout_buffer_clear)      :<C-u>IcedStdoutBufferCl
 nnoremap <silent> <Plug>(iced_stdout_buffer_close)      :<C-u>IcedStdoutBufferClose<CR>
 
 nnoremap <silent> <Plug>(iced_def_jump)                 :<C-u>IcedDefJump<CR>
-nnoremap <silent> <Plug>(iced_def_back)                 :<C-u>IcedDefBack<CR>
 
 nnoremap <silent> <Plug>(iced_document_open)            :<C-u>IcedDocumentOpen<CR>
 nnoremap <silent> <Plug>(iced_popup_document_open)      :<C-u>IcedPopupDocumentOpen<CR>
@@ -197,7 +207,7 @@ nnoremap <silent> <Plug>(iced_slurp)                    :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                     :<C-u>IcedBarf<CR>
 nnoremap <silent> <Plug>(iced_format)                   :<C-u>IcedFormat<CR>
 nnoremap <silent> <Plug>(iced_format_all)               :<C-u>IcedFormatAll<CR>
-nnoremap <silent> <Plug>(iced_toggle_src_and_test)      :<C-u>IcedToggleSrcAndTest<CR>
+nnoremap <silent> <Plug>(iced_cycle_src_and_test)       :<C-u>IcedCycleSrcAndTest<CR>
 nnoremap <silent> <Plug>(iced_grep)                     :<C-u>IcedGrep<CR>
 
 nnoremap <silent> <Plug>(iced_browse_related_namespace) :<C-u>IcedBrowseRelatedNamespace<CR>
@@ -219,19 +229,15 @@ nnoremap <silent> <Plug>(iced_extract_function)         :<C-u>IcedExtractFunctio
 nnoremap <silent> <Plug>(iced_add_arity)                :<C-u>IcedAddArity<CR>
 nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
 
-nnoremap <silent> <Plug>(iced_list_tapped)              :<C-u>IcedListTapped<CR>
-nnoremap <silent> <Plug>(iced_clear_tapped)             :<C-u>IcedClearTapped<CR>
 nnoremap <silent> <Plug>(iced_browse_tapped)            :<C-u>IcedBrowseTapped<CR>
+nnoremap <silent> <Plug>(iced_clear_tapped)             :<C-u>IcedClearTapped<CR>
 nnoremap <silent>
       \ <Plug>(iced_toggle_warn_on_reflection)          :<C-u>IcedToggleWarnOnReflection<CR>
 
 nnoremap <silent> <Plug>(iced_toggle_trace_ns)          :<C-u>IcedToggleTraceNs<CR>
 nnoremap <silent> <Plug>(iced_toggle_trace_var)         :<C-u>IcedToggleTraceVar<CR>
 
-nnoremap <silent> <Plug>(iced_in_repl_ns)               :<C-u>IcedInReplNs<CR>
-
-nnoremap <silent> <Plug>(iced_lint_current_file)        :<C-u>IcedLintCurrentFile<CR>
-nnoremap <silent> <Plug>(iced_lint_toggle)              :<C-u>IcedLintToggle<CR>
+nnoremap <silent> <Plug>(iced_in_init_ns)               :<C-u>IcedInInitNs<CR>
 
 nnoremap <silent> <Plug>(iced_jump_to_next_sign)        :<C-u>IcedJumpToNextSign<CR>
 nnoremap <silent> <Plug>(iced_jump_to_prev_sign)        :<C-u>IcedJumpToPrevSign<CR>
@@ -247,15 +253,6 @@ aug vim_iced_initial_setting
   au BufEnter *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufenter()
   au VimLeave * call iced#nrepl#auto#leave()
 aug END
-
-if exists('g:iced_enable_auto_linting')
-      \ && g:iced_enable_auto_linting
-  aug iced_auto_linting
-    au!
-    au BufWritePost *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufwrite_post()
-    au CursorMoved *.clj,*.cljs,*.cljc call iced#lint#echo_message()
-  aug END
-endif
 
 if g:iced_enable_auto_document ==# 'normal'
       \ || g:iced_enable_auto_document ==# 'every'
@@ -278,7 +275,7 @@ endif
 if has('nvim') && exists('*nvim_open_win')
   aug vim_iced_close_document_popup
     au!
-    au CursorMoved *.clj,*.cljs,*.cljc call iced#di#popup#neovim#moved()
+    au CursorMoved *.clj,*.cljs,*.cljc call iced#component#popup#neovim#moved()
   aug END
 endif
 "" }}}
@@ -313,14 +310,6 @@ function! s:default_key_mappings() abort
     silent! vmap <buffer> <Leader>ee <Plug>(iced_eval_visual)
   endif
 
-  if !hasmapto('<Plug>(iced_eval_repl_visual)')
-    silent! vmap <buffer> <Leader>er <Plug>(iced_eval_repl_visual)
-  endif
-
-  if !hasmapto('<Plug>(iced_eval_repl)')
-    silent! nmap <buffer> <Leader>er <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
-  endif
-
   if !hasmapto('<Plug>(iced_eval_ns)')
     silent! nmap <buffer> <Leader>en <Plug>(iced_eval_ns)
   endif
@@ -339,6 +328,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_undef)')
     silent! nmap <buffer> <Leader>eu <Plug>(iced_undef)
+  endif
+
+  if !hasmapto('<Plug>(iced_undef_all_in_ns)')
+    silent! nmap <buffer> <Leader>eU <Plug>(iced_undef_all_in_ns)
   endif
 
   if !hasmapto('<Plug>(iced_macroexpand_outer_list)')
@@ -509,10 +502,6 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <C-]> <Plug>(iced_def_jump)
   endif
 
-  if !hasmapto('<Plug>(iced_def_back)')
-    silent! nmap <buffer> <C-t> <Plug>(iced_def_back)
-  endif
-
   if !hasmapto('<Plug>(iced_jump_to_next_sign)')
     silent! nmap <buffer> <Leader>jn <Plug>(iced_jump_to_next_sign)
   endif
@@ -527,12 +516,12 @@ function! s:default_key_mappings() abort
 
   "" Debugging (<Leader>d)
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_list_tapped)')
-    silent! nmap <buffer> <Leader>dtl <Plug>(iced_list_tapped)
+  if !hasmapto('<Plug>(iced_browse_tapped)')
+    silent! nmap <buffer> <Leader>dbt <Plug>(iced_browse_tapped)
   endif
 
   if !hasmapto('<Plug>(iced_clear_tapped)')
-    silent! nmap <buffer> <Leader>dtc <Plug>(iced_clear_tapped)
+    silent! nmap <buffer> <Leader>dlt <Plug>(iced_clear_tapped)
   endif
 
   "" Misc
@@ -565,16 +554,14 @@ endif
 let s:default_signs = {
       \ 'error': '🔥',
       \ 'trace': '👁',
-      \ 'lint': '💔',
       \ 'errorhl': 'ErrorMsg',
       \ 'tracehl': 'Search',
-      \ 'linthl': 'WarningMsg',
       \ }
 
 let g:iced_sign = get(g:, 'iced_sign', {})
 let sign_setting = extend(copy(s:default_signs), g:iced_sign)
 
-for key in ['error', 'trace', 'lint']
+for key in ['error', 'trace']
   exe printf(':sign define %s text=%s texthl=%s',
         \ 'iced_'.key,
         \ sign_setting[key],

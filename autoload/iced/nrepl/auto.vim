@@ -1,5 +1,5 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let g:iced#nrepl#auto#does_switch_session = get(g:, 'iced#nrepl#auto#does_switch_session', v:false)
 let s:leaving = v:false
@@ -30,10 +30,10 @@ function! iced#nrepl#auto#bufenter() abort
   if ! iced#nrepl#check_session_validity(v:false) | return | endif
   let ns_name = iced#nrepl#ns#name_by_buf()
   let ns_name = (empty(ns_name))
-        \ ? iced#nrepl#ns#name_by_var(iced#nrepl#repl_session())
+        \ ? iced#nrepl#init_ns()
         \ : ns_name
   if !empty(ns_name)
-    call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), {_ -> ''})
+    call iced#nrepl#ns#in(ns_name, {_ -> ''})
   endif
 endfunction
 
@@ -42,29 +42,8 @@ function! iced#nrepl#auto#bufread() abort
   call s:auto_switching_session()
   if !iced#nrepl#check_session_validity(v:false) | return | endif
 
-  if iced#nrepl#current_session_key() ==# 'clj'
-    " NOTE: For midje user, requiring ns leads running tests.
-    "       So vim-iced evaluates ns form in CLJ session.
-    call iced#nrepl#ns#eval({_ -> ''})
-  else
-    " NOTE: In shadow-cljs, evaluating only ns form clears all vars evaluated before.
-    "       So vim-iced requires ns in CLJS session.
-    let ns_name = iced#nrepl#ns#name()
-    call iced#nrepl#ns#require(ns_name, {_ -> ''})
-  endif
-
+  call iced#nrepl#ns#require_if_not_loaded_promise()
   call iced#format#set_indentexpr()
-endfunction
-
-function! iced#nrepl#auto#bufwrite_post() abort
-  let timer = {}
-  function! timer.callback(_) abort
-    if !s:leaving
-      call iced#lint#current_file()
-    endif
-  endfunction
-
-  call iced#di#get('timer').start(500, timer.callback)
 endfunction
 
 function! iced#nrepl#auto#newfile() abort
@@ -83,5 +62,5 @@ function! iced#nrepl#auto#enable_bufenter(bool) abort
   let s:is_bufenter_enabled = a:bool
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

@@ -15,7 +15,7 @@ let s:test_1_10_error =
 
 " iced#nrepl#eval#err {{{
 function! s:suite.err_with_1_9_or_above_test() abort
-  call s:qf.register_test_builder()
+  call s:qf.mock()
   call s:qf.setlist([], 'r')
   call iced#nrepl#eval#err(s:test_1_9_error)
   call s:assert.equals(s:qf.get_last_args()['list'],
@@ -25,7 +25,7 @@ function! s:suite.err_with_1_9_or_above_test() abort
 endfunction
 
 function! s:suite.err_with_1_10_or_later_test() abort
-  call s:qf.register_test_builder()
+  call s:qf.mock()
   call s:qf.setlist([], 'r')
   call iced#nrepl#eval#err(s:test_1_10_error)
   call s:assert.equals(s:qf.get_last_args()['list'],
@@ -35,7 +35,7 @@ function! s:suite.err_with_1_10_or_later_test() abort
 endfunction
 
 function! s:suite.err_with_invalid_message_test() abort
-  call s:qf.register_test_builder()
+  call s:qf.mock()
   call s:qf.setlist([], 'r')
   call iced#nrepl#eval#err('invalid message')
   call s:assert.true(empty(s:qf.get_last_args()['list']))
@@ -52,17 +52,21 @@ function! s:code_relay(msg) abort
 endfunction
 
 function! s:suite.code_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:code_relay')})
-  call s:vt.register_test_builder()
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:code_relay')})
+  call s:vt.mock()
 
   let g:iced#eval#inside_comment = v:false
-  call iced#nrepl#eval#code('(comment (+ 1 2 3))')
+  let p =  iced#nrepl#eval#code('(comment (+ 1 2 3))')
+  call iced#promise#wait(p)
+
   call s:assert.equals(s:last_evaluated_code, '(comment (+ 1 2 3))')
   let last_args = get(s:vt.get_last_args(), 'set', {})
   call s:assert.equals(last_args['text'], '=> 123')
 
   let g:iced#eval#inside_comment = v:true
-  call iced#nrepl#eval#code('(comment (+ 1 2 3))')
+  let p =  iced#nrepl#eval#code('(comment (+ 1 2 3))')
+  call iced#promise#wait(p)
+
   call s:assert.equals(s:last_evaluated_code, '(+ 1 2 3)')
 endfunction
 
@@ -72,8 +76,9 @@ function! s:suite.code_with_callback_test() abort
     let self.resp = a:resp
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:code_relay')})
-  call iced#nrepl#eval#code('(+ 1 2 3)', {'callback': {v -> test.callback(v)}})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:code_relay')})
+  let p = iced#nrepl#eval#code('(+ 1 2 3)', {'callback': {v -> test.callback(v)}})
+  call iced#promise#wait(p)
 
   call s:assert.equals(test.resp.status, ['done'])
 endfunction
@@ -85,8 +90,8 @@ function! s:undef_relay(msg) abort
 endfunction
 
 function! s:suite.undef_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:undef_relay')})
-  call s:io.register_test_builder()
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:undef_relay')})
+  call s:io.mock()
 
   let sym = 'dummy/symbol'
   call iced#nrepl#eval#undef(sym)
@@ -104,7 +109,7 @@ function! s:print_last_relay(msg) abort
 endfunction
 
 function! s:suite.print_last_test() abort
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:print_last_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:print_last_relay')})
   call iced#buffer#stdout#init()
 
   try
@@ -122,7 +127,7 @@ endfunction
 
 " iced#nrepl#eval#outer_top_list {{{
 function! s:suite.outer_top_list_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {resp -> s:holder.relay(resp)},
         \ })
@@ -135,8 +140,10 @@ function! s:suite.outer_top_list_test() abort
         \ ])
   call s:holder.clear()
 
-  call iced#nrepl#eval#outer_top_list()
-  let msg = s:holder.get_args()[0]
+  let p = iced#nrepl#eval#outer_top_list()
+  call iced#promise#wait(p)
+
+  let msg = s:holder.get_args()[-1]
   call s:assert.equals(get(msg, 'code', ''), join([
         \ '(bar',
         \ '  (hello',
@@ -149,7 +156,7 @@ endfunction
 
 " iced#nrepl#eval#ns {{{
 function! s:suite.ns_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {resp -> s:holder.relay(resp)},
         \ })
@@ -161,8 +168,10 @@ function! s:suite.ns_test() abort
         \ ])
   call s:holder.clear()
 
-  call iced#nrepl#eval#ns()
-  let msg = s:holder.get_args()[0]
+  let p = iced#nrepl#eval#ns()
+  call iced#promise#wait(p)
+
+  let msg = s:holder.get_args()[-1]
   call s:assert.equals(get(msg, 'code', ''), join([
         \ '(ns foo',
         \ '  (:gen-class))',
@@ -174,7 +183,7 @@ endfunction
 
 " iced#nrepl#eval#visual {{{
 function! s:suite.visual_test() abort
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:holder.relay(msg)},
         \ })
@@ -182,38 +191,14 @@ function! s:suite.visual_test() abort
   call s:holder.clear()
   call iced#nrepl#change_current_session('clj')
   call iced#nrepl#set_session('clj',  'clj-session')
-  call iced#nrepl#set_session('repl', 'repl-session')
 
   silent exe "normal! vab\<Esc>"
-  call iced#nrepl#eval#visual()
+  let p = iced#nrepl#eval#visual()
+  call iced#promise#wait(p)
 
-  let msg = s:holder.get_args()[0]
+  let msg = s:holder.get_args()[-1]
   call s:assert.equals(get(msg, 'code', ''), '(bar)')
   call s:assert.equals(get(msg, 'session', ''), 'clj-session')
-
-  call s:buf.stop_dummy()
-endfunction
-" }}}
-
-" iced#nrepl#eval#repl_visual {{{
-function! s:suite.repl_visual_test() abort
-  call s:ch.register_test_builder({
-        \ 'status_value': 'open',
-        \ 'relay': {msg -> s:holder.relay(msg)},
-        \ })
-  call s:buf.start_dummy(['(foo (bar|) (baz))'])
-  call s:holder.clear()
-  call iced#nrepl#change_current_session('clj')
-  call iced#nrepl#set_session('clj',  'clj-session')
-  call iced#nrepl#set_session('repl', 'repl-session')
-
-  silent exe "normal! vab\<Esc>"
-  call iced#nrepl#eval#repl_visual()
-
-  let msg = filter(copy(s:holder.get_args()),
-        \ {_, v -> get(v, 'op') ==# 'eval'})[0]
-  call s:assert.equals(get(msg, 'code', ''), '(bar)')
-  call s:assert.equals(get(msg, 'session', ''), 'repl-session')
 
   call s:buf.stop_dummy()
 endfunction

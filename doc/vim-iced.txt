@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.12.5
+Version: 0.13.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -35,7 +35,6 @@ CONTENTS                                                    *vim-iced-contents*
     Formatting                 |vim-iced-formatting|
     Indenting                  |vim-iced-indenting|
     Refactoring                |vim-iced-refactoring|
-    Linting                    |vim-iced-linting|
   Interface                    |vim-iced-interface|
     Commands                   |vim-iced-commands|
     Functions                  |vim-iced-functions|
@@ -46,7 +45,6 @@ CONTENTS                                                    *vim-iced-contents*
     Documents                  |vim-iced-customizing-documents|
       Auto document            |vim-iced-customizing-auto-document|
     Auto indent                |vim-iced-customizing-auto-indent|
-    Linters                    |vim-iced-customizing-linters|
     Signs                      |vim-iced-customizing-signs|
     Command palettes           |vim-iced-customizing-palette|
     Hooks                      |vim-iced-customizing-hooks|
@@ -111,7 +109,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.6.0"]
-                   [iced-nrepl "0.6.6"]
+                   [iced-nrepl "0.7.0"]
                    [cider/cider-nrepl "0.22.4"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -141,7 +139,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
       [cider/cider-nrepl "0.22.4"]
-      [iced-nrepl "0.6.6"]])
+      [iced-nrepl "0.7.0"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -171,7 +169,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "2.4.0"]
                   [cider/cider-nrepl "0.22.4"]
-                  [iced-nrepl "0.6.6"]]
+                  [iced-nrepl "0.7.0"]]
 
    :nrepl {:cider false
            :middleware [cider.nrepl/wrap-classpath
@@ -327,13 +325,6 @@ EVALUATING                                                *vim-iced-evaluating*
   ;;            <-----ei----->
   ;;   <----------ee---------->
 <
-  If you would like to evaluate forms in REPL session,
-  |:IcedEvalRepl| will do.
-  See details: |<Plug>(iced_eval_repl)|
-
-  If you would like to evaluate in visual mode,
-  |:IcedEvalVisual| and |:IcedEvalReplVisual| will do.
-
   See |iced-tips-evaluating| for more information.
 
 ------------------------------------------------------------------------------
@@ -400,7 +391,7 @@ BROWSING TAPPED VALUES              *vim-iced-debugging-browsing-tapped-values*
   If you have a big data structure and want to dig into it,
   browsing tapped values is useful.
 
-  When you evaluate `(tap> YOUR_DATA)`, |:IcedListTapped| shows tapped values.
+  When you evaluate `(tap> YOUR_DATA)`, |:IcedBrowseTapped| shows tapped values.
   Select the value you want to dig into, then browsing value start.
   See |:IcedBrowseTapped| for browsing key details.
 
@@ -438,7 +429,7 @@ SKELETON                                                    *vim-iced-skeleton*
 TAG JUMP                                                    *vim-iced-tag-jump*
 
   |:IcedDefJump| to jump to definition.
-  |:IcedDefBack| to jump back.
+  To jump back, you can use default key mapping(<C-t>).
 
 ==============================================================================
 EDITING S-EXP                                          *vim-iced-editing-s-exp*
@@ -483,33 +474,6 @@ REFACTORING                                              *vim-iced-refactoring*
   - |:IcedExtractFunction| (|<Plug>(iced_extract_function)|)
   - |:IcedAddArity| (|<Plug>(iced_add_arity)|)
   - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
-
-------------------------------------------------------------------------------
-LINTING                                                      *vim-iced-linting*
-
-  vim-iced can collaborate with `jonase/eastwood` and `joker`.
-  - https://github.com/jonase/eastwood
-    - works for Clojure
-  - https://github.com/candid82/joker
-    - works for ClojureScript
-    - needs to be installed separately from vim-iced
-  - Command
-    - |:IcedLintCurrentFile| (|<Plug>(iced_lint_current_file)|)
-
-  To run linter automatically, set |g:iced_enable_auto_linting| to `v:true`.
->
-  let g:iced_enable_auto_linting = v:true
-<
-  If you would like to set manually, following autcmd is useful.
->
-  aug vim_iced_lint_setting
-    au!
-    au BufWritePost *.clj,*.cljs,*.cljc call iced#lint#current_file()
-    au CursorMoved  *.clj,*.cljs,*.cljc call iced#lint#echo_message()
-  aug END
-<
-  To define which linters to use, see |g:iced#eastwood#option|.
-  To show warnings as virtual text, see |g:iced#lint#use_virtual_text|.
 
 ==============================================================================
 INTERFACE                                                  *vim-iced-interface*
@@ -608,11 +572,6 @@ COMMANDS                                                    *vim-iced-commands*
   Evaluate {form} in current session.
   See details: |<Plug>(iced_eval)|
 
-                                                                *:IcedEvalRepl*
-:IcedEvalRepl {form}
-  Evaluate {form} in REPL session.
-  See details: |<Plug>(iced_eval_repl)|
-
                                                                   *:IcedEvalNs*
 :IcedEvalNs
   Evaluate `ns` form in current session.
@@ -622,11 +581,6 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedEvalVisual
   Evaluate selected form in current session.
   Key is mapped to |<Plug>(iced_eval_visual)|
-
-                                                          *:IcedEvalReplVisual*
-:IcedEvalReplVisual
-  Evaluate selected form in REPL session.
-  Key is mapped to |<Plug>(iced_eval_repl_visual)|
 
                                                                  *:IcedRequire*
 :IcedRequire
@@ -643,6 +597,12 @@ COMMANDS                                                    *vim-iced-commands*
   Undefine {symbol} in current namespace.
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_undef)|.
+  
+                                                            *:IcedUndefAllInNs*
+:IcedUndefAllInNs [{ns}]
+  Undefine all symbols in {ns}.
+  If {ns} is not passed, current namespace is used.
+  Key is mapped to |<Plug>(iced_undef_all_in_ns)|.
 
                                                         *:IcedEvalOuterTopList*
 :IcedEvalOuterTopList
@@ -732,11 +692,6 @@ COMMANDS                                                    *vim-iced-commands*
   Jump cursor to definition of symbol under cursor.
   Key is mapped to |<Plug>(iced_def_jump)|.
 
-                                                                 *:IcedDefBack*
-:IcedDefBack
-  Jump back cursor.
-  Key is mapped to |<Plug>(iced_def_back)|.
-  
                                                                   *:IcedOpenNs*
 :IcedOpenNs {ns-name}
   Open a file corresponding to the specified {ns-name}.
@@ -859,11 +814,11 @@ COMMANDS                                                    *vim-iced-commands*
   Reformat current buffer.
   Key is mapped to |<Plug>(iced_format_all)|.
 
-                                                        *:IcedToggleSrcAndTest*
-:IcedToggleSrcAndTest
+                                                         *:IcedCycleSrcAndTest*
+:IcedCycleSrcAndTest
   Switch between source file and test file.
   If the file does not exist, make sure you open a file with a pseudo path.
-  Key is mapped to |<Plug>(iced_toggle_src_and_test)|.
+  Key is mapped to |<Plug>(iced_cycle_src_and_test)|.
 
                                                                     *:IcedGrep*
 :IcedGrep [{keyword}]
@@ -875,12 +830,12 @@ COMMANDS                                                    *vim-iced-commands*
   Configurable option are |g:iced#grep#prg| and |g:iced#grep#format|.
   Key is mapped to |<Plug>(iced_grep)|.
 
-                                                        *:IcedRelatedNamespace*
-:IcedRelatedNamespace
+                                                  *:IcedBrowseRelatedNamespace*
+:IcedBrowseRelatedNamespace
   Browse namespaces relating to current namespace, and open selected one.
   `ctrlp.vim`, `fzf` or `vim-clap` is required to select namespace.
   Configurable option is |g:iced#related_ns#tail_patterns|.
-  Key is mapped to |<Plug>(iced_related_namespace)|.
+  Key is mapped to |<Plug>(iced_browse_related_namespace)|.
 
                                                               *:IcedBrowseSpec*
 :IcedBrowseSpec
@@ -955,20 +910,13 @@ COMMANDS                                                    *vim-iced-commands*
   If there is no `let` form in current top list,
   wrap the form with `let`.
 
-                                                              *:IcedListTapped*
-:IcedListTapped
-  Select one of tapped values, and start browsing.
-  `ctrlp.vim`, `fzf` or `vim-clap` is required to select tapped values.
-  Key is mapped to |<Plug>(iced_list_tapped)|.
-
-                                                             *:IcedClearTapped*
-:IcedClearTapped
-  Clear all tapped values.
-  Key is mapped to |<Plug>(iced_clear_tapped)|.
-
                                                             *:IcedBrowseTapped*
-:IcedBrowseTapped {keys}
-  Dig into tapped values.
+:IcedBrowseTapped [{keys}]
+
+  If {keys} are not passed, select one of tapped values, and start browsing.
+  `ctrlp.vim`, `fzf` or `vim-clap` is required to select tapped values.
+
+  If {keys} are passed, dig into tapped values.
   For example, when there are following tapped values:
     1st tapped value: {:foo [{:bar "baz"}]}
     2nd tapped value: {:hello "world"}
@@ -976,6 +924,12 @@ COMMANDS                                                    *vim-iced-commands*
   (The first `0` means "browse 1st tapped value")
 
   Key is mapped to |<Plug>(iced_browse_tapped)|.
+
+                                                             *:IcedClearTapped*
+:IcedClearTapped
+  Clear all tapped values.
+  Key is mapped to |<Plug>(iced_clear_tapped)|.
+
 
                                                   *:IcedToggleWarnOnReflection*
 :IcedToggleWarnOnReflection
@@ -994,20 +948,10 @@ COMMANDS                                                    *vim-iced-commands*
   If {ns} is not passed, current buffer's ns name is used.
   Key is mapped to |<Plug>(iced_toggle_trace_ns)|.
 
-                                                                *:IcedInReplNs*
-:IcedInReplNs
-  Sets `*ns*` to the REPL session's namespace name.
-  Key is mapped to |<Plug>(iced_in_repl_ns)|.
-
-                                                         *:IcedLintCurrentFile*
-:IcedLintCurrentFile
-  Lint codes in current file.
-  Key is mapped to |<Plug>(iced_lint_current_file)|.
-
-                                                              *:IcedLintToggle*
-:IcedLintToggle
-  Toggle linting.
-  Key is mapped to |<Plug>(iced_lint_toggle)|.
+                                                                *:IcedInInitNs*
+:IcedInInitNs
+  Sets `*ns*` to the session's initnal namespace name.
+  Key is mapped to |<Plug>(iced_in_init_ns)|.
 
                                                           *:IcedJumpToNextSign*
 :IcedJumpToNextSign
@@ -1089,15 +1033,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
 <
-                                                       *<Plug>(iced_eval_repl)*
-<Plug>(iced_eval_repl)
-  Evaluate codes in REPL session.
-  Followings are examples for working with {vim-sexp}.
->
-  <Plug>(iced_eval_repl)<Plug>(sexp_inner_element)``
-  <Plug>(iced_eval_repl)<Plug>(sexp_outer_list)``
-  <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
-<
                                                   *<Plug>(iced_eval_and_print)*
 <Plug>(iced_eval_and_print)
   Evaluate code and print result to stdout buffer.
@@ -1116,6 +1051,15 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   <Plug>(iced_eval_and_tap)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval_and_tap)<Plug>(sexp_outer_top_list)``
 <
+                                                *<Plug>(iced_eval_and_replace)*
+<Plug>(iced_eval_and_replace)
+  Evaluate code and replace it by the evaluation result.
+  Followings are examples for working with {vim-sexp}.
+>
+  <Plug>(iced_eval_and_replace)<Plug>(sexp_inner_element)``
+  <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_list)``
+  <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_top_list)``
+<
                                                          *<Plug>(iced_eval_ns)*
 <Plug>(iced_eval_ns)
   Same as |:IcedEvalNs|.
@@ -1123,11 +1067,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                      *<Plug>(iced_eval_visual)*
 <Plug>(iced_eval_visual)
   Same as |:IcedEvalVisual|.
-  This is mapped to `vnoremap`.
-
-                                                *<Plug>(iced_eval_repl_visual)*
-<Plug>(iced_eval_repl_visual)
-  Same as |:IcedEvalReplVisual|.
   This is mapped to `vnoremap`.
 
                                                      *<Plug>(iced_macroexpand)*
@@ -1155,6 +1094,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                            *<Plug>(iced_undef)*
 <Plug>(iced_undef)
   Same as |:IcedUndef|.
+  
+                                                 *<Plug>(iced_undef_all_in_ns)*
+<Plug>(iced_undef_all_in_ns)
+  Same as |:IcedUndefAllInNs|.
 
                                              *<Plug>(iced_eval_outer_top_list)*
 <Plug>(iced_eval_outer_top_list)
@@ -1216,10 +1159,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_def_jump)
   Same as |:IcedDefJump|.
 
-                                                        *<Plug>(iced_def_back)*
-<Plug>(iced_def_back)
-  Same as |:IcedDefBack|.
-  
                                                          *<Plug>(iced_open_ns)*
 <Plug>(iced_open_ns)
   Same as |:IcedOpenNs|.
@@ -1307,17 +1246,17 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_format_all)
   Same as |:IcedFormatAll|.
 
-                                             *<Plug>(iced_toggle_src_and_test)*
-<Plug>(iced_toggle_src_and_test)
-  Same as |:IcedToggleSrcAndTest|.
+                                              *<Plug>(iced_cycle_src_and_test)*
+<Plug>(iced_cycle_src_and_test)
+  Same as |:IcedCycleSrcAndTest|.
 
                                                             *<Plug>(iced_grep)*
 <Plug>(iced_grep)
   Same as |:IcedGrep|.
 
-                                               *<Plug>(iced_related_namespace)*
-<Plug>(iced_related_namespace)
-  Same as |:IcedRelatedNamespace|.
+                                        *<Plug>(iced_browse_related_namespace)*
+<Plug>(iced_browse_related_namespace)
+  Same as |:IcedBrowseRelatedNamespace|.
 
                                                      *<Plug>(iced_browse_spec)*
 <Plug>(iced_browse_spec)
@@ -1367,17 +1306,13 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_move_to_let)
   Same as |:IcedMoveToLet|.
 
-                                                     *<Plug>(iced_list_tapped)*
-<Plug>(iced_list_tapped)
-  Same as |:IcedListTapped|.
+                                                   *<Plug>(iced_browse_tapped)*
+<Plug>(iced_browse_tapped)
+  Same as |:IcedBrowseTapped|.
 
                                                     *<Plug>(iced_clear_tapped)*
 <Plug>(iced_clear_tapped)
   Same as |:IcedClearTapped|.
-
-                                                   *<Plug>(iced_browse_tapped)*
-<Plug>(iced_browse_tapped)
-  Same as |:IcedBrowseTapped|.
 
                                                 *<Plug>(iced_toggle_trace_var)*
 <Plug>(iced_toggle_trace_var)
@@ -1387,17 +1322,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_toggle_trace_ns)
   Same as |:IcedToggleTraceNs|.
 
-                                                      *<Plug>(iced_in_repl_ns)*
-<Plug>(iced_in_repl_ns)
-  Same as |:IcedInReplNs|.
-
-                                               *<Plug>(iced_lint_current_file)*
-<Plug>(iced_lint_current_file)
-  Same as |:IcedLintCurrentFile|.
-
-                                                     *<Plug>(iced_lint_toggle)*
-<Plug>(iced_lint_toggle)
-  Same as |:IcedLintToggle|.
+                                                      *<Plug>(iced_in_init_ns)*
+<Plug>(iced_in_init_ns)
+  Same as |:IcedInInitNs|.
 
                                                *<Plug>(iced_jump_to_next_sign)*
 <Plug>(iced_jump_to_next_sign)
@@ -1460,7 +1387,7 @@ g:iced#promise#timeout_ms
                                               *g:iced#related_ns#tail_patterns*
 g:iced#related_ns#tail_patterns
   The namespace tailing pattern to decide the namespace is related or not.
-  This option is used by|:IcedRelatedNamespace| command.
+  This option is used by|:IcedBrowseRelatedNamespace| command.
   Default value is `['', '-test', '-spec', '\.spec']` .
 
                                                    *g:iced#test#spec_num_tests*
@@ -1640,35 +1567,6 @@ g:iced_enable_auto_indent
   See details: |vim-iced-indenting|.
 
 ------------------------------------------------------------------------------
-LINTERS                                          *vim-iced-customizing-linters*
-
-                                                       *g:iced#eastwood#option*
-g:iced#eastwood#option
-  Linting option which is used by `jonase/eastwood`.
-  See details: |vim-iced-linting|
-
-  Specific linter names are shown at:
-  - https://github.com/jonase/eastwood#whats-there
-
-  Ex. enable all linters excluding `implicit-dependencies` linter
->
-  let g:iced#eastwood#option = {
-      \ 'linters': ['all'],
-      \ 'exclude-linters': ['implicit-dependencies'],
-      \ }
-<
-                                                *g:iced#lint#use_virtual_text*
-g:iced#lint#use_virtual_text
-  If {v:true}, use virtual text to show lint warning text.
-  Default value is `v:false`.
-
-                                                   *g:iced_enable_auto_linting*
-g:iced_enable_auto_linting
-  If {v:true}, enable linting automatically.
-  Linting is worked when |BufWritePost|.
-  See details: |vim-iced-linting|
-
-------------------------------------------------------------------------------
 SIGNS                                              *vim-iced-customizing-signs*
 
                                                                   *g:iced_sign*
@@ -1677,22 +1575,19 @@ g:iced_sign
   vim-iced provides following signs.
   - iced_error (for test failure position)
   - iced_trace (for tracing var position)
-  - iced_lint  (for lint warning position)
 
   Each sign has default setting as follows. >
   {
     'error':   '🔥',
     'trace':   '👁',
-    'lint':    '💔',
     'errorhl': 'ErrorMsg',
     'tracehl': 'Search',
-    'linthl':  'WarningMsg',
   }
 <
   You can change the setting by `g:iced_sign` variable.
   Ex. changing sign text
 >
-  let g:iced_sign = {'error': 'E', 'trace': 'T', 'lint': 'L'}
+  let g:iced_sign = {'error': 'E', 'trace': 'T'}
 <
 ------------------------------------------------------------------------------
 COMMAND PALETTES                                 *vim-iced-customizing-palette*
@@ -1714,6 +1609,8 @@ g:iced#hook
   Hook setting.
 
   - Hook kinds
+    - connected         |hook_kind_connected|
+    - disconnected      |hook_kind_disconnected|
     - test_finished     |hook_kind_test_finished|
     - ns_required       |hook_kind_ns_required|
     - ns_all_reloaded   |hook_kind_ns_all_reloaded|
@@ -1721,8 +1618,8 @@ g:iced#hook
   - Hook report types
     - shell             |hook_report_shell|
     - eval              |hook_report_eval|
-    - eval-repl         |hook_report_eval_repl|
     - function          |hook_report_function|
+    - command           |hook_report_command|
 
   Ex. >
   let g:iced#hook = {
@@ -1731,6 +1628,16 @@ g:iced#hook
       \  'exec': {v -> printf('tmux display-message "%s"', v.summary)}}
       \ }
 <
+CONNECTED                                                 *hook_kind_connected*
+
+  Hooked when vim-iced is connected to nREPL.
+  No parameters are passed to reporter.
+  
+DISCONNECTED                                           *hook_kind_disconnected*
+
+  Hooked when vim-iced is disconnected from nREPL.
+  No parameters are passed to reporter.
+
 TEST FINISHED                                         *hook_kind_test_finished*
 
   Hooked when running test is finished.
@@ -1805,14 +1712,13 @@ g:iced_enable_default_key_mappings
   n       <Leader>ei   <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   n       <Leader>ee   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   n       <Leader>et   <Plug>(iced_eval_outer_top_list)
-  n       <Leader>er   <Plug>(iced_eval_repl)<Plug>(sexp_outer_top_list)``
   n       <Leader>en   <Plug>(iced_eval_ns)
   v       <Leader>ee   <Plug>(iced_eval_visual)
-  v       <Leader>er   <Plug>(iced_eval_repl_visual)
   n       <Leader>ep   <Plug>(iced_print_last)
   n       <Leader>eb   <Plug>(iced_require)
   n       <Leader>eB   <Plug>(iced_require_all)
   n       <Leader>eu   <Plug>(iced_undef)
+  n       <Leader>eU   <Plug>(iced_undef_all_in_ns)
   n       <Leader>eq   <Plug>(iced_interrupt)
   n       <Leader>eQ   <Plug>(iced_interrupt_all)
   n       <Leader>eM   <Plug>(iced_macroexpand_outer_list)
@@ -1848,12 +1754,11 @@ g:iced_enable_default_key_mappings
   n       <Leader>br   <Plug>(iced_browse_references)
   n       <Leader>bd   <Plug>(iced_browse_dependencies)
   n       <C-]>        <Plug>(iced_def_jump)
-  n       <C-t>        <Plug>(iced_def_back)
   n       <Leader>jn   <Plug>(iced_jump_to_next_sign)
   n       <Leader>jN   <Plug>(iced_jump_to_prev_sign)
   n       <Leader>jl   <Plug>(iced_jump_to_let)
-  n       <Leader>dtl  <Plug>(iced_list_tapped)
-  n       <Leader>dtc  <Plug>(iced_clear_tapped)
+  n       <Leader>dbt  <Plug>(iced_browse_tapped)
+  n       <Leader>dlt  <Plug>(iced_clear_tapped)
   n       <Leader>*    <Plug>(iced_grep)
   n       <Leader>/    :<C-u>IcedGrep<Space>
   n       ==           <Plug>(iced_format)

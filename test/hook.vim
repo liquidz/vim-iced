@@ -5,9 +5,8 @@ let s:ex = themis#helper('iced_ex_cmd')
 
 function! s:setup() abort
   call iced#nrepl#set_session('clj',  'clj-session')
-  call iced#nrepl#set_session('repl', 'repl-session')
   call iced#nrepl#change_current_session('clj')
-  call s:ex.register_test_builder()
+  call s:ex.mock()
 endfunction
 
 function! s:teardown() abort
@@ -41,45 +40,23 @@ function! s:suite.run_eval_type_test() abort
     return {'status': ['done']}
   endfunction
 
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
 
   let g:iced#hook = {'eval-test': {'type': 'eval', 'exec': '(simple form)'}}
-  call iced#hook#run('eval-test', 'bar')
+  let p = iced#hook#run('eval-test', 'bar')
+  call iced#promise#wait(p)
+
   call s:assert.equals(test.last_message['op'], 'eval')
   call s:assert.equals(test.last_message['code'], '(simple form)')
   call s:assert.equals(test.last_message['session'], 'clj-session')
 
   let g:iced#hook = {'eval-test': {'type': 'eval', 'exec': {v -> printf('(foo %s)', v)}}}
-  call iced#hook#run('eval-test', 'bar')
+  let p = iced#hook#run('eval-test', 'bar')
+  call iced#promise#wait(p)
+
   call s:assert.equals(test.last_message['op'], 'eval')
   call s:assert.equals(test.last_message['code'], '(foo bar)')
   call s:assert.equals(test.last_message['session'], 'clj-session')
-
-  call s:teardown()
-endfunction
-
-function! s:suite.run_eval_repl_type_test() abort
-  call s:setup()
-
-  let test = {'last_message': ''}
-  function! test.relay(msg) abort
-    let self.last_message = a:msg
-    return {'status': ['done']}
-  endfunction
-
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
-
-  let g:iced#hook = {'eval-repl-test': {'type': 'eval-repl', 'exec': '(simple form)'}}
-  call iced#hook#run('eval-repl-test', 'bar')
-  call s:assert.equals(test.last_message['op'], 'eval')
-  call s:assert.equals(test.last_message['code'], '(simple form)')
-  call s:assert.equals(test.last_message['session'], 'repl-session')
-
-  let g:iced#hook = {'eval-repl-test': {'type': 'eval-repl', 'exec': {v -> printf('(foo %s)', v)}}}
-  call iced#hook#run('eval-repl-test', 'bar')
-  call s:assert.equals(test.last_message['op'], 'eval')
-  call s:assert.equals(test.last_message['code'], '(foo bar)')
-  call s:assert.equals(test.last_message['session'], 'repl-session')
 
   call s:teardown()
 endfunction

@@ -12,13 +12,13 @@ let s:temp_file = tempname()
 
 function! s:setup(opts) abort " {{{
   call writefile([''], s:temp_file)
-  call s:sel.register_test_builder()
-  call s:ex_cmd.register_test_builder()
-  call s:qf.register_test_builder()
+  call s:sel.mock()
+  call s:ex_cmd.mock()
+  call s:qf.mock()
   call iced#nrepl#change_current_session('clj')
 
   if has_key(a:opts, 'channel')
-    call s:ch.register_test_builder({'status_value': 'open', 'relay': a:opts['channel']})
+    call s:ch.mock({'status_value': 'open', 'relay': a:opts['channel']})
   endif
 
   if has_key(a:opts, 'buffer')
@@ -143,7 +143,9 @@ function! s:suite.test_test() abort
         \ 'buffer': ['(ns foo.bar)', '(defn baz [] "dummy"|)'],
         \ })
 
-  call iced#nrepl#navigate#test()
+  let p = iced#nrepl#navigate#test()
+  call iced#promise#wait(p)
+
   let config = s:sel.get_last_config()
   call s:assert.equals(sort(copy(config['candidates'])), [
         \ 'foo.bar-test/baz-failure-test',

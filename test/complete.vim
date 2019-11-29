@@ -81,7 +81,7 @@ endfunction
 
 function! s:suite.omni_test() abort
   let g:iced_enable_enhanced_cljs_completion = v:false
-  call s:ch.register_test_builder({'status_value': 'open', 'relay': funcref('s:complete_relay')})
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:complete_relay')})
   call s:buf.start_dummy([])
 
   call s:assert.equals(

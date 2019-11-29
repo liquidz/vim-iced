@@ -1,11 +1,12 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 " NOTE: `current_session_key` must be 'clj' or 'cljs'
 function! s:initialize_nrepl() abort
   return {
       \ 'port': '',
       \ 'channel': v:false,
+      \ 'init_ns': '',
       \ 'current_session_key': '',
       \ 'sessions': {
       \   'repl': '',
@@ -32,12 +33,19 @@ let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
 let g:iced#nrepl#path_translation = get(g:, 'iced#nrepl#path_translation', {})
+let g:iced#nrepl#init_cljs_ns = get(g:, 'iced#nrepl#init_cljs_ns', 'cljs.user')
 
 let s:id_counter = 1
 function! iced#nrepl#id() abort
   let res = s:id_counter
   let s:id_counter = (res < 100) ? res + 1 : 1
   return res
+endfunction
+
+function! iced#nrepl#init_ns() abort
+  return (iced#nrepl#current_session_key() ==# 'clj')
+        \ ? get(s:nrepl, 'init_ns', '')
+        \ : g:iced#nrepl#init_cljs_ns
 endfunction
 
 function! s:set_message(id, msg) abort
@@ -50,7 +58,8 @@ endfunction
 
 " SESSIONS {{{
 function! iced#nrepl#set_session(k, v) abort
-  if a:k =~# '\(cljs\?\|repl\|cljs_repl\)'
+  "if a:k =~# '\(cljs\?\|repl\|cljs_repl\)'
+  if a:k =~# 'cljs\?'
     let s:nrepl['sessions'][a:k] = a:v
   else
     throw printf('Invalid session-key to set: %s', a:k)
@@ -58,7 +67,8 @@ function! iced#nrepl#set_session(k, v) abort
 endfunction
 
 function! iced#nrepl#get_session(k) abort
-  if a:k =~# '\(cljs\?\|repl\|cljs_repl\)'
+  "if a:k =~# '\(cljs\?\|repl\|cljs_repl\)'
+  if a:k =~# 'cljs\?'
     return s:nrepl['sessions'][a:k]
   else
     throw printf('Invalid session-key to get: %s', a:k)
@@ -90,20 +100,12 @@ function! iced#nrepl#cljs_session() abort
   return s:nrepl['sessions']['cljs']
 endfunction
 
-function! iced#nrepl#cljs_repl_session() abort
-  return s:nrepl['sessions']['cljs_repl']
-endfunction
-
-function! iced#nrepl#repl_session() abort
-  return s:nrepl['sessions']['repl']
-endfunction
-
 function! iced#nrepl#check_session_validity(...) abort
   let ext = expand('%:e')
   let sess_key = iced#nrepl#current_session_key()
   let is_verbose = get(a:, 1, v:true)
 
-  if !empty(ext) && ext !=# 'cljc' && sess_key !=# ext
+  if !empty(sess_key) && !empty(ext) && ext !=# 'cljc' && sess_key !=# ext
     if is_verbose
       call iced#message#error('invalid_session', ext)
     endif
@@ -144,15 +146,13 @@ function! iced#nrepl#merge_response_handler(resp, last_result) abort
 endfunction
 
 function! iced#nrepl#path_translation_handler(path_keys, resp, _) abort
-  if empty(g:iced#nrepl#path_translation)
-    return a:resp
-  else
-    let resp = copy(a:resp)
-    for path_key in a:path_keys
-      let path = copy(get(resp, path_key, ''))
-      if empty(path) | continue | endif
-      let path_type = type(path)
+  let resp = copy(a:resp)
+  for path_key in a:path_keys
+    let path = copy(get(resp, path_key, ''))
+    if empty(path) | continue | endif
+    let path_type = type(path)
 
+    if !empty(g:iced#nrepl#path_translation)
       for trans_key in keys(g:iced#nrepl#path_translation)
         if path_type == v:t_list
           call map(path, {_, v -> iced#nrepl#path#replace(v, trans_key, g:iced#nrepl#path_translation[trans_key])})
@@ -160,10 +160,12 @@ function! iced#nrepl#path_translation_handler(path_keys, resp, _) abort
           let path = iced#nrepl#path#replace(path, trans_key, g:iced#nrepl#path_translation[trans_key])
         endif
       endfor
+    endif
 
-      let resp[path_key] = path
-    endfor
-  endif
+    let resp[path_key] = (path_type == v:t_list)
+          \ ? map(copy(path), {_, v -> iced#util#normalize_path(v)})
+          \ : iced#util#normalize_path(path)
+  endfor
 
   return resp
 endfunction
@@ -200,7 +202,7 @@ function! s:dispatcher(ch, resp) abort
   call iced#util#debug('<<<', text)
 
   try
-    let original_resp = iced#di#get('bencode').decode(text)
+    let original_resp = iced#system#get('bencode').decode(text)
   catch /Failed to parse/
     let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
     return
@@ -210,6 +212,7 @@ function! s:dispatcher(ch, resp) abort
   let responses = iced#util#ensure_array(original_resp)
   let ids = s:get_message_ids(responses)
   let original_resp_type = type(original_resp)
+  let future = iced#system#get('future')
 
   let need_debug_input_response = ''
 
@@ -261,14 +264,16 @@ function! s:dispatcher(ch, resp) abort
         call iced#nrepl#debug#quit()
 
         if !empty(handler_result) && type(Callback) == v:t_func
-          call Callback(handler_result)
+          " HACK: for neovim
+          let CB = deepcopy(Callback)
+          call future.do({-> CB(handler_result)})
         endif
       endif
     endif
   endfor
 
   if !empty(need_debug_input_response)
-    if !iced#buffer#stdout#is_visible() && !iced#di#get('popup').is_supported()
+    if !iced#buffer#stdout#is_visible() && !iced#system#get('popup').is_supported()
       call iced#buffer#stdout#open()
     endif
     call iced#nrepl#debug#start(need_debug_input_response)
@@ -322,9 +327,9 @@ function! iced#nrepl#send(data) abort
     call s:set_message(id, message)
   endif
 
-  call iced#di#get('channel').sendraw(
+  call iced#system#get('channel').sendraw(
         \ s:nrepl['channel'],
-        \ iced#di#get('bencode').encode(data))
+        \ iced#system#get('bencode').encode(data))
 endfunction
 
 function! iced#nrepl#is_op_running(op) abort " {{{
@@ -339,13 +344,19 @@ endfunction " }}}
 
 " CONNECT {{{
 function! s:warm_up() abort
+  let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
+
   " FIXME init-debugger does not return response immediately
   call iced#nrepl#op#cider#debug#init()
   sleep 100m
   call iced#nrepl#op#cider#debug#init()
 
   if iced#nrepl#check_session_validity(v:false)
-    call iced#nrepl#ns#in()
+    if iced#nrepl#ns#name() ==# s:nrepl['init_ns']
+      call iced#nrepl#ns#in()
+    else
+      call iced#nrepl#ns#load_current_file({_ -> ''})
+    endif
   endif
   call iced#format#set_indentexpr()
 
@@ -365,7 +376,7 @@ endfunction
 
 function! s:status(ch) abort
   try
-    return iced#di#get('channel').status(a:ch)
+    return iced#system#get('channel').status(a:ch)
   catch
     return 'fail'
   endtry
@@ -374,11 +385,7 @@ endfunction
 function! s:connected(resp, initial_session) abort
   if has_key(a:resp, 'new-session')
     let session = a:resp['new-session']
-    let repl_session_key = (a:initial_session ==# 'cljs') ? 'cljs_repl' : 'repl'
-    call iced#nrepl#set_session(repl_session_key, session)
-
-    let new_session = iced#nrepl#sync#clone(session)
-    call iced#nrepl#set_session(a:initial_session, new_session)
+    call iced#nrepl#set_session(a:initial_session, session)
     call iced#nrepl#change_current_session(a:initial_session)
 
     " Check if nREPL middlewares are enabled
@@ -390,6 +397,7 @@ function! s:connected(resp, initial_session) abort
 
     call iced#nrepl#auto#enable_bufenter(v:true)
     call iced#message#info('connected')
+    call iced#hook#run('connected', {})
   endif
 endfunction
 
@@ -418,7 +426,7 @@ function! iced#nrepl#connect(port, ...) abort
   if !iced#nrepl#is_connected()
     let address = printf('%s:%d', g:iced#nrepl#host, a:port)
     let s:nrepl['port'] = a:port
-    let s:nrepl['channel'] = iced#di#get('channel').open(address, {
+    let s:nrepl['channel'] = iced#system#get('channel').open(address, {
         \ 'mode': 'raw',
         \ 'callback': funcref('s:dispatcher'),
         \ 'drop': 'never',
@@ -451,16 +459,21 @@ endfunction " }}}
 function! iced#nrepl#disconnect() abort " {{{
   if !iced#nrepl#is_connected() | return | endif
 
+  " NOTE: 'timer' feature seems not to work on VimLeave.
+  "       To receive response correctly, replace 'future' component not to use 'timer'.
+  call iced#system#set_component('future', {'start': 'iced#component#future#instant#start'})
+
   for id in iced#nrepl#sync#session_list()
     call iced#nrepl#sync#send({'op': 'interrupt', 'session': id})
     call iced#nrepl#sync#close(id)
   endfor
-  call iced#di#get('channel').close(s:nrepl['channel'])
+  call iced#system#get('channel').close(s:nrepl['channel'])
   let s:nrepl = s:initialize_nrepl()
   call iced#cache#clear()
   call iced#nrepl#cljs#reset()
   call iced#nrepl#connect#reset()
   call iced#message#info('disconnected')
+  call iced#hook#run('disconnected', {})
 endfunction " }}}
 
 function! iced#nrepl#reconnect() abort " {{{
@@ -478,7 +491,6 @@ endfunction " }}}
 " EVAL {{{
 function! iced#nrepl#is_evaluating() abort
   return !empty(s:messages)
-        \ && (len(s:messages) != 1 || s:messages[keys(s:messages)[0]]['op'] !=# 'iced-lint-file')
 endfunction
 
 function! iced#nrepl#eval(code, ...) abort
@@ -587,6 +599,6 @@ endfunction " }}}
 call iced#nrepl#register_handler('eval', funcref('iced#nrepl#merge_response_handler'))
 call iced#nrepl#register_handler('load-file', funcref('iced#nrepl#merge_response_handler'))
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo
 " vim:fdm=marker:fdl=0

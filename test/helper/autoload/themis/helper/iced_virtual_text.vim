@@ -19,8 +19,8 @@ function! s:helper.get_last_args() abort
   return self.last_args
 endfunction
 
-function! s:helper.register_test_builder(...) abort
-  call iced#di#register('virtual_text', {_ -> self})
+function! s:helper.mock(...) abort
+  call iced#system#set_component('virtual_text', {'start': {_ -> self}})
 endfunction
 
 function! themis#helper#iced_virtual_text#new(runner) abort

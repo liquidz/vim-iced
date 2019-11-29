@@ -2,7 +2,7 @@ scriptencoding utf-8
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let g:iced#debug = v:false
+let g:iced#debug = get(g:, 'iced#debug', v:false)
 
 function! iced#util#wait(pred, timeout_ms) abort
   let t = 0
@@ -146,10 +146,6 @@ function! iced#util#normalize_path(path) abort
     let path = substitute(path, '!/', '::', '')
   endif
   return path
-endfunction
-
-function! iced#util#future(fn) abort
-  call iced#di#get('timer').start(10, {_ -> a:fn()})
 endfunction
 
 function! iced#util#delete_color_code(s) abort

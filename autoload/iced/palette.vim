@@ -1,12 +1,12 @@
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpo = &cpoptions
+set cpoptions&vim
 
 let s:default_palette = [
       \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt', 'InterruptAll',
       \ 'InstantConnect', 'JackIn',
       \ 'StartCljsRepl figwheel-sidecar', 'StartCljsRepl graaljs', 'StartCljsRepl nashorn',
       \ 'QuitCljsRepl', 'CycleSession',
-      \ 'EvalNs',
+      \ 'EvalNs', 'UndefAllInNs',
       \ 'Require', 'RequireAll',
       \ 'PrintLast',
       \ 'TestNs', 'TestAll', 'TestRedo', 'TestSpecCheck', 'TestRerunLast',
@@ -14,16 +14,15 @@ let s:default_palette = [
       \ 'StdoutBufferOpen', 'StdoutBufferClear', 'StdoutBufferClose',
       \ 'DocumentClose', 'ClojureDocsRefresh',
       \ 'FormatAll',
-      \ 'ToggleSrcAndTest',
+      \ 'CycleSrcAndTest', 'Grep',
       \ 'BrowseRelatedNamespace', 'BrowseSpec', 'BrowseTestUnderCursor',
       \ 'BrowseReferences', 'BrowseDependencies',
       \ 'BrowseVarReferences', 'BrowseVarDependencies',
       \ 'CleanNs', 'CleanAll', 'AddNs',
       \ 'ExtractFunction', 'AddArity', 'MoveToLet',
-      \ 'ListTapped', 'ClearTapped', 'MoveToLet',
+      \ 'BrowseTapped', 'ClearTapped',
       \ 'ToggleWarnOnReflection', 'ToggleTraceVar', 'ToggleTraceNs',
-      \ 'InReplNs',
-      \ 'LintCurrentFile', 'LintToggle',
+      \ 'InInitNs',
       \ 'JumpToNextSign', 'JumpToPrevSign',
       \ 'JumpToLet',
       \ ]
@@ -58,5 +57,5 @@ function! iced#palette#show() abort
         \ })
 endfunction
 
-let &cpo = s:save_cpo
+let &cpoptions = s:save_cpo
 unlet s:save_cpo

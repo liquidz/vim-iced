@@ -7,8 +7,8 @@ function! s:helper.select(config) abort
   let self.last_config = a:config
 endfunction
 
-function! s:helper.register_test_builder() abort
-  call iced#di#register('selector', {_ -> self})
+function! s:helper.mock() abort
+  call iced#system#set_component('selector', {'start': {_ -> self}})
 endfunction
 
 function! s:helper.get_last_config() abort

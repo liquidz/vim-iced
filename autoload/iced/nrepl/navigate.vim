@@ -5,17 +5,10 @@ let s:V = vital#iced#new()
 let s:S = s:V.import('Data.String')
 let s:L = s:V.import('Data.List')
 
-let s:tagstack = []
 let g:iced#related_ns#tail_patterns =
       \ get(g:, 'iced#related_ns#tail_patterns', ['', '-test', '-spec', '\.spec'])
 
 let g:iced#var_references#cache_dir = get(g:, 'iced#var_references#cache_dir', '/tmp')
-
-function! s:add_curpos_to_tagstack() abort
-  let pos = getcurpos()
-  let pos[0] = bufnr('%')
-  call s:L.push(s:tagstack, pos)
-endfunction
 
 function! s:apply_mode_to_file(mode, file) abort
   let cmd = ':edit'
@@ -24,7 +17,8 @@ function! s:apply_mode_to_file(mode, file) abort
   elseif a:mode ==# 't'
     let cmd = ':tabedit'
   endif
-  call iced#di#get('ex_cmd').exe(printf('%s %s', cmd, a:file))
+  call iced#system#get('tagstack').add_here()
+  call iced#system#get('ex_cmd').exe(printf('%s %s', cmd, a:file))
 endfunction
 
 " iced#nrepl#navigate#open_ns {{{
@@ -37,7 +31,7 @@ function! iced#nrepl#navigate#open_ns(mode, ns_name) abort
   let path = resp['path']
   if !filereadable(path)
     let prompt = printf('%s: ', iced#message#get('confirm_opening_file'))
-    let path = iced#di#get('io').input(prompt, path)
+    let path = iced#system#get('io').input(prompt, path)
   endif
 
   if !empty(path)
@@ -48,7 +42,7 @@ endfunction " }}}
 " s:open_var {{{
 function! s:open_var_info(mode, resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('not_found') | endif
-  let path = iced#util#normalize_path(a:resp['file'])
+  let path = a:resp['file']
 
   if expand('%:p') !=# path
     call s:apply_mode_to_file(a:mode, path)
@@ -69,7 +63,7 @@ function! s:open_var(mode, candidate) abort
   let ns = arr[0]
   let symbol = arr[1]
 
-  call s:add_curpos_to_tagstack()
+  call iced#system#get('tagstack').add_here()
   call iced#nrepl#ns#require(ns, {_ ->
        \ iced#nrepl#op#cider#info(ns, symbol, {resp -> s:open_var_info(a:mode, resp)})})
 endfunction " }}}
@@ -81,15 +75,15 @@ function! iced#nrepl#navigate#cycle_ns(ns) abort
       \ : a:ns . '-test')
 endfunction " }}}
 
-" iced#nrepl#navigate#toggle_src_and_test {{{
-function! iced#nrepl#navigate#toggle_src_and_test() abort
+" iced#nrepl#navigate#cycle_src_and_test {{{
+function! iced#nrepl#navigate#cycle_src_and_test() abort
   if !iced#nrepl#is_connected()
     return iced#message#error('not_connected')
   endif
 
   let ns = iced#nrepl#ns#name()
-  let toggle_ns = iced#nrepl#navigate#cycle_ns(ns)
-  call iced#nrepl#navigate#open_ns('e', toggle_ns)
+  let cycle_ns = iced#nrepl#navigate#cycle_ns(ns)
+  call iced#nrepl#navigate#open_ns('e', cycle_ns)
 endfunction " }}}
 
 " iced#nrepl#navigate#related_ns {{{
@@ -117,12 +111,12 @@ endfunction " }}}
 " iced#nrepl#navigate#jump_to_def {{{
 function! s:jump(resp) abort
   if !has_key(a:resp, 'file') | return iced#message#error('jump_not_found') | endif
-  let path = iced#util#normalize_path(a:resp['file'])
+  let path = a:resp['file']
   let line = a:resp['line']
   let column = get(a:resp, 'column', '0')
 
   if expand('%:p') !=# path
-    call iced#di#get('ex_cmd').exe(printf(':edit %s', path))
+    call iced#system#get('ex_cmd').exe(printf(':edit %s', path))
   endif
 
   call cursor(line, column)
@@ -131,21 +125,8 @@ function! s:jump(resp) abort
 endfunction
 
 function! iced#nrepl#navigate#jump_to_def(symbol) abort
-  call s:add_curpos_to_tagstack()
+  call iced#system#get('tagstack').add_here()
   call iced#nrepl#var#get(a:symbol, funcref('s:jump'))
-endfunction " }}}
-
-" iced#nrepl#navigate#jump_back {{{
-function! iced#nrepl#navigate#jump_back() abort
-  if empty(s:tagstack)
-    echo 'Local tag stack is empty'
-  else
-    let last_position = s:L.pop(s:tagstack)
-    execute printf(':buffer %d', last_position[0])
-    call cursor(last_position[1], last_position[2])
-    normal! zz
-    redraw!
-  endif
 endfunction " }}}
 
 " iced#nrepl#navigate#test {{{
@@ -162,7 +143,7 @@ function! iced#nrepl#navigate#test() abort
   if s:S.ends_with(ns_name, '-test') | return iced#message#warning('already_in_test_ns') | endif
 
   let ns_name = iced#nrepl#navigate#cycle_ns(ns_name)
-  call iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, funcref('s:test_vars'))
+  return iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, funcref('s:test_vars'))
 endfunction " }}}
 
 function! s:set_xref_resp_to_quickfix(key, resp) abort
@@ -179,8 +160,8 @@ function! s:set_xref_resp_to_quickfix(key, resp) abort
         \ }})
   if empty(xrefs) | return iced#message#info('not_found') | endif
 
-  call iced#di#get('quickfix').setlist(xrefs, 'r')
-  call iced#di#get('ex_cmd').silent_exe(':cwindow')
+  call iced#system#get('quickfix').setlist(xrefs, 'r')
+  call iced#system#get('ex_cmd').silent_exe(':cwindow')
 endfunction
 
 let s:fn_refs_callback = function('s:set_xref_resp_to_quickfix', ['fn-refs'])

@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 0.13.0 (2019-11-29)
+// {{{
+=== Added
+* Add hook for `connected` event.
+* Add `command` hook reporter to execute a command simply.
+* Add `IcedInInitNs` instead of `IcedInReplNs`.
+* Add `IcedUndefAllInNs` command.
+
+=== Changed
+* https://github.com/liquidz/vim-iced/issues/158[#158]: Clear test error sign only if the test passes.
+* (Breaking) Required vim/neovim version is changed.
+** Vim `8.1.0614` or later
+** Neovim `0.4` or later
+* Bump iced-nrepl to 0.7.0.
+* (Breaking) Rename `IcedToggleSrcAndTest` command to `IcedCycleSrcAndTest`.
+* (Breaking) Integrate `IcedListTapped` command to `IcedBrowseTapped`.
+** `IcedListTapped` command is removed.
+** If `IcedBrowseTapped` command is executed with no arguments, it works like `IcedListTapped`.
+** Add default key map `<Leader>dbt` for `IcedBrowseTapped`.
+** Change default key map `<Leader>dlt` for `IcedClearTapped`.
+* Update to require ns automatically if the first ns-name on connecting REPL is not initial ns-name on REPL.
+
+=== Fixed
+* Fixed clearing virtual text to work correctly in neovim.
+* Fixed not to clear quickfix when executing `IcedRequire` command.
+* Fixed to work auto connection correctly on evaluation.
+
+=== Removed
+* (Breaking) https://github.com/liquidz/vim-iced/issues/159[#159]: Remove linting functionality.
+* (Breaking) Remove `:IcedDefBack` command.
+** You can use built-in https://vim-jp.org/vimdoc-en/tagsrch.html#CTRL-T[<C-t>] key mapping instead.
+* (Breaking) Remove `:IcedInReplNs` command.
+* (Breaking) Remove `eval-repl` hook kind.
+// }}}
+
 == 0.12.5 (2019-10-20)
 // {{{
 === Added

@@ -3,6 +3,7 @@ set cpoptions&vim
 
 let s:popup = {
       \ 'env': 'vim',
+      \ 'config': {},
       \ }
 
 function! s:init_win(winid, opts) abort
@@ -75,11 +76,11 @@ function! s:popup.open(texts, ...) abort
         \ 'minwidth': width,
         \ 'maxwidth': max_width,
         \ 'minheight': min_height,
-        \ 'maxheight': g:iced#popup#max_height,
+        \ 'maxheight': self.config.max_height,
         \ }
 
   if get(opts, 'auto_close', v:true)
-    let win_opts['time'] = get(opts, 'close_time', g:iced#popup#time)
+    let win_opts['time'] = get(opts, 'close_time', self.config.time)
   endif
 
   call extend(win_opts, iced#util#select_keys(opts,
@@ -111,8 +112,11 @@ function! s:popup.close(window_id) abort
   call popup_close(a:window_id)
 endfunction
 
-function! iced#di#popup#vim#build(container) abort
-  return s:popup
+function! iced#component#popup#vim#start(this) abort
+  call iced#util#debug('start', 'vim popup')
+  let d = deepcopy(s:popup)
+  let d.config = a:this.popup_config
+  return d
 endfunction
 
 let &cpoptions = s:save_cpo

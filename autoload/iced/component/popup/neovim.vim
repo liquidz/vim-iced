@@ -6,6 +6,7 @@ let s:last_winid = -1
 
 let s:popup = {
       \ 'env': 'neovim',
+      \ 'config': {},
       \ }
 
 let g:iced#popup#neovim#winhighlight = get(g:, 'iced#popup#neovim#winhighlight', 'Normal:NormalFloat')
@@ -56,7 +57,7 @@ endfunction
 
 function! s:popup.open(texts, ...) abort
   if !s:is_supported() | return | endif
-  call iced#di#popup#neovim#moved()
+  call iced#component#popup#neovim#moved()
 
   let bufnr = nvim_create_buf(0, 1)
   if bufnr < 0 | return | endif
@@ -92,7 +93,7 @@ function! s:popup.open(texts, ...) abort
   endif
 
   let min_height = len(texts)
-  let height = min([min_height, g:iced#popup#max_height])
+  let height = min([min_height, self.config.max_height])
 
   if min_height + 5 >= &lines - &cmdheight
     throw 'vim-iced: too long texts to show in popup'
@@ -143,8 +144,8 @@ function! s:popup.open(texts, ...) abort
   endif
 
   if get(opts, 'auto_close', v:true)
-    let time = get(opts, 'close_time', g:iced#popup#time)
-    call iced#di#get('timer').start(time, {-> iced#di#get('popup').close(winid)})
+    let time = get(opts, 'close_time', self.config.time)
+    call iced#component#get('timer').start(time, {-> iced#component#get('popup').close(winid)})
   endif
 
   let s:last_winid = winid
@@ -174,10 +175,9 @@ function! s:popup.close(window_id) abort
   let s:last_winid = -1
 endfunction
 
-function! iced#di#popup#neovim#moved() abort
+function! iced#component#popup#neovim#moved() abort
   if s:last_winid == -1 | return | endif
-  let popup = iced#di#get('popup')
-  let context = popup.get_context(s:last_winid)
+  let context = s:popup.get_context(s:last_winid)
   let moved = get(context, '__moved', '')
   let base_line = get(context, '__lnum', 0)
   let line = line('.')
@@ -187,14 +187,17 @@ function! iced#di#popup#neovim#moved() abort
   if empty(moved)
     return
   elseif type(moved) == v:t_string && moved ==# 'any'
-    return popup.close(s:last_winid)
+    return s:popup.close(s:last_winid)
   elseif type(moved) == v:t_list && (line != base_line || col < moved[0] || col > moved[1])
-    return popup.close(s:last_winid)
+    return s:popup.close(s:last_winid)
   endif
 endfunction
 
-function! iced#di#popup#neovim#build(container) abort
-  return s:popup
+function! iced#component#popup#neovim#start(this) abort
+  call iced#util#debug('start', 'neovim popup')
+  let d = deepcopy(s:popup)
+  let d.config = a:this.popup_config
+  return d
 endfunction
 
 let &cpoptions = s:save_cpo

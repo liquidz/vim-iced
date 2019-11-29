@@ -74,7 +74,7 @@ endfunction
 
 function! iced#buffer#stdout#append(s) abort
   let s = iced#util#delete_color_code(a:s)
-  let timer = iced#di#get('timer')
+  let timer = iced#system#get('timer')
 
   if !empty(g:iced#buffer#stdout#file)
     call extend(s:write_file_buffer, split(s, '\r\?\n'))

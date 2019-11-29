@@ -26,10 +26,9 @@ function! s:setup(edit_file) abort " {{{
 
   call iced#nrepl#set_session('clj',  'clj-session')
   call iced#nrepl#set_session('cljs', 'cljs-session')
-  call iced#nrepl#set_session('repl', 'repl-session')
 
   call s:test.clear_messages()
-  call s:ch.register_test_builder({
+  call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:test.relay(msg)},
         \ })

@@ -34,7 +34,7 @@ function! s:on_grep_exit(_) abort
     if s:job.found
       call iced#message#info('finish_to_grep', s:job.keyword)
     else
-      call iced#di#get('ex_cmd').silent_exe(':cclose')
+      call iced#system#get('ex_cmd').silent_exe(':cclose')
       call iced#message#warning('grep_not_found', s:job.keyword)
     endif
   finally
@@ -66,10 +66,10 @@ function! iced#grep#exe(kw) abort
   endif
 
   call iced#message#info('start_to_grep', kw)
-  call iced#di#get('quickfix').setlist([], 'r')
-  call iced#di#get('ex_cmd').silent_exe(':copen')
+  call iced#system#get('quickfix').setlist([], 'r')
+  call iced#system#get('ex_cmd').silent_exe(':copen')
   let s:job.keyword = kw
-  let s:job.id = iced#di#get('job').start(['sh', '-c', command], {
+  let s:job.id = iced#system#get('job').start(['sh', '-c', command], {
         \ 'out_cb': funcref('s:on_grep_out'),
         \ 'close_cb': funcref('s:on_grep_exit'),
         \ })

@@ -90,7 +90,7 @@ SIGN                                                           *iced-tips-sign*
 ------------------------------------------------------------------------------
 JUMPING SIGNS                                         *iced-tips-jumping-signs*
 
-  vim-iced uses |signs| on tracing, linting, and testing.
+  vim-iced uses |signs| on tracing, and testing.
   For jumping between signs, following commands are usable.
 
   - |:IcedJumpToNextSign|

@@ -14,21 +14,6 @@ function! iced#nrepl#op#cider#sync#ns_list() abort
       \ })
 endfunction " }}}
 
-" ns-vars-with-meta {{{
-function! iced#nrepl#op#cider#sync#ns_vars(ns) abort
-  if !iced#nrepl#is_connected()
-    call iced#message#error('not_connected')
-    return ''
-  endif
-
-  return iced#nrepl#sync#send({
-      \ 'op': 'ns-vars-with-meta',
-      \ 'session': iced#nrepl#current_session(),
-      \ 'ns': a:ns,
-      \ 'verbose': v:false,
-      \ })
-endfunction " }}}
-
 " ns-path {{{
 function! iced#nrepl#op#cider#sync#ns_path(ns) abort
   if !iced#nrepl#is_connected()

@@ -61,7 +61,7 @@ function! s:move_cursor_and_set_highlight(resp) abort
   let ncol = max([a:resp['column'], 1])
 
   if expand('%:p') !=# a:resp['file']
-    call iced#di#get('ex_cmd').silent_exe(printf(':edit %s', a:resp['file']))
+    call iced#system#get('ex_cmd').silent_exe(printf(':edit %s', a:resp['file']))
   endif
   call cursor(nrow, ncol)
   call s:apply_coordination(a:resp['coor'])
@@ -111,11 +111,11 @@ function! iced#nrepl#debug#start(resp) abort
     call add(debug_texts, printf(' %' . max_key_len . 's: %s', k, v))
   endfor
 
-  if iced#di#get('popup').is_supported()
+  if iced#system#get('popup').is_supported()
     if s:debug_info_window_id != -1
-      call iced#di#get('popup').close(s:debug_info_window_id)
+      call iced#system#get('popup').close(s:debug_info_window_id)
     endif
-    let s:debug_info_window_id = iced#di#get('popup').open(debug_texts, {
+    let s:debug_info_window_id = iced#system#get('popup').open(debug_texts, {
          \ 'filetype': 'clojure',
          \ 'line': 'near-cursor',
          \ 'col': col('.'),
@@ -138,7 +138,7 @@ function! iced#nrepl#debug#start(resp) abort
   endif
 
   redraw
-  let in = trim(iced#di#get('io').input(prompt . "\n: "))
+  let in = trim(iced#system#get('io').input(prompt . "\n: "))
   if type(input_type) == v:t_dict
     let in = ':'.get(input_type, in, 'quit')
   endif
@@ -151,7 +151,7 @@ function! iced#nrepl#debug#quit() abort
 
   if type(s:saved_view) == v:t_dict
     let s:debug_key = ''
-    if !iced#di#get('popup').is_supported()
+    if !iced#system#get('popup').is_supported()
       call iced#buffer#stdout#append(';; Quit')
     endif
     call iced#highlight#clear()
@@ -159,7 +159,7 @@ function! iced#nrepl#debug#quit() abort
     let s:saved_view = ''
 
     if s:debug_info_window_id != -1
-      call iced#di#get('popup').close(s:debug_info_window_id)
+      call iced#system#get('popup').close(s:debug_info_window_id)
     endif
     let s:debug_info_window_id = -1
   endif
@@ -173,7 +173,7 @@ function! s:accept_tapped_value(_, x) abort
   call iced#nrepl#debug#browse_tapped(k)
 endfunction
 
-function! iced#nrepl#debug#list_tapped() abort
+function! s:show_tapped_list() abort
   call iced#promise#call('iced#nrepl#op#iced#list_tapped', [])
         \.then({resp -> has_key(resp, 'error') ? iced#promise#reject(resp['error']) : resp})
         \.then({resp -> map(get(resp, 'tapped', []), {i, v -> printf("%d: %s", i, v)})})
@@ -184,7 +184,7 @@ function! iced#nrepl#debug#list_tapped() abort
         \.catch({error -> iced#message#error_str(error)})
 endfunction
 
-function! iced#nrepl#debug#browse_tapped(key_str) abort
+function! s:browse_tapped_data(key_str) abort
   let keys = split(a:key_str, '\s\+')
   let keys = map(keys, {_, v ->
         \ (type(v) == v:t_string && match(v, '^\d\+$') == 0) ? str2nr(v) : v})
@@ -200,6 +200,14 @@ function! iced#nrepl#debug#browse_tapped(key_str) abort
   let cmd = printf(':IcedBrowseTapped %s ', a:key_str)
   let cmd = substitute(cmd, '\s\+', ' ', 'g')
   call feedkeys(cmd, 'n')
+endfunction
+
+function! iced#nrepl#debug#browse_tapped(key_str) abort
+  if empty(a:key_str)
+    return s:show_tapped_list()
+  endif
+
+  call s:browse_tapped_data(a:key_str)
 endfunction
 
 function! iced#nrepl#debug#complete_tapped(arg_lead, cmd_line, cursor_pos) abort
