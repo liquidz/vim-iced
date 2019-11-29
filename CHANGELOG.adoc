@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 0.13.0 (2019-11-29)
+// {{{
 === Added
 * Add hook for `connected` event.
 * Add `command` hook reporter to execute a command simply.
@@ -35,6 +37,7 @@ All notable changes to this project will be documented in this file. This change
 ** You can use built-in https://vim-jp.org/vimdoc-en/tagsrch.html#CTRL-T[<C-t>] key mapping instead.
 * (Breaking) Remove `:IcedInReplNs` command.
 * (Breaking) Remove `eval-repl` hook kind.
+// }}}
 
 == 0.12.5 (2019-10-20)
 // {{{
