@@ -148,16 +148,19 @@ workflows:
   version: 2
   all_test:
     jobs:
-      - build
-      - neovim-build
-      - docs-build
+      - build:
+          filters:
+            branches:
+              only: master
+      - neovim-build:
+          filters:
+            branches:
+              only: master
+      - docs-build:
+          filters:
+            branches:
+              only: master
       - load-files-build
-      # - nightly-docs-deploy:
-      #     requires:
-      #       - docs-build
-      #     filters:
-      #       branches:
-      #         only: dev
       - docs-deploy:
           requires:
             - build
