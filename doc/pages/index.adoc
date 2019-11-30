@@ -24,9 +24,9 @@ include::overview.adoc[]
 
 include::getting_started.adoc[]
 
-include::evaluation.adoc[]
+// include::evaluation.adoc[]
 
-include::completion.adoc[]
+// include::completion.adoc[]
 
 // include::reference.adoc[]
 
@@ -34,9 +34,9 @@ include::completion.adoc[]
 
 // include::testing.adoc[]
 
-include::buffer.adoc[]
+// include::buffer.adoc[]
 
-include::configuration.adoc[]
+// include::configuration.adoc[]
 
 // include::clojurescript.adoc[]
 
