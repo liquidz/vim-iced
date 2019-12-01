@@ -7,7 +7,7 @@ You can use <<evaluate_outer_list>> range to evaluate codes inside `comment` for
 but it is bored that some cursor movements are required.
 
 
-https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23eval%23inside_comment[g:iced#eval#inside_comment] is a configuration that allow you to evaluate inside `comment` form with <<evaluate_outer_top_list>> range, and it is enabled by default.
+{help_html}#g%3Aiced%23eval%23inside_comment[g:iced#eval#inside_comment] is a configuration that allow you to evaluate inside `comment` form with <<evaluate_outer_top_list>> range, and it is enabled by default.
 
 .Example (📍 means cursor position)
 [source,clojure]

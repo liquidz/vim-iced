@@ -23,21 +23,21 @@ If you enable default key mappings, following key mappings are available.
 | [reftext="evaluating inner element"]
 [[evaluate_inner_element]]
 inner element
-| `<Leader>ei`
+| `{plug_iced_eval_inner_element}`
 
 | [reftext="evaluating outer list"]
 [[evaluate_outer_list]]
 outer list
-| `<Leader>ee`
+| `{plug_iced_eval_outer_list}`
 
 | [reftext="evaluating outer top list"]
 [[evaluate_outer_top_list]]
 outer top list
-| `<Leader>et`
+| `{plug_iced_eval_outer_top_list}`
 
 |===
 
-See https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-customizing-default-keys[help file] for other default key mappings.
+See {help_html}#vim-iced-customizing-default-keys[help file] for other default key mappings.
 
 TIP: See also <<eval_inside_comment>>
 
