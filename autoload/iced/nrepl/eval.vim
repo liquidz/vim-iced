@@ -66,18 +66,9 @@ function! s:is_comment_form(code) abort
   return (stridx(a:code, '(comment') == 0)
 endfunction
 
-function! s:extract_inside_form(code) abort
-  let i = strridx(a:code, ')')
-  if i != -1
-    " NOTE: 8 = len('(comment')
-    return trim(a:code[8:i-1])
-  endif
-  return a:code
-endfunction
-
 function! iced#nrepl#eval#normalize_code(code) abort
   if g:iced#eval#inside_comment && s:is_comment_form(a:code)
-    return s:extract_inside_form(a:code)
+    return substitute(a:code, '^(comment', '(do', '')
   endif
   return a:code
 endfunction

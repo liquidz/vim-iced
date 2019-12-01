@@ -64,10 +64,10 @@ function! s:suite.code_test() abort
   call s:assert.equals(last_args['text'], '=> 123')
 
   let g:iced#eval#inside_comment = v:true
-  let p =  iced#nrepl#eval#code('(comment (+ 1 2 3))')
+  let p =  iced#nrepl#eval#code('(comment (+ 1 2 3) (* 1 2 3))')
   call iced#promise#wait(p)
 
-  call s:assert.equals(s:last_evaluated_code, '(+ 1 2 3)')
+  call s:assert.equals(s:last_evaluated_code, '(do (+ 1 2 3) (* 1 2 3))')
 endfunction
 
 function! s:suite.code_with_callback_test() abort
