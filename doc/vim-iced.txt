@@ -1218,6 +1218,18 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   - |g:iced_enable_auto_document|
   - |g:iced_enable_popup_document|
 
+                                                   *<Plug>(iced_use_case_open)*
+<Plug>(iced_use_case_open)
+  Same as |:IcedUseCaseOpen|.
+
+                                                   *<Plug>(iced_next_use_case)*
+<Plug>(iced_next_use_case)
+  Same as |:IcedNextUseCase|.
+
+                                                   *<Plug>(iced_prev_use_case)*
+<Plug>(iced_prev_use_case)
+  Same as |:IcedPrevUseCase|.
+
                                                   *<Plug>(iced_document_close)*
 <Plug>(iced_document_close)
   Same as |:IcedDocumentClose|.
