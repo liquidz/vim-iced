@@ -722,7 +722,7 @@ COMMANDS                                                    *vim-iced-commands*
   Open a window, and show documents for {symbol}.
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_document_open)|.
-  
+
                                                        *:IcedPopupDocumentOpen*
 :IcedPopupDocumentOpen [{symbol}]
   Open a popup window, and show documents for {symbol}.
@@ -735,6 +735,26 @@ COMMANDS                                                    *vim-iced-commands*
   Echo one-line document for form under cursor.
   This is useful to show document while editing codes.
   See details |<Plug>(iced_form_document)|.
+
+                                                             *:IcedUseCaseOpen*
+:IcedUseCaseOpen [{symbol}]
+  Open a window, and show usecase for {symbol}.
+  If {symbol} is not passed, symbol under cursor is used.
+  When several usecases are found, |:IcedNextUseCase| and |:IcedPrevUseCase|
+  commands are useful to show next or previous usecases.
+  Key is mapped to |<Plug>(iced_use_case_open)|.
+
+                                                             *:IcedNextUseCase*
+:IcedNextUseCase
+  Show next usecase in a window if there is.
+  See also |:IcedUseCaseOpen| command.
+  Key is mapped to |<Plug>(iced_next_use_case)|.
+
+                                                             *:IcedPrevUseCase*
+:IcedPrevUseCase
+  Show previous usecase in a window if there is.
+  See also |:IcedUseCaseOpen| command.
+  Key is mapped to |<Plug>(iced_prev_use_case)|.
 
                                                            *:IcedDocumentClose*
 :IcedDocumentClose
