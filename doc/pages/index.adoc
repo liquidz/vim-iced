@@ -48,7 +48,7 @@ include::getting_started.adoc[]
 
 include::evaluation.adoc[]
 
-// include::completion.adoc[]
+include::completion.adoc[]
 
 // include::reference.adoc[]
 

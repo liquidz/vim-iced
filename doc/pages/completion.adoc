@@ -24,12 +24,33 @@ However, the following completion plugins are supported as external plugins.
 https://github.com/prabirshrestha/asyncomplete.vim[asyncomplete.vim] is a async completion plugin in pure vim script for Vim8 and Neovim,
 and https://github.com/liquidz/vim-iced-asyncomplete[vim-iced-asyncomplete] is a vim-iced plugin to work with this plugin.
 
-See https://github.com/liquidz/vim-iced-asyncomplete#installation[here] for installation steps.
+To use `vim-iced-asyncomplete`, add followings to `vim-plug` section in your `~/.vimrc` (or `~/.config/nvim/init.vim` for Neovim)
+
+[source,vim]
+----
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'liquidz/vim-iced', {'for': 'clojure'}
+Plug 'liquidz/vim-iced-asyncomplete', {'for': 'clojure'}
+----
 
 ==== coc.nvim
 
 https://github.com/neoclide/coc.nvim[coc.nvim] is a intellisense engine for Vim8 and Neovim,
 and https://github.com/liquidz/vim-iced-coc-source[vim-iced-coc-source] is a vim-iced plugin to work this plugin.
 
-See https://github.com/liquidz/vim-iced-coc-source#installation[here] for installation steps.
+To use `vim-iced-coc-source`, do following installation steps.
 
+- Install coc.nvim (https://github.com/neoclide/coc.nvim/wiki/Install-coc.nvim[here] is the installation step)
+- Add followings to `vim-plug` section in your `~/.vimrc` (or `~/.config/nvim/init.vim` for Neovim)
+[source,vim]
+----
+Plug 'liquidz/vim-iced', {'for': 'clojure'}
+Plug 'liquidz/vim-iced-coc-source', {'for': 'clojure'}
+----
+- Add the following definition to your `coc-settings.json`
+[source,json]
+----
+{
+    "coc.source.iced.enable": true
+}
+----
