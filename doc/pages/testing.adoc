@@ -1,0 +1,36 @@
+== Testing [[testing]]
+
+{help_html}#%3AIcedTestNs[IcedTestNs]
+
+{help_html}#%3AIcedTestAll[IcedTestAll]
+
+{help_html}#%3AIcedTestRedo[IcedTestRedo]
+
+{help_html}#%3AIcedTestUnderCursor[IcedTestUnderCursor]
+
+{help_html}#%3AIcedTestRerunLast[IcedTestRerunLast]
+
+{help_html}#%3AIcedTestSpecCheck[IcedTestSpecCheck]
+
+{help_html}#%3AIcedTestBufferOpen[IcedTestBufferOpen]
+
+
+// vim-iced provides following test commands.
+//   - |:IcedTestUnderCursor|
+//   - |:IcedTestNs|
+//   - |:IcedTestAll|
+//   - |:IcedTestRedo|
+//   - |:IcedTestSpecCheck|
+//   - |:IcedTestRerunLast|
+//
+//   When tests are failed, vim-iced sets error positions to |quickfix|.
+//   |:cwindow| command enables you to show this information.
+//
+//   To show quickfix automatically, following autocmd is useful.
+// >
+//   aug VimIcedAutoOpenQuickfix
+//     au!
+//     au QuickFixCmdPost vim-iced cwindow
+//   aug END
+// <
+
