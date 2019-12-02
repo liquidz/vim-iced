@@ -5,6 +5,7 @@
 
 //:help_url: https://liquidz.github.io/vim-iced/vim-iced.html
 :help_html: https://vim-iced-nightly.netlify.com/vim-iced.html
+// key mappings {{{
 :plug_iced_eval_inner_element: <Leader>ei
 :plug_iced_eval_outer_list: <Leader>ee
 :plug_iced_eval_outer_top_list: <Leader>et
@@ -14,8 +15,16 @@
 :plug_iced_popup_source_show: <Leader>hs
 :plug_iced_macroexpand_outer_list: <Leader>eM
 :plug_iced_macroexpand_1_outer_list: <Leader>em
+:plug_iced_test_under_cursor: <Leader>tt
+:plug_iced_test_rerun_last: <Leader>tl
+:plug_iced_test_spec_check: <Leader>ts
+:plug_iced_test_buffer_open: <Leader>to
+:plug_iced_test_ns: <Leader>tn
+:plug_iced_test_all: <Leader>tp
+:plug_iced_test_redo: <Leader>tr
+// }}}
 
-// c.f. http://tholman.com/github-corners/
+// c.f. http://tholman.com/github-corners/ {{{
 +++
 <a href="https://github.com/liquidz/vim-iced" class="github-corner" aria-label="View source on GitHub">
   <svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
@@ -31,6 +40,7 @@
 @media (max-width:500px){ .github-corner:hover .octo-arm{ animation:none } .github-corner .octo-arm { animation:octocat-wave 560ms ease-in-out } }
 </style>
 +++
+// }}}
 
 include::overview.adoc[]
 
@@ -52,3 +62,5 @@ include::configuration.adoc[]
 
 // include::clojurescript.adoc[]
 
+
+// vim:fdm=marker:fdl=0

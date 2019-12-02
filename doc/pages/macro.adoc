@@ -1,4 +1,4 @@
-== Macro
+== Macro [[macro]]
 
 Expanding macro is important for writing/debugging macros.
 vim-iced provides {help_html}#%3AIcedMacroExpand1OuterList[IcedMacroExpand1OuterList] and {help_html}#%3AIcedMacroExpandOuterList[IcedMacroExpandOuterList] command.
