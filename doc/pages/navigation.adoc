@@ -1,0 +1,37 @@
+== Navigation [[navigation]]
+
+=== Jump to definition
+
+vim-iced provides {help_html}#%3AIcedDefJump[IcedDefJump] command for jumping to definition.
+
+If you jumped to a definition with above command, vim-iced add the current cursor position to Vim's https://vim-jp.org/vimdoc-en/tagsrch.html#tagstack[tag stack].
+So you can go back easily with https://vim-jp.org/vimdoc-en/tagsrch.html#CTRL-T[<C-t>].
+
+=== Other navigations
+
+==== Source and test
+
+{help_html}#%3AIcedCycleSrcAndTest[IcedCycleSrcAndTest] will cycle source file and test file for current namespace.
+
+For example, when you are in `foo.core`, `IcedCycleSrcAndTest` command will open the file which has `foo.core-test` namespace.
+If there is no corresponding file, vim-iced suggests pseudo file path to create new namespace.
+
+==== Cross reference
+
+To browse positions referencing/depending on the form under cursor, following commands are useful.
+
+- {help_html}#%3AIcedBrowseReferences[IcedBrowseReferences]
+- {help_html}#%3AIcedBrowseVarDependencies[IcedBrowseVarDependencies]
+
+==== Related namespaces
+
+Such as `foo.handler.home` and `foo.view.home`, there are likely to have related namespaces in web applications.
+
+{help_html}#%3AIcedBrowseRelatedNamespace[IcedBrowseRelatedNamespace] is useful to jump in these related namespaces.
+
+==== Test cases
+
+Sometimes you may want to jump to the test code that corresponds to a specific var.
+
+{help_html}#%3AIcedBrowseTestUnderCursor[IcedBrowseTestUnderCursor] command will search test functions that contains the var name in its test name.
+
