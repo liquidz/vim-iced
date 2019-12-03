@@ -90,7 +90,7 @@ This allows `iced` command to take care of all the additional libraries and REPL
 $ iced repl
 ----
 
-Open vim and execute `:IcedConnect` command.
+Open vim and execute {help_html}#%3AIcedConnect[IcedConnect] command.
 
 [source,console]
 ----
