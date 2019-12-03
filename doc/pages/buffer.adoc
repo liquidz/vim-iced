@@ -1,3 +1,5 @@
 == Buffer
 
 include::buffer/stdout.adoc[]
+
+include::buffer/test.adoc[]

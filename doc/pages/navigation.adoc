@@ -9,7 +9,7 @@ So you can go back easily with https://vim-jp.org/vimdoc-en/tagsrch.html#CTRL-T[
 
 === Other navigations
 
-==== Source and test
+==== Source and test [[navigation_source_and_test]]
 
 {help_html}#%3AIcedCycleSrcAndTest[IcedCycleSrcAndTest] will cycle source file and test file for current namespace.
 
