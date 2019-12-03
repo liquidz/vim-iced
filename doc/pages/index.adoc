@@ -50,7 +50,7 @@ include::evaluation.adoc[]
 
 include::completion.adoc[]
 
-// include::reference.adoc[]
+include::reference.adoc[]
 
 // include::navigation.adoc[]
 
