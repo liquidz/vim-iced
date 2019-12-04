@@ -52,7 +52,7 @@ include::completion.adoc[]
 
 include::reference.adoc[]
 
-// include::navigation.adoc[]
+include::navigation.adoc[]
 
 // include::testing.adoc[]
 
