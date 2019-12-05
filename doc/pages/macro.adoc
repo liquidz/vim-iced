@@ -1,12 +1,21 @@
 == Macro [[macro]]
 
 Expanding macro is important for writing/debugging macros.
-vim-iced provides {help_html}#%3AIcedMacroExpand1OuterList[IcedMacroExpand1OuterList] and {help_html}#%3AIcedMacroExpandOuterList[IcedMacroExpandOuterList] command.
+vim-iced provides following two commands.
+
+|===
+| Command | Default key mapping
+
+| {help_html}#%3AIcedMacroExpand1OuterList[IcedMacroExpand1OuterList]
+| {plug_iced_macroexpand_1_outer_list}
+
+| {help_html}#%3AIcedMacroExpandOuterList[IcedMacroExpandOuterList]
+| {plug_iced_macroexpand_1_outer_list}
+
+|===
 
 These commands will open a separated buffer, and show expanded result in it.
 `IcedMacroExpand1OuterList` will show the result of expanding once, while `IcedMacroExpandOuterList` will show the all expanded result.
-
-Default key mapping is a `{plug_iced_macroexpand_1_outer_list}` for `IcedMacroExpand1OuterList` and `{plug_iced_macroexpand_1_outer_list}` for `IcedMacroExpandOuterList`.
 
 === Expand expanded macro
 

@@ -54,6 +54,8 @@ include::reference.adoc[]
 
 include::navigation.adoc[]
 
+include::macro.adoc[]
+
 // include::testing.adoc[]
 
 include::buffer.adoc[]
