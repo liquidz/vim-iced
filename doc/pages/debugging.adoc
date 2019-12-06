@@ -21,27 +21,44 @@ image::assets/debugging.png[debugging screenshot]
 
 === Tracing function calls
 
-//TRACING FUNCTION CALLS              *vim-iced-debugging-tracing-function-calls*
-//
-//  vim-iced provides 2 ways for tracing function calls.
-//  - |:IcedToggleTraceVar|
-//  - |:IcedToggleTraceNs|
-//
-//  Traced result will be displayed in stdout buffer.
-//  - |vim-iced-stdout-buffer|
+vim-iced provides 2 commands for tracing function calls.
+
+|===
+| Command | Description
+
+| {help_html}#%3AIcedToggleTraceVar[IcedToggleTraceVar]
+| Toggle tracing the specified var in current namespace. +
+If any symbol is not passed, the symbol under cursor is used.
+
+| {help_html}#%3AIcedToggleTraceNs[IcedToggleTraceNs]
+| Toggle tracing the specified namespace. +
+If any namespace is not passed, the current buffer's namespace name is used.
+
+|===
+
+Traced result will be displayed in <<stdout_buffer>>.
 
 === Browsing tapped values
 
-//BROWSING TAPPED VALUES              *vim-iced-debugging-browsing-tapped-values*
-//
-//  WARNING: To use `tap>`, Clojure 1.10.0 or later is required
-//
-//  If you have a big data structure and want to dig into it,
-//  browsing tapped values is useful.
-//
-//  When you evaluate `(tap> YOUR_DATA)`, |:IcedBrowseTapped| shows tapped values.
-//  Select the value you want to dig into, then browsing value start.
-//  See |:IcedBrowseTapped| for browsing key details.
-//
-//  All tapped values are stored in memory.
-//  So if you would like to delete them, execute |:IcedClearTapped| command.
+If you have a big data structure and want to dig into it, browsing tapped values is useful.
+
+When you evaluate `(tap> YOUR_DATA)`, {help_html}#%3AIcedBrowseTapped[IcedBrowseTapped] shows tapped values.
+Select the value you want to dig into, then browsing value start.
+
+WARNING: To use `tap>`, Clojure 1.10.0 or later is required.
+
+All tapped values are stored in memory.
+So if you would like to delete them, execute {help_html}#%3AIcedClearTapped[IcedClearTapped] command.
+
+==== Browsing keys
+
+For example, when there are following tapped values:
+
+- 1st tapped value: `{:foo [{:dummy "bar"} {:bar "baz"}]}`
+- 2nd tapped value: `{:hello "world"}`
+
+The key to browse `"baz"` is `0 :foo 1 :bar`.
+
+- The first `0` means "browse 1st tapped value"
+- `:foo` and `:bar` means the key for hash-map
+- `1` means the index of list/vector
