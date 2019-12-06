@@ -22,6 +22,8 @@
 :plug_iced_test_ns: <Leader>tn
 :plug_iced_test_all: <Leader>tp
 :plug_iced_test_redo: <Leader>tr
+:plug_iced_format: ==
+:plug_iced_format_all: =G
 // }}}
 
 // c.f. http://tholman.com/github-corners/ {{{
