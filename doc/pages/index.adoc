@@ -24,6 +24,14 @@
 :plug_iced_test_redo: <Leader>tr
 :plug_iced_format: ==
 :plug_iced_format_all: =G
+:plug_iced_clean_ns: <Leader>rcn
+:plug_iced_add_ns: <Leader>ran
+:plug_iced_add_missing: <Leader>ram
+:plug_iced_thread_first: <Leader>rtf
+:plug_iced_thread_last: <Leader>rtl
+:plug_iced_extract_function: <Leader>ref
+:plug_iced_add_arity: <Leader>raa
+:plug_iced_move_to_let: <Leader>rml
 // }}}
 
 // c.f. http://tholman.com/github-corners/ {{{
@@ -58,7 +66,7 @@ include::navigation.adoc[]
 
 include::macro.adoc[]
 
-// include::testing.adoc[]
+include::testing.adoc[]
 
 include::buffer.adoc[]
 
