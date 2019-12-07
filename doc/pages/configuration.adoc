@@ -2,4 +2,4 @@
 
 include::configuration/evaluation.adoc[]
 
-//include::configuration/formatting.adoc[]
+include::configuration/formatting.adoc[]

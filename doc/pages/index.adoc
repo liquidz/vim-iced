@@ -32,6 +32,9 @@
 :plug_iced_extract_function: <Leader>ref
 :plug_iced_add_arity: <Leader>raa
 :plug_iced_move_to_let: <Leader>rml
+:plug_iced_browse_references: <Leader>br
+:plug_iced_browse_dependencies: <Leader>bd
+:plug_iced_jump_to_let: <Leader>jl
 // }}}
 
 // c.f. http://tholman.com/github-corners/ {{{
@@ -67,6 +70,8 @@ include::navigation.adoc[]
 include::macro.adoc[]
 
 include::testing.adoc[]
+
+include::formatting.adoc[]
 
 include::buffer.adoc[]
 
