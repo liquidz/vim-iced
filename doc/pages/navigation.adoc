@@ -20,8 +20,17 @@ If there is no corresponding file, vim-iced suggests pseudo file path to create 
 
 To browse positions referencing/depending on the form under cursor, following commands are useful.
 
-- {help_html}#%3AIcedBrowseReferences[IcedBrowseReferences]
-- {help_html}#%3AIcedBrowseVarDependencies[IcedBrowseVarDependencies]
+
+|===
+| Command | Default key mapping
+
+|{help_html}#%3AIcedBrowseReferences[IcedBrowseReferences]
+| {plug_iced_browse_references}
+
+|{help_html}#%3AIcedBrowseVarDependencies[IcedBrowseVarDependencies]
+| {plug_iced_browse_dependencies}
+
+|===
 
 ==== Related namespaces
 
@@ -35,3 +44,9 @@ Sometimes you may want to jump to the test code that corresponds to a specific v
 
 {help_html}#%3AIcedBrowseTestUnderCursor[IcedBrowseTestUnderCursor] command will search test functions that contains the var name in its test name.
 
+==== let form
+
+{help_html}#%3AIcedJumpToLet[IcedJumpToLet] allows you to jump cursor to the nearest `let` form.
+
+If `let` form is not found in current top list, cursor is not moved.
+Default key is mapped to `{plug_iced_jump_to_let}`.
