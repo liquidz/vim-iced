@@ -73,11 +73,12 @@ include::testing.adoc[]
 
 include::formatting.adoc[]
 
+include::debugging.adoc[]
+
 include::buffer.adoc[]
 
 include::configuration.adoc[]
 
 // include::clojurescript.adoc[]
-
 
 // vim:fdm=marker:fdl=0
