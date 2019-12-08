@@ -1,0 +1,22 @@
+=== Namespace [[refactoring_namespace]]
+
+Following commands are available.
+
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedCleanNs[IcedCleanNs]
+| {plug_iced_clean_ns}
+| Cleanup ns form.
+
+| {help_html}#%3AIcedAddNs[IcedAddNs]
+| {plug_iced_add_ns}
+| Add require to `ns` form.
+
+| {help_html}#%3AIcedAddMissing[IcedAddMissing]
+| {plug_iced_add_missing}
+| Add missing libspec.
+
+|===
+
+// TODO examples

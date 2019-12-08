@@ -1,0 +1,49 @@
+=== Function [[refactoring_function]]
+
+Following commands are available.
+
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedExtractFunction[IcedExtractFunction]
+| {plug_iced_extract_function}
+| Extract the form under cursor as a function.
+
+| {help_html}#%3AIcedAddArity[IcedAddArity]
+| {plug_iced_add_arity}
+| Add an arity to `defn`, `fn`, `defmacro`, or `defmethod`.
+
+|===
+
+==== Examples
+
+.IcedExtractFunction (📍 means cursor position, and "bar" is inputed by user)
+[source,clojure]
+----
+;; before
+(defn foo [x]
+  (inc (📍* x 2)))
+
+;; after
+(defn- bar [x]
+  (* x 2))
+
+(defn foo [x]
+  (inc (bar x)))
+----
+
+.IcedAddArity (📍 means cursor position)
+[source,clojure]
+----
+;; before
+(defn foo [x]
+  (📍inc x))
+;; after
+(defn foo
+  ([])
+  ([x]
+   (inc x)))
+----
+
+
+
