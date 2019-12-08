@@ -559,7 +559,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                             *:IcedQuitCljsRepl*
 :IcedQuitCljsRepl
   Quit CLJS REPL.
-  REPL session changes to 'user' namespace.
+  REPL session changes to initial namespace.
   Key is mapped to |<Plug>(iced_quit_cljs_repl)|.
 
                                                             *:IcedCycleSession*
