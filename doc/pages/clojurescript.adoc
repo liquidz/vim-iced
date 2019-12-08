@@ -1,0 +1,38 @@
+== ClojureScript
+
+vim-iced supports following environments currently.
+
+- https://github.com/bhauman/figwheel-main[Figwheel main]
+-- 0.2.0 or later is required.
+- https://github.com/bhauman/lein-figwheel/tree/master/sidecar[Figwheel Sidecar]
+- http://shadow-cljs.org[shadow-cljs]
+- https://github.com/graalvm/graaljs[GraalJS]
+-- ClojureScript 1.10.439 or later is required.
+- https://openjdk.java.net/projects/nashorn/[Nashorn]
+
+vim-iced provides following commands for ClojureScript.
+
+|===
+| Command | Description
+
+| {help_html}#%3AIcedStartCljsRepl[IcedStartCljsRepl]
+| Start CLJS REPL with specified environment. +
+REPL session changes to 'cljs.user' namespace. +
+If no environment is passed, {help_html}#g%3Aiced%23cljs%23default_env[g:iced#cljs#default_env] is used.
+
+| {help_html}#%3AIcedQuitCljsRepl[IcedQuitCljsRepl]
+| Quit CLJS REPL. +
+REPL session changes to initial namespace.
+
+| {help_html}#%3AIcedCycleSession[IcedCycleSession]
+| Cycle clj/cljs session. +
+Error occurs when CLJS session does not exist.
+
+| {help_html}#%3AIcedCljsRepl[IcedCljsRepl]
+| Start CLJS REPL via user specified code. +
+This can be used to start any CLJS REPLs. +
+The code will be passed to `cider.piggieback/cljs-repl`.
+
+|===
+
+include::clojurescript/figwheel_main.adoc[]

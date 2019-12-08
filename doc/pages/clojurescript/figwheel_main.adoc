@@ -1,0 +1,15 @@
+=== Figwheel-main [[clojurescript_figwheel_main]]
+
+To start CLJS REPL with Figwheel main, you need to specify `build-id`.
+
+.via IcedCljsRepl command
+[source,console]
+----
+:IcedCljsRepl (figwheel.main.api/repl-env "build-id")
+----
+
+.via IcedStartCljsRepl command
+[source,console]
+----
+:IcedStartCljsRepl figwheel-main build-id
+----
