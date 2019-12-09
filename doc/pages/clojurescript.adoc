@@ -36,3 +36,7 @@ The code will be passed to `cider.piggieback/cljs-repl`.
 |===
 
 include::clojurescript/figwheel_main.adoc[]
+
+// include::clojurescript/graaljs.adoc[]
+
+// include::clojurescript/shadow_cljs.adoc[]
