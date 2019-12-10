@@ -77,7 +77,7 @@ include::debugging.adoc[]
 
 include::refactoring.adoc[]
 
-// include::iced_command.adoc[]
+include::iced_command.adoc[]
 
 include::buffer.adoc[]
 
