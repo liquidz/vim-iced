@@ -1,0 +1,56 @@
+== Skeleton [[skeleton]]
+
+vim-iced provides code skeleton when you open new clojure files.
+Currently, following extensions are supported.
+
+- `*.clj`
+- `*.cljs`
+- `*.cljc`
+
+=== Source file [[skeleton_source_file]]
+
+For example, the skeleton when you open `src/foo/bar.clj` is as follows.
+
+[source,clojure]
+----
+(ns foo.bar)
+----
+
+=== Test file [[skeleton_test_file]]
+
+A skeleton for test file depends on the file extension.
+
+==== *.clj
+
+For example, the skeleton when you open `test/foo/bar_test.clj` is as follows.
+
+[source,clojure]
+----
+(ns foo.bar-test
+  (:require [clojure.test :as t]
+            [foo.bar :as sut]))
+----
+
+==== *.cljs
+
+For example, the skeleton when you open `test/foo/bar_test.cljs` is as follows.
+
+[source,clojure]
+----
+(ns foo.bar-test
+  (:require [cljs.test :as t :include-macros true]
+            [foo.bar :as sut]))
+----
+
+==== *.cljc
+
+For example, the skeleton when you open `test/foo/bar_test.cljc` is as follows.
+
+[source,clojure]
+----
+(ns foo.bar-test
+  (:require #?@(:clj  [[clojure.test :as t]
+                       [foo.bar :as sut]]
+                :cljs [[cljs.test :as t :include-macros true]
+                       [foo.bar :as sut]])))
+----
