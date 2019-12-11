@@ -1,4 +1,4 @@
-== ClojureScript
+== ClojureScript [[clojurescript]]
 
 vim-iced supports following environments currently.
 

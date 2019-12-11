@@ -79,10 +79,10 @@ include::refactoring.adoc[]
 
 include::iced_command.adoc[]
 
+include::clojurescript.adoc[]
+
 include::buffer.adoc[]
 
 include::configuration.adoc[]
-
-// include::clojurescript.adoc[]
 
 // vim:fdm=marker:fdl=0
