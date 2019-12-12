@@ -59,9 +59,12 @@ function! iced#nrepl#ns#util#add_namespace_to_require(ns_code, ns_name, ns_alias
   let reqend = stridx(a:ns_code, ')', reqstart)
 
   let head = trim(a:ns_code[0:reqend-1])
-  if stridx(head, a:ns_name, reqstart) != -1
-    return a:ns_code
-  endif
+
+  for postfix in [']', ')', "\r", "\n", "\t", ' ']
+    if stridx(head, printf('%s%s', a:ns_name, postfix), reqstart) != -1
+      return a:ns_code
+    endif
+  endfor
 
   let tail = trim(strpart(a:ns_code, reqend))
   let body = (empty(a:ns_alias) ? a:ns_name : printf('[%s :as %s]', a:ns_name, a:ns_alias))
