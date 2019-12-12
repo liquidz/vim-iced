@@ -13,7 +13,7 @@ PATH=/path/to/graalvm/bin:$PATH iced repl
 Once you launch REPL with GraalJS, you can start CLJS REPL with the following command.
 
 .via IcedStartCljsRepl command
-[source,console]
+[source,vim]
 ----
 :IcedStartCljsRepl graaljs
 ----

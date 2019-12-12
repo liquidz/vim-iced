@@ -5,6 +5,7 @@
 
 //:help_url: https://liquidz.github.io/vim-iced/vim-iced.html
 :help_html: https://vim-iced-nightly.netlify.com/vim-iced.html
+:vim_sexp: https://github.com/guns/vim-sexp[vim-sexp]
 // key mappings {{{
 :plug_iced_eval_inner_element: <Leader>ei
 :plug_iced_eval_outer_list: <Leader>ee

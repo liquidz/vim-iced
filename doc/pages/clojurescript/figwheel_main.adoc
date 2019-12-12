@@ -3,13 +3,13 @@
 To start CLJS REPL with Figwheel main, you need to specify `build-id`.
 
 .via IcedCljsRepl command
-[source,console]
+[source,vim]
 ----
 :IcedCljsRepl (figwheel.main.api/repl-env "build-id")
 ----
 
 .via IcedStartCljsRepl command
-[source,console]
+[source,vim]
 ----
 :IcedStartCljsRepl figwheel-main build-id
 ----
