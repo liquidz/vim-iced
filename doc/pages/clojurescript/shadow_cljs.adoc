@@ -1,4 +1,4 @@
-== shadow-cljs [[clojurescript_shadow_cljs]]
+=== shadow-cljs [[clojurescript_shadow_cljs]]
 
 [WARNING]
 ====
@@ -23,7 +23,7 @@ If you would like to start CLJS REPL by hand, you can do it as follows.
 :IcedEvalRepl (shadow.cljs.devtools.api/repl :YOUR-BUILD-ID)
 ----
 
-=== shadow-cljs.edn [[clojurescript_shadow_cljs_edn]]
+==== shadow-cljs.edn [[clojurescript_shadow_cljs_edn]]
 
 You need to modify `:dependencies` and `:nrepl` setting in `shadow-cljs.edn` as below.
 

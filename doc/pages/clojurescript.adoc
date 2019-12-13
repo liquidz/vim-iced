@@ -39,4 +39,4 @@ include::clojurescript/figwheel_main.adoc[]
 
 include::clojurescript/graaljs.adoc[]
 
-// include::clojurescript/shadow_cljs.adoc[]
+include::clojurescript/shadow_cljs.adoc[]
