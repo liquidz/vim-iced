@@ -45,7 +45,7 @@ If the var under cursor does not contain `:test` metadata and current namespace 
 vim-iced searches test vars in corresponding test namespace (c.f. <<navigation_source_and_test>>) and run them.
 Target test vars should include original var name in its name.
 
-=== Checking spec
+=== Checking spec [[testing_checking_spec]]
 
 There is also https://clojure.org/guides/spec#_testing[checking spec] as one of the tests.
 
