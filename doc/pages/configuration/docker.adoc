@@ -1,0 +1,14 @@
+=== Docker [[configuration_docker]]
+
+{help_html}#g%3Aiced%23nrepl%23path_translation[g:iced#nrepl#path_translation] is a option to define path translation rules.
+
+In actual use, it is recommended to define the option in the project-specific configuration file by {vim_localrc} like follows.
+
+./path/to/your/project/root/.local.vimrc
+[source,vim]
+----
+let g:iced#nrepl#path_translation = {
+      \ '/tmp': expand('<sfile>:p:h'),
+      \ '/root': $HOME,
+      \ }
+----

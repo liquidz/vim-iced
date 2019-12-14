@@ -1,0 +1,8 @@
+== Docker [[docker]]
+
+When you are connecting to nREPL in https://www.docker.com[docker] container, various paths will be paths in the docker container.
+
+Because some features such as jumping to definition does not work properly as it is,
+vim-iced provides {help_html}#g%3Aiced%23nrepl%23path_translation[g:iced#nrepl#path_translation] option to translate these paths.
+
+See <<configuration_docker>> in <<configuration>> section.
