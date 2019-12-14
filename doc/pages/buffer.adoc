@@ -3,3 +3,5 @@
 include::buffer/stdout.adoc[]
 
 include::buffer/test.adoc[]
+
+include::buffer/document.adoc[]
