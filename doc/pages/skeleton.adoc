@@ -1,6 +1,8 @@
 == Skeleton [[skeleton]]
 
 vim-iced provides code skeleton when you open new clojure files.
+Concretely "when you open new" means the time when https://vim-jp.org/vimdoc-en/autocmd.html#BufNewFile[BufNewFile] autocmd is fired.
+
 Currently, following extensions are supported.
 
 - `*.clj`
