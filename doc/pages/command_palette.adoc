@@ -1,0 +1,14 @@
+== Command palette [[command_palette]]
+
+Most commands which provided by vim-iced can be filterd/selected from the command palette.
+
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedCommandPalette[IcedCommandPalette]
+| {plug_iced_command_palette}
+| Select a command from the palette.
+
+|===
+
+If you'd like to customize the command palette, see <<configuration_command_palette>> in <<configuration>> section.
