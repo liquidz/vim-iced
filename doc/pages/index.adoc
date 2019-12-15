@@ -88,7 +88,7 @@ include::clojurescript.adoc[]
 
 include::skeleton.adoc[]
 
-// include::operator.adoc[]
+include::operator.adoc[]
 
 // include::clojure_spec.adoc[]
 
