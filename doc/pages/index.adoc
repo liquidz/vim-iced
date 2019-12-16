@@ -90,7 +90,7 @@ include::skeleton.adoc[]
 
 include::operator.adoc[]
 
-// include::clojure_spec.adoc[]
+include::clojure_spec.adoc[]
 
 // include::editing_sexp.adoc[]
 
