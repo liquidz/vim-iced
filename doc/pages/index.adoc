@@ -92,7 +92,7 @@ include::operator.adoc[]
 
 include::clojure_spec.adoc[]
 
-// include::editing_sexp.adoc[]
+include::editing_sexp.adoc[]
 
 // include::docker.adoc[]
 
@@ -102,6 +102,6 @@ include::buffer.adoc[]
 
 include::configuration.adoc[]
 
-include::nifty_tips.adoc[]
+include::tips.adoc[]
 
 // vim:fdm=marker:fdl=0

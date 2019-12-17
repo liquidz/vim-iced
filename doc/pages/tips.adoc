@@ -1,0 +1,13 @@
+== Tips [[tips]]
+
+TODO: 2019-12-22
+
+.TODO: vim-submode
+[source,vim]
+----
+call submode#enter_with('slurp', 'n', '', '<LocalLeader>ks', ':<C-u>IcedSlurp<CR>')
+call submode#enter_with('slurp', 'n', '', '<LocalLeader>kb', ':<C-u>IcedBarf<CR>')
+call submode#leave_with('slurp', 'n', '', '<Esc>')
+call submode#map('slurp', 'n', '', 's', ':<C-u>IcedSlurp<CR>')
+call submode#map('slurp', 'n', '', 'b', ':<C-u>IcedBarf<CR>')
+----

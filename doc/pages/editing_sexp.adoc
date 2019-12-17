@@ -9,17 +9,17 @@ In vim-iced, only the following functionalities which is extended from {vim_sexp
 | Command | Description
 
 | {help_html}#%3AIcedSlurp[IcedSlurp]
-| Slurp next element. +
+| Slurp the next element. +
 If no elements in current form, search next form and slurp. +
 For searching next form, {help_html}#g%3Aiced%23paredit%23slurp_max_depth[g:iced#paredit#slurp_max_depth] is used.
 
 | {help_html}#%3AIcedBarf[IcedBarf]
-| Barf last element in current form.
+| Barf the last element in current form.
 
 |===
 
 [NOTE]
 ====
 These commands are so useful when combined with {vim_submode}. +
-See <<nifty_tips>> for more information.
+See <<tips>> for more information.
 ====
