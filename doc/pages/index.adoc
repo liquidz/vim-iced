@@ -94,7 +94,7 @@ include::clojure_spec.adoc[]
 
 include::editing_sexp.adoc[]
 
-// include::docker.adoc[]
+include::docker.adoc[]
 
 // include::command_palette.adoc[]
 
