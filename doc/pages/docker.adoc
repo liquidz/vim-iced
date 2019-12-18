@@ -6,3 +6,45 @@ Because some features such as jumping to definition does not work properly as it
 vim-iced provides {help_html}#g%3Aiced%23nrepl%23path_translation[g:iced#nrepl#path_translation] option to translate these paths.
 
 See <<configuration_docker>> in <<configuration>> section.
+
+=== Example [[docker_example]]
+
+At first, build a simple docker image for vim-iced.
+
+.Minimum dockerfile for vim-iced
+[source,dockerfile]
+----
+FROM clojure:openjdk-14-lein-alpine
+RUN apk add --no-cache --virtual .builddeps git && \
+    git clone --depth 1 --single-branch https://github.com/liquidz/vim-iced /usr/local/src/vim-iced && \
+    apk del .builddeps
+ENV PATH $PATH:/usr/local/src/vim-iced/bin
+ENTRYPOINT ["iced", "repl"]
+----
+
+[source,console]
+----
+$ docker build -t vim-iced .
+----
+
+Second, launch nREPL with a fixed port number.
+
+.project.clj
+[source,clojure]
+----
+(defproject foo "0.1.0-SNAPSHOT"
+  ;; ...
+
+  ;; Change port number as you like
+  :repl-options {:host "0.0.0.0" :port 55555}
+
+  ;; ...
+  )
+----
+
+[source,console]
+----
+$ docker run --rm -it --expose 55555 -p 55555:55555 -v $(pwd):/tmp vim-iced
+----
+
+Finally just connect with {help_html}#%3AIcedConnect[IcedConnect] as usual.
