@@ -11,4 +11,6 @@ Most commands which provided by vim-iced can be filterd/selected from the comman
 
 |===
 
-If you'd like to customize the command palette, see <<configuration_command_palette>> in <<configuration>> section.
+If you'd like to customize the command palette(e.g. adding new command), {help_html}#g%3Aiced%23palette[g:iced#palette] option is useful.
+
+See <<configuration_command_palette>> in <<configuration>> section for more information.
