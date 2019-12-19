@@ -1,0 +1,78 @@
+== Hook [[hook]]
+
+Some events on vim-iced can be hooked, and you can execute any processing.
+
+=== Event [[hook_event]]
+
+Following events can be hooked.
+
+|===
+| Event key | Event parameters | Description
+
+| connected
+| -
+| Hooked when vim-iced is connected to nREPL.
+
+| disconnected
+| -
+| Hooked when vim-iced is disconnected from nREPL.
+
+| test_finished
+| `result`: Test result ("succeeded" or "failed") +
+`summary`: Test summary string
+| Hooked when running test is finished.
+
+| ns_required
+| -
+| Hooked when `:IcedRequire` is finished.
+
+| ns_all_reloaded
+| -
+| Hooked when `:IcedRequireAll` is finished.
+
+| session_switched
+| `session`: Destination session type. "clj" or "cljs".
+| Hooked when current session is switched.
+
+|===
+
+=== Reporter [[hook_reporter]]
+
+Hooked events and event parameters are reported to reporters.
+You can define some kind of reporters as follows.
+
+|===
+| Reporter key | Description
+
+| shell
+| Process a event by a shell command. +
+The shell command is executed in https://vim-jp.org/vimdoc-en/terminal.html[terminal].
+
+| eval
+| Process a event by {help_html}#%3AIcedEval[IcedEval] command.
+
+| function
+| Process a event by a user-defined function.
+
+| command
+| Process a event by a vim command.
+
+|===
+
+=== Example [[hook_example]]
+
+Here is a example to setting up hooks.
+
+[source,vim]
+----
+let g:iced#hook = {
+    \ 'connected': {'type': 'function',
+    \               'exec': {_ -> iced#message#info_str('foo')}},
+    \ 'disconnected': {'type': 'command',
+    \                  'exec': 'echom "bar"'},
+    \ 'ns_required': {'type': 'eval',
+    \                 'exec': '(println "baz")'},
+    \ 'test_finished': {'type': 'shell',
+    \                   'exec': {v -> printf('tmux display-message "%s"', v.summary)}}
+    \ }
+----
