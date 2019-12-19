@@ -1,6 +1,8 @@
 == Command palette [[command_palette]]
 
-Most commands which provided by vim-iced can be filterd/selected from the command palette.
+It is hard to remember all commands by vim-iced since there are many commands.
+
+But most commands can be filtered/selected from the command palette even if you don't remember them.
 
 |===
 | Command | Default key mapping | Description

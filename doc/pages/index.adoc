@@ -96,7 +96,7 @@ include::editing_sexp.adoc[]
 
 include::docker.adoc[]
 
-// include::command_palette.adoc[]
+include::command_palette.adoc[]
 
 include::buffer.adoc[]
 
