@@ -98,6 +98,8 @@ include::docker.adoc[]
 
 include::command_palette.adoc[]
 
+include::hook.adoc[]
+
 include::buffer.adoc[]
 
 include::configuration.adoc[]
