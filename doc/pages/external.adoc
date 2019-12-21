@@ -1,0 +1,3 @@
+== External integration [[external_integration]]
+
+include::external/kaocha.adoc[]

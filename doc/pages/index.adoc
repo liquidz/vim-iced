@@ -5,9 +5,11 @@
 
 //:help_url: https://liquidz.github.io/vim-iced/vim-iced.html
 :help_html: https://vim-iced-nightly.netlify.com/vim-iced.html
+:kaocha: https://github.com/lambdaisland/kaocha[kaocha]
+:vim_localrc: https://github.com/thinca/vim-localrc[vim-localrc]
 :vim_sexp: https://github.com/guns/vim-sexp[vim-sexp]
 :vim_submode: https://github.com/kana/vim-submode[vim-submode]
-:vim_localrc: https://github.com/thinca/vim-localrc[vim-localrc]
+:vim_iced_kaocha: https://github.com/liquidz/vim-iced-kaocha[vim-iced-kaocha]
 // key mappings {{{
 :plug_iced_eval_inner_element: <Leader>ei
 :plug_iced_eval_outer_list: <Leader>ee
