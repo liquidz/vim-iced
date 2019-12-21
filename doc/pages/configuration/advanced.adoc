@@ -1,0 +1,58 @@
+=== Advanced settings [[configuration_advanced]]
+
+==== Stdout buffer [[configuration_advanced_stdout_buffer]]
+
+[cols="30,20,50"]
+|===
+| Option | Default value | Description
+
+| {help_html}#g%3Aiced%23buffer%23stdout%23mods[g:iced#buffer#stdout#mods]
+| `''`
+| Buffer position definition. +
+Following values are supported.
+- `vertical`
+- `leftabove`
+- `aboveleft`
+- `rightbelow`
+- `belowright`
+- `topleft`
+- `botright`
+
+| {help_html}#g%3Aiced%23buffer%23stdout%23file[g:iced#buffer#stdout#file]
+| `''`
+| If not empty, vim-iced write stdout buffer content to the file path.
+
+| {help_html}#g%3Aiced%23buffer%23stdout%23file_buffer_size[g:iced#buffer#stdout#file_buffer_size]
+| `256`
+| Max line count to buffer for `g:iced#buffer#stdout#filer`.
+
+| {help_html}#g%3Aiced%23buffer%23stdout%23max_line[g:iced#buffer#stdout#max_line]
+| `-1`
+| Max line count to keep in stdout buffer. +
+If negative number is setted, it means no limit.
+
+| {help_html}#g%3Aiced%23buffer%23stdout%23deleting_line_delay[g:iced#buffer#stdout#deleting_line_delay]
+| `1000`
+| Delay time for deleting excess lines in stdout buffer. +
+Unit is milli sec. +
+This option is enabled when `g:iced#buffer#stdout#max_line` is a positive number.
+
+|===
+
+==== ClojureScript [[configuration_advanced_clojure_script]]
+
+[cols="30,20,50"]
+|===
+| Option | Default value | Description
+
+| {help_html}#g%3Aiced%23nrepl%23auto%23does_switch_session[g:iced#nrepl#auto#does_switch_session]
+| `v:false`
+| If `v:true`, enable automatic switching CLJ/CLJS session. +
+This will be done by https://vim-jp.org/vimdoc-en/autocmd.html#WinEnter[WinEnter] auto command.
+
+
+| {help_html}#g%3Aiced_enable_enhanced_cljs_completion[g:iced_enable_enhanced_cljs_completion]
+| `v:true`
+| If `v:true`, enable enhanced ClojureScript completion.
+
+|===
