@@ -20,7 +20,7 @@ If there is no corresponding file, vim-iced suggests pseudo file path to create 
 
 To browse positions referencing/depending on the form under cursor, following commands are useful.
 
-
+[cols="30,70"]
 |===
 | Command | Default key mapping
 

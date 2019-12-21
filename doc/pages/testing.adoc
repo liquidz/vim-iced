@@ -2,6 +2,7 @@
 
 vim-iced can integrate with https://clojure.github.io/clojure/clojure.test-api.html[clojure.test], and provides following test commands.
 
+[cols="30,20,50"]
 |===
 | Command | Default key mapping | Description
 

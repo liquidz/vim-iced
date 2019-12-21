@@ -25,6 +25,7 @@ $ iced repl [options]
 
 Following options are specially treated by `iced` command.
 
+[cols="30,70"]
 |===
 | Option | Description
 

@@ -17,7 +17,7 @@ image::assets/evaluation_range.png[Evaluation range]
 If you enable default key mappings, following key mappings are available.
 
 .Default key mappings
-[cols="a,a"]
+[cols="30a,70"]
 |===
 
 | [reftext="evaluating inner element"]

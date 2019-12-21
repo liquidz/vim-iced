@@ -2,6 +2,7 @@
 
 vim-iced provides following operators.
 
+[cols="30,70"]
 |===
 | Operator | Description
 

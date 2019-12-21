@@ -6,6 +6,7 @@ There are two ways (explicit and implicit) to refer var's docstring.
 
 The explicit way is executing commands such as follows.
 
+[cols="30,20,50"]
 |===
 | Command | Default key mapping | Description
 

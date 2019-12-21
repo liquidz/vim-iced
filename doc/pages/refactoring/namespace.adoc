@@ -2,6 +2,7 @@
 
 Following commands are available.
 
+[cols="30,20,50"]
 |===
 | Command | Default key mapping | Description
 

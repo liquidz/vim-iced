@@ -7,3 +7,5 @@ include::configuration/formatting.adoc[]
 include::configuration/docker.adoc[]
 
 include::configuration/command_palette.adoc[]
+
+// include::configuration/advanced.adoc[]

@@ -4,6 +4,7 @@
 vim-iced's code formatting is powered by https://github.com/weavejester/cljfmt[cljfmt].
 There are following two commands to format codes.
 
+[cols="30,20,50"]
 |===
 | Command | Default key mapping | Description
 

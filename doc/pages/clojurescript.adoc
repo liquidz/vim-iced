@@ -12,6 +12,7 @@ vim-iced supports following environments currently.
 
 vim-iced provides following commands for ClojureScript.
 
+[cols="30,70"]
 |===
 | Command | Description
 

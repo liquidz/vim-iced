@@ -6,6 +6,7 @@ Some events on vim-iced can be hooked, and you can execute any processing.
 
 Following events can be hooked.
 
+[cols="20,30,50"]
 |===
 | Event key | Event parameters | Description
 
@@ -41,6 +42,7 @@ Following events can be hooked.
 Hooked events and event parameters are reported to reporters.
 You can define some kind of reporters as follows.
 
+[cols="30,70"]
 |===
 | Reporter key | Description
 

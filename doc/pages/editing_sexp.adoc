@@ -5,6 +5,7 @@ vim-iced is depending on {vim_sexp}, and most features for editing S-expression 
 In vim-iced, only the following functionalities which is extended from {vim_sexp} are provided.
 
 
+[cols="30,70"]
 |===
 | Command | Description
 

@@ -3,6 +3,7 @@
 Expanding macro is important for writing/debugging macros.
 vim-iced provides following two commands.
 
+[cols="30,70"]
 |===
 | Command | Default key mapping
 

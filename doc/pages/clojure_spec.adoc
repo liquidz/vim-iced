@@ -2,6 +2,7 @@
 
 vim-iced provides following commands to integrate with https://clojure.org/guides/spec[clojure.spec].
 
+[cols="30,20,50"]
 |===
 | Command | Default key mapping | Description
 

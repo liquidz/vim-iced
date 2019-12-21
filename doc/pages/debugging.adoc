@@ -23,6 +23,7 @@ image::assets/debugging.png[debugging screenshot]
 
 vim-iced provides 2 commands for tracing function calls.
 
+[cols="30,70"]
 |===
 | Command | Description
 
