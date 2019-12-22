@@ -108,4 +108,6 @@ include::configuration.adoc[]
 
 include::tips.adoc[]
 
+include::external.adoc[]
+
 // vim:fdm=marker:fdl=0
