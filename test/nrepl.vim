@@ -223,3 +223,35 @@ function! s:suite.path_translation_handler_with_normalize_path_test() abort
 
   let g:iced#nrepl#path_translation = {}
 endfunction
+
+function! s:suite.status_test() abort
+  call s:ch.mock({'status_value': 'fail'})
+  call s:assert.equals(iced#nrepl#status(), 'not connected')
+
+  call s:ch.mock({'status_value': 'open'})
+  call iced#nrepl#set_session('clj',  'clj-session')
+  call iced#nrepl#change_current_session('clj')
+  call s:assert.equals(iced#nrepl#status(), 'CLJ')
+endfunction
+
+function! s:suite.status_with_cljs_session_test() abort
+  call s:ch.mock({'status_value': 'open'})
+  call iced#nrepl#set_session('clj',  'clj-session')
+  call iced#nrepl#set_session('cljs',  'cljs-session')
+  call iced#nrepl#change_current_session('clj')
+  call s:assert.equals(iced#nrepl#status(), 'CLJ(cljs)')
+  call iced#nrepl#change_current_session('cljs')
+  call s:assert.equals(iced#nrepl#status(), 'CLJS(clj)')
+endfunction
+
+function! s:suite.status_evaluating_test() abort
+  let test = {}
+  function! test.relay(msg) abort
+    call s:assert.equals(iced#nrepl#status(), 'evaluating')
+    return {'status': ['done']}
+  endfunction
+
+  call s:ch.mock({'status_value': 'open', 'relay': test.relay})
+  call iced#nrepl#set_session('clj',  'clj-session')
+  call iced#eval_and_read('(+ 1 2 3)')
+endfunction
