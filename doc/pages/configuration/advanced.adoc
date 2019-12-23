@@ -2,7 +2,7 @@
 
 ==== Stdout buffer [[configuration_advanced_stdout_buffer]]
 
-[cols="30,20,50"]
+[cols="30,20,50a"]
 |===
 | Option | Default value | Description
 
@@ -10,6 +10,7 @@
 | `''`
 | Buffer position definition. +
 Following values are supported.
+
 - `vertical`
 - `leftabove`
 - `aboveleft`
@@ -36,6 +37,57 @@ If negative number is setted, it means no limit.
 | Delay time for deleting excess lines in stdout buffer. +
 Unit is milli sec. +
 This option is enabled when `g:iced#buffer#stdout#max_line` is a positive number.
+
+|===
+
+==== Document [[configuration_advanced_document]]
+
+.Document buffer
+[cols="30,20,50"]
+|===
+| Option | Default value | Description
+
+| {help_html}#g%3Aiced%23buffer%23document%23height[g:iced#buffer#document#height]
+| `'previewheight'`
+| Document window height.
+
+| {help_html}#g%3Aiced%23buffer%23document%23does_update_automatically[g:iced#buffer#document#does_update_automatically]
+| `v:false`
+| If `v:true` and document buffer is visible, update document buffer with document for the form under cursor.
+
+|===
+
+.Auto document
+[cols="30,20,50a"]
+|===
+| Option | Default value | Description
+
+| {help_html}#g%3Aiced_enable_auto_document[g:iced_enable_auto_document]
+| `'none'`
+| Enable automatic displaying one-line document. +
+This will be done by https://vim-jp.org/vimdoc-en/autocmd.html#CursorHold[CursorHold] and https://vim-jp.org/vimdoc-en/autocmd.html#CursorHoldI[CursorHoldI] auto command. +
+ +
+The value should be one of `'normal'`, `'insert'` or `'any'`. +
+Otherwise, this option will be disabled.
+
+- `'normal'`: Enabled on only normal mode.
+- `'insert'`: Enabled on only insert mode.
+- `'every'` : Enabled on normal and insert mode.
+
+| {help_html}#g%3Aiced_enable_popup_document[g:iced_enable_popup_document]
+| `'every'`
+| Display documents on popup window. +
+The value should be one of follows. +
+Otherwise, this option will be disabled.
+
+- `'full'`    : Enabled on only full document.  {help_html}#%3AIcedDocumentOpen[IcedDocumentOpen] shows full document.
+- `'one-line'`: Enabled on only one-line document.
+- `'every'`   : Every enabled.
+
+| {help_html}#g%3Aiced_max_distance_for_auto_document[g:iced_max_distance_for_auto_document]
+| `2`
+| Max line distance to display one-line document. +
+See also |g:iced_enable_auto_document|.
 
 |===
 

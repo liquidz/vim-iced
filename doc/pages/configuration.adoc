@@ -8,4 +8,4 @@ include::configuration/docker.adoc[]
 
 include::configuration/command_palette.adoc[]
 
-// include::configuration/advanced.adoc[]
+include::configuration/advanced.adoc[]
