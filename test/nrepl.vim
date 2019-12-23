@@ -129,8 +129,8 @@ function! s:suite.eval_test() abort
 
   call iced#nrepl#eval(
       \ '(+ 1 2 3)',
-      \ {result -> test.result_callback(result)},
       \ {'id': 123},
+      \ {result -> test.result_callback(result)},
       \ )
   call s:assert.equals(test.result, {'status': ['done'], 'id': 123, 'ns': 'foo.core', 'value': '6'})
 endfunction
@@ -163,7 +163,7 @@ function! s:suite.multiple_different_ids_response_test() abort
   call s:ch.mock({'status_value': 'open', 'relay_raw': {msg -> test.relay_raw(msg)}})
   call s:funcs.set_message(234, {'op': 'eval', 'callback': test.callback_for_234})
 
-  call iced#nrepl#eval('(+ 1 2 3)', {result -> test.callback_for_123(result)}, {'id': 123})
+  call iced#nrepl#eval('(+ 1 2 3)', {'id': 123}, {result -> test.callback_for_123(result)})
   call s:assert.equals(test.result123, {'status': ['done'], 'id': 123, 'ns': 'foo.core', 'value': '6'})
   call s:assert.equals(test.result234, {'status': ['done'], 'id': 234, 'ns': 'bar.core', 'value': 'baaaarrrr'})
 

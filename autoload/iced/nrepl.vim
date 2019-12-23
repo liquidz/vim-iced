@@ -498,8 +498,15 @@ function! iced#nrepl#eval(code, ...) abort
     return
   endif
 
-  let Callback = get(a:, 1, '')
-  let option = get(a:, 2, {})
+  let Callback = ''
+  let option = {}
+  if a:0 == 1
+    let Callback = get(a:, 1, '')
+  elseif a:0 == 2
+    let option = get(a:, 1, {})
+    let Callback = get(a:, 2, '')
+  endif
+
   let session_key  = get(option, 'session', iced#nrepl#current_session_key())
   let session = get(s:nrepl['sessions'], session_key, iced#nrepl#current_session())
   let pos = getcurpos()
