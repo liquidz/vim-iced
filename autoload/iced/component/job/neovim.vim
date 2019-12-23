@@ -7,6 +7,9 @@ function! s:job.start(command, options) abort
   if has_key(a:options, 'out_cb')
     let options['on_stdout'] = {j,d,e -> a:options['out_cb'](j, d)}
   endif
+  if has_key(a:options, 'err_cb')
+    let options['on_stderr'] = {j,d,e -> a:options['err_cb'](j, d)}
+  endif
   if has_key(a:options, 'close_cb')
     let options['on_exit'] = {j,d,e -> a:options['close_cb'](j)}
   endif
@@ -19,6 +22,10 @@ endfunction
 
 function! s:job.is_job_id(x) abort
   return type(a:x) == v:t_number && a:x > 0
+endfunction
+
+function! s:job.sendraw(job_id, string) abort
+  return jobsend(a:job_id, a:string)
 endfunction
 
 function! iced#component#job#neovim#start(_) abort
