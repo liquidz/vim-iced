@@ -596,6 +596,24 @@ function! iced#nrepl#is_supported_op(op) abort " {{{
 endfunction " }}}
 " }}}
 
+" STATUS {{{
+function! iced#nrepl#status() abort
+  if !iced#nrepl#is_connected()
+    return 'not connected'
+  endif
+
+  if iced#nrepl#is_evaluating()
+    return 'evaluating'
+  else
+    let k = iced#nrepl#current_session_key()
+    if iced#nrepl#cljs_session() ==# ''
+      return toupper(k)
+    else
+      return (k ==# 'clj') ? 'CLJ(cljs)' : 'CLJS(clj)'
+    endif
+  endif
+endfunction " }}}
+
 call iced#nrepl#register_handler('eval', funcref('iced#nrepl#merge_response_handler'))
 call iced#nrepl#register_handler('load-file', funcref('iced#nrepl#merge_response_handler'))
 
