@@ -172,7 +172,10 @@ function! s:eval_visual(evaluator) abort
 endfunction
 
 function! iced#nrepl#eval#visual() abort " range
-  return s:eval_visual(function('iced#nrepl#eval#code'))
+  let Fn = iced#repl#get('eval_code')
+  if type(Fn) == v:t_func
+    return s:eval_visual(Fn)
+  endif
 endfunction
 
 let &cpoptions = s:save_cpo

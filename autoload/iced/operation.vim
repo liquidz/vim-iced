@@ -19,7 +19,7 @@ function! s:eval(f) abort
 endfunction
 
 function! iced#operation#eval(type) abort
-  return s:eval({code -> iced#nrepl#eval#code(code)})
+  return s:eval({code -> iced#repl#execute('eval_code', code)})
 endfunction
 
 function! iced#operation#eval_and_print(type) abort
@@ -35,7 +35,7 @@ function! iced#operation#eval_and_print(type) abort
 endfunction
 
 function! iced#operation#eval_and_tap(type) abort
-  return s:eval({code -> iced#nrepl#eval#code(printf('(clojure.core/tap> %s)', code))})
+  return s:eval({code -> iced#repl#execute('eval_code', printf('(clojure.core/tap> %s)', code))})
 endfunction
 
 function! s:replace_by_response_value(resp) abort
@@ -52,7 +52,8 @@ function! s:replace_by_response_value(resp) abort
 endfunction
 
 function! iced#operation#eval_and_replace(type) abort
-  return s:eval({code -> iced#nrepl#eval(
+  return s:eval({code -> iced#repl#execute(
+        \ 'eval_raw',
         \ iced#nrepl#eval#normalize_code(code),
         \ funcref('s:replace_by_response_value'))})
 endfunction
