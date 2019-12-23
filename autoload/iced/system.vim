@@ -30,6 +30,8 @@ let s:system_map = {
       \                            'requires': ['timer']}
       \                         : {'start': 'iced#component#virtual_text#vim#start',
       \                            'requires': ['popup', 'ex_cmd']}),
+      \ 'nrepl':        {'start': 'iced#component#repl#nrepl#start'},
+      \ 'socket_repl':  {'start': 'iced#component#repl#socket_repl#start'},
       \ }
 
 function! s:requires(name) abort
