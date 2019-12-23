@@ -39,6 +39,11 @@ function! iced#eval_and_read(code, ...) abort
   endif
 endfunction
 
+function! iced#job_start(cmd, ...) abort
+  let opt = get(a:, 1, {})
+  return iced#system#get('job').start(a:cmd, opt)
+endfunction
+
 function! iced#selector(config) abort
   call iced#system#get('selector').select(a:config)
 endfunction
