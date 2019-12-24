@@ -487,6 +487,17 @@ COMMANDS                                                    *vim-iced-commands*
   If {port} is not passed, {port} is detected by '.nrepl-port' automatically.
   Key is mapped to |<Plug>(iced_connect)|.
 
+                                                       *:IcedConnectSocketRepl*
+:IcedConnectSocketRepl {port}
+  Make connection to socket REPL.
+  {port} is required.
+
+                                                            *:IcedConnectPrepl*
+:IcedConnectPrepl {port}
+  Make connection to pREPL.
+  {port} is required.
+  This connection is based on socket repl connection.
+
                                                               *:IcedDisconnect*
 :IcedDisconnect
   Disconnect from nREPL.
