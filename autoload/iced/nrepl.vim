@@ -498,8 +498,15 @@ function! iced#nrepl#eval(code, ...) abort
     return
   endif
 
-  let Callback = get(a:, 1, '')
-  let option = get(a:, 2, {})
+  let Callback = ''
+  let option = {}
+  if a:0 == 1
+    let Callback = get(a:, 1, '')
+  elseif a:0 == 2
+    let option = get(a:, 1, {})
+    let Callback = get(a:, 2, '')
+  endif
+
   let session_key  = get(option, 'session', iced#nrepl#current_session_key())
   let session = get(s:nrepl['sessions'], session_key, iced#nrepl#current_session())
   let pos = getcurpos()
@@ -595,6 +602,24 @@ function! iced#nrepl#is_supported_op(op) abort " {{{
   return has_key(s:supported_ops, a:op)
 endfunction " }}}
 " }}}
+
+" STATUS {{{
+function! iced#nrepl#status() abort
+  if !iced#nrepl#is_connected()
+    return 'not connected'
+  endif
+
+  if iced#nrepl#is_evaluating()
+    return 'evaluating'
+  else
+    let k = iced#nrepl#current_session_key()
+    if iced#nrepl#cljs_session() ==# ''
+      return toupper(k)
+    else
+      return (k ==# 'clj') ? 'CLJ(cljs)' : 'CLJS(clj)'
+    endif
+  endif
+endfunction " }}}
 
 call iced#nrepl#register_handler('eval', funcref('iced#nrepl#merge_response_handler'))
 call iced#nrepl#register_handler('load-file', funcref('iced#nrepl#merge_response_handler'))

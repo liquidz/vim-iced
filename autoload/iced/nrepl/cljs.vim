@@ -22,7 +22,7 @@ function! s:set_cljs_session(original_cljs_session) abort
 
   call iced#nrepl#set_session('cljs', a:original_cljs_session)
   call iced#nrepl#set_session('clj', cloned_cljs_session)
-  call iced#nrepl#eval#code(s:quit_code, {'session': 'clj', 'ignore_session_validity': v:true})
+  return iced#nrepl#eval#code(s:quit_code, {'session': 'clj', 'ignore_session_validity': v:true})
 endfunction
 
 function! s:unset_cljs_session() abort
@@ -31,19 +31,23 @@ function! s:unset_cljs_session() abort
 endfunction
 
 function! iced#nrepl#cljs#check_switching_session(eval_resp, evaluated_code) abort
-  if !has_key(a:eval_resp, 'ns') || !has_key(a:eval_resp, 'session') | return '' | endif
+  if !has_key(a:eval_resp, 'ns') || !has_key(a:eval_resp, 'session')
+    return iced#promise#resolve('')
+  endif
 
   let eval_session = a:eval_resp['session']
   let eq_to_clj_session = (eval_session ==# iced#nrepl#clj_session())
   let eq_to_cljs_session = (eval_session ==# iced#nrepl#cljs_session())
 
-  if !eq_to_clj_session && !eq_to_cljs_session | return '' | endif
+  if !eq_to_clj_session && !eq_to_cljs_session
+    return iced#promise#resolve('')
+  endif
 
   let ns = a:eval_resp['ns']
   let ext = expand('%:e')
 
   if eq_to_clj_session && ns ==# g:iced#nrepl#init_cljs_ns
-    call s:set_cljs_session(eval_session)
+    let p = s:set_cljs_session(eval_session)
     if ext !=# 'clj'
       call iced#nrepl#change_current_session('cljs')
       call iced#nrepl#ns#in()
@@ -51,6 +55,7 @@ function! iced#nrepl#cljs#check_switching_session(eval_resp, evaluated_code) abo
     endif
 
     call iced#message#info('started_cljs_repl')
+    return p
   elseif eq_to_cljs_session
       \ && !get(s:using_env, 'ignore-quit-detecting', v:false)
       \ && a:evaluated_code ==# s:quit_code
@@ -63,6 +68,8 @@ function! iced#nrepl#cljs#check_switching_session(eval_resp, evaluated_code) abo
     call iced#message#info('quitted_cljs_repl')
     call iced#hook#run('session_switched', {'session': 'clj'})
   endif
+
+  return iced#promise#resolve('')
 endfunction
 
 function! iced#nrepl#cljs#cycle_session() abort

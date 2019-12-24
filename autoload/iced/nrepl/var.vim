@@ -87,8 +87,8 @@ function! iced#nrepl#var#extract_by_current_top_list(callback) abort
 
   let pos = ret['curpos']
   let option = {'line': pos[1], 'column': pos[2]}
-  call iced#nrepl#eval(code, {resp ->
-        \ s:extract_var_name(resp, a:callback)}, option)
+  call iced#nrepl#eval(code, option, {resp ->
+        \ s:extract_var_name(resp, a:callback)})
 endfunction
 
 let &cpoptions = s:save_cpo

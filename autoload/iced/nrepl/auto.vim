@@ -54,7 +54,7 @@ endfunction
 
 function! iced#nrepl#auto#leave() abort
   let s:leaving = v:true
-  call iced#nrepl#disconnect()
+  return iced#repl#execute('disconnect')
 endfunction
 
 function! iced#nrepl#auto#enable_bufenter(bool) abort

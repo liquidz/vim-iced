@@ -1,6 +1,7 @@
 let s:suite = themis#suite('iced.nrepl.auto')
 let s:assert = themis#helper('assert')
 let s:ch = themis#helper('iced_channel')
+let s:repl = themis#helper('iced_repl')
 
 let s:clj_tempfile = printf('%s.clj', tempname())
 let s:cljs_tempfile = printf('%s.cljs', tempname())
@@ -105,6 +106,7 @@ endfunction
 
 function! s:suite.leave_test() abort
   call s:setup('clj')
+  call s:repl.mock()
   call s:assert.equals(iced#nrepl#is_connected(), v:true)
   call iced#nrepl#auto#leave()
   call s:assert.equals(iced#nrepl#is_connected(), v:false)

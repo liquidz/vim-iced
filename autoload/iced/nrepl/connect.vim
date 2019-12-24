@@ -40,7 +40,7 @@ function! iced#nrepl#connect#auto(...) abort
   endif
 
   if port
-    call iced#nrepl#connect(port)
+    call iced#repl#connect('nrepl', port)
     return v:true
   endif
 

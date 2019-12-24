@@ -29,10 +29,11 @@ function! s:suite.check_switching_session_switch_to_cljs_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
 
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
-  let res = iced#nrepl#cljs#check_switching_session({
+  let p = iced#nrepl#cljs#check_switching_session({
        \ 'ns': 'cljs.user',
        \ 'session': 'original-clj-session',
        \ }, '')
+  let [res, _] = iced#promise#wait(p)
 
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')
   call s:assert.equals(iced#nrepl#current_session(), 'original-clj-session')
@@ -46,9 +47,10 @@ function! s:suite.check_switching_session_switch_to_clj_test() abort
         \ 'relay': {msg -> {'status': ['done']}}})
 
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')
-  let res = iced#nrepl#cljs#check_switching_session({
+  let p = iced#nrepl#cljs#check_switching_session({
        \ 'ns': 'foo.bar',
        \ 'session': 'original-cljs-session'}, ':cljs/quit')
+  let [res, _] = iced#promise#wait(p)
 
   call s:assert.true(empty(res))
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
@@ -62,9 +64,10 @@ function! s:suite.check_switching_session_do_not_switch_test() abort
   call s:clj_session_fixture()
   call iced#nrepl#change_current_session('clj')
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
-  let res = iced#nrepl#cljs#check_switching_session({
+  let p = iced#nrepl#cljs#check_switching_session({
       \ 'ns': 'cljs.user',
       \ 'session': 'not-clj-session'}, '')
+  let [res, _] = iced#promise#wait(p)
 
   call s:assert.true(empty(res))
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
@@ -73,9 +76,10 @@ function! s:suite.check_switching_session_do_not_switch_test() abort
   call s:clj_session_fixture()
   call iced#nrepl#change_current_session('clj')
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
-  let res = iced#nrepl#cljs#check_switching_session({
+  let p = iced#nrepl#cljs#check_switching_session({
      \ 'ns': 'foo.bar',
      \ 'session': 'original-clj-session'}, '')
+  let [res, _] = iced#promise#wait(p)
 
   call s:assert.true(empty(res))
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
@@ -83,9 +87,10 @@ function! s:suite.check_switching_session_do_not_switch_test() abort
   "" cljs session && session is not 'cljs'
   call s:cljs_session_fixture()
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')
-  let res = iced#nrepl#cljs#check_switching_session({
+  let p = iced#nrepl#cljs#check_switching_session({
      \ 'ns': 'foo.bar',
      \ 'session': 'original-clj-session'}, '')
+  let [res, _] = iced#promise#wait(p)
 
   call s:assert.true(empty(res))
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')
@@ -93,9 +98,10 @@ function! s:suite.check_switching_session_do_not_switch_test() abort
   "" cljs session && evaluated code is not `:cljs/quit`
   call s:cljs_session_fixture()
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')
-  let res = iced#nrepl#cljs#check_switching_session({
+  let p = iced#nrepl#cljs#check_switching_session({
      \ 'ns': 'cljs.user',
      \ 'session': 'original-cljs-session'}, ':foo/bar')
+  let [res, _] = iced#promise#wait(p)
 
   call s:assert.true(empty(res))
   call s:assert.equals(iced#nrepl#current_session_key(), 'cljs')

@@ -6,6 +6,7 @@ let s:qf = themis#helper('iced_quickfix')
 let s:vt = themis#helper('iced_virtual_text')
 let s:io = themis#helper('iced_io')
 let s:holder = themis#helper('iced_holder')
+let s:repl = themis#helper('iced_repl')
 
 let s:test_1_9_error =
       \ 'CompilerException java.lang.RuntimeException: Unable to resolve symbol: a in this context, compiling:(/path/to/src.clj:12:34)'
@@ -183,6 +184,7 @@ endfunction
 
 " iced#nrepl#eval#visual {{{
 function! s:suite.visual_test() abort
+  call s:repl.mock()
   call s:ch.mock({
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:holder.relay(msg)},

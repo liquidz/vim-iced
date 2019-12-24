@@ -58,8 +58,9 @@ function! iced#nrepl#eval#out(resp, ...) abort
   call iced#nrepl#eval#err(get(a:resp, 'err', ''))
 
   if has_key(a:, 1)
-    call iced#nrepl#cljs#check_switching_session(a:resp, get(a:, 1))
+    return iced#nrepl#cljs#check_switching_session(a:resp, get(a:, 1))
   endif
+  return iced#promise#resolve(v:true)
 endfunction
 
 function! s:is_comment_form(code) abort
@@ -89,7 +90,8 @@ function! iced#nrepl#eval#code(code, ...) abort
 
   try
     return iced#nrepl#ns#require_if_not_loaded_promise()
-          \.then({_ -> iced#nrepl#eval(code, Callback, opt)})
+          \.then({_ -> iced#promise#call('iced#nrepl#eval', [code, opt])})
+          \.then(Callback)
   finally
     let @@ = reg_save
     call winrestview(view)
@@ -140,7 +142,7 @@ function! iced#nrepl#eval#print_last() abort
     endif
   endfunction
 
-  call iced#nrepl#eval('*1', m.callback, {'use-printer?': v:true})
+  call iced#nrepl#eval('*1', {'use-printer?': v:true}, m.callback)
 endfunction
 
 function! iced#nrepl#eval#outer_top_list() abort
@@ -172,7 +174,10 @@ function! s:eval_visual(evaluator) abort
 endfunction
 
 function! iced#nrepl#eval#visual() abort " range
-  return s:eval_visual(function('iced#nrepl#eval#code'))
+  let Fn = iced#repl#get('eval_code')
+  if type(Fn) == v:t_func
+    return s:eval_visual(Fn)
+  endif
 endfunction
 
 let &cpoptions = s:save_cpo
