@@ -1,3 +1,20 @@
 === Test buffer [[test_buffer]]
 
-TODO
+Test results will be outputted to dedicated buffer.
+
+vim-iced provides following commans to control test buffer.
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedTestBufferOpen[IcedTestBufferOpen]
+| {plug_iced_test_buffer_open}
+| Open test result buffer.
+
+|===
+
+Test buffer is opened automatically when tests are failed.
+On the other hand, test buffer is closed automatically when test are succeeded.
+
+So *you don't need to use the above command* basically.
