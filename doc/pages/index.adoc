@@ -1,3 +1,4 @@
+[[top, Back to top]]
 = vim-iced
 :sectnums:
 :toc: left
@@ -67,51 +68,147 @@
 include::overview.adoc[]
 
 include::getting_started.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::evaluation.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::completion.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::reference.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::navigation.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::macro.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::testing.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::formatting.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::debugging.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::refactoring.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::iced_command.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::clojurescript.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::skeleton.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::operator.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::clojure_spec.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::editing_sexp.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::docker.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::command_palette.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::hook.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::buffer.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::configuration.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::tips.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::external.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 include::socket_repl.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
 
 // vim:fdm=marker:fdl=0
