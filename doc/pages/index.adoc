@@ -45,6 +45,12 @@
 :plug_iced_jump_to_let: <Leader>jl
 :plug_iced_browse_spec: <Leader>bs
 :plug_iced_command_palette: <Leader>hh
+:plug_iced_stdout_buffer_open: <Leader>ss
+:plug_iced_stdout_buffer_clear: <Leader>sl
+:plug_iced_stdout_buffer_close: <Leader>sq
+:plug_iced_test_buffer_open: <Leader>to
+:plug_iced_document_open: <Leader>hb
+:plug_iced_document_close: <Leader>hq
 // }}}
 
 // c.f. http://tholman.com/github-corners/ {{{
