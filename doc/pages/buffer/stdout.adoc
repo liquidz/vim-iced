@@ -1,3 +1,23 @@
 === Stdout buffer [[stdout_buffer]]
 
-TODO
+Standard outputs will be outputted to dedicated buffer.
+
+vim-iced provides following commans to control stdout buffer.
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedStdoutBufferOpen[IcedStdoutBufferOpen]
+| {plug_iced_stdout_buffer_open}
+| Open stdout buffer.
+
+| {help_html}#%3AIcedStdoutBufferClear[IcedStdoutBufferClear]
+| {plug_iced_stdout_buffer_clear}
+| Clear all lines in stdout buffer.
+
+| {help_html}#%3AIcedStdoutBufferClose[IcedStdoutBufferClose]
+| {plug_iced_stdout_buffer_close}
+| Close stdout buffer window.
+
+|===
