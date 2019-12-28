@@ -12,15 +12,15 @@
   <a href="https://github.com/liquidz/vim-iced/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/liquidz/vim-iced.svg?logo=Github" alt="GitHub license" />
   </a>
-  <a href="https://www.patreon.com/uochan">
-    <img src="https://img.shields.io/badge/patreon-donate-yellow.svg?logo=Patreon" alt="Become a Patron" />
-  </a>
   <a href="https://github.com/vim-jp/vital.vim">
     <img src="https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg?logo=Vim" alt="Powered by vital.vim" />
   </a>
   <br />
-  <a href="https://circleci.com/gh/liquidz/vim-iced">
-    <img src="https://img.shields.io/circleci/project/github/liquidz/vim-iced/master.svg?logo=CircleCI" alt="CircleCI" />
+  <a href="https://github.com/liquidz/vim-iced/actions?query=workflow%3Avim">
+    <img src="https://github.com/liquidz/vim-iced/workflows/vim/badge.svg" alt="GitHub Actions for vim workflow" />
+  </a>
+  <a href="https://github.com/liquidz/vim-iced/actions?query=workflow%3Aneovim">
+    <img src="https://github.com/liquidz/vim-iced/workflows/neovim/badge.svg" alt="GitHub Actions for neovim workflow" />
   </a>
   <a href="https://codecov.io/gh/liquidz/vim-iced">
     <img src="https://codecov.io/gh/liquidz/vim-iced/branch/master/graph/badge.svg" alt="Codecov" />
@@ -42,7 +42,7 @@
 
 |:zap:
 |Asynchronous evaluation
-|powered by `channel` in Vim8
+|powered by `channel` in Vim8 / Neovim
 
 |:fire:
 |Testing
@@ -93,6 +93,10 @@ Supports followings currently.
 - https://github.com/thheller/shadow-cljs[shadow-cljs]
 - https://github.com/graalvm/graaljs[GraalJS]
 - Nashorn
+
+|:electric_plug:
+|Socket REPL
+|Supports minimal operations.
 
 |:art:
 |Command palette
@@ -180,12 +184,15 @@ See link:https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-customizing[c
 | https://github.com/liquidz/vim-iced-function-list[vim-iced-function-list]
 | Provides `:IcedBrowseFunction` command for jumping to functions in current namespace.
 
-.2+|:thought_balloon:
+.3+|:thought_balloon:
 | https://github.com/liquidz/vim-iced-coc-source[vim-iced-coc-source]
 | Provides auto completion by https://github.com/neoclide/coc.nvim[coc.nvim].
 
 | https://github.com/liquidz/vim-iced-asyncomplete[vim-iced-asyncomplete]
 | Provides auto completion by https://github.com/prabirshrestha/asyncomplete.vim[asyncomplete.vim].
+
+| https://github.com/nbardiuk/vim-iced-ncm2[vim-iced-ncm2]
+| Provides auto completion by https://github.com/ncm2/ncm2[ncm2].
 
 |===
 
