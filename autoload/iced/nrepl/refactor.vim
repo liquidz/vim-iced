@@ -319,7 +319,7 @@ function! iced#nrepl#refactor#add_arity() abort
     " Format new defn code
     let p = getcurpos()
     call setpos('.', beginning_of_defn)
-    call iced#format#minimal()
+    call iced#format#minimal({'jump_to_its_match': v:false})
     call setpos('.', p)
     " Move cursor to the new arity
     call search(']')

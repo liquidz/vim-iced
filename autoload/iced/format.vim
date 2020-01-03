@@ -76,11 +76,14 @@ function! iced#format#form() abort
   endtry
 endfunction
 
-function! iced#format#minimal() abort
+function! iced#format#minimal(...) abort
   if !iced#nrepl#is_connected()
     silent exe "normal \<Plug>(sexp_indent)"
     return
   endif
+
+  let opt = get(a:, 1, {})
+  let jump_to_its_match = get(opt, 'jump_to_its_match', v:true)
 
   call s:set_indentation_rule()
 
@@ -88,9 +91,12 @@ function! iced#format#minimal() abort
   let reg_save = @@
   let ns_name = iced#nrepl#ns#name()
   try
-    " NOTE: vim-sexp's slurp move cursor to tail of form
-    normal! %
-    let ncol = max([col('.')-1, 1])
+    if jump_to_its_match
+      " NOTE: vim-sexp's slurp move cursor to tail of form
+      normal! %
+    endif
+
+    let ncol = max([col('.')-1, 0])
 
     let char = getline('.')[ncol]
     if char ==# '['

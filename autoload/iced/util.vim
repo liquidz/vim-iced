@@ -70,6 +70,7 @@ function! iced#util#char_repeat(n, c) abort
 endfunction
 
 function! iced#util#add_indent(n, s) abort
+  if a:n == 0 |  return a:s | endif
   let spc = iced#util#char_repeat(a:n, ' ')
   return substitute(a:s, '\r\?\n', "\n".spc, 'g')
 endfunction
