@@ -49,7 +49,7 @@ call plug#end()
 
 Next, launch your REPL with `--with-kaocha` option.
 
-[source,console]
+[source,shell]
 ----
 $ iced repl --with-kaocha
 ----

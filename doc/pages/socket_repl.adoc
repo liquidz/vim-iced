@@ -71,11 +71,6 @@ You can try socket REPL connection as follows.
 
 |===
 
-// [source,console]
-// ----
-// $ bb --socket-repl 5555
-// ----
-
 [source,vim]
 .Connect to socket REPL
 ----
@@ -97,7 +92,7 @@ NOTE: https://github.com/borkdude/jet[jet] is required currently.
 
 You can try pREPL connection as follows.
 
-[source,console]
+[source,shell]
 .Launch pREPL
 ----
 $ clj -J-Dclojure.server.repl="{:port 5555 :accept clojure.core.server/io-prepl}"

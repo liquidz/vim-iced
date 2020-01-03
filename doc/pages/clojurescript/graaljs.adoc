@@ -5,7 +5,7 @@ WARNING: ClojureScript `1.10.439` or later is required.
 https://www.graalvm.org/docs/getting-started/#install-graalvm[GraalVM] is also required, and you must add GraalVM `/bin` to your `PATH`.
 Otherwise you can set `PATH` temporarily when you execute `iced` command.
 
-[source,console]
+[source,shell]
 ----
 PATH=/path/to/graalvm/bin:$PATH iced repl
 ----

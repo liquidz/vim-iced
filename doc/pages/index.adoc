@@ -13,6 +13,7 @@
 :vim_sexp: https://github.com/guns/vim-sexp[vim-sexp]
 :vim_submode: https://github.com/kana/vim-submode[vim-submode]
 :vim_iced_kaocha: https://github.com/liquidz/vim-iced-kaocha[vim-iced-kaocha]
+:vim_themis: https://github.com/thinca/vim-themis[vim-themis]
 // key mappings {{{
 :plug_iced_eval_inner_element: <Leader>ei
 :plug_iced_eval_outer_list: <Leader>ee
@@ -212,6 +213,12 @@ include::external.adoc[]
 // }}}
 
 include::socket_repl.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
+
+include::developer.adoc[]
 // back to top {{{
 [.text-right]
 [small]#<<top>>#

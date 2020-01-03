@@ -22,7 +22,7 @@ ENV PATH $PATH:/usr/local/src/vim-iced/bin
 ENTRYPOINT ["iced", "repl"]
 ----
 
-[source,console]
+[source,shell]
 ----
 $ docker build -t vim-iced .
 ----
@@ -42,7 +42,7 @@ Second, launch nREPL with a fixed port number.
   )
 ----
 
-[source,console]
+[source,shell]
 ----
 $ docker run --rm -it --expose 55555 -p 55555:55555 -v $(pwd):/tmp vim-iced
 ----

@@ -15,14 +15,14 @@ If anything is okay, ctrlp.vim is easy to install and stable.
 At first, if you don't have a plugin manager, please install https://github.com/junegunn/vim-plug[vim-plug].
 
 .vim
-[source,console]
+[source,shell]
 ----
 $ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ----
 
 .neovim
-[source,console]
+[source,shell]
 ----
 $ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -57,14 +57,14 @@ let g:iced_enable_default_key_mappings = v:true
 Setup is easy, just add the `bin` directory under the installed vim-iced directory to `$PATH` environmental variable.
 With above vim-plug setting,  `~/.vim/plugged/vim-iced/bin` is the directory to add to `$PATH`.
 
-[source,console]
+[source,shell]
 ----
 $ export PATH=$PATH:/path/to/repo/vim-iced/bin
 ----
 
 To confirm setup, run the following command.
 
-[source,console]
+[source,shell]
 ----
 $ iced version
 ----
@@ -76,7 +76,7 @@ See <<iced_command>> for more information.
 Let's create a sample project for quick start.
 Here https://github.com/technomancy/leiningen[Leiningen] is used to create a project template.
 
-[source,console]
+[source,shell]
 ----
 $ lein new hello-iced
 $ cd hello-iced
@@ -85,14 +85,14 @@ $ cd hello-iced
 We use `iced` command to launch REPL instead of `lein` command.
 This allows `iced` command to take care of all the additional libraries and REPL settings you need.
 
-[source,console]
+[source,shell]
 ----
 $ iced repl
 ----
 
 Open vim and execute {help_html}#%3AIcedConnect[IcedConnect] command.
 
-[source,console]
+[source,shell]
 ----
 $ vim src/hello_iced/core.clj
 ----

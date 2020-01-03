@@ -16,7 +16,7 @@ To work with shadow-cljs, see {help_html}#vim-iced-shadow-cljs[vim-iced-shadow-c
 
 === Usage [[iced_usage]]
 
-[source,console]
+[source,shell]
 ----
 $ iced repl [options]
 ----
@@ -63,19 +63,19 @@ Other options are passed to each program as below.
 === Arguments [[iced_arguments]]
 
 .Leiningen profile
-[source,console]
+[source,shell]
 ----
 $ iced repl with-profile +foo
 ----
 
 .Clojure CLI alias
-[source,console]
+[source,shell]
 ----
 $ iced repl -A:foo
 ----
 
 .Combinating several options
-[source,console]
+[source,shell]
 ----
 $ iced repl --with-cljs --force-clojure-cli -A:foo
 ----
