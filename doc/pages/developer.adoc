@@ -1,0 +1,48 @@
+== Developer [[developer]]
+
+=== Testing vim-iced
+
+vim-iced uses {vim_themis} as a test runner.
+
+==== Run tests on docker
+
+The easiest way to run tests is the way using docker.
+
+[source,shell]
+----
+# Run vimscript test for vim
+$ make docker_themis
+
+# Run vimscript test for neovim
+$ make docker_neovim_themis
+----
+
+If you would like to filter test cases, use `--target` option for {vim_themis}.
+Please refer to the argument of `themis#suite` in the first line of each test for the string to be specified for `--target`.
+
+For example, execute the following command to run test cases only for `iced#nrepl#eval`.
+
+[source,shell]
+----
+$ docker run --rm -v $(pwd):/root \
+      --entrypoint './.vim-themis/bin/themis' uochan/vim:latest \
+      --target 'iced\.nrepl\.eval '
+----
+
+==== Run tests locally
+
+You can also run tests locally.
+The following `make` rule will clone {vim_themis} and run tests.
+
+[source,shell]
+----
+# Run vimscript test
+$ make themis
+
+# Run all tests
+$ make test
+
+# Once you clone vim-themis, you can specify `--target` like below
+$ ./.vim-themis/bin/themis \
+      --target 'iced\.nrepl\.eval '
+----
