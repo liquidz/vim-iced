@@ -198,6 +198,6 @@ See link:https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-customizing[c
 
 == License
 
-Copyright (c) 2018-2019 http://twitter.com/uochan[Masashi Iizuka]
+Copyright (c) 2018-2020 http://twitter.com/uochan[Masashi Iizuka]
 
 Distributed under the MIT License.
