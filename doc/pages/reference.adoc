@@ -31,18 +31,41 @@ This will be done by `CursorHold` and `CursorHoldI` auto command.
 https://clojuredocs.org[ClojureDocs] is a community-powered documentation and examples repository for the Clojure programming language.
 vim-iced provides the way to refer documents in ClojureDocs like docstring.
 
-{help_html}#%3AIcedClojureDocsOpen[IcedClojureDocsOpen] will open a window, and show documents for the symbol under the cursor.
-Default key mapping is a `{plug_iced_clojuredocs_open}`.
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
 
-`IcedClojureDocsOpen` will create a cache file in your local machine.
-If you get a outdated result, you can refresh cache file by {help_html}#%3AIcedClojureDocsRefresh[IcedClojureDocsRefresh] command.
+| {help_html}#%3AIcedClojureDocsOpen[IcedClojureDocsOpen]
+| {plug_iced_clojuredocs_open}
+| Open a window, and show documents for the symbol under the cursor.
+
+| {help_html}#%3AIcedClojureDocsRefresh[IcedClojureDocsRefresh]
+|
+| `IcedClojureDocsOpen` will create a cache file in your local machine. +
+If you get a outdated result, you can refresh cache file by this command.
+
+|===
 
 === Source codes
 
 {help_html}#%3AIcedSourceShow[IcedSourceShow] or {help_html}#%3AIcedPopupSourceShow[IcedPopupSourceShow] is useful when you would like to refer the source code itself.
 
-`IcedSourceShow` will open a separeted buffer and show source codes in it, while `IcedPopupSourceShow` shows in a popup window.
-Default key mapping is a `{plug_iced_source_show}` for `IcedSourceShow` and `{plug_iced_popup_source_show}` for `IcedPopupSourceShow`.
+// `IcedSourceShow` will open a separeted buffer and show source codes in it, while `IcedPopupSourceShow` shows in a popup window.
+// Default key mapping is a `{plug_iced_source_show}` for `IcedSourceShow` and `{plug_iced_popup_source_show}` for `IcedPopupSourceShow`.
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedPopupSourceShow[IcedPopupSourceShow]
+| {plug_iced_popup_source_show}
+| Show source codes in a popup window.
+
+| {help_html}#%3AIcedSourceShow[IcedSourceShow]
+| {plug_iced_source_show}
+| Open a separeted buffer(<<document_buffer>>) and show source codes in it.
+
+|===
 
 === Use cases
 
