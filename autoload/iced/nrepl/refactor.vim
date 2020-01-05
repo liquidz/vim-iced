@@ -320,9 +320,9 @@ function! iced#nrepl#refactor#add_arity() abort
     let p = getcurpos()
     call setpos('.', beginning_of_defn)
     call iced#format#minimal({'jump_to_its_match': v:false})
-    call setpos('.', p)
+    call setpos('.', beginning_var_name)
     " Move cursor to the new arity
-    call search(']')
+    call search(']', 'c')
   finally
     let @@ = reg_save
   endtry
