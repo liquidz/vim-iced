@@ -5,7 +5,7 @@ function! s:initialize_socket_repl() abort
   return {
         \ 'port': '',
         \ 'channel': v:false,
-        \ 'prompt': 'user=> ',
+        \ 'prompt': '\([A-Za-z0-9\-]\+\.\)\?user=> ',
         \ 'handler': '',
         \ }
 endfunction
@@ -33,31 +33,19 @@ function! s:callback(resp) abort
   endif
 endfunction
 
-function! s:detect_repl_type(text) abort
-  " Lumo or Planck
-  if stridx(a:text, 'Lumo') != -1
-        \ || stridx(a:text, 'cljs.user') == 0
-    let s:socket_repl['prompt'] = 'cljs.user=> '
-    return v:true
-  endif
-  return v:false
-endfunction
-
 function! s:dispatcher(ch, resp) abort
   let resp = join(iced#util#ensure_array(a:resp), ' ,,, ')
   let text = printf('%s%s', s:response_buffer, resp)
   call iced#util#debug('<<<', text)
 
   let s:response_buffer = (len(text) > g:iced#socket_repl#buffer_size) ? '' : text
-  let s:does_prompt_fixed = s:does_prompt_fixed || s:detect_repl_type(text)
 
-  let idx = stridx(text, s:socket_repl['prompt'])
+  let idx = match(text, s:socket_repl['prompt'])
   if idx == -1
     return
   endif
 
   let s:response_buffer = ''
-  let s:does_prompt_fixed = v:true
 
   let Handler = get(s:socket_repl, 'handler', '')
   if type(Handler) == v:t_func
