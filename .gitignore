@@ -1,5 +1,6 @@
 VIM_AUTO_RTP
 doc/tags
+bin/jet
 .vim-themis
 .vim-sexp
 .vimdoc
