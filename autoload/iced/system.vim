@@ -70,6 +70,11 @@ function! iced#system#get(name) abort
 
     let params = {}
     for required_component_name in s:requires(a:name)
+      let req = iced#system#get(required_component_name)
+      if empty(req)
+        call iced#message#error('component_error', required_component_name)
+        return ''
+      endif
       let params[required_component_name] = iced#system#get(required_component_name)
     endfor
 
@@ -78,8 +83,13 @@ function! iced#system#get(name) abort
       let StartFn = function(StartFn)
     endif
 
-    let s:component_cache[a:name] = StartFn(params)
-    return s:component_cache[a:name]
+    let component = StartFn(params)
+    if type(component) == v:t_dict
+      let s:component_cache[a:name] = component
+    else
+      call iced#message#error('component_error', a:name)
+    endif
+    return component
   endif
 endfunction
 
