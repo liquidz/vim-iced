@@ -328,6 +328,38 @@ function! iced#nrepl#refactor#add_arity() abort
   endtry
 endfunction " }}}
 
+" iced#nrepl#refactor#extract_definition {{{
+
+function! s:fixme(x) abort
+  echom printf('FIXME! %s', a:x)
+endfunction
+
+function! s:__extract_definition(resp) abort
+  if has_key(a:resp, 'error')
+    return iced#message#error_str(a:resp['error'])
+  endif
+
+  call iced#system#get('edn').decode(get(a:resp, 'definition', '{}'), funcref('s:fixme'))
+endfunction
+
+function! iced#nrepl#refactor#extract_definition() abort
+  let path = expand('%:p')
+  let ns_name = iced#nrepl#ns#name()
+  let sym = iced#nrepl#var#cword()
+  let pos = getcurpos()
+
+  " return iced#promise#call('iced#nrepl#op#refactor#extract_definition', [path, ns_name, sym, pos[1], pos[2]])
+  "      \.then({resp -> (has_key(resp, 'error')
+  "      \               ? iced#promise#reject(a:resp['error'])
+  "      \               : iced#promise#call(iced#system#get('edn').decode, [get(a:resp, 'definition', {})]))})
+  "      \.then(funcref('s:fixme'))
+  "      \.catch({text -> iced#message#error_str(text)})
+
+  call iced#nrepl#op#refactor#extract_definition(
+        \ path, ns_name, sym, pos[1], pos[2], funcref('s:__extract_definition'))
+endfunction
+" }}}
+
 let s:save_cpo = &cpo
 set cpo&vim
 " vim:fdm=marker:fdl=0

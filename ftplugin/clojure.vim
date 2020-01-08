@@ -125,6 +125,7 @@ command! -nargs=? IcedAddNs                 call iced#nrepl#refactor#add_ns(<q-a
 command!          IcedThreadFirst           call iced#nrepl#refactor#thread_first()
 command!          IcedThreadLast            call iced#nrepl#refactor#thread_last()
 command!          IcedExtractFunction       call iced#nrepl#refactor#extract_function()
+command!          IcedExtractDefinition     call iced#nrepl#refactor#extract_definition()
 command!          IcedAddArity              call iced#nrepl#refactor#add_arity()
 command!          IcedMoveToLet             call iced#let#move_to_let()
 
@@ -228,6 +229,7 @@ nnoremap <silent> <Plug>(iced_add_ns)                   :<C-u>IcedAddNs<CR>
 nnoremap <silent> <Plug>(iced_thread_first)             :<C-u>IcedThreadFirst<CR>
 nnoremap <silent> <Plug>(iced_thread_last)              :<C-u>IcedThreadLast<CR>
 nnoremap <silent> <Plug>(iced_extract_function)         :<C-u>IcedExtractFunction<CR>
+nnoremap <silent> <Plug>(iced_extract_definition)       :<C-u>IcedExtractDefinition<CR>
 nnoremap <silent> <Plug>(iced_add_arity)                :<C-u>IcedAddArity<CR>
 nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
 
@@ -466,6 +468,10 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_command_palette)')
     silent! nmap <buffer> <Leader>hh <Plug>(iced_command_palette)
+  endif
+
+  if !hasmapto('<Plug>(iced_extract_definition)')
+    silent! nmap <buffer> <Leader>hd <Plug>(iced_extract_definition)
   endif
 
   "" Browsing (<Leader>b)
