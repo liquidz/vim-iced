@@ -32,6 +32,8 @@ let s:system_map = {
       \                            'requires': ['popup', 'ex_cmd']}),
       \ 'installer':    {'start': 'iced#component#installer#start',
       \                  'requires': ['io', 'job']},
+      \ 'edn':          {'start': 'iced#component#edn#start',
+      \                  'requires': ['installer', 'job']},
       \ 'nrepl':        {'start': 'iced#component#repl#nrepl#start'},
       \ 'socket_repl':  {'start': 'iced#component#repl#socket_repl#start'},
       \ 'prepl':        {'start': 'iced#component#repl#prepl#start',
