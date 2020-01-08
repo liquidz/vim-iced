@@ -15,6 +15,10 @@ function! s:job.is_job_id(x) abort
   return type(a:x) == v:t_job
 endfunction
 
+function! s:job.info(job_id) abort
+  return job_info(a:job_id)
+endfunction
+
 function! s:job.sendraw(job, string) abort
   return ch_sendraw(a:job, a:string)
 endfunction
