@@ -37,7 +37,7 @@ let s:system_map = {
       \ 'nrepl':        {'start': 'iced#component#repl#nrepl#start'},
       \ 'socket_repl':  {'start': 'iced#component#repl#socket_repl#start'},
       \ 'prepl':        {'start': 'iced#component#repl#prepl#start',
-      \                  'requires': ['socket_repl', 'job']},
+      \                  'requires': ['socket_repl', 'edn']},
       \ }
 
 function! s:requires(name) abort

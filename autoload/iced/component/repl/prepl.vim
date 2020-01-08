@@ -3,56 +3,37 @@ set cpoptions&vim
 
 let s:prepl = {
       \ 'socket_repl': '',
-      \ 'job': '',
-      \ 'jet': '',
-      \ 'callback': '',
+      \ 'edn': '',
       \ }
 
-function! s:reader(_, resp) abort
-  try
-    let res = json_decode(a:resp)
-    if ! has_key(res, 'tag') | return | endif
+function! s:reader(callback, res) abort
+  if ! has_key(a:res, 'tag') | return | endif
 
-    call iced#util#debug('<<< edn', res)
+  call iced#util#debug('<<< edn', a:res)
 
-    let tag = res['tag']
-    let d = {}
-    if tag ==# 'ret'
-      let d['value'] = res['val']
-      if get(res, 'exception', v:false)
-        let d['out'] = res['val']
-      endif
-    elseif tag ==# 'out'
-      let d['out'] = res['val']
-    elseif tag ==# 'tap'
-      let d['out'] = printf('%s ;; <= tapped', res['val'])
+  let tag = a:res['tag']
+  let d = {}
+  if tag ==# 'ret'
+    let d['value'] = a:res['val']
+    if get(a:res, 'exception', v:false)
+      let d['out'] = a:res['val']
     endif
+  elseif tag ==# 'out'
+    let d['out'] = a:res['val']
+  elseif tag ==# 'tap'
+    let d['out'] = printf('%s ;; <= tapped', a:res['val'])
+  endif
 
-    if !empty(d)
-      call s:prepl['callback'](d)
-    endif
-
-  catch //
-    echom printf('Failed to decode json: %s (%s)', a:resp, string(v:exception))
-  endtry
+  if !empty(d)
+    call a:callback(d)
+  endif
 endfunction
 
 function! s:handler(text, callback) dict abort
-  let self.callback = a:callback
-  call self.job.sendraw(self.jet, a:text)
+  call self.edn.decode(a:text, funcref('s:reader', [a:callback]))
 endfunction
 
 function! s:connect(port) dict abort
-  if !executable('jet')
-    call iced#message#error('not_executable', 'jet')
-    return v:false
-  endif
-
-  let self.jet = self.job.start('jet --to json', {
-       \ 'out_cb': funcref('s:reader'),
-       \ 'drop': 'never',
-       \ })
-
   return self.socket_repl.connect(a:port, {
         \ 'prompt': "\n",
         \ 'handler': funcref('s:handler', self),
@@ -63,7 +44,7 @@ function! iced#component#repl#prepl#start(this) abort
   call iced#util#debug('start', 'prepl')
 
   let s:prepl.socket_repl = a:this['socket_repl']
-  let s:prepl.job = a:this['job']
+  let s:prepl.edn = a:this['edn']
 
   let d = deepcopy(a:this['socket_repl'])
   let d['connect'] = funcref('s:connect', s:prepl)
