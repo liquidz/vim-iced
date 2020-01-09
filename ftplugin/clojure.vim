@@ -96,6 +96,8 @@ command!          IcedPrevUseCase           call iced#nrepl#document#prev_usecas
 command!          IcedDocumentClose         call iced#nrepl#document#close()
 command! -nargs=? IcedSourceShow            call iced#nrepl#source#show(<q-args>)
 command! -nargs=? IcedSourcePopupShow       call iced#nrepl#source#popup_show(<q-args>)
+command!          IcedDefinitionShow        call iced#nrepl#source#show_definition()
+command!          IcedDefinitionPopupShow   call iced#nrepl#source#show_definition_popup()
 command!          IcedCommandPalette        call iced#palette#show()
 command! -nargs=? IcedSpecForm              call iced#nrepl#spec#form(<q-args>)
 command! -nargs=? IcedSpecExample           call iced#nrepl#spec#example(<q-args>)
@@ -199,6 +201,8 @@ nnoremap <silent> <Plug>(iced_prev_use_case)            :<C-u>IcedPrevUseCase<CR
 nnoremap <silent> <Plug>(iced_document_close)           :<C-u>IcedDocumentClose<CR>
 nnoremap <silent> <Plug>(iced_source_show)              :<C-u>IcedSourceShow<CR>
 nnoremap <silent> <Plug>(iced_source_popup_show)        :<C-u>IcedSourcePopupShow<CR>
+nnoremap <silent> <Plug>(iced_definition_show)          :<C-u>IcedDefinitionShow<CR>
+nnoremap <silent> <Plug>(iced_definition_popup_show)    :<C-u>IcedDefinitionPopupShow<CR>
 nnoremap <silent> <Plug>(iced_command_palette)          :<C-u>IcedCommandPalette<CR>
 nnoremap <silent> <Plug>(iced_spec_form)                :<C-u>IcedSpecForm<CR>
 nnoremap <silent> <Plug>(iced_spec_example)             :<C-u>IcedSpecExample<CR>
@@ -462,6 +466,14 @@ function! s:default_key_mappings() abort
 
   if !hasmapto('<Plug>(iced_clojuredocs_open)')
     silent! nmap <buffer> <Leader>hc <Plug>(iced_clojuredocs_open)
+  endif
+
+  if !hasmapto('<Plug>(iced_definition_show)')
+    silent! nmap <buffer> <Leader>hD <Plug>(iced_definition_show)
+  endif
+
+  if !hasmapto('<Plug>(iced_definition_popup_show)')
+    silent! nmap <buffer> <Leader>hd <Plug>(iced_definition_popup_show)
   endif
 
   if !hasmapto('<Plug>(iced_command_palette)')
