@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* Added document pages.
+** https://liquidz.github.io/vim-iced/
+** https://qiita.com/advent-calendar/2019/vim-iced
+* Added minimal support for socket REPL and pREPL.
+** https://liquidz.github.io/vim-iced/#socket_repl
+* Added `IcedDefinitionShow` command.
+* Added `IcedDefinitionPopupShow` command.
+
+=== Changed
+* (Breaking) Rename following commans.
+** `IcedPopupDocumentOpen` -> `IcedDocumentPopupOpen`
+** `IcedPopupSourceShow` -> `IcedSourcePopupShow`
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/166[#166]: Fixed to show document protocol method correctly.
+* https://github.com/liquidz/vim-iced/issues/168[#168]: Fixed a bug for adding resolved namespace.
+* https://github.com/liquidz/vim-iced/issues/171[#171]: Fixed `IcedAddArity` not to break indents.
+* Fixed vim's popup window position when a window is thin.
+
+// }}}
 
 == 0.13.0 (2019-11-29)
 // {{{
