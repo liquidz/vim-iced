@@ -734,12 +734,12 @@ COMMANDS                                                    *vim-iced-commands*
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_document_open)|.
 
-                                                       *:IcedPopupDocumentOpen*
-:IcedPopupDocumentOpen [{symbol}]
+                                                       *:IcedDocumentPopupOpen*
+:IcedDocumentPopupOpen [{symbol}]
   Open a popup window, and show documents for {symbol}.
   If {symbol} is not passed, symbol under cursor is used.
   If |popup| is not supported, |:IcedDocumentOpen| is called.
-  Key is mapped to |<Plug>(iced_popup_document_open)|.
+  Key is mapped to |<Plug>(iced_document_popup_open)|.
 
                                                             *:IcedFormDocument*
 :IcedFormDocument
@@ -778,13 +778,13 @@ COMMANDS                                                    *vim-iced-commands*
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_source_show)|.
 
-                                                         *:IcedPopupSourceShow*
-:IcedPopupSourceShow [{symbol}]
+                                                         *:IcedSourcePopupShow*
+:IcedSourcePopupShow [{symbol}]
   Open a popup window, and show source codes for {symbol}
   If {symbol} is not passed, symbol under cursor is used.
   If |popup| is not supported or codes are too long to show in popup window,
   |:IcedSourceShow| is called.
-  Key is mapped to |<Plug>(iced_popup_source_show)|.
+  Key is mapped to |<Plug>(iced_source_popup_show)|.
 
                                                           *:IcedCommandPalette*
 :IcedCommandPalette
@@ -1214,9 +1214,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_document_open)
   Same as |:IcedDocumentOpen|.
 
-                                             *<Plug>(iced_popup_document_open)*
-<Plug>(iced_popup_document_open)
-  Same as |:IcedPopupDocumentOpen|.
+                                             *<Plug>(iced_document_popup_open)*
+<Plug>(iced_document_popup_open)
+  Same as |:IcedDocumentPopupOpen|.
   Configurable options are:
   - |g:iced_enable_popup_document|
 
@@ -1249,9 +1249,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_source_show)
   Same as |:IcedSourceShow|.
 
-                                               *<Plug>(iced_popup_source_show)*
-<Plug>(iced_popup_source_show)
-  Same as |:IcedPopupSourceShow|.
+                                               *<Plug>(iced_source_popup_show)*
+<Plug>(iced_source_popup_show)
+  Same as |:IcedSourcePopupShow|.
 
                                                  *<Plug>(iced_command_palette)*
 <Plug>(iced_command_palette)
@@ -1785,13 +1785,13 @@ g:iced_enable_default_key_mappings
   n       <Leader>rtl  <Plug>(iced_thread_last)
   n       <Leader>ref  <Plug>(iced_extract_function)
   n       <Leader>rml  <Plug>(iced_move_to_let)
-  n       K            <Plug>(iced_popup_document_open)
+  n       K            <Plug>(iced_document_popup_open)
   n       <Leader>hb   <Plug>(iced_document_open)
   n       <Leader>hu   <Plug>(iced_use_case_open)
   n       <Leader>hn   <Plug>(iced_next_use_case)
   n       <Leader>hN   <Plug>(iced_prev_use_case)
   n       <Leader>hq   <Plug>(iced_document_close)
-  n       <Leader>hs   <Plug>(iced_popup_source_show)
+  n       <Leader>hs   <Plug>(iced_source_popup_show)
   n       <Leader>hS   <Plug>(iced_source_show)
   n       <Leader>hc   <Plug>(iced_clojuredocs_open)
   n       <Leader>hh   <Plug>(iced_command_palette)

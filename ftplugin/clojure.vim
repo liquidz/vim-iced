@@ -88,14 +88,14 @@ command! -nargs=1 -complete=custom,iced#nrepl#navigate#ns_complete
       \ IcedOpenNs                          call iced#nrepl#navigate#open_ns('e', <q-args>)
 
 command! -nargs=? IcedDocumentOpen          call iced#nrepl#document#open(<q-args>)
-command! -nargs=? IcedPopupDocumentOpen     call iced#nrepl#document#popup_open(<q-args>)
+command! -nargs=? IcedDocumentPopupOpen     call iced#nrepl#document#popup_open(<q-args>)
 command!          IcedFormDocument          call iced#nrepl#document#current_form()
 command! -nargs=? IcedUseCaseOpen           call iced#nrepl#document#usecase(<q-args>)
 command!          IcedNextUseCase           call iced#nrepl#document#next_usecase()
 command!          IcedPrevUseCase           call iced#nrepl#document#prev_usecase()
 command!          IcedDocumentClose         call iced#nrepl#document#close()
 command! -nargs=? IcedSourceShow            call iced#nrepl#source#show(<q-args>)
-command! -nargs=? IcedPopupSourceShow       call iced#nrepl#source#popup_show(<q-args>)
+command! -nargs=? IcedSourcePopupShow       call iced#nrepl#source#popup_show(<q-args>)
 command!          IcedCommandPalette        call iced#palette#show()
 command! -nargs=? IcedSpecForm              call iced#nrepl#spec#form(<q-args>)
 command! -nargs=? IcedSpecExample           call iced#nrepl#spec#example(<q-args>)
@@ -192,14 +192,14 @@ nnoremap <silent> <Plug>(iced_stdout_buffer_close)      :<C-u>IcedStdoutBufferCl
 nnoremap <silent> <Plug>(iced_def_jump)                 :<C-u>IcedDefJump<CR>
 
 nnoremap <silent> <Plug>(iced_document_open)            :<C-u>IcedDocumentOpen<CR>
-nnoremap <silent> <Plug>(iced_popup_document_open)      :<C-u>IcedPopupDocumentOpen<CR>
+nnoremap <silent> <Plug>(iced_document_popup_open)      :<C-u>IcedDocumentPopupOpen<CR>
 nnoremap <silent> <Plug>(iced_form_document)            :<C-u>IcedFormDocument<CR>
 nnoremap <silent> <Plug>(iced_use_case_open)            :<C-u>IcedUseCaseOpen<CR>
 nnoremap <silent> <Plug>(iced_next_use_case)            :<C-u>IcedNextUseCase<CR>
 nnoremap <silent> <Plug>(iced_prev_use_case)            :<C-u>IcedPrevUseCase<CR>
 nnoremap <silent> <Plug>(iced_document_close)           :<C-u>IcedDocumentClose<CR>
 nnoremap <silent> <Plug>(iced_source_show)              :<C-u>IcedSourceShow<CR>
-nnoremap <silent> <Plug>(iced_popup_source_show)        :<C-u>IcedPopupSourceShow<CR>
+nnoremap <silent> <Plug>(iced_source_popup_show)        :<C-u>IcedSourcePopupShow<CR>
 nnoremap <silent> <Plug>(iced_command_palette)          :<C-u>IcedCommandPalette<CR>
 nnoremap <silent> <Plug>(iced_spec_form)                :<C-u>IcedSpecForm<CR>
 nnoremap <silent> <Plug>(iced_spec_example)             :<C-u>IcedSpecExample<CR>
@@ -430,8 +430,8 @@ function! s:default_key_mappings() abort
 
   "" Help/Document (<Leader>h)
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_popup_document_open)')
-    silent! nmap <buffer> K <Plug>(iced_popup_document_open)
+  if !hasmapto('<Plug>(iced_document_popup_open)')
+    silent! nmap <buffer> K <Plug>(iced_document_popup_open)
   endif
 
   if !hasmapto('<Plug>(iced_document_open)')
@@ -458,8 +458,8 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>hS <Plug>(iced_source_show)
   endif
 
-  if !hasmapto('<Plug>(iced_popup_source_show)')
-    silent! nmap <buffer> <Leader>hs <Plug>(iced_popup_source_show)
+  if !hasmapto('<Plug>(iced_source_popup_show)')
+    silent! nmap <buffer> <Leader>hs <Plug>(iced_source_popup_show)
   endif
 
   if !hasmapto('<Plug>(iced_clojuredocs_open)')

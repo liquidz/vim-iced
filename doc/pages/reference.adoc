@@ -10,8 +10,8 @@ The explicit way is executing commands such as follows.
 |===
 | Command | Default key mapping | Description
 
-| {help_html}#%3AIcedPopupDocumentOpen[IcedPopupDocumentOpen]
-| {plug_iced_popup_document_open}
+| {help_html}#%3AIcedDocumentPopupOpen[IcedDocumentPopupOpen]
+| {plug_iced_document_popup_open}
 | Show docstring for the var under the cursor in popup window
 
 | {help_html}#%3AIcedDocumentOpen[IcedDocumentOpen]
@@ -48,17 +48,17 @@ If you get a outdated result, you can refresh cache file by this command.
 
 === Source codes
 
-{help_html}#%3AIcedSourceShow[IcedSourceShow] or {help_html}#%3AIcedPopupSourceShow[IcedPopupSourceShow] is useful when you would like to refer the source code itself.
+{help_html}#%3AIcedSourceShow[IcedSourceShow] or {help_html}#%3AIcedSourcePopupShow[IcedSourcePopupShow] is useful when you would like to refer the source code itself.
 
-// `IcedSourceShow` will open a separeted buffer and show source codes in it, while `IcedPopupSourceShow` shows in a popup window.
-// Default key mapping is a `{plug_iced_source_show}` for `IcedSourceShow` and `{plug_iced_popup_source_show}` for `IcedPopupSourceShow`.
+// `IcedSourceShow` will open a separeted buffer and show source codes in it, while `IcedSourcePopupShow` shows in a popup window.
+// Default key mapping is a `{plug_iced_source_show}` for `IcedSourceShow` and `{plug_iced_popup_source_show}` for `IcedSourcePopupShow`.
 
 [cols="30,20,50"]
 |===
 | Command | Default key mapping | Description
 
-| {help_html}#%3AIcedPopupSourceShow[IcedPopupSourceShow]
-| {plug_iced_popup_source_show}
+| {help_html}#%3AIcedSourcePopupShow[IcedSourcePopupShow]
+| {plug_iced_source_popup_show}
 | Show source codes in a popup window.
 
 | {help_html}#%3AIcedSourceShow[IcedSourceShow]
