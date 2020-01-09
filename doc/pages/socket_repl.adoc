@@ -88,7 +88,11 @@ Another way, you can launch socket REPL in your vim/neovim as a job.
 
 pREPL connection is based on socket REPL connection in vim-iced.
 
-NOTE: https://github.com/borkdude/jet[jet] is required currently.
+[NOTE]
+====
+https://github.com/borkdude/jet[borkdude/jet] is required currently. +
+vim-iced can download `jet` automatically if you want.
+====
 
 You can try pREPL connection as follows.
 
