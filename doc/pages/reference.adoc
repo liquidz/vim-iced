@@ -67,6 +67,34 @@ If you get a outdated result, you can refresh cache file by this command.
 
 |===
 
+=== Definitions
+
+{help_html}#%3AIcedDefinitionShow[IcedDefinitionShow] and {help_html}#%3AIcedDefinitionPopupShow[IcedDefinitionPopupShow] is similar to {help_html}#%3AIcedSourceShow[IcedSourceShow] and {help_html}#%3AIcedSourcePopupShow[IcedSourcePopupShow].
+
+The difference is that `IcedDefinitionShow` is not limited to `def`, `defn`.
+For example, this command can refer definition codes in `let` form.
+
+[NOTE]
+====
+https://github.com/borkdude/jet[borkdude/jet] is required currently. +
+vim-iced can download `jet` automatically if you want.
+====
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedDefinitionPopupShow[IcedDefinitionPopupShow]
+| {plug_iced_definition_popup_show}
+| Show definition codes in a popup window.
+
+| {help_html}#%3AIcedDefinitionShow[IcedDefinitionShow]
+| {plug_iced_definition_show}
+| Open a separeted buffer(<<document_buffer>>) and show definition codes in it.
+
+|===
+
+
 === Use cases
 
 Sometimes, it is useful to know how a function is used elsewhere.

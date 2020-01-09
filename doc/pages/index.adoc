@@ -22,6 +22,8 @@
 :plug_iced_clojuredocs_open: <Leader>hc
 :plug_iced_source_show: <Leader>hS
 :plug_iced_source_popup_show: <Leader>hs
+:plug_iced_definition_show: <Leader>hD
+:plug_iced_definition_popup_show: <Leader>hd
 :plug_iced_macroexpand_outer_list: <Leader>eM
 :plug_iced_macroexpand_1_outer_list: <Leader>em
 :plug_iced_test_under_cursor: <Leader>tt
