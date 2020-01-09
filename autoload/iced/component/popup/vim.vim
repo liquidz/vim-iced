@@ -60,6 +60,8 @@ function! s:popup.open(texts, ...) abort
   if type(org_col) == v:t_string
     if org_col ==# 'right'
       let org_col = wininfo['width'] - width
+    elseif org_col ==# 'near-cursor'
+      let org_col = wincol()
     else
       return iced#message#error('unexpected_error', printf('invalid column "%s"', org_col))
     endif
