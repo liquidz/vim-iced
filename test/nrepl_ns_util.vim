@@ -30,7 +30,7 @@ endfunction
 function! s:suite.replace_ns_not_found_test() abort
   call s:buf.start_dummy(['(list :hello)', 'nil|'])
   let org_text = s:buf.get_texts()
-  
+
   call s:assert.equals(line('.'), 2)
   call iced#nrepl#ns#util#replace('(ns bar.core)')
   call s:assert.equals(s:buf.get_texts(), org_text)
@@ -87,6 +87,13 @@ function! s:suite.add_namespace_to_require_sub_ns_test() abort
   let code = '(ns foo.bar.baz (:require))'
   let res = iced#nrepl#ns#util#add_namespace_to_require(code, 'foo.bar', 'bar')
   call s:assert.equals(res, '(ns foo.bar.baz (:require [foo.bar :as bar]))')
+
+  let code = '(ns foo.core (:require [foo.bar.baz :as baz]))'
+  let res = iced#nrepl#ns#util#add_namespace_to_require(code, 'foo.bar', '')
+  call s:assert.equals(res, "(ns foo.core (:require [foo.bar.baz :as baz]\nfoo.bar))")
+
+  let res = iced#nrepl#ns#util#add_namespace_to_require(code, 'foo.bar', 'bar')
+  call s:assert.equals(res, "(ns foo.core (:require [foo.bar.baz :as baz]\n[foo.bar :as bar]))")
 endfunction
 
 function! s:suite.add_test() abort
