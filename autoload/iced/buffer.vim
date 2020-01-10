@@ -21,8 +21,14 @@ function! s:bufwinnr(bufname) abort
   return bufwinnr(iced#buffer#nr(a:bufname))
 endfunction
 
-function! iced#buffer#focus(bufname) abort
-  call s:focus_window(s:bufwinnr(a:bufname))
+function! iced#buffer#focus(expr) abort
+  if type(a:expr) == v:t_string
+    call s:focus_window(s:bufwinnr(a:expr))
+  else
+    " a:expr should be buffer number
+    call s:focus_window(bufwinnr(a:expr))
+  endif
+  return v:true
 endfunction
 
 function! iced#buffer#is_initialized(bufname) abort
