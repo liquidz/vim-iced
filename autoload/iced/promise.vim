@@ -46,5 +46,10 @@ function! iced#promise#reject(x) abort
   return s:Promise.reject(a:x)
 endfunction
 
+" For debugging
+function! iced#promise#sleep(ms, ret) abort
+  return s:Promise.new({resolve -> timer_start(a:ms, {-> resolve(a:ret)})})
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
