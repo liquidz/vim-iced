@@ -34,11 +34,11 @@ function! s:installer.install(name, ...) abort
 
   call iced#message#info('required_to_install', a:name)
   let res = self.io.input(iced#message#get('confirm_installation', a:name, install_dir))
+  " for line break
+  echom ' '
   if res !=# '' && res !=# 'y' && res !=# 'Y'
     return Callback(v:false)
   endif
-  " for line break
-  echom ' '
 
   if !filereadable(installer)
     call iced#message#error('no_installer', a:name)
