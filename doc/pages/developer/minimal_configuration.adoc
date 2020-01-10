@@ -1,0 +1,43 @@
+=== Minimal configuration [[minimal_configuration]]
+
+Minimal configuration is useful for debugging.
+If you find an unexpected behavior, please try this configuration.
+
+.Setup
+[source,shell]
+----
+$ mkdir -p /tmp/vim-iced-test/pack/iced/start
+$ git clone https://github.com/guns/vim-sexp \
+    /tmp/vim-iced-test/pack/iced/start/vim-sexp
+$ git clone https://github.com/liquidz/vim-iced \
+    /tmp/vim-iced-test/pack/iced/start/vim-iced
+----
+
+.test_config.vim
+[source,vim]
+----
+set nocompatible
+set encoding=utf-8
+scriptencoding utf-8
+filetype plugin indent on
+set hidden
+
+set runtimepath-=$HOME/.vim
+set runtimepath-=$HOME/.vim/after
+set runtimepath-=$HOME/.config/nvim
+set runtimepath-=$HOME/.config/nvim/after
+set runtimepath-=$HOME/.local/share/nvim/site
+set runtimepath-=$HOME/.local/share/nvim/site/after
+
+set packpath=/tmp/vim-iced-test
+----
+
+.Lanuch Vim/Neovim
+[source,shell]
+----
+# Vim
+$ vim -u /path/to/test_config.vim /path/to/your/project/code.clj
+
+# Neovim
+$ nvim -u /path/to/test_config.vim /path/to/your/project/code.clj
+----
