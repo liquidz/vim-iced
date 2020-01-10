@@ -45,6 +45,7 @@ function! iced#component#repl#prepl#start(this) abort
 
   let s:prepl.socket_repl = a:this['socket_repl']
   let s:prepl.edn = a:this['edn']
+  if !s:prepl.edn.is_available() | return '' | endif
 
   let d = deepcopy(a:this['socket_repl'])
   let d['connect'] = funcref('s:connect', s:prepl)
