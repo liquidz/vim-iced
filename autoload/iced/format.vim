@@ -13,32 +13,89 @@ function! s:set_indentation_rule() abort
         \   'done')})
 endfunction
 
-function! iced#format#all() abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-  call s:set_indentation_rule()
+function! s:__format_finally(args) abort
+  let current_bufnr = get(a:args, 'back_to_bufnr', bufnr('%'))
+  let different_buffer = (current_bufnr != a:args.bufnr)
+  if different_buffer | call iced#buffer#focus(a:args.bufnr) | endif
 
-  let view = winsaveview()
-  let reg_save = @@
-  let ns_name = iced#nrepl#ns#name()
-  let sign = iced#system#get('sign')
-  let before_signs = copy(sign.list_in_buffer())
+  setl modifiable
+  let @@ = a:args.reg_save
+  call winrestview(a:args.view)
+  call iced#system#get('sign').refresh({'signs': a:args.signs})
+
+  if different_buffer | call iced#buffer#focus(current_bufnr) | endif
+endfunction
+
+"" iced#format#all {{{
+function! s:__format_all(resp, finally_args) abort
+  let current_bufnr = bufnr('%')
+  if current_bufnr != a:finally_args.bufnr
+    call iced#buffer#focus(a:finally_args.bufnr)
+  endif
+  setl modifiable
 
   try
-    let codes = trim(join(getline(1, '$'), "\n"))
-    if empty(codes) | return | endif
-
-    let resp = iced#nrepl#op#iced#sync#format_code(codes, iced#nrepl#ns#alias_dict(ns_name))
-    if has_key(resp, 'formatted') && !empty(resp['formatted'])
+    if has_key(a:resp, 'formatted') && !empty(a:resp['formatted'])
       %del
-      call setline(1, split(resp['formatted'], '\r\?\n'))
-    elseif has_key(resp, 'error')
-      call iced#message#error_str(resp['error'])
+      call setline(1, split(a:resp['formatted'], '\r\?\n'))
+    elseif has_key(a:resp, 'error')
+      call iced#message#error_str(a:resp['error'])
     endif
   finally
-    let @@ = reg_save
-    call winrestview(view)
-    call sign.refresh({'signs': before_signs})
+    let a:finally_args['back_to_bufnr'] = current_bufnr
+    call s:__format_finally(a:finally_args)
   endtry
+
+  return iced#promise#resolve('ok')
+endfunction
+
+function! iced#format#all() abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  let reg_save = @@
+  let view = winsaveview()
+  let codes = trim(join(getline(1, '$'), "\n"))
+  if empty(codes) | return | endif
+
+  call s:set_indentation_rule()
+
+  let ns_name = iced#nrepl#ns#name()
+  let alias_dict = iced#nrepl#ns#alias_dict(ns_name)
+  let finally_args = {
+        \ 'reg_save': reg_save,
+        \ 'view': view,
+        \ 'bufnr': bufnr('%'),
+        \ 'signs': copy(iced#system#get('sign').list_in_buffer()),
+        \ }
+
+  " Disable editing until the formatting process is completed
+  setl nomodifiable
+  return iced#promise#call('iced#nrepl#op#iced#format_code', [codes, alias_dict])
+        \.then({resp -> s:__format_all(resp, finally_args)})
+        \.catch({_ -> s:__format_finally(finally_args)})
+endfunction " }}}
+
+"" iced#format#form {{{
+function! s:__format_form(resp, finally_args) abort
+  let current_bufnr = bufnr('%')
+  if current_bufnr != a:finally_args.bufnr
+    call iced#buffer#focus(a:finally_args.bufnr)
+  endif
+  setl modifiable
+
+  try
+    if has_key(a:resp, 'formatted') && !empty(a:resp['formatted'])
+      let @@ = a:resp['formatted']
+      silent normal! gvp
+    elseif has_key(a:resp, 'error')
+      call iced#message#error_str(a:resp['error'])
+    endif
+  finally
+    let a:finally_args['back_to_bufnr'] = current_bufnr
+    call s:__format_finally(a:finally_args)
+  endtry
+
+  return iced#promise#resolve('ok')
 endfunction
 
 function! iced#format#form() abort
@@ -47,35 +104,31 @@ function! iced#format#form() abort
     return
   endif
 
+  let reg_save = @@ " must be captured before get_current_top_list_raw
+  let view = winsaveview() " must be captured before get_current_top_list_raw
+  let codes = get(iced#paredit#get_current_top_list_raw(), 'code', '')
+  if empty(codes) | return iced#message#warning('finding_code_error') | endif
+
+  call winrestview(view)
   call s:set_indentation_rule()
 
-  let view = winsaveview()
-  let reg_save = @@
   let ns_name = iced#nrepl#ns#name()
-  let sign = iced#system#get('sign')
-  let before_signs = copy(sign.list_in_buffer())
+  let alias_dict = iced#nrepl#ns#alias_dict(ns_name)
+  let finally_args = {
+        \ 'reg_save': reg_save,
+        \ 'view': view,
+        \ 'bufnr': bufnr('%'),
+        \ 'signs': copy(iced#system#get('sign').list_in_buffer()),
+        \ }
 
-  try
-    let res = iced#paredit#get_current_top_list_raw()
-    let code = res['code']
-    if empty(code)
-      call iced#message#warning('finding_code_error')
-    else
-      let resp = iced#nrepl#op#iced#sync#format_code(code, iced#nrepl#ns#alias_dict(ns_name))
-      if has_key(resp, 'formatted') && !empty(resp['formatted'])
-        let @@ = resp['formatted']
-        silent normal! gvp
-      elseif has_key(resp, 'error')
-        call iced#message#error_str(resp['error'])
-      endif
-    endif
-  finally
-    let @@ = reg_save
-    call winrestview(view)
-    call sign.refresh({'signs': before_signs})
-  endtry
-endfunction
+  " Disable editing until the formatting process is completed
+  setl nomodifiable
+  return iced#promise#call('iced#nrepl#op#iced#format_code', [codes, alias_dict])
+        \.then({resp -> s:__format_form(resp, finally_args)})
+        \.catch({_ -> s:__format_finally(finally_args)})
+endfunction " }}}
 
+"" iced#format#minimal {{{
 function! iced#format#minimal(...) abort
   if !iced#nrepl#is_connected()
     silent exe "normal \<Plug>(sexp_indent)"
@@ -116,8 +169,9 @@ function! iced#format#minimal(...) abort
     let @@ = reg_save
     call winrestview(view)
   endtry
-endfunction
+endfunction " }}}
 
+"" iced#format#calculate_indent {{{
 function! iced#format#calculate_indent(lnum) abort
   if !iced#nrepl#is_connected()
     return GetClojureIndent()
@@ -149,13 +203,15 @@ function! iced#format#calculate_indent(lnum) abort
     let @@ = reg_save
     call winrestview(view)
   endtry
-endfunction
+endfunction " }}}
 
+"" iced#format#set_indentexpr {{{
 function! iced#format#set_indentexpr() abort
   if get(g:, 'iced_enable_auto_indent', v:true)
     setlocal indentexpr=GetIcedIndent()
   endif
-endfunction
+endfunction " }}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
+" vim:fdm=marker:fdl=0
