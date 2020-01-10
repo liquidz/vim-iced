@@ -776,6 +776,7 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedSourceShow [{symbol}]
   Open a window, and show source codes for {symbol}
   If {symbol} is not passed, symbol under cursor is used.
+  See also |g:iced#nrepl#source#enable_enhanced_extraction|.
   Key is mapped to |<Plug>(iced_source_show)|.
 
                                                          *:IcedSourcePopupShow*
@@ -784,20 +785,8 @@ COMMANDS                                                    *vim-iced-commands*
   If {symbol} is not passed, symbol under cursor is used.
   If |popup| is not supported or codes are too long to show in popup window,
   |:IcedSourceShow| is called.
+  See also |g:iced#nrepl#source#enable_enhanced_extraction|.
   Key is mapped to |<Plug>(iced_source_popup_show)|.
-
-                                                          *:IcedDefinitionShow*
-:IcedDefinitionShow
-  Open a window, and show definition codes for the symbol under the cursor.
-  Key is mapped to |<Plug>(iced_definition_show)|.
-
-                                                     *:IcedDefinitionPopupShow*
-:IcedDefinitionPopupShow
-  Open a popup window, and show definition codes for the symbol under the
-  cursor.
-  If |popup| is not supported or codes are too long to show in popup window,
-  |:IcedDefinitionShow| is called.
-  Key is mapped to |<Plug>(iced_definition_popup_show)|.
 
                                                           *:IcedCommandPalette*
 :IcedCommandPalette
@@ -1266,14 +1255,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_source_popup_show)
   Same as |:IcedSourcePopupShow|.
 
-                                                 *<Plug>(iced_definition_show)*
-<Plug>(iced_definition_show)
-  Same as |:IcedDefinitionShow|.
-
-                                           *<Plug>(iced_definition_popup_show)*
-<Plug>(iced_definition_popup_show)
-  Same as |:IcedDefinitionPopupShow|.
-
                                                  *<Plug>(iced_command_palette)*
 <Plug>(iced_command_palette)
   Same as |:IcedCommandPalette|.
@@ -1511,11 +1492,24 @@ g:iced#nrepl#path_translation
   Default value is `{}`.
   See also |vim-iced-install-docker|.
 
-                   *g:iced#nrepl#source#fallback_to_source_when_no_definition*
-g:iced#nrepl#source#fallback_to_source_when_no_definition
-  If {v:true}, |:IcedDefinitionShow| will fallback to |:IcedSourceShow| when a
-  corresponding defition is not found.
+                               *g:iced#nrepl#source#enable_enhanced_extraction*
+g:iced#nrepl#source#enable_enhanced_extraction
+  If {v:true}, enable enhanced source extraction.
+  This feature will extract source by `let` form also.
   Default value is `v:true`.
+  See also |g:iced#nrepl#source#finding_max_depth|.
+
+  WARNING:
+    Enhanced source extraction requires `borkdude/jet`.
+    https://github.com/borkdude/jet
+    vim-iced will confirm you to install `jet` automatically If not installed.
+
+                                        *g:iced#nrepl#source#finding_max_depth*
+g:iced#nrepl#source#finding_max_depth
+  Max depth for finding source. 
+  This value is used on enhanced source extraction.
+  Default value is `3`.
+  See also |g:iced#nrepl#source#enable_enhanced_extraction|.
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
@@ -1820,8 +1814,6 @@ g:iced_enable_default_key_mappings
   n       <Leader>hq   <Plug>(iced_document_close)
   n       <Leader>hs   <Plug>(iced_source_popup_show)
   n       <Leader>hS   <Plug>(iced_source_show)
-  n       <Leader>hd   <Plug>(iced_definition_popup_show)
-  n       <Leader>hD   <Plug>(iced_definition_show)
   n       <Leader>hc   <Plug>(iced_clojuredocs_open)
   n       <Leader>hh   <Plug>(iced_command_palette)
   n       <Leader>bn   <Plug>(iced_browse_related_namespace)
