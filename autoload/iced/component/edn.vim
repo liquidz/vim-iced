@@ -5,11 +5,18 @@ let s:edn = {
       \ 'job': '',
       \ 'jet': '',
       \ 'callback': '',
+      \ 'available': v:false,
       \ }
 
+function! s:edn.is_available() abort
+  return self.available
+endfunction
+
 function! s:edn.decode(text, callback) abort
-  let self.callback = a:callback
-  call self.job.sendraw(self.jet, a:text)
+  if self.available
+    let self.callback = a:callback
+    call self.job.sendraw(self.jet, a:text)
+  endif
 endfunction
 
 function! s:out_callback(_, resp) abort dict
@@ -27,19 +34,22 @@ function! s:out_callback(_, resp) abort dict
 endfunction
 
 function! iced#component#edn#start(this) abort
+  call iced#util#debug('start', 'edn')
+
   if !executable('jet')
-    if !iced#promise#sync(a:this['installer'].install, ['jet'], 10000)
-      return ''
-    endif
+    call iced#promise#sync(a:this['installer'].install, ['jet'], 10000)
   endif
 
-  call iced#util#debug('start', 'edn')
-  let s:edn.job = a:this['job']
-
-  let s:edn.jet = s:edn.job.start('jet --to json', {
-       \ 'out_cb': funcref('s:out_callback', s:edn),
-       \ 'drop': 'never',
-       \ })
+  if !executable('jet')
+    let s:edn.available = v:false
+  else
+    let s:edn.available = v:true
+    let s:edn.job = a:this['job']
+    let s:edn.jet = s:edn.job.start('jet --to json', {
+          \ 'out_cb': funcref('s:out_callback', s:edn),
+          \ 'drop': 'never',
+          \ })
+  endif
 
   return s:edn
 endfunction
