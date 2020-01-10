@@ -107,7 +107,7 @@ function! iced#nrepl#source#show(symbol) abort
   let cword = iced#nrepl#var#cword()
   let symbol = empty(a:symbol) ? cword : a:symbol
 
-  return ((symbol ==# cword && g:iced#nrepl#source#enable_enhanced_extraction)
+  return ((symbol ==# cword && g:iced#nrepl#source#enable_enhanced_extraction && iced#system#get('edn').is_available())
         \ ? s:__fetch_definition()
         \ : s:__fetch_source(symbol))
         \.then({code -> empty(code)
@@ -143,7 +143,7 @@ function! iced#nrepl#source#popup_show(symbol) abort
   let cword = iced#nrepl#var#cword()
   let symbol = empty(a:symbol) ? cword : a:symbol
 
-  return ((symbol ==# cword && g:iced#nrepl#source#enable_enhanced_extraction)
+  return ((symbol ==# cword && g:iced#nrepl#source#enable_enhanced_extraction && iced#system#get('edn').is_available())
         \ ? s:__fetch_definition()
         \ : s:__fetch_source(symbol))
         \.then({code -> empty(code)
