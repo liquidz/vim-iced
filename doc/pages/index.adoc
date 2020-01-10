@@ -7,6 +7,7 @@
 
 //:help_url: https://liquidz.github.io/vim-iced/vim-iced.html
 :help_html: https://vim-iced-nightly.netlify.com/vim-iced.html
+//:help_html: http://localhost:8000/vim-iced.html
 :nrepl: https://nrepl.org/[nREPL]
 :kaocha: https://github.com/lambdaisland/kaocha[kaocha]
 :vim_localrc: https://github.com/thinca/vim-localrc[vim-localrc]
@@ -15,6 +16,8 @@
 :vim_iced_kaocha: https://github.com/liquidz/vim-iced-kaocha[vim-iced-kaocha]
 :vim_themis: https://github.com/thinca/vim-themis[vim-themis]
 // key mappings {{{
+
+:plug_iced_connect: <Leader>'
 :plug_iced_eval_inner_element: <Leader>ei
 :plug_iced_eval_outer_list: <Leader>ee
 :plug_iced_eval_outer_top_list: <Leader>et
@@ -221,6 +224,12 @@ include::socket_repl.adoc[]
 // }}}
 
 include::developer.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
+
+include::cheatsheet.adoc[]
 // back to top {{{
 [.text-right]
 [small]#<<top>>#
