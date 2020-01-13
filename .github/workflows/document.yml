@@ -4,7 +4,6 @@ on:
     branches:
       - master
       - dev
-      - docs
 jobs:
   asciidoc:
     runs-on: ubuntu-latest
@@ -52,6 +51,7 @@ jobs:
           path: target/html
 
   nightly-deploy:
+    if: github.ref == 'refs/heads/dev'
     needs: [asciidoc, help]
     runs-on: ubuntu-latest
     container:
@@ -66,3 +66,20 @@ jobs:
         run: npm install -g --silent netlify-cli
       - name: deploy to netlify
         run: netlify deploy --auth=${{ secrets.NETLIFY_PERSONAL_ACCESS_TOKEN }} --site=${{ secrets.NETLIFY_SITE_ID }} --dir=document --prod
+
+  deploy:
+    if: github.ref == 'refs/heads/master'
+    needs: [asciidoc, help]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/download-artifact@master
+        with:
+          name: document
+          path: document
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: ./document
