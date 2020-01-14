@@ -776,7 +776,7 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedSourceShow [{symbol}]
   Open a window, and show source codes for {symbol}
   If {symbol} is not passed, symbol under cursor is used.
-  See also |g:iced#nrepl#source#enable_enhanced_extraction|.
+  See also |g:iced_enable_enhanced_definition_extraction|.
   Key is mapped to |<Plug>(iced_source_show)|.
 
                                                          *:IcedSourcePopupShow*
@@ -785,7 +785,7 @@ COMMANDS                                                    *vim-iced-commands*
   If {symbol} is not passed, symbol under cursor is used.
   If |popup| is not supported or codes are too long to show in popup window,
   |:IcedSourceShow| is called.
-  See also |g:iced#nrepl#source#enable_enhanced_extraction|.
+  See also |g:iced_enable_enhanced_definition_extraction|.
   Key is mapped to |<Plug>(iced_source_popup_show)|.
 
                                                           *:IcedCommandPalette*
@@ -1492,8 +1492,8 @@ g:iced#nrepl#path_translation
   Default value is `{}`.
   See also |vim-iced-install-docker|.
 
-                               *g:iced#nrepl#source#enable_enhanced_extraction*
-g:iced#nrepl#source#enable_enhanced_extraction
+                                 *g:iced_enable_enhanced_definition_extraction*
+g:iced_enable_enhanced_definition_extraction
   If {v:true}, enable enhanced source extraction.
   This feature will extract source by `let` form also.
   Default value is `v:true`.
@@ -1509,7 +1509,7 @@ g:iced#nrepl#source#finding_max_depth
   Max depth for finding source. 
   This value is used on enhanced source extraction.
   Default value is `3`.
-  See also |g:iced#nrepl#source#enable_enhanced_extraction|.
+  See also |g:iced_enable_enhanced_definition_extraction|.
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*

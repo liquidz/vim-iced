@@ -66,7 +66,7 @@ If you get a outdated result, you can refresh cache file by this command.
 
 ==== Enhanced source extraction
 
-If {help_html}#g%3Aiced%23nrepl%23source%23enable_enhanced_extraction[g:iced#nrepl#source#enable_enhanced_extraction] is true, vim-iced enable enhanced source extraction.
+If {help_html}#g%3Aiced_enable_enhanced_definition_extraction[g:iced_enable_enhanced_definition_extraction] is true, vim-iced enable enhanced source extraction.
 This feature is enabled by default.
 
 The difference from normal extraction is to extract source by not only `def` and `defn` but also `let` form.

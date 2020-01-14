@@ -42,6 +42,10 @@ if !exists('g:iced_enable_enhanced_cljs_completion')
   let g:iced_enable_enhanced_cljs_completion = v:true
 endif
 
+if !exists('g:iced_enable_enhanced_definition_extraction')
+  let g:iced_enable_enhanced_definition_extraction = v:true
+endif
+
 "" Commands {{{
 command! -nargs=? IcedConnect               call iced#repl#connect('nrepl', <q-args>)
 command! -nargs=1 IcedConnectSocketRepl     call iced#repl#connect('socket_repl', <q-args>)
