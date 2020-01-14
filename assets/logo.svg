@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink"
-     width="200" height="200"
-     viewBox="10,10,80,80">
-  <polygon fill="#B3E5FC" points="50,10 10,50 30,70 20,50"/>
-  <polygon fill="#90CAF9" points="50,10 30,50 30,70 55,50"/>
-  <polygon fill="#81D4FA" points="50,10 70,70 90,50"/>
-  <polygon fill="#64B5F6" points="60,60 30,70 50,90 70,70"/>
-</svg>
