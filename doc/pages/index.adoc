@@ -5,8 +5,8 @@
 :source-highlighter: rouge
 :icons: font
 
-//:help_url: https://liquidz.github.io/vim-iced/vim-iced.html
-:help_html: https://vim-iced-nightly.netlify.com/vim-iced.html
+:help_html: https://liquidz.github.io/vim-iced/vim-iced.html
+//:help_html: https://vim-iced-nightly.netlify.com/vim-iced.html
 //:help_html: http://localhost:8000/vim-iced.html
 :nrepl: https://nrepl.org/[nREPL]
 :kaocha: https://github.com/lambdaisland/kaocha[kaocha]

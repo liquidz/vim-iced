@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file. This change
 // {{{
 === Added
 * Added document pages.
-** https://liquidz.github.io/vim-iced/
+** https://liquidz.github.io/vim-iced/index.html
 ** https://qiita.com/advent-calendar/2019/vim-iced
 * Added minimal support for socket REPL and pREPL.
 ** https://liquidz.github.io/vim-iced/#socket_repl
