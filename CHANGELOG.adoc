@@ -10,8 +10,8 @@ All notable changes to this project will be documented in this file. This change
 ** https://qiita.com/advent-calendar/2019/vim-iced
 * Added minimal support for socket REPL and pREPL.
 ** https://liquidz.github.io/vim-iced/#socket_repl
-* Added `IcedDefinitionShow` command.
-* Added `IcedDefinitionPopupShow` command.
+* Added enhanced mode for `IcedSourceShow` command.
+** Added `g:iced_enable_enhanced_definition_extraction` option.
 
 === Changed
 * (Breaking) Rename following commans.
@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file. This change
 * https://github.com/liquidz/vim-iced/issues/166[#166]: Fixed to show document protocol method correctly.
 * https://github.com/liquidz/vim-iced/issues/168[#168]: Fixed a bug for adding resolved namespace.
 * https://github.com/liquidz/vim-iced/issues/171[#171]: Fixed `IcedAddArity` not to break indents.
+* https://github.com/liquidz/vim-iced/issues/172[#172]: Fixed `IcedFormat` and `IcedFormatAll` to work asynchronously.
 * Fixed vim's popup window position when a window is thin.
 
 // }}}
