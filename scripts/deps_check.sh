@@ -12,28 +12,51 @@ for TARGET in ${TARGETS[@]}; do
     )
     echo "${TARGET}: Expected version = [${EXPECTED_VERSION}]"
 
+    # ----------------
+    # doc/vim-iced.txt
+    # ----------------
+    DOC_NAME=doc/vim-iced.txt
+    DOC=${SCRIPT_DIR}/../${DOC_NAME}
     if [ "${TARGET}" = "nrepl" ]; then
-        HIT=$(grep "${TARGET}" ${SCRIPT_DIR}/../doc/vim-iced.txt | grep "${EXPECTED_VERSION}" | grep -v iced-nrepl | wc -l)
+        HIT=$(grep "${TARGET}" ${DOC} | grep "${EXPECTED_VERSION}" | grep -v iced-nrepl | wc -l)
         if [ ${HIT} -ne 1 ]; then
-            echo "=> Invalid document for ${TARGET} dependency."
+            echo "NG: ${DOC_NAME} => Invalid document for ${TARGET} dependency."
             exit 1
         else
-            echo "=> OK"
+            echo "OK: ${DOC_NAME}"
         fi
     else
-        HIT=$(grep "${TARGET}" ${SCRIPT_DIR}/../doc/vim-iced.txt | grep "${EXPECTED_VERSION}" | wc -l)
+        HIT=$(grep "${TARGET}" ${DOC} | grep "${EXPECTED_VERSION}" | wc -l)
         if [ ${HIT} -ne 3 ]; then
-            echo "=> Invalid document for ${TARGET} dependency."
+            echo "NG: ${DOC_NAME} => Invalid document for ${TARGET} dependency."
             exit 1
         else
-            echo "=> OK"
+            echo "OK: ${DOC_NAME}"
+        fi
+    fi
+
+    # ----------------------------------------
+    # doc/pages/clojurescript/shadow_cljs.adoc
+    # ----------------------------------------
+    DOC_NAME=doc/pages/clojurescript/shadow_cljs.adoc
+    DOC=${SCRIPT_DIR}/../${DOC_NAME}
+    if [ "${TARGET}" = "nrepl" ]; then
+        echo "OK: ${DOC_NAME} => Skipped"
+        continue
+    else
+        HIT=$(grep "${TARGET}" ${DOC} | grep "${EXPECTED_VERSION}" | wc -l)
+        if [ ${HIT} -ne 1 ]; then
+            echo "NG: ${DOC_NAME} => Invalid document for ${TARGET} dependency."
+            exit 1
+        else
+            echo "OK: ${DOC_NAME}"
         fi
     fi
 done
 
 echo 'bin/iced: Expected to newer than deps.edn'
 if [ ${SCRIPT_DIR}/../deps.edn -nt ${SCRIPT_DIR}/../bin/iced ]; then
-    echo '=> NG: iced command seems not up-to-date'
+    echo 'NG: iced command seems not up-to-date'
     exit 1
 else
     echo '=> OK'

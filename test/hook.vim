@@ -2,15 +2,18 @@ let s:suite = themis#suite('iced.hook')
 let s:assert = themis#helper('assert')
 let s:ch = themis#helper('iced_channel')
 let s:ex = themis#helper('iced_ex_cmd')
+let s:holder = themis#helper('iced_holder')
 
 function! s:setup() abort
   call iced#nrepl#set_session('clj',  'clj-session')
   call iced#nrepl#change_current_session('clj')
   call s:ex.mock()
+  call s:holder.clear()
 endfunction
 
 function! s:teardown() abort
   let g:iced#hook = {}
+  call s:holder.clear()
 endfunction
 
 function! s:suite.run_shell_type_test() abort
@@ -33,30 +36,25 @@ endfunction
 
 function! s:suite.run_eval_type_test() abort
   call s:setup()
-
-  let test = {'last_message': ''}
-  function! test.relay(msg) abort
-    let self.last_message = a:msg
-    return {'status': ['done']}
-  endfunction
-
-  call s:ch.mock({'status_value': 'open', 'relay': {msg -> test.relay(msg)}})
+  call s:ch.mock({'status_value': 'open', 'relay': {resp -> s:holder.relay(resp)}})
 
   let g:iced#hook = {'eval-test': {'type': 'eval', 'exec': '(simple form)'}}
   let p = iced#hook#run('eval-test', 'bar')
   call iced#promise#wait(p)
 
-  call s:assert.equals(test.last_message['op'], 'eval')
-  call s:assert.equals(test.last_message['code'], '(simple form)')
-  call s:assert.equals(test.last_message['session'], 'clj-session')
+  let msg = s:holder.get_args()[-1]
+  call s:assert.equals(msg['op'], 'eval')
+  call s:assert.equals(msg['code'], '(simple form)')
+  call s:assert.equals(msg['session'], 'clj-session')
 
   let g:iced#hook = {'eval-test': {'type': 'eval', 'exec': {v -> printf('(foo %s)', v)}}}
   let p = iced#hook#run('eval-test', 'bar')
   call iced#promise#wait(p)
 
-  call s:assert.equals(test.last_message['op'], 'eval')
-  call s:assert.equals(test.last_message['code'], '(foo bar)')
-  call s:assert.equals(test.last_message['session'], 'clj-session')
+  let msg = s:holder.get_args()[-1]
+  call s:assert.equals(msg['op'], 'eval')
+  call s:assert.equals(msg['code'], '(foo bar)')
+  call s:assert.equals(msg['session'], 'clj-session')
 
   call s:teardown()
 endfunction
@@ -64,14 +62,11 @@ endfunction
 function! s:suite.run_funcion_type_test() abort
   call s:setup()
 
-  let test = {'last_params': ''}
-  function! test.exec(params) abort
-    let self.last_params = a:params
-  endfunction
-
-  let g:iced#hook = {'function-test': {'type': 'function', 'exec': {v -> test.exec(v)}}}
+  let g:iced#hook = {'function-test': {'type': 'function', 'exec': {v -> s:holder.run(v)}}}
   call iced#hook#run('function-test', {'foo': 'bar'})
-  call s:assert.equals(test.last_params, {'foo': 'bar'})
+
+  let param = s:holder.get_args()[-1]
+  call s:assert.equals(param, [{'foo': 'bar'}])
 
   call s:teardown()
 endfunction

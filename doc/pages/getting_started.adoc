@@ -1,0 +1,4 @@
+== Getting Started
+
+include::getting_started/installation.adoc[]
+

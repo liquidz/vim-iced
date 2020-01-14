@@ -1,0 +1,61 @@
+== Testing [[testing]]
+
+vim-iced can integrate with https://clojure.github.io/clojure/clojure.test-api.html[clojure.test], and provides following test commands.
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedTestAll[IcedTestAll]
+| {plug_iced_test_all}
+| Run all tests in current project
+
+| {help_html}#%3AIcedTestNs[IcedTestNs]
+| {plug_iced_test_ns}
+| Run tests in current namespace
+
+| {help_html}#%3AIcedTestUnderCursor[IcedTestUnderCursor]
+| `{plug_iced_test_under_cursor}`
+| Run a test under cursor +
+See also <<related_tests>>
+
+| {help_html}#%3AIcedTestRedo[IcedTestRedo]
+| `{plug_iced_test_redo}`
+| Re run *failed* tests
+
+| {help_html}#%3AIcedTestRerunLast[IcedTestRerunLast]
+| `{plug_iced_test_rerun_last}`
+| Run the last test again
+
+|===
+
+=== Test result [[test_result]]
+
+When tests are failed, vim-iced show error messages in <<test_buffer>>,
+and {help_html}#%3AIcedTestBufferOpen[IcedTestBufferOpen] command open the buffer.
+
+vim-iced also set error positions to https://vim-jp.org/vimdoc-en/quickfix.html[quickfix],
+and https://vim-jp.org/vimdoc-en/quickfix.html#:cwindow[:cwindow] command enables you to show this information.
+This is useful to jump each failed tests.
+
+=== Related tests [[related_tests]]
+
+{help_html}#%3AIcedTestUnderCursor[IcedTestUnderCursor] is not just running a test under cursor.
+
+If the var under cursor does not contain `:test` metadata and current namespace doesn't end with "-test",
+vim-iced searches test vars in corresponding test namespace (c.f. <<navigation_source_and_test>>) and run them.
+Target test vars should include original var name in its name.
+
+=== Checking spec [[testing_checking_spec]]
+
+There is also https://clojure.org/guides/spec#_testing[checking spec] as one of the tests.
+
+{help_html}#%3AIcedTestSpecCheck[IcedTestSpecCheck] command is useful to run `clojure.spec.test.alpha/check` for the function under cursor.
+
+[NOTE]
+====
+Adding https://github.com/clojure/test.check[test.check] dependency is required.
+====
+
+You can specify the number of tests as a command argument,
+or {help_html}#g%3Aiced%23test%23spec_num_tests[g:iced#test#spec_num_tests] variable.

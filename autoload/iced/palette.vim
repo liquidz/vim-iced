@@ -14,6 +14,7 @@ let s:default_palette = [
       \ 'StdoutBufferOpen', 'StdoutBufferClear', 'StdoutBufferClose',
       \ 'DocumentClose', 'ClojureDocsRefresh',
       \ 'FormatAll',
+      \ 'UseCaseOpen', 'NextUseCase', 'PrevUseCase',
       \ 'CycleSrcAndTest', 'Grep',
       \ 'BrowseRelatedNamespace', 'BrowseSpec', 'BrowseTestUnderCursor',
       \ 'BrowseReferences', 'BrowseDependencies',

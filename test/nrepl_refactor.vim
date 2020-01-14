@@ -117,26 +117,26 @@ function! s:suite.add_arity_defn_test() abort
         \ '  baz|)'])
   call iced#nrepl#refactor#add_arity()
   call s:assert.true(s:buf.test_curpos([
-        \ '(ns foo.core)',
-        \ '(defn foo',
-        \ '      ([|])',
-        \ '      ([bar]',
-        \ '      baz))']))
+       \ '(ns foo.core)',
+       \ '(defn foo',
+       \ '([|])',
+       \ '([bar]',
+       \ 'baz))']))
   call s:buf.stop_dummy()
 
   " Multiple arity
   call s:buf.start_dummy([
-        \ '(ns foo.core)',
-        \ '(defn foo',
-        \ '  ([bar]',
-        \ '   baz|))'])
+       \ '(ns foo.core)',
+       \ '(defn foo',
+       \ '  ([bar]',
+       \ '   baz|))'])
   call iced#nrepl#refactor#add_arity()
   call s:assert.true(s:buf.test_curpos([
-        \ '(ns foo.core)',
-        \ '(defn foo',
-        \ '       ([|])',
-        \ '       ([bar]',
-        \ '       baz))']))
+       \ '(ns foo.core)',
+       \ '(defn foo',
+       \ '([|])',
+       \ '([bar]',
+       \ 'baz))']))
   call s:buf.stop_dummy()
 endfunction
 
@@ -153,10 +153,10 @@ function! s:suite.add_arity_with_doc_string_test() abort
   call s:assert.true(s:buf.test_curpos([
         \ '(ns foo.core)',
         \ '(defn foo',
-        \ '      "doc-string"',
-        \ '      ([|])',
-        \ '      ([bar]',
-        \ '      baz))']))
+        \ '"doc-string"',
+        \ '([|])',
+        \ '([bar]',
+        \ 'baz))']))
   call s:buf.stop_dummy()
 
   " Multiple arity
@@ -170,10 +170,10 @@ function! s:suite.add_arity_with_doc_string_test() abort
   call s:assert.true(s:buf.test_curpos([
         \ '(ns foo.core)',
         \ '(defn foo',
-        \ '       "doc-string"',
-        \ '       ([|])',
-        \ '       ([bar]',
-        \ '       baz))']))
+        \ '"doc-string"',
+        \ '([|])',
+        \ '([bar]',
+        \ 'baz))']))
   call s:buf.stop_dummy()
 endfunction
 
@@ -182,7 +182,7 @@ function! s:suite.add_arity_with_meta_test() abort
   " Single arity
   call s:buf.start_dummy([
         \ '(ns foo.core)',
-        \ '(defn ^{:bar "baz"}',
+        \ '(defn ^{:bar "baz" :baz [1]}',
         \ '  foo',
         \ '  "doc-string"',
         \ '  [bar]',
@@ -190,18 +190,18 @@ function! s:suite.add_arity_with_meta_test() abort
   call iced#nrepl#refactor#add_arity()
   call s:assert.true(s:buf.test_curpos([
         \ '(ns foo.core)',
-        \ '(defn ^{:bar "baz"}',
-        \ '      foo',
-        \ '      "doc-string"',
-        \ '      ([|])',
-        \ '      ([bar]',
-        \ '      baz))']))
+        \ '(defn ^{:bar "baz" :baz [1]}',
+        \ 'foo',
+        \ '"doc-string"',
+        \ '([|])',
+        \ '([bar]',
+        \ 'baz))']))
   call s:buf.stop_dummy()
 
   " Multiple arity
   call s:buf.start_dummy([
         \ '(ns foo.core)',
-        \ '(defn ^{:bar "baz"}',
+        \ '(defn ^{:bar "baz" :baz [1]}',
         \ '  foo',
         \ '  "doc-string"',
         \ '  ([bar]',
@@ -209,12 +209,12 @@ function! s:suite.add_arity_with_meta_test() abort
   call iced#nrepl#refactor#add_arity()
   call s:assert.true(s:buf.test_curpos([
         \ '(ns foo.core)',
-        \ '(defn ^{:bar "baz"}',
-        \ '       foo',
-        \ '       "doc-string"',
-        \ '       ([|])',
-        \ '       ([bar]',
-        \ '       baz))']))
+        \ '(defn ^{:bar "baz" :baz [1]}',
+        \ 'foo',
+        \ '"doc-string"',
+        \ '([|])',
+        \ '([bar]',
+        \ 'baz))']))
   call s:buf.stop_dummy()
 endfunction
 
@@ -222,32 +222,32 @@ function! s:suite.add_arity_fn_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': funcref('s:add_arity_relay')})
   " Single arity
   call s:buf.start_dummy([
-        \ '(ns foo.core)',
-        \ '(def foo',
-        \ '  (fn [bar] baz|))'])
+       \ '(ns foo.core)',
+       \ '(def foo',
+       \ '  (fn [bar] baz|))'])
   call iced#nrepl#refactor#add_arity()
   call s:assert.true(s:buf.test_curpos([
-        \ '(ns foo.core)',
-        \ '(def foo',
-        \ '  (fn',
-        \ '             ([|])',
-        \ '             ([bar] baz)))']))
+       \ '(ns foo.core)',
+       \ '(def foo',
+       \ '  (fn',
+       \ '  ([|])',
+       \ '  ([bar] baz)))']))
   call s:buf.stop_dummy()
 
   " Multiple arity
   call s:buf.start_dummy([
-        \ '(ns foo.core)',
-        \ '(def foo',
-        \ '  (fn',
-        \ '    ([bar] baz|)))',
-        \ ])
+       \ '(ns foo.core)',
+       \ '(def foo',
+       \ '  (fn',
+       \ '    ([bar] baz|)))',
+       \ ])
   call iced#nrepl#refactor#add_arity()
   call s:assert.true(s:buf.test_curpos([
-        \ '(ns foo.core)',
-        \ '(def foo',
-        \ '  (fn',
-        \ '               ([|])',
-        \ '               ([bar] baz)))']))
+      \ '(ns foo.core)',
+      \ '(def foo',
+      \ '  (fn',
+      \ '  ([|])',
+      \ '  ([bar] baz)))']))
   call s:buf.stop_dummy()
 endfunction
 
@@ -262,9 +262,9 @@ function! s:suite.add_arity_defmacro_test() abort
   call s:assert.true(s:buf.test_curpos([
         \ '(ns foo.core)',
         \ '(defmacro foo',
-        \ '         ([|])',
-        \ '         ([bar]',
-        \ '         `(baz)))']))
+        \ '([|])',
+        \ '([bar]',
+        \ '`(baz)))']))
   call s:buf.stop_dummy()
 
   " Multiple arity
@@ -277,9 +277,9 @@ function! s:suite.add_arity_defmacro_test() abort
   call s:assert.true(s:buf.test_curpos([
         \ '(ns foo.core)',
         \ '(defmacro foo',
-        \ '          ([|])',
-        \ '          ([bar]',
-        \ '          `(baz)))']))
+        \ '([|])',
+        \ '([bar]',
+        \ '`(baz)))']))
   call s:buf.stop_dummy()
 endfunction
 
@@ -295,9 +295,9 @@ function! s:suite.add_arity_defmethod_test() abort
   call s:assert.true(s:buf.test_curpos([
         \ '(ns foo.core)',
         \ '(defmethod foo :bar',
-        \ '        ([|])',
-        \ '        ([baz]',
-        \ '        hello))']))
+        \ '([|])',
+        \ '([baz]',
+        \ 'hello))']))
   call s:buf.stop_dummy()
 
   " Multiple arity
@@ -310,9 +310,9 @@ function! s:suite.add_arity_defmethod_test() abort
   call s:assert.true(s:buf.test_curpos([
         \ '(ns foo.core)',
         \ '(defmethod foo :bar',
-        \ '         ([|])',
-        \ '         ([baz]',
-        \ '         hello))']))
+        \ '([|])',
+        \ '([baz]',
+        \ 'hello))']))
   call s:buf.stop_dummy()
 endfunction
 " }}}

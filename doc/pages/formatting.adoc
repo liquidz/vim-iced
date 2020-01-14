@@ -1,0 +1,31 @@
+== Formatting [[formatting]]
+
+
+vim-iced's code formatting is powered by https://github.com/weavejester/cljfmt[cljfmt].
+There are following two commands to format codes.
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedFormat[IcedFormat]
+| {plug_iced_format}
+| Reformat current form.
+
+
+| {help_html}#%3AIcedFormatAll[IcedFormatAll]
+| {plug_iced_format_all}
+| Reformat current buffer.
+
+|===
+
+
+https://github.com/guns/vim-sexp[vim-sexp] also provides formatting codes function.
+If you want to use vim-iced's formatting function, you should define `g:sexp_mappings` as follows.
+
+[source,vim]
+----
+let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
+----
+
+TIP: See also <<customizing_indent_rules>>

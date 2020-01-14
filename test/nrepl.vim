@@ -129,8 +129,8 @@ function! s:suite.eval_test() abort
 
   call iced#nrepl#eval(
       \ '(+ 1 2 3)',
-      \ {result -> test.result_callback(result)},
       \ {'id': 123},
+      \ {result -> test.result_callback(result)},
       \ )
   call s:assert.equals(test.result, {'status': ['done'], 'id': 123, 'ns': 'foo.core', 'value': '6'})
 endfunction
@@ -163,7 +163,7 @@ function! s:suite.multiple_different_ids_response_test() abort
   call s:ch.mock({'status_value': 'open', 'relay_raw': {msg -> test.relay_raw(msg)}})
   call s:funcs.set_message(234, {'op': 'eval', 'callback': test.callback_for_234})
 
-  call iced#nrepl#eval('(+ 1 2 3)', {result -> test.callback_for_123(result)}, {'id': 123})
+  call iced#nrepl#eval('(+ 1 2 3)', {'id': 123}, {result -> test.callback_for_123(result)})
   call s:assert.equals(test.result123, {'status': ['done'], 'id': 123, 'ns': 'foo.core', 'value': '6'})
   call s:assert.equals(test.result234, {'status': ['done'], 'id': 234, 'ns': 'bar.core', 'value': 'baaaarrrr'})
 
@@ -222,4 +222,36 @@ function! s:suite.path_translation_handler_with_normalize_path_test() abort
         \ )
 
   let g:iced#nrepl#path_translation = {}
+endfunction
+
+function! s:suite.status_test() abort
+  call s:ch.mock({'status_value': 'fail'})
+  call s:assert.equals(iced#nrepl#status(), 'not connected')
+
+  call s:ch.mock({'status_value': 'open'})
+  call iced#nrepl#set_session('clj',  'clj-session')
+  call iced#nrepl#change_current_session('clj')
+  call s:assert.equals(iced#nrepl#status(), 'CLJ')
+endfunction
+
+function! s:suite.status_with_cljs_session_test() abort
+  call s:ch.mock({'status_value': 'open'})
+  call iced#nrepl#set_session('clj',  'clj-session')
+  call iced#nrepl#set_session('cljs',  'cljs-session')
+  call iced#nrepl#change_current_session('clj')
+  call s:assert.equals(iced#nrepl#status(), 'CLJ(cljs)')
+  call iced#nrepl#change_current_session('cljs')
+  call s:assert.equals(iced#nrepl#status(), 'CLJS(clj)')
+endfunction
+
+function! s:suite.status_evaluating_test() abort
+  let test = {}
+  function! test.relay(msg) abort
+    call s:assert.equals(iced#nrepl#status(), 'evaluating')
+    return {'status': ['done']}
+  endfunction
+
+  call s:ch.mock({'status_value': 'open', 'relay': test.relay})
+  call iced#nrepl#set_session('clj',  'clj-session')
+  call iced#eval_and_read('(+ 1 2 3)')
 endfunction

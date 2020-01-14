@@ -1,0 +1,82 @@
+== iced command [[iced_command]]
+
+vim-iced provides `iced` command to use vim-iced easily.
+Main purpose of this command is launching REPL with all features for vim-iced.
+
+=== Supports [[iced_supports]]
+
+`iced` command currently supports following tools.
+
+- https://github.com/technomancy/leiningen[Leiningen]
+- https://github.com/boot-clj/boot[Boot]
+- https://clojure.org/guides/deps_and_cli[Clojure CLI]
+
+https://github.com/thheller/shadow-cljs[shadow-cljs] is not supported by `iced` command.
+To work with shadow-cljs, see {help_html}#vim-iced-shadow-cljs[vim-iced-shadow-cljs section in help].
+
+=== Usage [[iced_usage]]
+
+[source,shell]
+----
+$ iced repl [options]
+----
+
+==== Options
+
+Following options are specially treated by `iced` command.
+
+[cols="30,70"]
+|===
+| Option | Description
+
+| `--with-cljs`
+| Enables ClojureScript features. +
+This option is enabled automatically when project configuration +
+file(eg. project.clj) contains 'org.clojure/clojurescript' dependency.
+
+| `--with-kaocha`
+| Enables features for testing with kaocha.
+
+| `--force-boot`
+| Force to use Boot.
+
+| `--force-clojure-cli`
+| Force to use Clojure CLI.
+
+| `--dependency=VALUE`
+| Adds extra dependency. +
+`VALUE` format is 'PACKAGE_NAME:VERSION'. +
+For example: `--dependency=iced-nrepl:0.4.3`
+
+| `--middleware=VALUE`
+| Adds extra nrepl middleware. +
+For example: `--middleware=iced.nrepl/wrap-iced`
+
+| `--instant`
+| Launch instant REPL via Clojure CLI. +
+Instant REPL requires no project/config file.
+
+|===
+
+Other options are passed to each program as below.
+
+=== Arguments [[iced_arguments]]
+
+.Leiningen profile
+[source,shell]
+----
+$ iced repl with-profile +foo
+----
+
+.Clojure CLI alias
+[source,shell]
+----
+$ iced repl -A:foo
+----
+
+.Combinating several options
+[source,shell]
+----
+$ iced repl --with-cljs --force-clojure-cli -A:foo
+----
+

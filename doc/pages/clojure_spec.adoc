@@ -1,0 +1,29 @@
+== clojure.spec [[clojure_spec]]
+
+vim-iced provides following commands to integrate with https://clojure.org/guides/spec[clojure.spec].
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedBrowseSpec[IcedBrowseSpec]
+| {plug_iced_browse_spec}
+| Browse specs, and show spec form in <<document_buffer>>.
+
+
+| {help_html}#%3AIcedSpecForm[IcedSpecForm]
+|
+| Open a <<document_buffer>>, and show the spec form for specified keyword. +
+If no arguments are passed, the keyword under the cursor is used.
+
+| {help_html}#%3AIcedSpecExample[IcedSpecExample]
+|
+| Open a <<document_buffer>>, and show the example of the spec. +
+If no arguments are passed, the keyword under the cursor is used.
+
+| {help_html}#%3AIcedTestSpecCheck[IcedTestSpecCheck]
+| {plug_iced_test_spec_check}
+| See <<testing_checking_spec>> for more information
+
+|===
+

@@ -93,6 +93,19 @@ function! iced#nrepl#op#iced#complete_tapped(keys, callback) abort
         \ })
 endfunction " }}}
 
+function! iced#nrepl#op#iced#format_code(code, alias_map, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'iced-format-code-with-indents',
+        \ 'session': iced#nrepl#current_session(),
+        \ 'code': a:code,
+        \ 'alias-map': a:alias_map,
+        \ 'callback': a:callback,
+        \ })
+endfunction
+
 call iced#nrepl#register_handler('iced-pseudo-ns-path', function('iced#nrepl#path_translation_handler', [['path']]))
 
 let &cpoptions = s:save_cpo

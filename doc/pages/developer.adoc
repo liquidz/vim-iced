@@ -1,0 +1,9 @@
+== Developer [[developer]]
+
+include::developer/minimal_configuration.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
+
+include::developer/testing_vim_iced.adoc[]

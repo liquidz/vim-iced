@@ -1,0 +1,56 @@
+=== shadow-cljs [[clojurescript_shadow_cljs]]
+
+[WARNING]
+====
+<<iced_command>> does not support shadow-cljs currently. +
+So you need to launch REPL manually.
+====
+
+To start CLJS REPL with shadow-cljs, you need 3 steps.
+
+1. Add definitions to <<clojurescript_shadow_cljs_edn>>
+2. Start to watch
+** `$ shadow-cljs watch {YOUR-BUILD-ID}`
+3. Connect and start cljs-repl
+** Execute {help_html}#%3AIcedConnect[IcedConnect] command to connect to REPL
+** Execute {help_html}#%3AIcedStartCljsRepl[IcedStartCljsRepl] command like follows
+*** `:IcedStartCljsRepl  shadow-cljs {YOUR-BUILD-ID}`
+
+
+If you would like to start CLJS REPL by hand, you can do it as follows.
+[source,vim]
+----
+:IcedEvalRepl (shadow.cljs.devtools.api/repl :YOUR-BUILD-ID)
+----
+
+==== shadow-cljs.edn [[clojurescript_shadow_cljs_edn]]
+
+You need to modify `:dependencies` and `:nrepl` setting in `shadow-cljs.edn` as below.
+
+.shadow-cljs.edn
+[source,clojure]
+----
+{
+ :dependencies [[refactor-nrepl "2.4.0"]
+                [cider/cider-nrepl "0.22.4"]
+                [iced-nrepl "0.7.0"]]
+
+ :nrepl {:cider false
+         :middleware [cider.nrepl/wrap-classpath
+                      cider.nrepl/wrap-clojuredocs
+                      cider.nrepl/wrap-complete
+                      cider.nrepl/wrap-debug
+                      cider.nrepl/wrap-format
+                      cider.nrepl/wrap-info
+                      cider.nrepl/wrap-macroexpand
+                      cider.nrepl/wrap-ns
+                      cider.nrepl/wrap-out
+                      cider.nrepl/wrap-spec
+                      cider.nrepl/wrap-test
+                      cider.nrepl/wrap-trace
+                      cider.nrepl/wrap-undef
+                      cider.nrepl/wrap-xref
+                      refactor-nrepl.middleware/wrap-refactor
+                      iced.nrepl/wrap-iced]}
+}
+----

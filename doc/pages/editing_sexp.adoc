@@ -1,0 +1,26 @@
+== Editing S-expression [[editing_sexp]]
+
+vim-iced is depending on {vim_sexp}, and most features for editing S-expression are provided by {vim_sexp}.
+
+In vim-iced, only the following functionalities which is extended from {vim_sexp} are provided.
+
+
+[cols="30,70"]
+|===
+| Command | Description
+
+| {help_html}#%3AIcedSlurp[IcedSlurp]
+| Slurp the next element. +
+If no elements in current form, search next form and slurp. +
+For searching next form, {help_html}#g%3Aiced%23paredit%23slurp_max_depth[g:iced#paredit#slurp_max_depth] is used.
+
+| {help_html}#%3AIcedBarf[IcedBarf]
+| Barf the last element in current form.
+
+|===
+
+[NOTE]
+====
+These commands are so useful when combined with {vim_submode}. +
+See <<tips>> for more information.
+====

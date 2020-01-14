@@ -1,0 +1,46 @@
+== Operator [[operator]]
+
+vim-iced provides following operators.
+
+[cols="30,70"]
+|===
+| Operator | Description
+
+| {help_html}#%3CPlug%3E%28iced_eval%29[<Plug>(iced_eval)]
+| Evaluate codes
+
+| {help_html}#%3CPlug%3E%28iced_eval_and_print%29[<Plug>(iced_eval_and_print)]
+| Evaluate code and print result to stdout buffer
+
+| {help_html}#%3CPlug%3E%28iced_eval_and_tap%29[<Plug>(iced_eval_and_tap)]
+| Evaluate code and tap result by `clojure.core/tap>`
+
+| {help_html}#%3CPlug%3E%28iced_eval_and_replace%29[<Plug>(iced_eval_and_replace)]
+| Evaluate code and replace it by the evaluation result
+
+|===
+
+It is useful to combinate these operators with {vim_sexp}'s motions like follows.
+(Change the mapping key as you like)
+
+.Example
+[source,vim]
+----
+aug MyClojureSetting
+  au!
+  au FileType clojure nmap <buffer> <Leader>epe
+      \ <Plug>(iced_eval_and_print)<Plug>(sexp_outer_list)``
+  au FileType clojure nmap <buffer> <Leader>ept
+      \ <Plug>(iced_eval_and_print)<Plug>(sexp_outer_top_list)``
+
+  au FileType clojure nmap <buffer> <Leader>eae
+      \ <Plug>(iced_eval_and_tap)<Plug>(sexp_outer_list)``
+  au FileType clojure nmap <buffer> <Leader>eat
+      \ <Plug>(iced_eval_and_tap)<Plug>(sexp_outer_top_list)``
+
+  au FileType clojure nmap <buffer> <Leader>ere
+      \ <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_list)``
+  au FileType clojure nmap <buffer> <Leader>ert
+      \ <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_top_list)``
+aug END
+----

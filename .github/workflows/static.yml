@@ -1,0 +1,11 @@
+name: static
+on: [pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: version check
+        run: bash scripts/version_check.sh
+      - name: deps check
+        run: bash scripts/deps_check.sh

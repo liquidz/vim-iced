@@ -1,0 +1,32 @@
+=== Formatting [[configuration_formatting]]
+
+==== Customizing indent rules [[customizing_indent_rules]]
+
+{help_html}#g%3Aiced%23format%23rule[g:iced#format#rule] is a configuration that allow you to define indentation rules for https://github.com/weavejester/cljfmt[cljfmt].
+
+For example, https://github.com/liquidz/merr[merr]'s `let` has a form like follows.
+
+[source,clojure]
+----
+(merr/let +err+ [foo 1]
+          (inc foo))
+----
+
+To format like `clojure.core/let`, you should define the following rule.
+
+[source,vim]
+----
+let g:iced#format#rule = {
+      \ 'merr.core/let': '[[:block 2] [:inner 1]]',
+      \ }
+----
+
+Then you can get the following result.
+
+[source,clojure]
+----
+(merr/let +err+ [foo 1]
+  (inc foo))
+----
+
+See https://github.com/weavejester/cljfmt#indentation-rules[cljfmt's README] for more information.

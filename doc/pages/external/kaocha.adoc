@@ -1,0 +1,71 @@
+=== kaocha [[kaocha]]
+
+{kaocha} is full featured next gen Clojure test runner.
+
+vim-iced has a external plugin named {vim_iced_kaocha} to integrate with {kaocha}.
+
+[cols="30,70"]
+|===
+| Command |  Description
+
+| :IcedKaochaTest
+| Run tests specified by `{ids}`. +
+`{ids}` must be an array of testable-id. +
+See https://cljdoc.org/d/lambdaisland/kaocha/CURRENT/doc/6-focusing-and-skipping#on-id[kaocha document] for testable-id.
+
+
+| :IcedKaochaTestUnderCursor
+| Run a test under cursor.
+
+| :IcedKaochaTestNs
+| Run tests in current namespace.
+
+| :IcedKaochaTestAll
+| Run all tests in current project.
+
+| :IcedKaochaTestRedo
+| Re run failed tests.
+
+| :IcedKaochaTestRerunLast
+| Run last test again.
+
+|===
+
+==== Usage
+
+First, add {vim_iced_kaocha} to your vim-plug section.
+
+[source,vim]
+----
+call plug#begin('~/.vim/plugged')
+
+Plug 'liquidz/vim-iced', {'for': 'clojure'}
+" Add this line >>>>>>>>>>>>>>
+Plug 'liquidz/vim-iced-kaocha'
+" <<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+call plug#end()
+----
+
+Next, launch your REPL with `--with-kaocha` option.
+
+[source,shell]
+----
+$ iced repl --with-kaocha
+----
+
+
+[source,vim]
+.Key mapping example
+----
+aug MyClojureSetting
+  au!
+  " Change key mappings as you like.
+  au FileType clojure nmap <silent><buffer> <Leader>ktt <Plug>(iced_kaocha_test_under_cursor)
+  au FileType clojure nmap <silent><buffer> <Leader>ktn <Plug>(iced_kaocha_test_ns)
+  au FileType clojure nmap <silent><buffer> <Leader>ktr <Plug>(iced_kaocha_test_redo)
+  au FileType clojure nmap <silent><buffer> <Leader>ktl <Plug>(iced_kaocha_test_rerun_last)
+aug END
+----
+
+

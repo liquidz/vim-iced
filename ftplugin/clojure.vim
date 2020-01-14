@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 1300
+let g:vim_iced_version = 1400
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -42,9 +42,15 @@ if !exists('g:iced_enable_enhanced_cljs_completion')
   let g:iced_enable_enhanced_cljs_completion = v:true
 endif
 
+if !exists('g:iced_enable_enhanced_definition_extraction')
+  let g:iced_enable_enhanced_definition_extraction = v:true
+endif
+
 "" Commands {{{
-command! -nargs=? IcedConnect               call iced#nrepl#connect(<q-args>)
-command!          IcedDisconnect            call iced#nrepl#disconnect()
+command! -nargs=? IcedConnect               call iced#repl#connect('nrepl', <q-args>)
+command! -nargs=1 IcedConnectSocketRepl     call iced#repl#connect('socket_repl', <q-args>)
+command! -nargs=1 IcedConnectPrepl          call iced#repl#connect('prepl', <q-args>)
+command!          IcedDisconnect            call iced#repl#execute('disconnect')
 command!          IcedReconnect             call iced#nrepl#reconnect()
 command!          IcedInterrupt             call iced#nrepl#interrupt()
 command!          IcedInterruptAll          call iced#nrepl#interrupt_all()
@@ -57,14 +63,14 @@ command! -nargs=+ -complete=custom,iced#nrepl#cljs#env_complete
 command!          IcedQuitCljsRepl          call iced#nrepl#cljs#stop_repl_via_env()
 command!          IcedCycleSession          call iced#nrepl#cljs#cycle_session()
 
-command! -nargs=1 IcedEval                  call iced#nrepl#eval#code(<q-args>, {'ignore_session_validity': v:true})
+command! -nargs=1 IcedEval                  call iced#repl#execute('eval_code', <q-args>, {'ignore_session_validity': v:true})
 command!          IcedEvalNs                call iced#nrepl#eval#ns()
 command! -range   IcedEvalVisual            call iced#nrepl#eval#visual()
-command!          IcedRequire               call iced#nrepl#ns#load_current_file()
+command!          IcedRequire               call iced#repl#execute('load_current_file')
 command!          IcedRequireAll            call iced#nrepl#ns#reload_all()
 command! -nargs=? IcedUndef                 call iced#nrepl#eval#undef(<q-args>)
 command! -nargs=? IcedUndefAllInNs          call iced#nrepl#eval#undef_all_in_ns(<q-args>)
-command!          IcedEvalOuterTopList      call iced#nrepl#eval#outer_top_list()
+command!          IcedEvalOuterTopList      call iced#repl#execute('eval_outer_top_list')
 command!          IcedPrintLast             call iced#nrepl#eval#print_last()
 command!          IcedMacroExpandOuterList  call iced#nrepl#macro#expand_outer_list()
 command!          IcedMacroExpand1OuterList call iced#nrepl#macro#expand_1_outer_list()
@@ -86,14 +92,14 @@ command! -nargs=1 -complete=custom,iced#nrepl#navigate#ns_complete
       \ IcedOpenNs                          call iced#nrepl#navigate#open_ns('e', <q-args>)
 
 command! -nargs=? IcedDocumentOpen          call iced#nrepl#document#open(<q-args>)
-command! -nargs=? IcedPopupDocumentOpen     call iced#nrepl#document#popup_open(<q-args>)
+command! -nargs=? IcedDocumentPopupOpen     call iced#nrepl#document#popup_open(<q-args>)
 command!          IcedFormDocument          call iced#nrepl#document#current_form()
 command! -nargs=? IcedUseCaseOpen           call iced#nrepl#document#usecase(<q-args>)
 command!          IcedNextUseCase           call iced#nrepl#document#next_usecase()
 command!          IcedPrevUseCase           call iced#nrepl#document#prev_usecase()
 command!          IcedDocumentClose         call iced#nrepl#document#close()
 command! -nargs=? IcedSourceShow            call iced#nrepl#source#show(<q-args>)
-command! -nargs=? IcedPopupSourceShow       call iced#nrepl#source#popup_show(<q-args>)
+command! -nargs=? IcedSourcePopupShow       call iced#nrepl#source#popup_show(<q-args>)
 command!          IcedCommandPalette        call iced#palette#show()
 command! -nargs=? IcedSpecForm              call iced#nrepl#spec#form(<q-args>)
 command! -nargs=? IcedSpecExample           call iced#nrepl#spec#example(<q-args>)
@@ -189,14 +195,14 @@ nnoremap <silent> <Plug>(iced_stdout_buffer_close)      :<C-u>IcedStdoutBufferCl
 nnoremap <silent> <Plug>(iced_def_jump)                 :<C-u>IcedDefJump<CR>
 
 nnoremap <silent> <Plug>(iced_document_open)            :<C-u>IcedDocumentOpen<CR>
-nnoremap <silent> <Plug>(iced_popup_document_open)      :<C-u>IcedPopupDocumentOpen<CR>
+nnoremap <silent> <Plug>(iced_document_popup_open)      :<C-u>IcedDocumentPopupOpen<CR>
 nnoremap <silent> <Plug>(iced_form_document)            :<C-u>IcedFormDocument<CR>
 nnoremap <silent> <Plug>(iced_use_case_open)            :<C-u>IcedUseCaseOpen<CR>
 nnoremap <silent> <Plug>(iced_next_use_case)            :<C-u>IcedNextUseCase<CR>
 nnoremap <silent> <Plug>(iced_prev_use_case)            :<C-u>IcedPrevUseCase<CR>
 nnoremap <silent> <Plug>(iced_document_close)           :<C-u>IcedDocumentClose<CR>
 nnoremap <silent> <Plug>(iced_source_show)              :<C-u>IcedSourceShow<CR>
-nnoremap <silent> <Plug>(iced_popup_source_show)        :<C-u>IcedPopupSourceShow<CR>
+nnoremap <silent> <Plug>(iced_source_popup_show)        :<C-u>IcedSourcePopupShow<CR>
 nnoremap <silent> <Plug>(iced_command_palette)          :<C-u>IcedCommandPalette<CR>
 nnoremap <silent> <Plug>(iced_spec_form)                :<C-u>IcedSpecForm<CR>
 nnoremap <silent> <Plug>(iced_spec_example)             :<C-u>IcedSpecExample<CR>
@@ -426,8 +432,8 @@ function! s:default_key_mappings() abort
 
   "" Help/Document (<Leader>h)
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_popup_document_open)')
-    silent! nmap <buffer> K <Plug>(iced_popup_document_open)
+  if !hasmapto('<Plug>(iced_document_popup_open)')
+    silent! nmap <buffer> K <Plug>(iced_document_popup_open)
   endif
 
   if !hasmapto('<Plug>(iced_document_open)')
@@ -454,8 +460,8 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>hS <Plug>(iced_source_show)
   endif
 
-  if !hasmapto('<Plug>(iced_popup_source_show)')
-    silent! nmap <buffer> <Leader>hs <Plug>(iced_popup_source_show)
+  if !hasmapto('<Plug>(iced_source_popup_show)')
+    silent! nmap <buffer> <Leader>hs <Plug>(iced_source_popup_show)
   endif
 
   if !hasmapto('<Plug>(iced_clojuredocs_open)')
@@ -465,6 +471,7 @@ function! s:default_key_mappings() abort
   if !hasmapto('<Plug>(iced_command_palette)')
     silent! nmap <buffer> <Leader>hh <Plug>(iced_command_palette)
   endif
+
 
   "" Browsing (<Leader>b)
   "" ------------------------------------------------------------------------

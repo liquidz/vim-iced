@@ -1,0 +1,79 @@
+== Tips [[tips]]
+
+=== vim-submode [[tips_vim_submode]]
+
+> {vim_submode} is a Vim plugin to provide the way to define "submodes" to the built-in https://vim-jp.org/vimdoc-en/intro.html#vim-modes[vim-modes].
+
+
+{vim_submode} is useful to repeat some commands such as {help_html}#%3AIcedSlurp[IcedSlurp] or {help_html}#%3AIcedBarf[IcedBarf].
+
+.Repeat slurping and barfing
+[source,vim]
+----
+" Change key mappings as you like.
+" In this case, type `<LocalLeader>kssss` to repeat slurping.
+call submode#enter_with('slurp', 'n', '', '<LocalLeader>ks', ':<C-u>IcedSlurp<CR>')
+call submode#enter_with('slurp', 'n', '', '<LocalLeader>kb', ':<C-u>IcedBarf<CR>')
+call submode#leave_with('slurp', 'n', '', '<Esc>')
+call submode#map('slurp', 'n', '', 's', ':<C-u>IcedSlurp<CR>')
+call submode#map('slurp', 'n', '', 'b', ':<C-u>IcedBarf<CR>')
+----
+
+.Repeat jumping errors
+[source,vim]
+----
+" Change key mappings as you like.
+" In this case, type `<LocalLeader>nnnn` to repeat jumping next errors.
+call submode#enter_with('sign_jump', 'n', '', '<LocalLeader>n', ':<C-u>IcedJumpToNextError<CR>')
+call submode#enter_with('sign_jump', 'n', '', '<LocalLeader>N', ':<C-u>IcedJumpToPrevError<CR>')
+call submode#leave_with('sign_jump', 'n', '', '<Esc>')
+call submode#map('sign_jump', 'n', '', 'n', ':<C-u>IcedJumpToNextSign<CR>')
+call submode#map('sign_jump', 'n', '', 'N', ':<C-u>IcedJumpToPrevSign<CR>')
+----
+
+=== Auto connection [[tips_auto_connection]]
+
+If you'd like to connect to REPL automatically, define https://vim-jp.org/vimdoc-en/autocmd.html[autocmd] for https://vim-jp.org/vimdoc-en/autocmd.html#VimEnter[VimEnter] event.
+
+It is recommended to define autocmd like follows in https://vim-jp.org/vimdoc-en/filetype.html#ftplugin-docs[ftplugin] directory.
+
+.Example: $HOME/.vim/ftplugin/clojure.vim
+[source,vim]
+----
+aug MyClojureSetting
+  au!
+  au VimEnter * IcedConnect
+aug END
+----
+
+If you don't want to connect to REPL for `project.clj`, `*.edn`, or etc, skip connecting as below.
+
+.Example: $HOME/.vim/ftplugin/clojure.vim
+[source,vim]
+----
+function! s:auto_connect() abort
+  if expand('%:t') ==# 'project.clj' || expand('%:e') ==# 'edn'
+    return
+  endif
+  IcedConnect
+endfunction
+
+aug MyClojureSetting
+  au!
+  au VimEnter * call s:auto_connect()
+aug END
+----
+
+=== Reloaded workflows
+
+If you are managing lifecycle of components with https://github.com/stuartsierra/component[Stuart Sierra's component], https://github.com/weavejester/integrant[integrant] or etc, key mappings like follows are useful.
+
+[source,vim]
+----
+aug MyClojureSetting
+  au!
+  " Change key mappings and forms as you like
+  au FileType clojure nnoremap <buffer> <Leader>go :<C-u>IcedEval (user/go)<CR>
+  au FileType clojure nnoremap <buffer> <Leader>Go :<C-u>IcedEval (user/reset)<CR>
+aug END
+----

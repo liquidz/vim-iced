@@ -1,0 +1,9 @@
+{
+ :linters
+ {
+  ;; FIXME
+  :unresolved-namespace {:level :info}
+  }
+ }
+
+

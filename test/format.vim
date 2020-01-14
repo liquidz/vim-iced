@@ -29,7 +29,9 @@ function! s:suite.all_test() abort
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:format_code_relay(msg, ":dummy\n:formatted")}})
 
-  call iced#format#all()
+  let p = iced#format#all()
+  call iced#promise#wait(p)
+
   call s:assert.equals(s:buf.get_texts(),
         \ ":dummy\n:formatted")
 
@@ -45,7 +47,9 @@ function! s:suite.form_test() abort
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:format_code_relay(msg, ':dummy-formatted')}})
 
-  call iced#format#form()
+  let p = iced#format#form()
+  call iced#promise#wait(p)
+
   call s:assert.equals(s:buf.get_texts(),
         \ "(list :foo)\n:dummy-formatted")
 

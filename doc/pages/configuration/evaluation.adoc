@@ -1,0 +1,17 @@
+=== Evaluation [[configuration_evaluation]]
+
+==== Eval inside comment [[eval_inside_comment]]
+
+`comment` form is useful for checking behavior.
+You can use <<evaluate_outer_list>> range to evaluate codes inside `comment` form,
+but it is bored that some cursor movements are required.
+
+
+{help_html}#g%3Aiced%23eval%23inside_comment[g:iced#eval#inside_comment] is a configuration that allow you to evaluate inside `comment` form with <<evaluate_outer_top_list>> range, and it is enabled by default.
+
+.Example (📍 means cursor position)
+[source,clojure]
+----
+(comment📍      ;; Execute `:IcedEvalOuterTopList`
+  (+ 1 2 3))    ;; => 6
+----

@@ -1,0 +1,13 @@
+=== Command palette [[configuration_command_palette]]
+
+The {help_html}#g%3Aiced%23palette[g:iced#palette] option allows you to customize the command palette.
+
+In actual use, it is recommended to define the option in the project-specific configuration file by {vim_localrc} like follows.
+
+./path/to/your/project/root/.local.vimrc
+[source,vim]
+----
+let g:iced#palette = {
+      \ 'foo bar': ':IcedEval (+ 1 2 3 4 5)',
+      \ }
+----

@@ -1,0 +1,110 @@
+=== Advanced settings [[configuration_advanced]]
+
+==== Stdout buffer [[configuration_advanced_stdout_buffer]]
+
+[cols="30,20,50a"]
+|===
+| Option | Default value | Description
+
+| {help_html}#g%3Aiced%23buffer%23stdout%23mods[g:iced#buffer#stdout#mods]
+| `''`
+| Buffer position definition. +
+Following values are supported.
+
+- `vertical`
+- `leftabove`
+- `aboveleft`
+- `rightbelow`
+- `belowright`
+- `topleft`
+- `botright`
+
+| {help_html}#g%3Aiced%23buffer%23stdout%23file[g:iced#buffer#stdout#file]
+| `''`
+| If not empty, vim-iced write stdout buffer content to the file path.
+
+| {help_html}#g%3Aiced%23buffer%23stdout%23file_buffer_size[g:iced#buffer#stdout#file_buffer_size]
+| `256`
+| Max line count to buffer for `g:iced#buffer#stdout#filer`.
+
+| {help_html}#g%3Aiced%23buffer%23stdout%23max_line[g:iced#buffer#stdout#max_line]
+| `-1`
+| Max line count to keep in stdout buffer. +
+If negative number is setted, it means no limit.
+
+| {help_html}#g%3Aiced%23buffer%23stdout%23deleting_line_delay[g:iced#buffer#stdout#deleting_line_delay]
+| `1000`
+| Delay time for deleting excess lines in stdout buffer. +
+Unit is milli sec. +
+This option is enabled when `g:iced#buffer#stdout#max_line` is a positive number.
+
+|===
+
+==== Document [[configuration_advanced_document]]
+
+.Document buffer
+[cols="30,20,50"]
+|===
+| Option | Default value | Description
+
+| {help_html}#g%3Aiced%23buffer%23document%23height[g:iced#buffer#document#height]
+| `'previewheight'`
+| Document window height.
+
+| {help_html}#g%3Aiced%23buffer%23document%23does_update_automatically[g:iced#buffer#document#does_update_automatically]
+| `v:false`
+| If `v:true` and document buffer is visible, update document buffer with document for the form under cursor.
+
+|===
+
+.Auto document
+[cols="30,20,50a"]
+|===
+| Option | Default value | Description
+
+| {help_html}#g%3Aiced_enable_auto_document[g:iced_enable_auto_document]
+| `'none'`
+| Enable automatic displaying one-line document. +
+This will be done by https://vim-jp.org/vimdoc-en/autocmd.html#CursorHold[CursorHold] and https://vim-jp.org/vimdoc-en/autocmd.html#CursorHoldI[CursorHoldI] auto command. +
+ +
+The value should be one of `'normal'`, `'insert'` or `'any'`. +
+Otherwise, this option will be disabled.
+
+- `'normal'`: Enabled on only normal mode.
+- `'insert'`: Enabled on only insert mode.
+- `'every'` : Enabled on normal and insert mode.
+
+| {help_html}#g%3Aiced_enable_popup_document[g:iced_enable_popup_document]
+| `'every'`
+| Display documents on popup window. +
+The value should be one of follows. +
+Otherwise, this option will be disabled.
+
+- `'full'`    : Enabled on only full document.  {help_html}#%3AIcedDocumentOpen[IcedDocumentOpen] shows full document.
+- `'one-line'`: Enabled on only one-line document.
+- `'every'`   : Every enabled.
+
+| {help_html}#g%3Aiced_max_distance_for_auto_document[g:iced_max_distance_for_auto_document]
+| `2`
+| Max line distance to display one-line document. +
+See also |g:iced_enable_auto_document|.
+
+|===
+
+==== ClojureScript [[configuration_advanced_clojure_script]]
+
+[cols="30,20,50"]
+|===
+| Option | Default value | Description
+
+| {help_html}#g%3Aiced%23nrepl%23auto%23does_switch_session[g:iced#nrepl#auto#does_switch_session]
+| `v:false`
+| If `v:true`, enable automatic switching CLJ/CLJS session. +
+This will be done by https://vim-jp.org/vimdoc-en/autocmd.html#WinEnter[WinEnter] auto command.
+
+
+| {help_html}#g%3Aiced_enable_enhanced_cljs_completion[g:iced_enable_enhanced_cljs_completion]
+| `v:true`
+| If `v:true`, enable enhanced ClojureScript completion.
+
+|===

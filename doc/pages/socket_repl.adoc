@@ -1,0 +1,109 @@
+== Socket REPL [[socket_repl]]
+
+[WARNING]
+====
+This feature is under development. +
+Currently, only available on https://github.com/liquidz/vim-iced/tree/dev[dev branch].
+====
+
+vim-iced targets {nrepl} mainly, but now will also support minimal operations on socket REPL.
+
+Currently, only evaluating codes is supported by socket REPL.
+
+.Socket REPL supports
+[cols="30a,10,60"]
+|===
+| Feature | Supports? | Description
+
+| <<evaluation>>
+| icon:check[role="green"]
+| All ranges to evaluation are supported.
+
+| <<completion>>
+| icon:times[role="red"]
+|
+
+| <<reference>>
+| icon:times[role="red"]
+|
+
+| Etc...
+| icon:times[role="red"]
+| Any other features are not supported.
+
+|===
+
+vim-iced provides following commands to connect socket REPL.
+
+[cols="30,70"]
+|===
+| Command | Description
+
+| {help_html}#%3AIcedConnectSocketRepl[IcedConnectSocketRepl]
+| Make connection to socket REPL.
+
+| {help_html}#%3AIcedConnectPrepl[IcedConnectPrepl]
+| Make connection to pREPL. +
+This connection is based on socket repl connection.
+
+|===
+
+=== Connecting socket REPL
+
+You can try socket REPL connection as follows.
+
+.Launch socket REPL via babashka
+[cols="30a,70a"]
+|===
+| Tool | Command
+
+| https://github.com/borkdude/babashka[Babashka]
+| `$ bb --socket-repl 5555`
+
+| https://joker-lang.org[Joker]
+| `$ joker --repl :5555`
+
+| https://planck-repl.org[Planck]
+| `$ planck --socket-repl 5555`
+
+| https://github.com/anmonteiro/lumo[Lumo]
+| `$ lumo --socket-repl 5555`
+
+|===
+
+[source,vim]
+.Connect to socket REPL
+----
+:IcedConnectSocketRepl 5555
+----
+
+Another way, you can launch socket REPL in your vim/neovim as a job.
+
+[source,vim]
+----
+:call iced#job_start('bb --socket-repl 5555') | sleep 100m | IcedConnectSocketRepl 5555
+----
+
+=== Connecting pREPL
+
+pREPL connection is based on socket REPL connection in vim-iced.
+
+[NOTE]
+====
+https://github.com/borkdude/jet[borkdude/jet] is required currently. +
+vim-iced can download `jet` automatically if you want.
+====
+
+You can try pREPL connection as follows.
+
+[source,shell]
+.Launch pREPL
+----
+$ clj -J-Dclojure.server.repl="{:port 5555 :accept clojure.core.server/io-prepl}"
+----
+
+[source,vim]
+.Connect to pREPL
+----
+:IcedConnectPrepl 5555
+----

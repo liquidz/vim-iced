@@ -1,0 +1,21 @@
+=== Document buffer [[document_buffer]]
+
+Documents will be shown to popup window by default.
+But you can show them to dedicated buffer to keep them displayed.
+
+vim-iced provides following commands to control document buffer.
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedDocumentOpen[IcedDocumentOpen]
+| {plug_iced_document_open}
+| Open a window, and show documents for specified `symbol`. +
+If `symbol` is not passed, the symbol under the cursor is used.
+
+| {help_html}#%3AIcedDocumentClose[IcedDocumentClose]
+| {plug_iced_document_close}
+| Close document window.
+
+|===

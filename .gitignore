@@ -1,5 +1,6 @@
 VIM_AUTO_RTP
 doc/tags
+bin/jet
 .vim-themis
 .vim-sexp
 .vimdoc
@@ -10,3 +11,4 @@ doc/tags
 target
 .coverage_covimerage
 coverage.xml
+.clj-kondo/.cache

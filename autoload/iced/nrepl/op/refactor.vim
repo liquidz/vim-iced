@@ -44,5 +44,21 @@ function! iced#nrepl#op#refactor#find_used_locals(filepath, line, column, callba
         \ })
 endfunction
 
+function! iced#nrepl#op#refactor#extract_definition(filepath, ns_name, symbol, line, column, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  call iced#nrepl#send({
+        \ 'op': 'extract-definition',
+        \ 'id': iced#nrepl#id(),
+        \ 'session': iced#nrepl#current_session(),
+        \ 'file': a:filepath,
+        \ 'ns': a:ns_name,
+        \ 'name': a:symbol,
+        \ 'line': a:line,
+        \ 'column': a:column,
+        \ 'callback': a:callback,
+        \ })
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

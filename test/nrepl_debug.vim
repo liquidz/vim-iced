@@ -9,6 +9,8 @@ let s:popup = themis#helper('iced_popup')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl/debug.vim')
 
 function! s:suite.apply_coordination_test() abort
+  let g:iced_enable_popup_document = 'full'
+
   call s:buf.start_dummy(['|(aaa (bbb (ccc) ddd) eee)'])
 
   " aaa

@@ -1,23 +1,6 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-function! iced#status() abort
-  if !iced#nrepl#is_connected()
-    return 'not connected'
-  endif
-
-  if iced#nrepl#is_evaluating()
-    return 'evaluating'
-  else
-    let k = iced#nrepl#current_session_key()
-    if iced#nrepl#cljs_session() ==# ''
-      return toupper(k)
-    else
-      return (k ==# 'clj') ? 'CLJ(cljs)' : 'CLJS(clj)'
-    endif
-  endif
-endfunction
-
 function! s:json_resp(resp) abort
   try
     let resp = copy(a:resp)
@@ -54,6 +37,11 @@ function! iced#eval_and_read(code, ...) abort
   else
     return s:json_resp(iced#nrepl#sync#send(msg))
   endif
+endfunction
+
+function! iced#job_start(cmd, ...) abort
+  let opt = get(a:, 1, {})
+  return iced#system#get('job').start(a:cmd, opt)
 endfunction
 
 function! iced#selector(config) abort

@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.13.0
+Version: 0.14.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -487,6 +487,17 @@ COMMANDS                                                    *vim-iced-commands*
   If {port} is not passed, {port} is detected by '.nrepl-port' automatically.
   Key is mapped to |<Plug>(iced_connect)|.
 
+                                                       *:IcedConnectSocketRepl*
+:IcedConnectSocketRepl {port}
+  Make connection to socket REPL.
+  {port} is required.
+
+                                                            *:IcedConnectPrepl*
+:IcedConnectPrepl {port}
+  Make connection to pREPL.
+  {port} is required.
+  This connection is based on socket repl connection.
+
                                                               *:IcedDisconnect*
 :IcedDisconnect
   Disconnect from nREPL.
@@ -559,7 +570,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                             *:IcedQuitCljsRepl*
 :IcedQuitCljsRepl
   Quit CLJS REPL.
-  REPL session changes to 'user' namespace.
+  REPL session changes to initial namespace.
   Key is mapped to |<Plug>(iced_quit_cljs_repl)|.
 
                                                             *:IcedCycleSession*
@@ -722,19 +733,39 @@ COMMANDS                                                    *vim-iced-commands*
   Open a window, and show documents for {symbol}.
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_document_open)|.
-  
-                                                       *:IcedPopupDocumentOpen*
-:IcedPopupDocumentOpen [{symbol}]
+
+                                                       *:IcedDocumentPopupOpen*
+:IcedDocumentPopupOpen [{symbol}]
   Open a popup window, and show documents for {symbol}.
   If {symbol} is not passed, symbol under cursor is used.
   If |popup| is not supported, |:IcedDocumentOpen| is called.
-  Key is mapped to |<Plug>(iced_popup_document_open)|.
+  Key is mapped to |<Plug>(iced_document_popup_open)|.
 
                                                             *:IcedFormDocument*
 :IcedFormDocument
   Echo one-line document for form under cursor.
   This is useful to show document while editing codes.
   See details |<Plug>(iced_form_document)|.
+
+                                                             *:IcedUseCaseOpen*
+:IcedUseCaseOpen [{symbol}]
+  Open a window, and show usecase for {symbol}.
+  If {symbol} is not passed, symbol under cursor is used.
+  When several usecases are found, |:IcedNextUseCase| and |:IcedPrevUseCase|
+  commands are useful to show next or previous usecases.
+  Key is mapped to |<Plug>(iced_use_case_open)|.
+
+                                                             *:IcedNextUseCase*
+:IcedNextUseCase
+  Show next usecase in a window if there is.
+  See also |:IcedUseCaseOpen| command.
+  Key is mapped to |<Plug>(iced_next_use_case)|.
+
+                                                             *:IcedPrevUseCase*
+:IcedPrevUseCase
+  Show previous usecase in a window if there is.
+  See also |:IcedUseCaseOpen| command.
+  Key is mapped to |<Plug>(iced_prev_use_case)|.
 
                                                            *:IcedDocumentClose*
 :IcedDocumentClose
@@ -745,15 +776,17 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedSourceShow [{symbol}]
   Open a window, and show source codes for {symbol}
   If {symbol} is not passed, symbol under cursor is used.
+  See also |g:iced_enable_enhanced_definition_extraction|.
   Key is mapped to |<Plug>(iced_source_show)|.
 
-                                                         *:IcedPopupSourceShow*
-:IcedPopupSourceShow [{symbol}]
+                                                         *:IcedSourcePopupShow*
+:IcedSourcePopupShow [{symbol}]
   Open a popup window, and show source codes for {symbol}
   If {symbol} is not passed, symbol under cursor is used.
   If |popup| is not supported or codes are too long to show in popup window,
   |:IcedSourceShow| is called.
-  Key is mapped to |<Plug>(iced_popup_source_show)|.
+  See also |g:iced_enable_enhanced_definition_extraction|.
+  Key is mapped to |<Plug>(iced_source_popup_show)|.
 
                                                           *:IcedCommandPalette*
 :IcedCommandPalette
@@ -1183,9 +1216,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_document_open)
   Same as |:IcedDocumentOpen|.
 
-                                             *<Plug>(iced_popup_document_open)*
-<Plug>(iced_popup_document_open)
-  Same as |:IcedPopupDocumentOpen|.
+                                             *<Plug>(iced_document_popup_open)*
+<Plug>(iced_document_popup_open)
+  Same as |:IcedDocumentPopupOpen|.
   Configurable options are:
   - |g:iced_enable_popup_document|
 
@@ -1198,6 +1231,18 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   - |g:iced_enable_auto_document|
   - |g:iced_enable_popup_document|
 
+                                                   *<Plug>(iced_use_case_open)*
+<Plug>(iced_use_case_open)
+  Same as |:IcedUseCaseOpen|.
+
+                                                   *<Plug>(iced_next_use_case)*
+<Plug>(iced_next_use_case)
+  Same as |:IcedNextUseCase|.
+
+                                                   *<Plug>(iced_prev_use_case)*
+<Plug>(iced_prev_use_case)
+  Same as |:IcedPrevUseCase|.
+
                                                   *<Plug>(iced_document_close)*
 <Plug>(iced_document_close)
   Same as |:IcedDocumentClose|.
@@ -1206,9 +1251,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_source_show)
   Same as |:IcedSourceShow|.
 
-                                               *<Plug>(iced_popup_source_show)*
-<Plug>(iced_popup_source_show)
-  Same as |:IcedPopupSourceShow|.
+                                               *<Plug>(iced_source_popup_show)*
+<Plug>(iced_source_popup_show)
+  Same as |:IcedSourcePopupShow|.
 
                                                  *<Plug>(iced_command_palette)*
 <Plug>(iced_command_palette)
@@ -1446,6 +1491,25 @@ g:iced#nrepl#path_translation
 <
   Default value is `{}`.
   See also |vim-iced-install-docker|.
+
+                                 *g:iced_enable_enhanced_definition_extraction*
+g:iced_enable_enhanced_definition_extraction
+  If {v:true}, enable enhanced source extraction.
+  This feature will extract source by `let` form also.
+  Default value is `v:true`.
+  See also |g:iced#nrepl#source#finding_max_depth|.
+
+  WARNING:
+    Enhanced source extraction requires `borkdude/jet`.
+    https://github.com/borkdude/jet
+    vim-iced will confirm you to install `jet` automatically If not installed.
+
+                                        *g:iced#nrepl#source#finding_max_depth*
+g:iced#nrepl#source#finding_max_depth
+  Max depth for finding source. 
+  This value is used on enhanced source extraction.
+  Default value is `3`.
+  See also |g:iced_enable_enhanced_definition_extraction|.
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
@@ -1742,9 +1806,13 @@ g:iced_enable_default_key_mappings
   n       <Leader>rtl  <Plug>(iced_thread_last)
   n       <Leader>ref  <Plug>(iced_extract_function)
   n       <Leader>rml  <Plug>(iced_move_to_let)
-  n       K            <Plug>(iced_popup_document_open)
+  n       K            <Plug>(iced_document_popup_open)
   n       <Leader>hb   <Plug>(iced_document_open)
-  n       <Leader>hs   <Plug>(iced_popup_source_show)
+  n       <Leader>hu   <Plug>(iced_use_case_open)
+  n       <Leader>hn   <Plug>(iced_next_use_case)
+  n       <Leader>hN   <Plug>(iced_prev_use_case)
+  n       <Leader>hq   <Plug>(iced_document_close)
+  n       <Leader>hs   <Plug>(iced_source_popup_show)
   n       <Leader>hS   <Plug>(iced_source_show)
   n       <Leader>hc   <Plug>(iced_clojuredocs_open)
   n       <Leader>hh   <Plug>(iced_command_palette)

@@ -68,7 +68,9 @@ function! s:generate_cljdoc(resp) abort " {{{
   if has_key(a:resp, 'arglists-str')
     call add(doc, printf('  %s', join(split(a:resp['arglists-str'], '\r\?\n'), "\n  ")))
   endif
-  let docs = split(get(a:resp, 'doc', iced#message#get('no_document')), '\r\?\n')
+  let doc_str = get(a:resp, 'doc', iced#message#get('no_document'))
+  let doc_str = (type(doc_str) == v:t_string) ? doc_str : iced#message#get('no_document')
+  let docs = split(doc_str, '\r\?\n')
   call add(doc, printf('  %s', docs[0]))
   for doc_line in docs[1:]
     call add(doc, doc_line)
@@ -149,9 +151,9 @@ endfunction
 
 function! iced#nrepl#document#open(symbol) abort
   if !iced#nrepl#check_session_validity() | return | endif
-  call iced#nrepl#ns#in({_ ->
-        \ iced#nrepl#var#get(a:symbol, funcref('s:view_doc_on_buffer'))
-        \ })
+  return iced#promise#call('iced#nrepl#ns#in', [])
+        \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
+        \.then(funcref('s:view_doc_on_buffer'))
 endfunction
 
 function! iced#nrepl#document#popup_open(symbol) abort
@@ -161,9 +163,9 @@ function! iced#nrepl#document#popup_open(symbol) abort
   endif
 
   if !iced#nrepl#check_session_validity() | return | endif
-  call iced#nrepl#ns#in({_ ->
-        \ iced#nrepl#var#get(a:symbol, funcref('s:view_doc_on_popup'))
-        \ })
+  return iced#promise#call('iced#nrepl#ns#in', [])
+        \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
+        \.then(funcref('s:view_doc_on_popup'))
 endfunction
 
 function! s:one_line_doc(resp) abort

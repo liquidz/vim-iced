@@ -1,0 +1,85 @@
+name: document
+on:
+  push:
+    branches:
+      - master
+      - dev
+jobs:
+  asciidoc:
+    runs-on: ubuntu-latest
+    container:
+      image: asciidoctor/docker-asciidoctor
+    steps:
+      - uses: actions/checkout@v1
+      - name: build html
+        run: asciidoctor -o target/html/index.html doc/pages/index.adoc
+      - uses: actions/upload-artifact@master
+        with:
+          name: asciidoc_index.html
+          path: target/html/index.html
+
+  help:
+    needs: asciidoc
+    runs-on: ubuntu-latest
+    container:
+      image: clojure:openjdk-14-tools-deps
+    steps:
+      - uses: actions/checkout@v1
+      - name: cache cpcache
+        uses: actions/cache@v1
+        with:
+          path: ~/.clojure/.cpcache
+          key: document-cpcache-${{ hashFiles('deps.edn') }}
+      - name: cache m2
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: document-m2-${{ hashFiles('deps.edn') }}
+      - name: build help html
+        run: bash scripts/html.sh
+      - uses: actions/download-artifact@master
+        with:
+          name: asciidoc_index.html
+          path: tmp/html
+      - name: copy index.html
+        run: cp -pf tmp/html/index.html target/html/index.html
+      - name: copy assets
+        run: cp -pr doc/pages/assets target/html/assets
+      - uses: actions/upload-artifact@master
+        with:
+          name: document
+          path: target/html
+
+  nightly-deploy:
+    if: github.ref == 'refs/heads/dev'
+    needs: [asciidoc, help]
+    runs-on: ubuntu-latest
+    container:
+      image: node:8.10.0
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/download-artifact@master
+        with:
+          name: document
+          path: document
+      - name: install netlify-cli
+        run: npm install -g --silent netlify-cli
+      - name: deploy to netlify
+        run: netlify deploy --auth=${{ secrets.NETLIFY_PERSONAL_ACCESS_TOKEN }} --site=${{ secrets.NETLIFY_SITE_ID }} --dir=document --prod
+
+  deploy:
+    if: github.ref == 'refs/heads/master'
+    needs: [asciidoc, help]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/download-artifact@master
+        with:
+          name: document
+          path: document
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: ./document

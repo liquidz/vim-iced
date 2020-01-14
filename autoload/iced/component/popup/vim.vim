@@ -60,6 +60,8 @@ function! s:popup.open(texts, ...) abort
   if type(org_col) == v:t_string
     if org_col ==# 'right'
       let org_col = wininfo['width'] - width
+    elseif org_col ==# 'near-cursor'
+      let org_col = wincol()
     else
       return iced#message#error('unexpected_error', printf('invalid column "%s"', org_col))
     endif
@@ -67,6 +69,11 @@ function! s:popup.open(texts, ...) abort
     let org_col = org_col - 1
   endif
   let col = org_col + wininfo['wincol']
+  " Align right when column goes off the screen
+  if col + width > wininfo['width']
+    let org_col = wininfo['width'] - width
+    let col = org_col + wininfo['wincol']
+  endif
 
   let max_width = &columns - wininfo['wincol'] - org_col
 
