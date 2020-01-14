@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+
+=== Changed
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/174[#174]: Fixed to work `<Plug>(iced_eval_and_print)` correctly.
+
+// }}}
 
 == 0.14.0 (2020-01-14)
 // {{{

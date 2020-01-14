@@ -22,15 +22,18 @@ function! iced#operation#eval(type) abort
   return s:eval({code -> iced#repl#execute('eval_code', code)})
 endfunction
 
-function! iced#operation#eval_and_print(type) abort
-  let opt = {'use-printer?': v:true}
-  function! opt.callback(resp) abort
-    call iced#nrepl#eval#out(a:resp)
-    if has_key(a:resp, 'value')
-      call iced#buffer#stdout#append(a:resp['value'])
-    endif
-  endfunction
+function! s:__eval_and_print(resp) abort
+  call iced#nrepl#eval#out(a:resp)
+  if has_key(a:resp, 'value')
+    call iced#buffer#stdout#append(a:resp['value'])
+  endif
+endfunction
 
+function! iced#operation#eval_and_print(type) abort
+  let opt = {
+        \ 'use-printer?': v:true,
+        \ 'callback': funcref('s:__eval_and_print'),
+        \}
   return s:eval({code -> iced#nrepl#eval#code(code, opt)})
 endfunction
 
