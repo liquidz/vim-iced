@@ -1,11 +1,5 @@
 == Socket REPL [[socket_repl]]
 
-[WARNING]
-====
-This feature is under development. +
-Currently, only available on https://github.com/liquidz/vim-iced/tree/dev[dev branch].
-====
-
 vim-iced targets {nrepl} mainly, but now will also support minimal operations on socket REPL.
 
 Currently, only evaluating codes is supported by socket REPL.
