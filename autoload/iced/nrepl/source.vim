@@ -93,7 +93,7 @@ function! s:__fetch_definition(...) abort
   let level = get(opt, 'level', 0)
 
   return iced#promise#call('iced#nrepl#op#refactor#extract_definition', [path, ns_name, sym, line, column])
-       \.then({resp -> (has_key(resp, 'error')
+       \.then({resp -> (iced#util#has_status(resp, 'refactor-nrepl-error')
        \               ? (level > 0) ? '' : s:__fetch_source(sym)
        \               : iced#promise#call(iced#system#get('edn').decode, [get(resp, 'definition', {})]))
        \               })
