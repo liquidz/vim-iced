@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file. This change
 ** Added `g:iced_enable_enhanced_definition_extraction` option.
 
 === Changed
-* (Breaking) Rename following commans.
+* (Breaking) Rename following commands.
 ** `IcedPopupDocumentOpen` -> `IcedDocumentPopupOpen`
 ** `IcedPopupSourceShow` -> `IcedSourcePopupShow`
 

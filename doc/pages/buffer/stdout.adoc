@@ -2,7 +2,7 @@
 
 Standard outputs will be outputted to dedicated buffer.
 
-vim-iced provides following commans to control stdout buffer.
+vim-iced provides following commands to control stdout buffer.
 
 [cols="30,20,50"]
 |===

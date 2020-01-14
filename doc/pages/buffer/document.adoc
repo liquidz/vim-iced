@@ -3,7 +3,7 @@
 Documents will be shown to popup window by default.
 But you can show them to dedicated buffer to keep them displayed.
 
-vim-iced provides following commans to control document buffer.
+vim-iced provides following commands to control document buffer.
 
 [cols="30,20,50"]
 |===
