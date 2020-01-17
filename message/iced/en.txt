@@ -53,7 +53,6 @@
   'no_port_file':              '.nrepl-port is not found.',
   'no_selector':               'CtrlP or Fzf needed to select candidates is not installed.',
   'no_session':                'Session does not exist: %s.',
-  'no_set_hidden':             'You must add `set hidden` to your .vimrc.',
   'no_spec':                   'No spec form is found.',
   'no_test_summary':           'No tests to run.',
   'no_test_vars':              'No test vars.',

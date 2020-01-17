@@ -39,6 +39,7 @@ function! s:delete_old_lines(_) abort
 endfunction
 
 function! s:initialize(bufnr) abort
+  call setbufvar(a:bufnr, '&bufhidden', 'hide')
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&buftype', 'nofile')
   call setbufvar(a:bufnr, '&filetype', 'clojure')

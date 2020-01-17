@@ -402,11 +402,6 @@ function! s:connected(resp, initial_session) abort
 endfunction
 
 function! iced#nrepl#connect(port, ...) abort
-  " required by iced#buffer
-  if !&hidden
-    return iced#message#error('no_set_hidden')
-  endif
-
   if iced#nrepl#is_connected()
     call iced#message#info('already_connected')
     return v:true

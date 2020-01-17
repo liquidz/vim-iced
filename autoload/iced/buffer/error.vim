@@ -6,6 +6,7 @@ let s:bufname = 'iced_error'
 let g:iced#buffer#error#height = get(g:, 'iced#buffer#error#height', &previewheight)
 
 function! s:initialize(bufnr) abort
+  call setbufvar(a:bufnr, '&bufhidden', 'hide')
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&buftype', 'nofile')
   call setbufvar(a:bufnr, '&filetype', 'clojure')
