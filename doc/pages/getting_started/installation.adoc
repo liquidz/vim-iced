@@ -51,6 +51,13 @@ call plug#end()
 let g:iced_enable_default_key_mappings = v:true
 ----
 
+Then start Vim/Neovim, and execute the following command to install dependent plugins.
+
+[source,vim]
+----
+:PlugInstall
+----
+
 ==== iced command [[installation_iced_command]]
 
 `iced` is a a utility command to make you easy to use vim-iced, and it comes with vim-iced.
