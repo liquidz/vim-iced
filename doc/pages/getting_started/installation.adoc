@@ -78,7 +78,7 @@ $ iced version
 
 See <<iced_command>> for more information.
 
-=== Quick start
+=== Quick start [[quick_start]]
 
 Let's create a sample project for quick start.
 Here https://github.com/technomancy/leiningen[Leiningen] is used to create a project template.
