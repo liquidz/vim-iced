@@ -307,8 +307,8 @@ case "$1" in
                 echo_info "Clojure CLI project is detected"
             fi
 
-            run "clojure $OPTIONS -Sdeps '{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
-                         -m nrepl.cmdline $(cli_middleware_args ${TARGET_MIDDLEWARES})"
+            run "clj $OPTIONS -Sdeps '{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
+                         -m nrepl.cmdline $(cli_middleware_args ${TARGET_MIDDLEWARES}) --interactive"
         elif [ $IS_SHADOW_CLJS -eq 1 ]; then
             echo_error 'Currently iced command does not support shadow-cljs.'
             echo 'Please see `:h vim-iced-manual-shadow-cljs` for manual setting up.'
