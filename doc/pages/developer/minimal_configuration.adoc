@@ -20,7 +20,6 @@ set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
 filetype plugin indent on
-set hidden
 
 set runtimepath-=$HOME/.vim
 set runtimepath-=$HOME/.vim/after
