@@ -2,8 +2,6 @@ let s:suite  = themis#suite('iced.buffer.document')
 let s:assert = themis#helper('assert')
 let s:holder = themis#helper('iced_holder')
 
-set hidden
-
 function! s:suite.open_test() abort
   let info = iced#buffer#document#init()
 

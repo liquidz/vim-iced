@@ -4,12 +4,11 @@ let s:holder = themis#helper('iced_holder')
 
 let s:bufname = 'iced_buffer_test'
 
-set hidden
-
 function! s:init_buf() abort
   call s:holder.clear()
   let info = iced#buffer#init(s:bufname, s:holder.run)
   let nr = info['bufnr']
+  call setbufvar(nr, '&bufhidden', 'hide')
   call setbufvar(nr, '&buflisted', 0)
   call setbufvar(nr, '&buftype', 'nofile')
   call setbufvar(nr, '&swapfile', 0)
