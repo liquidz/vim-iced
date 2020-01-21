@@ -50,6 +50,27 @@ function! iced#util#restore_cursor_position(pos) abort
   silent call winrestview(a:pos['view'])
 endfunction
 
+function! iced#util#save_local_marks() abort
+  let res = {}
+  "" a-z
+  let mark_exprs = map(range(0, 25), {_, v -> printf("'%s", nr2char(v + 97))})
+  "" last selected range
+  let mark_exprs += ["'<", "'>"]
+
+  for mark_expr in mark_exprs
+    let pos = getpos(mark_expr)
+    if pos == [0, 0, 0, 0] | continue | endif
+    let res[mark_expr] = pos
+  endfor
+  return res
+endfunction
+
+function! iced#util#restore_local_marks(saved_result) abort
+  for mark_expr in keys(a:saved_result)
+    call setpos(mark_expr, a:saved_result[mark_expr])
+  endfor
+endfunction
+
 function! iced#util#has_status(resp, status) abort
   for resp in iced#util#ensure_array(a:resp)
     for status in get(resp, 'status', [''])
