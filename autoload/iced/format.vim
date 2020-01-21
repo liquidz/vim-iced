@@ -28,6 +28,15 @@ function! s:__format_finally(args) abort
 endfunction
 
 "" iced#format#all {{{
+function! s:__append_texts(lnum, texts) abort
+  let lnum = a:lnum
+  for txt in a:texts
+    call append(lnum, txt)
+    let lnum += 1
+  endfor
+  normal! dd
+endfunction
+
 function! s:__format_all(resp, finally_args) abort
   let current_bufnr = bufnr('%')
   if current_bufnr != a:finally_args.bufnr
@@ -37,8 +46,10 @@ function! s:__format_all(resp, finally_args) abort
 
   try
     if has_key(a:resp, 'formatted') && !empty(a:resp['formatted'])
-      %del
-      call setline(1, split(a:resp['formatted'], '\r\?\n'))
+      silent! execute "normal! i \<esc>x"
+           \ | undojoin
+           \ | %del
+           \ | call s:__append_texts(0, split(a:resp['formatted'], '\r\?\n'))
     elseif has_key(a:resp, 'error')
       call iced#message#error_str(a:resp['error'])
     endif
