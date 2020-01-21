@@ -22,6 +22,7 @@ function! s:__format_finally(args) abort
   let @@ = a:args.reg_save
   call winrestview(a:args.view)
   call iced#system#get('sign').refresh({'signs': a:args.signs})
+  call iced#util#restore_local_marks(a:args.marks)
 
   if different_buffer | call iced#buffer#focus(current_bufnr) | endif
 endfunction
@@ -66,6 +67,7 @@ function! iced#format#all() abort
         \ 'view': view,
         \ 'bufnr': bufnr('%'),
         \ 'signs': copy(iced#system#get('sign').list_in_buffer()),
+        \ 'marks': iced#util#save_local_marks(),
         \ }
 
   " Disable editing until the formatting process is completed
@@ -104,8 +106,11 @@ function! iced#format#form() abort
     return
   endif
 
-  let reg_save = @@ " must be captured before get_current_top_list_raw
-  let view = winsaveview() " must be captured before get_current_top_list_raw
+  " must be captured before get_current_top_list_raw
+  let reg_save = @@
+  let view = winsaveview()
+  let marks = iced#util#save_local_marks()
+
   let codes = get(iced#paredit#get_current_top_list_raw(), 'code', '')
   if empty(codes) | return iced#message#warning('finding_code_error') | endif
 
@@ -119,6 +124,7 @@ function! iced#format#form() abort
         \ 'view': view,
         \ 'bufnr': bufnr('%'),
         \ 'signs': copy(iced#system#get('sign').list_in_buffer()),
+        \ 'marks': marks,
         \ }
 
   " Disable editing until the formatting process is completed
