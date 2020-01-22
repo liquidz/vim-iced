@@ -30,7 +30,9 @@
            :extra-deps {kaocha-nrepl {:mvn/version "0.1.2-SNAPSHOT"}}
            :__middlewares__ ["kaocha-nrepl.core/wrap-kaocha"]}
 
-  :jackin {:paths ["clj/jackin"]
+  :jackin {;; Must be separeted from "clj/repl" path.
+           ;; c.f. https://github.com/liquidz/vim-iced/issues/175#issuecomment-575543011
+           :paths ["clj/jackin"]
            :extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}}}
   :command {:extra-deps {org.clojure/tools.cli {:mvn/version "0.4.2"}}}
   :ancient {:extra-deps {olical/depot {:mvn/version "1.8.4"}}
