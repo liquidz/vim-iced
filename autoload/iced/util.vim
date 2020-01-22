@@ -38,19 +38,7 @@ function! iced#util#debug(title, x) abort
   endif
 endfunction
 
-function! iced#util#save_cursor_position() abort
-  return {
-      \ 'bufnr': bufnr('%'),
-      \ 'view': winsaveview(),
-      \ }
-endfunction
-
-function! iced#util#restore_cursor_position(pos) abort
-  silent exe printf('b %d', a:pos['bufnr'])
-  silent call winrestview(a:pos['view'])
-endfunction
-
-function! iced#util#save_local_marks() abort
+function! s:__save_local_marks() abort
   let res = {}
   "" a-z
   let mark_exprs = map(range(0, 25), {_, v -> printf("'%s", nr2char(v + 97))})
@@ -65,10 +53,26 @@ function! iced#util#save_local_marks() abort
   return res
 endfunction
 
-function! iced#util#restore_local_marks(saved_result) abort
+function! s:__restore_local_marks(saved_result) abort
   for mark_expr in keys(a:saved_result)
     call setpos(mark_expr, a:saved_result[mark_expr])
   endfor
+endfunction
+
+function! iced#util#save_context() abort
+  return {
+        \ 'reg': @@,
+        \ 'bufnr': bufnr('%'),
+        \ 'view': winsaveview(),
+        \ 'marks': s:__save_local_marks(),
+        \ }
+endfunction
+
+function! iced#util#restore_context(saved_context) abort
+  silent exe printf('b %d', a:saved_context.bufnr)
+  silent call winrestview(a:saved_context.view)
+  call s:__restore_local_marks(a:saved_context.marks)
+  let @@ = a:saved_context.reg
 endfunction
 
 function! iced#util#has_status(resp, status) abort
