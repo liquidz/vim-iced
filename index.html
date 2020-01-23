@@ -447,7 +447,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_getting_started">2. Getting Started</a>
 <ul class="sectlevel2">
 <li><a href="#installation">2.1. Installation</a></li>
-<li><a href="#_quick_start">2.2. Quick start</a></li>
+<li><a href="#quick_start">2.2. Quick start</a></li>
 </ul>
 </li>
 <li><a href="#evaluation">3. Evaluation</a>
@@ -495,7 +495,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_browsing_tapped_values">10.2. Browsing tapped values</a></li>
 </ul>
 </li>
-<li><a href="#_refactoring">11. Refactoring</a>
+<li><a href="#refactoring">11. Refactoring</a>
 <ul class="sectlevel2">
 <li><a href="#refactoring_namespace">11.1. Namespace</a></li>
 <li><a href="#refactoring_function">11.2. Function</a></li>
@@ -506,7 +506,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#iced_supports">12.1. Supports</a></li>
 <li><a href="#iced_usage">12.2. Usage</a></li>
-<li><a href="#iced_arguments">12.3. Arguments</a></li>
+<li><a href="#iced_command_advanced">12.3. Advanced</a></li>
 </ul>
 </li>
 <li><a href="#clojurescript">13. ClojureScript</a>
@@ -694,6 +694,14 @@ Plug <span class="s1">'liquidz/vim-iced'</span><span class="p">,</span> <span cl
 <span class="k">let</span> <span class="nv">g:iced_enable_default_key_mappings</span> <span class="p">=</span> <span class="k">v</span><span class="p">:</span>true</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Then start Vim/Neovim, and execute the following command to install dependent plugins.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim"><span class="p">:</span>PlugInstall</code></pre>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="installation_iced_command">2.1.2. iced command</h4>
@@ -721,7 +729,7 @@ With above vim-plug setting,  <code>~/.vim/plugged/vim-iced/bin</code> is the di
 </div>
 </div>
 <div class="sect2">
-<h3 id="_quick_start">2.2. Quick start</h3>
+<h3 id="quick_start">2.2. Quick start</h3>
 <div class="paragraph">
 <p>Let&#8217;s create a sample project for quick start.
 Here <a href="https://github.com/technomancy/leiningen">Leiningen</a> is used to create a project template.</p>
@@ -1519,7 +1527,7 @@ So if you would like to delete them, execute <a href="https://liquidz.github.io/
 </div>
 </div>
 <div class="sect1">
-<h2 id="_refactoring">11. Refactoring</h2>
+<h2 id="refactoring">11. Refactoring</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="refactoring_namespace">11.1. Namespace</h3>
@@ -1791,9 +1799,8 @@ Instant REPL requires no project/config file.</p></td>
 <p>Other options are passed to each program as below.</p>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="iced_arguments">12.3. Arguments</h3>
+<div class="sect3">
+<h4 id="iced_arguments">12.2.2. Arguments</h4>
 <div class="listingblock">
 <div class="title">Leiningen profile</div>
 <div class="content">
@@ -1812,8 +1819,29 @@ Instant REPL requires no project/config file.</p></td>
 <pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span>iced repl <span class="nt">--with-cljs</span> <span class="nt">--force-clojure-cli</span> <span class="nt">-A</span>:foo</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="iced_command_advanced">12.3. Advanced</h3>
+<div class="sect3">
+<h4 id="_clojure_cli_project">12.3.1. Clojure CLI project</h4>
+<div class="paragraph">
+<p><code>iced</code> command use <code>clj</code> command for Clojure CLI project by default.</p>
+</div>
+<div class="paragraph">
+<p>If you would like to use <code>clojure</code> command instead, you can overwrite the command by <code>ICED_REPL_CLOJURE_CLI_CMD</code> environmental variable.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ ICED_REPL_CLOJURE_CLI_CMD</span><span class="o">=</span>clojure iced repl</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, this is useful when you&#8217;d like to use <a href="https://github.com/bhauman/rebel-readline">rebel-readline</a> in the REPL which is started by <code>iced repl</code>.</p>
+</div>
 <div class="paragraph text-right">
 <p><span class="small"><a href="#top">Back to top</a></span></p>
+</div>
 </div>
 </div>
 </div>
@@ -3371,7 +3399,6 @@ If you find an unexpected behavior, please try this configuration.</p>
 <span class="k">set</span> encoding<span class="p">=</span>utf<span class="m">-8</span>
 <span class="k">scriptencoding</span> utf<span class="m">-8</span>
 <span class="k">filetype</span> plugin indent <span class="k">on</span>
-<span class="k">set</span> hidden
 
 <span class="k">set</span> runtimepath<span class="p">-=</span>$HOME/<span class="p">.</span><span class="k">vim</span>
 <span class="k">set</span> runtimepath<span class="p">-=</span>$HOME<span class="sr">/.vim/</span>after
@@ -3460,22 +3487,233 @@ The following <code>make</code> rule will clone <a href="https://github.com/thin
 <div class="sect1">
 <h2 id="cheatsheet">27. Cheatsheet</h2>
 <div class="sectionbody">
-<h3 id="_connection_and_evaluation" class="discrete">Connection and Evaluation</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Based on default key mappings.<br>
+See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_default_key_mappings">help file</a> for whole default key mappings.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Connection</strong></p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 70%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Default key mapping</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;'</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Make connection to nREPL</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong><a href="#formatting">Formatting</a></strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">==</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reformat the form under cursor</p></td>
+</tr>
+</tbody>
+</table></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong><a href="#evaluation">Evaluation</a></strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;ee</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Evaluate outer list</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;et</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Evaluate outer top list</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;eb</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Require current namespace</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;eq</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interrupt code evaluation</p></td>
+</tr>
+</tbody>
+</table></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong><a href="#macro">Macro</a></strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;em</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Evaluate <code>macroexpand-1</code> for outer list</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;eM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Evaluate <code>macroexpand</code> for outer list</p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong><a href="#testing">Testing</a></strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;tt</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run test under cursor</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;tn</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run tests in current namespace</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;tr</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Re run failed tests</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;tl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Re run last test</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;tp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run all tests</p></td>
+</tr>
+</tbody>
+</table></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong><a href="#navigation">Navigation</a></strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;C-]&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jump cursor to the definition of symbol under cursor</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;C-t&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jump back cursor</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;bn</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Browse namespaces related to the current namespace</p></td>
+</tr>
+</tbody>
+</table></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong><a href="#reference">Reference</a></strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">K</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Show documents for the symbol under cursor</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;hs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Show source for the symbol under cursor</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;hq</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Close document buffer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;bs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Browse specs</p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong><a href="#refactoring">Refactoring</a></strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;rcn</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clean namespace</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;ram</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add missing libspec</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;ran</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add <code>ns</code> to require form</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;ref</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Extract the form under cursor as a function</p></td>
+</tr>
+</tbody>
+</table></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><strong>Others</strong></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;hh</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Show command palette</p></td>
+</tr>
+</tbody>
+</table></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"></div></td>
 </tr>
 </tbody>
 </table>
@@ -3487,7 +3725,7 @@ The following <code>make</code> rule will clone <a href="https://github.com/thin
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-14 22:11:43 UTC
+Last updated 2020-01-23 09:45:47 UTC
 </div>
 </div>
 <style>
