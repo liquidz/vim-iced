@@ -29,11 +29,22 @@ function! s:suite.all_test() abort
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:format_code_relay(msg, ":dummy\n:formatted")}})
 
+  " set dummy marks
+  call setpos("'a", [0, 1, 1, 0])
+  call setpos("'b", [0, 2, 2, 0])
+  call setpos("'<", [0, 2, 2, 0])
+  call setpos("'<", [0, 1, 2, 0])
+  call setpos("'>", [0, 1, 5, 0])
+
   let p = iced#format#all()
   call iced#promise#wait(p)
 
   call s:assert.equals(s:buf.get_texts(),
         \ ":dummy\n:formatted")
+  call s:assert.equals(getpos("'a"), [0, 1, 1, 0])
+  call s:assert.equals(getpos("'b"), [0, 2, 2, 0])
+  call s:assert.equals(getpos("'<"), [0, 1, 2, 0])
+  call s:assert.equals(getpos("'>"), [0, 1, 5, 0])
 
   call s:buf.stop_dummy()
 endfunction
@@ -47,11 +58,22 @@ function! s:suite.form_test() abort
         \ 'status_value': 'open',
         \ 'relay': {msg -> s:format_code_relay(msg, ':dummy-formatted')}})
 
+  " set dummy marks
+  call setpos("'a", [0, 1, 1, 0])
+  call setpos("'b", [0, 2, 2, 0])
+  call setpos("'<", [0, 2, 2, 0])
+  call setpos("'<", [0, 1, 2, 0])
+  call setpos("'>", [0, 1, 5, 0])
+
   let p = iced#format#form()
   call iced#promise#wait(p)
 
   call s:assert.equals(s:buf.get_texts(),
         \ "(list :foo)\n:dummy-formatted")
+  call s:assert.equals(getpos("'a"), [0, 1, 1, 0])
+  call s:assert.equals(getpos("'b"), [0, 2, 2, 0])
+  call s:assert.equals(getpos("'<"), [0, 1, 2, 0])
+  call s:assert.equals(getpos("'>"), [0, 1, 5, 0])
 
   call s:buf.stop_dummy()
 endfunction

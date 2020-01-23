@@ -28,7 +28,6 @@ function! s:suite.auto_test() abort
   let cwd = getcwd()
 
   try
-    set hidden
     silent execute printf(':lcd %s', s:default_dir)
     call s:assert.equals(iced#nrepl#connect#auto(), v:true)
 
@@ -47,7 +46,6 @@ function! s:suite.auto_with_shadow_cljs_test() abort
   let cwd = getcwd()
 
   try
-    set hidden
     silent execute printf(':lcd %s', s:shadow_cljs_dir)
     call s:assert.equals(iced#nrepl#connect#auto(), v:true)
 
@@ -70,7 +68,6 @@ function! s:suite.jack_in_test() abort
   let cwd = getcwd()
 
   try
-    set hidden
     silent execute printf(':lcd %s', s:default_dir)
 
     call iced#nrepl#connect#jack_in()
@@ -96,7 +93,6 @@ function! s:suite.instant_test() abort
   let cwd = getcwd()
 
   try
-    set hidden
     silent execute printf(':lcd %s', s:default_dir)
 
     call iced#nrepl#connect#instant()

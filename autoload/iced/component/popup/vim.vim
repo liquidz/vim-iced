@@ -68,15 +68,13 @@ function! s:popup.open(texts, ...) abort
   else
     let org_col = org_col - 1
   endif
-  let col = org_col + wininfo['wincol']
   " Align right when column goes off the screen
-  if col + width > wininfo['width']
+  if org_col + width > wininfo['width']
     let org_col = wininfo['width'] - width
-    let col = org_col + wininfo['wincol']
   endif
 
+  let col = org_col + wininfo['wincol']
   let max_width = &columns - wininfo['wincol'] - org_col
-
   let win_opts = {
         \ 'line': line,
         \ 'col': col,

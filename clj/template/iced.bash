@@ -307,8 +307,15 @@ case "$1" in
                 echo_info "Clojure CLI project is detected"
             fi
 
-            run "clojure $OPTIONS -Sdeps '{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
-                         -m nrepl.cmdline $(cli_middleware_args ${TARGET_MIDDLEWARES})"
+            CLOJURE_CLI_CMD="clj"
+            if [[ ! -z "${ICED_REPL_CLOJURE_CLI_CMD}" ]]; then
+              CLOJURE_CLI_CMD="${ICED_REPL_CLOJURE_CLI_CMD}"
+              echo_info "Overwrite Clojure CLI command with '${CLOJURE_CLI_CMD}'"
+            fi
+
+            run "$CLOJURE_CLI_CMD \
+                         $OPTIONS -Sdeps '{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
+                         -m nrepl.cmdline $(cli_middleware_args ${TARGET_MIDDLEWARES}) --interactive"
         elif [ $IS_SHADOW_CLJS -eq 1 ]; then
             echo_error 'Currently iced command does not support shadow-cljs.'
             echo 'Please see `:h vim-iced-manual-shadow-cljs` for manual setting up.'

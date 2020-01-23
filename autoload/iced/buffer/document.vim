@@ -7,6 +7,7 @@ let s:default_filetype = 'markdown'
 let g:iced#buffer#document#height = get(g:, 'iced#buffer#document#height', &previewheight)
 
 function! s:initialize(bufnr) abort
+  call setbufvar(a:bufnr, '&bufhidden', 'hide')
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&buftype', 'nofile')
   call setbufvar(a:bufnr, '&filetype', s:default_filetype)

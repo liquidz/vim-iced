@@ -1,92 +1,111 @@
 == Cheatsheet [[cheatsheet]]
 
-[discrete]
-=== Connection and Evaluation
+[NOTE]
+====
+Based on default key mappings. +
+See {help_html}#g%3Aiced_enable_default_key_mappings[help file] for whole default key mappings.
+====
 
+[cols="33a,33a,33a"]
+|===
 
+| *Connection*
 [cols="30,70"]
+!===
+! {plug_iced_connect}
+! Make connection to nREPL
+!===
+
+*<<formatting>>*
+[cols="30,70"]
+!===
+! {plug_iced_format}
+! Reformat the form under cursor
+!===
+
+
+| *<<evaluation>>*
+[cols="30,70"]
+!===
+! {plug_iced_eval_outer_list}
+! Evaluate outer list
+! {plug_iced_eval_outer_top_list}
+! Evaluate outer top list
+! {plug_iced_require}
+! Require current namespace
+! {plug_iced_interrupt}
+! Interrupt code evaluation
+!===
+
+| *<<macro>>*
+[cols="30,70"]
+!===
+! {plug_iced_macroexpand_1_outer_list}
+! Evaluate `macroexpand-1` for outer list
+! {plug_iced_macroexpand_outer_list}
+! Evaluate `macroexpand` for outer list
+!===
+
+| *<<testing>>*
+[cols="30,70"]
+!===
+! {plug_iced_test_under_cursor}
+! Run test under cursor
+! {plug_iced_test_ns}
+! Run tests in current namespace
+! {plug_iced_test_redo}
+! Re run failed tests
+! {plug_iced_test_rerun_last}
+! Re run last test
+! {plug_iced_test_all}
+! Run all tests
+!===
+
+| *<<navigation>>*
+[cols="30,70"]
+!===
+! `<C-]>`
+!  Jump cursor to the definition of symbol under cursor
+! `<C-t>`
+! Jump back cursor
+! {plug_iced_browse_related_namespace}
+! Browse namespaces related to the current namespace
+!===
+
+| *<<reference>>*
+[cols="30,70"]
+!===
+! {plug_iced_document_popup_open}
+! Show documents for the symbol under cursor
+! {plug_iced_source_popup_show}
+! Show source for the symbol under cursor
+! {plug_iced_document_close}
+! Close document buffer
+! {plug_iced_browse_spec}
+! Browse specs
+!===
+
+| *<<refactoring>>*
+[cols="30,70"]
+!===
+! {plug_iced_clean_ns}
+! Clean namespace
+! {plug_iced_add_missing}
+! Add missing libspec
+! {plug_iced_add_ns}
+! Add `ns` to require form
+! {plug_iced_extract_function}
+! Extract the form under cursor as a function
+!===
+
+| *Others*
+[cols="30,70"]
+!===
+! {plug_iced_command_palette}
+! Show command palette
+!===
+
+|
+
+// End of cheatsheet
 |===
-| Default key mapping | Description
-
-| {plug_iced_connect}
-| Make connection to nREPL
-
-|===
-
-// ==============================================================================
-// CONNECTION AND EVALUATION           *iced-cheatsheet-connection-and-evaluation*
-//
-//   `<Leader>'`  Make connection to nREPL
-//   `<Leader>et`  Evaluate outer top list
-//   `<Leader>ee`  Evaluate outer list
-//   `<Leader>eb`  Require current namespace
-//   `<Leader>eq`  Interrupt some code evaluation in current session
-//   `<Leader>em`  Evaluate `macroexpand-1` for outer list
-//   `<Leader>eM`  Evaluate `macroexpand` for outer list
-//
-//   See |vim-iced-evaluating| for more information.
-//
-// ==============================================================================
-// FORMATTING                                         *iced-cheatsheet-formatting*
-//
-//   `==`  Reformat the form under cursor
-//
-//   See |vim-iced-formatting| for more information.
-//
-// ==============================================================================
-// TESTING                                               *iced-cheatsheet-testing*
-//
-//   `<Leader>tt`  Run test under cursor
-//   `<Leader>tn`  Run tests in current namespace
-//   `<Leader>tr`  Re run failed tests
-//   `<Leader>tl`  Re run last test
-//   `<Leader>tp`  Run all tests
-//
-//   See |vim-iced-testing| for more information.
-//
-// ==============================================================================
-// STDOUT BUFFER                                   *iced-cheatsheet-stdout-buffer*
-//
-//   `<Leader>ss`  Open stdout buffer
-//   `<Leader>sl`  Clear stdout buffer
-//   `<Leader>sq`  Close stdout buffer
-//
-//   See |vim-iced-stdout-buffer| for more information.
-//
-// ==============================================================================
-// NAVIGATION                                         *iced-cheatsheet-navigation*
-//
-//   `<C-]>`  Jump cursor to the definition of symbol under cursor
-//   `<C-t>`  Jump back cursor
-//   `<Leader>br`  Browse namespaces related to the current namespace
-//   `<Leader>fr`  Find var references under cursor
-//   `<Leader>gl`  Move cursor to the nearest `let` form
-//
-//   See |vim-iced-tag-jump| for more information.
-//
-// ==============================================================================
-// REFERENCE                                           *iced-cheatsheet-reference*
-//
-//   `K`  Show documents for the symbol under cursor
-//   `<Leader>hs`  Show source for the symbol under cursor
-//   `<Leader>hq`  Close document buffer
-//   `<Leader>bs`  Browse specs
-//
-// ==============================================================================
-// REFACTORING                                       *iced-cheatsheet-refactoring*
-//
-//   `<Leader>rcn`  Clean namespace
-//   `<Leader>ram`  Add missing libspec
-//   `<Leader>ran`  Add `ns` to require form
-//   `<Leader>rtf`  Convert current outer form to use `->` threading macro
-//   `<Leader>rtl`  Convert current outer form to use `->>` threading macro
-//   `<Leader>ref`  Extract the form under cursor as a function
-//   `<Leader>rml`  Move the form under cursor to nearest `let` binding
-//
-//   See |vim-iced-refactoring| for more information.
-//
-// ==============================================================================
-// OTHER                                                   *iced-cheatsheet-other*
-//
-//   `<Leader>hh`  Show command palette
-//

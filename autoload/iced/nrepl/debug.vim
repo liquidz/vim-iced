@@ -88,7 +88,7 @@ let s:debug_info_window_id = -1
 
 function! iced#nrepl#debug#start(resp) abort
   if type(s:saved_view) != v:t_dict
-    let s:saved_view = iced#util#save_cursor_position()
+    let s:saved_view = iced#util#save_context()
   endif
 
   " NOTE: Disable temporarily.
@@ -155,7 +155,7 @@ function! iced#nrepl#debug#quit() abort
       call iced#buffer#stdout#append(';; Quit')
     endif
     call iced#highlight#clear()
-    call iced#util#restore_cursor_position(s:saved_view)
+    call iced#util#restore_context(s:saved_view)
     let s:saved_view = ''
 
     if s:debug_info_window_id != -1

@@ -108,64 +108,12 @@ NOTE: vim-iced is heavily powered by https://github.com/clojure-emacs/cider-nrep
 https://github.com/clojure-emacs/refactor-nrepl[refactor-nrepl],
 and https://github.com/liquidz/iced-nrepl[iced-nrepl].
 
-== Installation
+== Documents
 
-=== vim-plug
-
-[source,vim]
-----
-" One of following is required
-Plug 'ctrlpvim/ctrlp.vim'
-" or
-Plug 'junegunn/fzf'
-" or
-Plug 'liuchengxu/vim-clap'
-
-Plug 'guns/vim-sexp',    {'for': 'clojure'}
-Plug 'liquidz/vim-iced', {'for': 'clojure'}
-----
-
-NOTE: https://github.com/ctrlpvim/ctrlp.vim[ctrlp.vim], https://github.com/junegunn/fzf[fzf] or https://github.com/liuchengxu/vim-clap[vim-clap] is required only when selecting multiple candidates.
-
-=== iced command (recommended)
-
-* Add `$PATH` environment variable to link:./bin/iced[`/path/to/vim-iced/bin`].
-
-`iced` command currently supports:
-
-* Leiningen
-* Boot
-* Clojure CLI
-
-=== Manual setting (not recommended)
-
-* See link:https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-install-manually[manual install] section in vim-iced.txt.
-** To work with https://github.com/thheller/shadow-cljs[shadow-cljs], you need to set up https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-manual-shadow-cljs[manually].
-
-== Usage
-
-. Start repl via `iced` command.
-** `iced repl`
-. Open source file.
-. Evaluate forms. (If not connected, vim-iced will connect automatically)
-
-== Configuration
-
-=== key mappings
-
-vim-iced is providing default key mappings.
-To enable default key mappings, add following line to your `.vimrc`.
-
-[source,vim]
-----
-let g:iced_enable_default_key_mappings = v:true
-----
-
-See link:https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-customizing[customizing section] in vim-iced.txt for actual mappings.
-
-== Document
-
-  * See link:https://liquidz.github.io/vim-iced/vim-iced.html[vim-iced.txt].
+* https://liquidz.github.io/vim-iced/#installation[Installation]
+* https://liquidz.github.io/vim-iced/#quick_start[Quick start]
+** https://liquidz.github.io/vim-iced/#cheatsheet[Cheatsheet]
+* https://liquidz.github.io/vim-iced/vim-iced.html[vim-iced.txt (Vim help file)]
 
 == External plugins
 

@@ -66,10 +66,6 @@ function! s:suite.connect_test() abort
       \ 'relay': {msg -> test.relay(msg)},
       \ })
 
-  set nohidden
-  call s:assert.equals(iced#nrepl#connect(1234), v:false)
-
-  set hidden
   call s:assert.equals(iced#nrepl#connect(1234), v:true)
   call s:assert.equals(iced#nrepl#current_session_key(), 'clj')
   call s:assert.equals(iced#nrepl#current_session(), 'foo-session')

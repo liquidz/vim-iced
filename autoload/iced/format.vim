@@ -15,29 +15,39 @@ endfunction
 
 function! s:__format_finally(args) abort
   let current_bufnr = get(a:args, 'back_to_bufnr', bufnr('%'))
-  let different_buffer = (current_bufnr != a:args.bufnr)
-  if different_buffer | call iced#buffer#focus(a:args.bufnr) | endif
+  let different_buffer = (current_bufnr != a:args.context.bufnr)
+  if different_buffer | call iced#buffer#focus(a:args.context.bufnr) | endif
 
   setl modifiable
-  let @@ = a:args.reg_save
-  call winrestview(a:args.view)
+  call iced#util#restore_context(a:args.context)
   call iced#system#get('sign').refresh({'signs': a:args.signs})
 
   if different_buffer | call iced#buffer#focus(current_bufnr) | endif
 endfunction
 
 "" iced#format#all {{{
+function! s:__append_texts(lnum, texts) abort
+  let lnum = a:lnum
+  for txt in a:texts
+    call append(lnum, txt)
+    let lnum += 1
+  endfor
+  normal! dd
+endfunction
+
 function! s:__format_all(resp, finally_args) abort
   let current_bufnr = bufnr('%')
-  if current_bufnr != a:finally_args.bufnr
-    call iced#buffer#focus(a:finally_args.bufnr)
+  if current_bufnr != a:finally_args.context.bufnr
+    call iced#buffer#focus(a:finally_args.context.bufnr)
   endif
   setl modifiable
 
   try
     if has_key(a:resp, 'formatted') && !empty(a:resp['formatted'])
-      %del
-      call setline(1, split(a:resp['formatted'], '\r\?\n'))
+      silent! execute "normal! i \<esc>x"
+           \ | undojoin
+           \ | %del
+           \ | call s:__append_texts(0, split(a:resp['formatted'], '\r\?\n'))
     elseif has_key(a:resp, 'error')
       call iced#message#error_str(a:resp['error'])
     endif
@@ -52,8 +62,7 @@ endfunction
 function! iced#format#all() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
-  let reg_save = @@
-  let view = winsaveview()
+  let context = iced#util#save_context()
   let codes = trim(join(getline(1, '$'), "\n"))
   if empty(codes) | return | endif
 
@@ -62,9 +71,7 @@ function! iced#format#all() abort
   let ns_name = iced#nrepl#ns#name()
   let alias_dict = iced#nrepl#ns#alias_dict(ns_name)
   let finally_args = {
-        \ 'reg_save': reg_save,
-        \ 'view': view,
-        \ 'bufnr': bufnr('%'),
+        \ 'context': context,
         \ 'signs': copy(iced#system#get('sign').list_in_buffer()),
         \ }
 
@@ -78,8 +85,8 @@ endfunction " }}}
 "" iced#format#form {{{
 function! s:__format_form(resp, finally_args) abort
   let current_bufnr = bufnr('%')
-  if current_bufnr != a:finally_args.bufnr
-    call iced#buffer#focus(a:finally_args.bufnr)
+  if current_bufnr != a:finally_args.context.bufnr
+    call iced#buffer#focus(a:finally_args.context.bufnr)
   endif
   setl modifiable
 
@@ -104,20 +111,19 @@ function! iced#format#form() abort
     return
   endif
 
-  let reg_save = @@ " must be captured before get_current_top_list_raw
-  let view = winsaveview() " must be captured before get_current_top_list_raw
+  " must be captured before get_current_top_list_raw
+  let context = iced#util#save_context()
+
   let codes = get(iced#paredit#get_current_top_list_raw(), 'code', '')
   if empty(codes) | return iced#message#warning('finding_code_error') | endif
 
-  call winrestview(view)
+  call winrestview(context.view)
   call s:set_indentation_rule()
 
   let ns_name = iced#nrepl#ns#name()
   let alias_dict = iced#nrepl#ns#alias_dict(ns_name)
   let finally_args = {
-        \ 'reg_save': reg_save,
-        \ 'view': view,
-        \ 'bufnr': bufnr('%'),
+        \ 'context': context,
         \ 'signs': copy(iced#system#get('sign').list_in_buffer()),
         \ }
 

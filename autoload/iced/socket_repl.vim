@@ -80,11 +80,6 @@ endfunction
 function! iced#socket_repl#connect(port, ...) abort
   let opt = get(a:, 1, {})
 
-  " required by iced#buffer
-  if !&hidden
-    return iced#message#error('no_set_hidden')
-  endif
-
   if iced#socket_repl#is_connected()
     call iced#message#info('already_connected')
     return v:true

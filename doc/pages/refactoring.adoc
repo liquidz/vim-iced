@@ -1,4 +1,4 @@
-== Refactoring
+== Refactoring [[refactoring]]
 
 include::refactoring/namespace.adoc[]
 

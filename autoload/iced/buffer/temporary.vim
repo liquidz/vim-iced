@@ -5,6 +5,7 @@ let s:bufname = 'iced_temporary'
 let s:current_window = -1
 
 function! s:initialize(bufnr) abort
+  call setbufvar(a:bufnr, '&bufhidden', 'hide')
   call setbufvar(a:bufnr, '&buflisted', 0)
   call setbufvar(a:bufnr, '&buftype', 'nofile')
   call setbufvar(a:bufnr, '&swapfile', 0)

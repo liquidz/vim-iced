@@ -3,14 +3,24 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 0.14.1 (2020-01-23)
 // {{{
 === Added
+* https://github.com/liquidz/vim-iced/issues/179[#179]: Added environmental variable to overwrite Clojure CLI command.
+** https://liquidz.github.io/vim-iced/#iced_command_advanced
+* Added cheatshet.
+** https://liquidz.github.io/vim-iced/#cheatsheet
 
 === Changed
+* https://github.com/liquidz/vim-iced/issues/175[#175]: Changed `iced` command to use `clj` command for Clojure CLI project.
+* https://github.com/liquidz/vim-iced/issues/176[#176]: Added a mention for `PlugInstall` to "Getting started" document page.
+* https://github.com/liquidz/vim-iced/issues/177[#177]: Made `set hidden` option unnecessary.
 
 === Fixed
 * https://github.com/liquidz/vim-iced/issues/174[#174]: Fixed to work `<Plug>(iced_eval_and_print)` correctly.
-
+* https://github.com/liquidz/vim-iced/issues/178[#178]: Fixed `:IcedFormatAll` command to hold marks and the last visual range.
+* Fixed virtual text position for Vim.
 // }}}
 
 == 0.14.0 (2020-01-14)
