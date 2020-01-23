@@ -60,7 +60,7 @@ Instant REPL requires no project/config file.
 
 Other options are passed to each program as below.
 
-=== Arguments [[iced_arguments]]
+==== Arguments [[iced_arguments]]
 
 .Leiningen profile
 [source,shell]
@@ -79,4 +79,19 @@ $ iced repl -A:foo
 ----
 $ iced repl --with-cljs --force-clojure-cli -A:foo
 ----
+
+=== Advanced [[iced_command_advanced]]
+
+==== Clojure CLI project
+
+`iced` command use `clj` command for Clojure CLI project by default.
+
+If you would like to use `clojure` command instead, you can overwrite the command by `ICED_REPL_CLOJURE_CLI_CMD` environmental variable.
+
+[source,shell]
+----
+$ ICED_REPL_CLOJURE_CLI_CMD=clojure iced repl
+----
+
+For example, this is useful when you'd like to use https://github.com/bhauman/rebel-readline[rebel-readline] in the REPL which is started by `iced repl`.
 
