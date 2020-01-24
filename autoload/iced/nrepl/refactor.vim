@@ -84,20 +84,28 @@ function! s:clean_ns(resp) abort
       return iced#message#info('already_clean')
     endif
 
-    call iced#nrepl#ns#util#replace(a:resp['ns'])
+    let context = iced#util#save_context()
+    try
+      call iced#nrepl#ns#util#replace(a:resp['ns'])
+    finally
+      call iced#util#restore_context(context)
+    endtry
     call iced#message#info('cleaned')
   endif
 endfunction
 
 function! iced#nrepl#refactor#clean_ns() abort
-  call iced#nrepl#op#refactor#clean_ns(funcref('s:clean_ns'))
+  return iced#promise#call('iced#nrepl#op#refactor#clean_ns', [])
+       \.then(funcref('s:clean_ns'))
 endfunction " }}}
 
 " iced#nrepl#refactor#clean_all {{{
 function! iced#nrepl#refactor#clean_all() abort
-  let resp = iced#promise#sync('iced#nrepl#op#refactor#clean_ns', [])
-  call s:clean_ns(resp)
-  call iced#format#all()
+  return iced#nrepl#refactor#clean_ns()
+        \.then({_ -> iced#format#all()})
+  " let resp = iced#promise#sync('iced#nrepl#op#refactor#clean_ns', [])
+  " call s:clean_ns(resp)
+  " call iced#format#all()
 endfunction " }}}
 
 " iced#nrepl#refactor#add_missing_ns {{{

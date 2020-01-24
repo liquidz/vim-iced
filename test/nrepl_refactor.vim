@@ -62,7 +62,9 @@ function! s:suite.clean_ns_test() abort
         \ '(baz hello|)',
         \ ])
 
-  call iced#nrepl#refactor#clean_ns()
+  let p = iced#nrepl#refactor#clean_ns()
+  call iced#promise#wait(p)
+
   call s:assert.true(s:buf.test_curpos([
         \ '(ns cleaned)',
         \ '(baz hello|)',
