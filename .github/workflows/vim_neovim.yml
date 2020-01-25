@@ -30,6 +30,8 @@ jobs:
         run: ./.vim-themis/bin/themis
       - uses: actions/setup-python@v1
       - name: Coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           pip install -r requirements.txt
           bash scripts/coverage.sh
