@@ -25,16 +25,11 @@ jobs:
       image: clojure:openjdk-14-tools-deps
     steps:
       - uses: actions/checkout@v2
-      - name: cache cpcache
-        uses: actions/cache@v1
+      - name: Cache m2
+        uses: actions/cache@v1.1.0
         with:
-          path: ~/.clojure/.cpcache
-          key: document-cpcache-${{ hashFiles('deps.edn') }}
-      - name: cache m2
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: document-m2-${{ hashFiles('deps.edn') }}
+          path: /root/.m2
+          key: document-root-m2-${{ hashFiles('deps.edn') }}
       - name: build help html
         run: bash scripts/html.sh
       - uses: actions/download-artifact@master
