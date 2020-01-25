@@ -1,2 +1,2 @@
 vim-vint==0.3.21
-covimerage==0.1.6
+covimerage==0.2.1
