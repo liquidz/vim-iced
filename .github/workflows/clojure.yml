@@ -1,20 +1,12 @@
 name: clojure test
-on:
-  push:
-    branches:
-      - master
-      - dev
-  pull_request:
-    branches:
-      - master
-      - dev
+on: [push, pull_request]
 jobs:
   load-files:
     runs-on: ubuntu-latest
     container:
       image: clojure:openjdk-14-tools-deps
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: cache cpcache
         uses: actions/cache@v1
         with:

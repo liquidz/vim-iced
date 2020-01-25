@@ -1,0 +1,35 @@
+name: vim/neovim
+on: [push, pull_request]
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        neovim: [false, true]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Clone themis.vim
+        uses: actions/checkout@v2
+        with:
+          repository: thinca/vim-themis
+          path: .vim-themis
+      - name: Clone vim-sexp
+        uses: actions/checkout@v2
+        with:
+          repository: guns/vim-sexp
+          path: .vim-sexp
+      - uses: rhysd/action-setup-vim@v1
+        id: vim
+        with:
+          version: nightly
+          neovim: ${{ matrix.neovim }}
+      - name: Run themis
+        env:
+          THEMIS_VIM: ${{ steps.vim.outputs.executable }}
+        run: ./.vim-themis/bin/themis
+      - uses: actions/setup-python@v1
+      - name: Coverage
+        run: |
+          pip install -r requirements.txt
+          bash scripts/coverage.sh

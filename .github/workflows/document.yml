@@ -10,7 +10,7 @@ jobs:
     container:
       image: asciidoctor/docker-asciidoctor
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: build html
         run: asciidoctor -o target/html/index.html doc/pages/index.adoc
       - uses: actions/upload-artifact@master
@@ -24,7 +24,7 @@ jobs:
     container:
       image: clojure:openjdk-14-tools-deps
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: cache cpcache
         uses: actions/cache@v1
         with:
@@ -57,7 +57,7 @@ jobs:
     container:
       image: node:8.10.0
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/download-artifact@master
         with:
           name: document
@@ -72,7 +72,7 @@ jobs:
     needs: [asciidoc, help]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/download-artifact@master
         with:
           name: document

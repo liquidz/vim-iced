@@ -29,6 +29,8 @@ function s:setup(...) abort " {{{
     call writefile(['foo', 'bar', 'baz'], s:temp_foo)
     call writefile(['bar', 'baz', 'foo'], s:temp_bar)
   endif
+
+  silent call iced#buffer#error#init()
 endfunction " }}}
 function s:teardown() abort " {{{
   if filereadable(s:temp_foo)
