@@ -18,7 +18,8 @@ let s:enable_popup_full_document =
 let g:iced#buffer#document#does_update_automatically =
       \ get(g:, 'iced#buffer#document#does_update_automatically', v:false)
 
-let s:subsection_sep = '------------------------------------------------------------------------------'
+let g:iced#buffer#document#subsection_sep =
+      \ get(g:, 'iced#buffer#document#subsection_sep', '------------------------------------------------------------------------------')
 
 function! s:popup_context(d) abort
   return extend({
@@ -43,7 +44,7 @@ function! s:generate_javadoc(resp) abort " {{{
 
   if has_key(a:resp, 'returns')
     call add(doc, '')
-    call add(doc, s:subsection_sep)
+    call add(doc, g:iced#buffer#document#subsection_sep)
     call add (doc, '*Returns*')
     call add (doc, printf('  %s', a:resp['returns']))
   endif
@@ -78,7 +79,7 @@ function! s:generate_cljdoc(resp) abort " {{{
 
   if has_key(a:resp, 'spec')
     call add(doc, '')
-    call add(doc, s:subsection_sep)
+    call add(doc, g:iced#buffer#document#subsection_sep)
     call add(doc, printf('*%s*', a:resp['spec'][0]))
     let specs = s:D.from_list(a:resp['spec'][1:])
     for k in [':args', ':ret']
@@ -93,7 +94,7 @@ function! s:generate_cljdoc(resp) abort " {{{
 
   if has_key(a:resp, 'see-also')
     call add(doc, '')
-    call add(doc, s:subsection_sep)
+    call add(doc, g:iced#buffer#document#subsection_sep)
     call add(doc, '*see-also*')
     for name in a:resp['see-also']
       call add(doc, printf(' - %s', name))

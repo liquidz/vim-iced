@@ -60,3 +60,83 @@ function! s:suite.popup_open_cljdoc_with_empty_doc_test() abort
 
   call s:teardown()
 endfunction
+
+function! s:suite.javadoc_test() abort
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:relay', [{
+        \ 'member': 'bar' ,
+        \ 'class': 'Foo' ,
+        \ 'arglists-str': "hello\nworld",
+        \ 'doc': 'dummy doc',
+        \ 'returns': 'dummy returns',
+        \ 'javadoc': 'dummy javadoc',
+        \ }])})
+  let info = iced#buffer#document#init()
+
+  let p = iced#nrepl#document#open('dummy')
+  call iced#promise#wait(p)
+
+  call s:assert.equals(getbufline(info['bufnr'], 1, '$'), [
+        \ '*Foo/bar*',
+        \ '  hello',
+        \ '  world',
+        \ '  dummy doc',
+        \ '',
+        \ g:iced#buffer#document#subsection_sep,
+        \ '*Returns*',
+        \ '  dummy returns',
+        \ '',
+        \ 'dummy javadoc',
+        \ ])
+
+  call iced#buffer#document#close()
+endfunction
+
+function! s:suite.document_with_spec_test() abort
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:relay', [{
+        \ 'name': 'foo',
+        \ 'ns': 'baz.core',
+        \ 'doc': 'bar',
+        \ 'spec': ['spec', ':args', 'hello', ':ret', 'world'],
+        \ }])})
+  let info = iced#buffer#document#init()
+
+  let p = iced#nrepl#document#open('dummy')
+  call iced#promise#wait(p)
+
+  call s:assert.equals(getbufline(info['bufnr'], 1, '$'), [
+        \ '*baz.core/foo*',
+        \ '  bar',
+        \ '',
+        \ g:iced#buffer#document#subsection_sep,
+        \ '*spec*',
+        \ '  :args  hello',
+        \ '  :ret   world',
+        \ ])
+
+  call iced#buffer#document#close()
+endfunction
+
+function! s:suite.document_with_see_also_test() abort
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:relay', [{
+        \ 'name': 'foo',
+        \ 'ns': 'baz.core',
+        \ 'doc': 'bar',
+        \ 'see-also': ['hello', 'world'],
+        \ }])})
+  let info = iced#buffer#document#init()
+
+  let p = iced#nrepl#document#open('dummy')
+  call iced#promise#wait(p)
+
+  call s:assert.equals(getbufline(info['bufnr'], 1, '$'), [
+        \ '*baz.core/foo*',
+        \ '  bar',
+        \ '',
+        \ g:iced#buffer#document#subsection_sep,
+        \ '*see-also*',
+        \ ' - hello',
+        \ ' - world',
+        \ ])
+
+  call iced#buffer#document#close()
+endfunction
