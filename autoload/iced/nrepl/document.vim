@@ -229,7 +229,7 @@ function! s:one_line_doc(resp) abort
       endtry
     endif
 
-    echo iced#util#shorten(msg)
+    call iced#system#get('io').echo(iced#util#shorten(msg))
   endif
 endfunction
 
