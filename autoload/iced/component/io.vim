@@ -13,6 +13,10 @@ function! s:io.echomsg(hl, text) abort
   call s:M.echomsg(a:hl, a:text)
 endfunction
 
+function! s:io.echo(text) abort
+  echo a:text
+endfunction
+
 function! iced#component#io#start(_) abort
   call iced#util#debug('start', 'io')
   return s:io
