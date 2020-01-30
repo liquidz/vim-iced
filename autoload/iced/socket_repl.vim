@@ -154,6 +154,7 @@ function! iced#socket_repl#eval_outer_top_list() abort " {{{
   if empty(code)
     return iced#message#error('finding_code_error')
   endif
+  let code = iced#nrepl#eval#normalize_code(code)
 
   return iced#socket_repl#eval(code)
 endfunction " }}}
