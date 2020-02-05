@@ -6,56 +6,11 @@ let s:io = themis#helper('iced_io')
 let s:ch = themis#helper('iced_channel')
 let s:ex_cmd = themis#helper('iced_ex_cmd')
 let s:popup = themis#helper('iced_popup')
-let s:funcs = s:scope.funcs('autoload/iced/nrepl/debug.vim')
-
-function! s:suite.apply_coordination_test() abort
-  let g:iced_enable_popup_document = 'full'
-
-  call s:buf.start_dummy(['|(aaa (bbb (ccc) ddd) eee)'])
-
-  " aaa
-  call cursor(1, 1)
-  call s:funcs.apply_coordination([0])
-  call s:assert.equals(col('.'), 2)
-
-  " bbb
-  call cursor(1, 1)
-  call s:funcs.apply_coordination([1])
-  call s:assert.equals(col('.'), 6)
-
-  " ccc
-  call cursor(1, 1)
-  call s:funcs.apply_coordination([1, 1])
-  call s:assert.equals(col('.'), 11)
-
-  " ddd
-  call cursor(1, 1)
-  call s:funcs.apply_coordination([1, 2])
-  call s:assert.equals(col('.'), 17)
-
-  " eee
-  call cursor(1, 1)
-  call s:funcs.apply_coordination([0, 2])
-  call s:assert.equals(col('.'), 22)
-
-  call s:buf.stop_dummy()
-endfunction
-
-function! s:suite.ensure_dict_test() abort
-  call s:assert.equals(
-        \ s:funcs.ensure_dict({'foo': 'bar'}),
-        \ {'foo': 'bar'})
-
-  call s:assert.equals(
-        \ s:funcs.ensure_dict([{'foo': 'bar'}, {'bar': 'baz'}]),
-        \ {'foo': 'bar', 'bar': 'baz'})
-
-  call s:assert.equals(s:funcs.ensure_dict('string'), {})
-  call s:assert.equals(s:funcs.ensure_dict(123), {})
-endfunction
 
 function! s:suite.start_test() abort
+  let g:iced#debug#debugger = 'default'
   let test = {'last_msg': {}}
+
   function! test.relay(msg) abort
     let self.last_msg = a:msg
     return {'status': ['done']}
@@ -111,6 +66,8 @@ function! s:suite.start_test() abort
 endfunction
 
 function! s:suite.quit_test() abort
+  let g:iced#debug#debugger = 'default'
+
   call s:buf.start_dummy(['(aaa (bbb (ccc) ddd) eee)|'])
   call s:ex_cmd.mock()
   call s:io.mock({'input': 'dummy-input'})
