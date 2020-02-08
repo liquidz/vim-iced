@@ -11,6 +11,8 @@ let s:nrepl = {
       \ 'is_connected': function('iced#nrepl#is_connected'),
       \ 'status': function('iced#nrepl#status'),
       \ 'load_current_file': function('iced#nrepl#ns#load_current_file'),
+      \ 'document_open': function('iced#nrepl#document#open'),
+      \ 'document_popup_open': function('iced#nrepl#document#popup_open'),
       \ }
 
 function! iced#component#repl#nrepl#start(_) abort
