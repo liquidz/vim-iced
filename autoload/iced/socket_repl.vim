@@ -16,8 +16,7 @@ let s:does_prompt_fixed = v:false
 let g:iced#socket_repl#host = get(g:, 'iced#socket_repl#host', '127.0.0.1')
 let g:iced#socket_repl#buffer_size = get(g:, 'iced#socket_repl#buffer_size', 1048576)
 
-" DISPATCHER {{{
-function! s:callback(resp) abort
+function! s:default_callback(resp) abort
   let out = get(a:resp, 'out')
   let value = get(a:resp, 'value', '')
 
@@ -32,6 +31,10 @@ function! s:callback(resp) abort
           \ {'highlight': 'Comment', 'auto_clear': v:true})
   endif
 endfunction
+
+let s:callback = funcref('s:default_callback')
+
+" DISPATCHER {{{
 
 function! s:dispatcher(ch, resp) abort
   let resp = join(iced#util#ensure_array(a:resp), ' ,,, ')
@@ -49,7 +52,7 @@ function! s:dispatcher(ch, resp) abort
 
   let Handler = get(s:socket_repl, 'handler', '')
   if type(Handler) == v:t_func
-    call Handler(text, funcref('s:callback'))
+    call Handler(text, s:callback)
   else
     let value = trim(strpart(text, 0, idx))
     let idx = strridx(value, "\n")
@@ -145,6 +148,13 @@ function! iced#socket_repl#eval(code, ...) abort
   if !iced#socket_repl#is_connected()
     return
   endif
+
+  let opt = get(a:, 1, {})
+  let s:callback = get(opt, 'callback', funcref('s:default_callback'))
+  if type(s:callback) != v:t_func
+    let s:callback = funcref('s:default_callback')
+  endif
+
   call iced#socket_repl#send(a:code)
 endfunction
 
