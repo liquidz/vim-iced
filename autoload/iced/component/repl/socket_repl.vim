@@ -10,6 +10,8 @@ let s:socket_repl = {
       \ 'is_connected': function('iced#socket_repl#is_connected'),
       \ 'status': function('iced#socket_repl#status'),
       \ 'load_current_file': function('iced#socket_repl#load_current_file'),
+      \ 'document_open': function('iced#socket_repl#document#open'),
+      \ 'document_popup_open': function('iced#socket_repl#document#popup_open'),
       \ }
 
 function! iced#component#repl#socket_repl#start(_) abort
