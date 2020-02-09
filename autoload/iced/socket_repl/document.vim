@@ -5,10 +5,18 @@ let s:popup_winid = -1
 
 function! s:extract_document(resp) abort
   let out = get(a:resp, 'out', '')
+  if empty(out)
+    let out = get(a:resp, 'value', '')
+  endif
+  let out = substitute(out, '\(^"\|"$\)', '', 'g')
+
   if empty(out) | return | endif
 
   " Drop last (prompt) line
   let docs = split(out, '\r\?\n')[0:-2]
+  if !empty(out) && empty(docs)
+    let docs = split(out, '\\n')
+  endif
 
   if docs == ['nil']
     call iced#message#error('not_found')
@@ -25,7 +33,7 @@ function! s:fetch_document(symbol, callback) abort
   let code = join([
         \ '(when-let [m (some-> ''%s resolve meta)]',
         \ '  (clojure.string/join "\n" [(str "*" (:name m) "*")',
-        \ '                             (:arglists m)',
+        \ '                             (clojure.string/join " " (:arglists m))',
         \ '                             (:doc m)]))',
         \ ])
   let code = printf(code, symbol)
