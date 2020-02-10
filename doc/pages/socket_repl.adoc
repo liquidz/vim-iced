@@ -2,8 +2,6 @@
 
 vim-iced targets {nrepl} mainly, but now will also support minimal operations on socket REPL.
 
-Currently, only evaluating codes is supported by socket REPL.
-
 .Socket REPL supports
 [cols="30a,10,60"]
 |===
@@ -18,8 +16,8 @@ Currently, only evaluating codes is supported by socket REPL.
 |
 
 | <<reference>>
-| icon:times[role="red"]
-|
+| icon:exclamation-triangle[role="yellow"]
+| Only refering docstrings.
 
 | Etc...
 | icon:times[role="red"]
