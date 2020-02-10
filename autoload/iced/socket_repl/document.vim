@@ -2,9 +2,10 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:popup_winid = -1
+let s:document_code = join(readfile(printf('%s/clj/template/socket_repl_document.clj', g:vim_iced_home)), "\n")
 
 function! s:extract_document(resp) abort
-  let out = get(a:resp, 'out', '')
+  let out = iced#socket_repl#trim_prompt(get(a:resp, 'out', ''))
   if empty(out)
     let out = get(a:resp, 'value', '')
   endif
@@ -14,29 +15,18 @@ function! s:extract_document(resp) abort
 
   " Drop last (prompt) line
   let docs = split(out, '\r\?\n')[0:-2]
-  if !empty(out) && empty(docs)
+  if !empty(out) && len(docs) <= 1
     let docs = split(out, '\\n')
   endif
 
-  if docs == ['nil']
-    call iced#message#error('not_found')
-    return []
-  endif
-
-  return docs
+  return (docs == ['nil']) ? [] : docs
 endfunction
 
 function! s:fetch_document(symbol, callback) abort
   let symbol = empty(a:symbol)
         \ ? iced#nrepl#var#cword()
         \ : a:symbol
-  let code = join([
-        \ '(when-let [m (some-> ''%s resolve meta)]',
-        \ '  (clojure.string/join "\n" [(str "*" (:name m) "*")',
-        \ '                             (clojure.string/join " " (:arglists m))',
-        \ '                             (:doc m)]))',
-        \ ])
-  let code = printf(code, symbol)
+  let code = printf(s:document_code, symbol)
   call iced#socket_repl#eval(code, {'callback': {resp -> a:callback(s:extract_document(resp))}})
 endfunction
 
