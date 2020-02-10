@@ -183,6 +183,12 @@ function! iced#socket_repl#status() abort
   endif
 endfunction " }}}
 
+function! iced#socket_repl#trim_prompt(s) abort
+  let idx = match(a:s, s:socket_repl['prompt'])
+  if idx == -1 | return a:s | endif
+  return trim(strpart(a:s, 0, idx))
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
 " vim:fdm=marker:fdl=0
