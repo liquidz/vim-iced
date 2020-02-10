@@ -2037,7 +2037,7 @@ So you need to launch REPL manually.</p>
 <pre class="rouge highlight"><code data-lang="clojure"><span class="p">{</span><span class="w">
  </span><span class="no">:dependencies</span><span class="w"> </span><span class="p">[[</span><span class="n">refactor-nrepl</span><span class="w"> </span><span class="s">"2.4.0"</span><span class="p">]</span><span class="w">
                 </span><span class="p">[</span><span class="n">cider/cider-nrepl</span><span class="w"> </span><span class="s">"0.22.4"</span><span class="p">]</span><span class="w">
-                </span><span class="p">[</span><span class="n">iced-nrepl</span><span class="w"> </span><span class="s">"0.7.0"</span><span class="p">]]</span><span class="w">
+                </span><span class="p">[</span><span class="n">iced-nrepl</span><span class="w"> </span><span class="s">"0.7.1"</span><span class="p">]]</span><span class="w">
 
  </span><span class="no">:nrepl</span><span class="w"> </span><span class="p">{</span><span class="no">:cider</span><span class="w"> </span><span class="n">false</span><span class="w">
          </span><span class="no">:middleware</span><span class="w"> </span><span class="p">[</span><span class="n">cider.nrepl/wrap-classpath</span><span class="w">
@@ -3191,9 +3191,6 @@ aug END</code></pre>
 <div class="paragraph">
 <p>vim-iced targets <a href="https://nrepl.org/">nREPL</a> mainly, but now will also support minimal operations on socket REPL.</p>
 </div>
-<div class="paragraph">
-<p>Currently, only evaluating codes is supported by socket REPL.</p>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 4. Socket REPL supports</caption>
 <colgroup>
@@ -3227,8 +3224,8 @@ aug END</code></pre>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><a href="#reference">Reference</a></p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon red"><i class="fa fa-times"></i></span></p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon yellow"><i class="fa fa-exclamation-triangle"></i></span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only referring docstrings.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -3725,7 +3722,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-23 09:45:47 UTC
+Last updated 2020-02-10 22:22:51 UTC
 </div>
 </div>
 <style>
