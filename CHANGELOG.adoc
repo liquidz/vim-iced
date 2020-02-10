@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+== 0.14.2 (2020-02-11)
 // {{{
 === Added
 * Add more tests for iced#nrepl#document#open.
