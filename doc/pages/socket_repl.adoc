@@ -17,7 +17,7 @@ vim-iced targets {nrepl} mainly, but now will also support minimal operations on
 
 | <<reference>>
 | icon:exclamation-triangle[role="yellow"]
-| Only refering docstrings.
+| Only referring docstrings.
 
 | Etc...
 | icon:times[role="red"]

@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file. This change
 === Added
 * Add more tests for iced#nrepl#document#open.
 * Add `iced#nrepl#op#iced#fetch_tapped_children` function.
-* Add support for refering docstrings in Socket REPL.
+* Add support for referring docstrings in Socket REPL.
 * Add support for custom debugger.
 
 === Changed
