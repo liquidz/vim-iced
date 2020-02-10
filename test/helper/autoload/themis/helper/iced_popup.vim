@@ -24,6 +24,7 @@ endfunction
 
 function! s:helper.close(winid) abort
   let self.opening = v:false
+  let self.last_opts = {}
   return v:true
 endfunction
 

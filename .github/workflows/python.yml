@@ -1,0 +1,10 @@
+name: python
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+      - name: python doctest
+        run: python -m doctest python/bencode.py

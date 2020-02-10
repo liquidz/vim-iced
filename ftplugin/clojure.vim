@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 1401
+let g:vim_iced_version = 1402
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -91,8 +91,8 @@ command! -nargs=? IcedDefJump               call iced#nrepl#navigate#jump_to_def
 command! -nargs=1 -complete=custom,iced#nrepl#navigate#ns_complete
       \ IcedOpenNs                          call iced#nrepl#navigate#open_ns('e', <q-args>)
 
-command! -nargs=? IcedDocumentOpen          call iced#nrepl#document#open(<q-args>)
-command! -nargs=? IcedDocumentPopupOpen     call iced#nrepl#document#popup_open(<q-args>)
+command! -nargs=? IcedDocumentOpen          call iced#repl#execute('document_open', <q-args>)
+command! -nargs=? IcedDocumentPopupOpen     call iced#repl#execute('document_popup_open', <q-args>)
 command!          IcedFormDocument          call iced#nrepl#document#current_form()
 command! -nargs=? IcedUseCaseOpen           call iced#nrepl#document#usecase(<q-args>)
 command!          IcedNextUseCase           call iced#nrepl#document#next_usecase()

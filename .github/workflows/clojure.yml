@@ -1,29 +1,16 @@
 name: clojure test
-on:
-  push:
-    branches:
-      - master
-      - dev
-  pull_request:
-    branches:
-      - master
-      - dev
+on: [push, pull_request]
 jobs:
   load-files:
     runs-on: ubuntu-latest
     container:
       image: clojure:openjdk-14-tools-deps
     steps:
-      - uses: actions/checkout@v1
-      - name: cache cpcache
-        uses: actions/cache@v1
+      - uses: actions/checkout@v2
+      - name: Cache m2
+        uses: actions/cache@v1.1.0
         with:
-          path: ~/.clojure/.cpcache
-          key: load-files-cpcache-${{ hashFiles('deps.edn') }}
-      - name: cache m2
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: load-files-m2-${{ hashFiles('deps.edn') }}
+          path: /root/.m2
+          key: load-files-root-m2-${{ hashFiles('deps.edn') }}
       - name: run test
         run: clojure -A:load-files-test

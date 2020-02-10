@@ -16,6 +16,11 @@ function! s:helper.echomsg(hl, text) abort
   return ''
 endfunction
 
+function! s:helper.echo(text) abort
+  let self.last_args = {'echo': {'text': a:text}}
+  return ''
+endfunction
+
 function! s:helper.get_last_args() abort
   return self.last_args
 endfunction

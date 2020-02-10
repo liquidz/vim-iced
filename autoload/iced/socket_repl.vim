@@ -5,19 +5,18 @@ function! s:initialize_socket_repl() abort
   return {
         \ 'port': '',
         \ 'channel': v:false,
-        \ 'prompt': '\([A-Za-z0-9\-]\+\.\)\?user=> ',
+        \ 'prompt': '\([A-Za-z0-9\-]\+\.\)\?[A-Za-z0-9\-]\+=> ',
+        \ 'ignore_prompt': '#_=>\s\+',
         \ 'handler': '',
         \ }
 endfunction
 let s:socket_repl = s:initialize_socket_repl()
 let s:response_buffer = ''
-let s:does_prompt_fixed = v:false
 
 let g:iced#socket_repl#host = get(g:, 'iced#socket_repl#host', '127.0.0.1')
 let g:iced#socket_repl#buffer_size = get(g:, 'iced#socket_repl#buffer_size', 1048576)
 
-" DISPATCHER {{{
-function! s:callback(resp) abort
+function! s:default_callback(resp) abort
   let out = get(a:resp, 'out')
   let value = get(a:resp, 'value', '')
 
@@ -33,12 +32,17 @@ function! s:callback(resp) abort
   endif
 endfunction
 
+let s:callback = funcref('s:default_callback')
+
+" DISPATCHER {{{
+
 function! s:dispatcher(ch, resp) abort
   let resp = join(iced#util#ensure_array(a:resp), ' ,,, ')
   let text = printf('%s%s', s:response_buffer, resp)
   call iced#util#debug('<<<', text)
 
   let s:response_buffer = (len(text) > g:iced#socket_repl#buffer_size) ? '' : text
+  let text = substitute(text, s:socket_repl['ignore_prompt'], '', 'g')
 
   let idx = match(text, s:socket_repl['prompt'])
   if idx == -1
@@ -49,7 +53,7 @@ function! s:dispatcher(ch, resp) abort
 
   let Handler = get(s:socket_repl, 'handler', '')
   if type(Handler) == v:t_func
-    call Handler(text, funcref('s:callback'))
+    call Handler(text, s:callback)
   else
     let value = trim(strpart(text, 0, idx))
     let idx = strridx(value, "\n")
@@ -145,6 +149,13 @@ function! iced#socket_repl#eval(code, ...) abort
   if !iced#socket_repl#is_connected()
     return
   endif
+
+  let opt = get(a:, 1, {})
+  let s:callback = get(opt, 'callback', funcref('s:default_callback'))
+  if type(s:callback) != v:t_func
+    let s:callback = funcref('s:default_callback')
+  endif
+
   call iced#socket_repl#send(a:code)
 endfunction
 
@@ -154,6 +165,7 @@ function! iced#socket_repl#eval_outer_top_list() abort " {{{
   if empty(code)
     return iced#message#error('finding_code_error')
   endif
+  let code = iced#nrepl#eval#normalize_code(code)
 
   return iced#socket_repl#eval(code)
 endfunction " }}}
@@ -172,6 +184,12 @@ function! iced#socket_repl#status() abort
     return 'connected'
   endif
 endfunction " }}}
+
+function! iced#socket_repl#trim_prompt(s) abort
+  let idx = match(a:s, s:socket_repl['prompt'])
+  if idx == -1 | return a:s | endif
+  return trim(strpart(a:s, 0, idx))
+endfunction
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

@@ -16,11 +16,8 @@
     <img src="https://img.shields.io/badge/powered%20by-vital.vim-80273f.svg?logo=Vim" alt="Powered by vital.vim" />
   </a>
   <br />
-  <a href="https://github.com/liquidz/vim-iced/actions?query=workflow%3Avim">
-    <img src="https://github.com/liquidz/vim-iced/workflows/vim/badge.svg" alt="GitHub Actions for vim workflow" />
-  </a>
-  <a href="https://github.com/liquidz/vim-iced/actions?query=workflow%3Aneovim">
-    <img src="https://github.com/liquidz/vim-iced/workflows/neovim/badge.svg" alt="GitHub Actions for neovim workflow" />
+  <a href="https://github.com/liquidz/vim-iced/actions?query=workflow%3Avim%2Fneovim">
+    <img src="https://github.com/liquidz/vim-iced/workflows/vim%2Fneovim/badge.svg" alt="GitHub Actions for vim/neovim workflow" />
   </a>
   <a href="https://codecov.io/gh/liquidz/vim-iced">
     <img src="https://codecov.io/gh/liquidz/vim-iced/branch/master/graph/badge.svg" alt="Codecov" />

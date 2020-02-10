@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+== 0.14.2 (2020-02-11)
+// {{{
+=== Added
+* Add more tests for iced#nrepl#document#open.
+* Add `iced#nrepl#op#iced#fetch_tapped_children` function.
+* Add support for referring docstrings in Socket REPL.
+* Add support for custom debugger.
+
+=== Changed
+* Bump iced-nrepl to 0.7.1.
+
+=== Fixed
+* Fixed `:IcedCleanNs` and `:IcedCleanAll` command to hold marks and the last visual range.
+* Fix regexp for detecting Socket REPL prompt.
+* Fix `eval_outer_top_list` for Socket REPL to be able to evaluate inside comment form.
+// }}}
 
 == 0.14.1 (2020-01-23)
 // {{{

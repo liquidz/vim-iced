@@ -10,3 +10,13 @@ done
 VERSION_NUM=$(echo $VERSION_NUM | sed -e 's/^0*//g')
 
 grep "g:vim_iced_version = ${VERSION_NUM}" ${SCRIPT_DIR}/../ftplugin/clojure.vim
+if [ $? -ne 0 ]; then
+    echo 'version_check: Version num in ftplugin/clojure.vim is outdated'
+    exit 1
+fi
+
+grep "== ${VERSION}" ${SCRIPT_DIR}/../CHANGELOG.adoc
+if [ $? -ne 0 ]; then
+    echo 'version_check: There is no corresponding section in CHANGELOG'
+    exit 1
+fi

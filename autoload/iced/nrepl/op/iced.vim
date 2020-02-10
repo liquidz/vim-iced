@@ -81,6 +81,18 @@ function! iced#nrepl#op#iced#browse_tapped(keys, callback) abort
         \ })
 endfunction " }}}
 
+""" fetch-tapped-children {{{
+function! iced#nrepl#op#iced#fetch_tapped_children(keys, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'iced-fetch-tapped-children',
+        \ 'keys': a:keys,
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
 """ complete-tapped {{{
 function! iced#nrepl#op#iced#complete_tapped(keys, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif

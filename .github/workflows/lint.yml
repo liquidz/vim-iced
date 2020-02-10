@@ -1,0 +1,19 @@
+name: lint
+on: [push, pull_request]
+jobs:
+  vint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+      - run: pip install -r requirements.txt
+      - run: bash scripts/lint.sh
+
+  clj-kondo:
+    runs-on: ubuntu-latest
+    container:
+      image: borkdude/clj-kondo
+    steps:
+      - uses: actions/checkout@v2
+      - name: Lint by clj-kondo
+        run: clj-kondo --lint clj:test/clj
