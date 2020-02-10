@@ -6,6 +6,7 @@ function! s:initialize_socket_repl() abort
         \ 'port': '',
         \ 'channel': v:false,
         \ 'prompt': '\([A-Za-z0-9\-]\+\.\)\?[A-Za-z0-9\-]\+=> ',
+        \ 'ignore_prompt': '#_=>\s\+',
         \ 'handler': '',
         \ }
 endfunction
@@ -41,6 +42,7 @@ function! s:dispatcher(ch, resp) abort
   call iced#util#debug('<<<', text)
 
   let s:response_buffer = (len(text) > g:iced#socket_repl#buffer_size) ? '' : text
+  let text = substitute(text, s:socket_repl['ignore_prompt'], '', 'g')
 
   let idx = match(text, s:socket_repl['prompt'])
   if idx == -1
