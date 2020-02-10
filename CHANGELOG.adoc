@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. This change
 * Add support for custom debugger.
 
 === Changed
+* Bump iced-nrepl to 0.7.1.
 
 === Fixed
 * Fixed `:IcedCleanNs` and `:IcedCleanAll` command to hold marks and the last visual range.
