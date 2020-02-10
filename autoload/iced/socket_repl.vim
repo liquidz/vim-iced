@@ -11,7 +11,6 @@ function! s:initialize_socket_repl() abort
 endfunction
 let s:socket_repl = s:initialize_socket_repl()
 let s:response_buffer = ''
-let s:does_prompt_fixed = v:false
 
 let g:iced#socket_repl#host = get(g:, 'iced#socket_repl#host', '127.0.0.1')
 let g:iced#socket_repl#buffer_size = get(g:, 'iced#socket_repl#buffer_size', 1048576)
