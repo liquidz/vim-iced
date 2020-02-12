@@ -23,6 +23,10 @@ function! s:job.sendraw(job, string) abort
   return ch_sendraw(a:job, a:string)
 endfunction
 
+function! s:job.close_stdin(job) abort
+  return ch_close_in(job_getchannel(a:job))
+endfunction
+
 function! iced#component#job#vim#start(_) abort
   call iced#util#debug('start', 'vim job')
   return s:job

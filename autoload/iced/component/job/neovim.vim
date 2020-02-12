@@ -40,6 +40,10 @@ function! s:job.sendraw(job_id, string) abort
   return jobsend(a:job_id, a:string)
 endfunction
 
+function! s:job.close_stdin(job_id) abort
+  return chanclose(a:job_id, 'stdin')
+endfunction
+
 function! iced#component#job#neovim#start(_) abort
   call iced#util#debug('start', 'neovim job')
   return s:job
