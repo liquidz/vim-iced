@@ -5,9 +5,9 @@ let s:job = {
       \ 'exitvals': {},
       \ }
 
-function! s:on_exit(options, job, exit_code, event_type) abort dict
+function! s:on_exit(callback_key, options, job, exit_code, event_type) abort dict
   let self.exitvals[a:job] = a:exit_code
-	return a:options['close_cb'](a:job)
+	return a:options[a:callback_key](a:job)
 endfunction
 
 function! s:job.start(command, options) abort
@@ -19,7 +19,10 @@ function! s:job.start(command, options) abort
     let options['on_stderr'] = {j,d,e -> a:options['err_cb'](j, d)}
   endif
   if has_key(a:options, 'close_cb')
-    let options['on_exit'] = funcref('s:on_exit', [a:options], self)
+    let options['on_exit'] = funcref('s:on_exit', ['close_cb', a:options], self)
+  endif
+  if has_key(a:options, 'exit_cb')
+    let options['on_exit'] = funcref('s:on_exit', ['exit_cb', a:options], self)
   endif
   return jobstart(a:command, options)
 endfunction
