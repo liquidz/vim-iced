@@ -3,7 +3,7 @@ set cpo&vim
 
 " NOTE: setting indentexpr is executed at nREPL connection
 function! GetIcedIndent()
-  return iced#format#calculate_indent(v:lnum)
+  return iced#system#get('format').calculate_indent(v:lnum)
 endfunction
 
 let &cpo = s:save_cpo

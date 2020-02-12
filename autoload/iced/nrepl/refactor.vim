@@ -102,10 +102,7 @@ endfunction " }}}
 " iced#nrepl#refactor#clean_all {{{
 function! iced#nrepl#refactor#clean_all() abort
   return iced#nrepl#refactor#clean_ns()
-        \.then({_ -> iced#format#all()})
-  " let resp = iced#promise#sync('iced#nrepl#op#refactor#clean_ns', [])
-  " call s:clean_ns(resp)
-  " call iced#format#all()
+        \.then({_ -> iced#system#get('format').all()})
 endfunction " }}}
 
 " iced#nrepl#refactor#add_missing_ns {{{
@@ -327,7 +324,7 @@ function! iced#nrepl#refactor#add_arity() abort
     " Format new defn code
     let p = getcurpos()
     call setpos('.', beginning_of_defn)
-    call iced#format#minimal({'jump_to_its_match': v:false})
+    call iced#system#get('format').minimal({'jump_to_its_match': v:false})
     call setpos('.', beginning_var_name)
     " Move cursor to the new arity
     call search(']', 'c')
