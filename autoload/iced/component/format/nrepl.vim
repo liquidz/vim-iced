@@ -4,7 +4,9 @@ set cpoptions&vim
 let g:iced#format#does_overwrite_rules = get(g:, 'iced#format#does_overwrite_rules', v:false)
 let g:iced#format#rule = get(g:, 'iced#format#rule', {})
 
-let s:fmt = {}
+let s:fmt = {
+      \ 'sign': '',
+      \ }
 
 function! s:set_indentation_rule() abort
   call iced#cache#do_once('set-indentation-rule', {->
@@ -22,7 +24,7 @@ function! s:__format_finally(args) abort
 
   setl modifiable
   call iced#util#restore_context(a:args.context)
-  call iced#system#get('sign').refresh({'signs': a:args.signs})
+  call self.sign.refresh({'signs': a:args.signs})
 
   if different_buffer | call iced#buffer#focus(current_bufnr) | endif
 endfunction
@@ -74,7 +76,7 @@ function! s:fmt.all() abort
   let alias_dict = iced#nrepl#ns#alias_dict(ns_name)
   let finally_args = {
         \ 'context': context,
-        \ 'signs': copy(iced#system#get('sign').list_in_buffer()),
+        \ 'signs': copy(self.sign.list_in_buffer()),
         \ }
 
   " Disable editing until the formatting process is completed
@@ -126,7 +128,7 @@ function! s:fmt.current_form() abort
   let alias_dict = iced#nrepl#ns#alias_dict(ns_name)
   let finally_args = {
         \ 'context': context,
-        \ 'signs': copy(iced#system#get('sign').list_in_buffer()),
+        \ 'signs': copy(self.sign.list_in_buffer()),
         \ }
 
   " Disable editing until the formatting process is completed
@@ -213,9 +215,11 @@ function! s:fmt.calculate_indent(lnum) abort
   endtry
 endfunction " }}}
 
-function! iced#component#format#nrepl#start(_) abort
-  call iced#util#debug('start', 'format.nrepl')
-  return s:fmt
+function! iced#component#format#nrepl#start(this) abort
+  call iced#util#debug('start', 'format nrepl')
+  let d = deepcopy(s:fmt)
+  let d.sign = a:this.sign
+  return d
 endfunction
 
 let &cpoptions = s:save_cpo

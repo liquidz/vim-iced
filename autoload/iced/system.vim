@@ -4,6 +4,16 @@ set cpoptions&vim
 let s:component_cache = {}
 let s:nvim = has('nvim')
 
+let s:formatter_key = get(g:, 'iced_formatter', 'default')
+let s:formatter_map = {
+      \ 'default':  {'start': 'iced#component#format#nrepl#start',
+      \              'requires': ['sign']},
+      \ 'cljstyle': {'start': 'iced#component#format#cljstyle#start',
+      \              'requires': ['format_ni']},
+      \ 'zprint':   {'start': 'iced#component#format#zprint#start',
+      \              'requires': ['format_ni']},
+      \ }
+
 let s:system_map = {
       \ 'vim_bencode':  {'start': 'iced#component#bencode#vim#start'},
       \ 'bencode':      {'start': 'iced#component#bencode#start',
@@ -38,7 +48,9 @@ let s:system_map = {
       \ 'socket_repl':  {'start': 'iced#component#repl#socket_repl#start'},
       \ 'prepl':        {'start': 'iced#component#repl#prepl#start',
       \                  'requires': ['socket_repl', 'edn']},
-      \ 'format':       {'start': 'iced#component#format#nrepl#start'},
+      \ 'format_ni':    {'start': 'iced#component#format#native_image#start',
+      \                  'requires': ['sign', 'job']},
+      \ 'format':       get(s:formatter_map, s:formatter_key, s:formatter_map['default']),
       \ }
 
 function! s:requires(name) abort
