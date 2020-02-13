@@ -1,4 +1,4 @@
-let s:suite  = themis#suite('iced.format')
+let s:suite  = themis#suite('iced.component.format.nrepl')
 let s:assert = themis#helper('assert')
 let s:ch = themis#helper('iced_channel')
 let s:buf = themis#helper('iced_buffer')
@@ -36,7 +36,7 @@ function! s:suite.all_test() abort
   call setpos("'<", [0, 1, 2, 0])
   call setpos("'>", [0, 1, 5, 0])
 
-  let p = iced#format#all()
+  let p = iced#system#get('format').all()
   call iced#promise#wait(p)
 
   call s:assert.equals(s:buf.get_texts(),
@@ -65,7 +65,7 @@ function! s:suite.form_test() abort
   call setpos("'<", [0, 1, 2, 0])
   call setpos("'>", [0, 1, 5, 0])
 
-  let p = iced#format#form()
+  let p = iced#system#get('format').current_form()
   call iced#promise#wait(p)
 
   call s:assert.equals(s:buf.get_texts(),
@@ -98,7 +98,7 @@ function! s:suite.calculate_indent_with_top_form_test() abort
         \ '(foo',
         \ '|)',
         \ ])
-  let result = iced#format#calculate_indent(line('.'))
+  let result = iced#system#get('format').calculate_indent(line('.'))
   call s:assert.equals(result, 1)
 
   call s:buf.stop_dummy()
@@ -114,7 +114,7 @@ function! s:suite.calculate_indent_with_nested_form_test() abort
         \ '  (baz',
         \ '|)))',
         \ ])
-  let result = iced#format#calculate_indent(line('.'))
+  let result = iced#system#get('format').calculate_indent(line('.'))
   call s:assert.equals(result, 2 + 1)
 
   call s:buf.stop_dummy()
@@ -128,7 +128,7 @@ function! s:suite.calculate_indent_without_corresponding_form_test() abort
         \ '(foo)',
         \ '|',
         \ ])
-  let result = iced#format#calculate_indent(line('.'))
+  let result = iced#system#get('format').calculate_indent(line('.'))
   call s:assert.equals(result, GetClojureIndent())
 
   call s:buf.stop_dummy()
