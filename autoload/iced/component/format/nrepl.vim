@@ -17,14 +17,14 @@ function! s:set_indentation_rule() abort
         \   'done')})
 endfunction
 
-function! s:__format_finally(args) abort
+function! s:__format_finally(self, args) abort
   let current_bufnr = get(a:args, 'back_to_bufnr', bufnr('%'))
   let different_buffer = (current_bufnr != a:args.context.bufnr)
   if different_buffer | call iced#buffer#focus(a:args.context.bufnr) | endif
 
   setl modifiable
   call iced#util#restore_context(a:args.context)
-  call self.sign.refresh({'signs': a:args.signs})
+  call a:self.sign.refresh({'signs': a:args.signs})
 
   if different_buffer | call iced#buffer#focus(current_bufnr) | endif
 endfunction
@@ -39,7 +39,7 @@ function! s:__append_texts(lnum, texts) abort
   normal! dd
 endfunction
 
-function! s:__format_all(resp, finally_args) abort
+function! s:__format_all(resp, self, finally_args) abort
   let current_bufnr = bufnr('%')
   if current_bufnr != a:finally_args.context.bufnr
     call iced#buffer#focus(a:finally_args.context.bufnr)
@@ -57,7 +57,7 @@ function! s:__format_all(resp, finally_args) abort
     endif
   finally
     let a:finally_args['back_to_bufnr'] = current_bufnr
-    call s:__format_finally(a:finally_args)
+    call s:__format_finally(a:self, a:finally_args)
   endtry
 
   return iced#promise#resolve('ok')
@@ -82,12 +82,12 @@ function! s:fmt.all() abort
   " Disable editing until the formatting process is completed
   setl nomodifiable
   return iced#promise#call('iced#nrepl#op#iced#format_code', [codes, alias_dict])
-        \.then({resp -> s:__format_all(resp, finally_args)})
-        \.catch({_ -> s:__format_finally(finally_args)})
+        \.then({resp -> s:__format_all(resp, self, finally_args)})
+        \.catch({_ -> s:__format_finally(self, finally_args)})
 endfunction " }}}
 
 " format current form {{{
-function! s:__format_form(resp, finally_args) abort
+function! s:__format_form(resp, self, finally_args) abort
   let current_bufnr = bufnr('%')
   if current_bufnr != a:finally_args.context.bufnr
     call iced#buffer#focus(a:finally_args.context.bufnr)
@@ -103,7 +103,7 @@ function! s:__format_form(resp, finally_args) abort
     endif
   finally
     let a:finally_args['back_to_bufnr'] = current_bufnr
-    call s:__format_finally(a:finally_args)
+    call s:__format_finally(a:self, a:finally_args)
   endtry
 
   return iced#promise#resolve('ok')
@@ -134,8 +134,8 @@ function! s:fmt.current_form() abort
   " Disable editing until the formatting process is completed
   setl nomodifiable
   return iced#promise#call('iced#nrepl#op#iced#format_code', [codes, alias_dict])
-        \.then({resp -> s:__format_form(resp, finally_args)})
-        \.catch({_ -> s:__format_finally(finally_args)})
+        \.then({resp -> s:__format_form(resp, self, finally_args)})
+        \.catch({_ -> s:__format_finally(self, finally_args)})
 endfunction " }}}
 
 " format minimal {{{
