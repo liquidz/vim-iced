@@ -3,6 +3,11 @@ set cpoptions&vim
 
 function! iced#component#format#cljstyle#start(this) abort
   call iced#util#debug('start', 'format cljstyle')
+
+  if !executable('cljstyle')
+    call iced#promise#sync(a:this['installer'].install, ['cljstyle'], 30000)
+  endif
+
   let d = deepcopy(a:this.format_ni)
   let d.command = ['cljstyle', 'pipe']
   return d

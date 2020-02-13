@@ -9,9 +9,9 @@ let s:formatter_map = {
       \ 'default':  {'start': 'iced#component#format#nrepl#start',
       \              'requires': ['sign']},
       \ 'cljstyle': {'start': 'iced#component#format#cljstyle#start',
-      \              'requires': ['format_ni']},
+      \              'requires': ['installer', 'format_ni']},
       \ 'zprint':   {'start': 'iced#component#format#zprint#start',
-      \              'requires': ['format_ni']},
+      \              'requires': ['installer', 'format_ni']},
       \ }
 
 let s:system_map = {
