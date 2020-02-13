@@ -1,6 +1,5 @@
 == Formatting [[formatting]]
 
-
 vim-iced's code formatting is powered by https://github.com/weavejester/cljfmt[cljfmt].
 There are following two commands to format codes.
 
@@ -29,3 +28,18 @@ let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
 ----
 
 TIP: See also <<customizing_indent_rules>>
+
+=== Customize formatter  [[formatting_customize]]
+
+vim-iced also supports following (GraalVM powered) code formatting tools.
+
+- https://github.com/greglook/cljstyle[cljstyle]
+- https://github.com/kkinnear/zprint[zprint]
+
+If you change {help_html}#g%3Aiced_formatter[g:iced_formatter] option,
+vim-iced will use the tool to format codes and calculate indent level.
+
+[NOTE]
+====
+These tools can be downloaded automatically if you want.
+====

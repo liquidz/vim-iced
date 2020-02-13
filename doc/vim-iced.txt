@@ -451,6 +451,8 @@ FORMATTING                                                *vim-iced-formatting*
 >
   let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
 <
+  See also |vim-iced-customizing-formatter|.
+
 ------------------------------------------------------------------------------
 INDENTING                                                  *vim-iced-indenting*
 
@@ -1550,6 +1552,23 @@ g:iced#buffer#stdout#deleting_line_delay
   This option is enabled when |g:iced#buffer#stdout#max_line| is a positive
   number.
   Default value is `1000`.
+
+------------------------------------------------------------------------------
+FORMATTER                                      *vim-iced-customizing-formatter*
+
+                                                             *g:iced_formatter*
+g:iced_formatter
+  Formatter name.
+  Following formatters can be used.
+
+  - `default`
+    Default formatter powered by cljfmt.
+  - `cljstyle`
+    https://github.com/greglook/cljstyle
+    If cljstyle is not installed, will install automatically.
+  - `zprint`
+    https://github.com/kkinnear/zprint
+    If zprint is not installed, will install automatically.
 
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*
