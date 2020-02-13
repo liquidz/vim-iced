@@ -9,6 +9,16 @@ let s:fmt = {
       \ 'job': '',
       \ }
 
+function! s:job_start_promise(job, resolve, code, d) abort
+  let job = a:job.start(a:d.command, {
+       \ 'out_cb': funcref('s:out_cb', a:d),
+       \ 'err_cb': funcref('s:err_cb', a:d),
+       \ 'exit_cb': {v -> a:resolve(call('s:exit_cb', [v], a:d))}
+       \ })
+  call a:job.sendraw(job, a:code)
+  call a:job.close_stdin(job)
+endfunction
+
 function! s:__format_finally(args) abort
   let current_bufnr = get(a:args, '_back_to_bufnr', bufnr('%'))
   let different_buffer = (current_bufnr != a:args.context.bufnr)
@@ -16,18 +26,27 @@ function! s:__format_finally(args) abort
 
   setl modifiable
   call iced#util#restore_context(a:args.context)
-  call iced#system#get('sign').refresh({'signs': a:args.signs})
+  call a:args.sign_cmp.refresh({'signs': a:args.signs})
 
   if different_buffer | call iced#buffer#focus(current_bufnr) | endif
 endfunction
 
 function! s:out_cb(_, out) abort dict
-  echom printf('FIXME %s', a:out)
   call extend(self.buf, iced#util#ensure_array(a:out))
+endfunction
+
+function! s:err_cb(_, out) abort dict
+  if !empty(self.err) | return | endif
+  let self.err = iced#util#ensure_array(a:out)
 endfunction
 
 function! s:exit_cb(...) abort dict
   let self._finished = v:true
+  if !empty(self.err)
+    setl modifiable
+    return iced#message#error_str(trim(join(self.err, ' ')))
+  endif
+
   if has_key(self, 'callback')
     call self.callback(self)
   endif
@@ -44,7 +63,7 @@ function! s:__append_texts(lnum, texts) abort
 endfunction
 
 function! s:__all(result) abort
-  let res = copy(a:result)
+  let res = deepcopy(a:result)
   let current_bufnr = bufnr('%')
   if current_bufnr != res.context.bufnr
     call iced#buffer#focus(res.context.bufnr)
@@ -72,24 +91,20 @@ function! s:fmt.all() abort
   setl nomodifiable
 
   let d = {
+        \ 'command': self.command,
         \ 'context': context,
+        \ 'sign_cmp': self.sign,
         \ 'signs': copy(self.sign.list_in_buffer()),
         \ 'buf': [],
+        \ 'err': [],
         \ 'callback': funcref('s:__all'),
         \ }
-  let job = self.job.start(self.command, {
-        \ 'out_cb': funcref('s:out_cb', d),
-        \ 'exit_cb': funcref('s:exit_cb', d),
-        \ })
-  call self.job.sendraw(job, codes)
-  call self.job.close_stdin(job)
-
-  return iced#promise#resolve('ok')
+  return s:Promise.new({resolve -> s:job_start_promise(self.job, resolve, codes, d)})
 endfunction " }}}
 
 " format current form {{{
 function! s:__current_form(result) abort
-  let res = copy(a:result)
+  let res = deepcopy(a:result)
   let current_bufnr = bufnr('%')
   if current_bufnr != res.context.bufnr
     call iced#buffer#focus(res.context.bufnr)
@@ -119,19 +134,15 @@ function! s:fmt.current_form() abort
   setl nomodifiable
 
   let d = {
+        \ 'command': self.command,
         \ 'context': context,
+        \ 'sign_cmp': self.sign,
         \ 'signs': copy(self.sign.list_in_buffer()),
         \ 'buf': [],
+        \ 'err': [],
         \ 'callback': funcref('s:__current_form'),
         \ }
-  let job = self.job.start(self.command, {
-        \ 'out_cb': funcref('s:out_cb', d),
-        \ 'exit_cb': funcref('s:exit_cb', d),
-        \ })
-  call self.job.sendraw(job, codes)
-  call self.job.close_stdin(job)
-
-  return iced#promise#resolve('ok')
+  return s:Promise.new({resolve -> s:job_start_promise(self.job, resolve, codes, d)})
 endfunction " }}}
 
 " format minimal {{{
@@ -204,7 +215,7 @@ function! s:fmt.calculate_indent(lnum) abort
     endfor
     let code = join(result, "\n")
 
-    let d = {'buf': [], '_finished': v:false}
+    let d = {'buf': [], 'err': [], '_finished': v:false}
     let job = self.job.start(self.command, {
           \ 'out_cb': funcref('s:out_cb', d),
           \ 'exit_cb': funcref('s:exit_cb', d),
@@ -242,3 +253,4 @@ endfunction
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
+" vim:fdm=marker:fdl=0
