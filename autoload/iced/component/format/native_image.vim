@@ -37,7 +37,9 @@ endfunction
 
 function! s:err_cb(_, out) abort dict
   if !empty(self.err) | return | endif
-  let self.err = iced#util#ensure_array(a:out)
+  let tmp = iced#util#ensure_array(a:out)
+  if tmp == [''] | return | endif    " for neovim
+  let self.err = tmp
 endfunction
 
 function! s:exit_cb(...) abort dict
