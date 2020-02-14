@@ -15,7 +15,24 @@ function! s:setup() abort
   call iced#system#set_component('test_bar', {
         \ 'start': funcref('s:start_component', ['bar']),
         \ 'requires': ['test_foo']})
+  call iced#system#set_component('test_baz', {
+        \ 'start': funcref('s:start_component', ['baz']),
+        \ 'requires': ['test_bar']})
 endfunction
+
+" function! s:suite.requires_test() abort
+"   call s:setup()
+"   call s:assert.equals([], iced#system#requires('test_foo'))
+"   call s:assert.equals(['test_foo'], iced#system#requires('test_bar'))
+"   call s:assert.equals(['test_bar'], iced#system#requires('test_baz'))
+" endfunction
+
+" function! s:suite.all_requires_test() abort
+"   call s:setup()
+"   call s:assert.equals([], iced#system#all_requires('test_foo'))
+"   call s:assert.equals(['test_foo'], iced#system#all_requires('test_bar'))
+"   call s:assert.equals(['test_bar', 'test_foo'], sort(iced#system#all_requires('test_baz')))
+" endfunction
 
 function! s:suite.get_test() abort
   call s:setup()
@@ -30,14 +47,18 @@ function! s:suite.get_with_requires_test() abort
   call s:setup()
   call s:assert.equals(0, s:count)
   call s:assert.equals(
-        \ {'name': 'bar', 'count': 1, 'this': {'test_foo': {'name': 'foo', 'count': 0, 'this': {}}}},
-        \ iced#system#get('test_bar'))
-  call s:assert.equals(2, s:count)
+        \ {'name': 'baz', 'count': 2, 'this': {
+        \  'test_bar': {'name': 'bar', 'count': 1, 'this': {
+        \               'test_foo': {'name': 'foo', 'count': 0, 'this': {}}}}}},
+        \ iced#system#get('test_baz'))
+  call s:assert.equals(3, s:count)
 
   " update required component
   call iced#system#set_component('test_foo', {'start': {_ -> 'updated'}})
   call s:assert.equals(
-        \ {'name': 'bar', 'count': 2, 'this': {'test_foo': 'updated'}},
-        \ iced#system#get('test_bar'))
-  call s:assert.equals(3, s:count)
+       \ {'name': 'baz', 'count': 4, 'this': {
+       \  'test_bar': {'name': 'bar', 'count': 3, 'this': {
+       \               'test_foo': 'updated'}}}},
+       \ iced#system#get('test_baz'))
+  call s:assert.equals(5, s:count)
 endfunction

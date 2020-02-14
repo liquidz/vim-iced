@@ -48,7 +48,15 @@ let s:system_map = {
       \                         'requires': ['installer', 'format_native_image']},
       \ }
 
-function! s:requires(name) abort
+function! iced#system#all_requires(name) abort
+  let res = []
+  for req in get(s:system_map[a:name], 'requires', [])
+    call extend(res, iced#system#requires(req) + [req])
+  endfor
+  return res
+endfunction
+
+function! iced#system#requires(name) abort
   let requires = get(s:system_map[a:name], 'requires', [])
   return copy(requires)
 endfunction
@@ -61,7 +69,7 @@ function! iced#system#set_component(name, component_map) abort
   for component_name in keys(s:system_map)
     if !has_key(s:component_cache, component_name) | continue | endif
 
-    let requires = s:requires(component_name)
+    let requires = iced#system#all_requires(component_name)
     if index(requires, a:name) != -1
       unlet s:component_cache[component_name]
     endif
@@ -77,7 +85,7 @@ function! iced#system#get(name) abort
     if !has_key(s:system_map, a:name) | return '' | endif
 
     let params = {}
-    for required_component_name in s:requires(a:name)
+    for required_component_name in iced#system#requires(a:name)
       let req = iced#system#get(required_component_name)
       if empty(req)
         call iced#message#error('component_error', required_component_name)
@@ -106,7 +114,7 @@ function! s:stop(name) abort
     return ''
   endif
 
-  for required_component_name in s:requires(a:name)
+  for required_component_name in iced#system#requires(a:name)
     call s:stop(required_component_name)
   endfor
 
