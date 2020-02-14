@@ -169,7 +169,7 @@ function! s:fmt.minimal(opt) abort
     endif
     let code = @@
 
-    let d = {'buf': [], '_finished': v:false}
+    let d = {'buf': [], 'err': [], '_finished': v:false}
     let job = self.job.start(self.command, {
           \ 'out_cb': funcref('s:out_cb', d),
           \ 'exit_cb': funcref('s:exit_cb', d),
