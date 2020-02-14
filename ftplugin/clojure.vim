@@ -108,8 +108,8 @@ command!          IcedClojureDocsRefresh    call iced#clojuredocs#refresh()
 
 command!          IcedSlurp                 call iced#paredit#deep_slurp()
 command!          IcedBarf                  call iced#paredit#barf()
-command!          IcedFormat                call iced#system#get('format').current_form()
-command!          IcedFormatAll             call iced#system#get('format').all()
+command!          IcedFormat                call iced#format#current()
+command!          IcedFormatAll             call iced#format#all()
 command!          IcedCycleSrcAndTest       call iced#nrepl#navigate#cycle_src_and_test()
 command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
 

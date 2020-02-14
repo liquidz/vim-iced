@@ -8,7 +8,7 @@ function! iced#component#format#cljstyle#start(this) abort
     call iced#promise#sync(a:this['installer'].install, ['cljstyle'], 30000)
   endif
 
-  let d = deepcopy(a:this.format_ni)
+  let d = deepcopy(a:this.format_native_image)
   let d.command = ['cljstyle', 'pipe']
   return d
 endfunction

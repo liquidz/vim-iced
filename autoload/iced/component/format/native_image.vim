@@ -146,9 +146,8 @@ function! s:fmt.current_form() abort
 endfunction " }}}
 
 " format minimal {{{
-function! s:fmt.minimal(...) abort
-  let opt = get(a:, 1, {})
-  let jump_to_its_match = get(opt, 'jump_to_its_match', v:true)
+function! s:fmt.minimal(opt) abort
+  let jump_to_its_match = get(a:opt, 'jump_to_its_match', v:true)
 
   let view = winsaveview()
   let reg_save = @@

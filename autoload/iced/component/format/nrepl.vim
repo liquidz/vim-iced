@@ -139,14 +139,13 @@ function! s:fmt.current_form() abort
 endfunction " }}}
 
 " format minimal {{{
-function! s:fmt.minimal(...) abort
+function! s:fmt.minimal(opt) abort
   if !iced#nrepl#is_connected()
     silent exe "normal \<Plug>(sexp_indent)"
     return
   endif
 
-  let opt = get(a:, 1, {})
-  let jump_to_its_match = get(opt, 'jump_to_its_match', v:true)
+  let jump_to_its_match = get(a:opt, 'jump_to_its_match', v:true)
 
   call s:set_indentation_rule()
 

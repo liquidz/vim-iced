@@ -25,7 +25,7 @@ function! s:slurp(current_view, depth) abort
     call sexp#move_to_nearest_bracket('n', 0)
     call s:slurp(a:current_view, a:depth + 1)
   else
-    call iced#system#get('format').minimal()
+    call iced#format#minimal()
     call winrestview(a:current_view)
   endif
 endfunction

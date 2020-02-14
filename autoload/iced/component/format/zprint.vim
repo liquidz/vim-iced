@@ -11,7 +11,7 @@ function! iced#component#format#zprint#start(this) abort
     call iced#promise#sync(a:this['installer'].install, ['zprint'], 30000)
   endif
 
-  let d = deepcopy(a:this.format_ni)
+  let d = deepcopy(a:this.format_native_image)
   let d.command = ['zprint', g:iced#format#zprint_option]
   return d
 endfunction
