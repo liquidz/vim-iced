@@ -15,7 +15,11 @@ let s:saved_view = ''
 " l: locals
 " n: next
 " o: out
-let s:supported_types = {'n': '', 'c': '', 'q': '', 'j': '' }
+let s:supported_types = {'n': 'next', 'c': 'continue', 'q': 'quit', 'j': 'inject' }
+let s:reversed_supported_types = {}
+for k in keys(s:supported_types)
+  let s:reversed_supported_types[s:supported_types[k]] = k
+endfor
 
 " negative value means no limit
 let g:iced#debug#value_max_length = get(g:, 'iced#debug#value_max_length', -1)
@@ -153,17 +157,25 @@ function! iced#nrepl#debug#default#start(resp) abort
   endif
 
   let input_type = resp['input-type']
-  if type(input_type) == v:t_dict
+  let input_type_type = type(input_type)
+
+  if input_type_type == v:t_dict
     let ks = filter(sort(keys(input_type)), {_, v -> has_key(s:supported_types, v)})
     let prompt = join(map(ks, {_, k -> printf('(%s)%s', k, input_type[k])}), ', ')
-  elseif has_key(resp, 'prompt')
+
+  elseif type(input_type) == v:t_list
+    "" cider-nrepl 0.24.0 or later???
+    let ks = filter(sort(copy(input_type)), {_, v -> has_key(s:reversed_supported_types, v)})
+    let prompt = join(map(ks, {_, k -> printf('(%s)%s', s:reversed_supported_types[k], k)}), ', ')
+
+  elseif has_key(resp, 'prompt') && !empty(resp['prompt'])
     let prompt = resp['prompt']
   endif
 
   redraw
   let in = trim(iced#system#get('io').input(prompt . "\n: "))
-  if type(input_type) == v:t_dict
-    let in = ':'.get(input_type, in, 'quit')
+  if input_type_type == v:t_dict || input_type_type == v:t_list
+    let in = ':'.get(s:supported_types, in, 'quit')
   endif
   call iced#nrepl#op#cider#debug#input(resp['key'], in)
 endfunction " }}}
