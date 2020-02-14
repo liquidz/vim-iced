@@ -1,10 +1,15 @@
 let s:suite  = themis#suite('iced.component.format.native-image')
 let s:assert = themis#helper('assert')
 let s:buf = themis#helper('iced_buffer')
+let s:io = themis#helper('iced_io')
 
-let s:fmt = iced#system#get('format_cljstyle')
+let s:fmt = ''
 
 function! s:setup() abort
+  " Not to install cljstyle automatically
+  call s:io.mock({'input': 'n'})
+
+  let s:fmt = iced#system#get('format_cljstyle')
   call s:buf.start_dummy([
         \ '(ns foo.core',
         \ '    (:require [clojure.string :as str]',

@@ -25,6 +25,10 @@ jobs:
         with:
           version: nightly
           neovim: ${{ matrix.neovim }}
+      - run: echo "::add-path::./bin"
+      - name: Install cljstyle
+        run: ../installer/cljstyle.sh
+        working-directory: ./bin
       - name: Run themis
         env:
           THEMIS_VIM: ${{ steps.vim.outputs.executable }}
