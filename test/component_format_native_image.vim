@@ -6,6 +6,7 @@ let s:io = themis#helper('iced_io')
 let s:fmt = ''
 
 function! s:setup() abort
+  call iced#system#reset_component('job')
   " Not to install cljstyle automatically
   call s:io.mock({'input': 'n'})
 
