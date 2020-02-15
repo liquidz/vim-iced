@@ -4,7 +4,7 @@ set cpoptions&vim
 let s:component_cache = {}
 let s:nvim = has('nvim')
 
-let s:system_map = {
+let s:org_system_map = {
       \ 'vim_bencode':  {'start': 'iced#component#bencode#vim#start'},
       \ 'bencode':      {'start': 'iced#component#bencode#start',
       \                  'requires': ['vim_bencode']},
@@ -47,6 +47,7 @@ let s:system_map = {
       \ 'format_zprint':       {'start': 'iced#component#format#zprint#start',
       \                         'requires': ['installer', 'format_native_image']},
       \ }
+let s:system_map = copy(s:org_system_map)
 
 function! iced#system#all_requires(name) abort
   let res = []
@@ -76,6 +77,10 @@ function! iced#system#set_component(name, component_map) abort
   endfor
 
   let s:system_map[a:name] = copy(a:component_map)
+endfunction
+
+function! iced#system#reset_component(name) abort
+  call iced#system#set_component(a:name, s:org_system_map[a:name])
 endfunction
 
 function! iced#system#get(name) abort
