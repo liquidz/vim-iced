@@ -1,0 +1,5 @@
+{
+ :list-indent-size 1
+ :insert-padding-lines? false
+ }
+; vim:ft=clojure
