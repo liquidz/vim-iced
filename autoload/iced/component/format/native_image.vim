@@ -74,10 +74,12 @@ function! s:__all(result) abort
 
   try
     let code = trim(join(res.buf, "\n"))
-    silent! execute "normal! i \<esc>x"
-          \ | undojoin
-          \ | %del
-          \ | call s:__append_texts(0, split(code, '\r\?\n'))
+    if !empty(code)
+      silent! execute "normal! i \<esc>x"
+            \ | undojoin
+            \ | %del
+            \ | call s:__append_texts(0, split(code, '\r\?\n'))
+    endif
   finally
     let res['back_to_bufnr'] = current_bufnr
     call s:__format_finally(res)
@@ -114,8 +116,11 @@ function! s:__current_form(result) abort
   setl modifiable
 
   try
-    let @@ = trim(join(res.buf, "\n"))
-    silent normal! gvp
+    let code = trim(join(res.buf, "\n"))
+    if !empty(code)
+      let @@ = code
+      silent normal! gvp
+    endif
   finally
     let res['_back_to_bufnr'] = current_bufnr
     call s:__format_finally(res)
