@@ -185,8 +185,11 @@ function! s:fmt.minimal(opt) abort
     call self.job.close_stdin(job)
     call iced#util#wait({-> d._finished == v:false}, 1000)
 
-    let @@ = iced#util#add_indent(ncol, trim(join(d.buf, "\n")))
-    silent normal! gvp
+    let code = trim(join(d.buf, "\n"))
+    if !empty(code)
+      let @@ = iced#util#add_indent(ncol, code)
+      silent normal! gvp
+    endif
   finally
     let @@ = reg_save
     call winrestview(view)
