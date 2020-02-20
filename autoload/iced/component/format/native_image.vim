@@ -242,6 +242,8 @@ function! s:fmt.calculate_indent(lnum) abort
 
       return idx + start_column
     endfor
+
+    return GetClojureIndent()
   finally
     let @@ = reg_save
     call winrestview(view)
