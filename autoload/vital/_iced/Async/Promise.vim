@@ -4,7 +4,7 @@
 function! s:_SID() abort
   return matchstr(expand('<sfile>'), '<SNR>\zs\d\+\ze__SID$')
 endfunction
-execute join(['function! vital#_iced#Async#Promise#import() abort', printf("return map({'resolve': '', '_vital_depends': '', 'wait': '', '_vital_created': '', 'all': '', 'noop': '', 'is_promise': '', 'race': '', 'is_available': '', 'reject': '', 'new': '', '_vital_loaded': ''}, \"vital#_iced#function('<SNR>%s_' . v:key)\")", s:_SID()), 'endfunction'], "\n")
+execute join(['function! vital#_iced#Async#Promise#import() abort', printf("return map({'resolve': '', '_vital_depends': '', 'wait': '', '_vital_created': '', 'all': '', 'noop': '', 'on_unhandled_rejection': '', 'is_promise': '', 'race': '', 'is_available': '', 'reject': '', 'new': '', '_vital_loaded': ''}, \"vital#_iced#function('<SNR>%s_' . v:key)\")", s:_SID()), 'endfunction'], "\n")
 delfunction s:_SID
 " ___vital___
 " ECMAScript like Promise library for asynchronous operations.
@@ -47,6 +47,7 @@ let s:NOOP = funcref('s:noop')
 
 let s:PROMISE = {
     \   '_state': s:PENDING,
+    \   '_has_floating_child': v:false,
     \   '_children': [],
     \   '_fulfillments': [],
     \   '_rejections': [],
@@ -99,6 +100,9 @@ function! s:_publish(promise, ...) abort
   endif
 
   if empty(a:promise._children)
+    if settled == s:REJECTED && !a:promise._has_floating_child
+      call s:_on_unhandled_rejection(a:promise._result)
+    endif
     return
   endif
 
@@ -279,6 +283,11 @@ function! s:wait(promise, ...) abort
   endif
 endfunction
 
+let s:_on_unhandled_rejection = s:NOOP
+function! s:on_unhandled_rejection(on_unhandled_rejection) abort
+  let s:_on_unhandled_rejection = a:on_unhandled_rejection
+endfunction
+
 function! s:_promise_then(...) dict abort
   let parent = self
   let state = parent._state
@@ -286,8 +295,10 @@ function! s:_promise_then(...) dict abort
   let l:Res = a:0 > 0 ? a:1 : v:null
   let l:Rej = a:0 > 1 ? a:2 : v:null
   if state == s:FULFILLED
+    let parent._has_floating_child = v:true
     call s:Later.call(funcref('s:_invoke_callback', [state, child, Res, parent._result]))
   elseif state == s:REJECTED
+    let parent._has_floating_child = v:true
     call s:Later.call(funcref('s:_invoke_callback', [state, child, Rej, parent._result]))
   else
     call s:_subscribe(parent, child, Res, Rej)
