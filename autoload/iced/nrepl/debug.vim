@@ -22,7 +22,7 @@ function! s:accept_tapped_value(_, x) abort
 endfunction
 
 function! s:show_tapped_list() abort
-  call iced#promise#call('iced#nrepl#op#iced#list_tapped', [])
+  return iced#promise#call('iced#nrepl#op#iced#list_tapped', [])
         \.then({resp -> has_key(resp, 'error') ? iced#promise#reject(resp['error']) : resp})
         \.then({resp -> map(get(resp, 'tapped', []), {i, v -> printf("%d: %s", i, v)})})
         \.then({candidates -> empty(candidates)
@@ -47,7 +47,8 @@ function! s:browse_tapped_data(key_str) abort
   " continue to browse the tapped value in command mode
   let cmd = printf(':IcedBrowseTapped %s ', a:key_str)
   let cmd = substitute(cmd, '\s\+', ' ', 'g')
-  call feedkeys(cmd, 'n')
+  call iced#system#get('io').feedkeys(cmd, 'n')
+  return iced#promise#resolve('')
 endfunction
 
 function! iced#nrepl#debug#browse_tapped(key_str) abort
@@ -55,7 +56,7 @@ function! iced#nrepl#debug#browse_tapped(key_str) abort
     return s:show_tapped_list()
   endif
 
-  call s:browse_tapped_data(a:key_str)
+  return s:browse_tapped_data(a:key_str)
 endfunction
 
 function! iced#nrepl#debug#complete_tapped(arg_lead, cmd_line, cursor_pos) abort
