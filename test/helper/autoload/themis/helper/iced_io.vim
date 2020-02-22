@@ -21,6 +21,11 @@ function! s:helper.echo(text) abort
   return ''
 endfunction
 
+function! s:helper.feedkeys(ks, mode) abort
+  let self.last_args = {'feedkeys': {'keys': a:ks, 'mode': a:mode}}
+  return ''
+endfunction
+
 function! s:helper.get_last_args() abort
   return self.last_args
 endfunction

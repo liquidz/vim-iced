@@ -17,6 +17,10 @@ function! s:io.echo(text) abort
   echo a:text
 endfunction
 
+function! s:io.feedkeys(ks, mode) abort
+  return feedkeys(a:ks, a:mode)
+endfunction
+
 function! iced#component#io#start(_) abort
   call iced#util#debug('start', 'io')
   return s:io
