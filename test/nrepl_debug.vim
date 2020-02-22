@@ -147,3 +147,42 @@ function! s:suite.browse_tapped_data_test() abort
   call s:assert.equals(s:io.get_last_args()['feedkeys'],
         \ {'keys': ':IcedBrowseTapped foo bar ', 'mode': 'n'})
 endfunction
+
+function! s:__complete_tapped_test_relay(msg) abort
+  if a:msg['op'] ==# 'iced-complete-tapped'
+    return {'status': ['done'], 'complete': ['keys', join(a:msg['keys'], ',')]}
+  endif
+
+  return {'status': ['done']}
+endfunction
+
+function! s:suite.complete_tapped_test() abort
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:__complete_tapped_test_relay')})
+
+  let res = iced#nrepl#debug#complete_tapped('', ':IcedBrowseTapped foo bar', 22)
+  call s:assert.equals(res, "keys\nfoo")
+endfunction
+
+function! s:suite.clear_tapped_test() abort
+  call s:io.mock()
+  call s:ch.mock({'status_value': 'open', 'relay': {_ -> {'status': ['done']}}})
+
+  let p = iced#nrepl#debug#clear_tapped()
+  call iced#promise#wait(p)
+
+  call s:assert.equals(
+        \ s:io.get_last_args()['echomsg']['text'],
+        \ iced#message#get('cleared'),
+        \ )
+endfunction
+
+function! s:suite.toggle_warn_on_reflection_test() abort
+  call s:io.mock()
+  call s:ch.mock({'status_value': 'open', 'relay': {_ -> {'status': ['done'], 'value': 'true'}}})
+
+  call iced#nrepl#debug#toggle_warn_on_reflection()
+  call s:assert.equals(
+        \ s:io.get_last_args()['echomsg']['text'],
+        \ iced#message#get('toggle_warn_on_reflection', 'true'),
+        \ )
+endfunction

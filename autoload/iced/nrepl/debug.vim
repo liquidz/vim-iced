@@ -73,7 +73,7 @@ function! iced#nrepl#debug#complete_tapped(arg_lead, cmd_line, cursor_pos) abort
 endfunction
 
 function! iced#nrepl#debug#clear_tapped() abort
-  call iced#promise#call('iced#nrepl#op#iced#clear_tapped', [])
+  return iced#promise#call('iced#nrepl#op#iced#clear_tapped', [])
         \.then({resp -> has_key(resp, 'error')
         \               ? iced#promise#reject(resp['error'])
         \               : resp})
