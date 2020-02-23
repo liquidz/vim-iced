@@ -110,7 +110,7 @@ function! s:__dict_to_str(d, ...) abort
 endfunction
 
 function! s:__clojure_test_out(resp) abort
-  " HACK: Use `future` in Neovim because performing sync process in sync process will be unexpected behavior
+  " HACK: Use `future` in Neovim because performing sync process in async process will be unexpected behavior
   return iced#system#get('future').do({->
         \ iced#nrepl#test#done(iced#nrepl#test#clojure_test#parse(a:resp))
         \})
