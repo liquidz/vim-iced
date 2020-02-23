@@ -43,8 +43,8 @@ fi
 ### kkinnear/zprint version
 ZPRINT_URL='https://github.com/kkinnear/zprint/releases.atom'
 ZPRINT_VERSION=$(curl -s ${ZPRINT_URL} | grep '<title>' | head -n 2 | tail -n 1 | sed 's/[^0-9.]//g')
-grep "version='${ZPRINT_VERSION}'" ${SCRIPT_DIR}/../installer/zprint.sh
+grep "version='${ZPRINT_VERSION}'" ${SCRIPT_DIR}/../installer/zprint-clj.sh
 if [ $? -ne 0 ]; then
-    echo "version_check: Version num in installer/zprint.sh is outdated (${ZPRINT_VERSION})"
+    echo "version_check: Version num in installer/zprint-clj.sh is outdated (${ZPRINT_VERSION})"
     exit 1
 fi
