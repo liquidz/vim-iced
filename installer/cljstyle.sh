@@ -2,7 +2,7 @@
 
 set -e
 
-version='0.12.0'
+version='0.12.1'
 file='cljstyle.tar.gz'
 if [ "$(uname)" == 'Darwin' ]; then
     os='macos'
