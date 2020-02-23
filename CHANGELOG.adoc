@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+== 1.0.0 (2020-02-24)
+// {{{
+https://insideclojure.org/2020/02/18/lib-version/
+
+=== Added
+* Add support GraalVM powered code formatting tools.
+** https://github.com/greglook/cljstyle[cljstyle]
+** https://github.com/kkinnear/zprint[zprint]
+
+=== Changed
+* Bump cider-nrepl to 0.24.0.
+* Bump jet to 0.0.12.
+* Update vital.vim modules to be latest.
+
+=== Fixed
+* Fixed debugger to work with latest cider-nrepl.
+* https://github.com/liquidz/vim-iced/issues/183[#183]: Fixed `:IcedTestNs` not to be "Interrupted" in Neovim.
+
+// }}}
+
 == 0.14.2 (2020-02-11)
 // {{{
 === Added
