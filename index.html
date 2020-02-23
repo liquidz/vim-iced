@@ -488,7 +488,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#testing_checking_spec">8.3. Checking spec</a></li>
 </ul>
 </li>
-<li><a href="#formatting">9. Formatting</a></li>
+<li><a href="#formatting">9. Formatting</a>
+<ul class="sectlevel2">
+<li><a href="#formatting_customize">9.1. Customize formatter </a></li>
+</ul>
+</li>
 <li><a href="#debugging">10. Debugging</a>
 <ul class="sectlevel2">
 <li><a href="#_tracing_function_calls">10.1. Tracing function calls</a></li>
@@ -1403,8 +1407,42 @@ See also <a href="#customizing_indent_rules">Customizing indent rules</a>
 </tr>
 </table>
 </div>
+<div class="sect2">
+<h3 id="formatting_customize">9.1. Customize formatter </h3>
+<div class="paragraph">
+<p>vim-iced also supports following (GraalVM powered) code formatting tools.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/greglook/cljstyle">cljstyle</a></p>
+</li>
+<li>
+<p><a href="https://github.com/kkinnear/zprint">zprint</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you change <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_formatter">g:iced_formatter</a> option,
+vim-iced will use the tool to format codes and calculate indent level.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>These tools can be downloaded automatically if you want.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph text-right">
 <p><span class="small"><a href="#top">Back to top</a></span></p>
+</div>
 </div>
 </div>
 </div>
@@ -2036,8 +2074,8 @@ So you need to launch REPL manually.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="clojure"><span class="p">{</span><span class="w">
  </span><span class="no">:dependencies</span><span class="w"> </span><span class="p">[[</span><span class="n">refactor-nrepl</span><span class="w"> </span><span class="s">"2.4.0"</span><span class="p">]</span><span class="w">
-                </span><span class="p">[</span><span class="n">cider/cider-nrepl</span><span class="w"> </span><span class="s">"0.22.4"</span><span class="p">]</span><span class="w">
-                </span><span class="p">[</span><span class="n">iced-nrepl</span><span class="w"> </span><span class="s">"0.7.1"</span><span class="p">]]</span><span class="w">
+                </span><span class="p">[</span><span class="n">cider/cider-nrepl</span><span class="w"> </span><span class="s">"0.24.0"</span><span class="p">]</span><span class="w">
+                </span><span class="p">[</span><span class="n">iced-nrepl</span><span class="w"> </span><span class="s">"1.0.0"</span><span class="p">]]</span><span class="w">
 
  </span><span class="no">:nrepl</span><span class="w"> </span><span class="p">{</span><span class="no">:cider</span><span class="w"> </span><span class="n">false</span><span class="w">
          </span><span class="no">:middleware</span><span class="w"> </span><span class="p">[</span><span class="n">cider.nrepl/wrap-classpath</span><span class="w">
@@ -3722,7 +3760,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-02-10 22:22:51 UTC
+Last updated 2020-02-23 22:07:46 UTC
 </div>
 </div>
 <style>
