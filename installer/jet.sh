@@ -2,12 +2,13 @@
 
 set -e
 
-version='0.0.10'
-zip_file='jet.zip'
+version='0.0.12'
+file='jet.zip'
 if [ "$(uname)" == 'Darwin' ]; then
-    url="https://github.com/borkdude/jet/releases/download/v${version}/jet-${version}-macos-amd64.zip"
+    os='macos'
 else
-    url="https://github.com/borkdude/jet/releases/download/v${version}/jet-${version}-linux-amd64.zip"
+    os='linux'
 fi
+url="https://github.com/borkdude/jet/releases/download/v${version}/jet-${version}-${os}-amd64.zip"
 
-curl -L -o ${zip_file} ${url} && unzip ${zip_file} && rm -f ${zip_file}
+curl -L -o ${file} ${url} && unzip ${file} && rm -f ${file}

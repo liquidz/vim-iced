@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 0.14.2
+Version: 1.0.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -109,8 +109,8 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.6.0"]
-                   [iced-nrepl "0.7.1"]
-                   [cider/cider-nrepl "0.22.4"]]
+                   [iced-nrepl "1.0.0"]
+                   [cider/cider-nrepl "0.24.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -138,8 +138,8 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.4.0"]
-      [cider/cider-nrepl "0.22.4"]
-      [iced-nrepl "0.7.1"]])
+      [cider/cider-nrepl "0.24.0"]
+      [iced-nrepl "1.0.0"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -168,8 +168,8 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "2.4.0"]
-                  [cider/cider-nrepl "0.22.4"]
-                  [iced-nrepl "0.7.1"]]
+                  [cider/cider-nrepl "0.24.0"]
+                  [iced-nrepl "1.0.0"]]
 
    :nrepl {:cider false
            :middleware [cider.nrepl/wrap-classpath
@@ -451,6 +451,8 @@ FORMATTING                                                *vim-iced-formatting*
 >
   let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
 <
+  See also |vim-iced-customizing-formatter|.
+
 ------------------------------------------------------------------------------
 INDENTING                                                  *vim-iced-indenting*
 
@@ -1550,6 +1552,23 @@ g:iced#buffer#stdout#deleting_line_delay
   This option is enabled when |g:iced#buffer#stdout#max_line| is a positive
   number.
   Default value is `1000`.
+
+------------------------------------------------------------------------------
+FORMATTER                                      *vim-iced-customizing-formatter*
+
+                                                             *g:iced_formatter*
+g:iced_formatter
+  Formatter name.
+  Following formatters can be used.
+
+  - `default`
+    Default formatter powered by cljfmt.
+  - `cljstyle`
+    https://github.com/greglook/cljstyle
+    If cljstyle is not installed, will install automatically.
+  - `zprint`
+    https://github.com/kkinnear/zprint
+    If zprint is not installed, will install automatically.
 
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*

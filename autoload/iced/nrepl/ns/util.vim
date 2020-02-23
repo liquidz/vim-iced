@@ -35,7 +35,7 @@ function! iced#nrepl#ns#util#replace(new_ns) abort
   finally
     let @@ = reg_save
     if iced#nrepl#ns#util#search() != 0
-      call iced#promise#wait(iced#format#form())
+      call iced#promise#wait(iced#format#current())
       call iced#nrepl#ns#load_current_file({_ -> ''})
     endif
     call winrestview(view)

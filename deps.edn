@@ -2,8 +2,8 @@
  :paths ["clj/repl"]
  :deps {nrepl {:mvn/version "0.6.0"}
         refactor-nrepl {:mvn/version "2.4.0"}
-        cider/cider-nrepl {:mvn/version "0.22.4"}
-        iced-nrepl {:mvn/version "0.7.1"}}
+        cider/cider-nrepl {:mvn/version "0.24.0"}
+        iced-nrepl {:mvn/version "1.0.0"}}
  :__middlewares__
  ["cider.nrepl/wrap-classpath"
   "cider.nrepl/wrap-clojuredocs"

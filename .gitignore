@@ -1,6 +1,8 @@
 VIM_AUTO_RTP
 doc/tags
 bin/jet
+bin/cljstyle
+bin/zprint-clj
 .vim-themis
 .vim-sexp
 .vimdoc

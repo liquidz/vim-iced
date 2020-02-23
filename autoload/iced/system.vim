@@ -4,7 +4,7 @@ set cpoptions&vim
 let s:component_cache = {}
 let s:nvim = has('nvim')
 
-let s:system_map = {
+let s:org_system_map = {
       \ 'vim_bencode':  {'start': 'iced#component#bencode#vim#start'},
       \ 'bencode':      {'start': 'iced#component#bencode#start',
       \                  'requires': ['vim_bencode']},
@@ -38,9 +38,26 @@ let s:system_map = {
       \ 'socket_repl':  {'start': 'iced#component#repl#socket_repl#start'},
       \ 'prepl':        {'start': 'iced#component#repl#prepl#start',
       \                  'requires': ['socket_repl', 'edn']},
+      \ 'format_default':      {'start': 'iced#component#format#nrepl#start',
+      \                         'requires': ['sign']},
+      \ 'format_native_image': {'start': 'iced#component#format#native_image#start',
+      \                         'requires': ['sign', 'job']},
+      \ 'format_cljstyle':     {'start': 'iced#component#format#cljstyle#start',
+      \                         'requires': ['installer', 'format_native_image']},
+      \ 'format_zprint':       {'start': 'iced#component#format#zprint#start',
+      \                         'requires': ['installer', 'format_native_image']},
       \ }
+let s:system_map = copy(s:org_system_map)
 
-function! s:requires(name) abort
+function! iced#system#all_requires(name) abort
+  let res = []
+  for req in get(s:system_map[a:name], 'requires', [])
+    call extend(res, iced#system#requires(req) + [req])
+  endfor
+  return res
+endfunction
+
+function! iced#system#requires(name) abort
   let requires = get(s:system_map[a:name], 'requires', [])
   return copy(requires)
 endfunction
@@ -53,13 +70,17 @@ function! iced#system#set_component(name, component_map) abort
   for component_name in keys(s:system_map)
     if !has_key(s:component_cache, component_name) | continue | endif
 
-    let requires = s:requires(component_name)
+    let requires = iced#system#all_requires(component_name)
     if index(requires, a:name) != -1
       unlet s:component_cache[component_name]
     endif
   endfor
 
   let s:system_map[a:name] = copy(a:component_map)
+endfunction
+
+function! iced#system#reset_component(name) abort
+  call iced#system#set_component(a:name, s:org_system_map[a:name])
 endfunction
 
 function! iced#system#get(name) abort
@@ -69,7 +90,7 @@ function! iced#system#get(name) abort
     if !has_key(s:system_map, a:name) | return '' | endif
 
     let params = {}
-    for required_component_name in s:requires(a:name)
+    for required_component_name in iced#system#requires(a:name)
       let req = iced#system#get(required_component_name)
       if empty(req)
         call iced#message#error('component_error', required_component_name)
@@ -98,12 +119,13 @@ function! s:stop(name) abort
     return ''
   endif
 
-  for required_component_name in s:requires(a:name)
+  for required_component_name in iced#system#requires(a:name)
     call s:stop(required_component_name)
   endfor
 
-  if has_key(s:system_map[a:name], 'stop')
-    let StopFn = s:system_map[a:name]['stop']
+  let m = s:system_map[a:name]
+  if has_key(m, 'stop')
+    let StopFn = m['stop']
     if type(StopFn) == v:t_string
       let StopFn = function(StopFn)
     endif

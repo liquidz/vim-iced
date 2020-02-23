@@ -103,9 +103,6 @@ endfunction " }}}
 function! iced#nrepl#refactor#clean_all() abort
   return iced#nrepl#refactor#clean_ns()
         \.then({_ -> iced#format#all()})
-  " let resp = iced#promise#sync('iced#nrepl#op#refactor#clean_ns', [])
-  " call s:clean_ns(resp)
-  " call iced#format#all()
 endfunction " }}}
 
 " iced#nrepl#refactor#add_missing_ns {{{
@@ -199,7 +196,7 @@ function! s:add(ns_name) abort
     if empty(candidate)
       let candidate = ''
     endif
-    let ns_alias = trim(input('Alias: ', candidate))
+    let ns_alias = trim(iced#system#get('io').input('Alias: ', candidate))
   endif
 
   call iced#nrepl#ns#util#add(a:ns_name, ns_alias)

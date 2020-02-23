@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 1402
+let g:vim_iced_version = 10000
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -108,7 +108,7 @@ command!          IcedClojureDocsRefresh    call iced#clojuredocs#refresh()
 
 command!          IcedSlurp                 call iced#paredit#deep_slurp()
 command!          IcedBarf                  call iced#paredit#barf()
-command!          IcedFormat                call iced#format#form()
+command!          IcedFormat                call iced#format#current()
 command!          IcedFormatAll             call iced#format#all()
 command!          IcedCycleSrcAndTest       call iced#nrepl#navigate#cycle_src_and_test()
 command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
