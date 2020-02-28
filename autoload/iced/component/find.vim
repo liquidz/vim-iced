@@ -1,7 +1,7 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:find = {'job': ''}
+let s:find = {'job_out': ''}
 
 function! s:find.file(dir, name, callback) abort
   let cmd = ''
@@ -12,13 +12,13 @@ function! s:find.file(dir, name, callback) abort
          \ a:dir, fnamemodify(a:name, ':t'), fnamemodify(a:name, ':h'))
   endif
   let cmd = cmd . ' | head -n 1'
-  call self.job.out(['sh', '-c', cmd], a:callback)
+  call self.job_out.redir(['sh', '-c', cmd], a:callback)
 endfunction
 
 function! iced#component#find#start(this) abort
   call iced#util#debug('start', 'find')
   let d = deepcopy(s:find)
-  let d['job'] = a:this.job
+  let d['job_out'] = a:this.job_out
   return d
 endfunction
 
