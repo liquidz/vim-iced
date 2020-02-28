@@ -19,8 +19,10 @@ function! iced#nrepl#sideloader#start() abort
   call iced#nrepl#send({
       \ 'op': 'sideloader-start',
       \ 'session': iced#nrepl#current_session(),
-      \ 'callback': {_ -> iced#message#info('started_sideloader')},
+      \ 'callback': {_ -> ''},
+      \ 'does_not_capture_id': v:true,
       \ })
+  call iced#message#info('started_sideloader')
 endfunction
 
 function! s:lookup(file, callback) abort
