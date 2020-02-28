@@ -2,7 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:default_source_root = executable('ghq')
-     \ ? trim(system('ghq root'))
+     \ ? trim(system('git config ghq.root'))
      \ : ''
 let g:iced#source_root = get(g:, 'iced#source_root', s:default_source_root)
 
