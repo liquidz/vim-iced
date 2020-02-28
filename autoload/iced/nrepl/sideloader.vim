@@ -28,7 +28,7 @@ function! s:lookup(file, callback) abort
     return a:callback('')
   endif
 
-  call iced#system#get('job').out(printf('base64 %s', a:file), a:callback)
+  call iced#system#get('job_out').redir(printf('base64 %s', a:file), a:callback)
 endfunction
 
 function! s:provide(session, type, name, content) abort
