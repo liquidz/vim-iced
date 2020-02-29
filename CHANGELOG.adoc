@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This change
 // {{{
 === Fixed
 * Fixed `IcedAddNs` to show ns alias candidate correctly in Vim.
+* Fixed opening buffer / scrolling to bottom manipulation to ignore `WinEnter` and `BufEnter` autocmd.
 // }}}
 
 == 1.0.1 (2020-02-26)

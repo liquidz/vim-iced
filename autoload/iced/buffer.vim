@@ -83,30 +83,35 @@ function! iced#buffer#open(bufname, ...) abort
   let current_window = winnr()
   let opt = get(a:, 1, {})
 
-  if !iced#buffer#is_visible(a:bufname)
-    call s:B.open(nr, {
-        \ 'opener': get(opt, 'opener', 'split'),
-        \ 'mods': get(opt, 'mods', ''),
-        \ })
+  try
+    let &eventignore = 'WinEnter,BufEnter'
+    if !iced#buffer#is_visible(a:bufname)
+      call s:B.open(nr, {
+            \ 'opener': get(opt, 'opener', 'split'),
+            \ 'mods': get(opt, 'mods', ''),
+            \ })
 
-    if has_key(opt, 'height')
-      silent exec printf(':resize %d', opt['height'])
+      if has_key(opt, 'height')
+        silent exec printf(':resize %d', opt['height'])
+      endif
+
+      call s:apply_option(opt)
+      call s:focus_window(current_window)
     endif
-
-    call s:apply_option(opt)
-    call s:focus_window(current_window)
-  endif
+  finally
+    let &eventignore = ''
+  endtry
 endfunction
 
 function! s:scroll_to_bottom(nr, _) abort
   let current_window = winnr()
   try
-    call iced#nrepl#auto#enable_bufenter(v:false)
+    let &eventignore = 'WinEnter,BufEnter'
     call s:focus_window(bufwinnr(a:nr))
     silent normal! G
   finally
     call s:focus_window(current_window)
-    call iced#nrepl#auto#enable_bufenter(v:true)
+    let &eventignore = ''
   endtry
 endfunction
 
