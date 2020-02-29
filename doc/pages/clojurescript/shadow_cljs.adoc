@@ -31,7 +31,7 @@ You need to modify `:dependencies` and `:nrepl` setting in `shadow-cljs.edn` as 
 [source,clojure]
 ----
 {
- :dependencies [[refactor-nrepl "2.4.0"]
+ :dependencies [[refactor-nrepl "2.5.0"]
                 [cider/cider-nrepl "0.24.0"]
                 [iced-nrepl "1.0.0"]]
 

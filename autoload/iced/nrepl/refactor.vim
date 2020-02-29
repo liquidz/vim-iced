@@ -34,7 +34,10 @@ let g:iced#ns#favorites
 
 " iced#nrepl#refactor#extract_function {{{
 function! s:found_used_locals(resp) abort
-  if !has_key(a:resp, 'used-locals') | return iced#message#error('used_locals_error') | endif
+  if !has_key(a:resp, 'used-locals')
+    let msg = get(a:resp, 'error', 'Unknown error')
+    return iced#message#error('used_locals_error', msg)
+  endif
 
   let view = winsaveview()
   let reg_save = @@
@@ -212,9 +215,10 @@ function! s:ns_list(resp) abort
   let favorites = get(g:iced#ns#favorites, iced#nrepl#current_session_key(), {})
   let namespaces = s:L.uniq(s:L.concat([namespaces, keys(favorites)]))
 
+  " NOTE: Use `future` because candidate is not displayed correctly in `input` for Vim
   call iced#selector({
         \ 'candidates': namespaces,
-        \ 'accept': {_, ns_name -> s:add(ns_name)}
+        \ 'accept': {_, ns_name -> iced#system#get('future').do({-> s:add(ns_name)})}
         \ })
 endfunction
 

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 1.0.2 (2020-03-01)
+// {{{
+=== Changed
+* Bump refactor-nrepl to 2.5.0.
+* Update `IcedExtractFunction` to show concrete message on error.
+
+=== Fixed
+* Fixed `IcedAddNs` to show ns alias candidate correctly in Vim.
+* Fixed opening buffer / scrolling to bottom manipulation to ignore `WinEnter` and `BufEnter` autocmd.
+// }}}
+
 == 1.0.1 (2020-02-26)
 // {{{
 === Fixed
