@@ -212,9 +212,10 @@ function! s:ns_list(resp) abort
   let favorites = get(g:iced#ns#favorites, iced#nrepl#current_session_key(), {})
   let namespaces = s:L.uniq(s:L.concat([namespaces, keys(favorites)]))
 
+  " NOTE: Use `future` because candidate is not displayed correctly in `input` for Vim
   call iced#selector({
         \ 'candidates': namespaces,
-        \ 'accept': {_, ns_name -> s:add(ns_name)}
+        \ 'accept': {_, ns_name -> iced#system#get('future').do({-> s:add(ns_name)})}
         \ })
 endfunction
 
