@@ -34,7 +34,10 @@ let g:iced#ns#favorites
 
 " iced#nrepl#refactor#extract_function {{{
 function! s:found_used_locals(resp) abort
-  if !has_key(a:resp, 'used-locals') | return iced#message#error('used_locals_error') | endif
+  if !has_key(a:resp, 'used-locals')
+    let msg = get(a:resp, 'error', 'Unknown error')
+    return iced#message#error('used_locals_error', msg)
+  endif
 
   let view = winsaveview()
   let reg_save = @@

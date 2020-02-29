@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This change
 // {{{
 === Changed
 * Bump refactor-nrepl to 2.5.0.
+* Update `IcedExtractFunction` to show concrete message on error.
 
 === Fixed
 * Fixed `IcedAddNs` to show ns alias candidate correctly in Vim.

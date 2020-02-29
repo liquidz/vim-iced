@@ -96,7 +96,7 @@
   'unexpected_error':          'Unexpected error: %s',
   'unknown_hook_type':         'Hook type "%s" is unknown.',
   'untraced':                  'Untraced.',
-  'used_locals_error':         'Failed to fetch used-locals.',
+  'used_locals_error':         'Failed to fetch used-locals: %s.',
   'var_references_found':      'Found %d references.',
 
   '___EOF___': ''
