@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 // {{{
+=== Changed
+* Bump refactor-nrepl to 2.5.0.
+
 === Fixed
 * Fixed `IcedAddNs` to show ns alias candidate correctly in Vim.
 * Fixed opening buffer / scrolling to bottom manipulation to ignore `WinEnter` and `BufEnter` autocmd.
