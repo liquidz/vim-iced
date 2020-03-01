@@ -11,9 +11,10 @@ jobs:
 
   clj-kondo:
     runs-on: ubuntu-latest
-    container:
-      image: borkdude/clj-kondo
+    # container:
+    #   image: borkdude/clj-kondo
     steps:
       - uses: actions/checkout@v2
       - name: Lint by clj-kondo
-        run: clj-kondo --lint clj:test/clj
+        #run: clj-kondo --lint clj:test/clj
+        run: docker run --rm -v $(pwd):/tmp/work -w /tmp/work borkdude/clj-kondo clj-kondo --lint clj:test/clj
