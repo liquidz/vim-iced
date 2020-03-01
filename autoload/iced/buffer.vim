@@ -105,11 +105,14 @@ endfunction
 
 function! s:scroll_to_bottom(nr, _) abort
   let current_window = winnr()
+  let last_window = winnr('#')
   try
     let &eventignore = 'WinEnter,BufEnter'
     call s:focus_window(bufwinnr(a:nr))
     silent normal! G
   finally
+    " Preserve the user's last visited window by focusing to it first (PR #187)
+    call s:focus_window(last_window)
     call s:focus_window(current_window)
     let &eventignore = ''
   endtry
