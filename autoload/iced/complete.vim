@@ -12,7 +12,11 @@ function! iced#complete#omni(findstart, base) abort
     let s = line[0:ncol-2]
     return ncol - strlen(matchstr(s, '\k\+$')) - 1
   else
-    return iced#repl#execute('complete_omni', a:base)
+    try
+      return iced#promise#sync('iced#complete#candidates', [a:base], 10000)
+    catch
+      return []
+    endtry
   endif
 
   return []

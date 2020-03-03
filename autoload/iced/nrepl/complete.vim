@@ -84,9 +84,5 @@ function! iced#nrepl#complete#candidates(base, callback) abort
         \ {resp -> a:callback(s:candidates(resp))})
 endfunction
 
-function! iced#nrepl#complete#omni(base) abort
-  return iced#promise#sync('iced#complete#candidates', [a:base], 10000)
-endfunction
-
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

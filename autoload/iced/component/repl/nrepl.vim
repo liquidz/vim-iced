@@ -13,7 +13,6 @@ let s:nrepl = {
       \ 'load_current_file': function('iced#nrepl#ns#load_current_file'),
       \ 'document_open': function('iced#nrepl#document#open'),
       \ 'document_popup_open': function('iced#nrepl#document#popup_open'),
-      \ 'complete_omni': function('iced#nrepl#complete#omni'),
       \ 'complete_candidates': function('iced#nrepl#complete#candidates'),
       \ }
 

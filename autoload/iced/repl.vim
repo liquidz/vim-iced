@@ -33,6 +33,7 @@ function! iced#repl#execute(feature_name, ...) abort
   if type(Fn) == v:t_func
     return call(Fn, a:000)
   endif
+  throw printf('Invalid feature: %s', a:feature_name)
 endfunction
 
 let &cpo = s:save_cpo
