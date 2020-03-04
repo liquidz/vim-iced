@@ -4,7 +4,7 @@ set cpoptions&vim
 function! iced#socket_repl#out#lines(eval_response) abort
   let out = iced#socket_repl#trim_prompt(get(a:eval_response, 'out', ''))
   if empty(out)
-    let out = get(a:resp, 'value', '')
+    let out = get(a:eval_response, 'value', '')
   endif
   let out = substitute(out, '\(^"\|"$\)', '', 'g')
 
