@@ -82,6 +82,7 @@ function! iced#nrepl#complete#candidates(base, callback) abort
         \ iced#nrepl#ns#name(),
         \ s:context(),
         \ {resp -> a:callback(s:candidates(resp))})
+  return v:true
 endfunction
 
 let &cpoptions = s:save_cpo
