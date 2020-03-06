@@ -1,12 +1,35 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:complete_code = join(readfile(printf('%s/clj/template/socket_repl_complete.clj', g:vim_iced_home)), "\n")
+function! s:read_code(name) abort
+  return join(readfile(printf('%s/clj/template/socket_repl_%s.clj', g:vim_iced_home, a:name)), "\n")
+endfunction
+
+" workaround for planck warning
+function! s:planck_handler(lines) abort
+  if len(a:lines) == 3 && stridx(a:lines[1], 'WARNING') == 0
+    let out = substitute(a:lines[2], '\(^"\|"$\)', '', 'g')
+    return split(out, '\\n')
+  endif
+  return a:lines
+endfunction
 
 function! iced#socket_repl#complete#candidates(base, callback) abort
-  let code = printf(s:complete_code, a:base)
-  call iced#socket_repl#eval(code, {'callback': {resp ->
-       \ a:callback(iced#socket_repl#out#lines(resp))}})
+  let repl_type = iced#socket_repl#repl_type()
+  let Handler = {x -> x}
+
+  " Planck
+  if repl_type ==# 'cljs.user'
+    let code = s:read_code('complete_planck')
+    let Handler = funcref('s:planck_handler')
+  elseif repl_type ==# 'lumo'
+    let code = s:read_code('complete_lumo')
+  else
+    let code = s:read_code('complete_default')
+  endif
+
+  call iced#socket_repl#eval(printf(code, a:base), {'callback': {resp ->
+       \ a:callback(Handler(iced#socket_repl#out#lines(resp)))}})
   return v:true
 endfunction
 
