@@ -10,8 +10,7 @@ function! iced#socket_repl#out#lines(eval_response) abort
 
   if empty(out) | return [] | endif
 
-  " Drop last (prompt) line
-  let lines = split(out, '\r\?\n')[0:-2]
+  let lines = split(out, '\r\?\n')
   if len(lines) <= 1
     let lines = split(out, '\\n')
   endif
