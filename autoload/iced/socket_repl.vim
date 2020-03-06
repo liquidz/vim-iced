@@ -8,6 +8,7 @@ function! s:initialize_socket_repl() abort
         \ 'prompt': '\([A-Za-z0-9\-]\+\.\)\?[A-Za-z0-9\-]\+=> ',
         \ 'ignore_prompt': '#_=>\s\+',
         \ 'handler': '',
+        \ 'repl_type': 'unknown',
         \ }
 endfunction
 let s:socket_repl = s:initialize_socket_repl()
@@ -30,6 +31,18 @@ function! s:default_callback(resp) abort
           \ printf('=> %s', value),
           \ {'highlight': 'Comment', 'auto_clear': v:true})
   endif
+endfunction
+
+function! s:connecting_callback(resp) abort
+  let out = tolower(get(a:resp, 'out', ''))
+  for kw in ['babashka', 'joker', 'lumo', 'cljs.user']
+    if stridx(out, kw) != -1
+      let s:socket_repl['repl_type'] = kw
+      break
+    endif
+  endfor
+
+  return s:default_callback(a:resp)
 endfunction
 
 let s:callback = funcref('s:default_callback')
@@ -94,6 +107,9 @@ function! iced#socket_repl#connect(port, ...) abort
   silent call iced#buffer#stdout#init()
 
   if !iced#socket_repl#is_connected()
+    " to detect repl type
+    let s:callback = funcref('s:connecting_callback')
+
     let address = printf('%s:%d', g:iced#socket_repl#host, a:port)
     let s:socket_repl['port'] = a:port
     let s:socket_repl['channel'] = iced#system#get('channel').open(address, {
@@ -189,6 +205,10 @@ function! iced#socket_repl#trim_prompt(s) abort
   let idx = match(a:s, s:socket_repl['prompt'])
   if idx == -1 | return a:s | endif
   return trim(strpart(a:s, 0, idx))
+endfunction
+
+function! iced#socket_repl#repl_type() abort
+  return s:socket_repl['repl_type']
 endfunction
 
 let &cpoptions = s:save_cpo
