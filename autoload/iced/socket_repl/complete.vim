@@ -1,8 +1,8 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-function! s:read_code(name) abort
-  return join(readfile(printf('%s/clj/template/socket_repl_%s.clj', g:vim_iced_home, a:name)), "\n")
+function! s:read_code(filename) abort
+  return join(readfile(printf('%s/clj/template/socket_repl_%s', g:vim_iced_home, a:filename)), "\n")
 endfunction
 
 " workaround for planck warning
@@ -20,12 +20,12 @@ function! iced#socket_repl#complete#candidates(base, callback) abort
 
   " Planck
   if repl_type ==# 'cljs.user'
-    let code = s:read_code('complete_planck')
+    let code = s:read_code('complete_planck.cljs')
     let Handler = funcref('s:planck_handler')
   elseif repl_type ==# 'lumo'
-    let code = s:read_code('complete_lumo')
+    let code = s:read_code('complete_lumo.cljs')
   else
-    let code = s:read_code('complete_default')
+    let code = s:read_code('complete_default.clj')
   endif
 
   call iced#socket_repl#eval(printf(code, a:base), {'callback': {resp ->
