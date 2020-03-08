@@ -1,4 +1,6 @@
-.PHONY: all vital test themis docker_themis html pip_install lint python_doctest load_files_test version_check deps_check clean clean-all bin ancient aspell repl
+.PHONY: all vital test themis docker_themis html pip_install lint clj-lint
+.PHONY: python_doctest load_files_test version_check deps_check
+.PHONY: clean clean-all bin ancient aspell repl
 
 PWD=$(shell pwd)
 
@@ -43,6 +45,9 @@ pip_install:
 
 lint:
 	bash scripts/lint.sh
+
+clj-lint:
+	clj-kondo --lint clj:test/clj
 
 python_doctest:
 	python3 -m doctest python/bencode.py

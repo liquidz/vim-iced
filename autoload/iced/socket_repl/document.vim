@@ -5,20 +5,7 @@ let s:popup_winid = -1
 let s:document_code = join(readfile(printf('%s/clj/template/socket_repl_document.clj', g:vim_iced_home)), "\n")
 
 function! s:extract_document(resp) abort
-  let out = iced#socket_repl#trim_prompt(get(a:resp, 'out', ''))
-  if empty(out)
-    let out = get(a:resp, 'value', '')
-  endif
-  let out = substitute(out, '\(^"\|"$\)', '', 'g')
-
-  if empty(out) | return | endif
-
-  " Drop last (prompt) line
-  let docs = split(out, '\r\?\n')[0:-2]
-  if !empty(out) && len(docs) <= 1
-    let docs = split(out, '\\n')
-  endif
-
+  let docs = iced#socket_repl#out#lines(a:resp)
   return (docs == ['nil']) ? [] : docs
 endfunction
 
