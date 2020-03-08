@@ -41,3 +41,8 @@ function! s:suite.omni_test() abort
 
   call s:buf.stop_dummy()
 endfunction
+
+function! s:suite.omni_without_connection_test() abort
+  call s:repl.mock('non_existing_component')
+  call s:assert.equals(iced#complete#omni(v:false, 'base'), [])
+endfunction

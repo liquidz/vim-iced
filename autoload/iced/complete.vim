@@ -17,8 +17,6 @@ function! iced#complete#omni(findstart, base) abort
   else
     return iced#promise#sync('iced#complete#candidates', [a:base], 10000)
   endif
-
-  return []
 endfunction
 
 let &cpoptions = s:save_cpo
