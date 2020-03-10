@@ -2,9 +2,22 @@
 
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
+== Unreleased (dev)
+// {{{
+=== Added
+
+* Added code completion support for Socket REPL and pREPL.
+** https://github.com/borkdude/babashka[Babashka]
+** https://github.com/candid82/joker[Joker]
+** https://github.com/anmonteiro/lumo[Lumo]
+** https://github.com/planck-repl/planck[Planck]
+// }}}
+
 == 1.0.3 (2020-03-02)
+// {{{
 === Fixed
 * https://github.com/liquidz/vim-iced/issues/187[#187]: Fixed to preserve alternative window during scrolling stdout buffer.
+// }}}
 
 == 1.0.2 (2020-03-01)
 // {{{
