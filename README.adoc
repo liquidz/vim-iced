@@ -66,6 +66,14 @@ Provided by following external plugins.
 - https://github.com/liquidz/vim-iced-asyncomplete[vim-iced-asyncomplete] for https://github.com/prabirshrestha/asyncomplete.vim[asyncomplete.vim]
 Omni completion is provided by default.
 
+|:triangular_ruler:
+|Formatting
+|[%hardbreaks]
+Supports followings currently.
+- https://github.com/weavejester/cljfmt[cljfmt] via nREPL
+- https://github.com/greglook/cljstyle[cljstyle]
+- https://github.com/kkinnear/zprint[zprint]
+
 |:mag:
 |Reference
 |[%hardbreaks]
@@ -118,8 +126,8 @@ and https://github.com/liquidz/iced-nrepl[iced-nrepl].
 |===
 
 |:fire:
-|https://github.com/liquidz/vim-iced-kaocha[vim-iced-kaocha]
-|Provides some commands for testing with https://github.com/lambdaisland/kaocha[kaocha].
+| https://github.com/liquidz/vim-iced-kaocha[vim-iced-kaocha]
+| Provides some commands for testing with https://github.com/lambdaisland/kaocha[kaocha].
 
 
 .2+|:mag:
@@ -138,6 +146,10 @@ and https://github.com/liquidz/iced-nrepl[iced-nrepl].
 
 | https://github.com/nbardiuk/vim-iced-ncm2[vim-iced-ncm2]
 | Provides auto completion by https://github.com/ncm2/ncm2[ncm2].
+
+|:ant:
+| https://github.com/liquidz/vim-iced-fern-debugger[vim-iced-fern-debugger]
+| Provides tree views for debugging results and tapped values by https://github.com/lambdalisue/fern.vim[fern.vim].
 
 |===
 

@@ -12,6 +12,7 @@ let s:socket_repl = {
       \ 'load_current_file': function('iced#socket_repl#load_current_file'),
       \ 'document_open': function('iced#socket_repl#document#open'),
       \ 'document_popup_open': function('iced#socket_repl#document#popup_open'),
+      \ 'complete_candidates': function('iced#socket_repl#complete#candidates'),
       \ }
 
 function! iced#component#repl#socket_repl#start(_) abort
