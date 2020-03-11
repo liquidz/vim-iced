@@ -12,7 +12,7 @@ vim-iced targets {nrepl} mainly, but now will also support minimal operations on
 | All ranges to evaluation are supported.
 
 | <<completion>>
-| icon:times[role="red"]
+| icon:check[role="green"]
 |
 
 | <<reference>>
