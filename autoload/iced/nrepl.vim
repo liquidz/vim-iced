@@ -34,6 +34,7 @@ let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
 let g:iced#nrepl#path_translation = get(g:, 'iced#nrepl#path_translation', {})
 let g:iced#nrepl#init_cljs_ns = get(g:, 'iced#nrepl#init_cljs_ns', 'cljs.user')
+let g:iced#nrepl#enable_sideloader = get(g:, 'iced#nrepl#enable_sideloader', v:false)
 
 let s:id_counter = 1
 function! iced#nrepl#id() abort
@@ -366,6 +367,10 @@ function! s:warm_up() abort
     endif
   endif
   call iced#format#set_indentexpr()
+
+  if g:iced#nrepl#enable_sideloader
+    call iced#nrepl#sideloader#start()
+  endif
 
   " load util files
   let load_dir = printf('%s/clj/load_files', g:vim_iced_home)
