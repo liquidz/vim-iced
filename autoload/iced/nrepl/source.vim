@@ -90,9 +90,9 @@ function! s:__fetch_definition(...) abort
   let level = get(opt, 'level', 0)
 
   return iced#promise#call('iced#nrepl#op#refactor#extract_definition', [path, ns_name, sym, line, column])
-       \.then({resp -> (iced#util#has_status(resp, 'refactor-nrepl-error')
-       \               ? (level > 0) ? '' : s:__fetch_source(sym)
-       \               : iced#promise#call(iced#system#get('edn').decode, [get(resp, 'definition', {})]))
+       \.then({resp -> (type(resp) == v:t_dict && has_key(resp, 'definition'))
+       \               ? iced#promise#call(iced#system#get('edn').decode, [resp['definition']])
+       \               : (level > 0) ? '' : s:__fetch_source(sym)
        \               })
        \.then(funcref('s:__format_definition_codes', [level, result]))
 endfunction
