@@ -4,13 +4,16 @@ let s:ch = themis#helper('iced_channel')
 let s:popup = themis#helper('iced_popup')
 let s:buf = themis#helper('iced_buffer')
 let s:sys = themis#helper('iced_system_info')
+let s:io = themis#helper('iced_io')
 
 function! s:setup() abort
   let g:iced_enable_popup_document = 'every'
   call s:popup.mock()
   call s:popup.close(0)
   call s:sys.set_dummies()
-  call iced#system#reset_component('job')
+  call s:io.mock() " to install `jet` automatically
+  call iced#system#reset_component('job') " to use real `edn` component
+  call iced#system#reset_component('edn')
 endfunction
 
 function! s:teardown() abort
