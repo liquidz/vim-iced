@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file. This change
 === Fixed
 
 * https://github.com/liquidz/vim-iced/issues/191[#191]: Fixed `:IcedSourceShow` and `:IcedSourcePopupShow` to work correctly.
+* Fixed nrepl testing not to show duplicated results.
 // }}}
 
 == 1.1.0 (2020-03-12)
