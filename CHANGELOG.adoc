@@ -1,4 +1,3 @@
-= Change Log
 
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
@@ -8,6 +7,7 @@ All notable changes to this project will be documented in this file. This change
 
 * https://github.com/liquidz/vim-iced/issues/191[#191]: Fixed `:IcedSourceShow` and `:IcedSourcePopupShow` to work correctly.
 * Fixed nrepl testing not to show duplicated results.
+* Fixed to unplace signs on other buffers correctly. (for testing mainly)
 // }}}
 
 == 1.1.0 (2020-03-12)
