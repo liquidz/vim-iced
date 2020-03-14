@@ -23,7 +23,7 @@ function! s:helper.list_in_buffer(...) abort
   return filter(copy(self.signs), {_, v -> v['file'] ==# file})
 endfunction
 
-function! s:helper.all_list(...) abort
+function! s:helper.list_all(...) abort
   return copy(self.signs)
 endfunction
 

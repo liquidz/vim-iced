@@ -33,7 +33,7 @@ function! s:sign.list_in_buffer(...) abort
   endtry
 endfunction
 
-function! s:sign.all_list() abort
+function! s:sign.list_all() abort
   let res = []
   let buffers = filter(range(1, bufnr('$')), {_, i -> bufexists(i)})
   for nr in buffers
@@ -114,7 +114,7 @@ function! s:sign.unplace_by(opt) abort
   let file = get(a:opt, 'file', '')
 
   if empty(file)
-    let signs = self.all_list()
+    let signs = self.list_all()
   else
     let signs = self.list_in_buffer(file)
   endif
