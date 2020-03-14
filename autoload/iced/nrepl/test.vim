@@ -49,14 +49,6 @@ function! iced#nrepl#test#done(parsed_response) abort
               \ '']
       endif
     endif
-
-    if has_key(err, 'expected') && has_key(err, 'actual')
-          \ && !empty(err['expected']) && !empty(err['actual'])
-      let expected_and_actuals = expected_and_actuals + [
-          \ printf(';; %s', err['text']),
-          \ s:__dict_to_str(err, ['expected', 'actual', 'diffs']),
-          \ '']
-    endif
   endfor
 
   call iced#buffer#error#show(join(expected_and_actuals, "\n"))

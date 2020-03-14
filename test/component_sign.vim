@@ -6,42 +6,75 @@ call iced#system#set_component('sign', {
       \ 'requires': ['ex_cmd'],
       \ })
 let s:sign = iced#system#get('sign')
-let s:temp_file = tempname()
+let s:foo_file = tempname()
+let s:bar_file = tempname()
 
 function! s:setup() abort
-  call writefile(map(range(10), {_, v -> printf('line%d', v)}), s:temp_file)
+  call writefile(map(range(10), {_, v -> printf('line%d', v)}), s:foo_file)
+  call writefile(map(range(11, 20), {_, v -> printf('line%d', v)}), s:bar_file)
   call sign_unplace('*')
 
   call sign_define('iced_dummy1', {'text': 'd1'})
   call sign_define('iced_dummy2', {'text': 'd2'})
 
-  call s:sign.place('iced_dummy1', 3, s:temp_file)
-  call s:sign.place('iced_dummy1', 5, s:temp_file, 'group1')
-  call s:sign.place('iced_dummy2', 7, s:temp_file)
+  call s:sign.place('iced_dummy1', 3, s:foo_file)
+  call s:sign.place('iced_dummy1', 5, s:foo_file, 'group1')
+  call s:sign.place('iced_dummy2', 7, s:foo_file)
 
-  exec printf(':sp %s', s:temp_file)
+  call s:sign.place('iced_dummy1', 13, s:bar_file, 'groupN')
+  call s:sign.place('iced_dummy1', 15, s:bar_file, 'groupN')
+  call s:sign.place('iced_dummy2', 17, s:bar_file, 'groupN')
+
+  exec printf(':sp %s', s:foo_file)
 endfunction
 
 function! s:teardown() abort
   call sign_unplace('*')
   exec ':close'
 
-  if filereadable(s:temp_file)
-    call delete(s:temp_file)
+  if filereadable(s:foo_file)
+    call delete(s:foo_file)
   endif
 endfunction
 
 function! s:list_in_buffer() abort
-  let list = s:sign.list_in_buffer(s:temp_file)
+  let list = s:sign.list_in_buffer(s:foo_file)
   call sort(list, {a, b -> a.lnum > b.lnum})
   call map(list, {_, v -> iced#util#select_keys(v, ['lnum', 'id', 'name', 'group'])})
   return list
 endfunction
 
+function! s:suite.list_in_buffer_test() abort
+  call s:setup()
+
+  let list = s:sign.list_in_buffer(s:foo_file)
+  call sort(list, {a, b -> a.lnum > b.lnum})
+  call map(list, {_, v -> v['lnum']})
+  call s:assert.equals(list, [3, 5, 7])
+
+  let list = s:sign.list_in_buffer(s:bar_file)
+  call sort(list, {a, b -> a.lnum > b.lnum})
+  call map(list, {_, v -> v['lnum']})
+  call s:assert.equals(list, [13, 15, 17])
+
+  call s:teardown()
+endfunction
+
+function! s:suite.list_all_test() abort
+  call s:setup()
+
+  let list = s:sign.list_all()
+  call sort(list, {a, b -> a.lnum > b.lnum})
+  call map(list, {_, v -> v['lnum']})
+  call s:assert.equals(list, [3, 5, 7, 13, 15, 17])
+
+  call s:teardown()
+endfunction
+
 function! s:suite.place_and_list_in_buffer_test() abort
   call s:setup()
 
-  let actual_signs = sign_getplaced(s:temp_file, {'group': '*'})[0]['signs']
+  let actual_signs = sign_getplaced(s:foo_file, {'group': '*'})[0]['signs']
   call sort(actual_signs, {a, b -> a.lnum > b.lnum})
   call map(actual_signs, {_, v -> iced#util#select_keys(v, ['lnum', 'id', 'name', 'group'])})
 
@@ -51,7 +84,7 @@ function! s:suite.place_and_list_in_buffer_test() abort
       \ {'lnum': 7, 'id': 2, 'name': 'iced_dummy2', 'group': 'default'},
       \ ])
 
-  let list = s:sign.list_in_buffer(s:temp_file)
+  let list = s:sign.list_in_buffer(s:foo_file)
   call sort(list, {a, b -> a.lnum > b.lnum})
   call map(list, {_, v -> iced#util#select_keys(v, ['lnum', 'id', 'name', 'group'])})
   call s:assert.equals(list, actual_signs)
@@ -100,7 +133,7 @@ function! s:suite.unplace_by_default_group_test() abort
         \ {'lnum': 7, 'id': 2, 'name': 'iced_dummy2', 'group': 'default'},
         \ ])
 
-  call s:sign.unplace_by({'file': s:temp_file})
+  call s:sign.unplace_by({'file': s:foo_file})
   call s:assert.equals(s:list_in_buffer(), [
         \ {'lnum': 5, 'id': 1, 'name': 'iced_dummy1', 'group': 'group1'},
         \ ])
@@ -117,13 +150,13 @@ function! s:suite.unplace_by_specified_group_test() abort
         \ {'lnum': 7, 'id': 2, 'name': 'iced_dummy2', 'group': 'default'},
         \ ])
 
-  call s:sign.unplace_by({'file': s:temp_file, 'group': 'group1'})
+  call s:sign.unplace_by({'file': s:foo_file, 'group': 'group1'})
   call s:assert.equals(s:list_in_buffer(), [
         \ {'lnum': 3, 'id': 1, 'name': 'iced_dummy1', 'group': 'default'},
         \ {'lnum': 7, 'id': 2, 'name': 'iced_dummy2', 'group': 'default'},
         \ ])
 
-  call s:sign.unplace_by({'file': s:temp_file, 'group': '*'})
+  call s:sign.unplace_by({'file': s:foo_file, 'group': '*'})
   call s:assert.equals(s:list_in_buffer(), [])
 
   call s:teardown()
@@ -138,7 +171,7 @@ function! s:suite.unplace_by_id_test() abort
         \ {'lnum': 7, 'id': 2, 'name': 'iced_dummy2', 'group': 'default'},
         \ ])
 
-  call s:sign.unplace_by({'file': s:temp_file, 'group': '*', 'id': 2})
+  call s:sign.unplace_by({'file': s:foo_file, 'group': '*', 'id': 2})
   call s:assert.equals(s:list_in_buffer(), [
         \ {'lnum': 3, 'id': 1, 'name': 'iced_dummy1', 'group': 'default'},
         \ {'lnum': 5, 'id': 1, 'name': 'iced_dummy1', 'group': 'group1'},
@@ -156,7 +189,7 @@ function! s:suite.unplace_by_name_test() abort
         \ {'lnum': 7, 'id': 2, 'name': 'iced_dummy2', 'group': 'default'},
         \ ])
 
-  call s:sign.unplace_by({'file': s:temp_file, 'group': '*', 'name': 'iced_dummy1'})
+  call s:sign.unplace_by({'file': s:foo_file, 'group': '*', 'name': 'iced_dummy1'})
   call s:assert.equals(s:list_in_buffer(), [
         \ {'lnum': 7, 'id': 2, 'name': 'iced_dummy2', 'group': 'default'},
         \ ])
@@ -173,7 +206,7 @@ function! s:suite.refresh_test() abort
         \ {'lnum': 7, 'id': 2, 'name': 'iced_dummy2', 'group': 'default'},
         \ ])
 
-  call s:sign.refresh({'file': s:temp_file})
+  call s:sign.refresh({'file': s:foo_file})
   call s:assert.equals(s:list_in_buffer(), [
         \ {'lnum': 3, 'id': 3, 'name': 'iced_dummy1', 'group': 'default'},
         \ {'lnum': 5, 'id': 1, 'name': 'iced_dummy1', 'group': 'group1'},

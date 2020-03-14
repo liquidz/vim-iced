@@ -56,7 +56,7 @@ function! s:suite.done_test() abort
         \ 'summary': {'is_success': v:false, 'summary': 'dummy summary'},
         \ })
 
-   call s:assert.equals(s:sign.all_list(), [
+   call s:assert.equals(s:sign.list_all(), [
          \ {'lnum': 123, 'file': s:temp_foo, 'name': 'iced_error', 'group': 'foo_var'},
          \ {'lnum': 234, 'file': s:temp_bar, 'name': 'iced_error', 'group': 'bar_var'},
          \ ])
@@ -231,7 +231,7 @@ function! s:suite.under_cursor_with_test_var_failure_test() abort
        \  'filename': s:temp_foo,
        \  'var': 'baz-test'}
        \ ])
-  call s:assert.equals(s:sign.all_list(), [
+  call s:assert.equals(s:sign.list_all(), [
         \ {'lnum': 1, 'file': s:temp_foo, 'name': 'iced_error', 'group': 'baz-test'},
         \ ])
   call s:assert.equals(r.get_last_var_query(), {

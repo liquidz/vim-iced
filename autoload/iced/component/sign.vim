@@ -2,6 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:sign = {
+      \ 'global_prefix': 'iced_',
       \ 'default_group': 'default',
       \ 'ex_cmd': '',
       \ }
@@ -24,10 +25,21 @@ function! s:sign.list_in_buffer(...) abort
   let file = get(a:, 1, expand('%:p'))
   let list = sign_getplaced(file, {'group': '*'})
   try
-    return list[0]['signs']
+    let signs = list[0]['signs']
+    " Filter only to vim-iced signs
+    return filter(signs, {_, v -> stridx(v['name'], self.global_prefix) == 0})
   catch
     return []
   endtry
+endfunction
+
+function! s:sign.list_all() abort
+  let res = []
+  let buffers = filter(range(1, bufnr('$')), {_, i -> bufexists(i)})
+  for nr in buffers
+    call extend(res, self.list_in_buffer(nr))
+  endfor
+  return res
 endfunction
 
 function! s:sign.jump_to_next(...) abort
@@ -96,10 +108,16 @@ function! s:sign.jump_to_prev(...) abort
   endif
 endfunction
 
+
 function! s:sign.unplace_by(opt) abort
   let group = get(a:opt, 'group', self.default_group)
   let file = get(a:opt, 'file', '')
-  let signs = sign_getplaced(file, {'group': '*'})[0]['signs']
+
+  if empty(file)
+    let signs = self.list_all()
+  else
+    let signs = self.list_in_buffer(file)
+  endif
 
   if group !=# '*'
     call filter(signs, {_, v -> v['group'] ==# group})
