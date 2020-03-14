@@ -22,7 +22,7 @@ function! s:teardown() abort
   call s:sys.clear_dummies()
 endfunction
 
-function! s:extract_definition_relay(msg) abort
+function! s:__extract_definition_relay(msg) abort
   let op = a:msg['op']
   if op ==# 'eval'
     return {'status': ['done'], 'value': '#namespace[foo.core]'}
@@ -39,14 +39,86 @@ function! s:suite.popup_show_extract_definition_test() abort
   call s:setup()
   let g:iced_enable_enhanced_definition_extraction = v:true
   call s:ch.mock({
-        \ 'status_value': 'open',
-        \ 'relay': funcref('s:extract_definition_relay')})
+       \ 'status_value': 'open',
+       \ 'relay': funcref('s:__extract_definition_relay')})
   call s:buf.start_dummy(['d|ummy'])
 
   let p = iced#nrepl#source#popup_show('dummy')
   call iced#promise#wait(p)
   let texts = s:popup.get_last_texts()
   call s:assert.equals(texts, [';; file: /baz.clj:1 - 2', 'foo bar'])
+
+  unlet g:iced_enable_enhanced_definition_extraction
+  call s:buf.stop_dummy()
+  call s:teardown()
+endfunction
+
+function! s:__relay(info_base, msg) abort
+  let op = a:msg['op']
+  if op ==# 'eval'
+    return {'status': ['done'], 'value': '#namespace[foo.core]'}
+  elseif op ==# 'info'
+    let resp = copy(a:info_base)
+    let resp['status'] = ['done']
+    return resp
+  else
+    return {'status': ['done']}
+  endif
+endfunction
+
+function! s:suite.popup_show_test() abort
+  call s:setup()
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:__relay', [{
+        \ 'file': printf('%s/test/resources/source/foo.clj', expand('<sfile>:p:h')),
+        \ 'line': 5,
+        \ }])})
+  call iced#system#reset_component('ex_cmd')
+
+  let p = iced#nrepl#source#popup_show('dummy')
+  call iced#promise#wait(p)
+
+  let texts = s:popup.get_last_texts()
+  call s:assert.equals(texts, [
+        \ '(defn baz',
+        \ '  "baaaazzzz"',
+        \ '  []',
+        \ '  ::baz)'])
+
+  call s:teardown()
+endfunction
+
+function! s:__extract_definition_error_relay(info_base, msg) abort
+  let op = a:msg['op']
+  if op ==# 'eval'
+    return {'status': ['done'], 'value': '#namespace[foo.core]'}
+  elseif op ==# 'extract-definition'
+    return {'status': ['done'], 'error': 'error'}
+  elseif op ==# 'info'
+    let resp = copy(a:info_base)
+    let resp['status'] = ['done']
+    return resp
+  else
+    return {'status': ['done']}
+  endif
+endfunction
+
+function! s:suite.popup_show_extract_definition_error_test() abort
+  call s:setup()
+  let g:iced_enable_enhanced_definition_extraction = v:true
+  call s:ch.mock({
+      \ 'status_value': 'open',
+      \ 'relay': funcref('s:__extract_definition_error_relay', [{
+        \  'file': printf('%s/test/resources/source/foo.clj', expand('<sfile>:p:h')),
+       \   'line': 1,
+      \ }])})
+  call s:buf.start_dummy(['d|ummy'])
+
+  let p = iced#nrepl#source#popup_show('dummy')
+  call iced#promise#wait(p)
+  let texts = s:popup.get_last_texts()
+  call s:assert.equals(texts, [
+        \ '(defn bar []',
+        \ '  ::bar)'])
 
   unlet g:iced_enable_enhanced_definition_extraction
   call s:buf.stop_dummy()
