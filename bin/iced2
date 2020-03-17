@@ -1,0 +1,10 @@
+#!/bin/bash
+
+CWD=$(pwd)
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+PROJECT_DIR=$(cd $SCRIPT_DIR; cd ..; pwd)
+
+bb --classpath ${PROJECT_DIR}/clj/command -m iced.core \
+    "${CWD}" \
+    "${PROJECT_DIR}" \
+    $@
