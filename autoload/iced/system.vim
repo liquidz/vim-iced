@@ -14,6 +14,8 @@ let s:org_system_map = {
       \ 'io':           {'start': 'iced#component#io#start'},
       \ 'job':          {'start': (s:nvim ? 'iced#component#job#neovim#start'
       \                                   : 'iced#component#job#vim#start')},
+      \ 'job_out':      {'start': 'iced#component#job#out#start',
+      \                  'requires': ['job']},
       \ 'quickfix':     {'start': 'iced#component#quickfix#start'},
       \ 'selector':     {'start': 'iced#component#selector#start'},
       \ 'sign':         {'start': 'iced#component#sign#start',
