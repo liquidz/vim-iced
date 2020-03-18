@@ -127,30 +127,42 @@ function! s:symbol_to_alias(symbol) abort
   return ''
 endfunction
 
-function! s:add_ns(ns_name, symbol_alias) abort
+function! s:__add_missing_ns_add(ns_name, symbol_alias) abort
   call iced#nrepl#ns#util#add(a:ns_name, a:symbol_alias)
   call iced#message#info('ns_added', a:ns_name)
 endfunction
 
-function! s:add_all_ns_alias_candidates(candidates, symbol_alias) abort
-  if empty(a:symbol_alias) | return a:candidates | endif
-
-  let alias_dict = iced#nrepl#op#refactor#sync#all_ns_aliases()
-  let k = iced#nrepl#current_session_key()
-  if !has_key(alias_dict, k)
-    return []
+function! s:__add_missing_ns_select_candidates(symbol_alias, candidates) abort
+  let c = len(a:candidates)
+  if c == 1
+    call s:__add_missing_ns_add(a:candidates[0], a:symbol_alias)
+  elseif c > 1
+    call iced#selector({
+       \ 'candidates': a:candidates,
+       \ 'accept': {_, ns_name -> s:__add_missing_ns_add(ns_name, a:symbol_alias)}
+       \ })
+  else
+    return iced#message#echom('no_candidates')
   endif
-
-  let aliases = alias_dict[k]
-  let names = []
-  for k in filter(keys(aliases), {_, v -> stridx(v, a:symbol_alias) == 0})
-    let names = names + aliases[k]
-  endfor
-  let names = filter(names, {_, v -> !s:L.has(a:candidates, v)})
-  return a:candidates + names
 endfunction
 
-function! s:resolve_missing(symbol, resp) abort
+function! s:__add_missing_ns_ns_alias_candidates(symbol_alias, ns_candidates, alias_dict) abort
+  let candidates = copy(a:ns_candidates)
+  let k = iced#nrepl#current_session_key()
+  if has_key(a:alias_dict, k)
+    let aliases = a:alias_dict[k]
+    let names = []
+    for k in filter(keys(aliases), {_, v -> stridx(v, a:symbol_alias) == 0})
+      let names = names + aliases[k]
+    endfor
+    let names = filter(names, {_, v -> !s:L.has(candidates, v)})
+    let candidates += names
+  endif
+
+  return s:__add_missing_ns_select_candidates(a:symbol_alias, candidates)
+endfunction
+
+function! s:__add_missing_ns_resolve_missing(symbol, resp) abort
   if !has_key(a:resp, 'candidates') | return | endif
   let symbol_alias = s:symbol_to_alias(a:symbol)
 
@@ -169,64 +181,63 @@ function! s:resolve_missing(symbol, resp) abort
     let ns_candidates = map(ns_candidates, {_, v -> v[':name']})
   endif
 
-  let ns_candidates = s:add_all_ns_alias_candidates(ns_candidates, symbol_alias)
-
-  let c = len(ns_candidates)
-  if c == 1
-    call s:add_ns(ns_candidates[0], symbol_alias)
-  elseif c > 1
-    call iced#selector({
-        \ 'candidates': ns_candidates,
-        \ 'accept': {_, ns_name -> s:add_ns(ns_name, symbol_alias)}
-        \ })
+  if empty(symbol_alias)
+    return s:__add_missing_ns_select_candidates(symbol_alias, ns_candidates)
   else
-    return iced#message#echom('no_candidates')
+    return iced#nrepl#op#refactor#all_ns_aliases({resp ->
+          \ s:__add_missing_ns_ns_alias_candidates(symbol_alias, ns_candidates, resp)})
   endif
 endfunction
 
 function! iced#nrepl#refactor#add_missing_ns(symbol) abort
   let symbol = empty(a:symbol) ? iced#nrepl#var#cword() : a:symbol
-  call iced#nrepl#op#refactor#add_missing(symbol, {resp -> s:resolve_missing(symbol, resp)})
+  call iced#nrepl#op#refactor#add_missing(symbol, {resp -> s:__add_missing_ns_resolve_missing(symbol, resp)})
 endfunction " }}}
 
 " iced#nrepl#refactor#add_ns {{{
-function! s:add(ns_name) abort
-  let favorites = get(g:iced#ns#favorites, iced#nrepl#current_session_key(), {})
-  if has_key(favorites, a:ns_name)
-    let ns_alias = favorites[a:ns_name]
-  else
-    let candidate = iced#nrepl#ns#find_existing_alias(a:ns_name)
-    if empty(candidate)
-      let candidate = ''
-    endif
-    let ns_alias = trim(iced#system#get('io').input('Alias: ', candidate))
-  endif
-
-  call iced#nrepl#ns#util#add(a:ns_name, ns_alias)
-  return (empty(ns_alias)
+function! s:__add_ns_add(ns_name, ns_alias) abort
+  call iced#nrepl#ns#util#add(a:ns_name, a:ns_alias)
+  return (empty(a:ns_alias)
         \ ? iced#message#info('ns_added', a:ns_name)
-        \ : iced#message#info('ns_added_as', a:ns_name, ns_alias)
+        \ : iced#message#info('ns_added_as', a:ns_name, a:ns_alias)
         \ )
 endfunction
 
-function! s:ns_list(resp) abort
+function! s:__add_ns_input_ns_alias(candidate) abort
+  let alias = empty(a:candidate) ? '' : a:candidate
+  return trim(iced#system#get('io').input('Alias: ', alias))
+endfunction
+
+function! s:__add_ns_ns_alias(ns_name) abort
+  let favorites = get(g:iced#ns#favorites, iced#nrepl#current_session_key(), {})
+  if has_key(favorites, a:ns_name)
+    return s:__add_ns_add(a:ns_name, favorites[a:ns_name])
+  else
+    call iced#message#info('fetching_ns_aliases')
+    " NOTE: Use `future` because candidate is not displayed correctly in `input` for Vim
+    return iced#nrepl#ns#find_existing_alias(a:ns_name, {resp ->
+          \ iced#system#get('future').do({-> s:__add_ns_add(a:ns_name, s:__add_ns_input_ns_alias(resp))})
+          \ })
+  endif
+endfunction
+
+function! s:__add_ns_ns_list(resp) abort
   if !has_key(a:resp, 'ns-list') | return iced#message#error('ns_list_error') | endif
   let namespaces = get(a:resp, 'ns-list', [])
   let favorites = get(g:iced#ns#favorites, iced#nrepl#current_session_key(), {})
   let namespaces = s:L.uniq(s:L.concat([namespaces, keys(favorites)]))
 
-  " NOTE: Use `future` because candidate is not displayed correctly in `input` for Vim
   call iced#selector({
         \ 'candidates': namespaces,
-        \ 'accept': {_, ns_name -> iced#system#get('future').do({-> s:add(ns_name)})}
+        \ 'accept': {_, ns_name -> s:__add_ns_ns_alias(ns_name)},
         \ })
 endfunction
 
 function! iced#nrepl#refactor#add_ns(ns_name) abort
   if empty(a:ns_name)
-    call iced#nrepl#op#cider#ns_list(funcref('s:ns_list'))
+    call iced#nrepl#op#cider#ns_list(funcref('s:__add_ns_ns_list'))
   else
-    call s:add(a:ns_name)
+    call s:__add_ns_ns_alias(a:ns_name)
   endif
 endfunction " }}}
 
