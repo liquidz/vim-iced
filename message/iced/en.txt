@@ -28,6 +28,7 @@
   'failed_to_refresh':         'Failed to refresh %s: %s.',
   'fetching':                  'Fetching...',
   'fetching_ns_aliases':       'Fetching existing ns aliases...',
+  'fetching_pseudo_ns_path':   'Fetching pseudo ns path...',
   'finding_code_error':        'Failed to find code.',
   'finding_var_references':    'Finding var references...',
   'finish_to_grep':            'Finish to grep: %s',
