@@ -96,17 +96,18 @@ endfunction
 
 function! iced#socket_repl#connect(port, ...) abort
   let opt = get(a:, 1, {})
+  let verbose = get(opt, 'verbose', v:true)
 
   if iced#socket_repl#is_connected()
-    call iced#message#info('already_connected')
+    if verbose
+      call iced#message#info('already_connected')
+    endif
     return v:true
-  endif
+  else
+    " NOTE: Initialize buffers here to avoid firing `bufenter` autocmd
+    "       after connection established
+    silent call iced#buffer#stdout#init()
 
-  " NOTE: Initialize buffers here to avoid firing `bufenter` autocmd
-  "       after connection established
-  silent call iced#buffer#stdout#init()
-
-  if !iced#socket_repl#is_connected()
     " to detect repl type
     let s:callback = funcref('s:connecting_callback')
 
@@ -125,7 +126,9 @@ function! iced#socket_repl#connect(port, ...) abort
 
     if !iced#socket_repl#is_connected()
       let s:socket_repl['channel'] = v:false
-      call iced#message#error('connect_error')
+      if verbose
+        call iced#message#error('connect_error')
+      endif
       return v:false
     endif
   endif
@@ -133,7 +136,9 @@ function! iced#socket_repl#connect(port, ...) abort
   " NOTE: socket-repl connection in vim-iced does not support `bufenter` autocmd currently.
   " call iced#nrepl#auto#enable_bufenter(v:true)
 
-  call iced#message#info('connected')
+  if verbose
+    call iced#message#info('connected')
+  endif
   call iced#hook#run('connected', {})
   return v:true
 endfunction
