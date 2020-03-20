@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+== 1.2.0 (2020-03-21)
 // {{{
 === Added
 * Added a support https://github.com/borkdude/babashka[Babashka] to launching by `IcedInstantConnect`.
