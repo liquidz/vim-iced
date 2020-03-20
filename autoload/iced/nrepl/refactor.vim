@@ -213,7 +213,7 @@ function! s:__add_ns_ns_alias(ns_name) abort
   if has_key(favorites, a:ns_name)
     return s:__add_ns_add(a:ns_name, favorites[a:ns_name])
   else
-    call iced#message#info('fetching_ns_aliases')
+    call iced#message#echom('fetching_ns_aliases')
     " NOTE: Use `future` because candidate is not displayed correctly in `input` for Vim
     return iced#nrepl#ns#find_existing_alias(a:ns_name, {resp ->
           \ iced#system#get('future').do({-> s:__add_ns_add(a:ns_name, s:__add_ns_input_ns_alias(resp))})
