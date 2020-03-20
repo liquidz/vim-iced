@@ -9,7 +9,7 @@ function! s:helper.mock(...) abort
   if type(repl) != v:t_dict
     let repl = {}
   endif
-  let repl['connect'] = {_ -> ''}
+  let repl['connect'] = {_ -> v:true}
   call iced#system#set_component('test_repl', {'start': {_ -> repl}})
   call iced#repl#connect('test_repl', '')
 endfunction
