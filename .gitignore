@@ -3,6 +3,7 @@ doc/tags
 bin/jet
 bin/cljstyle
 bin/zprint-clj
+bin/bb
 .vim-themis
 .vim-sexp
 .vimdoc

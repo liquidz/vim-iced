@@ -3,7 +3,7 @@ set cpoptions&vim
 
 let s:default_palette = [
       \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt', 'InterruptAll',
-      \ 'InstantConnect', 'JackIn',
+      \ 'InstantConnect', 'InstantConnect babashka', 'JackIn',
       \ 'StartCljsRepl figwheel-sidecar', 'StartCljsRepl graaljs', 'StartCljsRepl nashorn',
       \ 'QuitCljsRepl', 'CycleSession',
       \ 'EvalNs', 'UndefAllInNs',

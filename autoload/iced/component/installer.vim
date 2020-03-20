@@ -7,16 +7,19 @@ let s:installer = {
       \ 'root_dir': expand('<sfile>:h:h:h:h'),
       \ 'install_dir_name': 'bin',
       \ 'installation_job': '',
+      \ 'fullname': {'bb': 'babashka',
+      \              'zprint-clj': 'zprint',
+      \              },
       \ }
 
-function! s:installed(name, callback, _) abort dict
+function! s:installed(fullname, callback, _) abort dict
   let info = self.job.info(self.installation_job)
 
   let ret = (info['exitval'] == 0) ? v:true : v:false
   if ret
-    call iced#message#info('finish_to_install', a:name)
+    call iced#message#info('finish_to_install', a:fullname)
   else
-    call iced#message#error('failed_to_install', a:name)
+    call iced#message#error('failed_to_install', a:fullname)
   endif
 
   return a:callback(ret)
@@ -24,6 +27,7 @@ endfunction
 
 function! s:installer.install(name, ...) abort
   let Callback = get(a:, 1, {v -> v})
+  let fullname = get(self.fullname, a:name, a:name)
 
   if executable(a:name)
     return Callback(v:true)
@@ -32,8 +36,8 @@ function! s:installer.install(name, ...) abort
   let installer = printf('%s/installer/%s.sh', self.root_dir, a:name)
   let install_dir = printf('%s/%s', self.root_dir, self.install_dir_name)
 
-  call iced#message#info('required_to_install', a:name)
-  let res = self.io.input(iced#message#get('confirm_installation', a:name, install_dir))
+  call iced#message#info('required_to_install', fullname)
+  let res = self.io.input(iced#message#get('confirm_installation', fullname, install_dir))
   " for line break
   echom ' '
   if res !=# '' && res !=# 'y' && res !=# 'Y'
@@ -41,14 +45,14 @@ function! s:installer.install(name, ...) abort
   endif
 
   if !filereadable(installer)
-    call iced#message#error('no_installer', a:name)
+    call iced#message#error('no_installer', fullname)
     return Callback(v:false)
   endif
 
-  call iced#message#info('start_to_install', a:name)
+  call iced#message#info('start_to_install', fullname)
   let self.installation_job = self.job.start(installer, {
         \ 'cwd': install_dir,
-        \ 'close_cb': funcref('s:installed', [a:name, Callback], self)
+        \ 'close_cb': funcref('s:installed', [fullname, Callback], self)
         \ })
 endfunction
 

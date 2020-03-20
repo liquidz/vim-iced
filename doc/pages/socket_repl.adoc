@@ -69,11 +69,11 @@ You can try socket REPL connection as follows.
 :IcedConnectSocketRepl 5555
 ----
 
-Another way, you can launch socket REPL in your vim/neovim as a job.
+Another way, you can launch socket REPL with random empty port internally.
 
 [source,vim]
 ----
-:call iced#job_start('bb --socket-repl 5555') | sleep 100m | IcedConnectSocketRepl 5555
+:IcedInstantConnect babashka
 ----
 
 === Connecting pREPL

@@ -225,9 +225,8 @@ function! iced#nrepl#ns#alias_dict(ns_name) abort
   endtry
 endfunction
 
-function! iced#nrepl#ns#find_existing_alias(ns_name) abort
-  let aliases = iced#nrepl#op#refactor#sync#all_ns_aliases()
-  let aliases = get(aliases, iced#nrepl#current_session_key(), {})
+function! s:__find_existing_alias(ns_name, aliases) abort
+  let aliases = get(a:aliases, iced#nrepl#current_session_key(), {})
 
   for k in keys(aliases)
     if k ==# 'sut' | continue | endif
@@ -238,6 +237,11 @@ function! iced#nrepl#ns#find_existing_alias(ns_name) abort
     endfor
   endfor
   return ''
+endfunction
+
+function! iced#nrepl#ns#find_existing_alias(ns_name, callback) abort
+  return iced#nrepl#op#refactor#all_ns_aliases({resp ->
+        \ a:callback(s:__find_existing_alias(a:ns_name, resp))})
 endfunction
 
 let &cpoptions = s:save_cpo

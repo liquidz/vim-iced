@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 10101
+let g:vim_iced_version = 10200
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -54,7 +54,9 @@ command!          IcedDisconnect            call iced#repl#execute('disconnect')
 command!          IcedReconnect             call iced#nrepl#reconnect()
 command!          IcedInterrupt             call iced#nrepl#interrupt()
 command!          IcedInterruptAll          call iced#nrepl#interrupt_all()
-command!          IcedInstantConnect        call iced#nrepl#connect#instant()
+command! -nargs=? -complete=custom,iced#repl#instant_connect_complete
+      \ IcedInstantConnect call iced#repl#instant_connect(<q-args>) "iced#nrepl#connect#instant()
+
 command!          IcedJackIn                call iced#nrepl#connect#jack_in()
 
 command! -nargs=? IcedCljsRepl              call iced#nrepl#cljs#start_repl(<q-args>)

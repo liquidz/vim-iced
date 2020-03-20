@@ -60,5 +60,49 @@ function! iced#nrepl#op#refactor#extract_definition(filepath, ns_name, symbol, l
         \ })
 endfunction
 
+function! s:parse_aliases_value(v) abort
+  let result = {}
+  if empty(a:v) | return result | endif
+  let v = trim(a:v)
+  for pair in split(trim(a:v), ',')
+    let [alias, name] = split(pair, '(')
+    let result[trim(alias)] = split(substitute(name, '[()]', '', 'g'), ' \+')
+  endfor
+  return result
+endfunction
+
+function! s:ensure_tuple(ls) abort
+  let l = len(a:ls)
+  if l == 2
+    return a:ls
+  elseif l > 0
+    return [a:ls[0], '']
+  endif
+  return ['', '']
+endfunction
+
+function! s:__all_ns_aliases(resp) abort
+  let result = {}
+  let aliases = a:resp['namespace-aliases']
+  let aliases = strpart(aliases, 1, len(aliases)-3)
+  for grp in split(aliases, '}')
+    let [k, v] = s:ensure_tuple(split(grp, '{'))
+    let k = strpart(trim(k), 1)
+    let result[k] = s:parse_aliases_value(v)
+  endfor
+  return result
+endfunction
+
+function! iced#nrepl#op#refactor#all_ns_aliases(callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  call iced#nrepl#send({
+        \ 'op': 'namespace-aliases',
+        \ 'id': iced#nrepl#id(),
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': {resp -> a:callback(s:__all_ns_aliases(resp))},
+        \ })
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

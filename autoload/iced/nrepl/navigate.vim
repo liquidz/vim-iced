@@ -22,13 +22,12 @@ function! s:apply_mode_to_file(mode, file) abort
 endfunction
 
 " iced#nrepl#navigate#open_ns {{{
-function! iced#nrepl#navigate#open_ns(mode, ns_name) abort
-  let resp = iced#promise#sync('iced#nrepl#op#iced#pseudo_ns_path', [a:ns_name])
-  if !has_key(resp, 'path') || empty(resp['path'])
+function! s:__open_ns(mode, resp) abort
+  if !has_key(a:resp, 'path') || empty(a:resp['path'])
     return iced#message#error('not_found')
   endif
 
-  let path = resp['path']
+  let path = a:resp['path']
   if !filereadable(path)
     let prompt = printf('%s: ', iced#message#get('confirm_opening_file'))
     let path = iced#system#get('io').input(prompt, path)
@@ -37,6 +36,14 @@ function! iced#nrepl#navigate#open_ns(mode, ns_name) abort
   if !empty(path)
     call s:apply_mode_to_file(a:mode, path)
   endif
+endfunction
+
+function! iced#nrepl#navigate#open_ns(mode, ns_name) abort
+  call iced#message#echom('fetching_pseudo_ns_path')
+  " NOTE: Use `future` because candidate is not displayed correctly in `input` for Vim
+  return iced#nrepl#op#iced#pseudo_ns_path(a:ns_name, {resp ->
+        \ iced#system#get('future').do({-> s:__open_ns(a:mode, resp)})
+        \ })
 endfunction " }}}
 
 " s:open_var {{{
@@ -105,6 +112,7 @@ function! s:ns_list(resp) abort
 endfunction
 
 function! iced#nrepl#navigate#related_ns() abort
+  call iced#message#info('fetching')
   call iced#nrepl#op#iced#project_ns_list(funcref('s:ns_list'))
 endfunction " }}}
 
