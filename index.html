@@ -3359,11 +3359,11 @@ This connection is based on socket repl connection.</p></td>
 </div>
 </div>
 <div class="paragraph">
-<p>Another way, you can launch socket REPL in your vim/neovim as a job.</p>
+<p>Another way, you can launch socket REPL with random empty port internally.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="vim"><span class="p">:</span><span class="k">call</span> iced#job_start<span class="p">(</span><span class="s1">'bb --socket-repl 5555'</span><span class="p">)</span> <span class="p">|</span> sleep <span class="m">100</span><span class="k">m</span> <span class="p">|</span> IcedConnectSocketRepl <span class="m">5555</span></code></pre>
+<pre class="rouge highlight"><code data-lang="vim"><span class="p">:</span>IcedInstantConnect babashka</code></pre>
 </div>
 </div>
 </div>
@@ -3760,7 +3760,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-03-14 21:01:22 UTC
+Last updated 2020-03-20 23:10:36 UTC
 </div>
 </div>
 <style>
