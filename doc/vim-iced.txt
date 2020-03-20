@@ -16,7 +16,7 @@ CONTENTS                                                    *vim-iced-contents*
       shadow-cljs              |vim-iced-manual-shadow-cljs|
     Boost by Python            |vim-iced-install-python|
     Docker                     |vim-iced-install-docker|
-  nREPL Connection             |vim-iced-nrepl-connection|
+  REPL Connection              |vim-iced-repl-connection|
   ClojureScript                |vim-iced-clojurescript|
     Piggieback                 |vim-iced-piggieback|
     GraalJS                    |vim-iced-graaljs|
@@ -219,23 +219,31 @@ DOCKER                                                *vim-iced-install-docker*
           \ }
 <
 ==============================================================================
-NREPL CONNECTION                                    *vim-iced-nrepl-connection*
+REPL CONNECTION                                      *vim-iced-repl-connection*
 
   REPL needs to be activated beforehand.
-  - `iced repl` to start REPL
-    `iced` command must be installed.
-    See |vim-iced-install-command|.
+  - nREPL
+    - `iced repl` to start REPL
+      `iced` command must be installed.
+      See |vim-iced-install-command|.
+  - pREPL
+    - `clj -J-Dclojure.server.repl="{:port 5555 :accept clojure.core.server/io-prepl}"`
+  - Socket REPL
+    - e.g. Babashka
+      - `bb --socket-repl 5555`
 
   If you don't want to launch REPL externally,
   vim-iced provides following ways to lancun REPL internally.
   - |:IcedJackIn| to launch `iced repl` internally
-  - |:IcedInstantConnect| to launch `iced repl --instant` internally
+  - |:IcedInstantConnect| to launch a REPL internally.
 
   |:IcedConnect| to connect nREPL.
+  |:IcedConnectPrepl| to connect pREPL.
+  |:IcedConnectSocketRepl| to connect Socket REPL.
   If not connected at the time of evaluation,
   vim-iced will connect automatically using '.nrepl-port' file.
 
-  |:IcedDisconnect| to disconnect nREPL.
+  |:IcedDisconnect| to disconnect from REPL.
 
 ==============================================================================
 CLOJURE SCRIPT                                         *vim-iced-clojurescript*
@@ -405,7 +413,7 @@ FLOATING WINDOW                            *vim-iced-debugging-floating-window*
   and floating window in Neovim.
   This feature is very experimental, but works.
 
-  If your environment meets followings, 
+  If your environment meets followings,
   debugging information will be shown in floating window automatically.
   - Vim 8.1 patch 1-1408 or later
   - Neovim 0.4.0 or later
@@ -531,9 +539,16 @@ COMMANDS                                                    *vim-iced-commands*
   Key is mapped to |<Plug>(iced_jack_in)|.
 
                                                           *:IcedInstantConnect*
-:IcedInstantConnect
+:IcedInstantConnect [{target}]
   Start instant REPL and connect to it.
   REPL is launched as job internally.
+
+  Supports follows {target}:
+  - `nrepl` or empty
+    Launch `iced repl --instant`
+  - `babashka`
+    Launch babashka REPL
+
   Key is mapped to |<Plug>(iced_instant_connect)|.
 
                                                                 *:IcedCljsRepl*
@@ -610,7 +625,7 @@ COMMANDS                                                    *vim-iced-commands*
   Undefine {symbol} in current namespace.
   If {symbol} is not passed, symbol under cursor is used.
   Key is mapped to |<Plug>(iced_undef)|.
-  
+
                                                             *:IcedUndefAllInNs*
 :IcedUndefAllInNs [{ns}]
   Undefine all symbols in {ns}.
@@ -1129,7 +1144,7 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                            *<Plug>(iced_undef)*
 <Plug>(iced_undef)
   Same as |:IcedUndef|.
-  
+
                                                  *<Plug>(iced_undef_all_in_ns)*
 <Plug>(iced_undef_all_in_ns)
   Same as |:IcedUndefAllInNs|.
@@ -1264,7 +1279,7 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                        *<Plug>(iced_spec_form)*
 <Plug>(iced_spec_form)
   Same as |:IcedSpecForm|.
-  
+
                                                     *<Plug>(iced_spec_example)*
 <Plug>(iced_spec_example)
   Same as |:IcedSpecExample|.
@@ -1508,7 +1523,7 @@ g:iced_enable_enhanced_definition_extraction
 
                                         *g:iced#nrepl#source#finding_max_depth*
 g:iced#nrepl#source#finding_max_depth
-  Max depth for finding source. 
+  Max depth for finding source.
   This value is used on enhanced source extraction.
   Default value is `3`.
   See also |g:iced_enable_enhanced_definition_extraction|.
@@ -1715,7 +1730,7 @@ CONNECTED                                                 *hook_kind_connected*
 
   Hooked when vim-iced is connected to nREPL.
   No parameters are passed to reporter.
-  
+
 DISCONNECTED                                           *hook_kind_disconnected*
 
   Hooked when vim-iced is disconnected from nREPL.

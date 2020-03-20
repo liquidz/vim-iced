@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 // {{{
+=== Added
+* Added a support https://github.com/borkdude/babashka[Babashka] to launching by `IcedInstantConnect`.
+
 === Fixed
 * Fixed `IcedAddMissing` and `IcedAddNs` commands not to time out.
 * Fixed `IcedCycleSrcAndTest` command not to time out.
