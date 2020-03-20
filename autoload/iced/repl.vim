@@ -19,9 +19,29 @@ function! iced#repl#connect(target, ...) abort
     return iced#message#error('connect_error')
   endif
 
-  call call(s:repl.connect, a:000)
+  let result = call(s:repl.connect, a:000)
+  if !result
+    let s:repl = {}
+  endif
 
   return s:repl
+endfunction
+
+" c.f. :h :command-completion-custom
+function! iced#repl#instant_connect_complete(arg_lead, cmd_line, cursor_pos) abort
+  let res = ['nrepl']
+  call extend(res, iced#socket_repl#connect#supported_programs())
+  return join(res, "\n")
+endfunction
+
+function! iced#repl#instant_connect(target) abort
+  if a:target ==# '' || a:target ==# 'nrepl'
+    call iced#nrepl#connect#instant()
+  elseif a:target ==# 'prepl'
+    call iced#prepl#connect#instant()
+  else
+    call iced#socket_repl#connect#instant(a:target)
+  endif
 endfunction
 
 function! iced#repl#get(feature_name) abort
