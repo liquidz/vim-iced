@@ -113,11 +113,18 @@ function! iced#socket_repl#connect(port, ...) abort
 
     let address = printf('%s:%d', g:iced#socket_repl#host, a:port)
     let s:socket_repl['port'] = a:port
-    let s:socket_repl['channel'] = iced#system#get('channel').open(address, {
-          \ 'mode': 'raw',
-          \ 'callback': funcref('s:dispatcher'),
-          \ 'drop': 'never',
-          \ })
+    try
+      let s:socket_repl['channel'] = iced#system#get('channel').open(address, {
+            \ 'mode': 'raw',
+            \ 'callback': funcref('s:dispatcher'),
+            \ 'drop': 'never',
+            \ })
+    catch
+      if verbose
+        call iced#message#error('connect_error')
+      endif
+      return v:false
+    endtry
 
     if has_key(opt, 'prompt') && !empty(opt['prompt'])
       let s:socket_repl['prompt'] = opt['prompt']
