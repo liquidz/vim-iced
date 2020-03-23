@@ -2,16 +2,17 @@
   (:require
    [clojure.edn :as edn]
    [clojure.java.io :as io]
+   [clojure.set :as set]
    [clojure.string :as str]
    [clojure.tools.cli :as cli]
    [clojure.walk :as walk]))
 
 (def cli-options
   [
-   [nil "--with-kaocha"]
-   [nil "--with-cljs"]
+   [nil "--with-kaocha" :id :kaocha]
+   [nil "--with-cljs" :id :cljs]
    [nil "--without-cljs"]
-   [nil "--dependency"]
+   [nil "--dependency" :default [] :update-fn conj]
    [nil "--middleware"]
    [nil "--force-boot"]
    [nil "--force-clojure-cli"]
@@ -33,35 +34,45 @@
         "deps.edn" [:clojure-cli dir]
         (recur (.getParentFile dir))))))
 
-(defn read-string [s]
-  (-> (str "[ " s " ]")
-      (str/replace "~" "")
-      (str/replace "#\"" "\"")
-      (str/replace "#=(" "(")
-      edn/read-string))
 
+(comment
+  (let [deps (deps-edn +iced-root+)
+        base-deps (:deps deps)]
 
+    base-deps
+    )
+  )
 
-(defn -repl [{:keys [iced-root cwd options arguments]}]
+(defn- fetch-extra-configs
+  [config options]
+  (for [[op _] options
+        :when (contains? (:aliases config) op)]
+    (get-in config [:aliases op])))
+
+(defn -repl
+  [{:keys [iced-root cwd options arguments]}]
   (let [config (deps-edn iced-root)
         [project-type project-dir-file] (if (:instant options)
                                           :clojure-cli
-                                          (detect-project-type cwd))]
+                                          (detect-project-type cwd))
+        extra-configs (fetch-extra-configs config options)
+        ; options (set/rename-keys options {:with-kaocha :kaocha
+        ;                                   :with-cljs :cljs})
+        ]
+    (println project-type
+             options
+             (extract-configs config options))
     ; (case project-type
     ;   :leiningen (str "LEIN" project-dir-file)
     ;   :boot (str "BOOT" project-dir-file)
     ;   :clojure-cli (str "CLI" project-dir-file)
     ;   (throw (ex-info "Failed to detect clojure project" {:cwd cwd}))
     ;   )
-    )
-  )
+    ))
 
 (defn -main [cwd iced-root & args]
   (let [{:keys [options arguments summary errors]} (cli/parse-opts args cli-options)
         [subcommand & arguments] arguments]
-    (println options)
-    (println "----")
-    (println arguments)
     (case subcommand
       "repl" (-repl {:iced-root iced-root :cwd cwd :options options :arguments arguments})
       "help" (println "FIXME help")
@@ -70,5 +81,8 @@
 (comment
   (def +merr-dir+ "/Users/iizuka/src/github.com/liquidz/merr")
   (def +iced-root+ "/Users/iizuka/src/github.com/liquidz/vim-iced")
-    (-main +merr-dir+ +iced-root+ "repl")
+    (-main +merr-dir+ +iced-root+ "repl" "--with-kaocha"
+           "--dependency foo:0.4.3"
+           "--dependency bar:0.4.3"
+           )
   )

@@ -1,7 +1,7 @@
-(ns iced.core-test
+(ns iced.leiningen-test
   (:require
    [clojure.test :as t]
-   [iced.core :as sut]))
+   [iced.leiningen :as sut]))
 
 (t/deftest lein-using-cljs?-test
   (t/is (true? (sut/lein-using-cljs?
