@@ -6,6 +6,17 @@ let s:default_source_root = executable('ghq')
      \ : ''
 let g:iced#source_root = get(g:, 'iced#source_root', s:default_source_root)
 
+let s:enabled_lookup = v:true
+
+function! iced#nrepl#sideloader#toggle_enablement_of_lookup() abort
+  let s:enabled_lookup = !s:enabled_lookup
+
+  if s:enabled_lookup
+    return iced#message#info('enable_sideloader_lookup')
+  endif
+  return iced#message#info('disable_sideloader_lookup')
+endfunction
+
 function! iced#nrepl#sideloader#start() abort
   if !iced#nrepl#is_connected() | return | endif
   if !executable('base64')
@@ -54,6 +65,11 @@ function! iced#nrepl#sideloader#lookup(resp) abort
   let name = a:resp['name']
   let session = a:resp['session']
   let type = a:resp['type']
+
+  if !s:enabled_lookup
+    " Empty content means that there are no corresponding codes.
+    return s:provide(session, type, name, '')
+  endif
 
   call iced#system#get('find').file(g:iced#source_root, name, {file ->
         \ s:lookup(file, {content ->
