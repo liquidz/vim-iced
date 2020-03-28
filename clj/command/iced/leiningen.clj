@@ -11,7 +11,7 @@
       (str/replace "#=(" "(")
       edn/read-string))
 
-(defn lein-using-cljs? [project-clj-content]
+(defn using-cljs? [project-clj-content]
   (let [skip-exclusions? (atom false)
         result (atom false)]
     (->> project-clj-content
@@ -21,48 +21,36 @@
          (walk/postwalk
            (fn [x]
              (cond
-               (and @skip-exclusions? (sequential? x) (apply = ::skip x)) (reset! skip-exclusions? false)
-               @skip-exclusions? ::skip
-               (= :exclusions x) (reset! skip-exclusions? true)
-               (= 'org.clojure/clojurescript x) (reset! result true)
+               (and @skip-exclusions? (sequential? x) (apply = ::skip x))
+               (reset! skip-exclusions? false)
+
+               @skip-exclusions?
+               ::skip
+
+               (= :exclusions x)
+               (reset! skip-exclusions? true)
+
+               (= 'org.clojure/clojurescript x)
+               (reset! result true)
+
                :else x))))
     @result))
 
-; function leiningen_deps_args() {
-;     local deps=($@)
-;
-;     for s in "${deps[@]}" ; do
-;         key="${s%%:*}"
-;         value="${s##*:}"
-;         echo -n "update-in :dependencies conj '[${key} \"${value}\"]' -- "
-;     done
-; }
-
-(defn gen-deps-args
+(defn dependencies->args
   [deps]
-  (mapcat
-   (fn [[k {:mvn/keys [version]}]]
-     ["update-in" ":dependencies" "conj"
-      (format "'[%s \"%s\"]'" k version)
-      "--"])
-   dpes))
+  (map (fn [[k {:mvn/keys [version]}]]
+         ["update-in" ":dependencies" "conj"
+          (format "'[%s \"%s\"]'" k version)])
+       deps))
 
-(comment
-  (let [deps (:deps +deps+)]
-    ; (->> (for [[k {:mvn/keys [version]}] deps]
-    ;    (format "update-in :dependencies conj '[%s \"%s\"]' --"
-    ;            k version))
-    ;      (str/join " "))
+(defn middlewares->args
+  [mdws]
+  (map (fn [mdw]
+         ["update-in" ":repl-options:nrepl-middleware" "conj"
+          (format "'%s'" mdw)])
+       mdws))
 
-         (mapcat (fn [[k {:mvn/keys [version]}]]
-                   ["update-in" ":dependencies" "conj"
-                    (format "'[%s \"%s\"]'" k version)
-                    "--"])
-                 dpes)
-    )
-  )
 
-(:deps +deps+)
 
 
 (comment
