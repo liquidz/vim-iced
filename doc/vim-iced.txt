@@ -1839,6 +1839,12 @@ g:iced#popup#neovim#style
 ------------------------------------------------------------------------------
 SIDELOADER                                    *vim-iced-customizing-sideloader*
 
+
+                                               *g:iced#nrepl#enable_sideloader*
+g:iced#nrepl#enable_sideloader
+  If `v:true`, vim-iced starts sideloader on startup automatically.
+  Default value is `v:false`.
+
                                                           *g:iced#source_root*
 g:iced#source_root
   If you have `ghq`, `git config ghq.root` will be the value automatically.
