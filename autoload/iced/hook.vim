@@ -11,14 +11,7 @@ endfunction
 
 function! s:run_by_shell(exec, params) abort
   let cmdstr = s:extract_string(a:exec, a:params)
-
-  if has('nvim')
-    let cmdstr = printf(':!%s', cmdstr)
-  else
-    let cmdstr = printf(':terminal ++hidden %s', cmdstr)
-  endif
-
-  call iced#system#get('ex_cmd').silent_exe(cmdstr)
+  call iced#system#get('job').start(cmdstr, {})
   return v:true
 endfunction
 
