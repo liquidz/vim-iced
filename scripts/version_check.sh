@@ -4,6 +4,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 VERSION=$(grep 'Version: ' ${SCRIPT_DIR}/../doc/vim-iced.txt | cut -d' ' -f2)
 
 ### vim-iced verion
+echo "CHECKING: vim-iced"
 VERSION_NUM=''
 for n in $(echo ${VERSION} | tr '.' '\n'); do
     VERSION_NUM="${VERSION_NUM}$(printf %02d ${n})"
@@ -23,6 +24,7 @@ if [ $? -ne 0 ]; then
 fi
 
 ### borkdude/jet version
+echo "CHECKING: borkdude/jet"
 JET_URL='https://github.com/borkdude/jet/releases.atom'
 JET_VERSION=$(curl -s ${JET_URL} | grep '<title>' | head -n 2 | tail -n 1 | sed 's/[^0-9.]//g')
 grep "version='${JET_VERSION}'" ${SCRIPT_DIR}/../installer/jet.sh
@@ -32,6 +34,7 @@ if [ $? -ne 0 ]; then
 fi
 
 ### greglook/cljstyle version
+echo "CHECKING: greglook/cljstyle"
 CLJSTYLE_URL='https://github.com/greglook/cljstyle/releases.atom'
 CLJSTYLE_VERSION=$(curl -s ${CLJSTYLE_URL} | grep '<title>' | head -n 2 | tail -n 1 | sed 's/[^0-9.]//g')
 grep "version='${CLJSTYLE_VERSION}'" ${SCRIPT_DIR}/../installer/cljstyle.sh
@@ -41,6 +44,7 @@ if [ $? -ne 0 ]; then
 fi
 
 ### kkinnear/zprint version
+echo "CHECKING: kkinnear/zprint"
 ZPRINT_URL='https://github.com/kkinnear/zprint/releases.atom'
 ZPRINT_VERSION=$(curl -s ${ZPRINT_URL} | grep '<title>' | head -n 2 | tail -n 1 | sed 's/[^0-9.]//g')
 grep "version='${ZPRINT_VERSION}'" ${SCRIPT_DIR}/../installer/zprint-clj.sh

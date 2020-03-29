@@ -1,0 +1,25 @@
+=== Docstring
+
+There are two ways (explicit and implicit) to refer var's docstring.
+
+The explicit way is executing commands such as follows.
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedDocumentPopupOpen[IcedDocumentPopupOpen]
+| {plug_iced_document_popup_open}
+| Show docstring for the var under the cursor in popup window
+
+| {help_html}#%3AIcedDocumentOpen[IcedDocumentOpen]
+|
+| Open a <<document_buffer>>, and show docstring in it.
+
+|===
+
+The implicit way is a Auto Document feature.
+This feature enable automatic displaying one-line document at right of cursor line.
+This will be done by `CursorHold` and `CursorHoldI` auto command.
+
+{help_html}#g%3Aiced_enable_auto_document[g:iced_enable_auto_document] is a configuration to enable auto document feature.

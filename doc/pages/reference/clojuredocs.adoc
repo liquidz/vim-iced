@@ -1,0 +1,19 @@
+=== ClojureDocs
+
+https://clojuredocs.org[ClojureDocs] is a community-powered documentation and examples repository for the Clojure programming language.
+vim-iced provides the way to refer documents in ClojureDocs like docstring.
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedClojureDocsOpen[IcedClojureDocsOpen]
+| {plug_iced_clojuredocs_open}
+| Open a window, and show documents for the symbol under the cursor.
+
+| {help_html}#%3AIcedClojureDocsRefresh[IcedClojureDocsRefresh]
+|
+| `IcedClojureDocsOpen` will create a cache file in your local machine. +
+If you get a outdated result, you can refresh cache file by this command.
+
+|===

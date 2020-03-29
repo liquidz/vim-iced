@@ -1,0 +1,30 @@
+=== Source codes
+
+{help_html}#%3AIcedSourceShow[IcedSourceShow] or {help_html}#%3AIcedSourcePopupShow[IcedSourcePopupShow] is useful when you would like to refer the source code itself.
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedSourcePopupShow[IcedSourcePopupShow]
+| {plug_iced_source_popup_show}
+| Show source codes in a popup window.
+
+| {help_html}#%3AIcedSourceShow[IcedSourceShow]
+| {plug_iced_source_show}
+| Open a separeted buffer(<<document_buffer>>) and show source codes in it.
+
+|===
+
+==== Enhanced source extraction
+
+If {help_html}#g%3Aiced_enable_enhanced_definition_extraction[g:iced_enable_enhanced_definition_extraction] is true, vim-iced enable enhanced source extraction.
+This feature is enabled by default.
+
+The difference from normal extraction is to extract source by not only `def` and `defn` but also `let` form.
+
+[NOTE]
+====
+https://github.com/borkdude/jet[borkdude/jet] is required currently. +
+vim-iced can download `jet` automatically if you want.
+====

@@ -84,7 +84,7 @@ function! iced#buffer#open(bufname, ...) abort
   let opt = get(a:, 1, {})
 
   try
-    let &eventignore = 'WinEnter,BufEnter'
+    let &eventignore = 'WinEnter,WinLeave,BufEnter,BufLeave'
     if !iced#buffer#is_visible(a:bufname)
       call s:B.open(nr, {
             \ 'opener': get(opt, 'opener', 'split'),
@@ -107,7 +107,7 @@ function! s:scroll_to_bottom(nr, _) abort
   let current_window = winnr()
   let last_window = winnr('#')
   try
-    let &eventignore = 'WinEnter,BufEnter'
+    let &eventignore = 'WinEnter,WinLeave,BufEnter,BufLeave'
     call s:focus_window(bufwinnr(a:nr))
     silent normal! G
   finally

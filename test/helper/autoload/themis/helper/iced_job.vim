@@ -24,6 +24,16 @@ function! s:helper.stop(_) abort
   return
 endfunction
 
+function! s:helper.out(command, callback) abort
+  let self.command = a:command
+
+  if type(a:callback) == v:t_func
+    call a:callback(join(self.outs, ''))
+  endif
+
+  return self.id
+endfunction
+
 function! s:helper.is_job_id(x) abort
   return (a:x == self.id)
 endfunction
