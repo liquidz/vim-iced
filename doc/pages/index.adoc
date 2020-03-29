@@ -143,6 +143,12 @@ include::refactoring.adoc[]
 [small]#<<top>>#
 // }}}
 
+include::sideloader.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
+
 include::iced_command.adoc[]
 // back to top {{{
 [.text-right]

@@ -1,0 +1,75 @@
+== Sideloader [[sideloader]]
+
+WARNING: `base64` command is required to use sideloader.
+
+Sideloader is a new feature from https://metaredux.com/posts/2020/03/28/nrepl-0-7.html[nREPL 0.7], and enables injecting code
+remotely in a running server on demand.
+
+vim-iced provides following commands for sideloader:
+
+- {help_html}#%3AIcedStartSideloader[IcedStartSideloader]
+- {help_html}#%3AIcedToggleSideloaderLookup[IcedToggleSideloaderLookup]
+
+When nREPL requires to look up some codes,
+vim-iced will search in {help_html}#g%3Aiced%23source_root[g:iced#source_root].
+
+It is assumed that sources under {help_html}#g%3Aiced%23source_root[g:iced#source_root] is managed by tools such as https://github.com/x-motemen/ghq[ghq].
+
+vim-iced will use `find` or https://github.com/sharkdp/fd[fd] as a searching file program.
+
+=== Starting sideloader
+
+There are following ways to start sideloader:
+
+- execute {help_html}#%3AIcedStartSideloader[IcedStartSideloader] command.
+- set `v:true` to {help_html}#g%3Aiced%23nrepl%23enable_sideloader[g:iced#nrepl#enable_sideloader] before launching vim/nvim.
+
+
+
+[WARNING]
+====
+Sideloader cannot be stopped basically. +
+If you want, please reconnect({help_html}#%3AIcedReconnect[IcedReconnect]) or restart REPL
+
+There is {help_html}#%3AIcedToggleSideloaderLookup[IcedToggleSideloaderLookup] command as a provisional method.
+====
+
+
+=== Example
+
+* Premise
+** https://github.com/x-motemen/ghq[ghq] is installed
+** `clojure.data.json` is cloned via `ghq get https://github.com/clojure/data.json`
+** No dependency for `clojure.data.json` in project.clj
+
+First, prepare the following code.
+
+[source,clojure]
+----
+(ns foo.core)
+
+(comment
+  (require '[clojure.data.json :as json])
+  (json/write-str {:foo "bar"}))
+----
+
+When you evaluate `comment` form, you will see the following error.
+
+----
+class java.io.FileNotFoundException
+Execution error (FileNotFoundException) at foo.core/eval13426 (form-init6273881382280324078.clj:7).
+Could not locate clojure/data/json__init.class, clojure/data/json.clj or clojure/data/json.cljc on classpath.
+----
+
+Then, execute {help_html}#%3AIcedStartSideloader[IcedStartSideloader] command, and you can see `Sideloader has started.` message is shown.
+
+So let's evaluate again!
+You'll see the expected result such as `"{\"foo\":\"bar\"}"`.
+
+You can also confirm that sideloader works clearly in `:message` command results.
+----
+Provided clojure/data/json.clj as resource to sideloader.
+Provided clojure/data/json.clj as resource to sideloader.
+Provided clojure/data/json_compat_0_1.clj as resource to sideloader.
+Provided clojure/data/json_compat_0_1.clj as resource to sideloader.
+----
