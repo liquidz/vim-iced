@@ -3,6 +3,8 @@ set cpoptions&vim
 
 let s:cache = {}
 
+let s:limit = 60 * 60 * 24 * 7 " 1 week
+
 function! s:expire_key(k) abort
   return printf('__%s__expire__', a:k)
 endfunction
@@ -22,7 +24,7 @@ function! iced#cache#get(k, ...) abort
   let default = get(a:, 1, '')
   let ex_k = s:expire_key(a:k)
 
-  let [expire_seconds, start_time] = get(s:cache, ex_k, [999, reltime()])
+  let [expire_seconds, start_time] = get(s:cache, ex_k, [s:limit, reltime()])
   if reltimefloat(reltime(start_time)) > expire_seconds
     call iced#cache#delete(a:k)
     call iced#cache#delete(ex_k)
@@ -40,6 +42,18 @@ function! iced#cache#delete(k) abort
   let v = copy(s:cache[a:k])
   unlet s:cache[a:k]
   return v
+endfunction
+
+function! iced#cache#delete_by_prefix(prefix) abort
+  let res = []
+  for k in keys(s:cache)
+    if stridx(k, a:prefix) == 0
+      call add(res, copy(s:cache[k]))
+      unlet s:cache[k]
+    endif
+  endfor
+
+  return res
 endfunction
 
 function! iced#cache#merge(dict) abort
