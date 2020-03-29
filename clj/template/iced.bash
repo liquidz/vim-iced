@@ -102,7 +102,7 @@ function leiningen_middleware_args() {
 function boot_deps_args() {
     local deps=($@)
 
-    echo -n '-i "(require ''cider.tasks)" '
+    echo -n "-i \"(require 'cider.tasks)\" "
     for s in "${deps[@]}" ; do
         key="${s%%:*}"
         value="${s##*:}"
