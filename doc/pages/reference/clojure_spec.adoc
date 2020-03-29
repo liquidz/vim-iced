@@ -1,4 +1,4 @@
-== clojure.spec [[clojure_spec]]
+=== clojure.spec [[clojure_spec]]
 
 vim-iced provides following commands to integrate with https://clojure.org/guides/spec[clojure.spec].
 

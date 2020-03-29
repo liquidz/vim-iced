@@ -167,12 +167,6 @@ include::operator.adoc[]
 [small]#<<top>>#
 // }}}
 
-include::clojure_spec.adoc[]
-// back to top {{{
-[.text-right]
-[small]#<<top>>#
-// }}}
-
 include::editing_sexp.adoc[]
 // back to top {{{
 [.text-right]
@@ -186,12 +180,6 @@ include::docker.adoc[]
 // }}}
 
 include::command_palette.adoc[]
-// back to top {{{
-[.text-right]
-[small]#<<top>>#
-// }}}
-
-include::hook.adoc[]
 // back to top {{{
 [.text-right]
 [small]#<<top>>#

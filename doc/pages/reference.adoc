@@ -1,86 +1,13 @@
 == Reference [[reference]]
 
-=== Docstring
 
-There are two ways (explicit and implicit) to refer var's docstring.
+include::reference/docstring.adoc[]
 
-The explicit way is executing commands such as follows.
+include::reference/clojuredocs.adoc[]
 
-[cols="30,20,50"]
-|===
-| Command | Default key mapping | Description
+include::reference/source_codes.adoc[]
 
-| {help_html}#%3AIcedDocumentPopupOpen[IcedDocumentPopupOpen]
-| {plug_iced_document_popup_open}
-| Show docstring for the var under the cursor in popup window
+include::reference/use_cases.adoc[]
 
-| {help_html}#%3AIcedDocumentOpen[IcedDocumentOpen]
-|
-| Open a <<document_buffer>>, and show docstring in it.
+include::reference/clojure_spec.adoc[]
 
-|===
-
-The implicit way is a Auto Document feature.
-This feature enable automatic displaying one-line document at right of cursor line.
-This will be done by `CursorHold` and `CursorHoldI` auto command.
-
-{help_html}#g%3Aiced_enable_auto_document[g:iced_enable_auto_document] is a configuration to enable auto document feature.
-
-=== ClojureDocs
-
-https://clojuredocs.org[ClojureDocs] is a community-powered documentation and examples repository for the Clojure programming language.
-vim-iced provides the way to refer documents in ClojureDocs like docstring.
-
-[cols="30,20,50"]
-|===
-| Command | Default key mapping | Description
-
-| {help_html}#%3AIcedClojureDocsOpen[IcedClojureDocsOpen]
-| {plug_iced_clojuredocs_open}
-| Open a window, and show documents for the symbol under the cursor.
-
-| {help_html}#%3AIcedClojureDocsRefresh[IcedClojureDocsRefresh]
-|
-| `IcedClojureDocsOpen` will create a cache file in your local machine. +
-If you get a outdated result, you can refresh cache file by this command.
-
-|===
-
-=== Source codes
-
-{help_html}#%3AIcedSourceShow[IcedSourceShow] or {help_html}#%3AIcedSourcePopupShow[IcedSourcePopupShow] is useful when you would like to refer the source code itself.
-
-[cols="30,20,50"]
-|===
-| Command | Default key mapping | Description
-
-| {help_html}#%3AIcedSourcePopupShow[IcedSourcePopupShow]
-| {plug_iced_source_popup_show}
-| Show source codes in a popup window.
-
-| {help_html}#%3AIcedSourceShow[IcedSourceShow]
-| {plug_iced_source_show}
-| Open a separeted buffer(<<document_buffer>>) and show source codes in it.
-
-|===
-
-==== Enhanced source extraction
-
-If {help_html}#g%3Aiced_enable_enhanced_definition_extraction[g:iced_enable_enhanced_definition_extraction] is true, vim-iced enable enhanced source extraction.
-This feature is enabled by default.
-
-The difference from normal extraction is to extract source by not only `def` and `defn` but also `let` form.
-
-[NOTE]
-====
-https://github.com/borkdude/jet[borkdude/jet] is required currently. +
-vim-iced can download `jet` automatically if you want.
-====
-
-=== Use cases
-
-Sometimes, it is useful to know how a function is used elsewhere.
-{help_html}#%3AIcedUseCaseOpen[IcedUseCaseOpen] command is for that.
-
-`IcedUseCaseOpen` will open a separated buffer, and show the first usecase if it is found.
-When there are several usecases, {help_html}#%3AIcedNextUseCase[IcedNextUseCase] and {help_html}#%3AIcedPrevUseCase[IcedPrevUseCase] commands switch the shown usecase.
