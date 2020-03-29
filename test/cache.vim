@@ -66,3 +66,14 @@ function! s:suite.do_once_test() abort
   call iced#cache#do_once('bar', {-> s:set('i', iced#cache#get('i') + 1, v:false)})
   call s:assert.equals(iced#cache#get('i'), 4)
 endfunction
+
+function! s:suite.expire_test() abort
+  call iced#cache#clear()
+  call iced#cache#set('foo', 'bar', 1)
+  call s:assert.equals(iced#cache#get('foo', 'baz'), 'bar')
+  call s:assert.true(iced#cache#has_key('foo'))
+
+  sleep 1100m
+  call s:assert.equals(iced#cache#get('foo', 'baz'), 'baz')
+  call s:assert.false(iced#cache#has_key('foo'))
+endfunction

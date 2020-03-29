@@ -3,13 +3,32 @@ set cpoptions&vim
 
 let s:cache = {}
 
-function! iced#cache#set(k, v) abort
+function! s:expire_key(k) abort
+  return printf('__%s__expire__', a:k)
+endfunction
+
+function! iced#cache#set(k, v, ...) abort
   let s:cache[a:k] = a:v
+
+  let expire_seconds = get(a:, 1, '')
+  if !empty(expire_seconds)
+    let s:cache[s:expire_key(a:k)] = [expire_seconds, reltime()]
+  endif
+
   return a:v
 endfunction
 
 function! iced#cache#get(k, ...) abort
   let default = get(a:, 1, '')
+  let ex_k = s:expire_key(a:k)
+
+  let [expire_seconds, start_time] = get(s:cache, ex_k, [999, reltime()])
+  if reltimefloat(reltime(start_time)) > expire_seconds
+    call iced#cache#delete(a:k)
+    call iced#cache#delete(ex_k)
+    return default
+  endif
+
   return get(s:cache, a:k, default)
 endfunction
 
