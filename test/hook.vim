@@ -2,12 +2,14 @@ let s:suite = themis#suite('iced.hook')
 let s:assert = themis#helper('assert')
 let s:ch = themis#helper('iced_channel')
 let s:ex = themis#helper('iced_ex_cmd')
+let s:job = themis#helper('iced_job')
 let s:holder = themis#helper('iced_holder')
 
 function! s:setup() abort
   call iced#nrepl#set_session('clj',  'clj-session')
   call iced#nrepl#change_current_session('clj')
   call s:ex.mock()
+  call s:job.mock()
   call s:holder.clear()
 endfunction
 
@@ -21,15 +23,11 @@ function! s:suite.run_shell_type_test() abort
 
   let g:iced#hook = {'shell-test': {'type': 'shell', 'exec': 'simple text'}}
   call iced#hook#run('shell-test', {'foo': 'bar'})
-  call s:assert.true(stridx(
-        \ get(s:ex.get_last_args(), 'silent_exe', ''),
-        \ 'simple text') > 0)
+  call s:assert.equals('simple text', s:job.get_last_command())
 
   let g:iced#hook = {'shell-test': {'type': 'shell', 'exec': {v -> printf('shell-test [%s]', v)}}}
   call iced#hook#run('shell-test', {'foo': 'bar'})
-  call s:assert.true(stridx(
-        \ get(s:ex.get_last_args(), 'silent_exe', ''),
-        \ "shell-test [{'foo': 'bar'}]") > 0)
+  call s:assert.equals("shell-test [{'foo': 'bar'}]", s:job.get_last_command())
 
   call s:teardown()
 endfunction
