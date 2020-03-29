@@ -468,6 +468,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_clojuredocs">5.2. ClojureDocs</a></li>
 <li><a href="#_source_codes">5.3. Source codes</a></li>
 <li><a href="#_use_cases">5.4. Use cases</a></li>
+<li><a href="#clojure_spec">5.5. clojure.spec</a></li>
 </ul>
 </li>
 <li><a href="#navigation">6. Navigation</a>
@@ -506,28 +507,33 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#refactoring_form">11.3. Form</a></li>
 </ul>
 </li>
-<li><a href="#iced_command">12. iced command</a>
+<li><a href="#sideloader">12. Sideloader</a>
 <ul class="sectlevel2">
-<li><a href="#iced_supports">12.1. Supports</a></li>
-<li><a href="#iced_usage">12.2. Usage</a></li>
-<li><a href="#iced_command_advanced">12.3. Advanced</a></li>
+<li><a href="#_starting_sideloader">12.1. Starting sideloader</a></li>
+<li><a href="#_example">12.2. Example</a></li>
 </ul>
 </li>
-<li><a href="#clojurescript">13. ClojureScript</a>
+<li><a href="#iced_command">13. iced command</a>
 <ul class="sectlevel2">
-<li><a href="#clojurescript_figwheel_main">13.1. Figwheel-main</a></li>
-<li><a href="#clojurescript_graaljs">13.2. GraalJS</a></li>
-<li><a href="#clojurescript_shadow_cljs">13.3. shadow-cljs</a></li>
+<li><a href="#iced_supports">13.1. Supports</a></li>
+<li><a href="#iced_usage">13.2. Usage</a></li>
+<li><a href="#iced_command_advanced">13.3. Advanced</a></li>
 </ul>
 </li>
-<li><a href="#skeleton">14. Skeleton</a>
+<li><a href="#clojurescript">14. ClojureScript</a>
 <ul class="sectlevel2">
-<li><a href="#skeleton_source_file">14.1. Source file</a></li>
-<li><a href="#skeleton_test_file">14.2. Test file</a></li>
+<li><a href="#clojurescript_figwheel_main">14.1. Figwheel-main</a></li>
+<li><a href="#clojurescript_graaljs">14.2. GraalJS</a></li>
+<li><a href="#clojurescript_shadow_cljs">14.3. shadow-cljs</a></li>
 </ul>
 </li>
-<li><a href="#operator">15. Operator</a></li>
-<li><a href="#clojure_spec">16. clojure.spec</a></li>
+<li><a href="#skeleton">15. Skeleton</a>
+<ul class="sectlevel2">
+<li><a href="#skeleton_source_file">15.1. Source file</a></li>
+<li><a href="#skeleton_test_file">15.2. Test file</a></li>
+</ul>
+</li>
+<li><a href="#operator">16. Operator</a></li>
 <li><a href="#editing_sexp">17. Editing S-expression</a></li>
 <li><a href="#docker">18. Docker</a>
 <ul class="sectlevel2">
@@ -535,54 +541,48 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#command_palette">19. Command palette</a></li>
-<li><a href="#hook">20. Hook</a>
+<li><a href="#_buffer">20. Buffer</a>
 <ul class="sectlevel2">
-<li><a href="#hook_event">20.1. Event</a></li>
-<li><a href="#hook_reporter">20.2. Reporter</a></li>
-<li><a href="#hook_example">20.3. Example</a></li>
+<li><a href="#stdout_buffer">20.1. Stdout buffer</a></li>
+<li><a href="#test_buffer">20.2. Test buffer</a></li>
+<li><a href="#document_buffer">20.3. Document buffer</a></li>
 </ul>
 </li>
-<li><a href="#_buffer">21. Buffer</a>
+<li><a href="#configuration">21. Configuration</a>
 <ul class="sectlevel2">
-<li><a href="#stdout_buffer">21.1. Stdout buffer</a></li>
-<li><a href="#test_buffer">21.2. Test buffer</a></li>
-<li><a href="#document_buffer">21.3. Document buffer</a></li>
+<li><a href="#configuration_evaluation">21.1. Evaluation</a></li>
+<li><a href="#configuration_formatting">21.2. Formatting</a></li>
+<li><a href="#hook">21.3. Hook</a></li>
+<li><a href="#configuration_docker">21.4. Docker</a></li>
+<li><a href="#configuration_command_palette">21.5. Command palette</a></li>
+<li><a href="#configuration_advanced">21.6. Advanced settings</a></li>
 </ul>
 </li>
-<li><a href="#configuration">22. Configuration</a>
+<li><a href="#tips">22. Tips</a>
 <ul class="sectlevel2">
-<li><a href="#configuration_evaluation">22.1. Evaluation</a></li>
-<li><a href="#configuration_formatting">22.2. Formatting</a></li>
-<li><a href="#configuration_docker">22.3. Docker</a></li>
-<li><a href="#configuration_command_palette">22.4. Command palette</a></li>
-<li><a href="#configuration_advanced">22.5. Advanced settings</a></li>
+<li><a href="#tips_vim_submode">22.1. vim-submode</a></li>
+<li><a href="#tips_auto_connection">22.2. Auto connection</a></li>
+<li><a href="#_reloaded_workflows">22.3. Reloaded workflows</a></li>
 </ul>
 </li>
-<li><a href="#tips">23. Tips</a>
+<li><a href="#external_integration">23. External integration</a>
 <ul class="sectlevel2">
-<li><a href="#tips_vim_submode">23.1. vim-submode</a></li>
-<li><a href="#tips_auto_connection">23.2. Auto connection</a></li>
-<li><a href="#_reloaded_workflows">23.3. Reloaded workflows</a></li>
+<li><a href="#kaocha">23.1. kaocha</a></li>
 </ul>
 </li>
-<li><a href="#external_integration">24. External integration</a>
+<li><a href="#socket_repl">24. Socket REPL</a>
 <ul class="sectlevel2">
-<li><a href="#kaocha">24.1. kaocha</a></li>
+<li><a href="#_connecting_socket_repl">24.1. Connecting socket REPL</a></li>
+<li><a href="#_connecting_prepl">24.2. Connecting pREPL</a></li>
 </ul>
 </li>
-<li><a href="#socket_repl">25. Socket REPL</a>
+<li><a href="#developer">25. Developer</a>
 <ul class="sectlevel2">
-<li><a href="#_connecting_socket_repl">25.1. Connecting socket REPL</a></li>
-<li><a href="#_connecting_prepl">25.2. Connecting pREPL</a></li>
+<li><a href="#minimal_configuration">25.1. Minimal configuration</a></li>
+<li><a href="#testing_vim_iced">25.2. Testing vim-iced</a></li>
 </ul>
 </li>
-<li><a href="#developer">26. Developer</a>
-<ul class="sectlevel2">
-<li><a href="#minimal_configuration">26.1. Minimal configuration</a></li>
-<li><a href="#testing_vim_iced">26.2. Testing vim-iced</a></li>
-</ul>
-</li>
-<li><a href="#cheatsheet">27. Cheatsheet</a></li>
+<li><a href="#cheatsheet">26. Cheatsheet</a></li>
 </ul>
 </div>
 </div>
@@ -1109,6 +1109,50 @@ vim-iced can download <code>jet</code> automatically if you want.</p>
 <p><code>IcedUseCaseOpen</code> will open a separated buffer, and show the first usecase if it is found.
 When there are several usecases, <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedNextUseCase">IcedNextUseCase</a> and <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedPrevUseCase">IcedPrevUseCase</a> commands switch the shown usecase.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="clojure_spec">5.5. clojure.spec</h3>
+<div class="paragraph">
+<p>vim-iced provides following commands to integrate with <a href="https://clojure.org/guides/spec">clojure.spec</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Command</th>
+<th class="tableblock halign-left valign-top">Default key mapping</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedBrowseSpec">IcedBrowseSpec</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;bs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Browse specs, and show spec form in <a href="#document_buffer">Document buffer</a>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedSpecForm">IcedSpecForm</a></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Open a <a href="#document_buffer">Document buffer</a>, and show the spec form for specified keyword.<br>
+If no arguments are passed, the keyword under the cursor is used.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedSpecExample">IcedSpecExample</a></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Open a <a href="#document_buffer">Document buffer</a>, and show the example of the spec.<br>
+If no arguments are passed, the keyword under the cursor is used.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedTestSpecCheck">IcedTestSpecCheck</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;ts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#testing_checking_spec">Checking spec</a> for more information</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph text-right">
 <p><span class="small"><a href="#top">Back to top</a></span></p>
 </div>
@@ -1744,14 +1788,158 @@ If there is no <code>let</code> form in current top list, wrap the form with <co
 </div>
 </div>
 <div class="sect1">
-<h2 id="iced_command">12. iced command</h2>
+<h2 id="sideloader">12. Sideloader</h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<code>base64</code> command is required to use sideloader.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Sideloader is a new feature from <a href="https://metaredux.com/posts/2020/03/28/nrepl-0-7.html">nREPL 0.7</a>, and enables injecting code
+remotely in a running server on demand.</p>
+</div>
+<div class="paragraph">
+<p>vim-iced provides following commands for sideloader:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStartSideloader">IcedStartSideloader</a></p>
+</li>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedToggleSideloaderLookup">IcedToggleSideloaderLookup</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When nREPL requires to look up some codes,
+vim-iced will search in <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23source_root">g:iced#source_root</a>.</p>
+</div>
+<div class="paragraph">
+<p>It is assumed that sources under <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23source_root">g:iced#source_root</a> is managed by tools such as <a href="https://github.com/x-motemen/ghq">ghq</a>.</p>
+</div>
+<div class="paragraph">
+<p>vim-iced will use <code>find</code> or <a href="https://github.com/sharkdp/fd">fd</a> as a searching file program.</p>
+</div>
+<div class="sect2">
+<h3 id="_starting_sideloader">12.1. Starting sideloader</h3>
+<div class="paragraph">
+<p>There are following ways to start sideloader:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>execute <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStartSideloader">IcedStartSideloader</a> command.</p>
+</li>
+<li>
+<p>set <code>v:true</code> to <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23nrepl%23enable_sideloader">g:iced#nrepl#enable_sideloader</a> before launching vim/nvim.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Sideloader cannot be stopped basically.<br>
+If you want, please reconnect(<a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedReconnect">IcedReconnect</a>) or restart REPL</p>
+</div>
+<div class="paragraph">
+<p>There is <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedToggleSideloaderLookup">IcedToggleSideloaderLookup</a> command as a provisional method.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example">12.2. Example</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Premise</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/x-motemen/ghq">ghq</a> is installed</p>
+</li>
+<li>
+<p><code>clojure.data.json</code> is cloned via <code>ghq get <a href="https://github.com/clojure/data.json" class="bare">https://github.com/clojure/data.json</a></code></p>
+</li>
+<li>
+<p>No dependency for <code>clojure.data.json</code> in project.clj</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>First, prepare the following code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="clojure"><span class="p">(</span><span class="nf">ns</span><span class="w"> </span><span class="n">foo.core</span><span class="p">)</span><span class="w">
+
+</span><span class="p">(</span><span class="nb">comment</span><span class="w">
+  </span><span class="p">(</span><span class="nf">require</span><span class="w"> </span><span class="o">'</span><span class="p">[</span><span class="n">clojure.data.json</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">json</span><span class="p">])</span><span class="w">
+  </span><span class="p">(</span><span class="nf">json/write-str</span><span class="w"> </span><span class="p">{</span><span class="no">:foo</span><span class="w"> </span><span class="s">"bar"</span><span class="p">}))</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you evaluate <code>comment</code> form, you will see the following error.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class java.io.FileNotFoundException
+Execution error (FileNotFoundException) at foo.core/eval13426 (form-init6273881382280324078.clj:7).
+Could not locate clojure/data/json__init.class, clojure/data/json.clj or clojure/data/json.cljc on classpath.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, execute <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStartSideloader">IcedStartSideloader</a> command, and you can see <code>Sideloader has started.</code> message is shown.</p>
+</div>
+<div class="paragraph">
+<p>So let&#8217;s evaluate again!
+You&#8217;ll see the expected result such as <code>"{\"foo\":\"bar\"}"</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can also confirm that sideloader works clearly in <code>:message</code> command results.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Provided clojure/data/json.clj as resource to sideloader.
+Provided clojure/data/json.clj as resource to sideloader.
+Provided clojure/data/json_compat_0_1.clj as resource to sideloader.
+Provided clojure/data/json_compat_0_1.clj as resource to sideloader.</pre>
+</div>
+</div>
+<div class="paragraph text-right">
+<p><span class="small"><a href="#top">Back to top</a></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="iced_command">13. iced command</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>vim-iced provides <code>iced</code> command to use vim-iced easily.
 Main purpose of this command is launching REPL with all features for vim-iced.</p>
 </div>
 <div class="sect2">
-<h3 id="iced_supports">12.1. Supports</h3>
+<h3 id="iced_supports">13.1. Supports</h3>
 <div class="paragraph">
 <p><code>iced</code> command currently supports following tools.</p>
 </div>
@@ -1774,14 +1962,14 @@ To work with shadow-cljs, see <a href="https://liquidz.github.io/vim-iced/vim-ic
 </div>
 </div>
 <div class="sect2">
-<h3 id="iced_usage">12.2. Usage</h3>
+<h3 id="iced_usage">13.2. Usage</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span>iced repl <span class="o">[</span>options]</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_options">12.2.1. Options</h4>
+<h4 id="_options">13.2.1. Options</h4>
 <div class="paragraph">
 <p>Following options are specially treated by <code>iced</code> command.</p>
 </div>
@@ -1838,7 +2026,7 @@ Instant REPL requires no project/config file.</p></td>
 </div>
 </div>
 <div class="sect3">
-<h4 id="iced_arguments">12.2.2. Arguments</h4>
+<h4 id="iced_arguments">13.2.2. Arguments</h4>
 <div class="listingblock">
 <div class="title">Leiningen profile</div>
 <div class="content">
@@ -1860,9 +2048,9 @@ Instant REPL requires no project/config file.</p></td>
 </div>
 </div>
 <div class="sect2">
-<h3 id="iced_command_advanced">12.3. Advanced</h3>
+<h3 id="iced_command_advanced">13.3. Advanced</h3>
 <div class="sect3">
-<h4 id="_clojure_cli_project">12.3.1. Clojure CLI project</h4>
+<h4 id="_clojure_cli_project">13.3.1. Clojure CLI project</h4>
 <div class="paragraph">
 <p><code>iced</code> command use <code>clj</code> command for Clojure CLI project by default.</p>
 </div>
@@ -1885,7 +2073,7 @@ Instant REPL requires no project/config file.</p></td>
 </div>
 </div>
 <div class="sect1">
-<h2 id="clojurescript">13. ClojureScript</h2>
+<h2 id="clojurescript">14. ClojureScript</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>vim-iced supports following environments currently.</p>
@@ -1949,7 +2137,7 @@ The code will be passed to <code>cider.piggieback/cljs-repl</code>.</p></td>
 </tbody>
 </table>
 <div class="sect2">
-<h3 id="clojurescript_figwheel_main">13.1. Figwheel-main</h3>
+<h3 id="clojurescript_figwheel_main">14.1. Figwheel-main</h3>
 <div class="paragraph">
 <p>To start CLJS REPL with Figwheel main, you need to specify <code>build-id</code>.</p>
 </div>
@@ -1967,7 +2155,7 @@ The code will be passed to <code>cider.piggieback/cljs-repl</code>.</p></td>
 </div>
 </div>
 <div class="sect2">
-<h3 id="clojurescript_graaljs">13.2. GraalJS</h3>
+<h3 id="clojurescript_graaljs">14.2. GraalJS</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -2000,7 +2188,7 @@ Otherwise you can set <code>PATH</code> temporarily when you execute <code>iced<
 </div>
 </div>
 <div class="sect2">
-<h3 id="clojurescript_shadow_cljs">13.3. shadow-cljs</h3>
+<h3 id="clojurescript_shadow_cljs">14.3. shadow-cljs</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -2065,7 +2253,7 @@ So you need to launch REPL manually.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="clojurescript_shadow_cljs_edn">13.3.1. shadow-cljs.edn</h4>
+<h4 id="clojurescript_shadow_cljs_edn">14.3.1. shadow-cljs.edn</h4>
 <div class="paragraph">
 <p>You need to modify <code>:dependencies</code> and <code>:nrepl</code> setting in <code>shadow-cljs.edn</code> as below.</p>
 </div>
@@ -2105,7 +2293,7 @@ So you need to launch REPL manually.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="skeleton">14. Skeleton</h2>
+<h2 id="skeleton">15. Skeleton</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>vim-iced provides code skeleton when you open new clojure files.
@@ -2128,7 +2316,7 @@ Concretely "when you open new" means the time when <a href="https://vim-jp.org/v
 </ul>
 </div>
 <div class="sect2">
-<h3 id="skeleton_source_file">14.1. Source file</h3>
+<h3 id="skeleton_source_file">15.1. Source file</h3>
 <div class="paragraph">
 <p>For example, the skeleton when you open <code>src/foo/bar.clj</code> is as follows.</p>
 </div>
@@ -2139,12 +2327,12 @@ Concretely "when you open new" means the time when <a href="https://vim-jp.org/v
 </div>
 </div>
 <div class="sect2">
-<h3 id="skeleton_test_file">14.2. Test file</h3>
+<h3 id="skeleton_test_file">15.2. Test file</h3>
 <div class="paragraph">
 <p>A skeleton for test file depends on the file extension.</p>
 </div>
 <div class="sect3">
-<h4 id="_clj">14.2.1. *.clj</h4>
+<h4 id="_clj">15.2.1. *.clj</h4>
 <div class="paragraph">
 <p>For example, the skeleton when you open <code>test/foo/bar_test.clj</code> is as follows.</p>
 </div>
@@ -2157,7 +2345,7 @@ Concretely "when you open new" means the time when <a href="https://vim-jp.org/v
 </div>
 </div>
 <div class="sect3">
-<h4 id="_cljs">14.2.2. *.cljs</h4>
+<h4 id="_cljs">15.2.2. *.cljs</h4>
 <div class="paragraph">
 <p>For example, the skeleton when you open <code>test/foo/bar_test.cljs</code> is as follows.</p>
 </div>
@@ -2170,7 +2358,7 @@ Concretely "when you open new" means the time when <a href="https://vim-jp.org/v
 </div>
 </div>
 <div class="sect3">
-<h4 id="_cljc">14.2.3. *.cljc</h4>
+<h4 id="_cljc">15.2.3. *.cljc</h4>
 <div class="paragraph">
 <p>For example, the skeleton when you open <code>test/foo/bar_test.cljc</code> is as follows.</p>
 </div>
@@ -2191,7 +2379,7 @@ Concretely "when you open new" means the time when <a href="https://vim-jp.org/v
 </div>
 </div>
 <div class="sect1">
-<h2 id="operator">15. Operator</h2>
+<h2 id="operator">16. Operator</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>vim-iced provides following operators.</p>
@@ -2252,55 +2440,6 @@ Concretely "when you open new" means the time when <a href="https://vim-jp.org/v
 aug END</code></pre>
 </div>
 </div>
-<div class="paragraph text-right">
-<p><span class="small"><a href="#top">Back to top</a></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="clojure_spec">16. clojure.spec</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>vim-iced provides following commands to integrate with <a href="https://clojure.org/guides/spec">clojure.spec</a>.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 30%;">
-<col style="width: 20%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Command</th>
-<th class="tableblock halign-left valign-top">Default key mapping</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedBrowseSpec">IcedBrowseSpec</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;bs</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Browse specs, and show spec form in <a href="#document_buffer">Document buffer</a>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedSpecForm">IcedSpecForm</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Open a <a href="#document_buffer">Document buffer</a>, and show the spec form for specified keyword.<br>
-If no arguments are passed, the keyword under the cursor is used.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedSpecExample">IcedSpecExample</a></p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Open a <a href="#document_buffer">Document buffer</a>, and show the example of the spec.<br>
-If no arguments are passed, the keyword under the cursor is used.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedTestSpecCheck">IcedTestSpecCheck</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;ts</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See <a href="#testing_checking_spec">Checking spec</a> for more information</p></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph text-right">
 <p><span class="small"><a href="#top">Back to top</a></span></p>
 </div>
@@ -2465,13 +2604,198 @@ vim-iced provides <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3A
 </div>
 </div>
 <div class="sect1">
-<h2 id="hook">20. Hook</h2>
+<h2 id="_buffer">20. Buffer</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="stdout_buffer">20.1. Stdout buffer</h3>
+<div class="paragraph">
+<p>Standard outputs will be outputted to dedicated buffer.</p>
+</div>
+<div class="paragraph">
+<p>vim-iced provides following commands to control stdout buffer.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Command</th>
+<th class="tableblock halign-left valign-top">Default key mapping</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStdoutBufferOpen">IcedStdoutBufferOpen</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;ss</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Open stdout buffer.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStdoutBufferClear">IcedStdoutBufferClear</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;sl</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clear all lines in stdout buffer.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStdoutBufferClose">IcedStdoutBufferClose</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;sq</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Close stdout buffer window.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="test_buffer">20.2. Test buffer</h3>
+<div class="paragraph">
+<p>Test results will be outputted to dedicated buffer.</p>
+</div>
+<div class="paragraph">
+<p>vim-iced provides following commands to control test buffer.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Command</th>
+<th class="tableblock halign-left valign-top">Default key mapping</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedTestBufferOpen">IcedTestBufferOpen</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;to</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Open test result buffer.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Test buffer is opened automatically when tests are failed.
+On the other hand, test buffer is closed automatically when test are succeeded.</p>
+</div>
+<div class="paragraph">
+<p>So <strong>you don&#8217;t need to use the above command</strong> basically.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="document_buffer">20.3. Document buffer</h3>
+<div class="paragraph">
+<p>Documents will be shown to popup window by default.
+But you can show them to dedicated buffer to keep them displayed.</p>
+</div>
+<div class="paragraph">
+<p>vim-iced provides following commands to control document buffer.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Command</th>
+<th class="tableblock halign-left valign-top">Default key mapping</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedDocumentOpen">IcedDocumentOpen</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;hb</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Open a window, and show documents for specified <code>symbol</code>.<br>
+If <code>symbol</code> is not passed, the symbol under the cursor is used.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedDocumentClose">IcedDocumentClose</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;hq</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Close document window.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph text-right">
+<p><span class="small"><a href="#top">Back to top</a></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration">21. Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="configuration_evaluation">21.1. Evaluation</h3>
+<div class="sect3">
+<h4 id="eval_inside_comment">21.1.1. Eval inside comment</h4>
+<div class="paragraph">
+<p><code>comment</code> form is useful for checking behavior.
+You can use <a href="#evaluate_outer_list">evaluating outer list</a> range to evaluate codes inside <code>comment</code> form,
+but it is bored that some cursor movements are required.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23eval%23inside_comment">g:iced#eval#inside_comment</a> is a configuration that allow you to evaluate inside <code>comment</code> form with <a href="#evaluate_outer_top_list">evaluating outer top list</a> range, and it is enabled by default.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example (📍 means cursor position)</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="clojure"><span class="p">(</span><span class="nb">comment</span><span class="err">📍</span><span class="w">      </span><span class="c1">;; Execute `:IcedEvalOuterTopList`</span><span class="w">
+  </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span><span class="w">    </span><span class="c1">;; =&gt; 6</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuration_formatting">21.2. Formatting</h3>
+<div class="sect3">
+<h4 id="customizing_indent_rules">21.2.1. Customizing indent rules</h4>
+<div class="paragraph">
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23format%23rule">g:iced#format#rule</a> is a configuration that allow you to define indentation rules for <a href="https://github.com/weavejester/cljfmt">cljfmt</a>.</p>
+</div>
+<div class="paragraph">
+<p>For example, <a href="https://github.com/liquidz/merr">merr</a>'s <code>let</code> has a form like follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="clojure"><span class="p">(</span><span class="nf">merr/let</span><span class="w"> </span><span class="n">+err+</span><span class="w"> </span><span class="p">[</span><span class="n">foo</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w">
+          </span><span class="p">(</span><span class="nb">inc</span><span class="w"> </span><span class="n">foo</span><span class="p">))</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To format like <code>clojure.core/let</code>, you should define the following rule.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim"><span class="k">let</span> <span class="nv">g:iced</span>#format#rule <span class="p">=</span> <span class="p">{</span>
+<span class="se">      \</span> <span class="s1">'merr.core/let'</span><span class="p">:</span> <span class="s1">'[[:block 2] [:inner 1]]'</span><span class="p">,</span>
+<span class="se">      \</span> <span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then you can get the following result.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="clojure"><span class="p">(</span><span class="nf">merr/let</span><span class="w"> </span><span class="n">+err+</span><span class="w"> </span><span class="p">[</span><span class="n">foo</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">inc</span><span class="w"> </span><span class="n">foo</span><span class="p">))</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="https://github.com/weavejester/cljfmt#indentation-rules">cljfmt&#8217;s README</a> for more information.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="hook">21.3. Hook</h3>
 <div class="paragraph">
 <p>Some events on vim-iced can be hooked, and you can execute any processing.</p>
 </div>
-<div class="sect2">
-<h3 id="hook_event">20.1. Event</h3>
+<div class="sect3">
+<h4 id="hook_event">21.3.1. Event</h4>
 <div class="paragraph">
 <p>Following events can be hooked.</p>
 </div>
@@ -2523,8 +2847,8 @@ vim-iced provides <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3A
 </tbody>
 </table>
 </div>
-<div class="sect2">
-<h3 id="hook_reporter">20.2. Reporter</h3>
+<div class="sect3">
+<h4 id="hook_reporter">21.3.2. Reporter</h4>
 <div class="paragraph">
 <p>Hooked events and event parameters are reported to reporters.
 You can define some kind of reporters as follows.</p>
@@ -2561,8 +2885,8 @@ The shell command is executed in <a href="https://vim-jp.org/vimdoc-en/terminal.
 </tbody>
 </table>
 </div>
-<div class="sect2">
-<h3 id="hook_example">20.3. Example</h3>
+<div class="sect3">
+<h4 id="hook_example">21.3.3. Example</h4>
 <div class="paragraph">
 <p>Here is a example to setting up hooks.</p>
 </div>
@@ -2580,200 +2904,10 @@ The shell command is executed in <a href="https://vim-jp.org/vimdoc-en/terminal.
 <span class="se">    \</span> <span class="p">}</span></code></pre>
 </div>
 </div>
-<div class="paragraph text-right">
-<p><span class="small"><a href="#top">Back to top</a></span></p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_buffer">21. Buffer</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="stdout_buffer">21.1. Stdout buffer</h3>
-<div class="paragraph">
-<p>Standard outputs will be outputted to dedicated buffer.</p>
-</div>
-<div class="paragraph">
-<p>vim-iced provides following commands to control stdout buffer.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 30%;">
-<col style="width: 20%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Command</th>
-<th class="tableblock halign-left valign-top">Default key mapping</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStdoutBufferOpen">IcedStdoutBufferOpen</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;ss</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Open stdout buffer.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStdoutBufferClear">IcedStdoutBufferClear</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;sl</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Clear all lines in stdout buffer.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStdoutBufferClose">IcedStdoutBufferClose</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;sq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Close stdout buffer window.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="test_buffer">21.2. Test buffer</h3>
-<div class="paragraph">
-<p>Test results will be outputted to dedicated buffer.</p>
-</div>
-<div class="paragraph">
-<p>vim-iced provides following commands to control test buffer.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 30%;">
-<col style="width: 20%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Command</th>
-<th class="tableblock halign-left valign-top">Default key mapping</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedTestBufferOpen">IcedTestBufferOpen</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;to</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Open test result buffer.</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>Test buffer is opened automatically when tests are failed.
-On the other hand, test buffer is closed automatically when test are succeeded.</p>
-</div>
-<div class="paragraph">
-<p>So <strong>you don&#8217;t need to use the above command</strong> basically.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="document_buffer">21.3. Document buffer</h3>
-<div class="paragraph">
-<p>Documents will be shown to popup window by default.
-But you can show them to dedicated buffer to keep them displayed.</p>
-</div>
-<div class="paragraph">
-<p>vim-iced provides following commands to control document buffer.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 30%;">
-<col style="width: 20%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Command</th>
-<th class="tableblock halign-left valign-top">Default key mapping</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedDocumentOpen">IcedDocumentOpen</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;hb</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Open a window, and show documents for specified <code>symbol</code>.<br>
-If <code>symbol</code> is not passed, the symbol under the cursor is used.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedDocumentClose">IcedDocumentClose</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;hq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Close document window.</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph text-right">
-<p><span class="small"><a href="#top">Back to top</a></span></p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="configuration">22. Configuration</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="configuration_evaluation">22.1. Evaluation</h3>
-<div class="sect3">
-<h4 id="eval_inside_comment">22.1.1. Eval inside comment</h4>
-<div class="paragraph">
-<p><code>comment</code> form is useful for checking behavior.
-You can use <a href="#evaluate_outer_list">evaluating outer list</a> range to evaluate codes inside <code>comment</code> form,
-but it is bored that some cursor movements are required.</p>
-</div>
-<div class="paragraph">
-<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23eval%23inside_comment">g:iced#eval#inside_comment</a> is a configuration that allow you to evaluate inside <code>comment</code> form with <a href="#evaluate_outer_top_list">evaluating outer top list</a> range, and it is enabled by default.</p>
-</div>
-<div class="listingblock">
-<div class="title">Example (📍 means cursor position)</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="clojure"><span class="p">(</span><span class="nb">comment</span><span class="err">📍</span><span class="w">      </span><span class="c1">;; Execute `:IcedEvalOuterTopList`</span><span class="w">
-  </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span><span class="w">    </span><span class="c1">;; =&gt; 6</span></code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="configuration_formatting">22.2. Formatting</h3>
-<div class="sect3">
-<h4 id="customizing_indent_rules">22.2.1. Customizing indent rules</h4>
-<div class="paragraph">
-<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23format%23rule">g:iced#format#rule</a> is a configuration that allow you to define indentation rules for <a href="https://github.com/weavejester/cljfmt">cljfmt</a>.</p>
-</div>
-<div class="paragraph">
-<p>For example, <a href="https://github.com/liquidz/merr">merr</a>'s <code>let</code> has a form like follows.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="clojure"><span class="p">(</span><span class="nf">merr/let</span><span class="w"> </span><span class="n">+err+</span><span class="w"> </span><span class="p">[</span><span class="n">foo</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w">
-          </span><span class="p">(</span><span class="nb">inc</span><span class="w"> </span><span class="n">foo</span><span class="p">))</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To format like <code>clojure.core/let</code>, you should define the following rule.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="vim"><span class="k">let</span> <span class="nv">g:iced</span>#format#rule <span class="p">=</span> <span class="p">{</span>
-<span class="se">      \</span> <span class="s1">'merr.core/let'</span><span class="p">:</span> <span class="s1">'[[:block 2] [:inner 1]]'</span><span class="p">,</span>
-<span class="se">      \</span> <span class="p">}</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then you can get the following result.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="clojure"><span class="p">(</span><span class="nf">merr/let</span><span class="w"> </span><span class="n">+err+</span><span class="w"> </span><span class="p">[</span><span class="n">foo</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w">
-  </span><span class="p">(</span><span class="nb">inc</span><span class="w"> </span><span class="n">foo</span><span class="p">))</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See <a href="https://github.com/weavejester/cljfmt#indentation-rules">cljfmt&#8217;s README</a> for more information.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="configuration_docker">22.3. Docker</h3>
+<h3 id="configuration_docker">21.4. Docker</h3>
 <div class="paragraph">
 <p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23nrepl%23path_translation">g:iced#nrepl#path_translation</a> is a option to define path translation rules.</p>
 </div>
@@ -2791,7 +2925,7 @@ but it is bored that some cursor movements are required.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="configuration_command_palette">22.4. Command palette</h3>
+<h3 id="configuration_command_palette">21.5. Command palette</h3>
 <div class="paragraph">
 <p>The <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23palette">g:iced#palette</a> option allows you to customize the command palette.</p>
 </div>
@@ -2808,9 +2942,9 @@ but it is bored that some cursor movements are required.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="configuration_advanced">22.5. Advanced settings</h3>
+<h3 id="configuration_advanced">21.6. Advanced settings</h3>
 <div class="sect3">
-<h4 id="configuration_advanced_stdout_buffer">22.5.1. Stdout buffer</h4>
+<h4 id="configuration_advanced_stdout_buffer">21.6.1. Stdout buffer</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 30%;">
@@ -2893,7 +3027,7 @@ This option is enabled when <code>g:iced#buffer#stdout#max_line</code> is a posi
 </table>
 </div>
 <div class="sect3">
-<h4 id="configuration_advanced_document">22.5.2. Document</h4>
+<h4 id="configuration_advanced_document">21.6.2. Document</h4>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 2. Document buffer</caption>
 <colgroup>
@@ -2994,7 +3128,7 @@ See also</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="configuration_advanced_clojure_script">22.5.3. ClojureScript</h4>
+<h4 id="configuration_advanced_clojure_script">21.6.3. ClojureScript</h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 30%;">
@@ -3030,10 +3164,10 @@ This will be done by <a href="https://vim-jp.org/vimdoc-en/autocmd.html#WinEnter
 </div>
 </div>
 <div class="sect1">
-<h2 id="tips">23. Tips</h2>
+<h2 id="tips">22. Tips</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="tips_vim_submode">23.1. vim-submode</h3>
+<h3 id="tips_vim_submode">22.1. vim-submode</h3>
 <div class="quoteblock">
 <blockquote>
 <div class="paragraph">
@@ -3070,7 +3204,7 @@ This will be done by <a href="https://vim-jp.org/vimdoc-en/autocmd.html#WinEnter
 </div>
 </div>
 <div class="sect2">
-<h3 id="tips_auto_connection">23.2. Auto connection</h3>
+<h3 id="tips_auto_connection">22.2. Auto connection</h3>
 <div class="paragraph">
 <p>If you&#8217;d like to connect to REPL automatically, define <a href="https://vim-jp.org/vimdoc-en/autocmd.html">autocmd</a> for <a href="https://vim-jp.org/vimdoc-en/autocmd.html#VimEnter">VimEnter</a> event.</p>
 </div>
@@ -3107,7 +3241,7 @@ aug END</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_reloaded_workflows">23.3. Reloaded workflows</h3>
+<h3 id="_reloaded_workflows">22.3. Reloaded workflows</h3>
 <div class="paragraph">
 <p>If you are managing lifecycle of components with <a href="https://github.com/stuartsierra/component">Stuart Sierra&#8217;s component</a>, <a href="https://github.com/weavejester/integrant">integrant</a> or etc, key mappings like follows are useful.</p>
 </div>
@@ -3128,10 +3262,10 @@ aug END</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="external_integration">24. External integration</h2>
+<h2 id="external_integration">23. External integration</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="kaocha">24.1. kaocha</h3>
+<h3 id="kaocha">23.1. kaocha</h3>
 <div class="paragraph">
 <p><a href="https://github.com/lambdaisland/kaocha">kaocha</a> is full featured next gen Clojure test runner.</p>
 </div>
@@ -3179,7 +3313,7 @@ See <a href="https://cljdoc.org/d/lambdaisland/kaocha/CURRENT/doc/6-focusing-and
 </tbody>
 </table>
 <div class="sect3">
-<h4 id="_usage">24.1.1. Usage</h4>
+<h4 id="_usage">23.1.1. Usage</h4>
 <div class="paragraph">
 <p>First, add <a href="https://github.com/liquidz/vim-iced-kaocha">vim-iced-kaocha</a> to your vim-plug section.</p>
 </div>
@@ -3224,7 +3358,7 @@ aug END</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="socket_repl">25. Socket REPL</h2>
+<h2 id="socket_repl">24. Socket REPL</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>vim-iced targets <a href="https://nrepl.org/">nREPL</a> mainly, but now will also support minimal operations on socket REPL.</p>
@@ -3301,7 +3435,7 @@ This connection is based on socket repl connection.</p></td>
 </tbody>
 </table>
 <div class="sect2">
-<h3 id="_connecting_socket_repl">25.1. Connecting socket REPL</h3>
+<h3 id="_connecting_socket_repl">24.1. Connecting socket REPL</h3>
 <div class="paragraph">
 <p>You can try socket REPL connection as follows.</p>
 </div>
@@ -3368,7 +3502,7 @@ This connection is based on socket repl connection.</p></td>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_connecting_prepl">25.2. Connecting pREPL</h3>
+<h3 id="_connecting_prepl">24.2. Connecting pREPL</h3>
 <div class="paragraph">
 <p>pREPL connection is based on socket REPL connection in vim-iced.</p>
 </div>
@@ -3409,10 +3543,10 @@ vim-iced can download <code>jet</code> automatically if you want.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="developer">26. Developer</h2>
+<h2 id="developer">25. Developer</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="minimal_configuration">26.1. Minimal configuration</h3>
+<h3 id="minimal_configuration">25.1. Minimal configuration</h3>
 <div class="paragraph">
 <p>Minimal configuration is useful for debugging.
 If you find an unexpected behavior, please try this configuration.</p>
@@ -3460,12 +3594,12 @@ If you find an unexpected behavior, please try this configuration.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="testing_vim_iced">26.2. Testing vim-iced</h3>
+<h3 id="testing_vim_iced">25.2. Testing vim-iced</h3>
 <div class="paragraph">
 <p>vim-iced uses <a href="https://github.com/thinca/vim-themis">vim-themis</a> as a test runner.</p>
 </div>
 <div class="sect3">
-<h4 id="_run_tests_on_docker">26.2.1. Run tests on docker</h4>
+<h4 id="_run_tests_on_docker">25.2.1. Run tests on docker</h4>
 <div class="paragraph">
 <p>The easiest way to run tests is the way using docker.</p>
 </div>
@@ -3494,7 +3628,7 @@ Please refer to the argument of <code>themis#suite</code> in the first line of e
 </div>
 </div>
 <div class="sect3">
-<h4 id="_run_tests_locally">26.2.2. Run tests locally</h4>
+<h4 id="_run_tests_locally">25.2.2. Run tests locally</h4>
 <div class="paragraph">
 <p>You can also run tests locally.
 The following <code>make</code> rule will clone <a href="https://github.com/thinca/vim-themis">vim-themis</a> and run tests.</p>
@@ -3520,7 +3654,7 @@ The following <code>make</code> rule will clone <a href="https://github.com/thin
 </div>
 </div>
 <div class="sect1">
-<h2 id="cheatsheet">27. Cheatsheet</h2>
+<h2 id="cheatsheet">26. Cheatsheet</h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
 <table>
@@ -3760,7 +3894,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-03-20 23:10:36 UTC
+Last updated 2020-03-29 06:16:43 UTC
 </div>
 </div>
 <style>
