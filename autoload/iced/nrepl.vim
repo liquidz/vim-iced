@@ -34,6 +34,7 @@ let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
 let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
 let g:iced#nrepl#path_translation = get(g:, 'iced#nrepl#path_translation', {})
 let g:iced#nrepl#init_cljs_ns = get(g:, 'iced#nrepl#init_cljs_ns', 'cljs.user')
+let g:iced#nrepl#enable_sideloader = get(g:, 'iced#nrepl#enable_sideloader', v:false)
 
 let s:id_counter = 1
 function! iced#nrepl#id() abort
@@ -215,6 +216,7 @@ function! s:dispatcher(ch, resp) abort
   let future = iced#system#get('future')
 
   let need_debug_input_response = ''
+  let sideloader_lookup_response = ''
 
   for resp in responses
     if type(resp) != v:t_dict
@@ -238,6 +240,8 @@ function! s:dispatcher(ch, resp) abort
     for status in get(resp, 'status', [''])
       if status ==# 'need-debug-input'
         let need_debug_input_response = resp
+      elseif status ==# 'sideloader-lookup'
+        let sideloader_lookup_response = resp
       endif
     endfor
   endfor
@@ -279,6 +283,8 @@ function! s:dispatcher(ch, resp) abort
       call iced#buffer#stdout#open()
     endif
     call iced#nrepl#debug#start(need_debug_input_response)
+  elseif !empty(sideloader_lookup_response)
+    call iced#nrepl#sideloader#lookup(sideloader_lookup_response)
   endif
 endfunction
 " }}}
@@ -361,6 +367,10 @@ function! s:warm_up() abort
     endif
   endif
   call iced#format#set_indentexpr()
+
+  if g:iced#nrepl#enable_sideloader
+    call iced#nrepl#sideloader#start()
+  endif
 
   " load util files
   let load_dir = printf('%s/clj/load_files', g:vim_iced_home)

@@ -1,8 +1,8 @@
-== Hook [[hook]]
+=== Hook [[hook]]
 
 Some events on vim-iced can be hooked, and you can execute any processing.
 
-=== Event [[hook_event]]
+==== Event [[hook_event]]
 
 Following events can be hooked.
 
@@ -37,7 +37,7 @@ Following events can be hooked.
 
 |===
 
-=== Reporter [[hook_reporter]]
+==== Reporter [[hook_reporter]]
 
 Hooked events and event parameters are reported to reporters.
 You can define some kind of reporters as follows.
@@ -61,7 +61,7 @@ The shell command is executed in https://vim-jp.org/vimdoc-en/terminal.html[term
 
 |===
 
-=== Example [[hook_example]]
+==== Example [[hook_example]]
 
 Here is a example to setting up hooks.
 

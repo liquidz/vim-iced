@@ -151,6 +151,9 @@ command!          IcedJumpToNextError       call iced#system#get('sign').jump_to
 command!          IcedJumpToPrevError       call iced#system#get('sign').jump_to_next({'name': iced#nrepl#test#sign_name()})
 command!          IcedJumpToLet             call iced#let#jump_to_let()
 
+command!          IcedStartSideloader        call iced#nrepl#sideloader#start()
+command!          IcedToggleSideloaderLookup call iced#nrepl#sideloader#toggle_enablement_of_lookup()
+
 "" }}}
 
 "" Key mappings {{{
@@ -250,6 +253,10 @@ nnoremap <silent> <Plug>(iced_in_init_ns)               :<C-u>IcedInInitNs<CR>
 nnoremap <silent> <Plug>(iced_jump_to_next_sign)        :<C-u>IcedJumpToNextSign<CR>
 nnoremap <silent> <Plug>(iced_jump_to_prev_sign)        :<C-u>IcedJumpToPrevSign<CR>
 nnoremap <silent> <Plug>(iced_jump_to_let)              :<C-u>IcedJumpToLet<CR>
+
+nnoremap <silent> <Plug>(iced_start_sideloader)         :<C-u>IcedStartSideloader<CR>
+nnoremap <silent> <Plug>(iced_toggle_sideloader_lookup) :<C-u>IcedToggleSideloaderLookup<CR>
+
 "" }}}
 
 "" Auto commands {{{

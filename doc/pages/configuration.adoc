@@ -4,6 +4,8 @@ include::configuration/evaluation.adoc[]
 
 include::configuration/formatting.adoc[]
 
+include::configuration/hook.adoc[]
+
 include::configuration/docker.adoc[]
 
 include::configuration/command_palette.adoc[]

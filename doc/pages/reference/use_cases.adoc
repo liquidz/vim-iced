@@ -1,0 +1,7 @@
+=== Use cases
+
+Sometimes, it is useful to know how a function is used elsewhere.
+{help_html}#%3AIcedUseCaseOpen[IcedUseCaseOpen] command is for that.
+
+`IcedUseCaseOpen` will open a separated buffer, and show the first usecase if it is found.
+When there are several usecases, {help_html}#%3AIcedNextUseCase[IcedNextUseCase] and {help_html}#%3AIcedPrevUseCase[IcedPrevUseCase] commands switch the shown usecase.

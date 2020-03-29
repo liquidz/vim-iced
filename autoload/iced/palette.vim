@@ -26,6 +26,7 @@ let s:default_palette = [
       \ 'InInitNs',
       \ 'JumpToNextSign', 'JumpToPrevSign',
       \ 'JumpToLet',
+      \ 'StartSideloader', 'ToggleSideloaderLookup',
       \ ]
 
 function! s:build_palette() abort
