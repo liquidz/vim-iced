@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 1.3.0 (2020-03-29)
+// {{{
+=== Added
+* Added a support for sideloader in nREPL 0.7.0.
+
+=== Changed
+* Bump nREPL to 0.7.0.
+* Bump zprint to 0.5.4.
+
+=== Fixed
+* Fixed buffer manipulation to ignore following autocmds also.
+** `WinLeave`, `BufLeave`
+// }}}
+
 == 1.2.0 (2020-03-21)
 // {{{
 === Added
