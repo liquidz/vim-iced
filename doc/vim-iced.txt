@@ -924,6 +924,15 @@ COMMANDS                                                    *vim-iced-commands*
   `ctrlp.vim`, `fzf` or `vim-clap` is required to select a test var.
   Key is mapped to |<Plug>(iced_browse_test_under_cursor)|.
 
+                                                            *:IcedClearNsCache*
+:IcedClearNsCache
+  Clear all caches related to namespace.
+  
+  vim-iced will cache followings currently:
+  - Existing all namespace aliases
+  
+  Key is mapped to |<Plug>(iced_clear_ns_cache)|.
+
                                                          *:IcedClearCtrlpCache*
 :IcedClearCtrlpCache
   Clear ctrlp cache used by vim-iced.
@@ -1368,6 +1377,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                         *<Plug>(iced_browse_test_under_cursor)*
 <Plug>(iced_browse_test_under_cursor)
   Same as |:IcedBrowseTestUnderCursor|.
+
+                                                  *<Plug>(iced_clear_ns_cache)*
+<Plug>(iced_clear_ns_cache)
+  Same as |:IcedClearNsCache|.
 
                                                *<Plug>(iced_clear_ctrlp_cache)*
 <Plug>(iced_clear_ctrlp_cache)

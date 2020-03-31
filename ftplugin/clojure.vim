@@ -122,7 +122,9 @@ command!          IcedBrowseReferences       call iced#nrepl#navigate#browse_ref
 command!          IcedBrowseDependencies     call iced#nrepl#navigate#browse_dependencies()
 command! -nargs=? IcedBrowseVarReferences    call iced#nrepl#navigate#browse_var_references(<q-args>)
 command! -nargs=? IcedBrowseVarDependencies  call iced#nrepl#navigate#browse_var_dependencies(<q-args>)
-command!          IcedClearCtrlpCache        call ctrlp#iced#cache#clear()
+
+command!          IcedClearNsCache          call iced#nrepl#ns#clear_cache()
+command!          IcedClearCtrlpCache       call ctrlp#iced#cache#clear()
 
 command!          IcedCleanNs               call iced#nrepl#refactor#clean_ns()
 command!          IcedCleanAll              call iced#nrepl#refactor#clean_all()
@@ -228,6 +230,8 @@ nnoremap <silent> <Plug>(iced_browse_references)        :<C-u>IcedBrowseReferenc
 nnoremap <silent> <Plug>(iced_browse_dependencies)      :<C-u>IcedBrowseDependencies<CR>
 nnoremap <silent> <Plug>(iced_browse_var_references)    :<C-u>IcedBrowseVarReferences<CR>
 nnoremap <silent> <Plug>(iced_browse_var_dependencies)  :<C-u>IcedBrowseVarDependencies<CR>
+
+nnoremap <silent> <Plug>(iced_clear_ns_cache)           :<C-u>IcedClearNsCache<CR>
 nnoremap <silent> <Plug>(iced_clear_ctrlp_cache)        :<C-u>IcedClearCtrlpCache<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)                 :<C-u>IcedCleanNs<CR>

@@ -244,5 +244,10 @@ function! iced#nrepl#ns#find_existing_alias(ns_name, callback) abort
         \ a:callback(s:__find_existing_alias(a:ns_name, resp))})
 endfunction
 
+"" Clear all caches related to namespace
+function! iced#nrepl#ns#clear_cache() abort
+  call iced#nrepl#op#refactor#__clear_cache()
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
