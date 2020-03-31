@@ -77,5 +77,30 @@ function! iced#cache#do_once(key, f) abort
   endif
 endfunction
 
+function! iced#cache#factory(prefix) abort
+  let d = {'__prefix__': a:prefix}
+  function! d.__key__(k) abort
+    return printf('%s-%s', self.__prefix__, a:k)
+  endfunction
+
+  function! d.set(k, v, ...) abort
+    return iced#cache#set(self.__key__(a:k), a:v, get(a:, 1, ''))
+  endfunction
+
+  function! d.get(k, ...) abort
+    return iced#cache#get(self.__key__(a:k), get(a:, 1, ''))
+  endfunction
+
+  function! d.delete(k) abort
+    return iced#cache#delete(self.__key__(a:k))
+  endfunction
+
+  function! d.clear() abort
+    return iced#cache#delete_by_prefix(self.__prefix__)
+  endfunction
+
+  return d
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

@@ -96,3 +96,18 @@ function! s:suite.delete_by_prefix_test() abort
   endfor
   call s:assert.true(iced#cache#has_key('b_baz'))
 endfunction
+
+function! s:suite.factory_test() abort
+  call iced#cache#clear()
+  call iced#cache#set('hello', 'world')
+
+  let l = iced#cache#factory('local')
+  call l.set('hello', 'local world')
+
+  call s:assert.equals(iced#cache#get('hello'), 'world')
+  call s:assert.equals(l.get('hello'), 'local world')
+
+  call l.clear()
+  call s:assert.equals(iced#cache#get('hello', 'default'), 'world')
+  call s:assert.equals(l.get('hello', 'local default'), 'local default')
+endfunction
