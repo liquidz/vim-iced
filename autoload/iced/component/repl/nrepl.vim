@@ -7,6 +7,7 @@ let s:nrepl = {
       \ 'env': 'nrepl',
       \ 'eval_code': function('iced#nrepl#eval#code'),
       \ 'eval_outer_top_list': function('iced#nrepl#eval#outer_top_list'),
+      \ 'eval_at_mark': function('iced#repl#eval_at_mark'),
       \ 'eval_raw': function('iced#nrepl#eval'),
       \ 'is_connected': function('iced#nrepl#is_connected'),
       \ 'status': function('iced#nrepl#status'),

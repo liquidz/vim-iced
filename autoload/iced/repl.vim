@@ -58,5 +58,31 @@ function! iced#repl#execute(feature_name, ...) abort
   endif
 endfunction
 
+function! iced#repl#eval_at_mark(mark) abort
+  if getpos(printf("'%s", a:mark)) == [0, 0, 0, 0]
+    return
+  endif
+
+  let context = iced#util#save_context()
+  " To show virtual text at current line
+  let opt = {'virtual_text': {
+        \ 'line': has('nvim') ? winline()-1 : winline(),
+        \ 'col': col('$') + 3,
+        \ 'buffer': bufnr('%'),
+        \ }}
+
+  try
+    " Move cursor at mark
+    silent execute printf("normal! `%s", a:mark)
+
+    let p = iced#repl#execute('eval_outer_top_list', opt)
+    if iced#promise#is_promise(p)
+      call iced#promise#wait(p)
+    endif
+  finally
+    call iced#util#restore_context(context)
+  endtry
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

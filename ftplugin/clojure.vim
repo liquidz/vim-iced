@@ -73,6 +73,7 @@ command!          IcedRequireAll            call iced#nrepl#ns#reload_all()
 command! -nargs=? IcedUndef                 call iced#nrepl#eval#undef(<q-args>)
 command! -nargs=? IcedUndefAllInNs          call iced#nrepl#eval#undef_all_in_ns(<q-args>)
 command!          IcedEvalOuterTopList      call iced#repl#execute('eval_outer_top_list')
+command!          IcedEvalAtMark            call iced#repl#execute('eval_at_mark', nr2char(getchar()))
 command!          IcedPrintLast             call iced#nrepl#eval#print_last()
 command!          IcedMacroExpandOuterList  call iced#nrepl#macro#expand_outer_list()
 command!          IcedMacroExpand1OuterList call iced#nrepl#macro#expand_1_outer_list()
@@ -183,6 +184,7 @@ nnoremap <silent> <Plug>(iced_require_all)              :<C-u>IcedRequireAll<CR>
 nnoremap <silent> <Plug>(iced_undef)                    :<C-u>IcedUndef<CR>
 nnoremap <silent> <Plug>(iced_undef_all_in_ns)          :<C-u>IcedUndefAllInNs<CR>
 nnoremap <silent> <Plug>(iced_eval_outer_top_list)      :<C-u>IcedEvalOuterTopList<CR>
+nnoremap <silent> <Plug>(iced_eval_at_mark)             :<C-u>IcedEvalAtMark<CR>
 nnoremap <silent> <Plug>(iced_print_last)               :<C-u>IcedPrintLast<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_outer_list)   :<C-u>IcedMacroExpandOuterList<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_1_outer_list) :<C-u>IcedMacroExpand1OuterList<CR>
@@ -323,6 +325,7 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>ei <Plug>(iced_eval)<Plug>(sexp_inner_element)``
     silent! nmap <buffer> <Leader>ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
     silent! nmap <buffer> <Leader>et <Plug>(iced_eval_outer_top_list)
+    silent! nmap <buffer> <Leader>ea <Plug>(iced_eval_at_mark)
   endif
 
   if !hasmapto('<Plug>(iced_eval_visual)')

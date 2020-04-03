@@ -7,6 +7,7 @@ let s:socket_repl = {
       \ 'env': 'socket_repl',
       \ 'eval_code': function('iced#socket_repl#eval'),
       \ 'eval_outer_top_list': function('iced#socket_repl#eval_outer_top_list'),
+      \ 'eval_at_mark': function('iced#repl#eval_at_mark'),
       \ 'is_connected': function('iced#socket_repl#is_connected'),
       \ 'status': function('iced#socket_repl#status'),
       \ 'load_current_file': function('iced#socket_repl#load_current_file'),
