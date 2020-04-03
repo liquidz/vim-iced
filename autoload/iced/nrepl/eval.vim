@@ -1,8 +1,6 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let g:iced#eval#inside_comment = get(g:, 'iced#eval#inside_comment', v:true)
-
 function! s:parse_error(err) abort
   " Clojure 1.9 or above
   let err = matchstr(a:err, ', compiling:(.\+:\d\+:\d\+)')
@@ -73,6 +71,7 @@ function! s:is_comment_form(code) abort
 endfunction
 
 function! iced#nrepl#eval#normalize_code(code) abort
+  " c.f. autoload/iced/repl.vim
   if g:iced#eval#inside_comment && s:is_comment_form(a:code)
     return substitute(a:code, '^(comment', '(do', '')
   endif

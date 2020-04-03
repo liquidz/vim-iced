@@ -1,6 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let g:iced#eval#inside_comment = get(g:, 'iced#eval#inside_comment', v:true)
+let g:iced#eval#mark_at_last = get(g:, 'iced#eval#mark_at_last', '1')
+
 let s:repl = {}
 
 function! iced#repl#status() abort
