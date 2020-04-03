@@ -164,6 +164,11 @@ function! iced#nrepl#eval#outer_top_list(...) abort
   let opt = {'line': pos[1], 'column': pos[2]}
   call extend(opt, get(a:, 1, {}))
 
+  " c.f. autoload/iced/repl.vim
+  if !empty(g:iced#eval#mark_at_last)
+    call setpos(printf("'%s", g:iced#eval#mark_at_last), pos)
+  endif
+
   return iced#nrepl#eval#code(code, opt)
 endfunction
 
