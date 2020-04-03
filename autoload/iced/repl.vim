@@ -84,5 +84,9 @@ function! iced#repl#eval_at_mark(mark) abort
   endtry
 endfunction
 
+function! iced#repl#eval_last_outer_top_list() abort
+  return iced#repl#eval_at_mark(g:iced#eval#mark_at_last)
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
