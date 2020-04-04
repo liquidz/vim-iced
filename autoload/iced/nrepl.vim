@@ -122,7 +122,13 @@ function! s:get_message_id(x) abort
   if type(a:x) != v:t_dict
     return -1
   endif
-  return get(a:x, 'id', get(a:x, 'original-id', -1))
+  let result = get(a:x, 'id', get(a:x, 'original-id', -1))
+
+  " babashka returns 'unknown'
+  if result ==# 'unknown'
+    return -1
+  endif
+  return result
 endfunction
 
 function! s:get_message_ids(x) abort
