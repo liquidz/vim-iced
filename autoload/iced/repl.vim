@@ -75,7 +75,10 @@ function! iced#repl#eval_at_mark(mark) abort
     " Move cursor at mark
     silent execute printf('normal! `%s', a:mark)
 
-    let p = iced#repl#execute('eval_outer_top_list', opt)
+    let code = iced#paredit#get_outer_list_raw()
+    let code = iced#nrepl#eval#normalize_code(code)
+
+    let p = iced#repl#execute('eval_code', code, opt)
     if iced#promise#is_promise(p)
       call iced#promise#wait(p)
     endif
