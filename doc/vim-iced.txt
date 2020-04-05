@@ -335,7 +335,7 @@ EVALUATING                                                *vim-iced-evaluating*
   ;;            <-----ei----->
   ;;   <----------ee---------->
 <
-  See |iced-tips-evaluating| for more information.
+  See https://liquidz.github.io/vim-iced/#configuration_evaluation
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                                          *vim-iced-stdout-buffer*
@@ -1476,7 +1476,7 @@ g:iced#cljs#default_env
 g:iced#eval#inside_comment
   If {v:true}, evaluate inside comment form.
   Default value is `v:true`.
-  See |iced-tips-eval-inside-comment| for more information.
+  See https://liquidz.github.io/vim-iced/#configuration_evaluation
 
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
