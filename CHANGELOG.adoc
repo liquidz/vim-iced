@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file. This change
 == 1.3.2 (2020-04-05)
 // {{{
 === Fixed
-* Fixed nREPL manipulation to support [babashka](https://github.com/borkdude/babashka)'s nREPL.
+* Fixed nREPL manipulation to support https://github.com/borkdude/babashka[babashka]'s nREPL.
 // }}}
 
 == 1.3.1 (2020-03-29)
