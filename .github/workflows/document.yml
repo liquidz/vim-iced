@@ -11,8 +11,14 @@ jobs:
       image: asciidoctor/docker-asciidoctor
     steps:
       - uses: actions/checkout@v2
-      - name: build html
+
+      - name: build html for DEV
+        if: github.ref == 'refs/heads/dev'
+        run: asciidoctor -o target/html/index.html doc/pages/index.adoc -a 'help_html=https://vim-iced-nightly.netlify.com/vim-iced.html'
+      - name: build html for PROD
+        if: github.ref == 'refs/heads/master'
         run: asciidoctor -o target/html/index.html doc/pages/index.adoc
+
       - uses: actions/upload-artifact@master
         with:
           name: asciidoc_index.html
