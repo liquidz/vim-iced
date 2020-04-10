@@ -59,8 +59,7 @@ function! s:context() abort
     let nrow = view['lnum'] - line('.')
     let ncol = view['col'] + 1
 
-    silent exe 'normal! va(y'
-    let codes = split(@@, '\r\?\n')
+    let codes = split(iced#paredit#get_outer_list_raw(), '\r\?\n')
     let codes[nrow] = printf('%s__prefix__%s', codes[nrow][0:ncol-2], codes[nrow][ncol-1:])
     return join(codes, "\n")
   catch /E684:/
