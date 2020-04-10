@@ -49,18 +49,18 @@ jobs:
     if: github.ref == 'refs/heads/dev'
     needs: [asciidoc, help]
     runs-on: ubuntu-latest
-    container:
-      image: node:8.10.0
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@master
         with:
           name: document
           path: document
-      - name: install netlify-cli
-        run: npm install -g --silent netlify-cli
-      - name: deploy to netlify
-        run: netlify deploy --auth=${{ secrets.NETLIFY_PERSONAL_ACCESS_TOKEN }} --site=${{ secrets.NETLIFY_SITE_ID }} --dir=document --prod
+      - uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_PERSONAL_ACCESS_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        with:
+          args: deploy --dir=document --prod
 
   deploy:
     if: github.ref == 'refs/heads/master'
