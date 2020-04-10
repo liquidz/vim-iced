@@ -44,7 +44,7 @@
 
 (defn all-command-option-configs [aliases]
   (keep (fn [alias-name]
-          (if-let [{:keys [dependencies middlewares]} (get-alias-config alias-name)]
+          (when-let [{:keys [dependencies middlewares]} (get-alias-config alias-name)]
             {:name (str/upper-case alias-name)
              :dependencies (bash-map dependencies)
              :middlewares (bash-list middlewares)}))
