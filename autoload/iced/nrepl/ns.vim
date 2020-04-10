@@ -39,8 +39,7 @@ function! iced#nrepl#ns#get() abort
     if iced#nrepl#ns#util#search() == 0
       return ''
     endif
-    silent normal! va(y
-    let code = @@
+    let code = iced#paredit#get_outer_list_raw()
   finally
     let @@ = reg_save
     call winrestview(view)
