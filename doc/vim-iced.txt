@@ -663,6 +663,18 @@ COMMANDS                                                    *vim-iced-commands*
   without scrolling.
   Key is mapped to |<Plug>(iced_eval_outer_top_list)|.
 
+                                                              *:IcedEvalAtMark*
+:IcedEvalAtMark
+  NOTE: Type a key to specify the mark after executing this command.
+  Evaluate the outer list (not outer top list) on the specified mark.
+  Key is mapped to |<Plug>(iced_eval_at_mark)|.
+
+                                                    *:IcedEvalLastOuterTopList*
+:IcedEvalLastOuterTopList
+  Re-evaluate the outer top list which is evaluated last.
+  Last evaluated list is marked to |g:iced#eval#mark_at_last|.
+  Key is mapped to |<Plug>(iced_eval_last_outer_top_list)|.
+
                                                                *:IcedPrintLast*
 :IcedPrintLast
   Open a window, and show last evaluated value.
@@ -927,10 +939,10 @@ COMMANDS                                                    *vim-iced-commands*
                                                             *:IcedClearNsCache*
 :IcedClearNsCache
   Clear all caches related to namespace.
-  
+
   vim-iced will cache followings currently:
   - Existing all namespace aliases
-  
+
   Key is mapped to |<Plug>(iced_clear_ns_cache)|.
 
                                                          *:IcedClearCtrlpCache*
@@ -1202,6 +1214,14 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                              *<Plug>(iced_eval_outer_top_list)*
 <Plug>(iced_eval_outer_top_list)
   Same as |:IcedEvalOuterTopList|.
+
+                                                    *<Plug>(iced_eval_at_mark)*
+<Plug>(iced_eval_at_mark)
+  Same as |:IcedEvalAtMark|.
+
+                                        *<Plug>(iced_eval_last_outer_top_list)*
+<Plug>(iced_eval_last_outer_top_list)
+  Same as |:IcedEvalLastOuterTopList|.
 
                                                       *<Plug>(iced_print_last)*
 <Plug>(iced_print_last)
@@ -1886,6 +1906,8 @@ g:iced_enable_default_key_mappings
   n       <Leader>ei   <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   n       <Leader>ee   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   n       <Leader>et   <Plug>(iced_eval_outer_top_list)
+  n       <Leader>ea   <Plug>(iced_eval_at_mark)
+  n       <Leader>el   <Plug>(iced_eval_last_outer_top_list)
   n       <Leader>en   <Plug>(iced_eval_ns)
   v       <Leader>ee   <Plug>(iced_eval_visual)
   n       <Leader>ep   <Plug>(iced_print_last)
