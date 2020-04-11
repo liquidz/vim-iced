@@ -2,6 +2,24 @@ a
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+
+* Added `:IcedEvalAtMark` command.
+* Added `:IcedEvalLastOuterTopList` command.
+** Added `g:iced#eval#mark_at_last` option to specify which mark to use.
+* Added `:IcedClearNsCache` command.
+
+=== Changed
+
+* Changed to cache the namespaces and its aliases for performance improvement.
+** `:IcedClearNsCache` will clear this cache.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/202[#202]: Fixed completion to avoid unexpected behavior with https://github.com/neoclide/coc.nvim[coc.nvim].
+** c.f. https://github.com/liquidz/vim-iced-coc-source/issues/1[vim-iced-coc-source#1]
+// }}}
+
 == 1.3.2 (2020-04-05)
 // {{{
 === Fixed
@@ -851,4 +869,3 @@ https://insideclojure.org/2020/02/18/lib-version/
 * Add `IcedTestRerunLast` command
 * Support neovim EXPERIMENTALLY
 // }}}
-// vim:fdm=marker:fdl=0
