@@ -1511,6 +1511,12 @@ g:iced#eval#inside_comment
   Default value is `v:true`.
   See https://liquidz.github.io/vim-iced/#configuration_evaluation
 
+                                                     *g:iced#eval#mark_at_last*
+g:iced#eval#mark_at_last
+  The mark to set last evaluated position.
+  It is recommended to use the mark which can be used by globally.
+  Default value is `1`.
+
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
