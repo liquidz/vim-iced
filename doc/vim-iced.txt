@@ -870,7 +870,10 @@ COMMANDS                                                    *vim-iced-commands*
   - Windows: FOLDERID_LocalAppData\\cache\orchard\clojuredocs\export.edn
   - Others : $XDG_CACHE_HOME or $HOME/.cache/orchard/clojuredocs/export.edn
 
-  See also |g:iced#clojuredocs#export_edn_url|.
+  See also:
+  - |g:iced#clojuredocs#export_edn_url|
+  - |g:iced#clojuredocs#use_clj_docs_on_cljs|
+
   Key is mapped to |<Plug>(iced_clojuredocs_open)|.
 
                                                       *:IcedClojureDocsRefresh*
@@ -1710,6 +1713,18 @@ g:iced#clojuredocs#export_edn_url
   The URL exported from ClojureDocs.
   EDN format file is expected.
   Default value is `https://clojuredocs-edn.netlify.com/export.edn`.
+
+                                      *g:iced#clojuredocs#use_clj_docs_on_cljs*
+g:iced#clojuredocs#use_clj_docs_on_cljs
+  If {v:true}, use Clojure documents instead of ClojureScript.
+  Default value is `v:false`.
+  See also |g:iced#clojuredocs#cljs_ns_replace_map|.
+
+                                       *g:iced#clojuredocs#cljs_ns_replace_map*
+g:iced#clojuredocs#cljs_ns_replace_map
+  The namespace conversion table for |g:iced#clojuredocs#use_clj_docs_on_cljs|
+  option.
+  Default value is `{'cljs.core': 'clojure.core'}` .
 
                                            *vim-iced-customizing-auto-document*
 AUTO DOCUMENT~
