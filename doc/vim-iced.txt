@@ -968,11 +968,17 @@ COMMANDS                                                    *vim-iced-commands*
   Add missing libspec.
   If {symbol} is not passed, symbol under cursor is used.
 
+  Namespaces and its aliases are cached for performance.
+  |:IcedClearNsCache| will clear this cache.
+
                                                                    *:IcedAddNs*
 :IcedAddNs [{ns}]
   Add require to `ns` form.
   If {ns} is not passed, select namespaces in your project
   via `ctrlp.vim`, `fzf` or `vim-clap` interface.
+
+  Namespaces and its aliases are cached for performance.
+  |:IcedClearNsCache| will clear this cache.
 
                                                              *:IcedThreadFirst*
 :IcedThreadFirst
