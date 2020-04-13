@@ -1583,6 +1583,13 @@ g:iced#nrepl#auto#does_switch_session
   This will be done by |WinEnter| auto command.
   Default value is `v:false`.
 
+                                         *g:iced#nrepl#complete#ignore_context*
+g:iced#nrepl#complete#ignore_context
+  If {v:true}, the manipulation for completion ignores collecting contexts.
+  This means that results no longer includes information in contexts.
+  Enable this option only when you have a trouble with performance.
+  Default value is `v:false`.
+
                                        *g:iced_enable_enhanced_cljs_completion*
 g:iced_enable_enhanced_cljs_completion
   If {v:true}, enable enhanced ClojureScript completion.

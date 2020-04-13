@@ -1,6 +1,8 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+let g:iced#nrepl#complete#ignore_context = get(g:, 'iced#nrepl#complete#ignore_context', v:false)
+
 let s:type_to_kind_dict = {
       \ 'class':         'c',
       \ 'field':         'i',
@@ -79,7 +81,7 @@ function! iced#nrepl#complete#candidates(base, callback) abort
   call iced#nrepl#op#cider#complete(
         \ a:base,
         \ iced#nrepl#ns#name(),
-        \ s:context(),
+        \ (g:iced#nrepl#complete#ignore_context) ? '' : s:context(),
         \ {resp -> a:callback(s:candidates(resp))})
   return v:true
 endfunction

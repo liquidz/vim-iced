@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This change
 * Added `:IcedEvalLastOuterTopList` command.
 ** Added `g:iced#eval#mark_at_last` option to specify which mark to use.
 * Added `:IcedClearNsCache` command.
+* Added `g:iced#nrepl#complete#ignore_context` option.
 
 === Changed
 
