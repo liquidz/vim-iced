@@ -454,6 +454,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#evaluation_ranges">3.1. Ranges</a></li>
 <li><a href="#evaluation_results">3.2. Results</a></li>
+<li><a href="#evaluation_marks">3.3. Marks</a></li>
 </ul>
 </li>
 <li><a href="#completion">4. Completion</a>
@@ -866,6 +867,59 @@ However, the displayed result is only the returned value, so for example, the co
 <div class="paragraph">
 <p>The contents output to standard output are displayed on the <a href="#stdout_buffer">Stdout buffer</a>.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="evaluation_marks">3.3. Marks</h3>
+<div class="paragraph">
+<p>vim-iced also provides ways to evaluate forms by Vim&#8217;s <a href="https://vim-jp.org/vimdoc-en/motion.html#mark-motions">mark</a>.
+This feature is implemented by <a href="https://github.com/Olical/conjure">Conjure</a> originally.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Command</th>
+<th class="tableblock halign-left valign-top">Default key mapping</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedEvalAtMark">IcedEvalAtMark</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;ea</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Evaluate the outer list <strong>(not outer top list)</strong> on the specified mark.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Type a key to specify the mark after executing this command.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedEvalLastOuterTopList">IcedEvalLastOuterTopList</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;el</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Re-evaluate the outer top list which is evaluated last.<br>
+Last evaluated list is marked to <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23eval%23mark_at_last">g:iced#eval#mark_at_last</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For example, when you have a mark <code>m</code> on any position, <code>&lt;Leader&gt;eam</code> will evaluate the outer list on the mark <code>m</code> from any position.</p>
+</div>
 <div class="paragraph text-right">
 <p><span class="small"><a href="#top">Back to top</a></span></p>
 </div>
@@ -1041,6 +1095,16 @@ If you get a outdated result, you can refresh cache file by this command.</p></t
 </tr>
 </tbody>
 </table>
+<div class="sect3">
+<h4 id="_clojuredocs_on_clojurescript">5.2.1. ClojureDocs on ClojureScript</h4>
+<div class="paragraph">
+<p>ClojureDocs does not have docs for ClojureScript currently.</p>
+</div>
+<div class="paragraph">
+<p>But if you would like to use Clojure documents instead of ClojureScript,
+you can use it by enabling <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23clojuredocs%23use_clj_docs_on_cljs">g:iced#clojuredocs#use_clj_docs_on_cljs</a>.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_source_codes">5.3. Source codes</h3>
@@ -1647,6 +1711,13 @@ So if you would like to delete them, execute <a href="https://liquidz.github.io/
 </tr>
 </tbody>
 </table>
+<div class="sect3">
+<h4 id="_cache">11.1.1. Cache</h4>
+<div class="paragraph">
+<p>Namespaces and its aliases are cached for performance.
+<a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedClearNsCache">IcedClearNsCache</a> will clear this cache.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="refactoring_function">11.2. Function</h3>
@@ -3910,7 +3981,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-13 12:25:49 UTC
+Last updated 2020-04-13 21:18:55 UTC
 </div>
 </div>
 <style>
