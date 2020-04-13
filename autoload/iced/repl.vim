@@ -1,6 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let g:iced#eval#inside_comment = get(g:, 'iced#eval#inside_comment', v:true)
+let g:iced#eval#mark_at_last = get(g:, 'iced#eval#mark_at_last', '1')
+
 let s:repl = {}
 
 function! iced#repl#status() abort
@@ -53,6 +56,39 @@ function! iced#repl#execute(feature_name, ...) abort
   if type(Fn) == v:t_func
     return call(Fn, a:000)
   endif
+endfunction
+
+function! iced#repl#eval_at_mark(mark) abort
+  if getpos(printf("'%s", a:mark)) == [0, 0, 0, 0]
+    return
+  endif
+
+  let context = iced#util#save_context()
+  " To show virtual text at current line
+  let opt = {'virtual_text': {
+        \ 'line': has('nvim') ? winline()-1 : winline(),
+        \ 'col': col('$') + 3,
+        \ 'buffer': bufnr('%'),
+        \ }}
+
+  try
+    " Move cursor at mark
+    silent execute printf('normal! `%s', a:mark)
+
+    let code = iced#paredit#get_outer_list_raw()
+    let code = iced#nrepl#eval#normalize_code(code)
+
+    let p = iced#repl#execute('eval_code', code, opt)
+    if iced#promise#is_promise(p)
+      call iced#promise#wait(p)
+    endif
+  finally
+    call iced#util#restore_context(context)
+  endtry
+endfunction
+
+function! iced#repl#eval_last_outer_top_list() abort
+  return iced#repl#eval_at_mark(g:iced#eval#mark_at_last)
 endfunction
 
 let &cpo = s:save_cpo

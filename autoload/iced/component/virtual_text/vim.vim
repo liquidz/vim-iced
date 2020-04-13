@@ -16,6 +16,10 @@ function! s:vt.set(text, ...) abort
         \ 'highlight': get(opt, 'highlight', 'Comment'),
         \ }
 
+  if has_key(opt, 'line')
+    let popup_opts['line'] = opt.line
+  endif
+
   if get(opt, 'auto_clear', v:false)
     let popup_opts['moved'] = 'any'
     let popup_opts['auto_close'] = v:false

@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 1.3.2
+Version: 1.4.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -663,6 +663,18 @@ COMMANDS                                                    *vim-iced-commands*
   without scrolling.
   Key is mapped to |<Plug>(iced_eval_outer_top_list)|.
 
+                                                              *:IcedEvalAtMark*
+:IcedEvalAtMark
+  NOTE: Type a key to specify the mark after executing this command.
+  Evaluate the outer list (not outer top list) on the specified mark.
+  Key is mapped to |<Plug>(iced_eval_at_mark)|.
+
+                                                    *:IcedEvalLastOuterTopList*
+:IcedEvalLastOuterTopList
+  Re-evaluate the outer top list which is evaluated last.
+  Last evaluated list is marked to |g:iced#eval#mark_at_last|.
+  Key is mapped to |<Plug>(iced_eval_last_outer_top_list)|.
+
                                                                *:IcedPrintLast*
 :IcedPrintLast
   Open a window, and show last evaluated value.
@@ -858,7 +870,10 @@ COMMANDS                                                    *vim-iced-commands*
   - Windows: FOLDERID_LocalAppData\\cache\orchard\clojuredocs\export.edn
   - Others : $XDG_CACHE_HOME or $HOME/.cache/orchard/clojuredocs/export.edn
 
-  See also |g:iced#clojuredocs#export_edn_url|.
+  See also:
+  - |g:iced#clojuredocs#export_edn_url|
+  - |g:iced#clojuredocs#use_clj_docs_on_cljs|
+
   Key is mapped to |<Plug>(iced_clojuredocs_open)|.
 
                                                       *:IcedClojureDocsRefresh*
@@ -924,6 +939,15 @@ COMMANDS                                                    *vim-iced-commands*
   `ctrlp.vim`, `fzf` or `vim-clap` is required to select a test var.
   Key is mapped to |<Plug>(iced_browse_test_under_cursor)|.
 
+                                                            *:IcedClearNsCache*
+:IcedClearNsCache
+  Clear all caches related to namespace.
+
+  vim-iced will cache followings currently:
+  - Existing all namespace aliases
+
+  Key is mapped to |<Plug>(iced_clear_ns_cache)|.
+
                                                          *:IcedClearCtrlpCache*
 :IcedClearCtrlpCache
   Clear ctrlp cache used by vim-iced.
@@ -947,11 +971,17 @@ COMMANDS                                                    *vim-iced-commands*
   Add missing libspec.
   If {symbol} is not passed, symbol under cursor is used.
 
+  Namespaces and its aliases are cached for performance.
+  |:IcedClearNsCache| will clear this cache.
+
                                                                    *:IcedAddNs*
 :IcedAddNs [{ns}]
   Add require to `ns` form.
   If {ns} is not passed, select namespaces in your project
   via `ctrlp.vim`, `fzf` or `vim-clap` interface.
+
+  Namespaces and its aliases are cached for performance.
+  |:IcedClearNsCache| will clear this cache.
 
                                                              *:IcedThreadFirst*
 :IcedThreadFirst
@@ -1194,6 +1224,14 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_eval_outer_top_list)
   Same as |:IcedEvalOuterTopList|.
 
+                                                    *<Plug>(iced_eval_at_mark)*
+<Plug>(iced_eval_at_mark)
+  Same as |:IcedEvalAtMark|.
+
+                                        *<Plug>(iced_eval_last_outer_top_list)*
+<Plug>(iced_eval_last_outer_top_list)
+  Same as |:IcedEvalLastOuterTopList|.
+
                                                       *<Plug>(iced_print_last)*
 <Plug>(iced_print_last)
   Same as |:IcedPrintLast|.
@@ -1369,6 +1407,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_browse_test_under_cursor)
   Same as |:IcedBrowseTestUnderCursor|.
 
+                                                  *<Plug>(iced_clear_ns_cache)*
+<Plug>(iced_clear_ns_cache)
+  Same as |:IcedClearNsCache|.
+
                                                *<Plug>(iced_clear_ctrlp_cache)*
 <Plug>(iced_clear_ctrlp_cache)
   Same as |:IcedClearCtrlpCache|.
@@ -1478,6 +1520,12 @@ g:iced#eval#inside_comment
   Default value is `v:true`.
   See https://liquidz.github.io/vim-iced/#configuration_evaluation
 
+                                                     *g:iced#eval#mark_at_last*
+g:iced#eval#mark_at_last
+  The mark to set last evaluated position.
+  It is recommended to use the mark which can be used by globally.
+  Default value is `1`.
+
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
@@ -1533,6 +1581,13 @@ g:iced#refactor#prefix_rewriting
 g:iced#nrepl#auto#does_switch_session
   If {v:true}, enable automatic switching CLJ/CLJS session.
   This will be done by |WinEnter| auto command.
+  Default value is `v:false`.
+
+                                         *g:iced#nrepl#complete#ignore_context*
+g:iced#nrepl#complete#ignore_context
+  If {v:true}, the manipulation for completion ignores collecting contexts.
+  This means that results no longer includes information in contexts.
+  Enable this option only when you have a trouble with performance.
   Default value is `v:false`.
 
                                        *g:iced_enable_enhanced_cljs_completion*
@@ -1665,6 +1720,18 @@ g:iced#clojuredocs#export_edn_url
   The URL exported from ClojureDocs.
   EDN format file is expected.
   Default value is `https://clojuredocs-edn.netlify.com/export.edn`.
+
+                                      *g:iced#clojuredocs#use_clj_docs_on_cljs*
+g:iced#clojuredocs#use_clj_docs_on_cljs
+  If {v:true}, use Clojure documents instead of ClojureScript.
+  Default value is `v:false`.
+  See also |g:iced#clojuredocs#cljs_ns_replace_map|.
+
+                                       *g:iced#clojuredocs#cljs_ns_replace_map*
+g:iced#clojuredocs#cljs_ns_replace_map
+  The namespace conversion table for |g:iced#clojuredocs#use_clj_docs_on_cljs|
+  option.
+  Default value is `{'cljs.core': 'clojure.core'}` .
 
                                            *vim-iced-customizing-auto-document*
 AUTO DOCUMENT~
@@ -1873,6 +1940,8 @@ g:iced_enable_default_key_mappings
   n       <Leader>ei   <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   n       <Leader>ee   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   n       <Leader>et   <Plug>(iced_eval_outer_top_list)
+  n       <Leader>ea   <Plug>(iced_eval_at_mark)
+  n       <Leader>el   <Plug>(iced_eval_last_outer_top_list)
   n       <Leader>en   <Plug>(iced_eval_ns)
   v       <Leader>ee   <Plug>(iced_eval_visual)
   n       <Leader>ep   <Plug>(iced_print_last)

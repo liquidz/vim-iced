@@ -17,3 +17,10 @@ vim-iced provides the way to refer documents in ClojureDocs like docstring.
 If you get a outdated result, you can refresh cache file by this command.
 
 |===
+
+==== ClojureDocs on ClojureScript
+
+ClojureDocs does not have docs for ClojureScript currently.
+
+But if you would like to use Clojure documents instead of ClojureScript,
+you can use it by enabling {help_html}#g%3Aiced%23clojuredocs%23use_clj_docs_on_cljs[g:iced#clojuredocs#use_clj_docs_on_cljs].

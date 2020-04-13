@@ -11,10 +11,8 @@ jobs:
 
   clj-kondo:
     runs-on: ubuntu-latest
-    # container:
-    #   image: borkdude/clj-kondo
     steps:
       - uses: actions/checkout@v2
+      # c.f. https://github.com/borkdude/clj-kondo/blob/master/doc/ci-integration.md#linter-output-integration
       - name: Lint by clj-kondo
-        #run: clj-kondo --lint clj:test/clj
-        run: docker run --rm -v $(pwd):/tmp/work -w /tmp/work borkdude/clj-kondo clj-kondo --lint clj:test/clj
+        run: docker run --rm -v $(pwd):/tmp/work -w /tmp/work borkdude/clj-kondo clj-kondo --lint clj:test/clj --config '{:output {:pattern "::{{level}} file={{filename}},line={{row}},col={{col}}::{{message}}"}}'

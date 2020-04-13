@@ -1,6 +1,8 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+let g:iced#nrepl#complete#ignore_context = get(g:, 'iced#nrepl#complete#ignore_context', v:false)
+
 let s:type_to_kind_dict = {
       \ 'class':         'c',
       \ 'field':         'i',
@@ -59,8 +61,7 @@ function! s:context() abort
     let nrow = view['lnum'] - line('.')
     let ncol = view['col'] + 1
 
-    silent exe 'normal! va(y'
-    let codes = split(@@, '\r\?\n')
+    let codes = split(iced#paredit#get_outer_list_raw(), '\r\?\n')
     let codes[nrow] = printf('%s__prefix__%s', codes[nrow][0:ncol-2], codes[nrow][ncol-1:])
     return join(codes, "\n")
   catch /E684:/
@@ -73,14 +74,14 @@ function! s:context() abort
 endfunction
 
 function! iced#nrepl#complete#candidates(base, callback) abort
-  if empty(a:base) || !iced#nrepl#is_connected() || !iced#nrepl#check_session_validity()
+  if empty(a:base) || !iced#nrepl#is_connected() || !iced#nrepl#check_session_validity() || !iced#nrepl#is_supported_op('complete')
     return a:callback([])
   endif
 
   call iced#nrepl#op#cider#complete(
         \ a:base,
         \ iced#nrepl#ns#name(),
-        \ s:context(),
+        \ (g:iced#nrepl#complete#ignore_context) ? '' : s:context(),
         \ {resp -> a:callback(s:candidates(resp))})
   return v:true
 endfunction

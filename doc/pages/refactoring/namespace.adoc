@@ -20,4 +20,9 @@ Following commands are available.
 
 |===
 
+==== Cache
+
+Namespaces and its aliases are cached for performance.
+{help_html}#%3AIcedClearNsCache[IcedClearNsCache] will clear this cache.
+
 // TODO examples

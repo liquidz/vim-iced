@@ -1,8 +1,6 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let g:iced#eval#inside_comment = get(g:, 'iced#eval#inside_comment', v:true)
-
 function! s:parse_error(err) abort
   " Clojure 1.9 or above
   let err = matchstr(a:err, ', compiling:(.\+:\d\+:\d\+)')
@@ -43,12 +41,17 @@ function! iced#nrepl#eval#err(err) abort
 endfunction
 
 function! iced#nrepl#eval#out(resp, ...) abort
+  let opt = get(a:, 1, {})
   if has_key(a:resp, 'value')
     echo iced#util#shorten(a:resp['value'])
 
+    let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
+    let virtual_text_opt['highlight'] = 'Comment'
+    let virtual_text_opt['auto_clear'] = v:true
+
     call iced#system#get('virtual_text').set(
           \ printf('=> %s', a:resp['value']),
-          \ {'highlight': 'Comment', 'auto_clear': v:true})
+          \ virtual_text_opt)
   endif
 
   if has_key(a:resp, 'ex') && !empty(a:resp['ex'])
@@ -57,8 +60,8 @@ function! iced#nrepl#eval#out(resp, ...) abort
 
   call iced#nrepl#eval#err(get(a:resp, 'err', ''))
 
-  if has_key(a:, 1)
-    return iced#nrepl#cljs#check_switching_session(a:resp, get(a:, 1))
+  if has_key(opt, 'code')
+    return iced#nrepl#cljs#check_switching_session(a:resp, opt.code)
   endif
   return iced#promise#resolve(v:true)
 endfunction
@@ -68,6 +71,7 @@ function! s:is_comment_form(code) abort
 endfunction
 
 function! iced#nrepl#eval#normalize_code(code) abort
+  " c.f. autoload/iced/repl.vim
   if g:iced#eval#inside_comment && s:is_comment_form(a:code)
     return substitute(a:code, '^(comment', '(do', '')
   endif
@@ -83,7 +87,10 @@ function! iced#nrepl#eval#code(code, ...) abort
   let reg_save = @@
 
   let code = iced#nrepl#eval#normalize_code(a:code)
-  let Callback = get(opt, 'callback', {resp -> iced#nrepl#eval#out(resp, code)})
+  let out_opt = copy(opt)
+  let out_opt['code'] = code
+
+  let Callback = get(opt, 'callback', {resp -> iced#nrepl#eval#out(resp, out_opt)})
   if has_key(opt, 'callback')
     unlet opt['callback']
   endif
@@ -145,7 +152,7 @@ function! iced#nrepl#eval#print_last() abort
   call iced#nrepl#eval('*1', {'use-printer?': v:true}, m.callback)
 endfunction
 
-function! iced#nrepl#eval#outer_top_list() abort
+function! iced#nrepl#eval#outer_top_list(...) abort
   if ! iced#nrepl#check_session_validity() | return | endif
   let ret = iced#paredit#get_current_top_list()
   let code = ret['code']
@@ -155,6 +162,13 @@ function! iced#nrepl#eval#outer_top_list() abort
 
   let pos = ret['curpos']
   let opt = {'line': pos[1], 'column': pos[2]}
+  call extend(opt, get(a:, 1, {}))
+
+  " c.f. autoload/iced/repl.vim
+  if !empty(g:iced#eval#mark_at_last)
+    call setpos(printf("'%s", g:iced#eval#mark_at_last), pos)
+  endif
+
   return iced#nrepl#eval#code(code, opt)
 endfunction
 

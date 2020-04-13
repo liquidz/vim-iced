@@ -39,8 +39,7 @@ function! iced#nrepl#ns#get() abort
     if iced#nrepl#ns#util#search() == 0
       return ''
     endif
-    silent normal! va(y
-    let code = @@
+    let code = iced#paredit#get_outer_list_raw()
   finally
     let @@ = reg_save
     call winrestview(view)
@@ -242,6 +241,11 @@ endfunction
 function! iced#nrepl#ns#find_existing_alias(ns_name, callback) abort
   return iced#nrepl#op#refactor#all_ns_aliases({resp ->
         \ a:callback(s:__find_existing_alias(a:ns_name, resp))})
+endfunction
+
+"" Clear all caches related to namespace
+function! iced#nrepl#ns#clear_cache() abort
+  call iced#nrepl#op#refactor#__clear_cache()
 endfunction
 
 let &cpoptions = s:save_cpo

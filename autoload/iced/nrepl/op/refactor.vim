@@ -3,6 +3,12 @@ set cpo&vim
 
 let g:iced#refactor#prefix_rewriting = get(g:, 'iced#refactor#prefix_rewriting', v:false)
 
+let s:cache = iced#cache#factory(expand('<sfile>'))
+
+function! iced#nrepl#op#refactor#__clear_cache() abort
+  call s:cache.clear()
+endfunction
+
 function! iced#nrepl#op#refactor#clean_ns(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
@@ -90,11 +96,21 @@ function! s:__all_ns_aliases(resp) abort
     let k = strpart(trim(k), 1)
     let result[k] = s:parse_aliases_value(v)
   endfor
+
+  if !empty(result)
+    call s:cache.set('iced#nrepl#op#refactor#all_ns_aliases', result)
+  endif
+
   return result
 endfunction
 
 function! iced#nrepl#op#refactor#all_ns_aliases(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  let cached = s:cache.get('iced#nrepl#op#refactor#all_ns_aliases')
+  if !empty(cached)
+    return a:callback(cached)
+  endif
 
   call iced#nrepl#send({
         \ 'op': 'namespace-aliases',

@@ -11,8 +11,14 @@ jobs:
       image: asciidoctor/docker-asciidoctor
     steps:
       - uses: actions/checkout@v2
-      - name: build html
+
+      - name: build html for DEV
+        if: github.ref == 'refs/heads/dev'
+        run: asciidoctor -o target/html/index.html doc/pages/index.adoc -a 'help_html=https://vim-iced-nightly.netlify.com/vim-iced.html'
+      - name: build html for PROD
+        if: github.ref == 'refs/heads/master'
         run: asciidoctor -o target/html/index.html doc/pages/index.adoc
+
       - uses: actions/upload-artifact@master
         with:
           name: asciidoc_index.html
@@ -49,18 +55,18 @@ jobs:
     if: github.ref == 'refs/heads/dev'
     needs: [asciidoc, help]
     runs-on: ubuntu-latest
-    container:
-      image: node:8.10.0
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@master
         with:
           name: document
           path: document
-      - name: install netlify-cli
-        run: npm install -g --silent netlify-cli
-      - name: deploy to netlify
-        run: netlify deploy --auth=${{ secrets.NETLIFY_PERSONAL_ACCESS_TOKEN }} --site=${{ secrets.NETLIFY_SITE_ID }} --dir=document --prod
+      - uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_PERSONAL_ACCESS_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        with:
+          args: deploy --dir=document --prod
 
   deploy:
     if: github.ref == 'refs/heads/master'

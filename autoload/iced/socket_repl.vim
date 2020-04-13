@@ -187,13 +187,18 @@ function! iced#socket_repl#eval(code, ...) abort
   call iced#socket_repl#send(a:code)
 endfunction
 
-function! iced#socket_repl#eval_outer_top_list() abort " {{{
+function! iced#socket_repl#eval_outer_top_list(...) abort " {{{
   let ret = iced#paredit#get_current_top_list()
   let code = ret['code']
   if empty(code)
     return iced#message#error('finding_code_error')
   endif
   let code = iced#nrepl#eval#normalize_code(code)
+
+  " c.f. autoload/iced/repl.vim
+  if !empty(g:iced#eval#mark_at_last)
+    call setpos(printf("'%s", g:iced#eval#mark_at_last), ret['curpos'])
+  endif
 
   return iced#socket_repl#eval(code)
 endfunction " }}}

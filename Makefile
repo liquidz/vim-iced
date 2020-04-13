@@ -1,4 +1,4 @@
-.PHONY: all vital test themis docker_themis html pip_install lint clj-lint
+.PHONY: all vital test themis docker_themis html document pip_install lint clj-lint
 .PHONY: python_doctest load_files_test version_check deps_check
 .PHONY: clean clean-all bin ancient aspell repl
 
@@ -39,6 +39,9 @@ docker_neovim_themis: .vim-themis .vim-sexp
 
 html: doc/vim-iced.txt
 	bash scripts/html.sh
+
+document:
+	bash scripts/asciidoctor.sh
 
 pip_install:
 	sudo pip3 install -r requirements.txt

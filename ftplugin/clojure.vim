@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 10302
+let g:vim_iced_version = 10400
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -73,6 +73,8 @@ command!          IcedRequireAll            call iced#nrepl#ns#reload_all()
 command! -nargs=? IcedUndef                 call iced#nrepl#eval#undef(<q-args>)
 command! -nargs=? IcedUndefAllInNs          call iced#nrepl#eval#undef_all_in_ns(<q-args>)
 command!          IcedEvalOuterTopList      call iced#repl#execute('eval_outer_top_list')
+command!          IcedEvalAtMark            call iced#repl#execute('eval_at_mark', nr2char(getchar()))
+command!          IcedEvalLastOuterTopList  call iced#repl#execute('eval_last_outer_top_list')
 command!          IcedPrintLast             call iced#nrepl#eval#print_last()
 command!          IcedMacroExpandOuterList  call iced#nrepl#macro#expand_outer_list()
 command!          IcedMacroExpand1OuterList call iced#nrepl#macro#expand_1_outer_list()
@@ -122,7 +124,9 @@ command!          IcedBrowseReferences       call iced#nrepl#navigate#browse_ref
 command!          IcedBrowseDependencies     call iced#nrepl#navigate#browse_dependencies()
 command! -nargs=? IcedBrowseVarReferences    call iced#nrepl#navigate#browse_var_references(<q-args>)
 command! -nargs=? IcedBrowseVarDependencies  call iced#nrepl#navigate#browse_var_dependencies(<q-args>)
-command!          IcedClearCtrlpCache        call ctrlp#iced#cache#clear()
+
+command!          IcedClearNsCache          call iced#nrepl#ns#clear_cache()
+command!          IcedClearCtrlpCache       call ctrlp#iced#cache#clear()
 
 command!          IcedCleanNs               call iced#nrepl#refactor#clean_ns()
 command!          IcedCleanAll              call iced#nrepl#refactor#clean_all()
@@ -181,6 +185,8 @@ nnoremap <silent> <Plug>(iced_require_all)              :<C-u>IcedRequireAll<CR>
 nnoremap <silent> <Plug>(iced_undef)                    :<C-u>IcedUndef<CR>
 nnoremap <silent> <Plug>(iced_undef_all_in_ns)          :<C-u>IcedUndefAllInNs<CR>
 nnoremap <silent> <Plug>(iced_eval_outer_top_list)      :<C-u>IcedEvalOuterTopList<CR>
+nnoremap <silent> <Plug>(iced_eval_at_mark)             :<C-u>IcedEvalAtMark<CR>
+nnoremap <silent> <Plug>(iced_eval_last_outer_top_list) :<C-u>IcedEvalLastOuterTopList<CR>
 nnoremap <silent> <Plug>(iced_print_last)               :<C-u>IcedPrintLast<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_outer_list)   :<C-u>IcedMacroExpandOuterList<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_1_outer_list) :<C-u>IcedMacroExpand1OuterList<CR>
@@ -228,6 +234,8 @@ nnoremap <silent> <Plug>(iced_browse_references)        :<C-u>IcedBrowseReferenc
 nnoremap <silent> <Plug>(iced_browse_dependencies)      :<C-u>IcedBrowseDependencies<CR>
 nnoremap <silent> <Plug>(iced_browse_var_references)    :<C-u>IcedBrowseVarReferences<CR>
 nnoremap <silent> <Plug>(iced_browse_var_dependencies)  :<C-u>IcedBrowseVarDependencies<CR>
+
+nnoremap <silent> <Plug>(iced_clear_ns_cache)           :<C-u>IcedClearNsCache<CR>
 nnoremap <silent> <Plug>(iced_clear_ctrlp_cache)        :<C-u>IcedClearCtrlpCache<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)                 :<C-u>IcedCleanNs<CR>
@@ -319,6 +327,8 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>ei <Plug>(iced_eval)<Plug>(sexp_inner_element)``
     silent! nmap <buffer> <Leader>ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
     silent! nmap <buffer> <Leader>et <Plug>(iced_eval_outer_top_list)
+    silent! nmap <buffer> <Leader>ea <Plug>(iced_eval_at_mark)
+    silent! nmap <buffer> <Leader>el <Plug>(iced_eval_last_outer_top_list)
   endif
 
   if !hasmapto('<Plug>(iced_eval_visual)')

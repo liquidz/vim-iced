@@ -6,8 +6,6 @@
 :icons: font
 
 :help_html: https://liquidz.github.io/vim-iced/vim-iced.html
-//:help_html: https://vim-iced-nightly.netlify.com/vim-iced.html
-//:help_html: http://localhost:8000/vim-iced.html
 :nrepl: https://nrepl.org/[nREPL]
 :kaocha: https://github.com/lambdaisland/kaocha[kaocha]
 :vim_localrc: https://github.com/thinca/vim-localrc[vim-localrc]
@@ -36,6 +34,8 @@
 :plug_iced_eval_inner_element: <Leader>ei
 :plug_iced_eval_outer_list: <Leader>ee
 :plug_iced_eval_outer_top_list: <Leader>et
+:plug_iced_eval_at_mark: <Leader>ea
+:plug_iced_eval_last_outer_top_list: <Leader>el
 :plug_iced_extract_function: <Leader>ref
 :plug_iced_format: ==
 :plug_iced_format_all: =G

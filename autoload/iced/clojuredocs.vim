@@ -2,7 +2,16 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let g:iced#clojuredocs#export_edn_url = get(g:, 'iced#clojuredocs#export_edn_url',
-    \ 'https://clojuredocs-edn.netlify.com/export.compact.edn')
+      \ 'https://clojuredocs-edn.netlify.com/export.compact.edn')
+
+let g:iced#clojuredocs#use_clj_docs_on_cljs =
+      \ get(g:, 'iced#clojuredocs#use_clj_docs_on_cljs', v:false)
+
+let s:default_cljs_ns_replace_map = {
+      \ 'cljs.core': 'clojure.core',
+      \ }
+let g:iced#clojuredocs#cljs_ns_replace_map =
+      \ get(g:, 'iced#clojuredocs#cljs_ns_replace_map', s:default_cljs_ns_replace_map)
 
 function! s:refreshed(resp) abort
   if has_key(a:resp, 'err')
@@ -101,10 +110,14 @@ function! s:construct_error_message() abort
 endfunction
 
 function! s:lookup(resp) abort
+  let resp = copy(a:resp)
+  if g:iced#clojuredocs#use_clj_docs_on_cljs
+    let resp['ns'] = get(g:iced#clojuredocs#cljs_ns_replace_map, resp['ns'], resp['ns'])
+  endif
   " NOTE: store ns-name and symbol-name for error message
-  call iced#cache#set('___clojuredocs-lookuping___', a:resp)
+  call iced#cache#set('___clojuredocs-lookuping___', resp)
   return iced#promise#call('iced#nrepl#op#cider#clojuredocs_lookup',
-        \ [a:resp['ns'], a:resp['name'], g:iced#clojuredocs#export_edn_url])
+        \ [resp['ns'], resp['name'], g:iced#clojuredocs#export_edn_url])
 endfunction
 
 function! iced#clojuredocs#open(symbol) abort

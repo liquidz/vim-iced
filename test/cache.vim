@@ -66,3 +66,48 @@ function! s:suite.do_once_test() abort
   call iced#cache#do_once('bar', {-> s:set('i', iced#cache#get('i') + 1, v:false)})
   call s:assert.equals(iced#cache#get('i'), 4)
 endfunction
+
+function! s:suite.expire_test() abort
+  call iced#cache#clear()
+  call iced#cache#set('foo', 'bar', 1)
+  call s:assert.equals(iced#cache#get('foo', 'baz'), 'bar')
+  call s:assert.true(iced#cache#has_key('foo'))
+
+  sleep 1100m
+  call s:assert.equals(iced#cache#get('foo', 'baz'), 'baz')
+  call s:assert.false(iced#cache#has_key('foo'))
+endfunction
+
+function! s:suite.delete_by_prefix_test() abort
+  call iced#cache#clear()
+  call iced#cache#set('a_foo', '1')
+  call iced#cache#set('a_bar', '2')
+  call iced#cache#set('b_baz', '3')
+
+  for k in ['a_foo', 'a_bar', 'b_baz']
+    call s:assert.true(iced#cache#has_key(k))
+  endfor
+
+  let res = iced#cache#delete_by_prefix('a_')
+  call s:assert.equals(res, ['1', '2'])
+
+  for k in ['a_foo', 'a_bar']
+    call s:assert.false(iced#cache#has_key(k))
+  endfor
+  call s:assert.true(iced#cache#has_key('b_baz'))
+endfunction
+
+function! s:suite.factory_test() abort
+  call iced#cache#clear()
+  call iced#cache#set('hello', 'world')
+
+  let l = iced#cache#factory('local')
+  call l.set('hello', 'local world')
+
+  call s:assert.equals(iced#cache#get('hello'), 'world')
+  call s:assert.equals(l.get('hello'), 'local world')
+
+  call l.clear()
+  call s:assert.equals(iced#cache#get('hello', 'default'), 'world')
+  call s:assert.equals(l.get('hello', 'local default'), 'local default')
+endfunction

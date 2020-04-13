@@ -47,3 +47,28 @@ The evaluation result is echoed on command-line and displayed in a popup at the 
 However, the displayed result is only the returned value, so for example, the contents output by `println` are not diplayed.
 
 The contents output to standard output are displayed on the <<stdout_buffer>>.
+
+=== Marks [[evaluation_marks]]
+
+vim-iced also provides ways to evaluate forms by Vim's https://vim-jp.org/vimdoc-en/motion.html#mark-motions[mark].
+This feature is implemented by https://github.com/Olical/conjure[Conjure] originally.
+
+
+[cols="30,20,50a"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedEvalAtMark[IcedEvalAtMark]
+| {plug_iced_eval_at_mark}
+| Evaluate the outer list *(not outer top list)* on the specified mark.
+
+NOTE: Type a key to specify the mark after executing this command.
+
+| {help_html}#%3AIcedEvalLastOuterTopList[IcedEvalLastOuterTopList]
+| {plug_iced_eval_last_outer_top_list}
+| Re-evaluate the outer top list which is evaluated last. +
+Last evaluated list is marked to {help_html}#g%3Aiced%23eval%23mark_at_last[g:iced#eval#mark_at_last].
+
+|===
+
+For example, when you have a mark `m` on any position, `{plug_iced_eval_at_mark}m` will evaluate the outer list on the mark `m` from any position.

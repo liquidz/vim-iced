@@ -17,11 +17,14 @@ function! s:suite.omni_findstart_test() abort
 endfunction
 
 function! s:complete_relay(msg) abort
-  if a:msg['op'] ==# 'complete'
+  let op = a:msg['op']
+  if op ==# 'complete'
     return {'status': ['done'], 'completions': [
           \ {'candidate': 'foo', 'arglists': ['bar'], 'doc': 'baz', 'type': 'function'},
           \ {'candidate': 'hello', 'type': 'namespace'},
           \ ]}
+  elseif op ==# 'describe'
+    return {'status': ['done'], 'ops': {'complete': {}}}
   endif
   return {'status': ['done']}
 endfunction
