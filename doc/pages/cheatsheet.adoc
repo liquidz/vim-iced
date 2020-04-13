@@ -90,12 +90,20 @@ See {help_html}#g%3Aiced_enable_default_key_mappings[help file] for whole defaul
 !===
 ! {plug_iced_clean_ns}
 ! Clean namespace
+! {plug_iced_add_ns}
+! Add https://clojuredocs.org/clojure.core/ns[`ns`] to require form
 ! {plug_iced_add_missing}
 ! Add missing libspec
-! {plug_iced_add_ns}
-! Add `ns` to require form
 ! {plug_iced_extract_function}
 ! Extract the form under cursor as a function
+! {plug_iced_add_arity}
+! Add another arity
+! {plug_iced_thread_first}
+! Convert form to use https://clojuredocs.org/clojure.core/-%3E[`+->+`] threading macro.
+! {plug_iced_thread_last}
+! Convert form to use https://clojuredocs.org/clojure.core/-%3E%3E[`+->>+`] threading macro
+! {plug_iced_move_to_let}
+! Move the form under cursor to nearest https://clojuredocs.org/clojure.core/let[`let`] binding
 !===
 
 | *Others*
