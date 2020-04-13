@@ -74,7 +74,7 @@ function! s:context() abort
 endfunction
 
 function! iced#nrepl#complete#candidates(base, callback) abort
-  if empty(a:base) || !iced#nrepl#is_connected() || !iced#nrepl#check_session_validity()
+  if empty(a:base) || !iced#nrepl#is_connected() || !iced#nrepl#check_session_validity() || !iced#nrepl#is_supported_op('complete')
     return a:callback([])
   endif
 

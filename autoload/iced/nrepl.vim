@@ -360,10 +360,12 @@ endfunction " }}}
 function! s:warm_up() abort
   let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
 
-  " FIXME init-debugger does not return response immediately
-  call iced#nrepl#op#cider#debug#init()
-  sleep 100m
-  call iced#nrepl#op#cider#debug#init()
+  if iced#nrepl#is_supported_op('init-debugger')
+    " FIXME init-debugger does not return response immediately
+    call iced#nrepl#op#cider#debug#init()
+    sleep 100m
+    call iced#nrepl#op#cider#debug#init()
+  endif
 
   if iced#nrepl#check_session_validity(v:false)
     if iced#nrepl#ns#name() ==# s:nrepl['init_ns']
@@ -374,7 +376,7 @@ function! s:warm_up() abort
   endif
   call iced#format#set_indentexpr()
 
-  if g:iced#nrepl#enable_sideloader
+  if g:iced#nrepl#enable_sideloader && iced#nrepl#is_supported_op('sideloader-start')
     call iced#nrepl#sideloader#start()
   endif
 
