@@ -78,15 +78,28 @@ function! s:context() abort
 endfunction
 
 function! iced#nrepl#complete#candidates(base, callback) abort
-  if empty(a:base) || !iced#nrepl#is_connected() || !iced#nrepl#check_session_validity() || !iced#nrepl#is_supported_op('complete')
+  if empty(a:base) || !iced#nrepl#is_connected() || !iced#nrepl#check_session_validity()
     return a:callback([])
   endif
 
-  call iced#nrepl#op#cider#complete(
+  if iced#nrepl#is_supported_op('complete')
+    call iced#nrepl#op#cider#complete(
         \ a:base,
         \ iced#nrepl#ns#name(),
         \ (g:iced#nrepl#complete#ignore_context) ? '' : s:context(),
         \ {resp -> a:callback(s:candidates(resp))})
+  elseif iced#nrepl#is_supported_op('completions')
+    call iced#nrepl#send({
+      \ 'op': 'completions',
+      \ 'id': iced#nrepl#id(),
+      \ 'session': iced#nrepl#current_session(),
+      \ 'prefix': a:base,
+      \ 'ns': iced#nrepl#ns#name(),
+      \ 'callback': {resp -> a:callback(s:candidates(resp))}})
+  else
+    return a:callback([])
+  endif
+
   return v:true
 endfunction
 
