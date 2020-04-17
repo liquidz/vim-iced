@@ -2,7 +2,16 @@
   (:require
    [clojure.java.io :as io]
    [clojure.test :as t]
-   [iced.core :as sut]))
+   [iced.core :as sut]
+   [iced.leiningen :as i.lein]))
+
+(defmacro with-alter-var-root [[v f] & body]
+  `(let [org-value# @~v]
+     (try
+       (alter-var-root ~v (fn [_] ~f))
+       ~@body
+       (finally
+         (alter-var-root ~v (fn [_] org-value#))))))
 
 (def ^:private test-config
   {:deps {'base-dep {:mvn/version "1"}}
@@ -123,6 +132,54 @@
 
 (t/deftest parse-options-test
   (let [cwd (.getAbsolutePath (io/file "test" "resources" "iced_command" "mixed" "src"))]
-    (t/is (nil? (sut/parse-options cwd {:force-clojure-cli true})))
-    )
-  )
+    (t/testing "leiningen が優先"
+      (let [res (sut/parse-options cwd {})]
+        (t/is (= :leiningen (:project-type res)))
+        (t/is (= (.getAbsolutePath (io/file "test" "resources" "iced_command" "mixed" "project.clj"))
+                 (.getAbsolutePath (:project-file res))))
+        (t/is (= {} (:options res)))))
+
+    (t/testing "force-boot"
+      (let [res (sut/parse-options cwd {:force-boot true})]
+        (t/is (= :boot (:project-type res)))
+        (t/is (= (.getAbsolutePath (io/file "test" "resources" "iced_command" "mixed" "build.boot"))
+                 (.getAbsolutePath (:project-file res))))
+        (t/is (= {:force-boot true} (:options res)))))
+
+    (t/testing "force-clojure-cli"
+      (let [res (sut/parse-options cwd {:force-clojure-cli true})]
+        (t/is (= :clojure-cli (:project-type res)))
+        (t/is (= (.getAbsolutePath (io/file "test" "resources" "iced_command" "mixed" "deps.edn"))
+                 (.getAbsolutePath (:project-file res))))
+        (t/is (= {:force-clojure-cli true} (:options res)))))
+
+    (t/testing "with-cljs が指定されていれば自動検知されないこと"
+      (let [auto-detected? (atom false)]
+        (with-alter-var-root [#'i.lein/using-cljs? (fn [_] (reset! auto-detected? true) true)]
+          (let [res (sut/parse-options cwd {:cljs true})]
+            (t/is (true? (get-in res [:options :cljs] false)))
+            (t/is (false? @auto-detected?))))))
+
+    (t/testing "without-cljs が指定されていれば自動検知されないこと"
+      (let [auto-detected? (atom false)]
+        (with-alter-var-root [#'i.lein/using-cljs? (fn [_] (reset! auto-detected? true) true)]
+          (let [res (sut/parse-options cwd {:without-cljs true})]
+            (t/is (false? (get-in res [:options :cljs] false)))
+            (t/is (false? @auto-detected?))))))
+
+    (t/testing "with-cljs も without-cljs が指定されていなければ自動検知されること"
+      (let [auto-detected? (atom false)]
+        (with-alter-var-root [#'i.lein/using-cljs? (fn [_] (reset! auto-detected? true) true)]
+          (let [res (sut/parse-options cwd {})]
+            (t/is (true? (get-in res [:options :cljs] false)))
+            (t/is (true? @auto-detected?))))))))
+
+
+
+
+
+
+
+
+
+

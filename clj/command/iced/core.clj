@@ -5,7 +5,8 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [clojure.tools.cli :as cli]
-   [clojure.walk :as walk]))
+   [clojure.walk :as walk]
+   [iced.leiningen :as i.lein]))
 
 (def ^:private project-priority
   [:leiningen :boot :clojure-cli])
@@ -60,12 +61,14 @@
         (recur (.getParentFile dir) result)))))
 
 (defn- fetch-flaged-configs
+  "with-cljs, with-kaocha などのフラグ向けの設定を取得する"
   [config options]
   (for [[op _] options
         :when (contains? (:aliases config) op)]
     (get-in config [:aliases op])))
 
 (defn fetch-dependencies-and-middlewares
+  "オプションに沿った依存ライブラリとミドルウェアを取得する"
   [config options]
   (let [flaged-configs (fetch-flaged-configs config options)
         dependencies (->> (:dependency options)
@@ -80,6 +83,7 @@
                           (:middleware options))}))
 
 (defn parse-options
+  "repl サブコマンド向けのオプションから"
   [cwd options]
   (let [detected (if (:instant options)
                    {:clojure-cli (io/file cwd)}
@@ -92,12 +96,18 @@
                                             [% project-dir]) project-priority)
         project-file (io/file project-dir (get project->file-map project-type))
 
-        ; options (cond-> options
-        ;           (and (not (:without-cljs options))))
-        ]
-    project-file
+        ;; clojurescript 利用の自動検知
+        options (if (and (= :leiningen project-type)
+                         (not (:without-cljs options))
+                         (not (:cljs options))
+                         (i.lein/using-cljs? (slurp project-file)))
+                  (assoc options :cljs true)
+                  options)]
 
-    ))
+    {:project-type project-type
+     :project-file project-file
+     :options options
+     }))
 
 (defn -repl
   [{:keys [iced-root cwd options arguments]}]
@@ -105,6 +115,7 @@
         ; [project-type project-dir-file] (if (:instant options)
         ;                                   :clojure-cli
         ;                                   (detect-project-type cwd))
+        {:keys [project-type options]} (parse-options cwd options)
         deps-mdws (fetch-dependencies-and-middlewares config options)]
     ; (case project-type
     ;   :leiningen (str "LEIN" project-dir-file)

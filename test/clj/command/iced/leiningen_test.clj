@@ -1,18 +1,20 @@
 (ns iced.leiningen-test
   (:require
+   [clojure.java.io :as io]
    [clojure.test :as t]
    [iced.leiningen :as sut]))
 
+(def ^:private project-file-with-cljs
+  (io/file "test" "resources" "iced_command" "leiningen_cljs" "project.clj"))
+
+(def ^:private project-file-without-cljs
+  (io/file "test" "resources" "iced_command" "leiningen_no_cljs" "project.clj"))
+
 (t/deftest using-cljs?-test
   (t/is (true? (sut/using-cljs?
-                "(defproject foo \"0.1.0\"
-                   :dependencies [[foo \"xxx\"]
-                                  [org.clojure/clojurescript \"xxx\"]])")))
+                (slurp project-file-with-cljs))))
   (t/is (false? (sut/using-cljs?
-                 "(defproject foo \"0.1.0\"
-                    :dependencies [[foo \"xxx\"]
-                                   [bar \"xxx\"
-                                    :exclusions [org.clojure/clojurescript]]])")))
+                 (slurp project-file-without-cljs))))
   (t/is (false? (sut/using-cljs?
                  "(defproject foo \"0.1.0\"
                     :dependencies [[bar \"xxx\"
