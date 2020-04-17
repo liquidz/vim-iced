@@ -2,6 +2,8 @@ a
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 1.4.1 (2020-04-18)
 // {{{
 === Changed
 * Bump iced-nrepl to 1.0.1.
