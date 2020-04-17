@@ -33,7 +33,7 @@ You need to modify `:dependencies` and `:nrepl` setting in `shadow-cljs.edn` as 
 {
  :dependencies [[refactor-nrepl "2.5.0"]
                 [cider/cider-nrepl "0.24.0"]
-                [iced-nrepl "1.0.0"]]
+                [iced-nrepl "1.0.1"]]
 
  :nrepl {:cider false
          :middleware [cider.nrepl/wrap-classpath
