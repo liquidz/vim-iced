@@ -5,7 +5,7 @@ function! s:initialize_socket_repl() abort
   return {
         \ 'port': '',
         \ 'channel': v:false,
-        \ 'prompt': '\([A-Za-z0-9\-]\+\.\)\?[A-Za-z0-9\-]\+=> ',
+        \ 'prompt': '\([A-Za-z0-9\-]\+\.\)*[A-Za-z0-9\-]\+=> ',
         \ 'ignore_prompt': '#_=>\s\+',
         \ 'handler': '',
         \ 'repl_type': 'unknown',
