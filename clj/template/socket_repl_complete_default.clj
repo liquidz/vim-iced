@@ -12,8 +12,11 @@
       ns-names (->> (ns-map *ns*) vals (map var->candidate))
       alias-names (->> (ns-aliases *ns*)
                        (mapcat (fn [[alias-name ns*]]
-                                 (map (fn [v] (str alias-name "/" (var->candidate v)))
-                                      (vals (ns-publics ns*))))))
+                                 (map (fn [[var-name x]]
+                                        (str alias-name "/" (if (var? x)
+                                                              (var->candidate x)
+                                                              var-name)))
+                                      (ns-publics ns*)))))
       all-names (concat ns-names alias-names)]
   (->> all-names
        (filter (fn [s] (re-seq base s)))
