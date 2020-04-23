@@ -33,15 +33,22 @@ endfunction
 
 function! iced#nrepl#connect#auto(...) abort
   let verbose = get(a:, 1, v:true)
-  let port = s:detect_shadow_cljs_nrepl_port()
+  let shadow_cljs_port = s:detect_shadow_cljs_nrepl_port()
+  let nrepl_port = s:detect_port_from_nrepl_port_file()
 
-  if !port
-    let port = s:detect_port_from_nrepl_port_file()
-  endif
-
-  if port
-    call iced#repl#connect('nrepl', port)
+  if shadow_cljs_port && nrepl_port
+    call iced#selector({
+          \ 'candidates': ['nREPL', 'shadow-cljs'],
+          \ 'accept': {_, s -> iced#repl#connect('nrepl', (s ==# 'nREPL') ? nrepl_port : shadow_cljs_port)}
+          \ })
     return v:true
+  else
+    let port = shadow_cljs_port ? shadow_cljs_port : nrepl_port
+
+    if port
+      call iced#repl#connect('nrepl', port)
+      return v:true
+    endif
   endif
 
   if verbose | call iced#message#error('no_port_file') | endif
