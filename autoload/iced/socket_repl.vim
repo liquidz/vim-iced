@@ -5,6 +5,7 @@ function! s:initialize_socket_repl() abort
   return {
         \ 'port': '',
         \ 'channel': v:false,
+        \ 'init_ns': '',
         \ 'prompt': '\([A-Za-z0-9\-]\+\.\)*[A-Za-z0-9\-]\+=> ',
         \ 'ignore_prompt': '#_=>\s\+',
         \ 'handler': '',
@@ -86,6 +87,14 @@ function! iced#socket_repl#send(data) abort
 endfunction " }}}
 
 " CONNECT {{{
+
+function! s:__connect_warm_up(resp) abort
+  let s:socket_repl['init_ns'] = get(a:resp, 'value', '')
+  if iced#nrepl#ns#name_by_buf() !=# s:socket_repl['init_ns']
+    call iced#socket_repl#load_current_file()
+  endif
+endfunction
+
 function! s:status(ch) abort
   try
     return iced#system#get('channel').status(a:ch)
@@ -142,6 +151,8 @@ function! iced#socket_repl#connect(port, ...) abort
 
   " NOTE: socket-repl connection in vim-iced does not support `bufenter` autocmd currently.
   " call iced#nrepl#auto#enable_bufenter(v:true)
+  call iced#system#get('future').do({->
+        \ iced#socket_repl#eval('(ns-name *ns*)', {'callback': funcref('s:__connect_warm_up')})})
 
   if verbose
     call iced#message#info('connected')
@@ -226,6 +237,10 @@ endfunction
 
 function! iced#socket_repl#repl_type() abort
   return s:socket_repl['repl_type']
+endfunction
+
+function! iced#socket_repl#init_ns() abort
+  return get(s:socket_repl, 'init_ns', '')
 endfunction
 
 let &cpoptions = s:save_cpo
