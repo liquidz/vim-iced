@@ -149,8 +149,7 @@ function! iced#socket_repl#connect(port, ...) abort
     endif
   endif
 
-  " NOTE: socket-repl connection in vim-iced does not support `bufenter` autocmd currently.
-  " call iced#nrepl#auto#enable_bufenter(v:true)
+  call iced#socket_repl#auto#enable_bufenter(v:true)
   call iced#system#get('future').do({->
         \ iced#socket_repl#eval('(ns-name *ns*)', {'callback': funcref('s:__connect_warm_up')})})
 
@@ -245,4 +244,3 @@ endfunction
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
-" vim:fdm=marker:fdl=0
