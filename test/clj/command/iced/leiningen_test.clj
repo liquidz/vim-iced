@@ -25,12 +25,12 @@
 (t/deftest dependencies->args-test
   (let [deps {'foo {:mvn/version "1"}
               'bar {:mvn/version "2"}}]
-    (t/is (= #{["update-in" ":dependencies" "conj" "'[foo \"1\"]'"]
-               ["update-in" ":dependencies" "conj" "'[bar \"2\"]'"]}
+    (t/is (= #{["update-in" ":dependencies" "conj" "'[foo \"1\"]'" "--"]
+               ["update-in" ":dependencies" "conj" "'[bar \"2\"]'" "--"]}
              (set (sut/dependencies->args deps))))))
 
 (t/deftest middlewares->args-test
   (let [mdws ["foo" "bar"]]
-    (t/is (= #{["update-in" ":repl-options:nrepl-middleware" "conj" "'foo'"]
-               ["update-in" ":repl-options:nrepl-middleware" "conj" "'bar'"]}
+    (t/is (= #{["update-in" ":repl-options:nrepl-middleware" "conj" "'foo'" "--"]
+               ["update-in" ":repl-options:nrepl-middleware" "conj" "'bar'" "--"]}
              (set (sut/middlewares->args mdws))))))

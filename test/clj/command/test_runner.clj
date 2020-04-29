@@ -4,7 +4,8 @@
 
 (def ^:private test-ns-list
   '(iced.core-test
-    iced.leiningen-test))
+    iced.leiningen-test
+    iced.boot-test))
 
 (doseq [sym test-ns-list]
   (require sym))

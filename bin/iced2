@@ -4,7 +4,15 @@ CWD=$(pwd)
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 PROJECT_DIR=$(cd $SCRIPT_DIR; cd ..; pwd)
 
-bb --classpath ${PROJECT_DIR}/clj/command -m iced.core \
-    "${CWD}" \
-    "${PROJECT_DIR}" \
-    $@
+RESULT=$(bb --classpath ${PROJECT_DIR}/clj/command -m iced.core \
+         "${CWD}" \
+         "${PROJECT_DIR}" \
+         $@)
+
+
+IFS='	' ARR=(${RESULT})
+
+if [ "${ARR[0]}" = 'ICED-COMMAND' ]; then
+    echo "${ARR[1]}"
+    bash -c "${ARR[1]}"
+fi

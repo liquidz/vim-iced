@@ -40,25 +40,24 @@
   [deps]
   (map (fn [[k {:mvn/keys [version]}]]
          ["update-in" ":dependencies" "conj"
-          (format "'[%s \"%s\"]'" k version)])
+          (format "'[%s \"%s\"]'" k version)
+          "--"])
        deps))
 
 (defn middlewares->args
   [mdws]
   (map (fn [mdw]
          ["update-in" ":repl-options:nrepl-middleware" "conj"
-          (format "'%s'" mdw)])
+          (format "'%s'" mdw)
+          "--"])
        mdws))
 
-
-
-
-(comment
-  (def +merr-dir+ "/Users/iizuka/src/github.com/liquidz/merr")
-  (def +iced-root+ "/Users/iizuka/src/github.com/liquidz/vim-iced")
-  (def +deps+
-    (-> (str +iced-root+ "/deps.edn")
-        slurp
-        edn/read-string))
-
-  )
+(defn construct-command
+  [x args]
+  (flatten
+   (concat
+    ["lein"]
+    (dependencies->args (:dependencies x))
+    (middlewares->args (:middlewares x))
+    args
+    ["repl"])))
