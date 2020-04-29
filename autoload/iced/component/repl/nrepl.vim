@@ -16,6 +16,8 @@ let s:nrepl = {
       \ 'document_open': function('iced#nrepl#document#open'),
       \ 'document_popup_open': function('iced#nrepl#document#popup_open'),
       \ 'complete_candidates': function('iced#nrepl#complete#candidates'),
+      \ 'autocmd_bufenter': function('iced#nrepl#auto#bufenter'),
+      \ 'autocmd_bufread': function('iced#nrepl#auto#bufread'),
       \ }
 
 function! iced#component#repl#nrepl#start(_) abort

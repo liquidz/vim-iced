@@ -15,6 +15,8 @@ let s:socket_repl = {
       \ 'document_open': function('iced#socket_repl#document#open'),
       \ 'document_popup_open': function('iced#socket_repl#document#popup_open'),
       \ 'complete_candidates': function('iced#socket_repl#complete#candidates'),
+      \ 'autocmd_bufenter': function('iced#socket_repl#auto#bufenter'),
+      \ 'autocmd_bufread': function('iced#socket_repl#auto#bufread'),
       \ }
 
 function! iced#component#repl#socket_repl#start(_) abort

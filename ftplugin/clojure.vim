@@ -271,9 +271,9 @@ nnoremap <silent> <Plug>(iced_toggle_sideloader_lookup) :<C-u>IcedToggleSideload
 aug vim_iced_initial_setting
   au!
   au FileType clojure setl omnifunc=iced#complete#omni
-  au BufRead *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufread()
+  au BufRead *.clj,*.cljs,*.cljc call iced#repl#execute('autocmd_bufread')
   au BufNewFile *.clj,*.cljs,*.cljc call iced#nrepl#auto#newfile()
-  au BufEnter *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufenter()
+  au BufEnter *.clj,*.cljs,*.cljc call iced#repl#execute('autocmd_bufenter')
   au VimLeave * call iced#nrepl#auto#leave()
 aug END
 
