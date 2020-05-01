@@ -2,6 +2,11 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+=== Changed
+* Changed Socket REPL session to evaluate `require` / `in-ns` when `bufread` / `bufenter` autocmd is fired.
+* Updated command palette to add run command to cmd history.
+* Update vital.vim modules to be latest.
+
 == 1.4.2 (2020-04-24)
 
 === Changed
