@@ -18,6 +18,16 @@
    :clojure-cli "deps.edn"
    :shadow-cljs "shadow-cljs.edn"})
 
+(def ^:private project-name-map
+  {:leiningen "Leiningen"
+   :boot "Boot"
+   :clojure-cli "Clojure CLI"
+   :shadow-cljs "Shadow-cljs"})
+
+(def ^:private option-name-map
+  {:cljs}
+  )
+
 (def ^:private file->project-map
   (reduce-kv #(assoc %1 %3 %2) {} project->file-map))
 
@@ -73,11 +83,24 @@
                     (keys file->project-map))]
         (recur (.getParentFile dir) result)))))
 
+(defn- print-order [order msg]
+  (println (str order "\t" msg)))
+
+(defn- print-run-command-order [command-coll]
+  (print-order "ICED_RUN_COMMAND" (str/join " " command-coll)))
+
+(defn- print-echo-info-order [msg]
+  (print-order "ICED_ECHO_INFO" msg))
+
+(defn- print-echo-error-order [msg]
+  (print-order "ICED_ECHO_ERROR" msg))
+
 (defn- fetch-flaged-configs
   "with-cljs, with-kaocha などのフラグ向けの設定を取得する"
   [config options]
   (for [[op _] options
         :when (contains? (:aliases config) op)]
+         (print-echo-info-order op)
     (get-in config [:aliases op])))
 
 (defn fetch-dependencies-and-middlewares
@@ -95,6 +118,7 @@
                           (mapcat :__middlewares__ flaged-configs)
                           (:middleware options))}))
 
+
 (defn parse-options
   "repl サブコマンド向けのオプションからFIXME"
   [cwd options]
@@ -107,6 +131,10 @@
 
         [project-type project-dir] (some #(when-let [project-dir (get detected-project %)]
                                             [% project-dir]) project-priority)
+        _ (if-let [s (get project-name-map project-type)]
+          (print-echo-info-order (str s " project is detected."))
+          (print-echo-error-order "FIXME")
+          )
         project-file (io/file project-dir (get project->file-map project-type))
 
         ;; clojurescript 利用の自動検知
@@ -120,23 +148,23 @@
      :project-file project-file
      :options options}))
 
-(defn print-command-result
-  "フロントにある shellscript で実行できるコマンドを標準出力に流す"
-  [command-coll]
-  (println (str "ICED-COMMAND\t" (str/join " " command-coll))))
-
 (defn -repl
   [{:keys [iced-root cwd options arguments]}]
   (let [config (deps-edn iced-root)
         {:keys [project-type options]} (parse-options cwd options)
         deps-mdws (fetch-dependencies-and-middlewares config options)]
+    (println (str "ICED-INFO\thello!"))
     (case project-type
-      :leiningen (print-command-result (i.lein/construct-command deps-mdws arguments))
-      :boot (print-command-result (i.boot/construct-command deps-mdws arguments))
+      :leiningen (print-run-command-order (i.lein/construct-command deps-mdws arguments))
+      :boot (print-run-command-order (i.boot/construct-command deps-mdws arguments))
       ; :clojure-cli (str "CLI" project-dir-file)
       (throw (ex-info "Failed to detect clojure project" {:cwd cwd}))
       )
     ))
+
+; function echo_info() {
+;     echo -e "\x1B[32mOK\x1B[m: \x1B[1m${1}\x1B[m"
+; }
 
 (defn -main [cwd iced-root & args]
   (let [;; iced 向けでないオプションは lein, boot, clj コマンドのオプションとして扱うので先に arguments として分離しておく

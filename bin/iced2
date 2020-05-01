@@ -9,10 +9,21 @@ RESULT=$(bb --classpath ${PROJECT_DIR}/clj/command -m iced.core \
          "${PROJECT_DIR}" \
          $@)
 
+# Split by new-line
+IFS='
+' LINES=(${RESULT})
 
-IFS='	' ARR=(${RESULT})
+for LINE in ${LINES[@]}; do
+    # Split by tab
+    IFS='	' ARR=(${LINE})
 
-if [ "${ARR[0]}" = 'ICED-COMMAND' ]; then
-    echo "${ARR[1]}"
-    bash -c "${ARR[1]}"
-fi
+    if [ "${ARR[0]}" = 'ICED_ECHO_INFO' ]; then
+        echo -e "\x1B[32mOK\x1B[m: \x1B[1m${ARR[1]}\x1B[m"
+    elif [ "${ARR[0]}" = 'ICED_ECHO_ERROR' ]; then
+        echo -e "\x1B[31mNG\x1B[m: \x1B[1m${ARR[1]}\x1B[m"
+    elif [ "${ARR[0]}" = 'ICED_RUN_COMMAND' ]; then
+        echo "${ARR[1]}"
+        #bash -c "${ARR[1]}"
+    fi
+done
+
