@@ -27,15 +27,8 @@ jobs:
   help:
     needs: asciidoc
     runs-on: ubuntu-latest
-    container:
-      image: clojure:openjdk-14-tools-deps
     steps:
       - uses: actions/checkout@v2
-      - name: Cache m2
-        uses: actions/cache@v1.1.0
-        with:
-          path: /root/.m2
-          key: document-root-m2-${{ hashFiles('deps.edn') }}
       - name: build help html
         run: bash scripts/html.sh
       - uses: actions/download-artifact@master

@@ -15,3 +15,4 @@ target
 .coverage_covimerage
 coverage.xml
 .clj-kondo/.cache
+/vimhelp
