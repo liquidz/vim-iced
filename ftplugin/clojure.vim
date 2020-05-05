@@ -327,7 +327,13 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>ei <Plug>(iced_eval)<Plug>(sexp_inner_element)``
     silent! nmap <buffer> <Leader>ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
     silent! nmap <buffer> <Leader>et <Plug>(iced_eval_outer_top_list)
+  endif
+
+  if !hasmapto('<Plug>(iced_eval_at_mark)')
     silent! nmap <buffer> <Leader>ea <Plug>(iced_eval_at_mark)
+  endif
+
+  if !hasmapto('<Plug>(iced_eval_last_outer_top_list)')
     silent! nmap <buffer> <Leader>el <Plug>(iced_eval_last_outer_top_list)
   endif
 
