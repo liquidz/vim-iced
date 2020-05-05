@@ -64,6 +64,24 @@ aug MyClojureSetting
 aug END
 ----
 
+=== Overwriting mappings
+
+vim-iced provides {help_html}#vim-iced-customizing-default-keys[default key mappings].
+Since vim-iced will verify the mapping existance, if you would like to overwrite some key mappings, you could do as follows.
+
+.Example: $HOME/.vim/ftplugin/clojure.vim
+
+[source,subs="attributes+,+replacements"]
+----
+nmap {plug_iced_macroexpand_1_outer_list} <Plug>(iced_eval_at_mark) <1>
+nmap {plug_iced_macroexpand_outer_list} <Plug>(iced_macroexpand_1_outer_list) <2>
+nmap <Nop>(iced_macroexpand_outer_list) <Plug>(iced_macroexpand_outer_list) <3>
+----
+<1> Use `{plug_iced_macroexpand_1_outer_list}` for `iced_eval_at_mark` instead of `{plug_iced_eval_at_mark}`.
+<2> Use `{plug_iced_macroexpand_outer_list}` for `iced_macroexpand_1_outer_list` instead of `{plug_iced_macroexpand_1_outer_list}`.
+<3> Disable default mapping `{plug_iced_macroexpand_outer_list}` for `iced_macroexpand_outer_list`.
+
+
 === Reloaded workflows
 
 If you are managing lifecycle of components with https://github.com/stuartsierra/component[Stuart Sierra's component], https://github.com/weavejester/integrant[integrant] or etc, key mappings like follows are useful.
