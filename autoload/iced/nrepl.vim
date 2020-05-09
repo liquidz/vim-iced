@@ -427,6 +427,8 @@ function! iced#nrepl#connect(port, ...) abort
     return v:true
   endif
 
+  let s:nrepl = s:initialize_nrepl()
+
   " NOTE: Initialize buffers here to avoid firing `bufenter` autocmd
   "       after connection established
   silent call iced#buffer#stdout#init()
