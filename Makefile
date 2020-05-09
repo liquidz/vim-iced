@@ -1,6 +1,6 @@
 .PHONY: all vital test themis docker_themis html document pip_install lint clj-lint
 .PHONY: python_doctest load_files_test version_check deps_check
-.PHONY: clean clean-all bin ancient aspell repl
+.PHONY: clean clean-all bin outdated aspell repl
 
 PWD=$(shell pwd)
 
@@ -77,8 +77,8 @@ clan-all: clean
 bin:
 	clojure -A:jackin -m iced-jackin
 
-ancient:
-	clojure -A:ancient
+outdated:
+	clojure -A:outdated
 
 aspell:
 	aspell -d en -W 3 -p ./.aspell.en.pws check README.adoc

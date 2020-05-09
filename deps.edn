@@ -24,24 +24,20 @@
 
  :aliases
  {:cljs {:__command_option__ true
-         :extra-deps {cider/piggieback {:mvn/version "0.4.1"}}
+         :extra-deps {cider/piggieback {:mvn/version "0.4.2"}}
          :__middlewares__ ["cider.piggieback/wrap-cljs-repl"]}
   :kaocha {:__command_option__ true
-           :extra-deps {kaocha-nrepl {:mvn/version "0.1.2-SNAPSHOT"}}
+           :extra-deps {kaocha-nrepl {:mvn/version "0.1.1"}}
            :__middlewares__ ["kaocha-nrepl.core/wrap-kaocha"]}
 
   :jackin {;; Must be separeted from "clj/repl" path.
            ;; c.f. https://github.com/liquidz/vim-iced/issues/175#issuecomment-575543011
            :paths ["clj/jackin"]
            :extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}}}
-  :command {:extra-deps {org.clojure/tools.cli {:mvn/version "0.4.2"}}}
-  :ancient {:extra-deps {olical/depot {:mvn/version "1.8.4"}}
-            :main-opts ["-m" "depot.outdated.main"]}
-  :doc {:extra-deps {liquidz/clj-vimhelp {:git/url "https://github.com/liquidz/clj-vimhelp"
-                                          :sha "38dea58d0516f8f6bbc424da14300c831a824242"}}
-        :main-opts ["-m" "vimhelp.core"]}
+  :outdated {:extra-deps {antq {:mvn/version "RELEASE"}}
+             :main-opts ["-m" "antq.core"]}
   :load-files-test {:extra-paths ["test/clj"]
-                    :extra-deps {lambdaisland/kaocha {:mvn/version "0.0-529"}}
+                    :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.629"}}
                     :main-opts ["-m" "kaocha.runner"]}
   :dev {}}
  }

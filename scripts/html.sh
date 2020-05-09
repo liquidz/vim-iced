@@ -130,8 +130,12 @@ footer {
 EOS
 )
 
+if [ ! -e ./vimhelp ]; then
+    curl -L https://raw.githubusercontent.com/liquidz/clj-vimhelp/master/script/download | bash
+fi
+
 mkdir -p target/html
-clojure -A:doc doc/*.txt \
+./vimhelp doc/*.txt \
     --title 'vim-iced help' \
     --css '//fonts.googleapis.com/css?family=Roboto+Mono' \
     --css '//cdn.rawgit.com/necolas/normalize.css/master/normalize.css' \
@@ -142,4 +146,3 @@ clojure -A:doc doc/*.txt \
     --blob 'https://github.com/liquidz/vim-iced/blob/master/doc' \
     --output=target/html \
     --verbose
-

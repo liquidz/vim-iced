@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 10402
+let g:vim_iced_version = 10403
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -271,9 +271,9 @@ nnoremap <silent> <Plug>(iced_toggle_sideloader_lookup) :<C-u>IcedToggleSideload
 aug vim_iced_initial_setting
   au!
   au FileType clojure setl omnifunc=iced#complete#omni
-  au BufRead *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufread()
+  au BufRead *.clj,*.cljs,*.cljc call iced#repl#execute('autocmd_bufread')
   au BufNewFile *.clj,*.cljs,*.cljc call iced#nrepl#auto#newfile()
-  au BufEnter *.clj,*.cljs,*.cljc call iced#nrepl#auto#bufenter()
+  au BufEnter *.clj,*.cljs,*.cljc call iced#repl#execute('autocmd_bufenter')
   au VimLeave * call iced#nrepl#auto#leave()
 aug END
 
@@ -327,7 +327,13 @@ function! s:default_key_mappings() abort
     silent! nmap <buffer> <Leader>ei <Plug>(iced_eval)<Plug>(sexp_inner_element)``
     silent! nmap <buffer> <Leader>ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
     silent! nmap <buffer> <Leader>et <Plug>(iced_eval_outer_top_list)
+  endif
+
+  if !hasmapto('<Plug>(iced_eval_at_mark)')
     silent! nmap <buffer> <Leader>ea <Plug>(iced_eval_at_mark)
+  endif
+
+  if !hasmapto('<Plug>(iced_eval_last_outer_top_list)')
     silent! nmap <buffer> <Leader>el <Plug>(iced_eval_last_outer_top_list)
   endif
 

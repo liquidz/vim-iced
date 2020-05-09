@@ -8,9 +8,9 @@ VERSION=$(grep 'Version: ' ${SCRIPT_DIR}/../doc/vim-iced.txt | cut -d' ' -f2)
 BASE_DEPENDENCIES='nrepl:0.7.0 refactor-nrepl:2.5.0 cider/cider-nrepl:0.24.0 iced-nrepl:1.0.1'
 BASE_MIDDLEWARES='cider.nrepl/wrap-classpath cider.nrepl/wrap-clojuredocs cider.nrepl/wrap-complete cider.nrepl/wrap-debug cider.nrepl/wrap-format cider.nrepl/wrap-info cider.nrepl/wrap-macroexpand cider.nrepl/wrap-ns cider.nrepl/wrap-out cider.nrepl/wrap-spec cider.nrepl/wrap-test cider.nrepl/wrap-trace cider.nrepl/wrap-undef cider.nrepl/wrap-xref refactor-nrepl.middleware/wrap-refactor iced.nrepl/wrap-iced'
 
-CLJS_DEPENDENCIES='cider/piggieback:0.4.1'
+CLJS_DEPENDENCIES='cider/piggieback:0.4.2'
 CLJS_MIDDLEWARES='cider.piggieback/wrap-cljs-repl'
-KAOCHA_DEPENDENCIES='kaocha-nrepl:0.1.2-SNAPSHOT'
+KAOCHA_DEPENDENCIES='kaocha-nrepl:0.1.1'
 KAOCHA_MIDDLEWARES='kaocha-nrepl.core/wrap-kaocha'
 
 IS_LEININGEN=0

@@ -49,6 +49,7 @@ let s:palette = s:build_palette()
 function! s:run(candidate) abort
   let cmd = get(s:palette, a:candidate, '')
   if !empty(cmd)
+    call histadd('cmd', strpart(cmd, 1))
     execute cmd
   endif
 endfunction
