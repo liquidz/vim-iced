@@ -34,7 +34,6 @@
            ;; c.f. https://github.com/liquidz/vim-iced/issues/175#issuecomment-575543011
            :paths ["clj/jackin"]
            :extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}}}
-  :command {:extra-deps {org.clojure/tools.cli {:mvn/version "0.4.2"}}}
   :outdated {:extra-deps {antq {:mvn/version "RELEASE"}}
              :main-opts ["-m" "antq.core"]}
   :load-files-test {:extra-paths ["test/clj"]
