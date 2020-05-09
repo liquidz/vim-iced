@@ -38,7 +38,7 @@
   :outdated {:extra-deps {antq {:mvn/version "RELEASE"}}
              :main-opts ["-m" "antq.core"]}
   :load-files-test {:extra-paths ["test/clj"]
-                    :extra-deps {lambdaisland/kaocha {:mvn/version "0.0-529"}}
+                    :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.629"}}
                     :main-opts ["-m" "kaocha.runner"]}
   :dev {}}
  }
