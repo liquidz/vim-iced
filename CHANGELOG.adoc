@@ -2,10 +2,20 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+=== Added
+* Added tip document for overwriting default key mappings.
+** https://liquidz.github.io/vim-iced/#tips_overwriting_mappings
+
 === Changed
 * Changed Socket REPL session to evaluate `require` / `in-ns` when `bufread` / `bufenter` autocmd is fired.
 * Updated command palette to add run command to cmd history.
 * Update vital.vim modules to be latest.
+* Bump github ation workflows.
+
+=== Fixed
+* Fixed to initialize inner state when reconnecting.
+** e.g. connect -> start cljs REPL -> quit cljs REPL outside vim -> connect
+*** Since cljs session is left so far, we must initialize this state.
 
 == 1.4.2 (2020-04-24)
 
