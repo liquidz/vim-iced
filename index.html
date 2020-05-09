@@ -563,7 +563,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#tips_vim_submode">22.1. vim-submode</a></li>
 <li><a href="#tips_auto_connection">22.2. Auto connection</a></li>
-<li><a href="#_reloaded_workflows">22.3. Reloaded workflows</a></li>
+<li><a href="#tips_overwriting_mappings">22.3. Overwriting mappings</a></li>
+<li><a href="#_reloaded_workflows">22.4. Reloaded workflows</a></li>
 </ul>
 </li>
 <li><a href="#external_integration">23. External integration</a>
@@ -3312,7 +3313,38 @@ aug END</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_reloaded_workflows">22.3. Reloaded workflows</h3>
+<h3 id="tips_overwriting_mappings">22.3. Overwriting mappings</h3>
+<div class="paragraph">
+<p>vim-iced provides <a href="https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-customizing-default-keys">default key mappings</a>.
+Since vim-iced will verify the mapping existence, if you would like to overwrite some key mappings, you could do as follows.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example: $HOME/.vim/ftplugin/clojure.vim</div>
+<div class="content">
+<pre class="rouge highlight"><code>nmap &lt;Leader&gt;em &lt;Plug&gt;(iced_eval_at_mark) <i class="conum" data-value="1"></i><b>(1)</b>
+nmap &lt;Leader&gt;eM &lt;Plug&gt;(iced_macroexpand_1_outer_list) <i class="conum" data-value="2"></i><b>(2)</b>
+nmap &lt;Nop&gt;(iced_macroexpand_outer_list) &lt;Plug&gt;(iced_macroexpand_outer_list) <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Use <code>&lt;Leader&gt;em</code> for <code>iced_eval_at_mark</code> instead of <code>&lt;Leader&gt;ea</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Use <code>&lt;Leader&gt;eM</code> for <code>iced_macroexpand_1_outer_list</code> instead of <code>&lt;Leader&gt;em</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Disable default mapping <code>&lt;Leader&gt;eM</code> for <code>iced_macroexpand_outer_list</code>.</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_reloaded_workflows">22.4. Reloaded workflows</h3>
 <div class="paragraph">
 <p>If you are managing lifecycle of components with <a href="https://github.com/stuartsierra/component">Stuart Sierra&#8217;s component</a>, <a href="https://github.com/weavejester/integrant">integrant</a> or etc, key mappings like follows are useful.</p>
 </div>
@@ -3981,7 +4013,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-23 21:06:56 UTC
+Last updated 2020-05-09 23:57:05 UTC
 </div>
 </div>
 <style>
