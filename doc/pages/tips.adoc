@@ -64,7 +64,7 @@ aug MyClojureSetting
 aug END
 ----
 
-=== Overwriting mappings
+=== Overwriting mappings [[tips_overwriting_mappings]]
 
 vim-iced provides {help_html}#vim-iced-customizing-default-keys[default key mappings].
 Since vim-iced will verify the mapping existance, if you would like to overwrite some key mappings, you could do as follows.
