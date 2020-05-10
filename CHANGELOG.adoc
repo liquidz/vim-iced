@@ -2,6 +2,12 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 1.4.4 (2020-05-10)
+// {{{
+=== Fixed
+* Fixed inner state initialization more.
+// }}}
+
 == 1.4.3 (2020-05-10)
 // {{{
 === Added
