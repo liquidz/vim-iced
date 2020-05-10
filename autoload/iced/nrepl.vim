@@ -57,6 +57,13 @@ function! s:clear_messages() abort
   let s:messages = {}
 endfunction
 
+function! iced#nrepl#reset() abort
+  let s:nrepl = s:initialize_nrepl()
+  call iced#cache#clear()
+  call iced#nrepl#cljs#reset()
+  call iced#nrepl#connect#reset()
+endfunction
+
 " SESSIONS {{{
 function! iced#nrepl#set_session(k, v) abort
   "if a:k =~# '\(cljs\?\|repl\|cljs_repl\)'
@@ -427,7 +434,7 @@ function! iced#nrepl#connect(port, ...) abort
     return v:true
   endif
 
-  let s:nrepl = s:initialize_nrepl()
+  call iced#nrepl#reset()
 
   " NOTE: Initialize buffers here to avoid firing `bufenter` autocmd
   "       after connection established
@@ -485,10 +492,7 @@ function! iced#nrepl#disconnect() abort " {{{
     call iced#nrepl#sync#close(id)
   endfor
   call iced#system#get('channel').close(s:nrepl['channel'])
-  let s:nrepl = s:initialize_nrepl()
-  call iced#cache#clear()
-  call iced#nrepl#cljs#reset()
-  call iced#nrepl#connect#reset()
+  call iced#nrepl#reset()
   call iced#message#info('disconnected')
   call iced#hook#run('disconnected', {})
 endfunction " }}}
@@ -643,4 +647,3 @@ call iced#nrepl#register_handler('load-file', funcref('iced#nrepl#merge_response
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
-" vim:fdm=marker:fdl=0
