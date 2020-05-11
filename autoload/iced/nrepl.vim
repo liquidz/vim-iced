@@ -419,6 +419,33 @@ function! s:status(ch) abort
   endtry
 endfunction
 
+function! s:__add_missing_middlewares() abort
+  let middlewares = iced#promise#sync('iced#nrepl#dynamic_loader#ls_middleware', [])
+  let required_middlewares = [
+        \ 'cider.nrepl/wrap-classpath',
+        \ 'cider.nrepl/wrap-clojuredocs',
+        \ 'cider.nrepl/wrap-complete',
+        \ 'cider.nrepl/wrap-debug',
+        \ 'cider.nrepl/wrap-format',
+        \ 'cider.nrepl/wrap-info',
+        \ 'cider.nrepl/wrap-macroexpand',
+        \ 'cider.nrepl/wrap-ns',
+        \ 'cider.nrepl/wrap-out',
+        \ 'cider.nrepl/wrap-spec',
+        \ 'cider.nrepl/wrap-test',
+        \ 'cider.nrepl/wrap-trace',
+        \ 'cider.nrepl/wrap-undef',
+        \ 'cider.nrepl/wrap-xref',
+        \ 'refactor-nrepl.middleware/wrap-refactor',
+        \ 'iced.nrepl/wrap-iced',
+        \ ]
+  let missing_middlewares = filter(required_middlewares, {_, v -> index(middlewares, v) == -1})
+  if empty(missing_middlewares) | return | endif
+
+  call iced#message#echom('start_to_load_middleware')
+  call iced#promise#sync('iced#nrepl#dynamic_loader#add_middlewares', [missing_middlewares], 60000)
+endfunction
+
 function! s:connected(resp, opts) abort
   if has_key(a:resp, 'new-session')
     let session = a:resp['new-session']
@@ -428,6 +455,9 @@ function! s:connected(resp, opts) abort
     let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
 
     if get(a:opts, 'with_iced_nrepl', v:true)
+      " FIXME
+      call s:__add_missing_middlewares()
+
       " Check if nREPL middlewares are enabled
       if !iced#nrepl#is_supported_op('iced-version')
         return iced#message#error('no_iced_nrepl')
