@@ -2,6 +2,12 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 1.4.5 (2020-05-15)
+// {{{
+=== Fixed
+* Fixed completion to work even if no candidate kind is returned.
+// }}}
+
 == 1.4.4 (2020-05-10)
 // {{{
 === Fixed
