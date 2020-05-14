@@ -32,7 +32,7 @@ function! s:candidate(c) abort
   let doc = get(a:c, 'doc', '')
   return {
       \ 'word': a:c['candidate'],
-      \ 'kind': get(s:type_to_kind_dict, a:c['type']),
+      \ 'kind': get(s:type_to_kind_dict, get(a:c, 'type', 'var')),
       \ 'menu': empty(arglists) ? '' : join(arglists, ' '),
       \ 'info': doc,
       \ 'icase': 1,
