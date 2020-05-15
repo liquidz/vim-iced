@@ -365,8 +365,6 @@ endfunction " }}}
 
 " CONNECT {{{
 function! s:warm_up() abort
-  let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
-
   if iced#nrepl#is_supported_op('init-debugger')
     " FIXME init-debugger does not return response immediately
     call iced#nrepl#op#cider#debug#init()
@@ -414,6 +412,7 @@ function! s:connected(resp, initial_session) abort
     let session = a:resp['new-session']
     call iced#nrepl#set_session(a:initial_session, session)
     call iced#nrepl#change_current_session(a:initial_session)
+    let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
 
     " Check if nREPL middlewares are enabled
     if !iced#nrepl#is_supported_op('iced-version')
