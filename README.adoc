@@ -19,6 +19,9 @@
   <a href="https://github.com/liquidz/vim-iced/actions?query=workflow%3Avim%2Fneovim">
     <img src="https://github.com/liquidz/vim-iced/workflows/vim%2Fneovim/badge.svg" alt="GitHub Actions for vim/neovim workflow" />
   </a>
+  <a href="https://github.com/liquidz/vim-iced/actions?query=workflow%3Adependencies">
+    <img src="https://github.com/liquidz/vim-iced/workflows/dependencies/badge.svg" alt="GitHub Actions for dependencies workflow" />
+  </a>
   <a href="https://codecov.io/gh/liquidz/vim-iced">
     <img src="https://codecov.io/gh/liquidz/vim-iced/branch/master/graph/badge.svg" alt="Codecov" />
   </a>
