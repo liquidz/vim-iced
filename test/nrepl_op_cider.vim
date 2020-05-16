@@ -11,7 +11,7 @@ endfunction
 let s:default_ns = 'foo.core'
 function! s:relay(msg) abort
   if a:msg['op'] ==# 'eval'
-    return {'status': ['done'], 'value': printf('#namespace[%s]', s:default_ns)}
+    return {'status': ['done'], 'value': s:default_ns}
   endif
   return {'status': ['done'], 'message': a:msg}
 endfunction

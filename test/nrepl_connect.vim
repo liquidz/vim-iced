@@ -10,6 +10,8 @@ let s:shadow_cljs_dir = printf('%s/resources/connect/shadow_cljs', expand('<sfil
 function! s:auto_relay(msg) abort
   if a:msg['op'] ==# 'clone'
     return {'status': ['done'], 'new-session': 'fixme'}
+  elseif a:msg['op'] ==# 'eval'
+    return {'status': ['done'], 'value': 'user'}
   endif
   return {'status': ['done']}
 endfunction

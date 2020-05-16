@@ -81,7 +81,7 @@ endfunction
 
 function! s:suite.shorten_test() abort
   let current_columns = &columns
-  let current_cmdheight = &cmdheight
+  let current_cmdheight = max([&cmdheight, 1])
   let current_showcmd = &showcmd
 
   try

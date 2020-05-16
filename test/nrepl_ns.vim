@@ -6,7 +6,7 @@ let s:buf = themis#helper('iced_buffer')
 function! s:suite.name_by_var_test() abort
   call s:ch.mock({
         \ 'status_value': 'open',
-        \ 'relay': {_ -> {'status': ['done'], 'value': '#namespace[foo.bar1]'}}})
+        \ 'relay': {_ -> {'status': ['done'], 'value': 'foo.bar1'}}})
 
   call s:assert.equals(iced#nrepl#ns#name_by_var(), 'foo.bar1')
 endfunction
@@ -52,7 +52,7 @@ endfunction
 function! s:suite.name_test() abort
   call s:ch.mock({
         \ 'status_value': 'open',
-        \ 'relay': {_ -> {'status': ['done'], 'value': '#namespace[foo.bar7]'}}})
+        \ 'relay': {_ -> {'status': ['done'], 'value': 'foo.bar7'}}})
 
   call s:buf.start_dummy(['(ns foo.bar8)', '|'])
   call s:assert.equals(iced#nrepl#ns#name(), 'foo.bar8')

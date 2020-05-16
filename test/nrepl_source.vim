@@ -8,6 +8,8 @@ let s:io = themis#helper('iced_io')
 
 function! s:setup() abort
   let g:iced_enable_popup_document = 'every'
+  let g:iced_enable_enhanced_definition_extraction = v:false
+
   call s:popup.mock()
   call s:popup.close(0)
   call s:sys.set_dummies()
@@ -25,7 +27,7 @@ endfunction
 function! s:__extract_definition_relay(msg) abort
   let op = a:msg['op']
   if op ==# 'eval'
-    return {'status': ['done'], 'value': '#namespace[foo.core]'}
+    return {'status': ['done'], 'value': 'foo.core'}
   elseif op ==# 'extract-definition'
     let file = printf('%s/baz.clj', s:sys.get_dummy_user_dir())
     let definition = printf( '{:definition {:definition "foo bar" :line-beg 1 :line-end 2 :col-beg 3 :file "%s" :name "hello"}}', file)
@@ -56,7 +58,7 @@ endfunction
 function! s:__relay(info_base, msg) abort
   let op = a:msg['op']
   if op ==# 'eval'
-    return {'status': ['done'], 'value': '#namespace[foo.core]'}
+    return {'status': ['done'], 'value': 'foo.core'}
   elseif op ==# 'info'
     let resp = copy(a:info_base)
     let resp['status'] = ['done']
@@ -90,7 +92,7 @@ endfunction
 function! s:__extract_definition_error_relay(info_base, msg) abort
   let op = a:msg['op']
   if op ==# 'eval'
-    return {'status': ['done'], 'value': '#namespace[foo.core]'}
+    return {'status': ['done'], 'value': 'foo.core'}
   elseif op ==# 'extract-definition'
     return {'status': ['done'], 'error': 'error'}
   elseif op ==# 'info'
