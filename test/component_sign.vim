@@ -12,6 +12,10 @@ let s:bar_file = tempname()
 function! s:setup() abort
   call writefile(map(range(10), {_, v -> printf('line%d', v)}), s:foo_file)
   call writefile(map(range(11, 20), {_, v -> printf('line%d', v)}), s:bar_file)
+
+  exec printf(':sp %s', s:foo_file)
+  exec printf(':sp %s', s:bar_file)
+
   call sign_unplace('*')
 
   call sign_define('iced_dummy1', {'text': 'd1'})
@@ -24,16 +28,19 @@ function! s:setup() abort
   call s:sign.place('iced_dummy1', 13, s:bar_file, 'groupN')
   call s:sign.place('iced_dummy1', 15, s:bar_file, 'groupN')
   call s:sign.place('iced_dummy2', 17, s:bar_file, 'groupN')
-
-  exec printf(':sp %s', s:foo_file)
 endfunction
 
 function! s:teardown() abort
   call sign_unplace('*')
-  exec ':close'
+  exec printf(':bwipeout %s', s:foo_file)
+  exec printf(':bwipeout %s', s:bar_file)
 
   if filereadable(s:foo_file)
     call delete(s:foo_file)
+  endif
+
+  if filereadable(s:bar_file)
+    call delete(s:bar_file)
   endif
 endfunction
 
@@ -94,6 +101,7 @@ endfunction
 
 function! s:suite.jump_to_next_test() abort
   call s:setup()
+  exec printf(':b %d', bufnr(s:foo_file))
 
   call s:assert.equals(getcurpos()[1:2], [1, 1])
   call s:sign.jump_to_next()
@@ -110,6 +118,7 @@ endfunction
 
 function! s:suite.jump_to_prev_test() abort
   call s:setup()
+  exec printf(':b %d', bufnr(s:foo_file))
 
   call s:assert.equals(getcurpos()[1:2], [1, 1])
   call s:sign.jump_to_prev()
@@ -199,6 +208,7 @@ endfunction
 
 function! s:suite.refresh_test() abort
   call s:setup()
+  exec printf(':b %d', bufnr(s:foo_file))
 
   call s:assert.equals(s:list_in_buffer(), [
         \ {'lnum': 3, 'id': 1, 'name': 'iced_dummy1', 'group': 'default'},

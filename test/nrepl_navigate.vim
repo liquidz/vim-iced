@@ -167,7 +167,7 @@ function! s:browse_var_references_relay(msg) abort
           \ {'file': 'non_existing.txt', 'name': 'world', 'doc': 'doc world', 'line': 34},
           \ ]}
   elseif op ==# 'eval'
-    return {'status': ['done'], 'value': '#namespace[foo.core]'}
+    return {'status': ['done'], 'value': 'foo.core'}
   else
     return {'status': ['done']}
   endif
@@ -195,7 +195,7 @@ function! s:browse_var_dependencies_relay(msg) abort
           \ {'file': 'non_existing.txt', 'name': 'neko', 'doc': 'doc neko', 'line': 78},
           \ ]}
   elseif op ==# 'eval'
-    return {'status': ['done'], 'value': '#namespace[foo.core]'}
+    return {'status': ['done'], 'value': 'foo.core'}
   else
     return {'status': ['done']}
   endif

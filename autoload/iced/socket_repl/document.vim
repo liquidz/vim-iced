@@ -4,16 +4,20 @@ set cpoptions&vim
 let s:popup_winid = -1
 let s:document_code = join(readfile(printf('%s/clj/template/socket_repl_document.clj', g:vim_iced_home)), "\n")
 
+function! iced#socket_repl#document#code(symbol) abort
+  let symbol = empty(a:symbol)
+        \ ? iced#nrepl#var#cword()
+        \ : a:symbol
+  return printf(s:document_code, symbol)
+endfunction
+
 function! s:extract_document(resp) abort
   let docs = iced#socket_repl#out#lines(a:resp)
   return (docs == ['nil']) ? [] : docs
 endfunction
 
 function! s:fetch_document(symbol, callback) abort
-  let symbol = empty(a:symbol)
-        \ ? iced#nrepl#var#cword()
-        \ : a:symbol
-  let code = printf(s:document_code, symbol)
+  let code = iced#socket_repl#document#code(a:symbol)
   call iced#socket_repl#eval(code, {'callback': {resp -> a:callback(s:extract_document(resp))}})
 endfunction
 

@@ -50,11 +50,11 @@ endfunction
 
 function! iced#nrepl#ns#name_by_var(...) abort
   let session = get(a:, 1, iced#nrepl#current_session())
-  let resp = iced#nrepl#sync#eval('*ns*', {'session_id': session})
+  let resp = iced#nrepl#sync#eval('(ns-name *ns*)', {'session_id': session})
   if type(resp) != v:t_dict || !has_key(resp, 'value')
     return ''
   endif
-  return iced#nrepl#ns#util#extract_ns(resp['value'])
+  return resp['value']
 endfunction
 
 function! iced#nrepl#ns#name_by_buf() abort

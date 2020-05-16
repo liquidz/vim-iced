@@ -121,12 +121,3 @@ function! s:suite.add_test() abort
 
   call s:buf.stop_dummy()
 endfunction
-
-function! s:suite.extract_ns_test() abort
-  call s:assert.equals(
-      \ iced#nrepl#ns#util#extract_ns('#namespace[foo.bar]'),
-      \ 'foo.bar')
-  call s:assert.equals(
-      \ iced#nrepl#ns#util#extract_ns('foo.bar'),
-      \ 'foo.bar')
-endfunction

@@ -42,7 +42,7 @@ function! s:setup(edit_file) abort " {{{
 endfunction " }}}
 
 function! s:teardown() abort " {{{
-  exec ':close'
+  exec printf(':bwipeout %s', bufname('%'))
   call delete(s:clj_tempfile)
   call delete(s:cljs_tempfile)
   call iced#nrepl#auto#enable_bufenter(v:false)
@@ -112,5 +112,3 @@ function! s:suite.leave_test() abort
   call s:assert.equals(iced#nrepl#is_connected(), v:false)
   call s:teardown()
 endfunction
-
-" vim:fdm=marker:fdl=0

@@ -24,7 +24,7 @@
 
  :aliases
  {:cljs {:__command_option__ true
-         :extra-deps {cider/piggieback {:mvn/version "0.4.2"}}
+         :extra-deps {cider/piggieback {:mvn/version "0.5.0"}}
          :__middlewares__ ["cider.piggieback/wrap-cljs-repl"]}
   :kaocha {:__command_option__ true
            :extra-deps {kaocha-nrepl {:mvn/version "0.1.1"}}
@@ -37,7 +37,7 @@
   :outdated {:extra-deps {antq {:mvn/version "RELEASE"}}
              :main-opts ["-m" "antq.core"]}
   :load-files-test {:extra-paths ["test/clj"]
-                    :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.629"}}
+                    :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.632"}}
                     :main-opts ["-m" "kaocha.runner"]}
   :dev {}}
  }

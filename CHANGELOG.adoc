@@ -2,6 +2,14 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 1.5.0 (2020-05-17)
+// {{{
+=== Changed
+* Updated `IcedDocumentOpen` to use simple document by metadata when there is no `info` op.
+* Bump kaocha.
+* Bump piggieback.
+// }}}
+
 == 1.4.5 (2020-05-15)
 // {{{
 === Fixed

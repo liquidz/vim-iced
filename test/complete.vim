@@ -23,8 +23,6 @@ function! s:complete_relay(msg) abort
           \ {'candidate': 'foo', 'arglists': ['bar'], 'doc': 'baz', 'type': 'function'},
           \ {'candidate': 'hello', 'type': 'namespace'},
           \ ]}
-  elseif op ==# 'describe'
-    return {'status': ['done'], 'ops': {'complete': {}}}
   endif
   return {'status': ['done']}
 endfunction

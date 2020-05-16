@@ -40,6 +40,10 @@ function! s:build_test_channel(opt) abort
         let resp_data['id'] = sent_data['id']
       endif
 
+      if get(sent_data, 'op') ==# 'describe' && !has_key(resp_data, 'ops')
+        let resp_data['ops'] = {'info': 1, 'complete': 1}
+      endif
+
       let resp_data = iced#system#get('bencode').encode(resp_data)
       let Cb = (has_key(self, 'callback') && type(self.callback) == v:t_func)
           \ ? self.callback : s:funcs.dispatcher

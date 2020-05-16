@@ -16,6 +16,7 @@ endfunction
 
 function! s:suite.check_switching_session_switch_to_cljs_test() abort
   call s:clj_session_fixture()
+  let g:iced#eval#inside_comment = v:true
 
   let test = {'session_patterns': ['new-clj-session']}
   function! test.relay(msg) abort

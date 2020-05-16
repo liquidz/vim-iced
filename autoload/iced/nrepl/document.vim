@@ -116,21 +116,28 @@ function! s:generate_doc(resp) abort
   return (empty(doc) ? '' : join(doc, "\n"))
 endfunction
 
-function! s:view_doc_on_buffer(resp) abort
-  let doc = s:generate_doc(a:resp)
-  if !empty(doc)
-    call iced#buffer#document#open(doc, 'help')
+function! s:generate_doc_by_meta(symbol) abort
+  let code = iced#socket_repl#document#code(a:symbol)
+  return iced#promise#call('iced#nrepl#ns#in', [])
+        \.then({_ -> iced#promise#call('iced#nrepl#eval', [code])})
+        \.then({resp -> get(resp, 'value', '')})
+        \.then({value -> substitute(value, '\(^"\|"$\)', '', 'g')})
+        \.then({value -> substitute(trim(value), '\\n', "\n", 'g')})
+endfunction
+
+function! s:view_doc_on_buffer(doc) abort
+  if !empty(a:doc)
+    call iced#buffer#document#open(a:doc, 'help')
   endif
 endfunction
 
-function! s:view_doc_on_popup(resp) abort
-  let doc = s:generate_doc(a:resp)
+function! s:view_doc_on_popup(doc) abort
   let popup = iced#system#get('popup')
-  if empty(doc) || !popup.is_supported()
+  if empty(a:doc) || !popup.is_supported()
     return
   endif
 
-  let doc = printf(' %s', doc)
+  let doc = printf(' %s', a:doc)
   if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
   try
     let s:popup_winid = popup.open(split(doc, '\r\?\n'), {
@@ -146,15 +153,22 @@ function! s:view_doc_on_popup(resp) abort
   catch
     call iced#message#warning('popup_error', string(v:exception))
     " fallback to iced#nrepl#document#open
-    call s:view_doc_on_buffer(a:resp)
+    call s:view_doc_on_buffer(a:doc)
   endtry
 endfunction
 
 function! iced#nrepl#document#open(symbol) abort
-  if !iced#nrepl#check_session_validity() | return | endif
-  return iced#promise#call('iced#nrepl#ns#in', [])
-        \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
-        \.then(funcref('s:view_doc_on_buffer'))
+  if iced#nrepl#is_supported_op('info')
+    if !iced#nrepl#check_session_validity() | return | endif
+    return iced#promise#call('iced#nrepl#ns#in', [])
+          \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
+          \.then({resp -> s:generate_doc(resp)})
+          \.then(funcref('s:view_doc_on_buffer'))
+  else
+    " Use simple document by metadata when there is no `info` op.
+    return s:generate_doc_by_meta(a:symbol)
+          \.then(funcref('s:view_doc_on_buffer'))
+  endif
 endfunction
 
 function! iced#nrepl#document#popup_open(symbol) abort
@@ -163,10 +177,18 @@ function! iced#nrepl#document#popup_open(symbol) abort
     return iced#nrepl#document#open(a:symbol)
   endif
 
-  if !iced#nrepl#check_session_validity() | return | endif
-  return iced#promise#call('iced#nrepl#ns#in', [])
-        \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
-        \.then(funcref('s:view_doc_on_popup'))
+  if iced#nrepl#is_supported_op('info')
+    if !iced#nrepl#check_session_validity() | return | endif
+    return iced#promise#call('iced#nrepl#ns#in', [])
+          \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
+          \.then({resp -> s:generate_doc(resp)})
+          \.then(funcref('s:view_doc_on_popup'))
+  else
+    " Use simple document by metadata when there is no `info` op.
+    return s:generate_doc_by_meta(a:symbol)
+          \.then({value -> substitute(value, "\n", "\n  ", 'g')})
+          \.then(funcref('s:view_doc_on_popup'))
+  endif
 endfunction
 
 function! s:one_line_doc(resp) abort
@@ -234,6 +256,8 @@ function! s:one_line_doc(resp) abort
 endfunction
 
 function! iced#nrepl#document#current_form() abort
+  if !iced#nrepl#is_supported_op('info') | return | endif
+
   let popup = iced#system#get('popup')
   let context = popup.get_context(s:popup_winid)
   if !iced#nrepl#is_connected()

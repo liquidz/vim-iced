@@ -6,6 +6,7 @@ let s:io = themis#helper('iced_io')
 let s:buf = themis#helper('iced_buffer')
 
 function! s:setup() abort
+  let g:vim_iced_home = expand('<sfile>:p:h')
   let g:iced_enable_popup_document = 'every'
   let g:iced_max_distance_for_auto_document = 2
   call s:io.mock()

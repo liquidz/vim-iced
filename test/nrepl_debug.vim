@@ -135,6 +135,7 @@ function! s:suite.browse_tapped_data_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': funcref('s:__browse_tapped_data_test_relay')})
   let info = iced#buffer#document#init()
 
+  call iced#buffer#document#close()
   call s:assert.false(iced#buffer#document#is_visible())
 
   let p = iced#nrepl#debug#browse_tapped('foo bar')
