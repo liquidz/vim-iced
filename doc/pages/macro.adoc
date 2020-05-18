@@ -11,7 +11,7 @@ vim-iced provides following two commands.
 | {plug_iced_macroexpand_1_outer_list}
 
 | {help_html}#%3AIcedMacroExpandOuterList[IcedMacroExpandOuterList]
-| {plug_iced_macroexpand_1_outer_list}
+| {plug_iced_macroexpand_outer_list}
 
 |===
 
