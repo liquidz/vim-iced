@@ -2,6 +2,15 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 1.5.1 (2020-05-19)
+// {{{
+=== Changed
+* Bump kaocha-nrepl.
+
+=== Fixed
+* Fixed not to work one-line document when not connected.
+// }}}
+
 == 1.5.0 (2020-05-17)
 // {{{
 === Changed

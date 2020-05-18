@@ -256,7 +256,10 @@ function! s:one_line_doc(resp) abort
 endfunction
 
 function! iced#nrepl#document#current_form() abort
-  if !iced#nrepl#is_supported_op('info') | return | endif
+  if !iced#nrepl#is_connected()
+        \ || !iced#nrepl#is_supported_op('info')
+    return
+  endif
 
   let popup = iced#system#get('popup')
   let context = popup.get_context(s:popup_winid)
