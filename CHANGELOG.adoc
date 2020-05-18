@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 1.5.1 (2020-05-19)
 // {{{
 === Changed
 * Bump kaocha-nrepl.
