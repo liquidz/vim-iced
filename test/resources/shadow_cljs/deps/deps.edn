@@ -1,0 +1,13 @@
+{
+ :deps {cider/cider-nrepl {:mvn/version "234"}
+        refactor-nrepl {:mvn/version "345"}
+        iced-nrepl {:mvn/version "456"}
+        baz {:mvn/version "RELEASE"} }
+
+ :aliases
+ {:foo {:extra-deps {cider/cider-nrepl {:mvn/version "987"}
+                     refactor-nrepl {:mvn/version "876"}
+                     foo {:mvn/version "RELEASE"}}}
+  :bar {:extra-deps {iced-nrepl {:mvn/version "765"}
+                     bar {:mvn/version "RELEASE"}}}}
+ }
