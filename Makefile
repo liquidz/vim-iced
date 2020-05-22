@@ -1,6 +1,6 @@
 .PHONY: all vital test themis docker_themis html document pip_install lint clj-lint
 .PHONY: python_doctest load_files_test version_check deps_check
-.PHONY: clean clean-all bin outdated aspell repl
+.PHONY: clean clean-all bin outdated repl
 
 PWD=$(shell pwd)
 
@@ -79,11 +79,6 @@ bin:
 
 outdated:
 	clojure -A:outdated
-
-aspell:
-	aspell -d en -W 3 -p ./.aspell.en.pws check README.adoc
-	aspell -d en -W 3 -p ./.aspell.en.pws check CHANGELOG.adoc
-	aspell -d en -W 3 -p ./.aspell.en.pws check doc/vim-iced.txt
 
 repl:
 	clojure -R:jackin:dev -m iced-repl
