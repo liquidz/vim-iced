@@ -384,19 +384,6 @@ function! s:warm_up() abort
   if g:iced#nrepl#enable_sideloader && iced#nrepl#is_supported_op('sideloader-start')
     call iced#nrepl#sideloader#start()
   endif
-
-  " load util files
-  let load_dir = printf('%s/clj/load_files', g:vim_iced_home)
-  for path in glob(printf('%s/*.clj', load_dir), v:true, v:true)
-    call iced#nrepl#send({
-          \ 'id': iced#nrepl#id(),
-          \ 'op': 'load-file',
-          \ 'session': iced#nrepl#current_session(),
-          \ 'file': join(readfile(path), "\n"),
-          \ 'file-name': path,
-          \ 'file-path': load_dir,
-          \ })
-  endfor
 endfunction
 
 function! s:status(ch) abort

@@ -1,5 +1,5 @@
 .PHONY: all vital test themis docker_themis html document pip_install lint clj-lint
-.PHONY: python_doctest load_files_test version_check deps_check
+.PHONY: python_doctest bb_script_test version_check deps_check
 .PHONY: clean clean-all bin outdated repl
 
 PWD=$(shell pwd)
@@ -55,8 +55,8 @@ clj-lint:
 python_doctest:
 	python3 -m doctest python/bencode.py
 
-load_files_test:
-	clojure -A:load-files-test
+bb_script_test:
+	bash scripts/bb_script_test.sh
 
 version_check:
 	bash scripts/version_check.sh
