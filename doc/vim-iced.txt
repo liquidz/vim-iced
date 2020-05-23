@@ -573,6 +573,7 @@ COMMANDS                                                    *vim-iced-commands*
     Launch `iced repl --instant`
   - `babashka`
     Launch babashka REPL
+    See also |g:iced#repl#babashka_repl_type| option.
 
   Key is mapped to |<Plug>(iced_instant_connect)|.
 
@@ -1631,6 +1632,12 @@ g:iced#nrepl#source#finding_max_depth
   This value is used on enhanced source extraction.
   Default value is `3`.
   See also |g:iced_enable_enhanced_definition_extraction|.
+  
+                                               *g:iced#repl#babashka_repl_type*
+g:iced#repl#babashka_repl_type
+  REPL type of server launching by babashka.
+  `'socket'` or `'nrepl'` can be set.
+  Default value is `'socket'`.
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
