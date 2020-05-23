@@ -97,7 +97,7 @@ function! s:suite.instant_test() abort
   try
     silent execute printf(':lcd %s', s:default_dir)
 
-    call iced#nrepl#connect#instant()
+    call iced#nrepl#connect#instant('')
 
     let opened_args = iced#system#get('channel').get_opened_args()
     call s:assert.equals(opened_args['address'], '127.0.0.1:123456')
