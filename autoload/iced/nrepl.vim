@@ -394,21 +394,25 @@ function! s:status(ch) abort
   endtry
 endfunction
 
-function! s:connected(resp, initial_session) abort
+function! s:connected(resp, opts) abort
   if has_key(a:resp, 'new-session')
     let session = a:resp['new-session']
-    call iced#nrepl#set_session(a:initial_session, session)
-    call iced#nrepl#change_current_session(a:initial_session)
+    let initial_session = get(a:opts, 'initial_session', 'clj')
+    call iced#nrepl#set_session(initial_session, session)
+    call iced#nrepl#change_current_session(initial_session)
     let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
 
-    " Check if nREPL middlewares are enabled
-    if !iced#nrepl#is_supported_op('iced-version')
-      return iced#message#error('no_iced_nrepl')
+    if get(a:opts, 'with_iced_nrepl', v:true)
+      " Check if nREPL middlewares are enabled
+      if !iced#nrepl#is_supported_op('iced-version')
+        return iced#message#error('no_iced_nrepl')
+      endif
+
+      silent call s:warm_up()
+
+      call iced#nrepl#auto#enable_bufenter(v:true)
     endif
 
-    silent call s:warm_up()
-
-    call iced#nrepl#auto#enable_bufenter(v:true)
     call iced#message#info('connected')
     call iced#hook#run('connected', {})
   endif
@@ -449,9 +453,9 @@ function! iced#nrepl#connect(port, ...) abort
     endif
   endif
 
-  let initial_session = get(a:, 1, 'clj')
+  let opts = get(a:, 1, {})
   let resp = iced#promise#sync('iced#nrepl#clone', [])
-  call s:connected(resp, initial_session)
+  call s:connected(resp, opts)
   return v:true
 endfunction
 

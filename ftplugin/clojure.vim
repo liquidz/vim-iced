@@ -55,7 +55,7 @@ command!          IcedReconnect             call iced#nrepl#reconnect()
 command!          IcedInterrupt             call iced#nrepl#interrupt()
 command!          IcedInterruptAll          call iced#nrepl#interrupt_all()
 command! -nargs=? -complete=custom,iced#repl#instant_connect_complete
-      \ IcedInstantConnect call iced#repl#instant_connect(<q-args>) "iced#nrepl#connect#instant()
+      \ IcedInstantConnect call iced#repl#instant_connect(<q-args>)
 
 command!          IcedJackIn                call iced#nrepl#connect#jack_in()
 
