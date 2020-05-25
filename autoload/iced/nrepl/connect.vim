@@ -103,13 +103,37 @@ function! iced#nrepl#connect#jack_in(...) abort
         \ })
 endfunction
 
-function! iced#nrepl#connect#instant() abort
+function! s:__instant_clj() abort
   if !executable(g:iced#nrepl#connect#clj_command)
     return iced#message#error('not_executable', g:iced#nrepl#connect#clj_command)
   endif
 
   let cmd = printf('%s repl --instant', g:iced#nrepl#connect#iced_command)
   call iced#nrepl#connect#jack_in(cmd)
+endfunction
+
+function! s:__instant_babashka(port) abort
+  let cmd = printf('bb --nrepl-server %s', a:port)
+  call iced#job_start(cmd)
+
+  call iced#message#echom('connecting')
+  let result = iced#util#wait({->
+        \ empty(iced#repl#connect('nrepl', a:port, {'with_iced_nrepl': v:false}))},
+        \ 3000)
+
+  if result
+    call iced#message#info('connected_to', printf('port %s', a:port))
+  else
+    call iced#message#error('connect_error')
+  endif
+endfunction
+
+function! iced#nrepl#connect#instant(program) abort
+  if a:program ==# 'babashka'
+    return iced#script#empty_port({port -> s:__instant_babashka(port)})
+  else
+    return s:__instant_clj()
+  endif
 endfunction
 
 function! iced#nrepl#connect#reset() abort

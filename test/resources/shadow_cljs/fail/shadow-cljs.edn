@@ -1,10 +1,15 @@
 {
- :dependencies [[cider/cider-nrepl "0.21.1"]
-                [refactor-nrepl "2.4.0"]
-                [iced-nrepl "0.4.3"]]
+ :dependencies [[cider/cider-nrepl "234"]
+                ;; this is wrong
+                [refactor-nrepl "987"]
+                ;; missing deps
+                ; [iced-nrepl "456"]
+                ]
 
  :nrepl {:cider false
          :middleware [cider.nrepl/wrap-classpath
+                      ;; missing middleware
+                      ; cider.nrepl/wrap-clojuredocs
                       cider.nrepl/wrap-complete
                       cider.nrepl/wrap-debug
                       cider.nrepl/wrap-format
@@ -16,6 +21,8 @@
                       cider.nrepl/wrap-test
                       cider.nrepl/wrap-trace
                       cider.nrepl/wrap-undef
+                      ;; missing middleware
+                      ; cider.nrepl/wrap-xref
                       refactor-nrepl.middleware/wrap-refactor
                       iced.nrepl/wrap-iced]}
  }

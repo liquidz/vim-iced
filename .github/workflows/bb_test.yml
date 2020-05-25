@@ -1,0 +1,12 @@
+name: babashka
+on: [push]
+
+jobs:
+  bb-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: liquidz/babashka-test-action@v1
+        with:
+          source-paths: 'clj/script'
+          test-paths: 'test/clj/script'

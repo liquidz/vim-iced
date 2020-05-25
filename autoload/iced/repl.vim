@@ -3,6 +3,7 @@ set cpo&vim
 
 let g:iced#eval#inside_comment = get(g:, 'iced#eval#inside_comment', v:true)
 let g:iced#eval#mark_at_last = get(g:, 'iced#eval#mark_at_last', '1')
+let g:iced#repl#babashka_repl_type = get(g:, 'iced#repl#babashka_repl_type', 'socket')
 
 let s:repl = {}
 
@@ -32,14 +33,15 @@ endfunction
 
 " c.f. :h :command-completion-custom
 function! iced#repl#instant_connect_complete(arg_lead, cmd_line, cursor_pos) abort
-  let res = ['nrepl']
+  let res = ['nrepl', 'babashka']
   call extend(res, iced#socket_repl#connect#supported_programs())
   return join(res, "\n")
 endfunction
 
 function! iced#repl#instant_connect(target) abort
-  if a:target ==# '' || a:target ==# 'nrepl'
-    call iced#nrepl#connect#instant()
+  if a:target ==# ''
+        \ || (g:iced#repl#babashka_repl_type ==# 'nrepl' && a:target ==# 'babashka')
+    call iced#nrepl#connect#instant(a:target)
   elseif a:target ==# 'prepl'
     call iced#prepl#connect#instant()
   else

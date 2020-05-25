@@ -7,12 +7,9 @@ function! s:validate_config() abort
   let file = findfile('shadow-cljs.edn', '.;')
   if empty(file) | return | endif
 
-  let code = printf('(vim-iced.loaded.shadow-cljs/validate-config "%s" "%s")',
-        \ g:vim_iced_home, file)
+  let resp = iced#promise#sync('iced#script#shadow_cljs_validation', [file])
+  let value = trim(resp, '"')
 
-  let resp = iced#promise#sync('iced#nrepl#eval', [code])
-  if !has_key(resp, 'value') | return '' | endif
-  let value = trim(resp.value, '"')
   if empty(value) | return '' | endif
   return printf("%s\n%s",
         \ substitute(value, '\\n', '\n', 'g'),

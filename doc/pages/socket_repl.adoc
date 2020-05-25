@@ -76,6 +76,9 @@ Another way, you can launch socket REPL with random empty port internally.
 :IcedInstantConnect babashka
 ----
 
+If you'd like to use nREPL server instead of Socket REPL,
+you use {help_html}#g%3Aiced%23repl%23babashka_repl_type[g:iced#repl#babashka_repl_type] option.
+
 === Connecting pREPL
 
 pREPL connection is based on socket REPL connection in vim-iced.

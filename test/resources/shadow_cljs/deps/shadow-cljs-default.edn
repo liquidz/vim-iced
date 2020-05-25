@@ -1,8 +1,7 @@
 {
- :dependencies [[cider/cider-nrepl "234"]
-                [refactor-nrepl "345"]
-                [iced-nrepl "456"]]
-
+ :dependencies [[cider/cider-nrepl "123"]
+                [refactor-nrepl "234"]
+                [iced-nrepl "345"]]
  :nrepl {:cider false
          :middleware [cider.nrepl/wrap-classpath
                       cider.nrepl/wrap-clojuredocs
