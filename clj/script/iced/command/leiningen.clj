@@ -4,14 +4,16 @@
    [clojure.string :as str]
    [clojure.walk :as walk]))
 
-(defn read-string* [s]
+(defn read-string*
+  [s]
   (-> (str "[ " s " ]")
       (str/replace "~" "")
       (str/replace "#\"" "\"")
       (str/replace "#=(" "(")
       edn/read-string))
 
-(defn using-cljs? [project-clj-content]
+(defn using-cljs?
+  [project-clj-content]
   (let [skip-exclusions? (atom false)
         result (atom false)]
     (->> project-clj-content
@@ -19,21 +21,21 @@
          (filter #(= 'defproject (first %)))
          first
          (walk/postwalk
-           (fn [x]
-             (cond
-               (and @skip-exclusions? (sequential? x) (apply = ::skip x))
-               (reset! skip-exclusions? false)
+          (fn [x]
+            (cond
+              (and @skip-exclusions? (sequential? x) (apply = ::skip x))
+              (reset! skip-exclusions? false)
 
-               @skip-exclusions?
-               ::skip
+              @skip-exclusions?
+              ::skip
 
-               (= :exclusions x)
-               (reset! skip-exclusions? true)
+              (= :exclusions x)
+              (reset! skip-exclusions? true)
 
-               (= 'org.clojure/clojurescript x)
-               (reset! result true)
+              (= 'org.clojure/clojurescript x)
+              (reset! result true)
 
-               :else x))))
+              :else x))))
     @result))
 
 (defn dependencies->args

@@ -1,6 +1,7 @@
 (ns iced.common.color)
 
-(defn- colorize [code s]
+(defn- colorize
+  [code s]
   (str "\033[" code "m" s "\033[m"))
 
 (def bold (partial colorize 1))

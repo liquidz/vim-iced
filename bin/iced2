@@ -4,6 +4,13 @@ CWD=$(pwd)
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 PROJECT_DIR=$(cd $SCRIPT_DIR; cd ..; pwd)
 
+which bb > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    INSTALLER_DIR=$(cd ${PROJECT_DIR}; cd installer; pwd)
+    echo 'Missing babashka.'
+    (cd ${SCRIPT_DIR}; bash ${INSTALLER_DIR}/bb.sh)
+fi
+
 bb --classpath ${PROJECT_DIR}/clj/script -m iced.command.core \
     "${CWD}" \
     "${PROJECT_DIR}" \

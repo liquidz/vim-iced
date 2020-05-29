@@ -11,10 +11,12 @@
    [iced.common.process :as process]
    [iced.common.version :as version]))
 
-(defn- print-info-log [s]
+(defn- print-info-log
+  [s]
   (println (str (color/green "OK") ": " (color/bold s))))
 
-(defn- print-error-log [s]
+(defn- print-error-log
+  [s]
   (println (str (color/red "NG") ": " (color/bold s))))
 
 (def ^:private base-help-text
@@ -76,7 +78,8 @@ Use 'iced help <task>' or 'iced <task> --help' for more information.
   [s]
   (some #(str/starts-with? s %) option-names))
 
-(defn iced-deps-edn [iced-root]
+(defn iced-deps-edn
+  [iced-root]
   (-> (str iced-root "/deps.edn")
       slurp
       edn/read-string))
@@ -187,10 +190,10 @@ Use 'iced help <task>' or 'iced <task> --help' for more information.
            (map #(str/replace % #"'" ""))
            (process/start)))))
 
-(defn -repl-help [summary errors]
+(defn -repl-help
+  [summary errors]
   ;;FIXME
-  (println summary)
-  )
+  (println summary))
 
 (defn -repl
   "Main process for `repl` subcommand"
@@ -221,8 +224,4 @@ Use 'iced help <task>' or 'iced <task> --help' for more information.
         (print-error-log (.getMessage ex))
         (when-let [desc (some-> ex ex-data :description)]
           (println desc))
-        (System/exit 1))
-
-      )))
-
-
+        (System/exit 1)))))
