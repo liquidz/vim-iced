@@ -1,4 +1,4 @@
-(ns iced.boot)
+(ns iced.command.boot)
 
 (defn dependencies->args
   [deps]
@@ -15,12 +15,13 @@
    (map vector (repeat "-m") mdws)))
 
 (defn construct-command
-  [dm args]
+  "Return command list like [\"foo\" \"-option\" \"value\"]."
+  [{:keys [dependencies middlewares]} args]
   (flatten
    (concat
     ["boot"]
-    (dependencies->args (:dependencies dm))
-    (middlewares->args (:middlewares dm))
+    (dependencies->args dependencies)
+    (middlewares->args middlewares)
     ["--"]
     args
     ["repl"])))

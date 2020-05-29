@@ -1,9 +1,9 @@
-(ns iced.core-test
+(ns iced.command.core-test
   (:require
    [clojure.java.io :as io]
    [clojure.test :as t]
-   [iced.core :as sut]
-   [iced.leiningen :as i.lein]))
+   [iced.command.core :as sut]
+   [iced.command.leiningen :as i.lein]))
 
 (defmacro with-alter-var-root [[v f] & body]
   `(let [org-value# @~v]

@@ -1,4 +1,4 @@
-(ns iced.leiningen
+(ns iced.command.leiningen
   (:require
    [clojure.edn :as edn]
    [clojure.string :as str]
@@ -53,11 +53,12 @@
        mdws))
 
 (defn construct-command
-  [x args]
+  "Return command list like [\"foo\" \"-option\" \"value\"]."
+  [{:keys [dependencies middlewares]} args]
   (flatten
    (concat
     ["lein"]
-    (dependencies->args (:dependencies x))
-    (middlewares->args (:middlewares x))
+    (dependencies->args dependencies)
+    (middlewares->args middlewares)
     args
     ["repl"])))

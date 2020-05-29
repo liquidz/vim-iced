@@ -3,7 +3,12 @@
    [clojure.test :as t]))
 
 (def ^:private test-ns-list
-  '(shadow-cljs-validation-test))
+  '(
+    iced.command.core-test
+    iced.command.leiningen-test
+    iced.command.boot-test
+    shadow-cljs-validation-test
+    ))
 
 (doseq [sym test-ns-list]
   (require sym))

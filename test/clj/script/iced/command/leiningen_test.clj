@@ -1,8 +1,8 @@
-(ns iced.leiningen-test
+(ns iced.command.leiningen-test
   (:require
    [clojure.java.io :as io]
    [clojure.test :as t]
-   [iced.leiningen :as sut]))
+   [iced.command.leiningen :as sut]))
 
 (def ^:private project-file-with-cljs
   (io/file "test" "resources" "iced_command" "leiningen_cljs" "project.clj"))

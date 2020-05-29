@@ -1,8 +1,8 @@
-(ns iced.boot-test
+(ns iced.command.boot-test
   (:require
    [clojure.java.io :as io]
    [clojure.test :as t]
-   [iced.boot :as sut]))
+   [iced.command.boot :as sut]))
 
 (t/deftest dependencies->args-test
   (let [deps {'foo {:mvn/version "1"}
