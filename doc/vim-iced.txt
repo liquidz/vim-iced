@@ -112,7 +112,7 @@ LEININGEN~
   {:user
    {:dependencies [[nrepl "0.7.0"]
                    [iced-nrepl "1.0.1"]
-                   [cider/cider-nrepl "0.24.0"]]
+                   [cider/cider-nrepl "0.25.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -140,7 +140,7 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.5.0"]
-      [cider/cider-nrepl "0.24.0"]
+      [cider/cider-nrepl "0.25.0"]
       [iced-nrepl "1.0.1"]])
 
   (swap! boot.repl/*default-middleware* concat
@@ -170,7 +170,7 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "2.5.0"]
-                  [cider/cider-nrepl "0.24.0"]
+                  [cider/cider-nrepl "0.25.0"]
                   [iced-nrepl "1.0.1"]]
 
    :nrepl {:cider false
