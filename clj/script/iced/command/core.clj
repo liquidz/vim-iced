@@ -89,7 +89,7 @@ Use 'iced help <task>' or 'iced <task> --help' for more information.
   (let [[k v] (str/split s #":" 2)]
     {(symbol k) {:mvn/version v}}))
 
-(defn- detect-project-types*
+(defn detect-project-types
   "Detect all project types from current working directory.
   Returns a map like below.
   {:leiningen project-root-dir, :boot project-root-dir, ...}"
@@ -109,11 +109,11 @@ Use 'iced help <task>' or 'iced <task> --help' for more information.
                     (keys file->project-map))]
         (recur (.getParentFile dir) result)))))
 
-(defn- detect-project
+(defn detect-project
   [cwd options]
   (let [detected-project (if (:instant options)
                            {:clojure-cli (io/file cwd)}
-                           (detect-project-types* cwd))
+                           (detect-project-types cwd))
         detected-project (cond-> detected-project
                            (:force-boot options) (dissoc :leiningen :clojure-cli)
                            (:force-clojure-cli options) (dissoc :leiningen :boot))
@@ -126,12 +126,12 @@ Use 'iced help <task>' or 'iced <task> --help' for more information.
     {:project-type project-type
      :project-file project-file}))
 
-(defn- cljs-auto-detected?
+(defn cljs-auto-detected?
   [options project-type project-file]
-  (some?  (and (= :leiningen project-type)
-               (not (:without-cljs options))
-               (not (:cljs options))
-               (i.c.lein/using-cljs? (slurp project-file)))))
+  (and (= :leiningen project-type)
+       (not (:without-cljs options false))
+       (not (:cljs options false))
+       (i.c.lein/using-cljs? (slurp project-file))))
 
 (defn- print-detected-project
   [project-type options]
