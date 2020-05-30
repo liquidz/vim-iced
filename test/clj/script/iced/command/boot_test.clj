@@ -1,6 +1,5 @@
 (ns iced.command.boot-test
   (:require
-   [clojure.java.io :as io]
    [clojure.test :as t]
    [iced.command.boot :as sut]))
 

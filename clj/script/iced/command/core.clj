@@ -191,7 +191,7 @@ Use 'iced help <task>' or 'iced <task> --help' for more information.
            (process/start)))))
 
 (defn -repl-help
-  [summary errors]
+  [summary _errors]
   ;;FIXME
   (println summary))
 
