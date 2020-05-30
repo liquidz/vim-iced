@@ -11,7 +11,7 @@ function! iced#nrepl#op#cider#complete(base, ns_name, context, callback) abort
         \ 'op': 'complete',
         \ 'session': iced#nrepl#current_session(),
         \ 'ns': a:ns_name,
-        \ 'symbol': a:base,
+        \ 'prefix': a:base,
         \ 'extra-metadata': ['arglists', 'doc'],
         \ 'callback': a:callback,
         \ }
@@ -33,7 +33,7 @@ function! iced#nrepl#op#cider#info(ns_name, symbol, callback) abort
   call iced#nrepl#send({
       \ 'op': 'info',
       \ 'session': iced#nrepl#current_session(),
-      \ 'symbol': a:symbol,
+      \ 'sym': a:symbol,
       \ 'ns': a:ns_name,
       \ 'callback': a:callback,
       \ })
@@ -121,7 +121,7 @@ function! iced#nrepl#op#cider#undef(symbol, callback) abort
       \ 'op': 'undef',
       \ 'session': iced#nrepl#current_session(),
       \ 'ns': iced#nrepl#ns#name(),
-      \ 'symbol': a:symbol,
+      \ 'sym': a:symbol,
       \ 'verbose': v:false,
       \ 'callback': a:callback,
       \ })
@@ -270,4 +270,3 @@ call iced#nrepl#register_handler('ns-path', function('iced#nrepl#path_translatio
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
-" vim:fdm=marker:fdl=0
