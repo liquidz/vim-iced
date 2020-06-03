@@ -44,7 +44,7 @@ function! s:suite.get_test() abort
   call s:assert.equals(s:test.result['msg'], {
         \ 'session': 'clj-session',
         \ 'ns': 'foo.bar',
-        \ 'symbol': 'baz',
+        \ 'sym': 'baz',
         \ 'op': 'info'})
   call s:teardown()
 endfunction
@@ -55,7 +55,7 @@ function! s:suite.get_with_specified_symbol_test() abort
   call s:assert.equals(s:test.result['msg'], {
         \ 'session': 'clj-session',
         \ 'ns': 'foo.bar',
-        \ 'symbol': 'baz/hello',
+        \ 'sym': 'baz/hello',
         \ 'op': 'info'})
   call s:teardown()
 endfunction
@@ -66,7 +66,7 @@ function! s:suite.get_with_specified_emtpy_symbol_test() abort
   call s:assert.equals(s:test.result['msg'], {
         \ 'session': 'clj-session',
         \ 'ns': 'foo.bar',
-        \ 'symbol': 'baz',
+        \ 'sym': 'baz',
         \ 'op': 'info'})
   call s:teardown()
 endfunction
@@ -77,7 +77,7 @@ function! s:suite.get_cljs_var_test() abort
   call s:assert.equals(s:test.result['msg'], {
        \ 'session': 'cljs-session',
        \ 'ns': 'foo.bar',
-       \ 'symbol': 'baz',
+       \ 'sym': 'baz',
        \ 'op': 'info'})
   call s:teardown()
 endfunction
@@ -88,7 +88,7 @@ function! s:suite.get_cljs_specified_var_test() abort
   call s:assert.equals(s:test.result['msg'], {
        \ 'session': 'cljs-session',
        \ 'ns': 'foo.bar',
-       \ 'symbol': 'baz.core/hello',
+       \ 'sym': 'baz.core/hello',
        \ 'op': 'info'})
   call s:teardown()
 endfunction
@@ -99,7 +99,7 @@ function! s:suite.get_cljs_keyword_test() abort
   call s:assert.equals(s:test.result['msg'], {
        \ 'session': 'cljs-session',
        \ 'ns': 'foo.bar',
-       \ 'symbol': ':baz/hello',
+       \ 'sym': ':baz/hello',
        \ 'op': 'info'})
   call s:teardown()
 endfunction

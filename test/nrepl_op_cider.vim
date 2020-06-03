@@ -33,7 +33,7 @@ function! s:suite.info_test() abort
   call s:assert.equals(s:callback.result['message'], {
         \ 'session': 'clj-session',
         \ 'ns': 'foo.core',
-        \ 'symbol': 'bar-sym',
+        \ 'sym': 'bar-sym',
         \ 'op': 'info'})
   call s:teardown()
 endfunction
@@ -86,7 +86,7 @@ function! s:suite.undef_test() abort
   call s:assert.equals(s:callback.result['message'], {
         \ 'session': 'clj-session',
         \ 'ns': s:default_ns,
-        \ 'symbol': 'bar-sym',
+        \ 'sym': 'bar-sym',
         \ 'op': 'undef'})
   call s:teardown()
 endfunction
