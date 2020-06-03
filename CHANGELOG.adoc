@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This change
 // {{{
 === Changed
 * Bump cider-nrepl to 0.25.0.
+* Bump iced-nrepl to 1.0.2.
 // }}}
 
 == 1.5.2 (2020-05-26)
