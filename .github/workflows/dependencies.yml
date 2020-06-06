@@ -10,4 +10,4 @@ jobs:
       image: uochan/antq
     steps:
       - uses: actions/checkout@v2
-      - run: java -jar /tmp/antq/antq.jar
+      - run: java -jar /tmp/antq/antq.jar --error-format="::error file={{file}}::{{message}}"
