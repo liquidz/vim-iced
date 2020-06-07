@@ -6,8 +6,6 @@ on:
 jobs:
   antq:
     runs-on: ubuntu-latest
-    container:
-      image: uochan/antq
     steps:
       - uses: actions/checkout@v2
-      - run: java -jar /tmp/antq/antq.jar --error-format="::error file={{file}}::{{message}}"
+      - uses: liquidz/antq-action@v1
