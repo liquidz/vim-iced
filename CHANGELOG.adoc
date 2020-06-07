@@ -2,6 +2,12 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 1.5.5 (2020-06-08)
+// {{{
+=== Changed
+* Bump cider-nrepl to 0.25.2.
+// }}}
+
 == 1.5.4 (2020-06-05)
 // {{{
 === Changed
