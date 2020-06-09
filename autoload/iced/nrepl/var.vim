@@ -55,6 +55,9 @@ function! iced#nrepl#var#get(...) abort
     return
   endif
 
+  " Remove quote if exists
+  let symbol = trim(symbol, "'")
+
   if type(Callback) != v:t_func
     return
   endif
