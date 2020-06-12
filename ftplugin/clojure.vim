@@ -158,6 +158,9 @@ command!          IcedJumpToLet             call iced#let#jump_to_let()
 command!          IcedStartSideloader        call iced#nrepl#sideloader#start()
 command!          IcedToggleSideloaderLookup call iced#nrepl#sideloader#toggle_enablement_of_lookup()
 
+command! -nargs=? -complete=custom,iced#component#installer#complete
+      \ IcedUpdateTool call iced#system#get('installer').reinstall(<q-args>)
+
 "" }}}
 
 "" Key mappings {{{
@@ -264,6 +267,8 @@ nnoremap <silent> <Plug>(iced_jump_to_let)              :<C-u>IcedJumpToLet<CR>
 
 nnoremap <silent> <Plug>(iced_start_sideloader)         :<C-u>IcedStartSideloader<CR>
 nnoremap <silent> <Plug>(iced_toggle_sideloader_lookup) :<C-u>IcedToggleSideloaderLookup<CR>
+
+nnoremap <silent> <Plug>(iced_update_tool) :<C-u>IcedUpdateTool<CR>
 
 "" }}}
 
