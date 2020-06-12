@@ -248,5 +248,18 @@ function! iced#nrepl#ns#clear_cache() abort
   call iced#nrepl#op#refactor#__clear_cache()
 endfunction
 
+function! iced#nrepl#ns#unalias(alias_name, ...) abort
+  let ns_name = iced#nrepl#ns#name()
+  let alias_name = empty(a:alias_name) ? iced#nrepl#var#cword() : a:alias_name
+  let Callback = get(a:, 1, '')
+
+  if type(Callback) != v:t_func
+    let Callback = {_ -> iced#message#info('unaliased', alias_name)}
+  endif
+
+  let code = printf("(ns-unalias '%s '%s)", ns_name, alias_name)
+  return iced#nrepl#eval(code, Callback)
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

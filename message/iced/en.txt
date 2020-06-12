@@ -101,6 +101,7 @@
   'toggle_warn_on_reflection': 'Toggled *warn-on-reflection* to %s.',
   'too_deep_to_slurp':         'Too deep to slurp.',
   'try_connect':               'Not connected. Try `:IcedConnect <port>`',
+  'unaliased':                 'Unaliased "%s".',
   'undefined':                 'Undefined %s.',
   'unexpected_error':          'Unexpected error: %s',
   'unknown':                    '"%s" is unknown.',

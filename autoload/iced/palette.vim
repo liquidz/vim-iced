@@ -6,7 +6,7 @@ let s:default_palette = [
       \ 'InstantConnect', 'InstantConnect babashka', 'JackIn',
       \ 'StartCljsRepl figwheel-sidecar', 'StartCljsRepl graaljs', 'StartCljsRepl nashorn',
       \ 'QuitCljsRepl', 'CycleSession',
-      \ 'EvalNs', 'UndefAllInNs',
+      \ 'EvalNs', 'UndefAllInNs', 'UnaliasNs',
       \ 'Require', 'RequireAll',
       \ 'PrintLast',
       \ 'TestNs', 'TestAll', 'TestRedo', 'TestSpecCheck', 'TestRerunLast',

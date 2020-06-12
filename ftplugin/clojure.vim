@@ -72,6 +72,7 @@ command!          IcedRequire               call iced#repl#execute('load_current
 command!          IcedRequireAll            call iced#nrepl#ns#reload_all()
 command! -nargs=? IcedUndef                 call iced#nrepl#eval#undef(<q-args>)
 command! -nargs=? IcedUndefAllInNs          call iced#nrepl#eval#undef_all_in_ns(<q-args>)
+command! -nargs=? IcedUnaliasNs             call iced#nrepl#ns#unalias(<q-args>)
 command!          IcedEvalOuterTopList      call iced#repl#execute('eval_outer_top_list')
 command!          IcedEvalAtMark            call iced#repl#execute('eval_at_mark', nr2char(getchar()))
 command!          IcedEvalLastOuterTopList  call iced#repl#execute('eval_last_outer_top_list')
@@ -187,6 +188,7 @@ nnoremap <silent> <Plug>(iced_require)                  :<C-u>IcedRequire<CR>
 nnoremap <silent> <Plug>(iced_require_all)              :<C-u>IcedRequireAll<CR>
 nnoremap <silent> <Plug>(iced_undef)                    :<C-u>IcedUndef<CR>
 nnoremap <silent> <Plug>(iced_undef_all_in_ns)          :<C-u>IcedUndefAllInNs<CR>
+nnoremap <silent> <Plug>(iced_unalias_ns)               :<C-u>IcedUnaliasNs<CR>
 nnoremap <silent> <Plug>(iced_eval_outer_top_list)      :<C-u>IcedEvalOuterTopList<CR>
 nnoremap <silent> <Plug>(iced_eval_at_mark)             :<C-u>IcedEvalAtMark<CR>
 nnoremap <silent> <Plug>(iced_eval_last_outer_top_list) :<C-u>IcedEvalLastOuterTopList<CR>
