@@ -49,6 +49,21 @@ function! s:suite.name_by_buf_without_ns_form_test() abort
   call s:buf.stop_dummy()
 endfunction
 
+function! s:suite.name_by_buf_in_ns_test() abort
+  " c.f. https://github.com/clojure/clojure/blob/clojure-1.10.1/src/clj/clojure/core_print.clj#L9
+  call s:buf.start_dummy(["(in-ns 'foo.bar7')", '|'])
+  call s:assert.equals(iced#nrepl#ns#name_by_buf(), 'foo.bar7')
+  call s:buf.stop_dummy()
+
+  call s:buf.start_dummy(["(ns foo.bar8)", "(in-ns 'foo.barx')", '|'])
+  call s:assert.equals(iced#nrepl#ns#name_by_buf(), 'foo.bar8')
+  call s:buf.stop_dummy()
+
+  call s:buf.start_dummy(["(in-ns 'foo.bar9')", "(ns foo.barx)", '|'])
+  call s:assert.equals(iced#nrepl#ns#name_by_buf(), 'foo.bar9')
+  call s:buf.stop_dummy()
+endfunction
+
 function! s:suite.name_test() abort
   call s:ch.mock({
         \ 'status_value': 'open',
