@@ -397,13 +397,7 @@ function! s:warm_up() abort
     call iced#nrepl#op#cider#debug#init()
   endif
 
-  if iced#nrepl#check_session_validity(v:false)
-    if iced#nrepl#ns#name() ==# s:nrepl['init_ns']
-      call iced#nrepl#ns#in()
-    else
-      call iced#nrepl#ns#load_current_file({_ -> ''})
-    endif
-  endif
+  call iced#nrepl#ns#create()
   call iced#format#set_indentexpr()
 
   if g:iced#nrepl#enable_sideloader && iced#nrepl#is_supported_op('sideloader-start')

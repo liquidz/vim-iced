@@ -24,17 +24,8 @@ function! iced#nrepl#auto#bufenter() abort
 
   if !iced#nrepl#is_connected() | return | endif
   call s:auto_switching_session()
-  " eval `in-ns` automatically
-  " NOTE: Do not use `iced#nrepl#ns#in` here
-  "       because ns-name by `*in*` var may be different in new buffer.
   if ! iced#nrepl#check_session_validity(v:false) | return | endif
-  let ns_name = iced#nrepl#ns#name_by_buf()
-  let ns_name = (empty(ns_name))
-        \ ? iced#nrepl#init_ns()
-        \ : ns_name
-  if !empty(ns_name)
-    call iced#nrepl#ns#in(ns_name, {_ -> ''})
-  endif
+  call iced#nrepl#ns#create()
 endfunction
 
 function! iced#nrepl#auto#bufread() abort
@@ -42,7 +33,7 @@ function! iced#nrepl#auto#bufread() abort
   call s:auto_switching_session()
   if !iced#nrepl#check_session_validity(v:false) | return | endif
 
-  call iced#nrepl#ns#require_if_not_loaded_promise()
+  call iced#nrepl#ns#create()
   call iced#format#set_indentexpr()
 endfunction
 
