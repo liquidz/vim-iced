@@ -99,8 +99,6 @@ Browsing tapped values https://twitter.com/uochan/status/1146982101662572544[:mo
 Supports followings currently.
 - https://github.com/bhauman/figwheel-main[Figwheel Main], https://github.com/bhauman/lein-figwheel[lein-figwheel]
 - https://github.com/thheller/shadow-cljs[shadow-cljs]
-- https://github.com/graalvm/graaljs[GraalJS]
-- Nashorn
 
 |:electric_plug:
 |Socket REPL

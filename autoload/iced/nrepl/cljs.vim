@@ -9,8 +9,6 @@ let s:quit_code = ':cljs/quit'
 let s:env = {
     \ 'figwheel-sidecar': function('iced#nrepl#cljs#figwheel_sidecar#get_env'),
     \ 'figwheel-main': function('iced#nrepl#cljs#figwheel_main#get_env'),
-    \ 'nashorn': function('iced#nrepl#cljs#nashorn#get_env'),
-    \ 'graaljs': function('iced#nrepl#cljs#graaljs#get_env'),
     \ 'shadow-cljs': function('iced#nrepl#cljs#shadow_cljs#get_env'),
     \ }
 

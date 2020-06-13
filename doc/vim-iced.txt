@@ -19,7 +19,6 @@ CONTENTS                                                    *vim-iced-contents*
   REPL Connection              |vim-iced-repl-connection|
   ClojureScript                |vim-iced-clojurescript|
     Piggieback                 |vim-iced-piggieback|
-    GraalJS                    |vim-iced-graaljs|
     FigwheelMain               |vim-iced-figwheel-main|
     shadow-cljs                |vim-iced-shadow-cljs|
   Evaluating                   |vim-iced-evaluating|
@@ -255,9 +254,6 @@ CLOJURE SCRIPT                                         *vim-iced-clojurescript*
     0.2.0 or later is required.
   - figwheel-sidecar
   - shadow-cljs
-  - graaljs
-    ClojureScript 1.10.439 or later is required.
-  - nashorn
 
   |:IcedStartCljsRepl| to start cljs-repl.
   |:IcedQuitCljsRepl| to quit it.
@@ -276,17 +272,6 @@ PIGGIEBACK                                                *vim-iced-piggieback*
   Or you can use `--with-cljs` option to inject piggieback explicitly.
 >
   iced repl --with-cljs
-<
-------------------------------------------------------------------------------
-GRAALJS                                                      *vim-iced-graaljs*
-
-  At first, ClojureScript 1.10.439 or later is required.
-
-  GraalVM is also required, and you must add GraalVM `/bin` to your `PATH`.
-  c.f. https://www.graalvm.org/docs/getting-started/#install-graalvm
-  Otherwise you can set `PATH` temporarily when you execute `iced` command.
->
-  $ PATH=/path/to/graalvm/bin:$PATH iced repl
 <
 ------------------------------------------------------------------------------
 FIGWHEEL MAIN                                          *vim-iced-figwheel-main*
@@ -588,12 +573,6 @@ COMMANDS                                                    *vim-iced-commands*
 
   ;; figwheel-sidecar
   :IcedCljsRepl (figwheel-sidecar.repl-api/repl-env)
-
-  ;; graaljs
-  :IcedCljsRepl (cljs.repl.graaljs/repl-env)
-
-  ;; nashorn
-  :IcedCljsRepl (cljs.repl.nashorn/repl-env)
 <
                                                            *:IcedStartCljsRepl*
 :IcedStartCljsRepl [{env}]
@@ -604,8 +583,6 @@ COMMANDS                                                    *vim-iced-commands*
   Supports following environment currently.
   - figwheel-sidecar
   - figwheel-main
-  - nashorn
-  - graaljs
   - shadow-cljs
 
   Key is mapped to |<Plug>(iced_start_cljs_repl)|.
