@@ -4,30 +4,22 @@ set cpoptions&vim
 let s:V = vital#iced#new()
 let s:D = s:V.import('Data.Dict')
 
-function! s:buffer_ns_loaded() abort
-  let b:iced_ns_loaded = 1
+function! s:buffer_ns_created() abort
+  let b:iced_ns_created = 1
   return v:true
 endfunction
 
-function! iced#nrepl#ns#require_if_not_loaded_promise() abort
-  if exists('b:iced_ns_loaded')
-    return iced#promise#resolve(v:true)
-  endif
+function! iced#nrepl#ns#create() abort
+  if exists('b:iced_ns_created') | return | endif
+  if !iced#nrepl#is_connected() | return | endif
 
-  if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect()
-    return iced#promise#resolve(v:false)
-  endif
+  let ns_name = iced#nrepl#ns#name_by_buf()
+  if ns_name ==# '' | return | endif
 
-  if iced#nrepl#current_session_key() ==# 'clj'
-    " NOTE: For midje user, requiring ns leads running tests.
-    "       So vim-iced evaluates ns form in CLJ session.
-    return iced#promise#call('iced#nrepl#ns#eval', [])
-  else
-    " NOTE: In shadow-cljs, evaluating only ns form clears all vars evaluated before.
-    "       So vim-iced requires ns in CLJS session.
-    let ns_name = iced#nrepl#ns#name()
-    return iced#promise#call('iced#nrepl#ns#require', [ns_name])
-  endif
+  return iced#nrepl#eval(printf('(clojure.core/create-ns ''%s)', ns_name), {_ ->
+        \ iced#nrepl#eval('(clojure.core/refer-clojure)', {'ns': ns_name}, {_ ->
+        \ s:buffer_ns_created()})
+        \ })
 endfunction
 
 function! iced#nrepl#ns#get() abort
