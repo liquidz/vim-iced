@@ -3,6 +3,9 @@
  {
   ;; FIXME
   :unresolved-namespace {:level :info}
+
+  :unresolved-symbol
+  {:exclude [%s]}
   }
  }
 
