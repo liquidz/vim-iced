@@ -55,11 +55,11 @@ function! s:suite.name_by_buf_in_ns_test() abort
   call s:assert.equals(iced#nrepl#ns#name_by_buf(), 'foo.bar7')
   call s:buf.stop_dummy()
 
-  call s:buf.start_dummy(["(ns foo.bar8)", "(in-ns 'foo.barx')", '|'])
+  call s:buf.start_dummy(['(ns foo.bar8)', "(in-ns 'foo.barx')", '|'])
   call s:assert.equals(iced#nrepl#ns#name_by_buf(), 'foo.bar8')
   call s:buf.stop_dummy()
 
-  call s:buf.start_dummy(["(in-ns 'foo.bar9')", "(ns foo.barx)", '|'])
+  call s:buf.start_dummy(["(in-ns 'foo.bar9')", '(ns foo.barx)', '|'])
   call s:assert.equals(iced#nrepl#ns#name_by_buf(), 'foo.bar9')
   call s:buf.stop_dummy()
 endfunction
