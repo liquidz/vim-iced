@@ -77,8 +77,9 @@ function! s:installer.reinstall(fullname, ...) abort
       break
     endif
   endfor
+
   if empty(name)
-    return iced#message#error('no_installer', a:fullname)
+    let name = a:fullname
   endif
 
   let iced_bin = printf('%s/bin/%s', g:vim_iced_home, name)
