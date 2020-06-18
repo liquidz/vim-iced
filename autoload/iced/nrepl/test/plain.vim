@@ -1,0 +1,28 @@
+let s:save_cpo = &cpoptions
+set cpoptions&vim
+
+function! s:out(resp) abort
+  echom printf('FIXME %s', a:resp)
+endfunction
+
+function! s:test_var_using_clojure_test_directly(resp) abort
+  let var = get(a:resp, 'qualified_var')
+  if empty(var) || var ==# 'nil'
+    return iced#message#error('not_found')
+  endif
+
+  let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
+  let code = printf(code, var)
+
+  return iced#promise#call('iced#nrepl#eval', [code])
+endfunction
+
+function! iced#nrepl#test#plain#under_cursor() abort
+  return iced#promise#call('iced#nrepl#var#extract_by_current_top_list', [])
+        \.then(funcref('s:test_var_using_clojure_test_directly'))
+        \.then({resp -> iced#promise#call(iced#system#get('edn').decode, [get(resp, 'value', '')])})
+        \.then(funcref('s:out'))
+endfunction
+
+let &cpoptions = s:save_cpo
+unlet s:save_cpo

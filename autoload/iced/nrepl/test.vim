@@ -200,18 +200,6 @@ function! s:__under_cursor(var_info, test_vars) abort
   endif
 endfunction
 
-function! s:test_var_using_clojure_test_directly(resp) abort
-  let var = get(a:resp, 'qualified_var')
-  if empty(var)
-    "FIXME
-    return
-  endif
-
-  let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
-  let code = printf(code, var)
-  return iced#nrepl#eval#code(code)
-endfunction
-
 function! iced#nrepl#test#under_cursor() abort
   if iced#nrepl#is_supported_op('test-var-query')
     return iced#promise#call('iced#nrepl#var#extract_by_current_top_list', [])
@@ -219,8 +207,8 @@ function! iced#nrepl#test#under_cursor() abort
           \.then({resp -> iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [resp['ns']])})
           \.then({test_vars -> s:__under_cursor(iced#cache#delete('iced#nrepl#test#under_cursor'), test_vars)})
   else
-    return iced#promise#call('iced#nrepl#var#extract_by_current_top_list', [])
-          \.then(funcref('s:test_var_using_clojure_test_directly'))
+    " Use simple test integration when there is no `test-var-query` op.
+    return iced#nrepl#test#plain#under_cursor()
   endif
 endfunction "}}}
 
