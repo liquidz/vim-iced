@@ -43,6 +43,8 @@ function! s:collect_errors_and_passes(resp) abort
   let errors  = []
   let passes = []
 
+  let is_ns_path_op_supported = iced#nrepl#is_supported_op('ns-path')
+
   for response in iced#util#ensure_array(a:resp)
     let results = get(response, 'results', {})
 
@@ -58,21 +60,26 @@ function! s:collect_errors_and_passes(resp) abort
             continue
           endif
 
-          let ns_path_resp = iced#nrepl#op#cider#sync#ns_path(ns_name)
-          if type(ns_path_resp) != v:t_dict || !has_key(ns_path_resp, 'path')
-            continue
-          endif
+          if is_ns_path_op_supported
+            let ns_path_resp = iced#nrepl#op#cider#sync#ns_path(ns_name)
 
-          if empty(ns_path_resp['path'])
-            if !has_key(test, 'file') || type(test['file']) != v:t_string
+            if type(ns_path_resp) != v:t_dict || !has_key(ns_path_resp, 'path')
               continue
             endif
-            let filename = printf('%s%s%s',
-                  \ iced#nrepl#system#user_dir(),
-                  \ iced#nrepl#system#separator(),
-                  \ test['file'])
+
+            if empty(ns_path_resp['path'])
+              if !has_key(test, 'file') || type(test['file']) != v:t_string
+                continue
+              endif
+              let filename = printf('%s%s%s',
+                    \ iced#nrepl#system#user_dir(),
+                    \ iced#nrepl#system#separator(),
+                    \ test['file'])
+            else
+              let filename = ns_path_resp['path']
+            endif
           else
-            let filename = ns_path_resp['path']
+            let filename = get(test, 'file')
           endif
 
           let err = {
