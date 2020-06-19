@@ -2,7 +2,8 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 function! s:out(resp) abort
-  echom printf('FIXME %s', a:resp)
+  let parsed = iced#nrepl#test#clojure_test#parse(a:resp)
+  return iced#nrepl#test#done(parsed)
 endfunction
 
 function! s:test_var_using_clojure_test_directly(resp) abort
