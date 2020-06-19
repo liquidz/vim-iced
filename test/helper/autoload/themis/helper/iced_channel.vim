@@ -41,7 +41,7 @@ function! s:build_test_channel(opt) abort
       endif
 
       if get(sent_data, 'op') ==# 'describe' && !has_key(resp_data, 'ops')
-        let resp_data['ops'] = {'info': 1, 'complete': 1, 'test-var-query': 1}
+        let resp_data['ops'] = {'info': 1, 'complete': 1, 'test-var-query': 1, 'ns-path': 1}
       endif
 
       let resp_data = iced#system#get('bencode').encode(resp_data)

@@ -35,9 +35,10 @@ function! s:suite.summary_failure_test() abort
 endfunction
 
 function! s:ns_path_relay(msg) abort
-  return (a:msg['op'] ==# 'ns-path')
-        \ ? {'status': ['done'], 'path': '/path/to/file.clj'}
-        \ : {}
+  if a:msg['op'] ==# 'ns-path'
+    return {'status': ['done'], 'path': '/path/to/file.clj'}
+  endif
+  return {'status': ['done']}
 endfunction
 
 function! s:suite.collect_errors_and_passes_success_test() abort
