@@ -96,7 +96,7 @@ function! s:collect_errors_and_passes(resp) abort
           if test['type'] ==# 'fail'
             call add(errors, extend(copy(err), s:extract_actual_values(test)))
           elseif test['type'] ==# 'error'
-            call add(errors, extend(copy(err), {'actual': test['error']}))
+            call add(errors, extend(copy(err), {'actual': get(test, 'error', get(test, 'actual', ''))}))
           endif
         endfor
       endfor
