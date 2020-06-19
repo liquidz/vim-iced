@@ -6,6 +6,14 @@ function! s:out(resp) abort
   return iced#nrepl#test#done(parsed)
 endfunction
 
+function! s:decode_edn(resp) abort
+  let value = get(a:resp, 'value', '')
+  if empty(value)
+    return iced#promise#reject('')
+  endif
+  return iced#promise#call(iced#system#get('edn').decode, [value])
+endfunction
+
 function! s:test_var_using_clojure_test_directly(resp) abort
   let var = get(a:resp, 'qualified_var')
   if empty(var) || var ==# 'nil'
@@ -21,7 +29,7 @@ endfunction
 function! iced#nrepl#test#plain#under_cursor() abort
   return iced#promise#call('iced#nrepl#var#extract_by_current_top_list', [])
         \.then(funcref('s:test_var_using_clojure_test_directly'))
-        \.then({resp -> iced#promise#call(iced#system#get('edn').decode, [get(resp, 'value', '')])})
+        \.then(funcref('s:decode_edn'))
         \.then(funcref('s:out'))
 endfunction
 
