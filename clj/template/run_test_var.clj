@@ -9,15 +9,13 @@
                      (pr-str x)))
           report (fn [m]
                    (case (:type m)
-                     :pass (swap! summary update (:type m)  inc)
-
-                     (:fail :error) (let [ns' (namespace @testing-var)
-                                          var' (name @testing-var)
-                                          m (-> (assoc m :ns ns' :var var')
-                                                (update :expected to-str)
-                                                (update :actual to-str))]
-                                      (swap! summary update (:type m) inc)
-                                      (swap! results update-in [ns' var'] conj m))
+                     (:pass :fail :error) (let [ns' (some-> @testing-var namespace)
+                                                var' (some-> @testing-var name)
+                                                m (-> (assoc m :ns ns' :var var')
+                                                      (update :expected to-str)
+                                                      (update :actual to-str))]
+                                            (swap! summary update (:type m) inc)
+                                            (swap! results update-in [ns' var'] conj m))
 
                      :begin-test-var (let [var-sym (symbol (:var m))]
                                        (swap! summary update :test inc)
