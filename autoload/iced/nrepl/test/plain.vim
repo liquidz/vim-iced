@@ -1,8 +1,14 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-function! s:out(resp) abort
+function! s:out(current_file, resp) abort
   let parsed = iced#nrepl#test#clojure_test#parse(a:resp)
+  let errs = []
+  for err in get(parsed, 'errors', [])
+    call add(errs, extend(err, {'filename': a:current_file}))
+  endfor
+  let parsed['errors'] = errs
+
   return iced#nrepl#test#done(parsed)
 endfunction
 
@@ -27,10 +33,12 @@ function! s:test_var_using_clojure_test_directly(resp) abort
 endfunction
 
 function! iced#nrepl#test#plain#under_cursor() abort
+  let current_file = expand('%:p')
+
   return iced#promise#call('iced#nrepl#var#extract_by_current_top_list', [])
         \.then(funcref('s:test_var_using_clojure_test_directly'))
         \.then(funcref('s:decode_edn'))
-        \.then(funcref('s:out'))
+        \.then(funcref('s:out', [current_file]))
 endfunction
 
 let &cpoptions = s:save_cpo
