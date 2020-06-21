@@ -26,7 +26,7 @@
                      :end-test-var (reset! testing-var nil)
                      nil))]
       (binding [clojure.test/report report]
-        (clojure.test/test-var #'%s))
+        %s)
       (cond-> {:summary @summary
                :results @results}
         @testing-ns (assoc :testing-ns @testing-ns))))

@@ -26,8 +26,9 @@ function! s:test_var_using_clojure_test_directly(resp) abort
     return iced#message#error('not_found')
   endif
 
+  let test_var_code = printf("(clojure.test/test-var #'%s)", var)
   let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
-  let code = printf(code, var)
+  let code = printf(code, test_var_code)
 
   return iced#promise#call('iced#nrepl#eval', [code])
 endfunction
@@ -37,6 +38,22 @@ function! iced#nrepl#test#plain#under_cursor() abort
 
   return iced#promise#call('iced#nrepl#var#extract_by_current_top_list', [])
         \.then(funcref('s:test_var_using_clojure_test_directly'))
+        \.then(funcref('s:decode_edn'))
+        \.then(funcref('s:out', [current_file]))
+endfunction
+
+function! s:test_ns_using_clojure_test_directly(ns_name) abort
+  let test_ns_code = printf("(clojure.test/test-ns '%s)", a:ns_name)
+  let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
+  let code = printf(code, test_ns_code)
+
+  return iced#promise#call('iced#nrepl#eval', [code])
+endfunction
+
+function! iced#nrepl#test#plain#ns(ns_name) abort
+  let current_file = expand('%:p')
+
+  return s:test_ns_using_clojure_test_directly(a:ns_name)
         \.then(funcref('s:decode_edn'))
         \.then(funcref('s:out', [current_file]))
 endfunction

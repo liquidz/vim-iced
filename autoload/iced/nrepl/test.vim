@@ -241,8 +241,14 @@ endfunction
 function! iced#nrepl#test#ns() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let ns = iced#nrepl#ns#name()
-  return iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [ns])
-        \.then(funcref('s:__ns', [ns]))
+
+  if iced#nrepl#is_supported_op('test-var-query')
+    return iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [ns])
+          \.then(funcref('s:__ns', [ns]))
+  else
+    " Use simple test integration when there is no `test-var-query` op.
+    return iced#nrepl#test#plain#ns(ns)
+  endif
 endfunction " }}}
 
 " iced#nrepl#test#all {{{
