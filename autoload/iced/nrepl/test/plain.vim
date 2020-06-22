@@ -26,9 +26,9 @@ function! s:test_var_using_clojure_test_directly(resp) abort
     return iced#message#error('not_found')
   endif
 
-  let test_var_code = printf("(clojure.test/test-var #'%s)", var)
+  let vars_code = printf("(list #'%s)", var)
   let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
-  let code = printf(code, test_var_code)
+  let code = printf(code, vars_code)
 
   return iced#promise#call('iced#nrepl#eval', [code])
 endfunction
@@ -43,9 +43,9 @@ function! iced#nrepl#test#plain#under_cursor() abort
 endfunction
 
 function! s:test_ns_using_clojure_test_directly(ns_name) abort
-  let test_ns_code = printf("(clojure.test/test-ns '%s)", a:ns_name)
+  let vars_code = printf("(vals (ns-interns '%s))", a:ns_name)
   let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
-  let code = printf(code, test_ns_code)
+  let code = printf(code, vars_code)
 
   return iced#promise#call('iced#nrepl#eval', [code])
 endfunction
