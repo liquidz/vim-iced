@@ -17,11 +17,15 @@
                                             (swap! summary update (:type m) inc)
                                             (swap! results update-in [ns' var'] conj m))
 
-                     :begin-test-var (let [var-sym (symbol (:var m))]
+                     :begin-test-var (let [var-meta (some-> m :var meta)
+                                           ns-name' (some-> var-meta :ns ns-name str)
+                                           var-name' (some-> var-meta :name str)]
                                        (swap! summary update :test inc)
                                        (swap! summary update :var inc)
-                                       (reset! testing-var var-sym)
-                                       (reset! testing-ns (namespace var-sym)))
+                                       (when (and ns-name' var-name')
+                                         (reset! testing-var (symbol ns-name' var-name')))
+                                       (when ns-name'
+                                         (reset! testing-ns ns-name')))
 
                      :end-test-var (reset! testing-var nil)
                      nil))]
