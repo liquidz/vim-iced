@@ -14,6 +14,7 @@ function! s:initialize_nrepl() abort
       \   'cljs': '',
       \   'cljs_repl': '',
       \   },
+      \ 'nrepl_version': {},
       \ }
 endfunction
 let s:nrepl = s:initialize_nrepl()
@@ -49,6 +50,10 @@ function! iced#nrepl#init_ns() abort
   return (iced#nrepl#current_session_key() ==# 'clj')
         \ ? get(s:nrepl, 'init_ns', '')
         \ : g:iced#nrepl#init_cljs_ns
+endfunction
+
+function! iced#nrepl#version() abort
+  return s:nrepl['nrepl_version']
 endfunction
 
 function! s:set_message(id, msg) abort
@@ -605,6 +610,10 @@ endfunction
 function! iced#nrepl#is_supported_op(op) abort " {{{
   if empty(s:supported_ops)
     let resp = iced#promise#sync('iced#nrepl#describe', [])
+
+    if has_key(resp, 'versions')
+      let s:nrepl['nrepl_version'] = copy(resp.versions)
+    endif
 
     if !has_key(resp, 'ops')
       return iced#message#error('unexpected_error', 'Invalid :describe op response')
