@@ -18,7 +18,7 @@ let s:test_1_10_error =
 function! s:suite.err_with_1_9_or_above_test() abort
   call s:qf.mock()
   call s:qf.setlist([], 'r')
-  call iced#nrepl#eval#err(s:test_1_9_error)
+  call iced#nrepl#eval#err(s:test_1_9_error, {})
   call s:assert.equals(s:qf.get_last_args()['list'],
         \ [{'filename': '/path/to/src.clj',
         \   'lnum': '12',
@@ -28,7 +28,7 @@ endfunction
 function! s:suite.err_with_1_10_or_later_test() abort
   call s:qf.mock()
   call s:qf.setlist([], 'r')
-  call iced#nrepl#eval#err(s:test_1_10_error)
+  call iced#nrepl#eval#err(s:test_1_10_error, {})
   call s:assert.equals(s:qf.get_last_args()['list'],
         \ [{'filename': '/path/to/src.clj',
         \   'lnum': '12',
@@ -38,7 +38,7 @@ endfunction
 function! s:suite.err_with_invalid_message_test() abort
   call s:qf.mock()
   call s:qf.setlist([], 'r')
-  call iced#nrepl#eval#err('invalid message')
+  call iced#nrepl#eval#err('invalid message', {})
   call s:assert.true(empty(s:qf.get_last_args()['list']))
 endfunction
 " }}}
@@ -141,6 +141,7 @@ function! s:suite.outer_top_list_test() abort
         \ ])
   call s:holder.clear()
 
+  let g:iced#eval#mark_at_last = 1
   let p = iced#nrepl#eval#outer_top_list()
   call iced#promise#wait(p)
 
@@ -205,5 +206,3 @@ function! s:suite.visual_test() abort
   call s:buf.stop_dummy()
 endfunction
 " }}}
-
-" vim:fdm=marker:fdl=0
