@@ -26,6 +26,8 @@ let s:printer_dict = {
       \ 'default': 'cider.nrepl.pprint/pprint',
       \ }
 
+let s:supported_ops = {}
+
 let s:V = vital#iced#new()
 let s:L = s:V.import('Data.List')
 
@@ -59,6 +61,7 @@ endfunction
 
 function! iced#nrepl#reset() abort
   let s:nrepl = s:initialize_nrepl()
+  let s:supported_ops = {}
   call iced#cache#clear()
   call iced#nrepl#cljs#reset()
   call iced#nrepl#connect#reset()
@@ -598,7 +601,6 @@ function! iced#nrepl#describe(callback) abort
         \ })
 endfunction
 
-let s:supported_ops = {}
 function! iced#nrepl#is_supported_op(op) abort " {{{
   if empty(s:supported_ops)
     let resp = iced#promise#sync('iced#nrepl#describe', [])
