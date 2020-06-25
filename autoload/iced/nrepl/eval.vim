@@ -26,7 +26,9 @@ function! s:parse_error(err) abort
   endif
 endfunction
 
-function! iced#nrepl#eval#err(err) abort
+function! iced#nrepl#eval#err(err, opt) abort
+  let is_verbose = get(a:opt, 'verbose', v:true)
+
   if empty(a:err)
     return iced#qf#clear()
   endif
@@ -34,9 +36,13 @@ function! iced#nrepl#eval#err(err) abort
   let err_info = s:parse_error(a:err)
   if !empty(err_info)
     call iced#qf#set([err_info])
-    call iced#message#error_str(err_info['text'])
+    if is_verbose
+      call iced#message#error_str(err_info['text'])
+    endif
   else
-    call iced#message#error_str(a:err)
+    if is_verbose
+      call iced#message#error_str(a:err)
+    endif
   endif
 endfunction
 
@@ -58,7 +64,7 @@ function! iced#nrepl#eval#out(resp, ...) abort
     call iced#message#error_str(a:resp['ex'])
   endif
 
-  call iced#nrepl#eval#err(get(a:resp, 'err', ''))
+  call iced#nrepl#eval#err(get(a:resp, 'err', ''), opt)
 
   if has_key(opt, 'code')
     return iced#nrepl#cljs#check_switching_session(a:resp, opt.code)

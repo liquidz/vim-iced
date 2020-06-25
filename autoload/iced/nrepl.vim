@@ -533,6 +533,7 @@ function! iced#nrepl#eval(code, ...) abort
         \ 'line': get(option, 'line', pos[1]),
         \ 'column': get(option, 'column', pos[2]),
         \ 'nrepl.middleware.print/stream?': 1,
+        \ 'verbose': get(option, 'verbose', v:true),
         \ 'callback': Callback,
         \ }
 

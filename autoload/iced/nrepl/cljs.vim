@@ -20,7 +20,8 @@ function! s:set_cljs_session(original_cljs_session) abort
 
   call iced#nrepl#set_session('cljs', a:original_cljs_session)
   call iced#nrepl#set_session('clj', cloned_cljs_session)
-  return iced#nrepl#eval#code(s:quit_code, {'session': 'clj', 'ignore_session_validity': v:true})
+  " Quit **CLONED** cljs session to work as a clj session
+  return iced#nrepl#eval#code(s:quit_code, {'session': 'clj', 'ignore_session_validity': v:true, 'verbose': v:false})
 endfunction
 
 function! s:unset_cljs_session() abort
