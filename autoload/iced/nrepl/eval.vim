@@ -26,8 +26,9 @@ function! s:parse_error(err) abort
   endif
 endfunction
 
-function! iced#nrepl#eval#err(err, opt) abort
-  let is_verbose = get(a:opt, 'verbose', v:true)
+function! iced#nrepl#eval#err(err, ...) abort
+  let opt = get(a:, 1, {})
+  let is_verbose = get(opt, 'verbose', v:true)
 
   if empty(a:err)
     return iced#qf#clear()
