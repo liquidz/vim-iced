@@ -1,5 +1,6 @@
 (do (require 'clojure.test)
-    (let [summary (atom {:test 0 :pass 0 :fail 0 :error 0 :var 0})
+    (let [ignore-keys [%s]
+          summary (atom {:test 0 :pass 0 :fail 0 :error 0 :var 0})
           results (atom {})
           testing-var (atom nil)
           testing-ns (atom nil)
@@ -13,7 +14,8 @@
                                                 var' (some-> @testing-var name)
                                                 m (-> (assoc m :ns ns' :var var')
                                                       (update :expected to-str)
-                                                      (update :actual to-str))]
+                                                      (update :actual to-str))
+                                                m (apply dissoc m ignore-keys)]
                                             (swap! summary update (:type m) inc)
                                             (swap! results update-in [ns' var'] conj m))
 

@@ -20,6 +20,14 @@ function! s:decode_edn(resp) abort
   return iced#promise#call(iced#system#get('edn').decode, [value])
 endfunction
 
+function! s:ignore_keys() abort
+  " for babashka.nrepl, line number may be wrong currently
+  if has_key(iced#nrepl#version(), 'babashka')
+    return ':line'
+  endif
+  return ''
+endfunction
+
 function! s:test_var_using_clojure_test_directly(resp) abort
   let var = get(a:resp, 'qualified_var')
   if empty(var) || var ==# 'nil'
@@ -28,7 +36,7 @@ function! s:test_var_using_clojure_test_directly(resp) abort
 
   let vars_code = printf("(list #'%s)", var)
   let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
-  let code = printf(code, vars_code)
+  let code = printf(code, s:ignore_keys(), vars_code)
 
   return iced#promise#call('iced#nrepl#eval', [code])
 endfunction
@@ -45,7 +53,7 @@ endfunction
 function! s:test_ns_using_clojure_test_directly(ns_name) abort
   let vars_code = printf("(vals (ns-interns '%s))", a:ns_name)
   let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
-  let code = printf(code, vars_code)
+  let code = printf(code, s:ignore_keys(), vars_code)
 
   return iced#promise#call('iced#nrepl#eval', [code])
 endfunction
