@@ -251,3 +251,19 @@ function! s:suite.status_evaluating_test() abort
   call iced#nrepl#set_session('clj',  'clj-session')
   call iced#eval_and_read('(+ 1 2 3)')
 endfunction
+
+function! s:suite.version_test() abort
+  call iced#nrepl#reset()
+
+  call s:assert.equals({}, iced#nrepl#version())
+
+  call s:ch.mock({
+        \ 'status_value': 'open',
+        \ 'relay': {msg -> (msg['op'] ==# 'describe')
+        \                  ? {'status': ['done'], 'ops': {'dummy': 1}, 'versions': {'iced': 'test'}}
+        \                  : {'status': ['done']}},
+        \ })
+
+  call s:assert.true(iced#nrepl#is_supported_op('dummy'))
+  call s:assert.equals({'iced': 'test'}, iced#nrepl#version())
+endfunction
