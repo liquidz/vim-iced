@@ -3,11 +3,14 @@ set cpoptions&vim
 
 function! s:out(current_file, resp) abort
   let parsed = iced#nrepl#test#clojure_test#parse(a:resp)
-  let errs = []
-  for err in get(parsed, 'errors', [])
-    call add(errs, extend(err, {'filename': a:current_file}))
-  endfor
-  let parsed['errors'] = errs
+
+  if ! empty(a:current_file)
+    let errs = []
+    for err in get(parsed, 'errors', [])
+      call add(errs, extend(err, {'filename': a:current_file}))
+    endfor
+    let parsed['errors'] = errs
+  endif
 
   return iced#nrepl#test#done(parsed)
 endfunction
@@ -64,6 +67,21 @@ function! iced#nrepl#test#plain#ns(ns_name) abort
   return s:test_ns_using_clojure_test_directly(a:ns_name)
         \.then(funcref('s:decode_edn'))
         \.then(funcref('s:out', [current_file]))
+endfunction
+
+function! s:test_all_using_clojure_test_directly() abort
+  let vars_code = join(readfile(printf('%s/clj/template/all_user_vars.clj', g:vim_iced_home)), "\n")
+  echom printf('FIXME %s', vars_code)
+  let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
+  let code = printf(code, s:ignore_keys(), vars_code)
+
+  return iced#promise#call('iced#nrepl#eval', [code])
+endfunction
+
+function! iced#nrepl#test#plain#all() abort
+  return s:test_all_using_clojure_test_directly()
+        \.then(funcref('s:decode_edn'))
+        \.then(funcref('s:out', ['']))
 endfunction
 
 let &cpoptions = s:save_cpo

@@ -255,15 +255,20 @@ endfunction " }}}
 function! iced#nrepl#test#all() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
-  let query = {
-        \ 'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}
-        \ }
-  let s:last_test = {'type': 'test-var', 'query': query}
+  if iced#nrepl#is_supported_op('test-var-query')
+    let query = {
+          \ 'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}
+          \ }
+    let s:last_test = {'type': 'test-var', 'query': query}
 
-  call iced#system#get('sign').unplace_by({'name': s:sign_name, 'group': '*'})
-  call s:__echo_testing_message(query)
-  return iced#promise#call('iced#nrepl#op#cider#test_var_query', [query])
-        \.then(funcref('s:__clojure_test_out'))
+    call iced#system#get('sign').unplace_by({'name': s:sign_name, 'group': '*'})
+    call s:__echo_testing_message(query)
+    return iced#promise#call('iced#nrepl#op#cider#test_var_query', [query])
+          \.then(funcref('s:__clojure_test_out'))
+  else
+    " Use simple test integration when there is no `test-var-query` op.
+    return iced#nrepl#test#plain#all()
+  endif
 endfunction " }}}
 
 " iced#nrepl#test#redo {{{
