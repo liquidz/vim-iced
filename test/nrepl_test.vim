@@ -31,6 +31,8 @@ function s:setup(...) abort " {{{
   endif
 
   silent call iced#buffer#error#init()
+  silent call iced#nrepl#reset()
+  let g:vim_iced_home = expand('<sfile>:p:h')
 endfunction " }}}
 function s:teardown() abort " {{{
   if filereadable(s:temp_foo)
@@ -131,6 +133,10 @@ function! s:suite.fetch_test_vars_by_function_under_cursor_test() abort
   call s:assert.equals(test.result['test_vars'], ['foo.bar/baz-test'])
   call s:buf.stop_dummy()
 endfunction
+
+" ==============================================
+" =iced#nrepl#test#under_cursor
+" ==============================================
 
 function! s:build_under_cursor_relay() abort
   let d = {'last_var_query': {}}
@@ -278,13 +284,82 @@ function! s:suite.under_cursor_with_non_test_var_and_non_test_ns_test() abort
   call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
 
   let p = iced#nrepl#test#under_cursor()
-	call iced#promise#wait(p)
+  call iced#promise#wait(p)
 
   call s:assert.equals(s:qf.get_last_args()['list'], [])
   call s:assert.equals(r.get_last_var_query(), {
         \ 'ns-query': {'exactly': ['foo.bar-test']},
         \ 'exactly': ['foo.bar-test/var-test1', 'foo.bar-test/var-test2'],
         \ })
+
+  call s:buf.stop_dummy()
+  call s:teardown()
+endfunction
+
+" ==============================================
+" =iced#nrepl#test#under_cursor (plain)
+" ==============================================
+
+function! s:plain_under_cursor_relay(edn, msg) abort
+  let op = get(a:msg, 'op')
+  if op ==# 'describe'
+    return {'status': ['done'], 'ops': {}}
+  elseif op ==# 'eval'
+    if get(a:msg, 'code', '') ==# '(some codes)'
+      return {'status': ['done'], 'value': "#'foo/bar"}
+    else
+      return {'status': ['done'], 'value': a:edn}
+    endif
+  endif
+  return {'status': ['done']}
+endfunction
+
+function! s:suite.under_cursor_with_plain_nrepl_success_test() abort
+  call s:setup()
+
+  let edn = '{:summary {:fail 0, :var 1, :error 0, :pass 1, :test 1}, :results {"foo.core" {"bar-success" ({:type :pass, :expected "1", :actual "1", :message nil, :ns "foo.core", :var "bar-success"})}}, :testing-ns "foo.core"}'
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:plain_under_cursor_relay', [edn])})
+  call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
+
+  let p = iced#nrepl#test#under_cursor()
+  call iced#promise#wait(p)
+  call s:assert.equals(s:qf.get_last_args()['list'], [])
+
+  call s:buf.stop_dummy()
+  call s:teardown()
+endfunction
+
+function! s:suite.under_cursor_with_plain_nrepl_fail_test() abort
+  call s:setup()
+
+  let edn = '{:summary {:fail 1, :var 1, :error 0, :pass 0, :test 1}, :results {"foo.core" {"bar-fail" ({:type :fail, :expected "1", :actual "2", :message nil, :ns "foo.core", :var "bar-fail", :file "dummy"})}}, :testing-ns "foo.core"}'
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:plain_under_cursor_relay', [edn])})
+  call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
+
+  let p = iced#nrepl#test#under_cursor()
+  call iced#promise#wait(p)
+  call s:assert.equals(s:qf.get_last_args()['list'], [
+        \ {'type': 'E', 'expected': '1', 'actual': '2', 'filename': 'dummy',
+        \  'text': 'bar-fail', 'var': 'bar-fail'},
+        \ ])
+
+  call s:buf.stop_dummy()
+  call s:teardown()
+endfunction
+
+function! s:suite.under_cursor_with_plain_nrepl_error_test() abort
+  call s:setup()
+
+  let edn = '{:summary {:fail 0, :var 1, :error 1, :pass 0, :test 1}, :results {"foo.core" {"bar-error" ({:type :error, :expected "1", :actual "class clojure.lang.ExceptionInfo: foo{:bar 3}", :message nil, :ns "foo.core", :var "bar-error", :file "dummy"})}}, :testing-ns "foo.core"}'
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:plain_under_cursor_relay', [edn])})
+  call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
+
+  let p = iced#nrepl#test#under_cursor()
+  call iced#promise#wait(p)
+  call s:assert.equals(s:qf.get_last_args()['list'], [
+        \ {'type': 'E', 'expected': '1', 'actual': 'class clojure.lang.ExceptionInfo: foo{:bar 3}', 'filename': 'dummy',
+        \  'text': 'bar-error', 'var': 'bar-error'},
+        \ ])
 
   call s:buf.stop_dummy()
   call s:teardown()
@@ -497,5 +572,3 @@ function! s:suite.spec_check_failure_test() abort
 
   call s:buf.stop_dummy()
 endfunction
-
-" vim:fdm=marker:fdl=0
