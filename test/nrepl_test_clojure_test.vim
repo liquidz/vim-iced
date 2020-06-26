@@ -141,3 +141,21 @@ function! s:suite.collect_errors_and_passes_could_not_find_ns_path_test() abort
         \ [],
         \ ])
 endfunction
+
+function! s:suite.collect_errors_and_passes_without_ns_path_op() abort
+  let dummy_resp = [{
+        \ 'results': {
+        \   'foo.core-test': {
+        \     'err-test': [
+        \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test-var',
+        \        'file': 'dummy-file', 'line': 234, 'expected': 'expected-result', 'actual': 'actual-result'}]}}}]
+
+  call iced#nrepl#reset()
+  call s:ch.mock({'status_value': 'open', 'relay': {msg ->
+        \ (msg['op'] ==# 'describe') ? {'status': ['done'], 'ops': {}} : {}}})
+
+  call s:assert.equals(s:funcs.collect_errors_and_passes(dummy_resp),
+        \ [[{'lnum': 234, 'actual': 'actual-result', 'expected': 'expected-result',
+        \    'type': 'E', 'text': 'err-test-var', 'var': 'err-test-var', 'filename': 'dummy-file'}],
+        \ []])
+endfunction
