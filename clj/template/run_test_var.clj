@@ -32,6 +32,7 @@
                      :end-test-var (reset! testing-var nil)
                      nil))]
       (binding [clojure.test/report report]
+        ;; Use `test-vars` instead of `test-var` to support fixtures
         (clojure.test/test-vars %s))
       (cond-> {:summary @summary
                :results @results}
