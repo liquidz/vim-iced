@@ -59,3 +59,26 @@ Adding https://github.com/clojure/test.check[test.check] dependency is required.
 
 You can specify the number of tests as a command argument,
 or {help_html}#g%3Aiced%23test%23spec_num_tests[g:iced#test#spec_num_tests] variable.
+
+=== Testing on plain nREPL [[testing_plain_nrepl]]
+
+vim-iced basically requires nREPL with some middlewares.
+But in some case, you may need to use plain nREPL such as https://github.com/borkdude/babashka/blob/master/doc/repl.md#nrepl[babashka.nrepl].
+
+In this case, vim-iced provides simple test integration which has less
+functionality than https://docs.cider.mx/cider-nrepl/nrepl-api/ops.html#test-var-query[cider-nrepl's one].
+
+To use this simple test integration, you don't need to recognize whether your nREPL is plain or not.
+Following commands are also support simple test integration, so you just execute these commands as usual.
+
+* {help_html}#%3AIcedTestUnderCursor[IcedTestUnderCursor]
+* {help_html}#%3AIcedTestNs[IcedTestNs]
+* {help_html}#%3AIcedTestAll[IcedTestAll]
+
+[NOTE]
+====
+`:IcedTestAll` depends on current namespace.
+(e.g. `foo.core` will search all vars in `foo.*`). +
+So it's still not really the whole test.
+====
+
