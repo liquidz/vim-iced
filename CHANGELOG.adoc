@@ -1,6 +1,12 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* Added support for test integration on plain nREPL with following commands.
+** `:IcedTestUnderCursor`, `:IcedTestNs`, `:IcedTestAll`
+** Now you can run tests on https://github.com/borkdude/babashka/blob/master/doc/repl.md#nrepl[Babashka]!
+// }}}
 
 == 1.5.5 (2020-06-08)
 // {{{

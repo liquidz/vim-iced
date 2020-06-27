@@ -24,6 +24,7 @@ CONTENTS                                                    *vim-iced-contents*
   Evaluating                   |vim-iced-evaluating|
     Stdout Buffer              |vim-iced-stdout-buffer|
   Testing                      |vim-iced-testing|
+    Plain nREPL                |vim-iced-testing-plain-nrepl|
   Debugging                    |vim-iced-debugging|
     Tracing function calls     |vim-iced-debugging-tracing-function-calls|
     Browsing tapped values     |vim-iced-debugging-browsing-tapped-values|
@@ -353,6 +354,28 @@ TESTING                                                      *vim-iced-testing*
     au QuickFixCmdPost vim-iced cwindow
   aug END
 <
+------------------------------------------------------------------------------
+PLAIN NREPL                                      *vim-iced-testing-plain-nrepl*
+
+  vim-iced basically requires nREPL with some middlewares.
+  But in some case, you may need to use plain nREPL such as babashka.nrepl.
+  - https://github.com/borkdude/babashka/blob/master/doc/repl.md#nrepl
+
+  In this case, vim-iced provides simple test integration which has less
+  functionality than cider-nrepl's one.
+
+  To use this simple test integration, you don't need to recognize whether
+  your nREPL is plain or not.
+  Following commands are also support simple test integration,
+  so you just execute these commands as usual.
+  
+  - |:IcedTestUnderCursor|
+  - |:IcedTestNs|
+  - |:IcedTestAll|
+    NOTE: `:IcedTestAll` depends on current namespace.
+          (e.g. `foo.core` will search all vars in `foo.*`).
+          So it's still not really the whole test.
+
 ==============================================================================
 DEBUGGING                                                  *vim-iced-debugging*
 
