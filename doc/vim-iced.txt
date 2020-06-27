@@ -1695,6 +1695,9 @@ g:iced_formatter
   - `zprint`
     https://github.com/kkinnear/zprint
     If zprint is not installed, will install automatically.
+  - `joker`
+    https://github.com/candid82/joker
+    If joker is not installed, will install automatically.
 
 ------------------------------------------------------------------------------
 INDENT RULES                                     *vim-iced-customizing-indents*
