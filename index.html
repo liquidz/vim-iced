@@ -488,6 +488,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#test_result">8.1. Test result</a></li>
 <li><a href="#related_tests">8.2. Related tests</a></li>
 <li><a href="#testing_checking_spec">8.3. Checking spec</a></li>
+<li><a href="#testing_plain_nrepl">8.4. Testing on plain nREPL</a></li>
 </ul>
 </li>
 <li><a href="#formatting">9. Formatting</a>
@@ -524,8 +525,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#clojurescript">14. ClojureScript</a>
 <ul class="sectlevel2">
 <li><a href="#clojurescript_figwheel_main">14.1. Figwheel-main</a></li>
-<li><a href="#clojurescript_graaljs">14.2. GraalJS</a></li>
-<li><a href="#clojurescript_shadow_cljs">14.3. shadow-cljs</a></li>
+<li><a href="#clojurescript_shadow_cljs">14.2. shadow-cljs</a></li>
 </ul>
 </li>
 <li><a href="#skeleton">15. Skeleton</a>
@@ -1456,6 +1456,65 @@ Target test vars should include original var name in its name.</p>
 <p>You can specify the number of tests as a command argument,
 or <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23test%23spec_num_tests">g:iced#test#spec_num_tests</a> variable.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="testing_plain_nrepl">8.4. Testing on plain nREPL</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><a href="https://github.com/borkdude/jet">borkdude/jet</a> is required currently.<br>
+vim-iced can download <code>jet</code> automatically if you want.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>vim-iced basically requires nREPL with some middlewares.
+But in some case, you may need to use plain nREPL such as <a href="https://github.com/borkdude/babashka/blob/master/doc/repl.md#nrepl">babashka.nrepl</a>.</p>
+</div>
+<div class="paragraph">
+<p>In this case, vim-iced provides simple test integration which has less
+functionality than <a href="https://docs.cider.mx/cider-nrepl/nrepl-api/ops.html#test-var-query">cider-nrepl&#8217;s one</a>.</p>
+</div>
+<div class="paragraph">
+<p>To use this simple test integration, you don&#8217;t need to recognize whether your nREPL is plain or not.
+Following commands are also support simple test integration, so you just execute these commands as usual.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedTestUnderCursor">IcedTestUnderCursor</a></p>
+</li>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedTestNs">IcedTestNs</a></p>
+</li>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedTestAll">IcedTestAll</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>:IcedTestAll</code> depends on current namespace.
+(e.g. <code>foo.core</code> will search all vars in <code>foo.*</code>).<br>
+So it&#8217;s still not really the whole test.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph text-right">
 <p><span class="small"><a href="#top">Back to top</a></span></p>
 </div>
@@ -1528,6 +1587,9 @@ See also <a href="#customizing_indent_rules">Customizing indent rules</a>
 </li>
 <li>
 <p><a href="https://github.com/kkinnear/zprint">zprint</a></p>
+</li>
+<li>
+<p><a href="https://github.com/candid82/joker">joker</a></p>
 </li>
 </ul>
 </div>
@@ -2161,12 +2223,6 @@ Instant REPL requires no project/config file.</p></td>
 <li>
 <p><a href="http://shadow-cljs.org">shadow-cljs</a></p>
 </li>
-<li>
-<p><a href="https://github.com/graalvm/graaljs">GraalJS</a>&#8201;&#8212;&#8201;ClojureScript 1.10.439 or later is required.</p>
-</li>
-<li>
-<p><a href="https://openjdk.java.net/projects/nashorn/">Nashorn</a></p>
-</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -2227,40 +2283,7 @@ The code will be passed to <code>cider.piggieback/cljs-repl</code>.</p></td>
 </div>
 </div>
 <div class="sect2">
-<h3 id="clojurescript_graaljs">14.2. GraalJS</h3>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-ClojureScript <code>1.10.439</code> or later is required.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><a href="https://www.graalvm.org/docs/getting-started/#install-graalvm">GraalVM</a> is also required, and you must add GraalVM <code>/bin</code> to your <code>PATH</code>.
-Otherwise you can set <code>PATH</code> temporarily when you execute <code>iced</code> command.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="shell"><span class="nv">PATH</span><span class="o">=</span>/path/to/graalvm/bin:<span class="nv">$PATH</span> iced repl</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Once you launch REPL with GraalJS, you can start CLJS REPL with the following command.</p>
-</div>
-<div class="listingblock">
-<div class="title">via IcedStartCljsRepl command</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="vim"><span class="p">:</span>IcedStartCljsRepl graaljs</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="clojurescript_shadow_cljs">14.3. shadow-cljs</h3>
+<h3 id="clojurescript_shadow_cljs">14.2. shadow-cljs</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -2325,7 +2348,7 @@ So you need to launch REPL manually.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="clojurescript_shadow_cljs_edn">14.3.1. shadow-cljs.edn</h4>
+<h4 id="clojurescript_shadow_cljs_edn">14.2.1. shadow-cljs.edn</h4>
 <div class="paragraph">
 <p>You need to modify <code>:dependencies</code> and <code>:nrepl</code> setting in <code>shadow-cljs.edn</code> as below.</p>
 </div>
@@ -4017,7 +4040,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-07 21:17:32 UTC
+Last updated 2020-06-27 22:06:33 UTC
 </div>
 </div>
 <style>
