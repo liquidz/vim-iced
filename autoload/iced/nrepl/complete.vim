@@ -29,7 +29,11 @@ endfunction
 function! s:candidate(c) abort
   let arglists = get(a:c, 'arglists', [])
   let arglists = map(arglists, {_, v -> s:format_arglist(v)})
-  let doc = get(a:c, 'doc', '')
+  let doc = get(a:c, 'doc')
+  if empty(doc)
+    let doc = ''
+  endif
+
   return {
       \ 'word': a:c['candidate'],
       \ 'kind': get(s:type_to_kind_dict, get(a:c, 'type', 'var')),

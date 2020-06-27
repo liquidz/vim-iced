@@ -120,3 +120,14 @@ function! s:suite.get_special_form_test() abort
   call s:assert.equals(s:test.result['ns'], 'clojure.core')
   call s:teardown()
 endfunction
+
+function! s:suite.get_symbol_test() abort
+  call s:setup()
+  call iced#nrepl#var#get("''baz/hello", {v -> s:test.callback(v)})
+  call s:assert.equals(s:test.result['msg'], {
+        \ 'session': 'clj-session',
+        \ 'ns': 'foo.bar',
+        \ 'sym': 'baz/hello',
+        \ 'op': 'info'})
+  call s:teardown()
+endfunction

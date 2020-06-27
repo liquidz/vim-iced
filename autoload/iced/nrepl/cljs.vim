@@ -9,8 +9,6 @@ let s:quit_code = ':cljs/quit'
 let s:env = {
     \ 'figwheel-sidecar': function('iced#nrepl#cljs#figwheel_sidecar#get_env'),
     \ 'figwheel-main': function('iced#nrepl#cljs#figwheel_main#get_env'),
-    \ 'nashorn': function('iced#nrepl#cljs#nashorn#get_env'),
-    \ 'graaljs': function('iced#nrepl#cljs#graaljs#get_env'),
     \ 'shadow-cljs': function('iced#nrepl#cljs#shadow_cljs#get_env'),
     \ }
 
@@ -22,7 +20,8 @@ function! s:set_cljs_session(original_cljs_session) abort
 
   call iced#nrepl#set_session('cljs', a:original_cljs_session)
   call iced#nrepl#set_session('clj', cloned_cljs_session)
-  return iced#nrepl#eval#code(s:quit_code, {'session': 'clj', 'ignore_session_validity': v:true})
+  " Quit **CLONED** cljs session to work as a clj session
+  return iced#nrepl#eval#code(s:quit_code, {'session': 'clj', 'ignore_session_validity': v:true, 'verbose': v:false})
 endfunction
 
 function! s:unset_cljs_session() abort

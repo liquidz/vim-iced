@@ -17,11 +17,20 @@ function! s:helper.start(command, options) abort
     endfor
   endif
 
+  let CloseCB = get(a:options, 'close_cb')
+  if type(CloseCB) == v:t_func
+    call CloseCB(v:true)
+  endif
+
   return self.id
 endfunction
 
 function! s:helper.stop(_) abort
   return
+endfunction
+
+function! s:helper.info(_) abort
+  return {'exitval': 0}
 endfunction
 
 function! s:helper.out(command, callback) abort

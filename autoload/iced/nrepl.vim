@@ -14,6 +14,7 @@ function! s:initialize_nrepl() abort
       \   'cljs': '',
       \   'cljs_repl': '',
       \   },
+      \ 'nrepl_version': {},
       \ }
 endfunction
 let s:nrepl = s:initialize_nrepl()
@@ -25,6 +26,8 @@ let s:response_buffer = ''
 let s:printer_dict = {
       \ 'default': 'cider.nrepl.pprint/pprint',
       \ }
+
+let s:supported_ops = {}
 
 let s:V = vital#iced#new()
 let s:L = s:V.import('Data.List')
@@ -49,6 +52,10 @@ function! iced#nrepl#init_ns() abort
         \ : g:iced#nrepl#init_cljs_ns
 endfunction
 
+function! iced#nrepl#version() abort
+  return s:nrepl['nrepl_version']
+endfunction
+
 function! s:set_message(id, msg) abort
   let s:messages[a:id] = a:msg
 endfunction
@@ -59,6 +66,7 @@ endfunction
 
 function! iced#nrepl#reset() abort
   let s:nrepl = s:initialize_nrepl()
+  let s:supported_ops = {}
   call iced#cache#clear()
   call iced#nrepl#cljs#reset()
   call iced#nrepl#connect#reset()
@@ -530,6 +538,7 @@ function! iced#nrepl#eval(code, ...) abort
         \ 'line': get(option, 'line', pos[1]),
         \ 'column': get(option, 'column', pos[2]),
         \ 'nrepl.middleware.print/stream?': 1,
+        \ 'verbose': get(option, 'verbose', v:true),
         \ 'callback': Callback,
         \ }
 
@@ -598,10 +607,13 @@ function! iced#nrepl#describe(callback) abort
         \ })
 endfunction
 
-let s:supported_ops = {}
 function! iced#nrepl#is_supported_op(op) abort " {{{
   if empty(s:supported_ops)
     let resp = iced#promise#sync('iced#nrepl#describe', [])
+
+    if has_key(resp, 'versions')
+      let s:nrepl['nrepl_version'] = copy(resp.versions)
+    endif
 
     if !has_key(resp, 'ops')
       return iced#message#error('unexpected_error', 'Invalid :describe op response')

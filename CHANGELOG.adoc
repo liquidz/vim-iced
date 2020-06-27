@@ -2,6 +2,28 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.0.0 (2020-06-28)
+// {{{
+=== Added
+* Added support for test integration on plain nREPL with following commands.
+** This functionality was sponsored by https://www.clojuriststogether.org[Clojurists Together] as a part of their "Summer of Bugs" program.
+** `:IcedTestUnderCursor`, `:IcedTestNs`, `:IcedTestAll`
+** Now you can run tests on https://github.com/borkdude/babashka/blob/master/doc/repl.md#nrepl[Babashka]!
+* Added `IcedUnaliasNs` command.
+* Added `IcedUpdateTool` command.
+* Added https://github.com/candid82/joker[joker] as a code formatter.
+
+=== Fixed
+* Fixed to be able to get var from quoated symbols.
+* Fixed to be able to detect the namespace name in `in-ns` form.
+* Fixed to reset supported ops when reconnecting.
+* Fixed not to display extra messages on starting shadow-cljs REPL.
+
+=== Removed
+* https://github.com/liquidz/vim-iced/issues/226[#226]: (Breaking) Removed ClojureScript support for `Nashorn` and `GraalJS`.
+** c.f. https://clojurescript.org/news/2020-04-24-release
+// }}}
+
 == 1.5.5 (2020-06-08)
 // {{{
 === Changed

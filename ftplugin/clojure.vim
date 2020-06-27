@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 10505
+let g:vim_iced_version = 20000
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -72,6 +72,7 @@ command!          IcedRequire               call iced#repl#execute('load_current
 command!          IcedRequireAll            call iced#nrepl#ns#reload_all()
 command! -nargs=? IcedUndef                 call iced#nrepl#eval#undef(<q-args>)
 command! -nargs=? IcedUndefAllInNs          call iced#nrepl#eval#undef_all_in_ns(<q-args>)
+command! -nargs=? IcedUnaliasNs             call iced#nrepl#ns#unalias(<q-args>)
 command!          IcedEvalOuterTopList      call iced#repl#execute('eval_outer_top_list')
 command!          IcedEvalAtMark            call iced#repl#execute('eval_at_mark', nr2char(getchar()))
 command!          IcedEvalLastOuterTopList  call iced#repl#execute('eval_last_outer_top_list')
@@ -158,6 +159,9 @@ command!          IcedJumpToLet             call iced#let#jump_to_let()
 command!          IcedStartSideloader        call iced#nrepl#sideloader#start()
 command!          IcedToggleSideloaderLookup call iced#nrepl#sideloader#toggle_enablement_of_lookup()
 
+command! -nargs=? -complete=custom,iced#component#installer#complete
+      \ IcedUpdateTool call iced#system#get('installer').reinstall(<q-args>)
+
 "" }}}
 
 "" Key mappings {{{
@@ -184,6 +188,7 @@ nnoremap <silent> <Plug>(iced_require)                  :<C-u>IcedRequire<CR>
 nnoremap <silent> <Plug>(iced_require_all)              :<C-u>IcedRequireAll<CR>
 nnoremap <silent> <Plug>(iced_undef)                    :<C-u>IcedUndef<CR>
 nnoremap <silent> <Plug>(iced_undef_all_in_ns)          :<C-u>IcedUndefAllInNs<CR>
+nnoremap <silent> <Plug>(iced_unalias_ns)               :<C-u>IcedUnaliasNs<CR>
 nnoremap <silent> <Plug>(iced_eval_outer_top_list)      :<C-u>IcedEvalOuterTopList<CR>
 nnoremap <silent> <Plug>(iced_eval_at_mark)             :<C-u>IcedEvalAtMark<CR>
 nnoremap <silent> <Plug>(iced_eval_last_outer_top_list) :<C-u>IcedEvalLastOuterTopList<CR>
@@ -264,6 +269,8 @@ nnoremap <silent> <Plug>(iced_jump_to_let)              :<C-u>IcedJumpToLet<CR>
 
 nnoremap <silent> <Plug>(iced_start_sideloader)         :<C-u>IcedStartSideloader<CR>
 nnoremap <silent> <Plug>(iced_toggle_sideloader_lookup) :<C-u>IcedToggleSideloaderLookup<CR>
+
+nnoremap <silent> <Plug>(iced_update_tool) :<C-u>IcedUpdateTool<CR>
 
 "" }}}
 

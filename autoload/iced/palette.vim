@@ -4,9 +4,9 @@ set cpoptions&vim
 let s:default_palette = [
       \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt', 'InterruptAll',
       \ 'InstantConnect', 'InstantConnect babashka', 'JackIn',
-      \ 'StartCljsRepl figwheel-sidecar', 'StartCljsRepl graaljs', 'StartCljsRepl nashorn',
+      \ 'StartCljsRepl figwheel-sidecar',
       \ 'QuitCljsRepl', 'CycleSession',
-      \ 'EvalNs', 'UndefAllInNs',
+      \ 'EvalNs', 'UndefAllInNs', 'UnaliasNs',
       \ 'Require', 'RequireAll',
       \ 'PrintLast',
       \ 'TestNs', 'TestAll', 'TestRedo', 'TestSpecCheck', 'TestRerunLast',

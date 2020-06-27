@@ -1,8 +1,9 @@
-.PHONY: all vital test themis docker_themis html document pip_install lint clj-lint
+.PHONY: all vital test themis themis_nvim html document pip_install lint clj-lint
 .PHONY: python_doctest bb_script_test version_check deps_check
 .PHONY: clean clean-all bin outdated repl
 
 PWD=$(shell pwd)
+NVIM=$(shell which nvim)
 
 PLUGIN_NAME = iced
 VITAL_MODULES = \
@@ -31,11 +32,8 @@ test: themis lint python_doctest version_check deps_check
 themis: .vim-themis .vim-sexp
 	./.vim-themis/bin/themis
 
-docker_themis: .vim-themis .vim-sexp
-	docker run --rm -v $(PWD):/root --entrypoint './.vim-themis/bin/themis' uochan/vim:latest
-
-docker_neovim_themis: .vim-themis .vim-sexp
-	docker run --rm -v $(PWD):/mnt/volume lambdalisue/neovim-themis:latest
+themis_nvim:
+	THEMIS_VIM=$(NVIM) ./.vim-themis/bin/themis
 
 html: doc/vim-iced.txt
 	bash scripts/html.sh

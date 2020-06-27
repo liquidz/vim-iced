@@ -4,9 +4,26 @@ set cpo&vim
 function! iced#nrepl#ns#util#search() abort
   call cursor(1, 1)
   let line = trim(getline('.'))
-  if line !=# '(ns' && line[0:3] !=# '(ns '
-    return search('(ns[ \r\n]')
+  if line ==# '(ns' || line[0:3] ==# '(ns '
+    return 1
+  elseif line ==# '(in-ns' || line[0:7] ==# '(in-ns '
+    return 1
+  else
+    let [l1, c1] = searchpos('(ns[ \r\n]', 'n')
+    let [l2, c2] = searchpos('(in-ns[ \r\n]', 'n')
+    if l1 == 0 && l2 == 0
+      return 0
+    elseif l1 != 0 && l2 == 0
+      call cursor(l1, c1)
+    elseif l1 == 0 && l2 != 0
+      call cursor(l2, c2)
+    elseif l1 < l2
+      call cursor(l1, c1)
+    else
+      call cursor(l2, c2)
+    endif
   endif
+
   return 1
 endfunction
 

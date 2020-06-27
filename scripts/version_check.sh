@@ -52,3 +52,13 @@ if [ $? -ne 0 ]; then
     echo "version_check: Version num in installer/zprint-clj.sh is outdated (${ZPRINT_VERSION})"
     exit 1
 fi
+
+### candid82/joker version
+echo "CHECKING: candid82/joker"
+JOKER_URL='https://github.com/candid82/joker/releases.atom'
+JOKER_VERSION=$(curl -s ${JOKER_URL} | grep '<title>' | head -n 2 | tail -n 1 | sed 's/[^0-9.]//g')
+grep "version='${JOKER_VERSION}'" ${SCRIPT_DIR}/../installer/joker.sh
+if [ $? -ne 0 ]; then
+    echo "version_check: Version num in installer/joker.sh is outdated (${JOKER_VERSION})"
+    exit 1
+fi

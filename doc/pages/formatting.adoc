@@ -35,6 +35,7 @@ vim-iced also supports following (GraalVM powered) code formatting tools.
 
 - https://github.com/greglook/cljstyle[cljstyle]
 - https://github.com/kkinnear/zprint[zprint]
+- https://github.com/candid82/joker[joker]
 
 If you change {help_html}#g%3Aiced_formatter[g:iced_formatter] option,
 vim-iced will use the tool to format codes and calculate indent level.

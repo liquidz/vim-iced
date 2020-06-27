@@ -201,10 +201,15 @@ function! s:__under_cursor(var_info, test_vars) abort
 endfunction
 
 function! iced#nrepl#test#under_cursor() abort
-  return iced#promise#call('iced#nrepl#var#extract_by_current_top_list', [])
-        \.then({resp -> iced#cache#set('iced#nrepl#test#under_cursor', resp)})
-        \.then({resp -> iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [resp['ns']])})
-        \.then({test_vars -> s:__under_cursor(iced#cache#delete('iced#nrepl#test#under_cursor'), test_vars)})
+  if iced#nrepl#is_supported_op('test-var-query')
+    return iced#promise#call('iced#nrepl#var#extract_by_current_top_list', [])
+          \.then({resp -> iced#cache#set('iced#nrepl#test#under_cursor', resp)})
+          \.then({resp -> iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [resp['ns']])})
+          \.then({test_vars -> s:__under_cursor(iced#cache#delete('iced#nrepl#test#under_cursor'), test_vars)})
+  else
+    " Use simple test integration when there is no `test-var-query` op.
+    return iced#nrepl#test#plain#under_cursor()
+  endif
 endfunction "}}}
 
 " iced#nrepl#test#ns {{{
@@ -236,23 +241,34 @@ endfunction
 function! iced#nrepl#test#ns() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let ns = iced#nrepl#ns#name()
-  return iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [ns])
-        \.then(funcref('s:__ns', [ns]))
+
+  if iced#nrepl#is_supported_op('test-var-query')
+    return iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [ns])
+          \.then(funcref('s:__ns', [ns]))
+  else
+    " Use simple test integration when there is no `test-var-query` op.
+    return iced#nrepl#test#plain#ns(ns)
+  endif
 endfunction " }}}
 
 " iced#nrepl#test#all {{{
 function! iced#nrepl#test#all() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
-  let query = {
-        \ 'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}
-        \ }
-  let s:last_test = {'type': 'test-var', 'query': query}
+  if iced#nrepl#is_supported_op('test-var-query')
+    let query = {
+          \ 'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}
+          \ }
+    let s:last_test = {'type': 'test-var', 'query': query}
 
-  call iced#system#get('sign').unplace_by({'name': s:sign_name, 'group': '*'})
-  call s:__echo_testing_message(query)
-  return iced#promise#call('iced#nrepl#op#cider#test_var_query', [query])
-        \.then(funcref('s:__clojure_test_out'))
+    call iced#system#get('sign').unplace_by({'name': s:sign_name, 'group': '*'})
+    call s:__echo_testing_message(query)
+    return iced#promise#call('iced#nrepl#op#cider#test_var_query', [query])
+          \.then(funcref('s:__clojure_test_out'))
+  else
+    " Use simple test integration when there is no `test-var-query` op.
+    return iced#nrepl#test#plain#all()
+  endif
 endfunction " }}}
 
 " iced#nrepl#test#redo {{{
@@ -341,4 +357,3 @@ endfunction " }}}
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
-" vim:fdm=marker:fdl=0
