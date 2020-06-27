@@ -363,14 +363,18 @@ PLAIN NREPL                                      *vim-iced-testing-plain-nrepl*
 
   In this case, vim-iced provides simple test integration which has less
   functionality than cider-nrepl's one.
-  
-  You don't need to recognize whether your nREPL is plain or not.
+
+  To use this simple test integration, you don't need to recognize whether
+  your nREPL is plain or not.
   Following commands are also support simple test integration,
   so you just execute these commands as usual.
   
   - |:IcedTestUnderCursor|
   - |:IcedTestNs|
   - |:IcedTestAll|
+    NOTE: `:IcedTestAll` depends on current namespace.
+          (e.g. `foo.core` will search all vars in `foo.*`).
+          So it's still not really the whole test.
 
 ==============================================================================
 DEBUGGING                                                  *vim-iced-debugging*
