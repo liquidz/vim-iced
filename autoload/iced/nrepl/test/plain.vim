@@ -70,8 +70,16 @@ function! iced#nrepl#test#plain#ns(ns_name) abort
 endfunction
 
 function! s:test_all_using_clojure_test_directly() abort
-  let vars_code = join(readfile(printf('%s/clj/template/all_user_vars.clj', g:vim_iced_home)), "\n")
-  echom printf('FIXME %s', vars_code)
+  let ns = iced#nrepl#ns#name_by_buf()
+  let ns_arr = split(ns, '\.')
+  if len(ns_arr) == 0
+    return iced#promise#reject(iced#message#get('not_found'))
+  endif
+
+  let root_ns = ns_arr[0]
+  let vars_code = join(readfile(printf('%s/clj/template/related_all_vars.clj', g:vim_iced_home)), "\n")
+  let vars_code = printf(vars_code, root_ns)
+
   let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
   let code = printf(code, s:ignore_keys(), vars_code)
 
