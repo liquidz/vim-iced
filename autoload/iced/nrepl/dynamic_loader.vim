@@ -2,7 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 function! iced#nrepl#dynamic_loader#ls_middleware(callback) abort
-  " NOTE: remove thw first two chars because middleware names start with "#'".
+  " NOTE: remove the first two chars because middleware names start with "#'".
   call iced#nrepl#send({
       \ 'op': 'ls-middleware',
       \ 'session': iced#nrepl#current_session(),
