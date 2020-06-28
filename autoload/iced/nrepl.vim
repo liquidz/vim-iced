@@ -455,8 +455,10 @@ function! s:connected(resp, opts) abort
     let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
 
     if get(a:opts, 'with_iced_nrepl', v:true)
-      " FIXME
-      call s:__add_missing_middlewares()
+      " Add missing middlewares if there are
+      if iced#nrepl#is_supported_op('ls-middleware') && iced#nrepl#is_supported_op('add-middleware')
+        call s:__add_missing_middlewares()
+      endif
 
       " Check if nREPL middlewares are enabled
       if !iced#nrepl#is_supported_op('iced-version')
