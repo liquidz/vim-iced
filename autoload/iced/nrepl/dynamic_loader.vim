@@ -16,7 +16,7 @@ function! s:__add_middlewares(names, resp) abort
     let resp = copy(a:resp)
     unlet resp['status']
     unlet resp['session']
-    call iced#message#error('load_middleware_error', s:names, string(resp))
+    call iced#message#error('load_middleware_error', a:names, string(resp))
     return v:false
   endif
   call iced#message#info('finish_to_load', a:names)
