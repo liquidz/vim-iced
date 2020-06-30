@@ -318,7 +318,7 @@ endif
 function! s:define_mapping(map_type, default_keys, plug_name) abort
   if !hasmapto(a:plug_name)
     let keys = substitute(a:default_keys, '<Leader>', g:iced_default_key_mapping_leader, '')
-    let cmd = printf("%s <buffer> %s %s",
+    let cmd = printf('%s <buffer> %s %s',
           \ a:map_type,
           \ keys,
           \ a:plug_name,
