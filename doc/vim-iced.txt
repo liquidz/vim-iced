@@ -1939,6 +1939,17 @@ PREFIXES~
   - <Leader>b: Browsing
   - <Leader>j: Jumping cursor
 
+                                            *g:iced_default_key_mapping_leader*
+g:iced_default_key_mapping_leader
+  <Leader> key for default key mappings.
+
+  If you'd like to use <LocalLeader> instead of <Leader>,
+  please set as follows:
+>
+  let g:iced_default_key_mapping_leader = '<LocalLeader>'
+<
+  Default value is `'<Leader>'`.
+
                                            *g:iced_enable_default_key_mappings*
 g:iced_enable_default_key_mappings
   If {v:true}, apply following mappings.
