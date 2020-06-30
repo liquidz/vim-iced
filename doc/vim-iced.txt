@@ -278,7 +278,7 @@ PIGGIEBACK                                                *vim-iced-piggieback*
 FIGWHEEL MAIN                                          *vim-iced-figwheel-main*
 
   To start CLJS REPL with figwheel-main, you need to specify {build-id}.
-  Ex. `:IcedCljsRepl (figwheel.main.api/repl-env "build-id")`
+  E.g. `:IcedCljsRepl (figwheel.main.api/repl-env "build-id")`
 
   Via `:IcedStartCljsRepl` command, you can specify {build-id} as follows.
   `:IcedStartCljsRepl figwheel-main build-id`
@@ -590,7 +590,7 @@ COMMANDS                                                    *vim-iced-commands*
   Start CLJS REPL via user specified code.
   The code will be passed to `cider.piggieback/cljs-repl`.
 
-  Ex. >
+  E.g. >
   ;; figwheel-main
   :IcedCljsRepl (figwheel.main.api/repl-env "app")
 
@@ -987,7 +987,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                              *:IcedThreadFirst*
 :IcedThreadFirst
   Convert current outer form to use `->` threading macro.
-  Ex. >
+  E.g. >
   ;; before
   (foo (bar (baz "hello")))
   ;; after
@@ -996,7 +996,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                               *:IcedThreadLast*
 :IcedThreadLast
   Convert current outer form to use `->>` threading macro.
-  Ex. >
+  E.g. >
   ;; before
   (foo yy (bar xx "hello"))
   ;; after
@@ -1103,7 +1103,7 @@ iced#status()
   Return vim-iced's status.
   This is useful to show status in status line.
 
-  Ex. working with https://github.com/itchyny/lightline.vim
+  E.g. working with https://github.com/itchyny/lightline.vim
 >
   let g:lightline = {
       \ 'active': {'right': [['iced']]},
@@ -1809,7 +1809,7 @@ g:iced_sign
   }
 <
   You can change the setting by `g:iced_sign` variable.
-  Ex. changing sign text
+  E.g. changing sign text
 >
   let g:iced_sign = {'error': 'E', 'trace': 'T'}
 <
@@ -1819,7 +1819,7 @@ COMMAND PALETTES                                 *vim-iced-customizing-palette*
                                                                *g:iced#palette*
 g:iced#palette
   User custom commands.
-  Ex. define command palette to start cljs REPL
+  E.g. define command palette to start cljs REPL
 >
   let g:iced#palette = {
         \ 'foo bar': ':IcedEvalRepl (cljs-repl)'
@@ -1845,7 +1845,7 @@ g:iced#hook
     - function          |hook_report_function|
     - command           |hook_report_command|
 
-  Ex. >
+  E.g. >
   let g:iced#hook = {
       \ 'test_finished':
       \ {'type': 'shell',
