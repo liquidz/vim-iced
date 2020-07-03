@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 20000
+let g:vim_iced_version = 20001
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -44,6 +44,10 @@ endif
 
 if !exists('g:iced_enable_enhanced_definition_extraction')
   let g:iced_enable_enhanced_definition_extraction = v:true
+endif
+
+if !exists('g:iced_default_key_mapping_leader')
+  let g:iced_default_key_mapping_leader = '<Leader>'
 endif
 
 "" Commands {{{
@@ -311,272 +315,114 @@ endif
 "" }}}
 
 "" Default mappings {{{
-function! s:default_key_mappings() abort
-  if !hasmapto('<Plug>(iced_connect)')
-    silent! nmap <buffer> <Leader>' <Plug>(iced_connect)
+function! s:define_mapping(map_type, default_keys, plug_name) abort
+  if !hasmapto(a:plug_name)
+    let keys = substitute(a:default_keys, '<Leader>', g:iced_default_key_mapping_leader, '')
+    let cmd = printf('%s <buffer> %s %s',
+          \ a:map_type,
+          \ keys,
+          \ a:plug_name,
+          \ )
+    call execute(cmd, 'silent!')
   endif
+endfunction
+
+function! s:default_key_mappings() abort
+  call s:define_mapping('nmap', "<Leader>'", '<Plug>(iced_connect)')
 
   "" Evaluating (<Leader>e)
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_interrupt)')
-    silent! nmap <buffer> <Leader>eq <Plug>(iced_interrupt)
-  endif
-
-  if !hasmapto('<Plug>(iced_interrupt_all)')
-    silent! nmap <buffer> <Leader>eQ <Plug>(iced_interrupt_all)
-  endif
-
-  if !hasmapto('<Plug>(iced_jack_in)')
-    silent! nmap <buffer> <Leader>" <Plug>(iced_jack_in)
-  endif
+  call s:define_mapping('nmap', '<Leader>eq', '<Plug>(iced_interrupt)')
+  call s:define_mapping('nmap', '<Leader>eQ', '<Plug>(iced_interrupt_all)')
+  call s:define_mapping('nmap', '<Leader>"',  '<Plug>(iced_jack_in)')
 
   if !hasmapto('<Plug>(iced_eval)')
-    silent! nmap <buffer> <Leader>ei <Plug>(iced_eval)<Plug>(sexp_inner_element)``
-    silent! nmap <buffer> <Leader>ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
-    silent! nmap <buffer> <Leader>et <Plug>(iced_eval_outer_top_list)
+    call s:define_mapping('nmap', '<Leader>ei', '<Plug>(iced_eval)<Plug>(sexp_inner_element)``')
+    call s:define_mapping('nmap', '<Leader>ee', '<Plug>(iced_eval)<Plug>(sexp_outer_list)``')
+    call s:define_mapping('nmap', '<Leader>et', '<Plug>(iced_eval_outer_top_list)')
   endif
 
-  if !hasmapto('<Plug>(iced_eval_at_mark)')
-    silent! nmap <buffer> <Leader>ea <Plug>(iced_eval_at_mark)
-  endif
-
-  if !hasmapto('<Plug>(iced_eval_last_outer_top_list)')
-    silent! nmap <buffer> <Leader>el <Plug>(iced_eval_last_outer_top_list)
-  endif
-
-  if !hasmapto('<Plug>(iced_eval_visual)')
-    silent! vmap <buffer> <Leader>ee <Plug>(iced_eval_visual)
-  endif
-
-  if !hasmapto('<Plug>(iced_eval_ns)')
-    silent! nmap <buffer> <Leader>en <Plug>(iced_eval_ns)
-  endif
-
-  if !hasmapto('<Plug>(iced_print_last)')
-    silent! nmap <buffer> <Leader>ep <Plug>(iced_print_last)
-  endif
-
-  if !hasmapto('<Plug>(iced_require)')
-    silent! nmap <buffer> <Leader>eb <Plug>(iced_require)
-  endif
-
-  if !hasmapto('<Plug>(iced_require_all)')
-    silent! nmap <buffer> <Leader>eB <Plug>(iced_require_all)
-  endif
-
-  if !hasmapto('<Plug>(iced_undef)')
-    silent! nmap <buffer> <Leader>eu <Plug>(iced_undef)
-  endif
-
-  if !hasmapto('<Plug>(iced_undef_all_in_ns)')
-    silent! nmap <buffer> <Leader>eU <Plug>(iced_undef_all_in_ns)
-  endif
-
-  if !hasmapto('<Plug>(iced_macroexpand_outer_list)')
-    silent! nmap <buffer> <Leader>eM <Plug>(iced_macroexpand_outer_list)
-  endif
-
-  if !hasmapto('<Plug>(iced_macroexpand_1_outer_list)')
-    silent! nmap <buffer> <Leader>em <Plug>(iced_macroexpand_1_outer_list)
-  endif
+  call s:define_mapping('nmap', '<Leader>ea', '<Plug>(iced_eval_at_mark)')
+  call s:define_mapping('nmap', '<Leader>el', '<Plug>(iced_eval_last_outer_top_list)')
+  call s:define_mapping('vmap', '<Leader>ee', '<Plug>(iced_eval_visual)')
+  call s:define_mapping('nmap', '<Leader>en', '<Plug>(iced_eval_ns)')
+  call s:define_mapping('nmap', '<Leader>ep', '<Plug>(iced_print_last)')
+  call s:define_mapping('nmap', '<Leader>eb', '<Plug>(iced_require)')
+  call s:define_mapping('nmap', '<Leader>eB', '<Plug>(iced_require_all)')
+  call s:define_mapping('nmap', '<Leader>eu', '<Plug>(iced_undef)')
+  call s:define_mapping('nmap', '<Leader>eU', '<Plug>(iced_undef_all_in_ns)')
+  call s:define_mapping('nmap', '<Leader>eM', '<Plug>(iced_macroexpand_outer_list)')
+  call s:define_mapping('nmap', '<Leader>em', '<Plug>(iced_macroexpand_1_outer_list)')
 
   "" Testing (<Leader>t)
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_test_under_cursor)')
-    silent! nmap <buffer> <Leader>tt <Plug>(iced_test_under_cursor)
-  endif
-
-  if !hasmapto('<Plug>(iced_test_rerun_last)')
-    silent! nmap <buffer> <Leader>tl <Plug>(iced_test_rerun_last)
-  endif
-
-  if !hasmapto('<Plug>(iced_test_spec_check)')
-    silent! nmap <buffer> <Leader>ts <Plug>(iced_test_spec_check)
-  endif
-
-  if !hasmapto('<Plug>(iced_test_buffer_open)')
-    silent! nmap <buffer> <Leader>to <Plug>(iced_test_buffer_open)
-  endif
-
-  if !hasmapto('<Plug>(iced_test_ns)')
-    silent! nmap <buffer> <Leader>tn <Plug>(iced_test_ns)
-  endif
-
-  if !hasmapto('<Plug>(iced_test_all)')
-    silent! nmap <buffer> <Leader>tp <Plug>(iced_test_all)
-  endif
-
-  if !hasmapto('<Plug>(iced_test_redo)')
-    silent! nmap <buffer> <Leader>tr <Plug>(iced_test_redo)
-  endif
+ call s:define_mapping('nmap', '<Leader>tt', '<Plug>(iced_test_under_cursor)')
+ call s:define_mapping('nmap', '<Leader>tl', '<Plug>(iced_test_rerun_last)')
+ call s:define_mapping('nmap', '<Leader>ts', '<Plug>(iced_test_spec_check)')
+ call s:define_mapping('nmap', '<Leader>to', '<Plug>(iced_test_buffer_open)')
+ call s:define_mapping('nmap', '<Leader>tn', '<Plug>(iced_test_ns)')
+ call s:define_mapping('nmap', '<Leader>tp', '<Plug>(iced_test_all)')
+ call s:define_mapping('nmap', '<Leader>tr', '<Plug>(iced_test_redo)')
 
   "" Stdout buffer (<Leader>s)
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_stdout_buffer_open)')
-    silent! nmap <buffer> <Leader>ss <Plug>(iced_stdout_buffer_open)
-  endif
-
-  if !hasmapto('<Plug>(iced_stdout_buffer_clear)')
-    silent! nmap <buffer> <Leader>sl <Plug>(iced_stdout_buffer_clear)
-  endif
-
-  if !hasmapto('<Plug>(iced_stdout_buffer_close)')
-    silent! nmap <buffer> <Leader>sq <Plug>(iced_stdout_buffer_close)
-  endif
+  call s:define_mapping('nmap', '<Leader>ss', '<Plug>(iced_stdout_buffer_open)')
+  call s:define_mapping('nmap', '<Leader>sl', '<Plug>(iced_stdout_buffer_clear)')
+  call s:define_mapping('nmap', '<Leader>sq', '<Plug>(iced_stdout_buffer_close)')
 
   "" Refactoring (<Leader>r)
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_clean_ns)')
-    silent! nmap <buffer> <Leader>rcn <Plug>(iced_clean_ns)
-  endif
-
-  if !hasmapto('<Plug>(iced_clean_all)')
-    silent! nmap <buffer> <Leader>rca <Plug>(iced_clean_all)
-  endif
-
-  if !hasmapto('<Plug>(iced_add_missing)')
-    silent! nmap <buffer> <Leader>ram <Plug>(iced_add_missing)
-  endif
-
-  if !hasmapto('<Plug>(iced_add_ns)')
-    silent! nmap <buffer> <Leader>ran <Plug>(iced_add_ns)
-  endif
-
-  if !hasmapto('<Plug>(iced_thread_first)')
-    silent! nmap <buffer> <Leader>rtf <Plug>(iced_thread_first)
-  endif
-
-  if !hasmapto('<Plug>(iced_thread_last)')
-    silent! nmap <buffer> <Leader>rtl <Plug>(iced_thread_last)
-  endif
-
-  if !hasmapto('<Plug>(iced_extract_function)')
-    silent! nmap <buffer> <Leader>ref <Plug>(iced_extract_function)
-  endif
-
-  if !hasmapto('<Plug>(iced_add_arity)')
-    silent! nmap <buffer> <Leader>raa <Plug>(iced_add_arity)
-  endif
-
-  if !hasmapto('<Plug>(iced_move_to_let)')
-    silent! nmap <buffer> <Leader>rml <Plug>(iced_move_to_let)
-  endif
+  call s:define_mapping('nmap', '<Leader>rcn', '<Plug>(iced_clean_ns)')
+  call s:define_mapping('nmap', '<Leader>rca', '<Plug>(iced_clean_all)')
+  call s:define_mapping('nmap', '<Leader>ram', '<Plug>(iced_add_missing)')
+  call s:define_mapping('nmap', '<Leader>ran', '<Plug>(iced_add_ns)')
+  call s:define_mapping('nmap', '<Leader>rtf', '<Plug>(iced_thread_first)')
+  call s:define_mapping('nmap', '<Leader>rtl', '<Plug>(iced_thread_last)')
+  call s:define_mapping('nmap', '<Leader>ref', '<Plug>(iced_extract_function)')
+  call s:define_mapping('nmap', '<Leader>raa', '<Plug>(iced_add_arity)')
+  call s:define_mapping('nmap', '<Leader>rml', '<Plug>(iced_move_to_let)')
 
   "" Help/Document (<Leader>h)
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_document_popup_open)')
-    silent! nmap <buffer> K <Plug>(iced_document_popup_open)
-  endif
-
-  if !hasmapto('<Plug>(iced_document_open)')
-    silent! nmap <buffer> <Leader>hb <Plug>(iced_document_open)
-  endif
-
-  if !hasmapto('<Plug>(iced_use_case_open)')
-    silent! nmap <buffer> <Leader>hu <Plug>(iced_use_case_open)
-  endif
-
-  if !hasmapto('<Plug>(iced_next_use_case)')
-    silent! nmap <buffer> <Leader>hn <Plug>(iced_next_use_case)
-  endif
-
-  if !hasmapto('<Plug>(iced_prev_use_case)')
-    silent! nmap <buffer> <Leader>hN <Plug>(iced_prev_use_case)
-  endif
-
-  if !hasmapto('<Plug>(iced_document_close)')
-    silent! nmap <buffer> <Leader>hq <Plug>(iced_document_close)
-  endif
-
-  if !hasmapto('<Plug>(iced_source_show)')
-    silent! nmap <buffer> <Leader>hS <Plug>(iced_source_show)
-  endif
-
-  if !hasmapto('<Plug>(iced_source_popup_show)')
-    silent! nmap <buffer> <Leader>hs <Plug>(iced_source_popup_show)
-  endif
-
-  if !hasmapto('<Plug>(iced_clojuredocs_open)')
-    silent! nmap <buffer> <Leader>hc <Plug>(iced_clojuredocs_open)
-  endif
-
-  if !hasmapto('<Plug>(iced_command_palette)')
-    silent! nmap <buffer> <Leader>hh <Plug>(iced_command_palette)
-  endif
-
+  call s:define_mapping('nmap', 'K',          '<Plug>(iced_document_popup_open)')
+  call s:define_mapping('nmap', '<Leader>hb', '<Plug>(iced_document_open)')
+  call s:define_mapping('nmap', '<Leader>hu', '<Plug>(iced_use_case_open)')
+  call s:define_mapping('nmap', '<Leader>hn', '<Plug>(iced_next_use_case)')
+  call s:define_mapping('nmap', '<Leader>hN', '<Plug>(iced_prev_use_case)')
+  call s:define_mapping('nmap', '<Leader>hq', '<Plug>(iced_document_close)')
+  call s:define_mapping('nmap', '<Leader>hS', '<Plug>(iced_source_show)')
+  call s:define_mapping('nmap', '<Leader>hs', '<Plug>(iced_source_popup_show)')
+  call s:define_mapping('nmap', '<Leader>hc', '<Plug>(iced_clojuredocs_open)')
+  call s:define_mapping('nmap', '<Leader>hh', '<Plug>(iced_command_palette)')
 
   "" Browsing (<Leader>b)
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_browse_related_namespace)')
-    silent! nmap <buffer> <Leader>bn <Plug>(iced_browse_related_namespace)
-  endif
-
-  if !hasmapto('<Plug>(iced_browse_spec)')
-    silent! nmap <buffer> <Leader>bs <Plug>(iced_browse_spec)
-  endif
-
-  if !hasmapto('<Plug>(iced_browse_test_under_cursor)')
-    silent! nmap <buffer> <Leader>bt <Plug>(iced_browse_test_under_cursor)
-  endif
-
-  if !hasmapto('<Plug>(iced_browse_references)')
-    silent! nmap <buffer> <Leader>br <Plug>(iced_browse_references)
-  endif
-
-  if !hasmapto('<Plug>(iced_browse_dependencies)')
-    silent! nmap <buffer> <Leader>bd <Plug>(iced_browse_dependencies)
-  endif
-
-  if !hasmapto('<Plug>(iced_browse_var_references)')
-    silent! nmap <buffer> <Leader>bvr <Plug>(iced_browse_var_references)
-  endif
-
-  if !hasmapto('<Plug>(iced_browse_var_dependencies)')
-    silent! nmap <buffer> <Leader>bvd <Plug>(iced_browse_var_dependencies)
-  endif
+  call s:define_mapping('nmap', '<Leader>bn',  '<Plug>(iced_browse_related_namespace)')
+  call s:define_mapping('nmap', '<Leader>bs',  '<Plug>(iced_browse_spec)')
+  call s:define_mapping('nmap', '<Leader>bt',  '<Plug>(iced_browse_test_under_cursor)')
+  call s:define_mapping('nmap', '<Leader>br',  '<Plug>(iced_browse_references)')
+  call s:define_mapping('nmap', '<Leader>bd',  '<Plug>(iced_browse_dependencies)')
+  call s:define_mapping('nmap', '<Leader>bvr', '<Plug>(iced_browse_var_references)')
+  call s:define_mapping('nmap', '<Leader>bvd', '<Plug>(iced_browse_var_dependencies)')
 
   "" Jumping cursor (<Leader>j)
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_def_jump)')
-    silent! nmap <buffer> <C-]> <Plug>(iced_def_jump)
-  endif
-
-  if !hasmapto('<Plug>(iced_jump_to_next_sign)')
-    silent! nmap <buffer> <Leader>jn <Plug>(iced_jump_to_next_sign)
-  endif
-
-  if !hasmapto('<Plug>(iced_jump_to_prev_sign)')
-    silent! nmap <buffer> <Leader>jN <Plug>(iced_jump_to_prev_sign)
-  endif
-
-  if !hasmapto('<Plug>(iced_jump_to_let)')
-    silent! nmap <buffer> <Leader>jl <Plug>(iced_jump_to_let)
-  endif
+  call s:define_mapping('nmap', '<C-]>',      '<Plug>(iced_def_jump)')
+  call s:define_mapping('nmap', '<Leader>jn', '<Plug>(iced_jump_to_next_sign)')
+  call s:define_mapping('nmap', '<Leader>jN', '<Plug>(iced_jump_to_prev_sign)')
+  call s:define_mapping('nmap', '<Leader>jl', '<Plug>(iced_jump_to_let)')
 
   "" Debugging (<Leader>d)
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_browse_tapped)')
-    silent! nmap <buffer> <Leader>dbt <Plug>(iced_browse_tapped)
-  endif
-
-  if !hasmapto('<Plug>(iced_clear_tapped)')
-    silent! nmap <buffer> <Leader>dlt <Plug>(iced_clear_tapped)
-  endif
+  call s:define_mapping('nmap', '<Leader>dbt', '<Plug>(iced_browse_tapped)')
+  call s:define_mapping('nmap', '<Leader>dlt', '<Plug>(iced_clear_tapped)')
 
   "" Misc
   "" ------------------------------------------------------------------------
-  if !hasmapto('<Plug>(iced_format)')
-    silent! nmap <buffer> == <Plug>(iced_format)
-  endif
-
-  if !hasmapto('<Plug>(iced_format_all)')
-    silent! nmap <buffer> =G <Plug>(iced_format_all)
-  endif
-
-  if !hasmapto('<Plug>(iced_grep)')
-    silent! nmap <buffer> <Leader>* <Plug>(iced_grep)
-    silent! nmap <buffer> <Leader>/ :<C-u>IcedGrep<Space>
-  endif
+  call s:define_mapping('nmap', '==',        '<Plug>(iced_format)')
+  call s:define_mapping('nmap', '=G',        '<Plug>(iced_format_all)')
+  call s:define_mapping('nmap', '<Leader>*', '<Plug>(iced_grep)')
+  call s:define_mapping('nmap', '<Leader>/', ':<C-u>IcedGrep<Space>')
 endfunction
 
 if exists('g:iced_enable_default_key_mappings')

@@ -2,6 +2,15 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.0.1 (2020-07-04)
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/issues/229[#229]: Added `g:iced_default_key_mapping_leader` option to be able to change `<Leader>` in default key mappings.
+
+=== Fixed
+* Fixed test integration to show error message if error context does not exist.
+// }}}
+
 == 2.0.0 (2020-06-28)
 // {{{
 === Added

@@ -22,6 +22,8 @@ set cpoptions&vim
 function! s:error_message(test) abort
   if has_key(a:test, 'context') && !empty(a:test['context'])
     return printf('%s: %s', a:test['var'], a:test['context'])
+  elseif has_key(a:test, 'message') && !empty(a:test['message'])
+    return printf('%s: %s', a:test['var'], a:test['message'])
   else
     return a:test['var']
   endif
