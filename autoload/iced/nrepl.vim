@@ -482,6 +482,14 @@ function! iced#nrepl#clone(...) abort " {{{
   endif
 endfunction " }}}
 
+function! iced#nrepl#close(session, callback) abort
+  return iced#nrepl#send({
+      \ 'op': 'close',
+      \ 'session': a:session,
+      \ 'callback': a:callback,
+      \ })
+endfunction
+
 function! iced#nrepl#is_connected() abort " {{{
   return (s:status(s:nrepl['channel']) ==# 'open')
 endfunction " }}}
