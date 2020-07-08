@@ -26,7 +26,7 @@ let s:default_palette = [
       \ 'InInitNs',
       \ 'JumpToNextSign', 'JumpToPrevSign',
       \ 'JumpToLet',
-      \ 'StartSideloader', 'ToggleSideloaderLookup',
+      \ 'StartSideloader', 'StopSideloader', 'ToggleSideloaderLookup',
       \ 'ClearNsCache',
       \ ]
 
