@@ -93,6 +93,7 @@
   'start_to_trace':            'Start to trace: %s.',
   'started_cljs_repl':         'CLJS repl has started.',
   'started_sideloader':        'Sideloader has started.',
+  'stopped_sideloader':        'Sideloader has stopped.',
   'stop_to_trace':             'Stop to trace: %s.',
   'test_summary':              '%s: Ran %d assertions, in %d test functions. %d failures, %d errors.',
   'testing':                   'Testing...',

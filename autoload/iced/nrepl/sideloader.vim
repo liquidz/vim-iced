@@ -36,6 +36,19 @@ function! iced#nrepl#sideloader#start() abort
   call iced#message#info('started_sideloader')
 endfunction
 
+function! iced#nrepl#sideloader#stop() abort
+  " NOTE: nrepl doesn't have a op to stop sideloader.
+  "       but sideloader is a session specific mode,
+  "       so we can stop sideloading by stopping to use current session.
+  if !iced#nrepl#is_connected() | return | endif
+
+  let current_session = iced#nrepl#clj_session()
+  return iced#nrepl#clone(current_session,
+        \ {resp -> iced#nrepl#set_session('clj', resp['new-session']) ||
+        \          iced#nrepl#close(current_session,
+        \                           {_ -> iced#message#info('stopped_sideloader')})})
+endfunction
+
 function! s:lookup(file, callback) abort
   if empty(a:file)
     return a:callback('')
