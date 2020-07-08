@@ -467,11 +467,19 @@ function! iced#nrepl#connect(port, ...) abort
   return v:true
 endfunction
 
-function! iced#nrepl#clone(callback) abort " {{{
-  call iced#nrepl#send({
-        \ 'op': 'clone',
-        \ 'callback': a:callback,
-        \ })
+function! iced#nrepl#clone(...) abort " {{{
+  if a:0 == 1
+    call iced#nrepl#send({
+          \ 'op': 'clone',
+          \ 'callback': get(a:, 1, {_ -> v:null}),
+          \ })
+  elseif a:0 == 2
+    call iced#nrepl#send({
+          \ 'op': 'clone',
+          \ 'session': get(a:, 1, ''),
+          \ 'callback': get(a:, 2, {_ -> v:null}),
+          \ })
+  endif
 endfunction " }}}
 
 function! iced#nrepl#is_connected() abort " {{{
