@@ -1089,12 +1089,6 @@ COMMANDS                                                    *vim-iced-commands*
   Key is mapped to |<Plug>(iced_start_sideloader)|.
   See also |vim-iced-sideloader|.
 
-                                                  *:IcedToggleSideloaderLookup*
-:IcedToggleSideloaderLookup
-  Toggle enablement of sideloader's lookup.
-  This behaves pseudo sideloader pausing. (It's not perfect)
-  Key is mapped to |<Plug>(iced_toggle_sideloader_lookup)|.
-
 ------------------------------------------------------------------------------
 FUNCTIONS                                                  *vim-iced-functions*
 
@@ -1488,9 +1482,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_start_sideloader)
   Same as |:IcedStartSideloader|.
 
-                                        *<Plug>(iced_toggle_sideloader_lookup)*
-<Plug>(iced_toggle_sideloader_lookup)
-  Same as |:IcedToggleSideloaderLookup|.
 
 ==============================================================================
 CUSTOMIZING                                              *vim-iced-customizing*
