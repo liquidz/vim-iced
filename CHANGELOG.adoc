@@ -1,6 +1,20 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* Added `:IcedStopSideloader` command.
+
+=== Changed
+* Bump kaocha-nrepl to 1.0.1.
+
+=== Fixed
+* Fixed `:IcedUndef` command to handle not-found error.
+
+=== Removed
+* (Breaking) Removed `:IcedToggleSideloaderLookup` command.
+** Please use `:IcedStopSideloader` command instead.
+// }}}
 
 == 2.0.1 (2020-07-04)
 // {{{
