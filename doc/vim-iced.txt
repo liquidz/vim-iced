@@ -506,7 +506,7 @@ SIDELOADER                                                *vim-iced-sideloader*
 
   vim-iced provides following commands for sideloader:
   - |:IcedStartSideloader|.
-  - |:IcedToggleSideloaderLookup|.
+  - |:IcedStoptSideloader|.
 
   When nREPL requires to look up some codes,
   vim-iced will search in |g:iced#source_root|.
@@ -1082,9 +1082,15 @@ COMMANDS                                                    *vim-iced-commands*
                                                          *:IcedStartSideloader*
 :IcedStartSideloader
   Start side-loading.
+  Key is mapped to |<Plug>(iced_start_sideloader)|.
+  See also |vim-iced-sideloader|.
 
-  WARNING: This feature cannot be stopped unless you reconnect or stop REPL.
-           See also |:IcedToggleSideloaderLookup|.
+                                                          *:IcedStopSideloader*
+:IcedStopSideloader
+  Stop side-loading.
+  NOTE: nREPL does not provide the way to stop sideloader officially.
+        But sideloader is a session specific mode, so we can stop
+        sideloading by stopping to use current session.
 
   Key is mapped to |<Plug>(iced_start_sideloader)|.
   See also |vim-iced-sideloader|.
@@ -1482,6 +1488,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_start_sideloader)
   Same as |:IcedStartSideloader|.
 
+                                                 *<Plug>(iced_stop_sideloader)*
+<Plug>(iced_stop_sideloader)
+  Same as |:IcedStopSideloader|.
 
 ==============================================================================
 CUSTOMIZING                                              *vim-iced-customizing*

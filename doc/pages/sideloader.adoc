@@ -8,7 +8,7 @@ remotely in a running server on demand.
 vim-iced provides following commands for sideloader:
 
 - {help_html}#%3AIcedStartSideloader[IcedStartSideloader]
-- {help_html}#%3AIcedToggleSideloaderLookup[IcedToggleSideloaderLookup]
+- {help_html}#%3AIcedStopSideloader[IcedStopSideloader]
 
 When nREPL requires to look up some codes,
 vim-iced will search in {help_html}#g%3Aiced%23source_root[g:iced#source_root].
@@ -24,16 +24,13 @@ There are following ways to start sideloader:
 - execute {help_html}#%3AIcedStartSideloader[IcedStartSideloader] command.
 - set `v:true` to {help_html}#g%3Aiced%23nrepl%23enable_sideloader[g:iced#nrepl#enable_sideloader] before launching vim/nvim.
 
+=== Stopping sideloader
 
+nREPL does not provide the way to stop sideloader officially.
+But sideloader is a session specific mode, so we can stop sideloading by stopping to use current session.
 
-[WARNING]
-====
-Sideloader cannot be stopped basically. +
-If you want, please reconnect({help_html}#%3AIcedReconnect[IcedReconnect]) or restart REPL
-
-There is {help_html}#%3AIcedToggleSideloaderLookup[IcedToggleSideloaderLookup] command as a provisional method.
-====
-
+Executing {help_html}#%3AIcedStopSideloader[IcedStopSideloader] command will
+renew the current Clojure session.
 
 === Example
 
