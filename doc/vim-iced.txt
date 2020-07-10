@@ -42,7 +42,9 @@ CONTENTS                                                    *vim-iced-contents*
     Key Mappings               |vim-iced-key-mappings|
   Customizing                  |vim-iced-customizing|
     Stdout buffer              |vim-iced-customizing-stdout-buffer|
+    Formatter                  |vim-iced-customizing-formatter|
     Indent rules               |vim-iced-customizing-indents|
+      Tonsky's rule            |vim-iced-customizing-tonsky-rule|
     Documents                  |vim-iced-customizing-documents|
       Auto document            |vim-iced-customizing-auto-document|
     Auto indent                |vim-iced-customizing-auto-indent|
@@ -1711,6 +1713,21 @@ g:iced#format#rule
         \ 'merr.core/let': '[[:block 2] [:inner 1]]',
         \ }
 <
+                                             *vim-iced-customizing-tonsky-rule*
+TONSKY'S RULE~
+  See http://tonsky.me/blog/clojurefmt/ .
+  You can use this rule with cljfmt and cljstyle.
+
+  - cljfmt >
+    let g:iced#format#rule = {'#"^\w"': '[[:inner 0]]'}
+<
+  - cljstyle
+    Add following `:indents` setting to your `.cljstyle`.
+>
+    {
+     :indents ^:replace {#"^\w" [[:inner 0]]}
+     }
+>
 ------------------------------------------------------------------------------
 DOCUMENTS                                      *vim-iced-customizing-documents*
 

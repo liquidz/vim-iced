@@ -30,3 +30,26 @@ Then you can get the following result.
 ----
 
 See https://github.com/weavejester/cljfmt#indentation-rules[cljfmt's README] for more information.
+
+==== Tonsky's formatting rule [[customizing_tonsky_formatting_rule]]
+
+If you'd like to use http://tonsky.me/blog/clojurefmt/[Tonsky's formatting rule],
+you can use this rule with `cljfmt` and `cljstyle`.
+
+===== cljfmt
+Set the following rule to {help_html}#g%3Aiced%23format%23rule[g:iced#format#rule] option.
+
+[source,vim]
+----
+let g:iced#format#rule = {'#"^\w"': '[[:inner 0]]'}
+----
+
+===== cljstyle
+Add following `:indents` setting to your `.cljstyle`.
+
+[source,clojure]
+----
+{
+ :indents ^:replace {#"^\w" [[:inner 0]]}
+ }
+----
