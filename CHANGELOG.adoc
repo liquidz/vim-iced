@@ -2,6 +2,25 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.1.0 (2020-07-11)
+// {{{
+=== Added
+* Added `:IcedStopSideloader` command.
+* https://github.com/liquidz/vim-iced/issues/104[#104]: Added support for http://tonsky.me/blog/clojurefmt/[Tonsky's formatting rule].
+** https://liquidz.github.io/vim-iced/#customizing_tonsky_formatting_rule
+
+=== Changed
+* Bump iced-nrepl to 1.0.3.
+* Bump kaocha-nrepl to 1.0.1.
+
+=== Fixed
+* Fixed `:IcedUndef` command to handle not-found error.
+
+=== Removed
+* (Breaking) Removed `:IcedToggleSideloaderLookup` command.
+** Please use `:IcedStopSideloader` command instead.
+// }}}
+
 == 2.0.1 (2020-07-04)
 // {{{
 === Added

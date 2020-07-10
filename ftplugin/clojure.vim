@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 20001
+let g:vim_iced_version = 20100
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -161,7 +161,7 @@ command!          IcedJumpToPrevError       call iced#system#get('sign').jump_to
 command!          IcedJumpToLet             call iced#let#jump_to_let()
 
 command!          IcedStartSideloader        call iced#nrepl#sideloader#start()
-command!          IcedToggleSideloaderLookup call iced#nrepl#sideloader#toggle_enablement_of_lookup()
+command!          IcedStopSideloader         call iced#nrepl#sideloader#stop()
 
 command! -nargs=? -complete=custom,iced#component#installer#complete
       \ IcedUpdateTool call iced#system#get('installer').reinstall(<q-args>)
@@ -272,7 +272,7 @@ nnoremap <silent> <Plug>(iced_jump_to_prev_sign)        :<C-u>IcedJumpToPrevSign
 nnoremap <silent> <Plug>(iced_jump_to_let)              :<C-u>IcedJumpToLet<CR>
 
 nnoremap <silent> <Plug>(iced_start_sideloader)         :<C-u>IcedStartSideloader<CR>
-nnoremap <silent> <Plug>(iced_toggle_sideloader_lookup) :<C-u>IcedToggleSideloaderLookup<CR>
+nnoremap <silent> <Plug>(iced_stop_sideloader)          :<C-u>IcedStopSideloader<CR>
 
 nnoremap <silent> <Plug>(iced_update_tool) :<C-u>IcedUpdateTool<CR>
 

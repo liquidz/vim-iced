@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.0.1
+Version: 2.1.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -42,7 +42,9 @@ CONTENTS                                                    *vim-iced-contents*
     Key Mappings               |vim-iced-key-mappings|
   Customizing                  |vim-iced-customizing|
     Stdout buffer              |vim-iced-customizing-stdout-buffer|
+    Formatter                  |vim-iced-customizing-formatter|
     Indent rules               |vim-iced-customizing-indents|
+      Tonsky's rule            |vim-iced-customizing-tonsky-rule|
     Documents                  |vim-iced-customizing-documents|
       Auto document            |vim-iced-customizing-auto-document|
     Auto indent                |vim-iced-customizing-auto-indent|
@@ -111,7 +113,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.7.0"]
-                   [iced-nrepl "1.0.2"]
+                   [iced-nrepl "1.0.3"]
                    [cider/cider-nrepl "0.25.2"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -141,7 +143,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.5.0"]
       [cider/cider-nrepl "0.25.2"]
-      [iced-nrepl "1.0.2"]])
+      [iced-nrepl "1.0.3"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -171,7 +173,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "2.5.0"]
                   [cider/cider-nrepl "0.25.2"]
-                  [iced-nrepl "1.0.2"]]
+                  [iced-nrepl "1.0.3"]]
 
    :nrepl {:cider false
            :middleware [cider.nrepl/wrap-classpath
@@ -506,7 +508,7 @@ SIDELOADER                                                *vim-iced-sideloader*
 
   vim-iced provides following commands for sideloader:
   - |:IcedStartSideloader|.
-  - |:IcedToggleSideloaderLookup|.
+  - |:IcedStoptSideloader|.
 
   When nREPL requires to look up some codes,
   vim-iced will search in |g:iced#source_root|.
@@ -1082,18 +1084,18 @@ COMMANDS                                                    *vim-iced-commands*
                                                          *:IcedStartSideloader*
 :IcedStartSideloader
   Start side-loading.
-
-  WARNING: This feature cannot be stopped unless you reconnect or stop REPL.
-           See also |:IcedToggleSideloaderLookup|.
-
   Key is mapped to |<Plug>(iced_start_sideloader)|.
   See also |vim-iced-sideloader|.
 
-                                                  *:IcedToggleSideloaderLookup*
-:IcedToggleSideloaderLookup
-  Toggle enablement of sideloader's lookup.
-  This behaves pseudo sideloader pausing. (It's not perfect)
-  Key is mapped to |<Plug>(iced_toggle_sideloader_lookup)|.
+                                                          *:IcedStopSideloader*
+:IcedStopSideloader
+  Stop side-loading.
+  NOTE: nREPL does not provide the way to stop sideloader officially.
+        But sideloader is a session specific mode, so we can stop
+        sideloading by stopping to use current session.
+
+  Key is mapped to |<Plug>(iced_start_sideloader)|.
+  See also |vim-iced-sideloader|.
 
 ------------------------------------------------------------------------------
 FUNCTIONS                                                  *vim-iced-functions*
@@ -1488,9 +1490,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_start_sideloader)
   Same as |:IcedStartSideloader|.
 
-                                        *<Plug>(iced_toggle_sideloader_lookup)*
-<Plug>(iced_toggle_sideloader_lookup)
-  Same as |:IcedToggleSideloaderLookup|.
+                                                 *<Plug>(iced_stop_sideloader)*
+<Plug>(iced_stop_sideloader)
+  Same as |:IcedStopSideloader|.
 
 ==============================================================================
 CUSTOMIZING                                              *vim-iced-customizing*
@@ -1711,6 +1713,21 @@ g:iced#format#rule
         \ 'merr.core/let': '[[:block 2] [:inner 1]]',
         \ }
 <
+                                             *vim-iced-customizing-tonsky-rule*
+TONSKY'S RULE~
+  See http://tonsky.me/blog/clojurefmt/ .
+  You can use this rule with cljfmt and cljstyle.
+
+  - cljfmt >
+    let g:iced#format#rule = {'#"^\w"': '[[:inner 0]]'}
+<
+  - cljstyle
+    Add following `:indents` setting to your `.cljstyle`.
+>
+    {
+     :indents ^:replace {#"^\w" [[:inner 0]]}
+     }
+>
 ------------------------------------------------------------------------------
 DOCUMENTS                                      *vim-iced-customizing-documents*
 
