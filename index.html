@@ -512,7 +512,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#sideloader">12. Sideloader</a>
 <ul class="sectlevel2">
 <li><a href="#_starting_sideloader">12.1. Starting sideloader</a></li>
-<li><a href="#_example">12.2. Example</a></li>
+<li><a href="#_stopping_sideloader">12.2. Stopping sideloader</a></li>
+<li><a href="#_example">12.3. Example</a></li>
 </ul>
 </li>
 <li><a href="#iced_command">13. iced command</a>
@@ -1949,7 +1950,7 @@ remotely in a running server on demand.</p>
 <p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStartSideloader">IcedStartSideloader</a></p>
 </li>
 <li>
-<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedToggleSideloaderLookup">IcedToggleSideloaderLookup</a></p>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStopSideloader">IcedStopSideloader</a></p>
 </li>
 </ul>
 </div>
@@ -1978,27 +1979,20 @@ vim-iced will search in <a href="https://liquidz.github.io/vim-iced/vim-iced.htm
 </li>
 </ul>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
+</div>
+<div class="sect2">
+<h3 id="_stopping_sideloader">12.2. Stopping sideloader</h3>
 <div class="paragraph">
-<p>Sideloader cannot be stopped basically.<br>
-If you want, please reconnect(<a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedReconnect">IcedReconnect</a>) or restart REPL</p>
+<p>nREPL does not provide the way to stop sideloader officially.
+But sideloader is a session specific mode, so we can stop sideloading by stopping to use current session.</p>
 </div>
 <div class="paragraph">
-<p>There is <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedToggleSideloaderLookup">IcedToggleSideloaderLookup</a> command as a provisional method.</p>
-</div>
-</td>
-</tr>
-</table>
+<p>Executing <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedStopSideloader">IcedStopSideloader</a> command will
+renew the current Clojure session.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_example">12.2. Example</h3>
+<h3 id="_example">12.3. Example</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -2358,7 +2352,7 @@ So you need to launch REPL manually.</p>
 <pre class="rouge highlight"><code data-lang="clojure"><span class="p">{</span><span class="w">
  </span><span class="no">:dependencies</span><span class="w"> </span><span class="p">[[</span><span class="n">refactor-nrepl</span><span class="w"> </span><span class="s">"2.5.0"</span><span class="p">]</span><span class="w">
                 </span><span class="p">[</span><span class="n">cider/cider-nrepl</span><span class="w"> </span><span class="s">"0.25.2"</span><span class="p">]</span><span class="w">
-                </span><span class="p">[</span><span class="n">iced-nrepl</span><span class="w"> </span><span class="s">"1.0.2"</span><span class="p">]]</span><span class="w">
+                </span><span class="p">[</span><span class="n">iced-nrepl</span><span class="w"> </span><span class="s">"1.0.3"</span><span class="p">]]</span><span class="w">
 
  </span><span class="no">:nrepl</span><span class="w"> </span><span class="p">{</span><span class="no">:cider</span><span class="w"> </span><span class="n">false</span><span class="w">
          </span><span class="no">:middleware</span><span class="w"> </span><span class="p">[</span><span class="n">cider.nrepl/wrap-classpath</span><span class="w">
@@ -2881,6 +2875,37 @@ but it is bored that some cursor movements are required.</p>
 </div>
 <div class="paragraph">
 <p>See <a href="https://github.com/weavejester/cljfmt#indentation-rules">cljfmt&#8217;s README</a> for more information.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="customizing_tonsky_formatting_rule">21.2.2. Tonsky&#8217;s formatting rule</h4>
+<div class="paragraph">
+<p>If you&#8217;d like to use <a href="http://tonsky.me/blog/clojurefmt/">Tonsky&#8217;s formatting rule</a>,
+you can use this rule with <code>cljfmt</code> and <code>cljstyle</code>.</p>
+</div>
+<div class="sect4">
+<h5 id="_cljfmt">cljfmt</h5>
+<div class="paragraph">
+<p>Set the following rule to <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23format%23rule">g:iced#format#rule</a> option.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim"><span class="k">let</span> <span class="nv">g:iced</span>#format#rule <span class="p">=</span> <span class="p">{</span><span class="s1">'#"^\w"'</span><span class="p">:</span> <span class="s1">'[[:inner 0]]'</span><span class="p">}</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_cljstyle">cljstyle</h5>
+<div class="paragraph">
+<p>Add following <code>:indents</code> setting to your <code>.cljstyle</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="clojure"><span class="p">{</span><span class="w">
+ </span><span class="no">:indents</span><span class="w"> </span><span class="o">^</span><span class="no">:replace</span><span class="w"> </span><span class="p">{</span><span class="o">#</span><span class="s">"^\w"</span><span class="w"> </span><span class="p">[[</span><span class="no">:inner</span><span class="w"> </span><span class="mi">0</span><span class="p">]]}</span><span class="w">
+ </span><span class="p">}</span></code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -4040,7 +4065,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-07-03 20:55:47 UTC
+Last updated 2020-07-10 21:45:57 UTC
 </div>
 </div>
 <style>
