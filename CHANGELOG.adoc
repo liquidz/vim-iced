@@ -1,6 +1,11 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Bump iced-nrepl to 1.0.3.
+** Fixed https://github.com/liquidz/vim-iced-fern-debugger[vim-iced-fern-debugger]'s issue: https://github.com/liquidz/vim-iced-fern-debugger/issues/1[#1], https://github.com/liquidz/vim-iced-fern-debugger/issues/2[#2]
+// }}}
 
 == 2.1.0 (2020-07-11)
 // {{{
