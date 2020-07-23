@@ -1,6 +1,6 @@
 === Installation [[installation]]
 
-vim-iced itself and {vim_sexp} are the minimul requirements.
+vim-iced itself and {vim_sexp} are the minimal requirements.
 
 In addition, if there is one of follows, you can use interactive UI for selecting one from multiple candidates (e.g. selecting a ns which you'd like to add)
 
