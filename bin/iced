@@ -20,6 +20,12 @@ IS_SHADOW_CLJS=0
 IS_DRYRUN=0
 IS_INSTANT=0
 
+DOES_BB_INSTALLED=0
+which bb > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    DOES_BB_INSTALLED=1
+fi
+
 function iced_usage() {
     echo "vim-iced ${VERSION}"
     echo ""
@@ -208,7 +214,11 @@ do
         IS_DETECTED=1
 
         if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
-            grep org.clojure/clojurescript project.clj > /dev/null 2>&1
+            if [ $DOES_BB_INSTALLED -eq 1 ]; then
+                bb "${PROJECT_DIR}/clj/script/lein_is_using_cljs.clj" "$(pwd)/project.clj"
+            else
+                grep org.clojure/clojurescript project.clj > /dev/null 2>&1
+            fi
             if [ $? -eq 0 ]; then
                 IS_CLJS=1
             fi
