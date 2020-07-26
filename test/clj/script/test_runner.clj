@@ -3,7 +3,8 @@
    [clojure.test :as t]))
 
 (def ^:private test-ns-list
-  '(shadow-cljs-validation-test))
+  '(shadow-cljs-validation-test
+    lein-is-using-cljs-test))
 
 (doseq [sym test-ns-list]
   (require sym))
