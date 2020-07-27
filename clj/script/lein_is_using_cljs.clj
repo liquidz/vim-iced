@@ -47,7 +47,7 @@
     (System/exit (if (-> args first slurp using-cljs?) 0 1))
     (catch Exception _
       (println "Failed to check the use of ClojureScript")
-      (System/exit 1))))
+      (System/exit 2))))
 
 (when *command-line-args*
   (-main *command-line-args*))
