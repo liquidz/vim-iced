@@ -4,7 +4,8 @@
 
 (def ^:private test-ns-list
   '(shadow-cljs-validation-test
-    lein-is-using-cljs-test))
+    lein-is-using-cljs-test
+    deps-is-using-cljs-test))
 
 (doseq [sym test-ns-list]
   (require sym))
