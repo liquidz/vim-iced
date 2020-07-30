@@ -214,12 +214,20 @@ do
         IS_DETECTED=1
 
         if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
+            RET=-1
             if [ $DOES_BB_INSTALLED -eq 1 ]; then
                 bb "${PROJECT_DIR}/clj/script/lein_is_using_cljs.clj" "$(pwd)/project.clj"
+                RET=$?
+                # Fallback to grep when failed to check
+                if [ $RET -eq 2 ]; then
+                    grep org.clojure/clojurescript project.clj > /dev/null 2>&1
+                    RET=$?
+                fi
             else
                 grep org.clojure/clojurescript project.clj > /dev/null 2>&1
+                RET=$?
             fi
-            if [ $? -eq 0 ]; then
+            if [ $RET -eq 0 ]; then
                 IS_CLJS=1
             fi
         fi
