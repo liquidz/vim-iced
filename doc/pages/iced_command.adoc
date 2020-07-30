@@ -11,8 +11,11 @@ Main purpose of this command is launching REPL with all features for vim-iced.
 - https://github.com/boot-clj/boot[Boot]
 - https://clojure.org/guides/deps_and_cli[Clojure CLI]
 
-https://github.com/thheller/shadow-cljs[shadow-cljs] is not supported by `iced` command.
+[WARNING]
+====
+https://github.com/thheller/shadow-cljs[shadow-cljs] is not supported by `iced` command for now.
 To work with shadow-cljs, see {help_html}#vim-iced-shadow-cljs[vim-iced-shadow-cljs section in help].
+====
 
 === Usage [[iced_usage]]
 
@@ -25,7 +28,7 @@ $ iced repl [options]
 
 Following options are specially treated by `iced` command.
 
-[cols="30,70"]
+[cols="30,70a"]
 |===
 | Option | Description
 
@@ -33,6 +36,15 @@ Following options are specially treated by `iced` command.
 | Enables ClojureScript features. +
 This option is enabled automatically when project configuration +
 file(eg. project.clj) contains 'org.clojure/clojurescript' dependency.
+[NOTE]
+====
+By default, it may be a false positive because of simple string match.
+
+In this case, you can use more accurate checks with
+https://github.com/borkdude/babashka[Babashka].
+(Optional and Limited for Leiningen and Clojure CLI only)
+`iced` command will use it automatically when `bb` command exists.
+====
 
 | `--with-kaocha`
 | Enables features for testing with kaocha.
