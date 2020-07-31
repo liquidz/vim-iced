@@ -2084,9 +2084,20 @@ Main purpose of this command is launching REPL with all features for vim-iced.</
 </li>
 </ul>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p><a href="https://github.com/thheller/shadow-cljs">shadow-cljs</a> is not supported by <code>iced</code> command.
+<p><a href="https://github.com/thheller/shadow-cljs">shadow-cljs</a> is not supported by <code>iced</code> command for now.
 To work with shadow-cljs, see <a href="https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-shadow-cljs">vim-iced-shadow-cljs section in help</a>.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -2115,37 +2126,71 @@ To work with shadow-cljs, see <a href="https://liquidz.github.io/vim-iced/vim-ic
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--with-cljs</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables ClojureScript features.<br>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Enables ClojureScript features.<br>
 This option is enabled automatically when project configuration<br>
-file(eg. project.clj) contains 'org.clojure/clojurescript' dependency.</p></td>
+file(eg. project.clj) contains 'org.clojure/clojurescript' dependency.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>By default, it may be a false positive because of simple string match.</p>
+</div>
+<div class="paragraph">
+<p>In this case, you can use more accurate checks with
+<a href="https://github.com/borkdude/babashka">Babashka</a>.
+(Optional and Limited for Leiningen and Clojure CLI only)
+<code>iced</code> command will use it automatically when <code>bb</code> command exists.</p>
+</div>
+</td>
+</tr>
+</table>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--with-kaocha</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Enables features for testing with kaocha.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Enables features for testing with kaocha.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--force-boot</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Force to use Boot.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Force to use Boot.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--force-clojure-cli</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Force to use Clojure CLI.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Force to use Clojure CLI.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--dependency=VALUE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Adds extra dependency.<br>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Adds extra dependency.<br>
 <code>VALUE</code> format is 'PACKAGE_NAME:VERSION'.<br>
-For example: <code>--dependency=iced-nrepl:0.4.3</code></p></td>
+For example: <code>--dependency=iced-nrepl:0.4.3</code></p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--middleware=VALUE</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Adds extra nrepl middleware.<br>
-For example: <code>--middleware=iced.nrepl/wrap-iced</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Adds extra nrepl middleware.<br>
+For example: <code>--middleware=iced.nrepl/wrap-iced</code></p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--instant</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Launch instant REPL via Clojure CLI.<br>
-Instant REPL requires no project/config file.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Launch instant REPL via Clojure CLI.<br>
+Instant REPL requires no project/config file.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -2351,7 +2396,7 @@ So you need to launch REPL manually.</p>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="clojure"><span class="p">{</span><span class="w">
  </span><span class="no">:dependencies</span><span class="w"> </span><span class="p">[[</span><span class="n">refactor-nrepl</span><span class="w"> </span><span class="s">"2.5.0"</span><span class="p">]</span><span class="w">
-                </span><span class="p">[</span><span class="n">cider/cider-nrepl</span><span class="w"> </span><span class="s">"0.25.2"</span><span class="p">]</span><span class="w">
+                </span><span class="p">[</span><span class="n">cider/cider-nrepl</span><span class="w"> </span><span class="s">"0.25.3"</span><span class="p">]</span><span class="w">
                 </span><span class="p">[</span><span class="n">iced-nrepl</span><span class="w"> </span><span class="s">"1.0.4"</span><span class="p">]]</span><span class="w">
 
  </span><span class="no">:nrepl</span><span class="w"> </span><span class="p">{</span><span class="no">:cider</span><span class="w"> </span><span class="n">false</span><span class="w">
@@ -4065,7 +4110,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-07-26 20:54:21 UTC
+Last updated 2020-07-31 22:21:07 UTC
 </div>
 </div>
 <style>
