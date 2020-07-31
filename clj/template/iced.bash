@@ -20,6 +20,12 @@ IS_SHADOW_CLJS=0
 IS_DRYRUN=0
 IS_INSTANT=0
 
+DOES_BB_INSTALLED=0
+which bb > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    DOES_BB_INSTALLED=1
+fi
+
 function iced_usage() {
     echo "vim-iced ${VERSION}"
     echo ""
@@ -208,8 +214,20 @@ do
         IS_DETECTED=1
 
         if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
-            grep org.clojure/clojurescript project.clj > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
+            RET=-1
+            if [ $DOES_BB_INSTALLED -eq 1 ]; then
+                bb "${PROJECT_DIR}/clj/script/lein_is_using_cljs.clj" "$(pwd)/project.clj"
+                RET=$?
+                # Fallback to grep when failed to check
+                if [ $RET -eq 2 ]; then
+                    grep org.clojure/clojurescript project.clj > /dev/null 2>&1
+                    RET=$?
+                fi
+            else
+                grep org.clojure/clojurescript project.clj > /dev/null 2>&1
+                RET=$?
+            fi
+            if [ $RET -eq 0 ]; then
                 IS_CLJS=1
             fi
         fi
@@ -234,8 +252,20 @@ do
         IS_DETECTED=1
 
         if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
-            grep org.clojure/clojurescript deps.edn > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
+            RET=-1
+            if [ $DOES_BB_INSTALLED -eq 1 ]; then
+                bb "${PROJECT_DIR}/clj/script/deps_is_using_cljs.clj" "$(pwd)/deps.edn"
+                RET=$?
+                # Fallback to grep when failed to check
+                if [ $RET -eq 2 ]; then
+                    grep org.clojure/clojurescript deps.edn > /dev/null 2>&1
+                    RET=$?
+                fi
+            else
+                grep org.clojure/clojurescript deps.edn > /dev/null 2>&1
+                RET=$?
+            fi
+            if [ $RET -eq 0 ]; then
                 IS_CLJS=1
             fi
         fi
@@ -314,7 +344,7 @@ case "$1" in
             fi
 
             run "$CLOJURE_CLI_CMD \
-                         $OPTIONS -Sdeps '{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
+                         $OPTIONS -Sdeps '{:deps {iced-repl/iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
                          -m nrepl.cmdline $(cli_middleware_args ${TARGET_MIDDLEWARES}) --interactive"
         elif [ $IS_SHADOW_CLJS -eq 1 ]; then
             echo_error 'Currently iced command does not support shadow-cljs.'

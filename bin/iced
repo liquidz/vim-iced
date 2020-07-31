@@ -5,12 +5,12 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 PROJECT_DIR=$(cd $SCRIPT_DIR; cd ..; pwd)
 VERSION=$(grep 'Version: ' ${SCRIPT_DIR}/../doc/vim-iced.txt | cut -d' ' -f2)
 
-BASE_DEPENDENCIES='nrepl:0.7.0 refactor-nrepl:2.5.0 cider/cider-nrepl:0.25.2 iced-nrepl:1.0.4'
+BASE_DEPENDENCIES='nrepl/nrepl:0.7.0 refactor-nrepl/refactor-nrepl:2.5.0 cider/cider-nrepl:0.25.3 iced-nrepl/iced-nrepl:1.0.4'
 BASE_MIDDLEWARES='cider.nrepl/wrap-classpath cider.nrepl/wrap-clojuredocs cider.nrepl/wrap-complete cider.nrepl/wrap-debug cider.nrepl/wrap-format cider.nrepl/wrap-info cider.nrepl/wrap-macroexpand cider.nrepl/wrap-ns cider.nrepl/wrap-out cider.nrepl/wrap-spec cider.nrepl/wrap-test cider.nrepl/wrap-trace cider.nrepl/wrap-undef cider.nrepl/wrap-xref refactor-nrepl.middleware/wrap-refactor iced.nrepl/wrap-iced'
 
 CLJS_DEPENDENCIES='cider/piggieback:0.5.0'
 CLJS_MIDDLEWARES='cider.piggieback/wrap-cljs-repl'
-KAOCHA_DEPENDENCIES='kaocha-nrepl:1.0.1'
+KAOCHA_DEPENDENCIES='kaocha-nrepl/kaocha-nrepl:1.0.1'
 KAOCHA_MIDDLEWARES='kaocha-nrepl.core/wrap-kaocha'
 
 IS_LEININGEN=0
@@ -19,6 +19,12 @@ IS_CLOJURE_CLI=0
 IS_SHADOW_CLJS=0
 IS_DRYRUN=0
 IS_INSTANT=0
+
+DOES_BB_INSTALLED=0
+which bb > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    DOES_BB_INSTALLED=1
+fi
 
 function iced_usage() {
     echo "vim-iced ${VERSION}"
@@ -208,8 +214,20 @@ do
         IS_DETECTED=1
 
         if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
-            grep org.clojure/clojurescript project.clj > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
+            RET=-1
+            if [ $DOES_BB_INSTALLED -eq 1 ]; then
+                bb "${PROJECT_DIR}/clj/script/lein_is_using_cljs.clj" "$(pwd)/project.clj"
+                RET=$?
+                # Fallback to grep when failed to check
+                if [ $RET -eq 2 ]; then
+                    grep org.clojure/clojurescript project.clj > /dev/null 2>&1
+                    RET=$?
+                fi
+            else
+                grep org.clojure/clojurescript project.clj > /dev/null 2>&1
+                RET=$?
+            fi
+            if [ $RET -eq 0 ]; then
                 IS_CLJS=1
             fi
         fi
@@ -234,8 +252,20 @@ do
         IS_DETECTED=1
 
         if [ $DISABLE_CLJS_DETECTOR -ne 1 ]; then
-            grep org.clojure/clojurescript deps.edn > /dev/null 2>&1
-            if [ $? -eq 0 ]; then
+            RET=-1
+            if [ $DOES_BB_INSTALLED -eq 1 ]; then
+                bb "${PROJECT_DIR}/clj/script/deps_is_using_cljs.clj" "$(pwd)/deps.edn"
+                RET=$?
+                # Fallback to grep when failed to check
+                if [ $RET -eq 2 ]; then
+                    grep org.clojure/clojurescript deps.edn > /dev/null 2>&1
+                    RET=$?
+                fi
+            else
+                grep org.clojure/clojurescript deps.edn > /dev/null 2>&1
+                RET=$?
+            fi
+            if [ $RET -eq 0 ]; then
                 IS_CLJS=1
             fi
         fi
@@ -314,7 +344,7 @@ case "$1" in
             fi
 
             run "$CLOJURE_CLI_CMD \
-                         $OPTIONS -Sdeps '{:deps {iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
+                         $OPTIONS -Sdeps '{:deps {iced-repl/iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
                          -m nrepl.cmdline $(cli_middleware_args ${TARGET_MIDDLEWARES}) --interactive"
         elif [ $IS_SHADOW_CLJS -eq 1 ]; then
             echo_error 'Currently iced command does not support shadow-cljs.'

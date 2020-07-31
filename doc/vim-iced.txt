@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.1.1
+Version: 2.1.2
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -95,6 +95,14 @@ ICED COMMAND                                         *vim-iced-install-command*
   Add `$PATH` environment variable to `/path/to/vim-iced/bin`.
   E.g. export PATH=$PATH:~/src/github.com/liquidz/vim-iced/bin
 
+  NOTE:
+    `iced` command has a feature to detect a use of ClojureScript.
+    But by default, it may be a false positive because of simple string match.
+
+    In this case, you can use more accurate checks with Babashka.
+    (Optional and Limited for Leiningen and Clojure CLI only)
+    `iced` command will use it automatically when `bb` command exists.
+
   WARNING:
     Do not copy `bin/iced` file to your `$PATH`.
     `iced` command references `/path/to/vim-iced/deps.edn` for Clojure CLI.
@@ -114,7 +122,7 @@ LEININGEN~
   {:user
    {:dependencies [[nrepl "0.7.0"]
                    [iced-nrepl "1.0.4"]
-                   [cider/cider-nrepl "0.25.2"]]
+                   [cider/cider-nrepl "0.25.3"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -142,7 +150,7 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.5.0"]
-      [cider/cider-nrepl "0.25.2"]
+      [cider/cider-nrepl "0.25.3"]
       [iced-nrepl "1.0.4"]])
 
   (swap! boot.repl/*default-middleware* concat
@@ -172,7 +180,7 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "2.5.0"]
-                  [cider/cider-nrepl "0.25.2"]
+                  [cider/cider-nrepl "0.25.3"]
                   [iced-nrepl "1.0.4"]]
 
    :nrepl {:cider false

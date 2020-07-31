@@ -1,9 +1,9 @@
 {
  :paths ["clj/repl"]
- :deps {nrepl {:mvn/version "0.7.0"}
-        refactor-nrepl {:mvn/version "2.5.0"}
-        cider/cider-nrepl {:mvn/version "0.25.2"}
-        iced-nrepl {:mvn/version "1.0.4"}}
+ :deps {nrepl/nrepl {:mvn/version "0.7.0"}
+        refactor-nrepl/refactor-nrepl {:mvn/version "2.5.0"}
+        cider/cider-nrepl {:mvn/version "0.25.3"}
+        iced-nrepl/iced-nrepl {:mvn/version "1.0.4"}}
  :__middlewares__
  ["cider.nrepl/wrap-classpath"
   "cider.nrepl/wrap-clojuredocs"
@@ -27,14 +27,14 @@
          :extra-deps {cider/piggieback {:mvn/version "0.5.0"}}
          :__middlewares__ ["cider.piggieback/wrap-cljs-repl"]}
   :kaocha {:__command_option__ true
-           :extra-deps {kaocha-nrepl {:mvn/version "1.0.1"}}
+           :extra-deps {kaocha-nrepl/kaocha-nrepl {:mvn/version "1.0.1"}}
            :__middlewares__ ["kaocha-nrepl.core/wrap-kaocha"]}
 
   :jackin {;; Must be separeted from "clj/repl" path.
            ;; c.f. https://github.com/liquidz/vim-iced/issues/175#issuecomment-575543011
            :paths ["clj/jackin"]
            :extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}}}
-  :outdated {:extra-deps {antq {:mvn/version "RELEASE"}}
+  :outdated {:extra-deps {antq/antq {:mvn/version "RELEASE"}}
              :main-opts ["-m" "antq.core"]}
   :load-files-test {:extra-paths ["test/clj"]
                     :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.641"}}

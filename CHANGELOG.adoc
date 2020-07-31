@@ -1,6 +1,14 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
-== Unreleased (dev)
+== 2.1.2 (2020-08-01)
+// {{{
+=== Changed
+* Bumped cider-nrepl to 0.25.3.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/121[#121]: Added a option to use https://github.com/borkdude/babashka[Babashka] to detect the use of ClojureScript.
+** c.f. https://liquidz.github.io/vim-iced/#iced_usage
+// }}}
 
 == 2.1.1 (2020-07-12)
 // {{{
