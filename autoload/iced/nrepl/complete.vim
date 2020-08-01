@@ -83,12 +83,14 @@ function! iced#nrepl#complete#candidates(base, callback) abort
   endif
 
   if iced#nrepl#is_supported_op('complete')
+    " cider-nrepl
     call iced#nrepl#op#cider#complete(
         \ a:base,
         \ iced#nrepl#ns#name(),
         \ (g:iced#nrepl#complete#ignore_context) ? '' : s:context(),
         \ {resp -> a:callback(s:candidates(resp))})
   elseif iced#nrepl#is_supported_op('completions')
+    " nrepl
     call iced#nrepl#send({
       \ 'op': 'completions',
       \ 'id': iced#nrepl#id(),
