@@ -99,6 +99,7 @@
   'timeout':                   'Timed out.',
   'toggle_warn_on_reflection': 'Toggled *warn-on-reflection* to %s.',
   'too_deep_to_slurp':         'Too deep to slurp.',
+  'too_large_values':          'It will take a too long time because evaludated values are too large.',
   'try_connect':               'Not connected. Try `:IcedConnect <port>`',
   'unaliased':                 'Unaliased "%s".',
   'undefined':                 'Undefined %s.',

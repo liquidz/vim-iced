@@ -226,12 +226,24 @@ endfunction
 " DISPATCHER {{{
 function! s:dispatcher(ch, resp) abort
   let text = printf('%s%s', s:response_buffer, a:resp)
+  let text_len = len(text)
   call iced#util#debug('<<<', text)
+
+  "" To avoid freezing vim/nvim when too large values are returned.
+  "" c.f. https://github.com/liquidz/vim-iced/issues/219
+  if text_len > g:iced#nrepl#buffer_size
+    call iced#message#error('too_large_values')
+    if g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded
+      let s:response_buffer = ''
+      let s:messages = {}
+      return
+    endif
+  endif
 
   try
     let original_resp = iced#system#get('bencode').decode(text)
   catch /Failed to parse/
-    let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
+    let s:response_buffer = (text_len > g:iced#nrepl#buffer_size) ? '' : text
     return
   endtry
 
