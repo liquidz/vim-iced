@@ -1517,6 +1517,12 @@ g:iced#nrepl#buffer_size
   too large response and warn.
   Default value is `1048576`.
 
+                    *g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded*
+g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded
+  If {v:true}, skip evaluation when the nREPL response length exceed
+  |g:iced#nrepl#buffer_size|.
+  Default value is `v:false`.
+
                                          *g:iced#nrepl#connect#jack_in_command*
 g:iced#nrepl#connect#jack_in_command
   Command to start REPL in |:IcedJackIn|.

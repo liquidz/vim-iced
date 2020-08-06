@@ -34,6 +34,9 @@ let s:L = s:V.import('Data.List')
 
 let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
+let g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded
+      \ = get(g:, 'iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded', v:false)
+
 let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
 let g:iced#nrepl#path_translation = get(g:, 'iced#nrepl#path_translation', {})
 let g:iced#nrepl#init_cljs_ns = get(g:, 'iced#nrepl#init_cljs_ns', 'cljs.user')
