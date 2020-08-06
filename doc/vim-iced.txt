@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.1.2
+Version: 2.1.3
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -1509,6 +1509,19 @@ CUSTOMIZING                                              *vim-iced-customizing*
 g:iced#nrepl#host
   Connection host name.
   Default value is `'127.0.0.1'`.
+ 
+                                                     *g:iced#nrepl#buffer_size*
+g:iced#nrepl#buffer_size
+  Threshold for nREPL response length.
+  If response exceed this threshold, vim-iced will handle the response as
+  too large response and warn.
+  Default value is `1048576`.
+
+                    *g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded*
+g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded
+  If {v:true}, skip evaluation when the nREPL response length exceed
+  |g:iced#nrepl#buffer_size|.
+  Default value is `v:false`.
 
                                          *g:iced#nrepl#connect#jack_in_command*
 g:iced#nrepl#connect#jack_in_command

@@ -34,6 +34,9 @@ let s:L = s:V.import('Data.List')
 
 let g:iced#nrepl#host = get(g:, 'iced#nrepl#host', '127.0.0.1')
 let g:iced#nrepl#buffer_size = get(g:, 'iced#nrepl#buffer_size', 1048576)
+let g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded
+      \ = get(g:, 'iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded', v:false)
+
 let g:iced#nrepl#printer = get(g:, 'iced#nrepl#printer', 'default')
 let g:iced#nrepl#path_translation = get(g:, 'iced#nrepl#path_translation', {})
 let g:iced#nrepl#init_cljs_ns = get(g:, 'iced#nrepl#init_cljs_ns', 'cljs.user')
@@ -66,6 +69,8 @@ endfunction
 
 function! iced#nrepl#reset() abort
   let s:nrepl = s:initialize_nrepl()
+  let s:messages = {}
+  let s:response_buffer = ''
   let s:supported_ops = {}
   call iced#cache#clear()
   call iced#nrepl#cljs#reset()
@@ -221,12 +226,24 @@ endfunction
 " DISPATCHER {{{
 function! s:dispatcher(ch, resp) abort
   let text = printf('%s%s', s:response_buffer, a:resp)
+  let text_len = len(text)
   call iced#util#debug('<<<', text)
+
+  "" To avoid freezing vim/nvim when too large values are returned.
+  "" c.f. https://github.com/liquidz/vim-iced/issues/219
+  if text_len > g:iced#nrepl#buffer_size
+    call iced#message#error('too_large_values')
+    if g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded
+      let s:response_buffer = ''
+      let s:messages = {}
+      return
+    endif
+  endif
 
   try
     let original_resp = iced#system#get('bencode').decode(text)
   catch /Failed to parse/
-    let s:response_buffer = (len(text) > g:iced#nrepl#buffer_size) ? '' : text
+    let s:response_buffer = (text_len > g:iced#nrepl#buffer_size) ? '' : text
     return
   endtry
 
