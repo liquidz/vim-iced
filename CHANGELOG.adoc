@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 2.1.3 (2020-08-07)
 // {{{
 === Added
 * https://github.com/liquidz/vim-iced/issues/242[#242]: Added `g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded` option to avoid freezing vim/nvim when too large values are returned from nREPL.
