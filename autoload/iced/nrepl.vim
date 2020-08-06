@@ -66,6 +66,8 @@ endfunction
 
 function! iced#nrepl#reset() abort
   let s:nrepl = s:initialize_nrepl()
+  let s:messages = {}
+  let s:response_buffer = ''
   let s:supported_ops = {}
   call iced#cache#clear()
   call iced#nrepl#cljs#reset()
