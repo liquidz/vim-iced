@@ -98,25 +98,6 @@ function! iced#nrepl#ns#eval(callback) abort
   endif
 endfunction
 
-function! iced#nrepl#ns#in(...) abort
-  let ns_name = ''
-  let Callback = ''
-
-  if a:0 == 1
-    let ns_name = iced#nrepl#ns#name()
-    let Callback = get(a:, 1, {_ -> ''})
-  elseif a:0 == 2
-    let ns_name = get(a:, 1, '')
-    let Callback = get(a:, 2, {_ -> ''})
-  endif
-
-  let ns_name = empty(ns_name) ? iced#nrepl#ns#name() : ns_name
-  let Callback = (type(Callback) == v:t_func) ? Callback : {_ -> ''}
-  if empty(ns_name) | return | endif
-  call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), {resp ->
-        \ s:buffer_ns_created() && Callback(resp)})
-endfunction
-
 function! iced#nrepl#ns#require(ns_name, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let code = printf('(clojure.core/require ''%s)', a:ns_name)
