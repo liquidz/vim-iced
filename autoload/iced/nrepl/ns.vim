@@ -186,20 +186,6 @@ function! iced#nrepl#ns#reload_all() abort
   endif
 endfunction
 
-function! iced#nrepl#ns#in_init_ns() abort
-  if iced#nrepl#current_session_key() ==# 'cljs'
-    return iced#message#error('invalid_session', 'clj')
-  endif
-
-  let ns_name = iced#nrepl#init_ns()
-  if empty(ns_name)
-    call iced#message#warn('not_found')
-    return
-  endif
-
-  call iced#nrepl#ns#in(ns_name, {resp -> iced#nrepl#eval#out(resp)})
-endfunction
-
 function! iced#nrepl#ns#does_exist(ns_name) abort
   " FIXME: Workaround for supporting cider-nrepl 0.21.0
   "        In cljs, find-ns is bootstrap only.

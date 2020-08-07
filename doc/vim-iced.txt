@@ -1064,11 +1064,6 @@ COMMANDS                                                    *vim-iced-commands*
   If {ns} is not passed, current buffer's ns name is used.
   Key is mapped to |<Plug>(iced_toggle_trace_ns)|.
 
-                                                                *:IcedInInitNs*
-:IcedInInitNs
-  Sets `*ns*` to the session's initnal namespace name.
-  Key is mapped to |<Plug>(iced_in_init_ns)|.
-
                                                           *:IcedJumpToNextSign*
 :IcedJumpToNextSign
   Jump cursor to next sign in current buffer.
@@ -1477,10 +1472,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                  *<Plug>(iced_toggle_trace_ns)*
 <Plug>(iced_toggle_trace_ns)
   Same as |:IcedToggleTraceNs|.
-
-                                                      *<Plug>(iced_in_init_ns)*
-<Plug>(iced_in_init_ns)
-  Same as |:IcedInInitNs|.
 
                                                *<Plug>(iced_jump_to_next_sign)*
 <Plug>(iced_jump_to_next_sign)
