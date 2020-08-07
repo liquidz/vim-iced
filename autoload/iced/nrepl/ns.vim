@@ -4,6 +4,11 @@ set cpoptions&vim
 let s:V = vital#iced#new()
 let s:D = s:V.import('Data.Dict')
 
+let s:create_ns_code = join([
+      \ '(when-not (clojure.core/find-ns ''%s)',
+      \ '  (clojure.core/create-ns ''%s))',
+      \ ])
+
 function! s:buffer_ns_created() abort
   let b:iced_ns_created = 1
   return v:true
@@ -16,10 +21,12 @@ function! iced#nrepl#ns#create() abort
   let ns_name = iced#nrepl#ns#name_by_buf()
   if ns_name ==# '' | return | endif
 
-  return iced#nrepl#eval(printf('(clojure.core/create-ns ''%s)', ns_name), {_ ->
-        \ iced#nrepl#eval('(clojure.core/refer-clojure)', {'ns': ns_name}, {_ ->
-        \ s:buffer_ns_created()})
-        \ })
+  let code = printf(s:create_ns_code, ns_name, ns_name)
+  return iced#nrepl#eval(code, {resp ->
+      \ (get(resp, 'value', 'nil') ==# 'nil')
+      \ ? s:buffer_ns_created()
+      \ : iced#nrepl#eval('(clojure.core/refer-clojure)', {'ns': ns_name}, {_ -> s:buffer_ns_created()})
+      \ })
 endfunction
 
 function! iced#nrepl#ns#get() abort
