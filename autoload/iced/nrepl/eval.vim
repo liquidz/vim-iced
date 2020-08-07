@@ -102,9 +102,11 @@ function! iced#nrepl#eval#code(code, ...) abort
     unlet opt['callback']
   endif
 
-  let ns_name = iced#nrepl#ns#name_by_buf()
-  if ns_name !=# ''
-    let opt['ns'] = ns_name
+  if !get(opt, 'ignore_ns', v:false)
+    let ns_name = iced#nrepl#ns#name_by_buf()
+    if ns_name !=# ''
+      let opt['ns'] = ns_name
+    endif
   endif
 
   try
