@@ -87,10 +87,10 @@ function! s:parse_qualified_symbol(qualified_symbol) abort
   let i = stridx(a:qualified_symbol, '/')
   if i < 0 | return {} | endif
 
-  return {
+  return iced#promise#resolve({
         \ 'ns': a:qualified_symbol[0:i-1],
         \ 'name': a:qualified_symbol[i+1:],
-        \ }
+        \ })
 endfunction
 
 function! s:construct_error_message() abort
@@ -122,18 +122,19 @@ endfunction
 
 function! iced#clojuredocs#open(symbol) abort
   call iced#message#echom('fetching')
-  call iced#promise#call('iced#nrepl#ns#in', [])
-       \.then({_ -> (stridx(a:symbol, '/') > 0)
-       \            ? s:parse_qualified_symbol(a:symbol)
-       \            : iced#promise#call('iced#nrepl#var#get', [a:symbol])})
-       \.then({resp -> iced#util#has_status(resp, 'no-info')
-       \               ? iced#promise#reject('not-found')
-       \               : s:lookup(resp)})
-       \.then({resp -> iced#util#has_status(resp, 'no-doc')
-       \               ? iced#message#error_str(s:construct_error_message())
-       \               : s:show_doc(resp)},
-       \      {err -> iced#message#error_str(s:construct_error_message())})
-       \.catch({err -> iced#message#error('unexpected_error', err)})
+
+  let p = (stridx(a:symbol, '/') > 0)
+        \ ? s:parse_qualified_symbol(a:symbol)
+        \ : iced#promise#call('iced#nrepl#var#get', [a:symbol])
+
+  call p.then({resp -> iced#util#has_status(resp, 'no-info')
+        \               ? iced#promise#reject('not-found')
+        \               : s:lookup(resp)})
+        \.then({resp -> iced#util#has_status(resp, 'no-doc')
+        \               ? iced#message#error_str(s:construct_error_message())
+        \               : s:show_doc(resp)},
+        \      {err -> iced#message#error_str(s:construct_error_message())})
+        \.catch({err -> iced#message#error('unexpected_error', err)})
 endfunction
 
 let &cpoptions = s:save_cpo
