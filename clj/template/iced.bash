@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 CWD=$(pwd)
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
