@@ -104,7 +104,10 @@ endfunction
 function! iced#nrepl#ns#require(ns_name, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let code = printf('(clojure.core/require ''%s)', a:ns_name)
-  call iced#nrepl#eval(code, {resp -> s:buffer_ns_created() && a:callback(resp)})
+  call iced#nrepl#eval(
+        \ code,
+        \ {'ns': iced#nrepl#ns#name_by_buf()},
+        \ {resp -> s:buffer_ns_created() && a:callback(resp)})
 endfunction
 
 function! s:cljs_load_file(callback) abort
