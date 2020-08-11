@@ -94,7 +94,10 @@ function! iced#nrepl#ns#eval(callback) abort
   if empty(code)
     call a:callback('')
   else
-    call iced#nrepl#eval(code, {resp -> s:buffer_ns_created() && a:callback(resp)})
+    call iced#nrepl#eval(
+          \ code,
+          \ {'ns': iced#nrepl#ns#name_by_buf()},
+          \ {resp -> s:buffer_ns_created() && a:callback(resp)})
   endif
 endfunction
 
