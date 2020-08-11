@@ -152,6 +152,16 @@ function! iced#paredit#get_current_top_object(...) abort
   endtry
 endfunction
 
+function! iced#paredit#get_current_top_something() abort
+  let res = iced#paredit#get_current_top_object('(', ')')
+  if !empty(res) | return res | endif
+
+  let res = iced#paredit#get_current_top_object('{', '}')
+  if !empty(res) | return res | endif
+
+  return iced#paredit#get_current_top_object('[', ']')
+endfunction
+
 function! iced#paredit#get_current_top_list_raw(...) abort
   let code = ''
   let pos = ''
