@@ -166,7 +166,7 @@ function! iced#nrepl#ns#reload_all() abort
   if iced#nrepl#current_session_key() ==# 'clj'
     let ns = iced#nrepl#ns#name()
     let code = printf('(clojure.core/require ''%s :reload-all)', ns)
-    call iced#nrepl#eval(code, Cb)
+    call iced#nrepl#eval(code, {'ns': ns}, Cb)
   else
     call s:cljs_load_file(Cb)
   endif
