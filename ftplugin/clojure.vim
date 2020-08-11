@@ -454,6 +454,11 @@ for key in ['error', 'trace']
 endfor
 "" }}}
 
+" Set `indentexpr` without waiting for a REPL connection when native-image formatter is used
+if g:iced_formatter !=# 'default'
+  call iced#format#set_indentexpr()
+endif
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
 

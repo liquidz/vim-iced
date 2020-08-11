@@ -19,9 +19,14 @@ function! iced#format#calculate_indent(lnum) abort
   return iced#system#get(s:formatter).calculate_indent(a:lnum)
 endfunction
 
+function! s:set_indentexpr() abort
+  setlocal indentexpr=GetIcedIndent()
+endfunction
+
 function! iced#format#set_indentexpr() abort
   if get(g:, 'iced_enable_auto_indent', v:true)
-    setlocal indentexpr=GetIcedIndent()
+    " Delay `setlocal` if called by ftplugin, because `GetIcedIndent` is not yet loaded
+    call iced#system#get('future').do({-> s:set_indentexpr()})
   endif
 endfunction
 
