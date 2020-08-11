@@ -21,11 +21,21 @@ function! iced#nrepl#ns#create() abort
   let ns_name = iced#nrepl#ns#name_by_buf()
   if ns_name ==# '' | return | endif
 
-  let code = printf(s:create_ns_code, ns_name, ns_name)
-  return iced#nrepl#eval(code, {resp ->
+  let create_code = printf(s:create_ns_code, ns_name, ns_name)
+  if iced#nrepl#current_session_key() ==# 'clj'
+    " NOTE: For midje user, requiring ns leads running tests.
+    "       So vim-iced only evaluates ns form in CLJ session.
+    let Require_fn = function('iced#nrepl#ns#eval')
+  else
+    " NOTE: In shadow-cljs, evaluating only ns form clears all vars evaluated before.
+    "       So vim-iced requires ns in CLJS session.
+    let Require_fn = function('iced#nrepl#ns#require', [ns_name])
+  endif
+
+  return iced#nrepl#eval(create_code, {resp ->
       \ (get(resp, 'value', 'nil') ==# 'nil')
       \ ? s:buffer_ns_created()
-      \ : iced#nrepl#eval('(clojure.core/refer-clojure)', {'ns': ns_name}, {_ -> s:buffer_ns_created()})
+      \ : iced#promise#call(Require_fn, []).then({_ -> s:buffer_ns_created()})
       \ })
 endfunction
 
