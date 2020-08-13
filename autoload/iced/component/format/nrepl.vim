@@ -193,7 +193,7 @@ function! s:fmt.calculate_indent(lnum) abort
   let ns_name = iced#nrepl#ns#name()
   try
     let res = iced#paredit#get_current_top_something()
-    let code = res['code']
+    let code = get(res, 'code', '')
     if trim(code) ==# ''
       return GetClojureIndent()
     endif
