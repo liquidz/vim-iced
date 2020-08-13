@@ -163,42 +163,6 @@ function! iced#paredit#get_current_top_something() abort
   return iced#paredit#get_current_top_object('[', ']')
 endfunction
 
-function! iced#paredit#get_current_top_list_raw(...) abort
-  let code = ''
-  let pos = ''
-  let target_level = get(a:, 1, -1) " -1 = top level
-  let level = 1
-
-  try
-    while v:true
-      " move to start position of current outer list
-      let @@ = ''
-      silent exe 'normal! vaby'
-      " no matched parenthesis
-      if empty(@@)
-        break
-      endif
-
-      if col('.') == 1 || stridx(getline('.'), '#') == 0 || level == target_level
-        " To wrap top level tag literal
-        if level != target_level
-          silent normal! vabo0y
-        endif
-        let code = @@
-        let pos = getcurpos()
-        break
-      else
-        let level = level + 1
-        silent normal! h
-      endif
-    endwhile
-  finally
-    silent exe "normal! \<Esc>"
-  endtry
-
-  return {'code': code, 'curpos': pos}
-endfunction
-
 function! iced#paredit#find_parent_form_raw(prefixes) abort
   let reg_save = @@
   let prefixes = map(copy(a:prefixes), {_, s -> printf('(%s', s)})
@@ -229,22 +193,6 @@ function! iced#paredit#find_parent_form_raw(prefixes) abort
   endtry
 
   return {}
-endfunction
-
-function! iced#paredit#get_current_top_list(...) abort
-  let target_level = get(a:, 1, -1)
-  let view = winsaveview()
-  let reg_save = @@
-  let res = ''
-
-  try
-    let res = iced#paredit#get_current_top_list_raw(target_level)
-  finally
-    let @@ = reg_save
-    call winrestview(view)
-  endtry
-
-  return res
 endfunction
 
 function! iced#paredit#get_outer_list_raw() abort
