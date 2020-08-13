@@ -105,9 +105,9 @@ function! iced#paredit#get_current_top_object_raw(...) abort
   try
     while v:true
       let line = getline('.')
-      if empty(line) | break | endif
 
-      if substitute(line, '^#[^\(\[\{ ]\+ \?', '', '')[0] ==# open_char
+      if !empty(line) && substitute(line, '^#[^\(\[\{ ]\+ \?', '', '')[0] ==# open_char
+        " Found a top level object
         let start_pos = getcurpos()
         let start_pos[2] = stridx(line, open_char) + 1
 
@@ -123,10 +123,11 @@ function! iced#paredit#get_current_top_object_raw(...) abort
 
           let result = {
                \ 'code': @@,
-               \ 'pos': start_pos,
+               \ 'curpos': start_pos,
                \ }
-          break
         endif
+
+        break
       endif
 
       if line('.') == 1 | break | endif
