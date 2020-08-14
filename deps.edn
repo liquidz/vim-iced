@@ -1,5 +1,4 @@
-{
- :paths ["clj/repl"]
+{:paths ["clj/repl"]
  :deps {nrepl/nrepl {:mvn/version "0.7.0"}
         refactor-nrepl/refactor-nrepl {:mvn/version "2.5.0"}
         cider/cider-nrepl {:mvn/version "0.25.3"}
@@ -39,5 +38,4 @@
   :load-files-test {:extra-paths ["test/clj"]
                     :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.641"}}
                     :main-opts ["-m" "kaocha.runner"]}
-  :dev {}}
- }
+  :dev {}}}
