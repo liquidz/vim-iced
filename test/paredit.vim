@@ -42,53 +42,34 @@ function! s:suite.barf_test() abort
   call s:buf.stop_dummy()
 endfunction
 
-function! s:suite.get_current_top_list_test() abort
+function! s:suite.get_current_top_object_test() abort
   call s:buf.start_dummy([
         \ '(foo',
         \ ' (bar|))',
         \ ])
-  let res = iced#paredit#get_current_top_list()
+  let res = iced#paredit#get_current_top_object()
   call s:assert.equals(res['code'], "(foo\n (bar))")
   call s:buf.stop_dummy()
 endfunction
 
-function! s:suite.get_current_top_list_with_blank_line_test() abort
+function! s:suite.get_current_top_object_with_blank_line_test() abort
   call s:buf.start_dummy([
         \ '(foo',
         \ '|',
         \ ' (bar))',
         \ ])
-  let res = iced#paredit#get_current_top_list()
+  let res = iced#paredit#get_current_top_object()
   call s:assert.equals(res['code'], "(foo\n\n (bar))")
   call s:buf.stop_dummy()
 endfunction
 
-function! s:suite.get_current_top_list_with_tag_test() abort
+function! s:suite.get_current_top_object_with_tag_test() abort
   call s:buf.start_dummy([
         \ '#?(:clj',
         \ '   (foo (bar|)))',
         \ ])
-  let res = iced#paredit#get_current_top_list()
+  let res = iced#paredit#get_current_top_object()
   call s:assert.equals(res['code'], "#?(:clj\n   (foo (bar)))")
-  call s:buf.stop_dummy()
-endfunction
-
-function! s:suite.get_current_top_list_with_level_test() abort
-  call s:buf.start_dummy([
-        \ '(foo',
-        \ ' (bar',
-        \ '  (baz|)))',
-        \ ])
-
-  let res = iced#paredit#get_current_top_list()
-  call s:assert.equals(res['code'], "(foo\n (bar\n  (baz)))")
-
-  let res = iced#paredit#get_current_top_list(2)
-  call s:assert.equals(res['code'], "(bar\n  (baz))")
-
-  let res = iced#paredit#get_current_top_list(10)
-  call s:assert.equals(res['code'], "(foo\n (bar\n  (baz)))")
-
   call s:buf.stop_dummy()
 endfunction
 
@@ -167,5 +148,66 @@ function! s:suite.find_parent_form_raw_test() abort
   let res = iced#paredit#find_parent_form_raw(['non_existing'])
   call s:assert.equals(res, {})
 
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:suite.get_current_top_object_test() abort
+  call s:buf.start_dummy([
+        \ '(foo',
+        \ ' (bar|))',
+        \ ])
+  let res = iced#paredit#get_current_top_object()
+  call s:assert.equals(res['code'], "(foo\n (bar))")
+  call s:buf.stop_dummy()
+
+  " with meta
+  call s:buf.start_dummy([
+        \ '#tag1/name (foo',
+        \ ' (bar|))',
+        \ ])
+  let res = iced#paredit#get_current_top_object()
+  call s:assert.equals(res['code'], "#tag1/name (foo\n (bar))")
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:suite.get_current_top_object_vector_test() abort
+  call s:buf.start_dummy([
+       \ '[foo',
+       \ ' [bar|]]',
+       \ ])
+  let res = iced#paredit#get_current_top_object()
+  call s:assert.equals(res, {})
+  let res = iced#paredit#get_current_top_object('[', ']')
+  call s:assert.equals(res['code'], "[foo\n [bar]]")
+  call s:buf.stop_dummy()
+
+  " with meta
+  call s:buf.start_dummy([
+       \ '#tag2/name [foo',
+       \ ' [bar|]]',
+       \ ])
+  let res = iced#paredit#get_current_top_object('[', ']')
+  call s:assert.equals(res['code'], "#tag2/name [foo\n [bar]]")
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:suite.get_current_top_object_vector_test() abort
+  call s:buf.start_dummy([
+       \ '{:foo',
+       \ ' {:bar 123|}}',
+       \ ])
+  let res = iced#paredit#get_current_top_object()
+  call s:assert.equals(res, {})
+  let res = iced#paredit#get_current_top_object('{', '}')
+  call s:assert.equals(res['code'], "{:foo\n {:bar 123}}")
+  call s:buf.stop_dummy()
+
+  " with meta
+  call s:buf.start_dummy([
+       \ '#tag3/name {:foo',
+       \ ' {:bar 123|}}',
+       \ ])
+  let res = iced#paredit#get_current_top_object('{', '}')
+  call s:assert.equals(res['code'], "#tag3/name {:foo\n {:bar 123}}")
   call s:buf.stop_dummy()
 endfunction

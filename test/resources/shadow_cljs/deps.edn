@@ -1,8 +1,8 @@
 {
- :deps {nrepl {:mvn/version "123"}
+ :deps {nrepl/nrepl {:mvn/version "123"}
         cider/cider-nrepl {:mvn/version "234"}
-        refactor-nrepl {:mvn/version "345"}
-        iced-nrepl {:mvn/version "456"}}
+        refactor-nrepl/refactor-nrepl {:mvn/version "345"}
+        iced-nrepl/iced-nrepl {:mvn/version "456"}}
 
  :__middlewares__
  ["cider.nrepl/wrap-classpath"

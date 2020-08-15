@@ -11,15 +11,18 @@
 
 (defn normalize-deps
   [[name ver]]
-  (if (map? ver)
-    [name  (:mvn/version ver)]
-    [name ver]))
+  (let [qualified-name (if  (str/includes? name "/")
+                         name
+                         (symbol (str name) (str name)))]
+    (if (map? ver)
+      [qualified-name (:mvn/version ver)]
+      [qualified-name ver])))
 
 (defn filter-and-normalize-deps
   [required-deps deps]
   (->> deps
-       (filter (comp required-deps first))
        (map normalize-deps)
+       (filter (comp required-deps first))
        set))
 
 (defn extract-shadow-cljs-dependency-set
@@ -50,9 +53,8 @@
   (let [iced-deps-edn (read-edn (io/file vim-iced-home-dir "deps.edn"))
         shadow-cljs-edn (read-edn shadow-cljs-config-path)
         required-deps (->> (:deps iced-deps-edn)
-                           (keep (comp #(when (not= % 'nrepl) %) first))
+                           (keep (comp #(when (not= % 'nrepl/nrepl) %) first))
                            set)
-
         iced-dependency-set (->> (:deps iced-deps-edn)
                                  (filter-and-normalize-deps required-deps))
         shadow-dependency-set (->> shadow-cljs-edn

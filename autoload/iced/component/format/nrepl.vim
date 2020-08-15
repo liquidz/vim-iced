@@ -115,10 +115,10 @@ function! s:fmt.current_form() abort
     return
   endif
 
-  " must be captured before get_current_top_list_raw
+  " must be captured before get_current_top_something
   let context = iced#util#save_context()
 
-  let codes = get(iced#paredit#get_current_top_list_raw(), 'code', '')
+  let codes = get(iced#paredit#get_current_top_something(), 'code', '')
   if empty(codes) | return iced#message#warning('finding_code_error') | endif
 
   call winrestview(context.view)
@@ -192,8 +192,8 @@ function! s:fmt.calculate_indent(lnum) abort
   let reg_save = @@
   let ns_name = iced#nrepl#ns#name()
   try
-    let res = iced#paredit#get_current_top_list()
-    let code = res['code']
+    let res = iced#paredit#get_current_top_something()
+    let code = get(res, 'code', '')
     if trim(code) ==# ''
       return GetClojureIndent()
     endif

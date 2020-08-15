@@ -434,9 +434,9 @@ function! s:connected(resp, opts) abort
       endif
 
       silent call s:warm_up()
-
-      call iced#nrepl#auto#enable_bufenter(v:true)
     endif
+
+    call iced#nrepl#auto#enable_bufenter(v:true)
 
     call iced#message#info('connected')
     call iced#hook#run('connected', {})

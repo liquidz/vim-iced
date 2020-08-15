@@ -128,9 +128,10 @@ function! s:__current_form(result) abort
 endfunction
 
 function! s:fmt.current_form() abort
-  " must be captured before get_current_top_list_raw
+  " must be captured before iced#paredit#get_current_top_something
   let context = iced#util#save_context()
-  let codes = get(iced#paredit#get_current_top_list_raw(), 'code', '')
+  let codes = get(iced#paredit#get_current_top_something(), 'code', '')
+
   if empty(codes)
     call iced#message#warning('finding_code_error')
     return iced#promise#reject('ng')
@@ -202,8 +203,8 @@ function! s:fmt.calculate_indent(lnum) abort
   let reg_save = @@
 
   try
-    let res = iced#paredit#get_current_top_list()
-    let code = res['code']
+    let res = iced#paredit#get_current_top_something()
+    let code = get(res, 'code', '')
     if trim(code) ==# ''
       return GetClojureIndent()
     endif
@@ -264,4 +265,3 @@ endfunction
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
-" vim:fdm=marker:fdl=0

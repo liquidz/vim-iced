@@ -2,6 +2,20 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.1.4 (2020-08-15)
+// {{{
+=== Changed
+* Bumped piggieback to 0.5.1.
+* Changed to be able to use native-image formatters even when not connected.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/239[#239]: Fixed to be able to format the top level map.
+** E.g. `deps.edn` file could not be formattable until now.
+* Fixed validation for `shadow-cljs.edn` to work correctly.
+** A bug from ver 2.1.2.
+* Fixed `bufenter` autocmd to work with https://github.com/babashka/babashka.nrepl[babashka.nrepl].
+// }}}
+
 == 2.1.3 (2020-08-07)
 // {{{
 === Added

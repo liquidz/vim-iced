@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" NOTE: setting indentexpr is executed at nREPL connection
+" NOTE: setting indentexpr is executed at nREPL connection or ftplugin/clojure.vim
 function! GetIcedIndent()
   return iced#format#calculate_indent(v:lnum)
 endfunction

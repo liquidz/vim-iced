@@ -90,40 +90,77 @@ function! iced#paredit#move_to_parent_element() abort
   return col('.')
 endfunction
 
-function! iced#paredit#get_current_top_list_raw(...) abort
-  let code = ''
-  let pos = ''
-  let target_level = get(a:, 1, -1) " -1 = top level
-  let level = 1
+function! s:is_in_range(current_pos, start_pos, end_pos) abort
+  return (a:current_pos[1] == a:start_pos[1] && a:start_pos[2] <= a:current_pos[2])
+        \ || (a:current_pos[1] == a:end_pos[1] && a:current_pos[2] <= a:end_pos[2])
+        \ || (a:start_pos[1] <= a:current_pos[1] && a:current_pos[1] <= a:end_pos[1])
+endfunction
+
+function! iced#paredit#get_current_top_object_raw(...) abort
+  let open_char = get(a:, 1, '(')
+  let close_char = get(a:, 2, ')')
+  let pos = getcurpos()
+  let result = {}
 
   try
     while v:true
-      " move to start position of current outer list
-      let @@ = ''
-      silent exe 'normal! vaby'
-      " no matched parenthesis
-      if empty(@@)
+      let line = getline('.')
+
+      if !empty(line) && substitute(line, '^#[^\(\[\{ ]\+ \?', '', '')[0] ==# open_char
+        " Found a top level object
+        let start_pos = getcurpos()
+        let start_pos[2] = stridx(line, open_char) + 1
+
+        call setpos('.', start_pos)
+        " move to pair
+        silent normal! %
+        let end_pos = getcurpos()
+
+        if s:is_in_range(pos, start_pos, end_pos)
+          call setpos('.', start_pos)
+          " NOTE: `o0y` is to wrap top level tag literal
+          silent exe printf('normal! va%so0y', open_char)
+
+          let result = {
+               \ 'code': @@,
+               \ 'curpos': start_pos,
+               \ }
+        endif
+
         break
       endif
 
-      if col('.') == 1 || stridx(getline('.'), '#') == 0 || level == target_level
-        " To wrap top level tag literal
-        if level != target_level
-          silent normal! vabo0y
-        endif
-        let code = @@
-        let pos = getcurpos()
-        break
-      else
-        let level = level + 1
-        silent normal! h
-      endif
+      if line('.') == 1 | break | endif
+      " Move cursor up
+      silent normal! k
     endwhile
   finally
     silent exe "normal! \<Esc>"
   endtry
 
-  return {'code': code, 'curpos': pos}
+  return result
+endfunction
+
+function! iced#paredit#get_current_top_object(...) abort
+  let view = winsaveview()
+  let reg_save = @@
+
+  try
+    return call('iced#paredit#get_current_top_object_raw', a:000)
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+  endtry
+endfunction
+
+function! iced#paredit#get_current_top_something() abort
+  let res = iced#paredit#get_current_top_object('(', ')')
+  if !empty(res) | return res | endif
+
+  let res = iced#paredit#get_current_top_object('{', '}')
+  if !empty(res) | return res | endif
+
+  return iced#paredit#get_current_top_object('[', ']')
 endfunction
 
 function! iced#paredit#find_parent_form_raw(prefixes) abort
@@ -156,22 +193,6 @@ function! iced#paredit#find_parent_form_raw(prefixes) abort
   endtry
 
   return {}
-endfunction
-
-function! iced#paredit#get_current_top_list(...) abort
-  let target_level = get(a:, 1, -1)
-  let view = winsaveview()
-  let reg_save = @@
-  let res = ''
-
-  try
-    let res = iced#paredit#get_current_top_list_raw(target_level)
-  finally
-    let @@ = reg_save
-    call winrestview(view)
-  endtry
-
-  return res
 endfunction
 
 function! iced#paredit#get_outer_list_raw() abort
