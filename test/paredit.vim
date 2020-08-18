@@ -197,7 +197,7 @@ function! s:suite.get_current_top_object_vector_test() abort
        \ ' {:bar 123|}}',
        \ ])
   let res = iced#paredit#get_current_top_object()
-  call s:assert.equals(res, {})
+  call s:assert.equals(res, {'code': '', 'curpos': []})
   let res = iced#paredit#get_current_top_object('{', '}')
   call s:assert.equals(res['code'], "{:foo\n {:bar 123}}")
   call s:buf.stop_dummy()
