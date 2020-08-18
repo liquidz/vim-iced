@@ -211,3 +211,32 @@ function! s:suite.get_current_top_object_vector_test() abort
   call s:assert.equals(res['code'], "#tag3/name {:foo\n {:bar 123}}")
   call s:buf.stop_dummy()
 endfunction
+
+function! s:suite.get_current_top_something_test() abort
+  " list
+  call s:buf.start_dummy([
+       \ '(:foo',
+       \ ' {:bar 123|})',
+       \ ])
+  let res = iced#paredit#get_current_top_something()
+  call s:assert.equals(res['code'], "(:foo\n {:bar 123})")
+  call s:buf.stop_dummy()
+
+  " vector
+  call s:buf.start_dummy([
+       \ '[:foo',
+       \ ' {:bar 123|}]',
+       \ ])
+  let res = iced#paredit#get_current_top_something()
+  call s:assert.equals(res['code'], "[:foo\n {:bar 123}]")
+  call s:buf.stop_dummy()
+
+  " map
+  call s:buf.start_dummy([
+       \ '{:foo',
+       \ ' {:bar 123|}}',
+       \ ])
+  let res = iced#paredit#get_current_top_something()
+  call s:assert.equals(res['code'], "{:foo\n {:bar 123}}")
+  call s:buf.stop_dummy()
+endfunction
