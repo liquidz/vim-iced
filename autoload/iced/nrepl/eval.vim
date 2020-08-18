@@ -164,7 +164,7 @@ endfunction
 function! iced#nrepl#eval#outer_top_list(...) abort
   if ! iced#nrepl#check_session_validity() | return | endif
   let ret = iced#paredit#get_current_top_object('(', ')')
-  let code = ret['code']
+  let code = get(ret, 'code')
   if empty(code)
     return iced#message#error('finding_code_error')
   endif
