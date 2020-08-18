@@ -2,6 +2,16 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.1.6 (2020-08-19)
+// {{{
+=== Changed
+* Bumped kaocha to `1.0.663`.
+* Bumped kaocha-nrepl to `1.0.2`.
+
+=== Fixed
+* Fixed not to throw error on evaluating the code where there is nothing.
+// }}}
+
 == 2.1.5 (2020-08-16)
 // {{{
 === Fixed
