@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 2.1.6 (2020-08-19)
 // {{{
 === Changed
 * Bumped kaocha to `1.0.663`.
