@@ -100,7 +100,7 @@ function! iced#paredit#get_current_top_object_raw(...) abort
   let open_char = get(a:, 1, '(')
   let close_char = get(a:, 2, ')')
   let pos = getcurpos()
-  let result = {}
+  let result = {'code': '', 'curpos': []}
 
   try
     while v:true
