@@ -155,10 +155,10 @@ endfunction
 
 function! iced#paredit#get_current_top_something() abort
   let res = iced#paredit#get_current_top_object('(', ')')
-  if !empty(res) | return res | endif
+  if !empty(get(res, 'code')) | return res | endif
 
   let res = iced#paredit#get_current_top_object('{', '}')
-  if !empty(res) | return res | endif
+  if !empty(get(res, 'code')) | return res | endif
 
   return iced#paredit#get_current_top_object('[', ']')
 endfunction
