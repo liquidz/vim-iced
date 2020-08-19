@@ -11,7 +11,9 @@ To start CLJS REPL with shadow-cljs, you need 3 steps.
 1. Add definitions to <<clojurescript_shadow_cljs_edn>>
 2. Start to watch
 ** `$ shadow-cljs watch {YOUR-BUILD-ID}`
-3. Connect and start cljs-repl
+3. Access shadow-cljs's HTTP server in your browser
+** E.g. http://localhost:8080
+4. Connect and start cljs-repl
 ** Execute {help_html}#%3AIcedConnect[IcedConnect] command to connect to REPL
 ** Execute {help_html}#%3AIcedStartCljsRepl[IcedStartCljsRepl] command like follows
 *** `:IcedStartCljsRepl  shadow-cljs {YOUR-BUILD-ID}`

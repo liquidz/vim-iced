@@ -304,7 +304,10 @@ SHADOW-CLJS                                              *vim-iced-shadow-cljs*
   2. Start to watch
     `$ shadow-cljs watch {build-id}`
 
-  3. Connect and start cljs-repl
+  3. Access shadow-cljs's HTTP server in your browser
+    E.g. http://localhost:8080
+  
+  4. Connect and start cljs-repl
     - |:IcedConnect|
     - |:IcedStartCljsRepl| shadow-cljs {build-id}
 
