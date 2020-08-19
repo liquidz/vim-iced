@@ -168,7 +168,7 @@ function! s:set_xref_resp_to_quickfix(key, resp) abort
         \ }})
   if empty(xrefs) | return iced#message#info('not_found') | endif
 
-  call iced#system#get('quickfix').setlist(xrefs, 'r')
+  call iced#system#get('quickfix').setlist(xrefs)
   call iced#system#get('ex_cmd').silent_exe(':cwindow')
 endfunction
 

@@ -21,7 +21,7 @@ function s:setup(...) abort " {{{
   call s:sign.mock()
   call s:timer.mock()
 
-  call s:qf.setlist([], 'r')
+  call s:qf.setlist([])
   call s:holder.clear()
   call s:sign.clear()
 
