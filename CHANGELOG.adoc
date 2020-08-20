@@ -1,6 +1,16 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Updated quickfix list to be able to trace histories.
+** Now you can use https://vim-jp.org/vimdoc-en/quickfix.html#:colder[:colder] and https://vim-jp.org/vimdoc-en/quickfix.html#:cnewer[:cnewer] commands.
+* Bumped kaocha to `1.0.669`.
+* Bumped kaocha-nrepl to `1.0.3`.
+
+=== Fixed
+* Fixed not to show extra message on starting ClojureScript REPL.
+// }}}
 
 == 2.1.6 (2020-08-19)
 // {{{
