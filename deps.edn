@@ -26,7 +26,7 @@
          :extra-deps {cider/piggieback {:mvn/version "0.5.1"}}
          :__middlewares__ ["cider.piggieback/wrap-cljs-repl"]}
   :kaocha {:__command_option__ true
-           :extra-deps {kaocha-nrepl/kaocha-nrepl {:mvn/version "1.0.2"}}
+           :extra-deps {kaocha-nrepl/kaocha-nrepl {:mvn/version "1.0.3"}}
            :__middlewares__ ["kaocha-nrepl.core/wrap-kaocha"]}
 
   :jackin {;; Must be separeted from "clj/repl" path.
