@@ -26,7 +26,7 @@
          :extra-deps {cider/piggieback {:mvn/version "0.5.1"}}
          :__middlewares__ ["cider.piggieback/wrap-cljs-repl"]}
   :kaocha {:__command_option__ true
-           :extra-deps {kaocha-nrepl/kaocha-nrepl {:mvn/version "1.0.2"}}
+           :extra-deps {kaocha-nrepl/kaocha-nrepl {:mvn/version "1.0.3"}}
            :__middlewares__ ["kaocha-nrepl.core/wrap-kaocha"]}
 
   :jackin {;; Must be separeted from "clj/repl" path.
@@ -36,6 +36,6 @@
   :outdated {:extra-deps {antq/antq {:mvn/version "RELEASE"}}
              :main-opts ["-m" "antq.core"]}
   :load-files-test {:extra-paths ["test/clj"]
-                    :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.663"}}
+                    :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.669"}}
                     :main-opts ["-m" "kaocha.runner"]}
   :dev {}}}

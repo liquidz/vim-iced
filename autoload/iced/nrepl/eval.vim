@@ -50,15 +50,17 @@ endfunction
 function! iced#nrepl#eval#out(resp, ...) abort
   let opt = get(a:, 1, {})
   if has_key(a:resp, 'value')
-    echo iced#util#shorten(a:resp['value'])
+    if get(opt, 'verbose', v:true)
+      echo iced#util#shorten(a:resp['value'])
 
-    let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
-    let virtual_text_opt['highlight'] = 'Comment'
-    let virtual_text_opt['auto_clear'] = v:true
+      let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
+      let virtual_text_opt['highlight'] = 'Comment'
+      let virtual_text_opt['auto_clear'] = v:true
 
-    call iced#system#get('virtual_text').set(
-          \ printf('=> %s', a:resp['value']),
-          \ virtual_text_opt)
+      call iced#system#get('virtual_text').set(
+            \ printf('=> %s', a:resp['value']),
+            \ virtual_text_opt)
+    endif
   endif
 
   if has_key(a:resp, 'ex') && !empty(a:resp['ex'])

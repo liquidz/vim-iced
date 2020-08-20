@@ -66,7 +66,7 @@ function! iced#grep#exe(kw) abort
   endif
 
   call iced#message#info('start_to_grep', kw)
-  call iced#system#get('quickfix').setlist([], 'r')
+  call iced#system#get('quickfix').setlist([])
   call iced#system#get('ex_cmd').silent_exe(':copen')
   let s:job.keyword = kw
   let s:job.id = iced#system#get('job').start(['sh', '-c', command], {

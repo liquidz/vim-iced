@@ -17,7 +17,7 @@ let s:test_1_10_error =
 " iced#nrepl#eval#err {{{
 function! s:suite.err_with_1_9_or_above_test() abort
   call s:qf.mock()
-  call s:qf.setlist([], 'r')
+  call s:qf.setlist([])
   call iced#nrepl#eval#err(s:test_1_9_error, {})
   call s:assert.equals(s:qf.get_last_args()['list'],
         \ [{'filename': '/path/to/src.clj',
@@ -27,7 +27,7 @@ endfunction
 
 function! s:suite.err_with_1_10_or_later_test() abort
   call s:qf.mock()
-  call s:qf.setlist([], 'r')
+  call s:qf.setlist([])
   call iced#nrepl#eval#err(s:test_1_10_error, {})
   call s:assert.equals(s:qf.get_last_args()['list'],
         \ [{'filename': '/path/to/src.clj',
@@ -37,7 +37,7 @@ endfunction
 
 function! s:suite.err_with_invalid_message_test() abort
   call s:qf.mock()
-  call s:qf.setlist([], 'r')
+  call s:qf.setlist([])
   call iced#nrepl#eval#err('invalid message', {})
   call s:assert.true(empty(s:qf.get_last_args()['list']))
 endfunction

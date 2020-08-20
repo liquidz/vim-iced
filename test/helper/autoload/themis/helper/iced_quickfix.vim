@@ -3,12 +3,14 @@ set cpoptions&vim
 
 let s:helper = {}
 
-function! s:helper.setlist(list, action) abort
-  let self.last_args = {'list': a:list, 'action': a:action}
+function! s:helper.setlist(list, ...) abort
+  let action = get(a:, 1, ' ')
+  let self.last_args = {'list': a:list, 'action': action}
 endfunction
 
-function! s:helper.setloclist(nr, list, action) abort
-  let self.last_args = {'nr': a:nr, 'loclist': a:list, 'action': a:action}
+function! s:helper.setloclist(nr, list, ...) abort
+  let action = get(a:, 1, ' ')
+  let self.last_args = {'nr': a:nr, 'loclist': a:list, 'action': action}
 endfunction
 
 function! s:helper.mock() abort
