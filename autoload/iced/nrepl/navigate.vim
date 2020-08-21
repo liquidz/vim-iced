@@ -163,7 +163,7 @@ function! s:set_xref_resp_to_quickfix(key, resp) abort
   call filter(xrefs, {_, v -> filereadable(v['file'])})
   call map(xrefs, {_, v -> {
         \ 'filename': v['file'],
-        \ 'text': printf('%s: %s', v['name'], v['doc']),
+        \ 'text': (has_key(v, 'doc') ? printf('%s: %s', v['name'], v['doc']) : v['name']),
         \ 'lnum': v['line'],
         \ }})
   if empty(xrefs) | return iced#message#info('not_found') | endif
@@ -182,30 +182,114 @@ function! s:got_var_info(resp, callback) abort
   call a:callback(a:resp['ns'], a:resp['name'])
 endfunction
 
+function! s:clj_kondo_analysis_to_fn_refs(analysis) abort
+  return {'fn-refs': map(a:analysis, {_, v ->
+        \ {'file': get(v, 'filename', ''),
+        \  'name': (has_key(v, 'from') ? printf('%s/%s', get(v, 'from', ''), get(v, 'from-var', ''))
+        \                              : get(v, 'from-var', '')),
+        \  'line': get(v, 'row', 1),
+        \  }})}
+endfunction
+
+function! s:clj_kondo_analysis_to_fn_deps(analysis) abort
+  return {'fn-deps': map(a:analysis, {_, v ->
+        \ {'file': get(v, 'filename', ''),
+        \  'name': (has_key(v, 'ns') ? printf('%s/%s', get(v, 'ns', ''), get(v, 'name', ''))
+        \                            : get(v, 'name', '')),
+        \  'line': get(v, 'row', 1),
+        \  }})}
+endfunction
+
 function! iced#nrepl#navigate#browse_references() abort
-  call iced#nrepl#var#extract_by_current_top_list({res ->
-        \ iced#nrepl#op#cider#fn_refs(res.ns, res.var, s:fn_refs_callback)
-        \ })
+  if !iced#nrepl#is_connected()
+    return iced#message#error('not_connected')
+  endif
+
+  let kondo = iced#system#get('clj_kondo')
+  if kondo.is_analyzed()
+    " Use clj-kondo's analysis
+    call iced#nrepl#ns#in({_ -> iced#nrepl#var#extract_by_current_top_list({res ->
+          \ s:fn_refs_callback(s:clj_kondo_analysis_to_fn_refs(kondo.references(res.ns, res.name)))
+          \ })})
+  elseif iced#nrepl#is_supported_op('fn-refs')
+    " Use cider-nrepl's xref op
+    " In this case, only loaded vars are detected.
+    call iced#nrepl#ns#in({_ -> iced#nrepl#var#extract_by_current_top_list({res ->
+          \ iced#nrepl#op#cider#fn_refs(res.ns, res.name, s:fn_refs_callback)
+          \ })})
+  else
+    call iced#message#error('not_supported')
+  endif
 endfunction
 
 function! iced#nrepl#navigate#browse_dependencies() abort
-  call iced#nrepl#var#extract_by_current_top_list({res ->
-        \ iced#nrepl#op#cider#fn_deps(res.ns, res.var, s:fn_deps_callback)
-        \ })
+  if !iced#nrepl#is_connected()
+    return iced#message#error('not_connected')
+  endif
+
+  let kondo = iced#system#get('clj_kondo')
+  if kondo.is_analyzed()
+    " Use clj-kondo's analysis
+    call iced#nrepl#ns#in({_ -> iced#nrepl#var#extract_by_current_top_list({res ->
+          \ s:fn_deps_callback(s:clj_kondo_analysis_to_fn_deps(kondo.dependencies(res.ns, res.name)))
+          \ })})
+  elseif iced#nrepl#is_supported_op('fn-deps')
+    " Use cider-nrepl's xref op
+    " In this case, only loaded vars are detected.
+    call iced#nrepl#ns#in({_ -> iced#nrepl#var#extract_by_current_top_list({res ->
+          \ iced#nrepl#op#cider#fn_deps(res.ns, res.name, s:fn_deps_callback)
+          \ })})
+  else
+    call iced#message#error('not_supported')
+  endif
 endfunction
 
 function! iced#nrepl#navigate#browse_var_references(symbol) abort
-  call iced#nrepl#ns#in({_ -> iced#nrepl#var#get(a:symbol, {resp ->
-        \ s:got_var_info(resp, {ns, symbol ->
-        \     iced#nrepl#op#cider#fn_refs(ns, symbol, s:fn_refs_callback)
-        \ })})})
+  if !iced#nrepl#is_connected()
+    return iced#message#error('not_connected')
+  endif
+
+  let kondo = iced#system#get('clj_kondo')
+  if kondo.is_analyzed()
+    " Use clj-kondo's analysis
+    call iced#nrepl#ns#in({_ -> iced#nrepl#var#get(a:symbol, {resp ->
+          \ s:got_var_info(resp, {ns, symbol ->
+          \     s:fn_refs_callback(s:clj_kondo_analysis_to_fn_refs(kondo.references(ns, symbol)))
+          \ })})})
+  elseif iced#nrepl#is_supported_op('fn-refs')
+    " Use cider-nrepl's xref op
+    " In this case, only loaded vars are detected.
+    call iced#nrepl#ns#in({_ -> iced#nrepl#var#get(a:symbol, {resp ->
+          \ s:got_var_info(resp, {ns, symbol ->
+          \     iced#nrepl#op#cider#fn_refs(ns, symbol, s:fn_refs_callback)
+          \ })})})
+  else
+    call iced#message#error('not_supported')
+  endif
 endfunction
 
 function! iced#nrepl#navigate#browse_var_dependencies(symbol) abort
-  call iced#nrepl#ns#in({_ -> iced#nrepl#var#get(a:symbol, {resp ->
-        \ s:got_var_info(resp, {ns, symbol ->
-        \     iced#nrepl#op#cider#fn_deps(ns, symbol, s:fn_deps_callback)
-        \ })})})
+  if !iced#nrepl#is_connected()
+    return iced#message#error('not_connected')
+  endif
+
+  let kondo = iced#system#get('clj_kondo')
+  if kondo.is_analyzed()
+    " Use clj-kondo's analysis
+    call iced#nrepl#ns#in({_ -> iced#nrepl#var#get(a:symbol, {resp ->
+          \ s:got_var_info(resp, {ns, symbol ->
+          \     s:fn_deps_callback(s:clj_kondo_analysis_to_fn_deps(kondo.dependencies(ns, symbol)))
+          \ })})})
+  elseif iced#nrepl#is_supported_op('fn-deps')
+    " Use cider-nrepl's xref op
+    " In this case, only loaded vars are detected.
+    call iced#nrepl#ns#in({_ -> iced#nrepl#var#get(a:symbol, {resp ->
+          \ s:got_var_info(resp, {ns, symbol ->
+          \     iced#nrepl#op#cider#fn_deps(ns, symbol, s:fn_deps_callback)
+          \ })})})
+  else
+    call iced#message#error('not_supported')
+  endif
 endfunction
 
 function! iced#nrepl#navigate#ns_complete(arg_lead, cmd_line, cursor_pos) abort
@@ -216,4 +300,3 @@ endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
-" vim:fdm=marker:fdl=0
