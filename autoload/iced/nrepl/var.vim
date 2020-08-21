@@ -33,6 +33,23 @@ function! s:assoc_ns_for_special_form(resp) abort
   return a:resp
 endfunction
 
+function! s:extract_var_name(eval_resp, callback) abort
+  if has_key(a:eval_resp, 'err') | return iced#nrepl#eval#err(a:eval_resp['err']) | endif
+  if !has_key(a:eval_resp, 'value') | return iced#message#error('not_found') | endif
+
+  let var = a:eval_resp['value']
+  let var = substitute(var, '^#''', '', '')
+  let i = stridx(var, '/')
+  let ns = var[0:i-1]
+  let var_name = strpart(var, i+1)
+
+  call a:callback({
+        \ 'qualified_var': var,
+        \ 'ns': ns,
+        \ 'name': var_name,
+        \ })
+endfunction
+
 ""
 " If a:0 == 1, first argument is a callback function.
 " If a:0 == 2, first argument is a symbol string and second is a callback function.
@@ -67,20 +84,14 @@ function! iced#nrepl#var#get(...) abort
     let symbol = s:expand_ns_alias(ns_name, symbol)
   endif
 
-  call iced#nrepl#op#cider#info(ns_name, symbol, {resp -> Callback(s:assoc_ns_for_special_form(resp))})
-endfunction
-
-function! s:extract_var_name(eval_resp, callback) abort
-  if has_key(a:eval_resp, 'err') | return iced#nrepl#eval#err(a:eval_resp['err']) | endif
-  if !has_key(a:eval_resp, 'value') | return iced#message#error('not_found') | endif
-
-  let var = a:eval_resp['value']
-  let var = substitute(var, '^#''', '', '')
-  let i = stridx(var, '/')
-  let ns = var[0:i-1]
-  let var_name = strpart(var, i+1)
-
-  call a:callback({'qualified_var': var, 'ns': ns, 'var': var_name})
+  if iced#nrepl#is_supported_op('info')
+    call iced#nrepl#op#cider#info(ns_name, symbol, {resp -> Callback(s:assoc_ns_for_special_form(resp))})
+  else
+    let code = printf('#''%s', symbol)
+    let pos = getcurpos()
+    let option = {'line': pos[1], 'column': pos[2]}
+    call iced#nrepl#eval(code, option, {resp -> s:extract_var_name(resp, Callback)})
+  endif
 endfunction
 
 function! iced#nrepl#var#extract_by_current_top_list(callback) abort
