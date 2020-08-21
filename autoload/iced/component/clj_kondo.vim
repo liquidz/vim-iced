@@ -1,6 +1,9 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+let s:V = vital#iced#new()
+let s:L = s:V.import('Data.List')
+
 let s:kondo = {
       \ 'job_out': '',
       \ 'cache_dir': iced#cache#directory(),
@@ -93,6 +96,27 @@ function! s:kondo.dependencies(ns_name, var_name) abort
 
   return filter(definitions, {_, definition ->
         \ has_key(deps_dict, printf('%s/%s', get(definition, 'ns', ''), get(definition, 'name', '')))})
+endfunction
+
+function! s:kondo.ns_aliases() abort
+  let ana = self.analysis()
+  "let usages = get(ana, 'namespace-usages', [])
+  let result = {}
+
+  for usage in get(ana, 'namespace-usages', [])
+    let ns_name = get(usage, 'to', '')
+    let alias_name = get(usage, 'alias', '')
+    if empty(ns_name) || empty(alias_name)
+      continue
+    endif
+
+    " Format similar to refactor-nrepl's `namespace-aliases` op
+    let ns_list = get(result, alias_name, [])
+    call add(ns_list, ns_name)
+    let result[alias_name] = s:L.uniq(ns_list)
+  endfor
+
+  return result
 endfunction
 
 function! iced#component#clj_kondo#start(this) abort
