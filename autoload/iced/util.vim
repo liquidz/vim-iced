@@ -145,8 +145,14 @@ endfunction
 
 function! iced#util#shorten(msg) abort
   let max_length = (&columns * &cmdheight) - 1
-  if &showcmd " from experimenting: seems to use 12 characters
+  " from experimenting: seems to use 12 characters
+  if &showcmd
     let max_length -= 12
+  endif
+
+  " from experimenting
+  if &laststatus != 2
+    let max_length -= 25
   endif
 
   let msg = substitute(a:msg, '\r\?\n', ' ', 'g')
