@@ -83,11 +83,14 @@ function! s:suite.shorten_test() abort
   let current_columns = &columns
   let current_cmdheight = max([&cmdheight, 1])
   let current_showcmd = &showcmd
+  let current_laststatus = &laststatus
+
 
   try
     set columns=20
     set cmdheight=1
     set noshowcmd
+    set laststatus=2
 
     let text = '01234567890123456789'
     call s:assert.equals(iced#util#shorten(text), '0123456789012345...')
@@ -97,9 +100,24 @@ function! s:suite.shorten_test() abort
 
     let text_with_crln = "01234\n56789\r\n0123456789"
     call s:assert.equals(iced#util#shorten(text_with_crln), '01234 56789 01234...')
+
+    " showcmd
+    set columns=20
+    set showcmd
+    call s:assert.equals(iced#util#shorten(text), '0123...')
+
+    " laststatus
+    set columns=30
+    set cmdheight=1
+    set noshowcmd
+    set laststatus=0
+
+    let text = '012345678901234567890123456789'
+    call s:assert.equals(iced#util#shorten(text), '0...')
   finally
     exec printf('set columns=%d', current_columns)
     exec printf('set cmdheight=%d', current_cmdheight)
+    exec printf('set laststatus=%d', current_laststatus)
     if current_showcmd | set showcmd | endif
   endtry
 endfunction
