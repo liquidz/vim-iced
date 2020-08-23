@@ -83,23 +83,31 @@ function! s:suite.shorten_test() abort
   let current_columns = &columns
   let current_cmdheight = max([&cmdheight, 1])
   let current_showcmd = &showcmd
+  let current_laststatus = &laststatus
+
 
   try
     set columns=20
     set cmdheight=1
     set noshowcmd
+    set laststatus=2
 
-    let text = '01234567890123456789'
-    call s:assert.equals(iced#util#shorten(text), '0123456789012345...')
+    let text = '0123456789'
+    call s:assert.equals(iced#util#shorten(text), '0123456789')
 
-    set columns=21
-    call s:assert.equals(iced#util#shorten(text), text)
+    " This test depends on the value of `v:echospace`, so it's OK if the long string is shortened"
+    let text = ''
+    for _ in range(10)
+      let text = printf('%s0123456789', text)
+    endfor
 
-    let text_with_crln = "01234\n56789\r\n0123456789"
-    call s:assert.equals(iced#util#shorten(text_with_crln), '01234 56789 01234...')
+    let result = iced#util#shorten(text)
+    call s:assert.true(len(result) < len(text))
+    call s:assert.true(match(result, '\.\.\.$') != -1)
   finally
     exec printf('set columns=%d', current_columns)
     exec printf('set cmdheight=%d', current_cmdheight)
+    exec printf('set laststatus=%d', current_laststatus)
     if current_showcmd | set showcmd | endif
   endtry
 endfunction
