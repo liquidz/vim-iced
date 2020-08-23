@@ -104,16 +104,14 @@ function! s:suite.shorten_test() abort
     " showcmd
     set columns=20
     set showcmd
-    call s:assert.equals(iced#util#shorten(text), '0123...')
+    call s:assert.equals(iced#util#shorten(text), '01234...')
 
     " laststatus
-    set columns=30
+    set columns=20
     set cmdheight=1
     set noshowcmd
     set laststatus=0
-
-    let text = '012345678901234567890123456789'
-    call s:assert.equals(iced#util#shorten(text), '0...')
+    call s:assert.equals(iced#util#shorten(text), '0123456789012345...')
   finally
     exec printf('set columns=%d', current_columns)
     exec printf('set cmdheight=%d', current_cmdheight)

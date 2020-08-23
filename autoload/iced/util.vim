@@ -144,15 +144,20 @@ function! iced#util#read_var(filename) abort
 endfunction
 
 function! iced#util#shorten(msg) abort
-  let max_length = (&columns * &cmdheight) - 1
-  " from experimenting: seems to use 12 characters
-  if &showcmd
-    let max_length -= 12
-  endif
+  let max_length = 0
+  if exists('v:echospace')
+    let max_length = v:echospace + ((&cmdheight - 1) * &columns)
+  else
+    let max_length = (&columns * &cmdheight) - 1
+    " from experimenting: seems to use 12 characters
+    if &showcmd
+      let max_length -= 12
+    endif
 
-  " from experimenting
-  if &laststatus != 2
-    let max_length -= 25
+    " from experimenting
+    if &laststatus != 2
+      let max_length -= 25
+    endif
   endif
 
   let msg = substitute(a:msg, '\r\?\n', ' ', 'g')
