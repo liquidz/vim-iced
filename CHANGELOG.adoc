@@ -1,6 +1,13 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Bump jet to 0.0.13.
+
+=== Fixed
+* Fixed to avoid `Press ENTER` message on evaluating code especially when `laststatus` is `0`.
+// }}}
 
 == 2.1.7 (2020-08-21)
 // {{{
