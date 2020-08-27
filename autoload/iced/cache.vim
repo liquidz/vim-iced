@@ -39,9 +39,11 @@ function! iced#cache#has_key(k) abort
 endfunction
 
 function! iced#cache#delete(k) abort
-  let v = copy(s:cache[a:k])
-  unlet s:cache[a:k]
-  return v
+  if has_key(s:cache, a:k)
+    let v = copy(s:cache[a:k])
+    unlet s:cache[a:k]
+    return v
+  endif
 endfunction
 
 function! iced#cache#delete_by_prefix(prefix) abort
