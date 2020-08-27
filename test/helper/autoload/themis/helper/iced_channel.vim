@@ -78,6 +78,7 @@ endfunction
 
 function! s:helper.mock(opt) abort
   call iced#nrepl#auto#enable_bufenter(v:false)
+  call iced#cache#delete('supported_ops')
   call iced#system#set_component('bencode', {'start': 'iced#component#bencode#vim#start'})
   call iced#system#set_component('channel', {'start': {_ -> s:build_test_channel(a:opt)}})
   call iced#system#set_component('future', {'start': 'iced#component#future#instant#start'})
