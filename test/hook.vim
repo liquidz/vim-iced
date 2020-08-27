@@ -11,6 +11,7 @@ function! s:setup() abort
   call s:ex.mock()
   call s:job.mock()
   call s:holder.clear()
+  let g:iced#eval#inside_comment = v:true
 endfunction
 
 function! s:teardown() abort
