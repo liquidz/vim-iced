@@ -104,6 +104,30 @@ function! s:kondo.analysis() abort
   return get(json_decode(res[0]), 'analysis', {})
 endfunction
 
+function! s:kondo.namespace_usages() abort
+  if !g:iced_enable_clj_kondo_analysis
+    return {'error': 'clj-kondo: disabled'}
+  endif
+
+  let cache_name = self.namespace_usages_cache_name()
+  if !filereadable(cache_name)
+    let ana = self.analysis()
+    return (has_key(ana, 'namespace-usages'))
+          \ ? ana['namespace-usages']
+          \ : ana
+  endif
+
+  let res = readfile(cache_name)
+  if empty(res)
+    let ana = self.analysis()
+    return (has_key(ana, 'namespace-usages'))
+          \ ? ana['namespace-usages']
+          \ : ana
+  endif
+
+  return json_decode(res[0])
+endfunction
+
 function! s:kondo.references(ns_name, var_name) abort
   let ana = self.analysis()
   let usages = get(ana, 'var-usages', [])
@@ -128,20 +152,19 @@ function! s:kondo.dependencies(ns_name, var_name) abort
 endfunction
 
 function! s:kondo.ns_aliases() abort
-  let ana = self.analysis()
-  "let usages = get(ana, 'namespace-usages', [])
+  let usages = self.namespace_usages()
   let result = {}
+  if empty(usages) | return result | endif
 
-  for usage in get(ana, 'namespace-usages', [])
+  for usage in usages
     let ns_name = get(usage, 'to', '')
     let alias_name = get(usage, 'alias', '')
-    if empty(ns_name) || empty(alias_name)
+    if empty(ns_name) || empty(alias_name) || alias_name ==# 'sut'
       continue
     endif
 
     " Format similar to refactor-nrepl's `namespace-aliases` op
-    let ns_list = get(result, alias_name, [])
-    call add(ns_list, ns_name)
+    let ns_list = get(result, alias_name, []) + [ns_name]
     let result[alias_name] = s:L.uniq(ns_list)
   endfor
 
