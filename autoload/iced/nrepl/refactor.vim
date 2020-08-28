@@ -235,7 +235,11 @@ endfunction
 
 function! iced#nrepl#refactor#add_ns(ns_name) abort
   if empty(a:ns_name)
-    call iced#nrepl#op#cider#ns_list(funcref('s:__add_ns_ns_list'))
+    if iced#nrepl#is_supported_op('ns-list')
+      call iced#nrepl#op#cider#ns_list(funcref('s:__add_ns_ns_list'))
+    else
+      call iced#repl#ns#list(funcref('s:__add_ns_ns_list'))
+    endif
   else
     call s:__add_ns_ns_alias(a:ns_name)
   endif
@@ -350,4 +354,3 @@ endfunction " }}}
 
 let s:save_cpo = &cpo
 set cpo&vim
-" vim:fdm=marker:fdl=0
