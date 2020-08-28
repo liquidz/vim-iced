@@ -29,6 +29,8 @@ endfunction
 
 function! iced#nrepl#ns#util#replace(new_ns) abort
   let view = winsaveview()
+  let before_lnum = 0
+  let after_lnum = 0
   let reg_save = @@
 
   try
@@ -40,8 +42,6 @@ function! iced#nrepl#ns#util#replace(new_ns) abort
 
     let new_ns = trim(a:new_ns)
     let before_lnum = len(split(@@, '\r\?\n'))
-    let after_lnum = len(split(new_ns, '\r\?\n'))
-    let view['lnum'] = view['lnum'] + (after_lnum - before_lnum)
 
     if before_lnum == 1
       call iced#compat#deletebufline('%', line('.'), 1)
@@ -60,6 +60,10 @@ function! iced#nrepl#ns#util#replace(new_ns) abort
         call iced#nrepl#ns#load_current_file({_ -> ''})
       endif
     endif
+
+    " NOTE: need to calculate lnum after calling `iced#format#current`
+    let after_lnum = len(split(iced#nrepl#ns#get(), '\r\?\n'))
+    let view['lnum'] = view['lnum'] + (after_lnum - before_lnum)
     call winrestview(view)
   endtry
 endfunction
