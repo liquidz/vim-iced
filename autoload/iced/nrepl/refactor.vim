@@ -200,6 +200,8 @@ function! s:__add_missing_by_clj_kondo_analysis(symbol) abort
 endfunction
 
 function! iced#nrepl#refactor#add_missing_ns(symbol) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
   let kondo = iced#system#get('clj_kondo')
   let symbol = empty(a:symbol) ? iced#nrepl#var#cword() : a:symbol
 
@@ -253,6 +255,8 @@ function! s:__add_ns_ns_list(resp) abort
 endfunction
 
 function! iced#nrepl#refactor#add_ns(ns_name) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
   if empty(a:ns_name)
     if iced#nrepl#is_supported_op('ns-list')
       call iced#nrepl#op#cider#ns_list(funcref('s:__add_ns_ns_list'))
