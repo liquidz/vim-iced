@@ -19,7 +19,7 @@ let s:default_palette = [
       \ 'BrowseRelatedNamespace', 'BrowseSpec', 'BrowseTestUnderCursor',
       \ 'BrowseReferences', 'BrowseDependencies',
       \ 'BrowseVarReferences', 'BrowseVarDependencies',
-      \ 'CleanNs', 'CleanAll', 'AddNs',
+      \ 'CleanNs', 'CleanAll', 'AddNs', 'AddMissing',
       \ 'ExtractFunction', 'AddArity', 'MoveToLet',
       \ 'BrowseTapped', 'ClearTapped',
       \ 'ToggleWarnOnReflection', 'ToggleTraceVar', 'ToggleTraceNs',
