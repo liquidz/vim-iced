@@ -18,17 +18,46 @@ function! s:user_dir() abort
   return user_dir
 endfunction
 
+function! s:temp_name(name) abort
+  return printf('%s.tmp', a:name)
+endfunction
+
+function! s:rename_temp_file(base_name) abort
+  call rename(s:temp_name(a:base_name), a:base_name)
+endfunction
+
+" -------------------
+" clj-kondo component
+" -------------------
+
 function! s:kondo.cache_name() abort
   return printf('%s/%s.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
 endfunction
 
-function! s:kondo.cache_temp_name() abort
-  return printf('%s/.%s.tmp', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
+function! s:kondo.namespace_usages_cache_name() abort
+  return printf('%s/%s_ns_usages.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
 endfunction
 
 function! s:analyze__analyzed(callback, result) abort dict
   let cache_name = self.cache_name()
-  call rename(self.cache_temp_name(), cache_name)
+  call s:rename_temp_file(cache_name)
+
+  "" `jq` is little bit faster than `jet`
+  if executable('jq')
+    let ns_usage_cache_name = self.namespace_usages_cache_name()
+    let command = ['sh', '-c', printf('jq -c ''.analysis."namespace-usages"'' %s > %s',
+          \ cache_name,
+          \ s:temp_name(ns_usage_cache_name),
+          \ )]
+    call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_usage_cache_name)})
+  elseif executable('jet')
+    let ns_usage_cache_name = self.namespace_usages_cache_name()
+    let command = ['sh', '-c', printf('cat %s | jet --from json --to json --query ''["analysis" "namespace-usages"]'' > %s',
+          \ cache_name,
+          \ s:temp_name(ns_usage_cache_name),
+          \ )]
+    call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_usage_cache_name)})
+  endif
 
   let self.is_analyzing = v:false
   return a:callback(cache_name)
@@ -45,7 +74,7 @@ function! s:kondo.analyze(callback) abort
   " NOTE: Using `writefile` will freeze vim/nvim just a little
   let command = ['sh', '-c', printf('clj-kondo --lint %s --config ''{:output {:analysis true :format :json}}'' > %s',
         \ s:user_dir(),
-        \ self.cache_temp_name(),
+        \ s:temp_name(self.cache_name()),
         \ )]
   call self.job_out.redir(command, funcref('s:analyze__analyzed', [a:callback], self))
 endfunction
