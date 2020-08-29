@@ -2,6 +2,12 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.1.9 (2020-08-30)
+// {{{
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/250[#250], https://github.com/liquidz/vim-iced/issues/253[#253]: Fixed figwheel-main to start ClojureScript REPL correctly.
+// }}}
+
 == 2.1.8 (2020-08-24)
 // {{{
 === Changed
