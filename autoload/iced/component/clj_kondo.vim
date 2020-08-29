@@ -151,6 +151,16 @@ function! s:kondo.dependencies(ns_name, var_name) abort
         \ has_key(deps_dict, printf('%s/%s', get(definition, 'ns', ''), get(definition, 'name', '')))})
 endfunction
 
+function! s:kondo.used_ns_list() abort
+  let usages = self.namespace_usages()
+  if empty(usages) | return [] | endif
+
+  let result = map(usages, {_, v -> get(v, 'to', '')})
+  let result = filter(result, {_, v -> v !=# ''})
+
+  return s:L.uniq(result)
+endfunction
+
 function! s:kondo.ns_aliases() abort
   let usages = self.namespace_usages()
   let result = {}
