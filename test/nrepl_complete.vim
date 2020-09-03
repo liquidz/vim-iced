@@ -88,33 +88,33 @@ endfunction
 "
 "   call s:buf.stop_dummy()
 " endfunction
-
-function! s:__candidates_nrepl_relay(msg) abort
-  let op = a:msg['op']
-  if op ==# 'describe'
-    return {'status': ['done'], 'ops': {'completions': 1}}
-  elseif op ==# 'completions'
-    return {'status': ['done'], 'completions': [
-          \ {'candidate': 'foo'},
-          \ {'candidate': 'bar'},
-          \ {'candidate': 'nrepl'}]}
-  else
-    return {'status': ['done']}
-  endif
-endfunction
-
-function! s:suite.candidates_nrepl_completions_test() abort
-  call s:buf.start_dummy(['(ns foo.core)|'])
-  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:__candidates_nrepl_relay')})
-  let g:iced_enable_enhanced_cljs_completion = v:false
-  let g:iced#nrepl#complete#ignore_context = v:true
-
-  let res = iced#promise#sync('iced#nrepl#complete#candidates', ['dummy base'])
-  call s:assert.equals(res, [
-        \ {'word': 'bar', 'menu': '', 'info': '', 'kind': 'v', 'icase': 1},
-        \ {'word': 'foo', 'menu': '', 'info': '', 'kind': 'v', 'icase': 1},
-        \ {'word': 'nrepl', 'menu': '', 'info': '', 'kind': 'v', 'icase': 1},
-        \ ])
-
-  call s:buf.stop_dummy()
-endfunction
+"
+" function! s:__candidates_nrepl_relay(msg) abort
+"   let op = a:msg['op']
+"   if op ==# 'describe'
+"     return {'status': ['done'], 'ops': {'completions': 1}}
+"   elseif op ==# 'completions'
+"     return {'status': ['done'], 'completions': [
+"          \ {'candidate': 'foo'},
+"          \ {'candidate': 'bar'},
+"          \ {'candidate': 'nrepl'}]}
+"   else
+"     return {'status': ['done']}
+"   endif
+" endfunction
+"
+" function! s:suite.candidates_nrepl_completions_test() abort
+"   call s:buf.start_dummy(['(ns foo.core)|'])
+"   call s:ch.mock({'status_value': 'open', 'relay': funcref('s:__candidates_nrepl_relay')})
+"   let g:iced_enable_enhanced_cljs_completion = v:false
+"   let g:iced#nrepl#complete#ignore_context = v:true
+"
+"   let res = iced#promise#sync('iced#nrepl#complete#candidates', ['dummy base'])
+"   call s:assert.equals(res, [
+"        \ {'word': 'bar', 'menu': '', 'info': '', 'kind': 'v', 'icase': 1},
+"        \ {'word': 'foo', 'menu': '', 'info': '', 'kind': 'v', 'icase': 1},
+"        \ {'word': 'nrepl', 'menu': '', 'info': '', 'kind': 'v', 'icase': 1},
+"        \ ])
+"
+"   call s:buf.stop_dummy()
+" endfunction
