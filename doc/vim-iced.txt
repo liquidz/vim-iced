@@ -120,7 +120,7 @@ LEININGEN~
   $HOME/.lein/profile.clj
 >
   {:user
-   {:dependencies [[nrepl "0.7.0"]
+   {:dependencies [[nrepl "0.8.1"]
                    [iced-nrepl "1.0.4"]
                    [cider/cider-nrepl "0.25.3"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
