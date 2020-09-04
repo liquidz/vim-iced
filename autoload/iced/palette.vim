@@ -4,9 +4,9 @@ set cpoptions&vim
 let s:default_palette = [
       \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt', 'InterruptAll',
       \ 'InstantConnect', 'InstantConnect babashka', 'JackIn',
-      \ 'StartCljsRepl figwheel-sidecar',
+      \ 'StartCljsRepl <env>',
       \ 'QuitCljsRepl', 'CycleSession',
-      \ 'EvalNs', 'UndefAllInNs', 'UnaliasNs',
+      \ 'EvalNs', 'Undef', 'UndefAllInNs', 'UnaliasNs',
       \ 'Require', 'RequireAll',
       \ 'PrintLast',
       \ 'TestNs', 'TestAll', 'TestRedo', 'TestSpecCheck', 'TestRerunLast',
@@ -28,6 +28,7 @@ let s:default_palette = [
       \ 'JumpToLet',
       \ 'StartSideloader', 'StopSideloader',
       \ 'ClearNsCache',
+      \ 'UpdateTool <tool-name>',
       \ ]
 
 function! s:build_palette() abort
@@ -49,8 +50,16 @@ let s:palette = s:build_palette()
 function! s:run(candidate) abort
   let cmd = get(s:palette, a:candidate, '')
   if !empty(cmd)
-    call histadd('cmd', strpart(cmd, 1))
-    execute cmd
+    let arr = split(cmd, ' ')
+    if len(arr) == 1
+      call histadd('cmd', strpart(cmd, 1))
+      execute cmd
+    else
+      " Remove last element, but remain last space
+      let arr[-1] = ''
+      let cmd = join(arr, ' ')
+      call feedkeys(cmd, 'n')
+    endif
   endif
 endfunction
 
