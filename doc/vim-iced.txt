@@ -1665,6 +1665,17 @@ g:iced#repl#babashka_repl_type
   `'socket'` or `'nrepl'` can be set.
   Default value is `'socket'`.
 
+                                                       *g:iced_cache_directory*
+g:iced_cache_directory
+  Path to store cached files.
+  If a empty string is specified, the following path is used.
+
+  - macOS  : $HOME/Library/Caches/vim-iced
+  - Others : $XDG_CACHE_HOME/vim-iced
+             or $HOME/.cache/vim-iced
+
+  Default value is `''`.
+
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
 

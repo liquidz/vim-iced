@@ -106,6 +106,10 @@ endfunction
 
 let s:temp_dir = fnamemodify(tempname(), ':h')
 function! iced#cache#directory() abort
+  if !empty(g:iced_cache_directory)
+    return g:iced_cache_directory
+  endif
+
   let iced = 'vim-iced'
   let result = s:temp_dir
 

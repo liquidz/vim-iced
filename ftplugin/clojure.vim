@@ -58,6 +58,10 @@ if !exists('g:iced_default_key_mapping_leader')
   let g:iced_default_key_mapping_leader = '<Leader>'
 endif
 
+if !exists('g:iced_cache_directory')
+  let g:iced_cache_directory = ''
+endif
+
 "" Commands {{{
 command! -nargs=? IcedConnect               call iced#repl#connect('nrepl', <q-args>)
 command! -nargs=1 IcedConnectSocketRepl     call iced#repl#connect('socket_repl', <q-args>)
