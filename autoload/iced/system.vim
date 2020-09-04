@@ -53,7 +53,7 @@ let s:org_system_map = {
       \ 'find':         {'start': 'iced#component#find#start',
       \                  'requires': ['job_out']},
       \ 'clj_kondo':    {'start': 'iced#component#clj_kondo#start',
-      \                  'requires': ['job_out']},
+      \                  'requires': ['installer', 'job_out']},
       \ }
 let s:system_map = copy(s:org_system_map)
 

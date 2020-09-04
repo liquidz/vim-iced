@@ -184,6 +184,11 @@ endfunction
 function! iced#component#clj_kondo#start(this) abort
   call iced#util#debug('start', 'clj-kondo')
 
+  if g:iced_enable_clj_kondo_analysis
+        \ && !executable('clj-kondo')
+    call iced#promise#sync(a:this['installer'].install, ['clj-kondo'], 30000)
+  endif
+
   let s:kondo.job_out = a:this['job_out']
   return s:kondo
 endfunction
