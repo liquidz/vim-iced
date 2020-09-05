@@ -149,6 +149,12 @@ include::sideloader.adoc[]
 [small]#<<top>>#
 // }}}
 
+include::static_analysis.adoc[]
+// back to top {{{
+[.text-right]
+[small]#<<top>>#
+// }}}
+
 include::iced_command.adoc[]
 // back to top {{{
 [.text-right]

@@ -66,6 +66,7 @@
   'not_executable':            '"%s" is not executable.',
   'not_found':                 'Not found.',
   'not_installed_by_iced':     '"%s" is not installed by vim-iced.',
+  'not_supported':             'Not supported.',
   'ns_added':                  'Added %s.',
   'ns_added_as':               'Added %s as ''%s''.',
   'ns_list_error':             'Failed to fetch ns list.',

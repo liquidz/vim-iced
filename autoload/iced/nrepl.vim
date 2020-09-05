@@ -27,8 +27,6 @@ let s:printer_dict = {
       \ 'default': 'cider.nrepl.pprint/pprint',
       \ }
 
-let s:supported_ops = {}
-
 let s:V = vital#iced#new()
 let s:L = s:V.import('Data.List')
 
@@ -71,7 +69,6 @@ function! iced#nrepl#reset() abort
   let s:nrepl = s:initialize_nrepl()
   let s:messages = {}
   let s:response_buffer = ''
-  let s:supported_ops = {}
   call iced#cache#clear()
   call iced#nrepl#cljs#reset()
   call iced#nrepl#connect#reset()
@@ -641,7 +638,7 @@ function! iced#nrepl#describe(callback) abort
 endfunction
 
 function! iced#nrepl#is_supported_op(op) abort " {{{
-  if empty(s:supported_ops)
+  if !iced#cache#has_key('supported_ops')
     let resp = iced#promise#sync('iced#nrepl#describe', [])
 
     if has_key(resp, 'versions')
@@ -652,10 +649,10 @@ function! iced#nrepl#is_supported_op(op) abort " {{{
       return iced#message#error('unexpected_error', 'Invalid :describe op response')
     endif
 
-    let s:supported_ops = resp['ops']
+    call iced#cache#set('supported_ops', resp['ops'])
   endif
 
-  return has_key(s:supported_ops, a:op)
+  return has_key(iced#cache#get('supported_ops', {}), a:op)
 endfunction " }}}
 " }}}
 

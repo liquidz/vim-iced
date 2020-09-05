@@ -239,8 +239,18 @@ function! s:__find_existing_alias(ns_name, aliases) abort
 endfunction
 
 function! iced#nrepl#ns#find_existing_alias(ns_name, callback) abort
-  return iced#nrepl#op#refactor#all_ns_aliases({resp ->
-        \ a:callback(s:__find_existing_alias(a:ns_name, resp))})
+  let kondo = iced#system#get('clj_kondo')
+  if kondo.is_analyzed()
+    let aliases = kondo.ns_aliases()
+    let resp = {}
+    let resp[iced#nrepl#current_session_key()] = aliases
+    return a:callback(s:__find_existing_alias(a:ns_name, resp))
+  elseif iced#nrepl#is_supported_op('namespace-aliases')
+    return iced#nrepl#op#refactor#all_ns_aliases({resp ->
+          \ a:callback(s:__find_existing_alias(a:ns_name, resp))})
+  else
+    return iced#message#error('not_supported')
+  endif
 endfunction
 
 "" Clear all caches related to namespace

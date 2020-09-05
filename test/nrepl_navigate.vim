@@ -11,6 +11,9 @@ let s:funcs = s:scope.funcs('autoload/iced/nrepl/navigate.vim')
 let s:temp_file = tempname()
 
 function! s:setup(opts) abort " {{{
+  let g:iced_enable_clj_kondo_analysis = v:false
+  let g:iced_cache_directory = ''
+
   call writefile([''], s:temp_file)
   call s:sel.mock()
   call s:ex_cmd.mock()
@@ -212,5 +215,3 @@ function! s:suite.browse_var_dependencies_test() abort
 
   call s:teardown()
 endfunction
-
-" vim:fdm=marker:fdl=0

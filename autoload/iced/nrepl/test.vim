@@ -183,7 +183,7 @@ endfunction
 function! s:__under_cursor(var_info, test_vars) abort
   let qualified_var = a:var_info['qualified_var']
   let ns = a:var_info['ns']
-  let var_name = a:var_info['var']
+  let var_name = a:var_info['name']
 
   if index(a:test_vars, var_name) != -1
     " Form under the cursor is a test

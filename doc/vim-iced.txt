@@ -36,6 +36,8 @@ CONTENTS                                                    *vim-iced-contents*
     Indenting                  |vim-iced-indenting|
     Refactoring                |vim-iced-refactoring|
   Sideloader                   |vim-iced-sideloader|
+  Static analysis              |vim-iced-static-analysis|
+    clj-kondo                  |vim-iced-static-analysis-clj-kondo|
   Interface                    |vim-iced-interface|
     Commands                   |vim-iced-commands|
     Functions                  |vim-iced-functions|
@@ -530,6 +532,32 @@ SIDELOADER                                                *vim-iced-sideloader*
 
   vim-iced will use `find` or `fd` as a searching file program.
   - https://github.com/sharkdp/fd
+
+==============================================================================
+STATIC ANALYSIS                                      *vim-iced-static-analysis*
+
+  Currently vim-iced supports static analysis by clj-kondo.
+  - https://github.com/borkdude/clj-kondo
+    
+------------------------------------------------------------------------------
+CLJ-KONDO                                  *vim-iced-static-analysis-clj-kondo*
+
+  This feature is disabled by default.
+  To enable, see |g:iced_enable_clj_kondo_analysis|.
+
+  Analysis process is run at |BufWritePost| autocmd.
+  Analyzed data is cached at |g:iced_cache_directory|, and used in followings:
+  - |:IcedBrowseReferences|
+  - |:IcedBrowseDependencies|
+  - |:IcedAddMissing|
+  - |:IcedAddNs|
+
+  TIPS
+  - Cached files will be separated to var definition/usage and
+    ns definition/usage automatically if you have `jq` or `jet`.
+    - https://github.com/stedolan/jq
+    - https://github.com/borkdude/jet
+  - This leads to make |:IcedAddMissing| and |:IcedAddNs| more faster.
 
 ==============================================================================
 INTERFACE                                                  *vim-iced-interface*
@@ -1664,6 +1692,24 @@ g:iced#repl#babashka_repl_type
   REPL type of server launching by babashka.
   `'socket'` or `'nrepl'` can be set.
   Default value is `'socket'`.
+
+                                                       *g:iced_cache_directory*
+g:iced_cache_directory
+  Path to store cached files.
+  If a empty string is specified, the following path is used.
+
+  - macOS  : $HOME/Library/Caches/vim-iced
+  - Others : $XDG_CACHE_HOME/vim-iced
+             or $HOME/.cache/vim-iced
+
+  Default value is `''`.
+
+                                             *g:iced_enable_clj_kondo_analysis*
+g:iced_enable_clj_kondo_analysis
+  If {v:true}, enable clj-kondo's analysis.
+  If `clj-kondo` is not installed, will install automatically.
+  Default value is `v:false`.
+  See also |vim-iced-static-analysis-clj-kondo|.
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*

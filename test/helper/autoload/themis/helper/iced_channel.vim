@@ -41,7 +41,10 @@ function! s:build_test_channel(opt) abort
       endif
 
       if get(sent_data, 'op') ==# 'describe' && !has_key(resp_data, 'ops')
-        let resp_data['ops'] = {'info': 1, 'complete': 1, 'test-var-query': 1, 'ns-path': 1}
+        let resp_data['ops'] = {
+              \ 'info': 1, 'complete': 1, 'test-var-query': 1, 'ns-path': 1,
+              \ 'fn-refs': 1, 'fn-deps': 1,
+              \ }
       endif
 
       let resp_data = iced#system#get('bencode').encode(resp_data)
@@ -75,6 +78,7 @@ endfunction
 
 function! s:helper.mock(opt) abort
   call iced#nrepl#auto#enable_bufenter(v:false)
+  call iced#cache#delete('supported_ops')
   call iced#system#set_component('bencode', {'start': 'iced#component#bencode#vim#start'})
   call iced#system#set_component('channel', {'start': {_ -> s:build_test_channel(a:opt)}})
   call iced#system#set_component('future', {'start': 'iced#component#future#instant#start'})
