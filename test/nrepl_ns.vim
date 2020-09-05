@@ -2,6 +2,7 @@ let s:suite  = themis#suite('iced.nrepl.ns')
 let s:assert = themis#helper('assert')
 let s:ch = themis#helper('iced_channel')
 let s:buf = themis#helper('iced_buffer')
+let s:holder = themis#helper('iced_holder')
 
 function! s:suite.name_by_var_test() abort
   call s:ch.mock({
@@ -75,5 +76,27 @@ function! s:suite.name_test() abort
 
   call s:buf.start_dummy(['|'])
   call s:assert.equals(iced#nrepl#ns#name(), 'foo.bar7')
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:__unalias_relay(msg) abort
+  if a:msg['op'] ==# 'eval' && has_key(a:msg, 'code')
+    call s:holder.run(a:msg['code'])
+  endif
+  return {'status': ['done']}
+endfunction
+
+function! s:suite.unalias_test() abort
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:__unalias_relay')})
+  call s:buf.start_dummy(['(ns foo.core)', 'baz|'])
+
+  call s:holder.clear()
+  call iced#nrepl#ns#unalias('')
+  call s:assert.equals(s:holder.get_args(), [['(ns-unalias ''foo.core ''baz)']])
+
+  call s:holder.clear()
+  call iced#nrepl#ns#unalias('sym')
+  call s:assert.equals(s:holder.get_args(), [['(ns-unalias ''foo.core ''sym)']])
+
   call s:buf.stop_dummy()
 endfunction
