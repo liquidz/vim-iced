@@ -1,0 +1,22 @@
+== Static analysis [[static_analysis]]
+
+Currently vim-iced supports static analysis by https://github.com/borkdude/clj-kondo[clj-kondo].
+
+=== clj-kondo [[static_analysis_clj_kondo]]
+
+This feature is disabled by default.
+To enable, set `v:true` to {help_html}#g%3Aiced_enable_clj_kondo_analysis[g:iced_enable_clj_kondo_analysis].
+
+Analysis process is run at https://vim-jp.org/vimdoc-en/autocmd.html#BufWritePost[BufWritePost] autocmd.
+Analyzed data is cached at {help_html}#g%3Aiced_cache_directory[g:iced_cache_directory], and used in followings:
+
+- {help_html}#%3AIcedBrowseReferences[IcedBrowseReferences]
+- {help_html}#%3AIcedBrowseDependencies[IcedBrowseDependencies]
+- {help_html}#%3AIcedAddMissing[IcedAddMissing]
+- {help_html}#%3AIcedAddNs[IcedAddNs]
+
+==== Tips
+
+Cached files will be separated to var definition/usage and ns definition/usage automatically if you have https://github.com/stedolan/jq[jq] or https://github.com/borkdude/jet[jet].
+
+This leads to make {help_html}#%3AIcedAddMissing[IcedAddMissing] and {help_html}#%3AIcedAddNs[IcedAddNs] more faster.
