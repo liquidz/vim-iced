@@ -3,10 +3,14 @@ set cpoptions&vim
 
 let s:helper = {}
 
+function! s:install(_, callback) abort
+  return a:callback('ok')
+endfunction
+
 function! s:helper.mock(analysis) abort
   let org = iced#component#clj_kondo#start({
         \ 'job_out': '',
-        \ 'installer': {'install': {_ -> ''}},
+        \ 'installer': {'install': funcref('s:install')},
         \ })
   let mock = deepcopy(org)
   let mock.is_analyzed = {-> v:true}
