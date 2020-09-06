@@ -79,6 +79,34 @@ function! s:suite.name_test() abort
   call s:buf.stop_dummy()
 endfunction
 
+function! s:__find_existing_alias_relay(msg) abort
+  if a:msg['op'] ==# 'namespace-aliases'
+    return {'status': ['done'], 'namespace-aliases': '{:clj {alias1 (ns1 ns2), alias2 (ns3)}, :cljs {}}'}
+  else
+    return {'status': ['done']}
+  endif
+endfunction
+
+function! s:suite.find_existing_alias_nrepl_test() abort
+  let g:iced_cache_directory = ''
+  let g:iced_enable_clj_kondo_analysis = v:false
+  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:__find_existing_alias_relay')})
+
+  call iced#nrepl#change_current_session('clj')
+  call s:assert.equals(
+        \ iced#promise#sync('iced#nrepl#ns#find_existing_alias', ['ns1']),
+        \ 'alias1')
+  call s:assert.equals(
+        \ iced#promise#sync('iced#nrepl#ns#find_existing_alias', ['ns2']),
+        \ 'alias1')
+  call s:assert.equals(
+        \ iced#promise#sync('iced#nrepl#ns#find_existing_alias', ['ns3']),
+        \ 'alias2')
+  call s:assert.equals(
+        \ iced#promise#sync('iced#nrepl#ns#find_existing_alias', ['unknown']),
+        \ '')
+endfunction
+
 function! s:__unalias_relay(msg) abort
   if a:msg['op'] ==# 'eval' && has_key(a:msg, 'code')
     call s:holder.run(a:msg['code'])
