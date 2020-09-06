@@ -3,6 +3,7 @@ let s:assert = themis#helper('assert')
 let s:ch = themis#helper('iced_channel')
 let s:buf = themis#helper('iced_buffer')
 let s:holder = themis#helper('iced_holder')
+let s:kondo = themis#helper('iced_clj_kondo')
 
 function! s:suite.name_by_var_test() abort
   call s:ch.mock({
@@ -105,6 +106,30 @@ function! s:suite.find_existing_alias_nrepl_test() abort
   call s:assert.equals(
         \ iced#promise#sync('iced#nrepl#ns#find_existing_alias', ['unknown']),
         \ '')
+endfunction
+
+function! s:suite.find_existing_alias_clj_kondo_test() abort
+  let g:iced_cache_directory = ''
+  let g:iced_enable_clj_kondo_analysis = v:true
+  call s:kondo.mock({'namespace-usages': [
+        \ {'to': 'ns1', 'alias': 'kondo-alias1'},
+        \ {'to': 'ns2', 'alias': 'kondo-alias1'},
+        \ {'to': 'ns3', 'alias': 'kondo-alias2'},
+        \ ]})
+
+  call s:assert.equals(
+       \ iced#promise#sync('iced#nrepl#ns#find_existing_alias', ['ns1']),
+       \ 'kondo-alias1')
+  call s:assert.equals(
+       \ iced#promise#sync('iced#nrepl#ns#find_existing_alias', ['ns2']),
+       \ 'kondo-alias1')
+  call s:assert.equals(
+       \ iced#promise#sync('iced#nrepl#ns#find_existing_alias', ['ns3']),
+       \ 'kondo-alias2')
+  call s:assert.equals(
+       \ iced#promise#sync('iced#nrepl#ns#find_existing_alias', ['unknown']),
+       \ '')
+  let g:iced_enable_clj_kondo_analysis = v:false
 endfunction
 
 function! s:__unalias_relay(msg) abort
