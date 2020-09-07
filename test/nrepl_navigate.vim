@@ -6,6 +6,7 @@ let s:ch = themis#helper('iced_channel')
 let s:sel = themis#helper('iced_selector')
 let s:ex_cmd = themis#helper('iced_ex_cmd')
 let s:qf = themis#helper('iced_quickfix')
+let s:kondo = themis#helper('iced_clj_kondo')
 
 let s:funcs = s:scope.funcs('autoload/iced/nrepl/navigate.vim')
 let s:temp_file = tempname()
@@ -31,6 +32,7 @@ endfunction " }}}
 
 function! s:teardown() abort " {{{
   call delete(s:temp_file)
+  call iced#system#reset_component('clj_kondo')
   call s:buf.stop_dummy()
 endfunction " }}}
 
@@ -212,6 +214,63 @@ function! s:suite.browse_var_dependencies_test() abort
   call s:assert.equals(qf_list, [
         \ {'filename': s:temp_file, 'lnum': 56, 'text': 'world: doc world'}
         \ ])
+
+  call s:teardown()
+endfunction
+
+function! s:suite.browse_references_clj_kondo_test() abort
+  call s:setup({
+        \ 'channel': {_ -> {'status': ['done'], 'value': '#''X/v'}},
+        \ 'buffer': ['(dummy|)'],
+        \ })
+  let g:iced_enable_clj_kondo_analysis = v:true
+  call s:kondo.mock({'var-usages': [
+        \ {'from': 'A', 'from-var': 'a', 'to': 'X', 'name': 'v', 'filename': s:temp_file, 'row': 1},
+        \ {'from': 'B', 'from-var': 'b', 'to': 'X', 'name': 'v', 'filename': s:temp_file, 'row': 2},
+        \ {'from': 'D', 'from-var': 'd', 'to': 'X', 'name': 'v', 'filename': 'non_existing_file', 'row': 3},
+        \ {'from': 'C', 'from-var': 'c', 'to': 'X', 'name': 'different_var', 'filename': s:temp_file, 'row': 4},
+        \ {'from': 'E', 'from-var': 'e', 'to': 'Y', 'name': 'another ns', 'filename': s:temp_file, 'row': 5},
+        \ ]})
+
+  call iced#nrepl#navigate#browse_references()
+
+  let qf_list = s:qf.get_last_args()['list']
+  call s:assert.equals(qf_list, [
+        \ {'lnum': 1, 'filename': s:temp_file, 'text': 'A/a'},
+        \ {'lnum': 2, 'filename': s:temp_file, 'text': 'B/b'},
+        \ ])
+
+  call s:teardown()
+endfunction
+
+function! s:suite.browse_dependencies_clj_kondo_test() abort
+  call s:setup({
+        \ 'channel': {_ -> {'status': ['done'], 'value': '#''A/a'}},
+        \ 'buffer': ['(dummy|)'],
+        \ })
+  let g:iced_enable_clj_kondo_analysis = v:true
+  call s:kondo.mock({
+        \ 'var-usages': [
+        \   {'from': 'A', 'from-var': 'a', 'to': 'X', 'name': 'v'},
+        \   {'from': 'A', 'from-var': 'a', 'to': 'X', 'name': 'w'},
+        \   {'from': 'A', 'from-var': 'a', 'to': 'clojure.core', 'name': 'str'},
+        \   {'from': 'A', 'from-var': 'different_var', 'to': 'X', 'name': 'v'},
+        \   {'from': 'another ns', 'from-var': 'a', 'to': 'X', 'name': 'v'},
+        \ ],
+        \ 'var-definitions': [
+        \   {'ns': 'X' , 'name': 'v', 'filename': s:temp_file, 'row': 1},
+        \   {'ns': 'X' , 'name': 'w', 'filename': s:temp_file, 'row': 2},
+        \   {'ns': 'clojure.core' , 'name': 'str', 'filename': s:temp_file, 'row': 9},
+        \ ],
+        \ })
+
+  call iced#nrepl#navigate#browse_dependencies()
+
+  let qf_list = s:qf.get_last_args()['list']
+  call s:assert.equals(qf_list, [
+        \ {'lnum': 1, 'filename': s:temp_file, 'text': 'X/v'},
+        \ {'lnum': 2, 'filename': s:temp_file, 'text': 'X/w'},
+       \ ])
 
   call s:teardown()
 endfunction
