@@ -130,6 +130,7 @@ function! s:suite.find_existing_alias_clj_kondo_test() abort
        \ iced#promise#sync('iced#nrepl#ns#find_existing_alias', ['unknown']),
        \ '')
   let g:iced_enable_clj_kondo_analysis = v:false
+  call iced#system#reset_component('clj_kondo')
 endfunction
 
 function! s:__unalias_relay(msg) abort
