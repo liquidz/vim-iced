@@ -207,7 +207,7 @@ function! iced#nrepl#refactor#add_missing_ns(symbol) abort
 
   if kondo.is_analyzed()
     return s:__add_missing_by_clj_kondo_analysis(symbol)
-  elseif iced#nrepl#is_supported_op('resolving_missing')
+  elseif iced#nrepl#is_supported_op('resolve-missing')
     call iced#nrepl#op#refactor#add_missing(symbol, {resp ->
          \ s:__add_missing_ns_resolve_missing(symbol, resp)})
   else
