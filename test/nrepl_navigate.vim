@@ -218,6 +218,37 @@ function! s:suite.browse_var_dependencies_test() abort
   call s:teardown()
 endfunction
 
+function! s:__browse_references_reply(msg) abort
+  let op = a:msg['op']
+  if op ==# 'eval'
+    return {'status': ['done'], 'value': '#''example/var'}
+  elseif op ==# 'fn-refs'
+    return {'status': ['done'], 'fn-refs': [
+          \ {'file': s:temp_file, 'name': 'nrepl hello', 'doc': 'doc nrepl hello', 'line': 12},
+          \ {'file': 'non_existing.txt', 'name': 'world', 'doc': 'doc world', 'line': 34},
+          \ ]}
+  else
+    return {'status': ['done']}
+  endif
+endfunction
+
+function! s:suite.browse_references_nrepl_test() abort
+  call s:setup({
+        \ 'channel': funcref('s:__browse_references_reply'),
+        \ 'buffer': ['(dummy|)'],
+        \ })
+  let g:iced_cache_directory = ''
+  let g:iced_enable_clj_kondo_analysis = v:false
+
+  call iced#nrepl#navigate#browse_references()
+  let qf_list = s:qf.get_last_args()['list']
+  call s:assert.equals(qf_list, [
+        \ {'lnum': 12, 'filename': s:temp_file, 'text': 'nrepl hello: doc nrepl hello'},
+        \ ])
+
+  call s:teardown()
+endfunction
+
 function! s:suite.browse_references_clj_kondo_test() abort
   call s:setup({
         \ 'channel': {_ -> {'status': ['done'], 'value': '#''X/v'}},
@@ -238,6 +269,37 @@ function! s:suite.browse_references_clj_kondo_test() abort
   call s:assert.equals(qf_list, [
         \ {'lnum': 1, 'filename': s:temp_file, 'text': 'A/a'},
         \ {'lnum': 2, 'filename': s:temp_file, 'text': 'B/b'},
+        \ ])
+
+  call s:teardown()
+endfunction
+
+function! s:__browse_dependencies_reply(msg) abort
+  let op = a:msg['op']
+  if op ==# 'eval'
+    return {'status': ['done'], 'value': '#''example/var'}
+  elseif op ==# 'fn-deps'
+    return {'status': ['done'], 'fn-deps': [
+          \ {'file': s:temp_file, 'name': 'nrepl hello', 'doc': 'doc nrepl hello', 'line': 12},
+          \ {'file': 'non_existing.txt', 'name': 'world', 'doc': 'doc world', 'line': 34},
+          \ ]}
+  else
+    return {'status': ['done']}
+  endif
+endfunction
+
+function! s:suite.browse_dependencies_nrepl_test() abort
+  call s:setup({
+        \ 'channel': funcref('s:__browse_dependencies_reply'),
+        \ 'buffer': ['(dummy|)'],
+        \ })
+  let g:iced_cache_directory = ''
+  let g:iced_enable_clj_kondo_analysis = v:false
+
+  call iced#nrepl#navigate#browse_dependencies()
+  let qf_list = s:qf.get_last_args()['list']
+  call s:assert.equals(qf_list, [
+        \ {'lnum': 12, 'filename': s:temp_file, 'text': 'nrepl hello: doc nrepl hello'},
         \ ])
 
   call s:teardown()
