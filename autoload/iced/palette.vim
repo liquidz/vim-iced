@@ -4,7 +4,7 @@ set cpoptions&vim
 let s:default_palette = [
       \ 'Connect', 'Disconnect', 'Reconnect', 'Interrupt', 'InterruptAll',
       \ 'InstantConnect', 'InstantConnect babashka', 'JackIn',
-      \ 'StartCljsRepl <env>',
+      \ 'StartCljsRepl {{env}}',
       \ 'QuitCljsRepl', 'CycleSession',
       \ 'EvalNs', 'Undef', 'UndefAllInNs', 'UnaliasNs',
       \ 'Require', 'RequireAll',
@@ -28,7 +28,7 @@ let s:default_palette = [
       \ 'JumpToLet',
       \ 'StartSideloader', 'StopSideloader',
       \ 'ClearNsCache',
-      \ 'UpdateTool <tool-name>',
+      \ 'UpdateTool {{tool-name}}>',
       \ ]
 
 function! s:build_palette() abort
@@ -51,7 +51,7 @@ function! s:run(candidate) abort
   let cmd = get(s:palette, a:candidate, '')
   if !empty(cmd)
     let arr = split(cmd, ' ')
-    if len(arr) == 1
+    if len(arr) == 1 || stridx(arr[-1], '{{') == -1
       call histadd('cmd', strpart(cmd, 1))
       execute cmd
     else
