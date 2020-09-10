@@ -32,6 +32,9 @@ jobs:
       - name: Install jet
         run: ../installer/jet.sh
         working-directory: ./bin
+      - name: Install clj-kondo
+        run: ../installer/clj-kondo.sh
+        working-directory: ./bin
       - name: Run themis
         env:
           THEMIS_VIM: ${{ steps.vim.outputs.executable }}
