@@ -6,7 +6,7 @@ let s:L = s:V.import('Data.List')
 
 let s:kondo = {
       \ 'job_out': '',
-      \ 'cache_dir': iced#cache#directory(),
+      \ 'cache_dir': '',
       \ 'is_analyzing': v:false,
       \ }
 
@@ -114,7 +114,7 @@ function! s:kondo.namespace_usages() abort
     let ana = self.analysis()
     return (has_key(ana, 'namespace-usages'))
           \ ? ana['namespace-usages']
-          \ : ana
+          \ : {}
   endif
 
   let res = readfile(cache_name)
@@ -190,6 +190,7 @@ function! iced#component#clj_kondo#start(this) abort
   endif
 
   let s:kondo.job_out = a:this['job_out']
+  let s:kondo.cache_dir = iced#cache#directory()
   return s:kondo
 endfunction
 
