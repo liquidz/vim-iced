@@ -4,6 +4,8 @@ bin/jet
 bin/cljstyle
 bin/zprint-clj
 bin/bb
+bin/joker
+bin/clj-kondo
 .vim-themis
 .vim-sexp
 .vimdoc
@@ -16,3 +18,4 @@ target
 coverage.xml
 .clj-kondo/.cache
 /vimhelp
+.DS_Store
