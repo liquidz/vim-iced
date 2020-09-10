@@ -72,7 +72,7 @@ function! s:kondo.analyze(callback) abort
 
   let self.is_analyzing = v:true
   " NOTE: Using `writefile` will freeze vim/nvim just a little
-  let command = ['sh', '-c', printf('clj-kondo --lint %s --config ''{:output {:analysis true :format :json}}'' > %s',
+  let command = ['sh', '-c', printf('clj-kondo --parallel --lint %s --config ''{:output {:analysis true :format :json}}'' > %s',
         \ s:user_dir(),
         \ s:temp_name(self.cache_name()),
         \ )]
