@@ -113,7 +113,7 @@ function! s:__instant_clj() abort
 endfunction
 
 function! s:__instant_babashka(port) abort
-  let cmd = printf('bb --nrepl-server %s', a:port)
+  let cmd = ['sh', '-c', printf('bb --nrepl-server %s > /dev/null 2>&1', a:port)]
   call iced#job_start(cmd)
 
   call iced#message#echom('connecting')
