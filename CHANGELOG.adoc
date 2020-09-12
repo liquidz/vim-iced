@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. This change
 === Changed
 * Bumped nREPL to `0.8.1`.
 * Bumped iced-nrepl to `1.0.5`.
+* Update command palette to be able to select commands which arguments.
 // }}}
 
 == 2.1.9 (2020-08-30)
