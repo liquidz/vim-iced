@@ -2,6 +2,20 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.2.0 (2020-09-13)
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/issues/207[#207]: Added support for `completions` op in nREPL 0.8.
+* https://github.com/liquidz/vim-iced/issues/247[#247]: Added support to use clj-kondo analysis.
+** Added `g:iced_enable_clj_kondo_analysis` option.
+** Added `g:iced_cache_directory` option.
+
+=== Changed
+* Bumped nREPL to `0.8.1`.
+* Bumped iced-nrepl to `1.0.5`.
+* Update command palette to be able to select commands which arguments.
+// }}}
+
 == 2.1.9 (2020-08-30)
 // {{{
 === Fixed

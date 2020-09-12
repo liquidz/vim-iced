@@ -189,5 +189,13 @@ function! iced#util#delete_color_code(s) abort
   return substitute(a:s, '\[[0-9;]*m', '', 'g')
 endfunction
 
+function! iced#util#list_to_dict(ls, key_fn, val_fn) abort
+  let result = {}
+  for x in a:ls
+    let result[a:key_fn(x)] = a:val_fn(x)
+  endfor
+  return result
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

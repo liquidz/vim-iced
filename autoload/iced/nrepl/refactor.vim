@@ -189,9 +189,30 @@ function! s:__add_missing_ns_resolve_missing(symbol, resp) abort
   endif
 endfunction
 
+function! s:__add_missing_by_clj_kondo_analysis(symbol) abort
+  let kondo = iced#system#get('clj_kondo')
+  let aliases = kondo.ns_aliases()
+
+  let symbol_alias = s:symbol_to_alias(a:symbol)
+  let ns_candidates = get(aliases, symbol_alias, [])
+
+  return s:__add_missing_ns_select_candidates(symbol_alias, ns_candidates)
+endfunction
+
 function! iced#nrepl#refactor#add_missing_ns(symbol) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  let kondo = iced#system#get('clj_kondo')
   let symbol = empty(a:symbol) ? iced#nrepl#var#cword() : a:symbol
-  call iced#nrepl#op#refactor#add_missing(symbol, {resp -> s:__add_missing_ns_resolve_missing(symbol, resp)})
+
+  if kondo.is_analyzed()
+    return s:__add_missing_by_clj_kondo_analysis(symbol)
+  elseif iced#nrepl#is_supported_op('resolve-missing')
+    call iced#nrepl#op#refactor#add_missing(symbol, {resp ->
+         \ s:__add_missing_ns_resolve_missing(symbol, resp)})
+  else
+    return iced#message#error('not_supported')
+  endif
 endfunction " }}}
 
 " iced#nrepl#refactor#add_ns {{{
@@ -234,8 +255,14 @@ function! s:__add_ns_ns_list(resp) abort
 endfunction
 
 function! iced#nrepl#refactor#add_ns(ns_name) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
   if empty(a:ns_name)
-    call iced#nrepl#op#cider#ns_list(funcref('s:__add_ns_ns_list'))
+    if iced#nrepl#is_supported_op('ns-list')
+      call iced#nrepl#op#cider#ns_list(funcref('s:__add_ns_ns_list'))
+    else
+      call iced#repl#ns#list(funcref('s:__add_ns_ns_list'))
+    endif
   else
     call s:__add_ns_ns_alias(a:ns_name)
   endif
@@ -350,4 +377,3 @@ endfunction " }}}
 
 let s:save_cpo = &cpo
 set cpo&vim
-" vim:fdm=marker:fdl=0

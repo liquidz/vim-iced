@@ -126,7 +126,8 @@ function! s:suite.collect_errors_and_passes_could_not_find_ns_path_test() abort
         \       {'context': [], 'ns': 'foo.core-test', 'message': [], 'type': 'fail', 'var': 'err-test-var',
         \        'file': 'test/foo/core_test.clj', 'line': 123, 'expected': 'expected-result', 'actual': 'actual-result'}]}}}]
   call s:ch.mock({'status_value': 'open', 'relay': {msg ->
-        \ (msg['op'] ==# 'ns-path') ? {'status': ['done'], 'path': []} : {}}})
+        \ (msg['op'] ==# 'ns-path') ? {'status': ['done'], 'path': []}
+        \                           : {'status': ['done']}}})
   call iced#cache#set('user-dir', '/user/dir')
   call iced#cache#set('file-separator', '/')
 

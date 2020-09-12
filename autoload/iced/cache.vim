@@ -39,9 +39,11 @@ function! iced#cache#has_key(k) abort
 endfunction
 
 function! iced#cache#delete(k) abort
-  let v = copy(s:cache[a:k])
-  unlet s:cache[a:k]
-  return v
+  if has_key(s:cache, a:k)
+    let v = copy(s:cache[a:k])
+    unlet s:cache[a:k]
+    return v
+  endif
 endfunction
 
 function! iced#cache#delete_by_prefix(prefix) abort
@@ -100,6 +102,32 @@ function! iced#cache#factory(prefix) abort
   endfunction
 
   return d
+endfunction
+
+let s:temp_dir = fnamemodify(tempname(), ':h')
+function! iced#cache#directory() abort
+  if !empty(g:iced_cache_directory)
+    return g:iced_cache_directory
+  endif
+
+  let iced = 'vim-iced'
+  let result = s:temp_dir
+
+  if has('macunix')
+    let result = join([$HOME, 'Library', 'Caches', iced], '/')
+  elseif has('unix')
+    if empty($XDG_CACHE_HOME)
+      let result = join([$HOME, '.cache', iced], '/')
+    else
+      let result = join([$XDG_CACHE_HOME, iced], '/')
+    endif
+  endif
+
+  if !isdirectory(result)
+    call mkdir(result, 'p')
+  endif
+
+  return result
 endfunction
 
 let &cpoptions = s:save_cpo

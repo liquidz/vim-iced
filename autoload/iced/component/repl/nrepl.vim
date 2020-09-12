@@ -18,6 +18,7 @@ let s:nrepl = {
       \ 'complete_candidates': function('iced#nrepl#complete#candidates'),
       \ 'autocmd_bufenter': function('iced#nrepl#auto#bufenter'),
       \ 'autocmd_bufread': function('iced#nrepl#auto#bufread'),
+      \ 'autocmd_bufwritepost': function('iced#repl#auto#bufwritepost'),
       \ }
 
 function! iced#component#repl#nrepl#start(_) abort

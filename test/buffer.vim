@@ -1,11 +1,13 @@
 let s:suite  = themis#suite('iced.buffer')
 let s:assert = themis#helper('assert')
 let s:holder = themis#helper('iced_holder')
+let s:timer = themis#helper('iced_timer')
 
 let s:bufname = 'iced_buffer_test'
 
 function! s:init_buf() abort
   call s:holder.clear()
+  call s:timer.mock()
   let info = iced#buffer#init(s:bufname, s:holder.run)
   let nr = info['bufnr']
   call setbufvar(nr, '&bufhidden', 'hide')

@@ -132,3 +132,12 @@ function! s:suite.normalize_path_test() abort
   call s:assert.equals(iced#util#normalize_path('jar:file:/path/to/jarfile.jar!/path/to/file.clj'),
         \ 'zipfile:/path/to/jarfile.jar::path/to/file.clj')
 endfunction
+
+function! s:suite.list_to_dict_test() abort
+  let sample = [{'k': 'one', 'v': 1}, {'k': 'two', 'v': 2}]
+
+  call s:assert.equals(iced#util#list_to_dict(sample, {v -> v.k}, {v -> v}),
+        \ {'one': {'k': 'one', 'v': 1}, 'two': {'k': 'two', 'v': 2}})
+  call s:assert.equals(iced#util#list_to_dict(sample, {v -> v.k}, {v -> v.v}),
+        \ {'one': 1, 'two': 2})
+endfunction

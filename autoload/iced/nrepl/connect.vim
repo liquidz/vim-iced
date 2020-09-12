@@ -113,7 +113,9 @@ function! s:__instant_clj() abort
 endfunction
 
 function! s:__instant_babashka(port) abort
-  let cmd = printf('bb --nrepl-server %s', a:port)
+  " NOTE: A job in vim may terminate when outputting long texts such as stack traces.
+  "       So ignoring the standard output etc.
+  let cmd = ['sh', '-c', printf('bb --nrepl-server %s > /dev/null 2>&1', a:port)]
   call iced#job_start(cmd)
 
   call iced#message#echom('connecting')

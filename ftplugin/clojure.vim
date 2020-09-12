@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 20109
+let g:vim_iced_version = 20200
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -50,8 +50,16 @@ if !exists('g:iced_formatter')
   let g:iced_formatter = 'default'
 endif
 
+if !exists('g:iced_enable_clj_kondo_analysis')
+  let g:iced_enable_clj_kondo_analysis = v:false
+endif
+
 if !exists('g:iced_default_key_mapping_leader')
   let g:iced_default_key_mapping_leader = '<Leader>'
+endif
+
+if !exists('g:iced_cache_directory')
+  let g:iced_cache_directory = ''
 endif
 
 "" Commands {{{
@@ -289,6 +297,7 @@ aug vim_iced_initial_setting
   au BufRead *.clj,*.cljs,*.cljc call iced#repl#execute('autocmd_bufread')
   au BufNewFile *.clj,*.cljs,*.cljc call iced#nrepl#auto#newfile()
   au BufEnter *.clj,*.cljs,*.cljc call iced#repl#execute('autocmd_bufenter')
+  au BufWritePost *.clj,*.cljs,*.cljc call iced#repl#execute('autocmd_bufwritepost')
   au VimLeave * call iced#nrepl#auto#leave()
 aug END
 
