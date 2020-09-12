@@ -117,7 +117,7 @@ function! iced#cache#directory() abort
     let result = join([$HOME, 'Library', 'Caches', iced], '/')
   elseif has('unix')
     if empty($XDG_CACHE_HOME)
-      let result = join(['$HOME', '.cache', iced], '/')
+      let result = join([$HOME, '.cache', iced], '/')
     else
       let result = join([$XDG_CACHE_HOME, iced], '/')
     endif
