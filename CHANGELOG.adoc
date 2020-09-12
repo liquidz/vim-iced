@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 2.2.0 (2020-09-13)
 // {{{
 === Added
 * https://github.com/liquidz/vim-iced/issues/207[#207]: Added support for `completions` op in nREPL 0.8.
