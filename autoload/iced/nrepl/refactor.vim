@@ -421,14 +421,14 @@ function! s:decoded_occurrence(old_name, new_name, occurrence) abort
 
   call cmd.exe(printf(':edit +%s %s', line, file))
 
-  " substitude exactly at position
-  " \1 - matches all characters befor col-beg
+  " substitute exactly at position
+  " \1 - matches all characters before col-beg
   " \2 - matches optional namespace
   call cmd.exe(printf(':silent! s/\v^(.{%s})(.{-}\/)=%s/\1\2%s/', column - 1, a:old_name, a:new_name))
 
-  " substitude in definition form
+  " substitute in definition form
   " (because refactor-nrepl reports opening paren for declaration)
-  " \1 - matches all characters befor col-beg
+  " \1 - matches all characters before col-beg
   " \2 - matches optional definition prefix i.e. '(def ' '(defmethod ' '(defn ' '(defmutli '
   call cmd.exe(printf(':silent! s/\v^(.{%s})(\(def.{-})=%s/\1\2%s/', column - 1, a:old_name, a:new_name))
 
