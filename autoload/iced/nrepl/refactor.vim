@@ -375,5 +375,65 @@ function! iced#nrepl#refactor#add_arity() abort
   endtry
 endfunction " }}}
 
+" iced#nrepl#refactor#rename_symbol {{{
+function! iced#nrepl#refactor#rename_symbol(symbol) abort
+  call iced#nrepl#var#get(a:symbol, funcref('s:got_var'))
+endfunction
+
+function! s:got_var(resp) abort
+  if !has_key(a:resp, 'file')
+        \|| !has_key(a:resp, 'ns')
+        \|| !has_key(a:resp, 'name')
+        \|| !has_key(a:resp, 'column')
+        \|| !has_key(a:resp, 'line')
+    return iced#message#error('not_found')
+  endif
+  let ns = a:resp['ns']
+  let name = a:resp['name']
+  let path = a:resp['file']
+  let column = a:resp['column']
+  let line = a:resp['line']
+  let OnFound = funcref('s:found_symbol', [name])
+  call iced#nrepl#op#refactor#find_symbol(ns, name, path, line, column, OnFound)
+endfunction
+
+function! s:found_symbol(old_name, responses) abort
+  let edn = iced#system#get('edn')
+
+  let io = iced#system#get('io')
+  let new_name = trim(io.input('New name: '))
+
+  let OnDecoded = funcref('s:decoded_occurrence', [a:old_name, new_name])
+  for response in a:responses
+    if has_key(response, 'occurrence')
+      call edn.decode(response['occurrence'], OnDecoded)
+    endif
+  endfor
+endfunction
+
+function! s:decoded_occurrence(old_name, new_name, occurrence) abort
+  let line = a:occurrence['line-beg']
+  let file = a:occurrence['file']
+  let column = a:occurrence['col-beg']
+
+  let cmd = iced#system#get('ex_cmd')
+  call iced#message#echom(json_encode(a:occurrence))
+
+  call cmd.exe(printf(':edit +%s %s', line, file))
+
+  " substitude exactly at position
+  " \1 - matches all characters befor col-beg
+  " \2 - matches optional namespace
+  call cmd.exe(printf(':silent! s/\v^(.{%s})(.{-}\/)=%s/\1\2%s/', column - 1, a:old_name, a:new_name))
+
+  " substitude in definition form
+  " (because refactor-nrepl reports opening paren for declaration)
+  " \1 - matches all characters befor col-beg
+  " \2 - matches optional definition prefix i.e. '(def ' '(defmethod ' '(defn ' '(defmutli '
+  call cmd.exe(printf(':silent! s/\v^(.{%s})(\(def.{-})=%s/\1\2%s/', column - 1, a:old_name, a:new_name))
+
+  call cmd.exe(':write')
+endfunction " }}}
+
 let s:save_cpo = &cpo
 set cpo&vim

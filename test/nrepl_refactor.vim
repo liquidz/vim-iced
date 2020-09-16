@@ -319,4 +319,64 @@ function! s:suite.add_arity_defmethod_test() abort
 endfunction
 " }}}
 
+" rename_symbol {{{
+function! s:suite.rename_symbol_test() abort
+  let def_file = tempname()
+  call writefile([
+        \'(ns user)',
+        \'   (defn bar [] :bar)'], def_file)
+
+  let alias_file = tempname()
+  call writefile([
+        \'(ns a (:require [user :as a.u])',
+        \';; bar',
+        \'(let [bar (a.u/bar :bar))]'], alias_file)
+
+  let refer_file = tempname()
+  call writefile([
+        \'(ns a (:require [user :refer [bar]])',
+        \';; bar',
+        \'(let [bar (bar :bar))]'], refer_file)
+
+  let responses = {}
+  let responses['info'] = {
+        \'ns': 'user',
+        \'name': 'bar',
+        \'file': def_file,
+        \'line': 2,
+        \'column': 1,
+        \'status': ['done']}
+  let responses['find-symbol'] = [
+        \{'occurrence': '{:file "'.def_file.'"   :line-beg 2 :col-beg 4}'},
+        \{'occurrence': '{:file "'.alias_file.'" :line-beg 3 :col-beg 13}'},
+        \{'occurrence': '{:file "'.refer_file.'" :line-beg 1 :col-beg 31}'},
+        \{'occurrence': '{:file "'.refer_file.'" :line-beg 3 :col-beg 12}'},
+        \{'status': ['done']}]
+  call s:ch.mock({'status_value': 'open', 'relay':
+        \{m -> get(responses, m['op'], {'status': ['done']})}})
+
+
+  call s:io.mock({'input': 'new-name'})
+  call iced#nrepl#refactor#rename_symbol('dummy')
+  sleep 1000m " TODO figure out how to wait for finished refactoring
+
+
+  call s:assert.equals(readfile(def_file), [
+        \'(ns user)',
+        \'   (defn new-name [] :bar)'])
+  call delete(def_file)
+
+  call s:assert.equals(readfile(alias_file), [
+        \'(ns a (:require [user :as a.u])',
+        \';; bar',
+        \'(let [bar (a.u/new-name :bar))]'])
+  call delete(alias_file)
+
+  call s:assert.equals(readfile(refer_file), [
+        \'(ns a (:require [user :refer [new-name]])',
+        \';; bar',
+        \'(let [bar (new-name :bar))]'])
+  call delete(refer_file)
+endfunction
+" }}}
 " vim:fdm=marker:fdl=0

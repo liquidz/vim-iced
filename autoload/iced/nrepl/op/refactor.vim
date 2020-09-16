@@ -36,6 +36,23 @@ function! iced#nrepl#op#refactor#add_missing(symbol, callback) abort
         \ })
 endfunction
 
+function! iced#nrepl#op#refactor#find_symbol(ns_name, symbol, filepath, line, column, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  return iced#nrepl#send({
+        \ 'op': 'find-symbol',
+        \ 'id': iced#nrepl#id(),
+        \ 'session': iced#nrepl#current_session(),
+        \ 'ns': a:ns_name,
+        \ 'name': a:symbol,
+        \ 'file': a:filepath,
+        \ 'line': a:line,
+        \ 'column': a:column,
+        \ 'callback': a:callback,
+        \ })
+endfunction
+call iced#nrepl#register_handler('find-symbol', function('iced#nrepl#extend_responses_handler'))
+
 function! iced#nrepl#op#refactor#find_used_locals(filepath, line, column, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
