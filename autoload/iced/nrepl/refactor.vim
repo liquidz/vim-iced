@@ -401,6 +401,9 @@ function! s:found_symbols(old_name, symbols) abort
 
   let io = iced#system#get('io')
   let new_name = trim(io.input('New name: '))
+  if empty(new_name)
+    return iced#message#info('canceled')
+  endif
 
   let symbols = filter(a:symbols, {i, v -> has_key(v, 'occurrence')})
   let occurrences = map(symbols, {i, v -> iced#promise#sync(edn.decode, [v['occurrence']])})
@@ -408,9 +411,7 @@ function! s:found_symbols(old_name, symbols) abort
   " occurrence to the right should be renamed first to avoid shifting column numbers
   call sort(occurrences, {a, b -> b['col-beg'] - a['col-beg']}) 
 
-  for occurrence in occurrences
-    call s:rename_occurrence(a:old_name, new_name, occurrence)
-  endfor
+  call map(occurrences, {i, v -> s:rename_occurrence(a:old_name, new_name, v)})
 endfunction
 
 function! s:rename_occurrence(old_name, new_name, occurrence) abort

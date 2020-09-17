@@ -323,7 +323,6 @@ endfunction
 "
 " TODO
 "
-" * user does not provide 'New name'
 " * definition form with multiline documentation
 " * symbol defined in jar
 "
@@ -391,6 +390,39 @@ function! s:suite.rename_symbol_test() abort
 
   call s:assert.equals(readfile(sameline_file), ['[new-name new-name]'])
   call delete(sameline_file)
+endfunction
+
+function! s:suite.rename_symbol_no_input_test() abort
+  let def_file = tempname()
+  let original_src = ['(ns user)', '   (defn bar [] :bar)']
+  call writefile(original_src, def_file)
+
+  let nrepl_ops = {}
+  let nrepl_ops['info'] = {
+        \'ns': 'user',
+        \'name': 'bar',
+        \'file': def_file,
+        \'line': 2,
+        \'column': 1,
+        \'status': ['done']}
+  let nrepl_ops['find-symbol'] = [
+        \{'occurrence': '{:file "'.def_file.'"   :line-beg 2 :col-beg 4}'},
+        \{'status': ['done']}]
+  call s:ch.mock({'status_value': 'open', 'relay':
+        \{m -> get(nrepl_ops, m['op'], {'status': ['done']})}})
+
+
+  call s:io.mock({'input': ' '})
+  call iced#promise#wait(iced#nrepl#refactor#rename_symbol('dummy'))
+
+
+  call s:assert.equals(readfile(def_file), original_src)
+  call delete(def_file)
+
+  call s:assert.equals(
+        \ s:io.get_last_args()['echomsg']['text'],
+        \ iced#message#get('canceled'),
+        \ )
 endfunction
 " }}}
 
