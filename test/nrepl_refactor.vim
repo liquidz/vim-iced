@@ -320,6 +320,14 @@ endfunction
 " }}}
 
 " rename_symbol {{{
+"
+" TODO
+"
+" * occurrences on the same line
+" * user does not provide 'New name'
+" * definition form with multiline documentation
+" * symbol defined in jar
+"
 function! s:suite.rename_symbol_test() abort
   let def_file = tempname()
   call writefile([
