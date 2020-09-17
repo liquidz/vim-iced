@@ -320,11 +320,6 @@ endfunction
 " }}}
 
 " rename_symbol {{{
-"
-" TODO
-"
-" * definition form with multiline documentation
-"
 function! s:suite.rename_symbol_test() abort
   let def_file = tempname()
   call writefile([
@@ -346,6 +341,12 @@ function! s:suite.rename_symbol_test() abort
   let sameline_file = tempname()
   call writefile(['[bar bar]'], sameline_file)
 
+  let def_newline_file = tempname()
+  call writefile([
+        \'(def ^{:doc "bar"',
+        \'       :optional 123}',
+        \' bar)'], def_newline_file)
+
   let nrepl_ops = {}
   let nrepl_ops['info'] = {
         \'ns': 'user',
@@ -356,11 +357,12 @@ function! s:suite.rename_symbol_test() abort
         \'status': ['done']}
   let nrepl_ops['find-symbol'] = [
         \{'occurrence': '{:file "'.def_file.'"   :line-beg 2 :col-beg 4}'},
-        \{'occurrence': '{:file "'.alias_file.'" :line-beg 3 :col-beg 13}'},
+        \{'occurrence': '{:file "'.alias_file.'" :line-beg 3 :col-beg 12}'},
         \{'occurrence': '{:file "'.refer_file.'" :line-beg 1 :col-beg 31}'},
         \{'occurrence': '{:file "'.refer_file.'" :line-beg 3 :col-beg 12}'},
         \{'occurrence': '{:file "'.sameline_file.'" :line-beg 1 :col-beg 2}'},
         \{'occurrence': '{:file "'.sameline_file.'" :line-beg 1 :col-beg 6}'},
+        \{'occurrence': '{:file "'.def_newline_file.'" :line-beg 1 :col-beg 1}'},
         \{'status': ['done']}]
   call s:ch.mock({'status_value': 'open', 'relay':
         \{m -> get(nrepl_ops, m['op'], {'status': ['done']})}})
@@ -389,6 +391,12 @@ function! s:suite.rename_symbol_test() abort
 
   call s:assert.equals(readfile(sameline_file), ['[new-name new-name]'])
   call delete(sameline_file)
+
+  call s:assert.equals(readfile(def_newline_file), [
+        \'(def ^{:doc "bar"',
+        \'       :optional 123}',
+        \' new-name)'])
+  call delete(def_newline_file)
 endfunction
 
 function! s:suite.rename_symbol_no_input_test() abort
@@ -461,7 +469,6 @@ function! s:suite.rename_symbol_in_jar_test() abort
         \ s:io.get_last_args()['echomsg']['text'],
         \ iced#message#get('not_found'),
         \ )
-endfunction
-" }}}
+endfunction " }}}
 
 " vim:fdm=marker:fdl=0

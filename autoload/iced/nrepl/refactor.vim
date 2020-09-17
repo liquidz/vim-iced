@@ -422,6 +422,11 @@ function! s:found_symbols(old_name, symbols) abort
   call map(occurrences, {i, v -> s:rename_occurrence(a:old_name, new_name, v)})
 endfunction
 
+function! s:char_at(expr) abort
+  let [_b, cursorline, cursorcol, _o] = getpos(a:expr)
+  return getline(cursorline)[cursorcol - 1]
+endfunction
+
 function! s:rename_occurrence(old_name, new_name, occurrence) abort
   let line = a:occurrence['line-beg']
   let file = a:occurrence['file']
@@ -431,16 +436,29 @@ function! s:rename_occurrence(old_name, new_name, occurrence) abort
 
   call cmd.exe(printf(':edit +%s %s', line, file))
 
-  " substitute exactly at position
-  " \1 - matches all characters before col-beg
-  " \2 - matches optional namespace
-  call cmd.exe(printf(':silent! s/\v^(.{%s})(.{-}\/)=%s/\1\2%s/', column - 1, a:old_name, a:new_name))
+  " navigate to the occurrence
+  call cmd.exe(printf(':normal! %s|', column))
 
-  " substitute in definition form
-  " (because refactor-nrepl reports opening paren for declaration)
-  " \1 - matches all characters before col-beg
-  " \2 - matches optional definition prefix i.e. '(def ' '(defmethod ' '(defn ' '(defmutli '
-  call cmd.exe(printf(':silent! s/\v^(.{%s})(\(def.{-})%s/\1\2%s/', column - 1, a:old_name, a:new_name))
+  " when occurence is definition the find-symbol reports whole form
+  if s:char_at('.') ==# '('
+    " skip open paren
+    call cmd.exe('normal! l')
+    " skip definition keyword like def defmethod defn defmulti
+    call sexp#move_to_adjacent_element('n', 1, 1, 0, 0)
+
+    " when definition has metadata
+    if s:char_at('.') ==# '^'
+      " skip caret symbol
+      call cmd.exe('normal! l')
+      " skip metadata map
+      call sexp#move_to_adjacent_element('n',1, 1, 0, 0)
+    endif
+  endif
+
+  " substitute exactly at position
+  " \1 - matches all characters before col
+  " \2 - matches optional namespace
+  call cmd.exe(printf(':silent! s/\v^(.{%s})(.{-}\/)=%s/\1\2%s/', col('.') - 1, a:old_name, a:new_name))
 
   call cmd.exe(':write')
 endfunction " }}}
