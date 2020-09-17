@@ -323,7 +323,6 @@ endfunction
 "
 " TODO
 "
-" * occurrences on the same line
 " * user does not provide 'New name'
 " * definition form with multiline documentation
 " * symbol defined in jar
@@ -346,6 +345,9 @@ function! s:suite.rename_symbol_test() abort
         \';; bar',
         \'(let [bar (bar :bar))]'], refer_file)
 
+  let sameline_file = tempname()
+  call writefile(['[bar bar]'], sameline_file)
+
   let nrepl_ops = {}
   let nrepl_ops['info'] = {
         \'ns': 'user',
@@ -359,6 +361,8 @@ function! s:suite.rename_symbol_test() abort
         \{'occurrence': '{:file "'.alias_file.'" :line-beg 3 :col-beg 13}'},
         \{'occurrence': '{:file "'.refer_file.'" :line-beg 1 :col-beg 31}'},
         \{'occurrence': '{:file "'.refer_file.'" :line-beg 3 :col-beg 12}'},
+        \{'occurrence': '{:file "'.sameline_file.'" :line-beg 1 :col-beg 2}'},
+        \{'occurrence': '{:file "'.sameline_file.'" :line-beg 1 :col-beg 6}'},
         \{'status': ['done']}]
   call s:ch.mock({'status_value': 'open', 'relay':
         \{m -> get(nrepl_ops, m['op'], {'status': ['done']})}})
@@ -384,6 +388,9 @@ function! s:suite.rename_symbol_test() abort
         \';; bar',
         \'(let [bar (new-name :bar))]'])
   call delete(refer_file)
+
+  call s:assert.equals(readfile(sameline_file), ['[new-name new-name]'])
+  call delete(sameline_file)
 endfunction
 " }}}
 
