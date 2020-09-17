@@ -424,6 +424,22 @@ function! s:suite.rename_symbol_no_input_test() abort
         \ iced#message#get('canceled'),
         \ )
 endfunction
+
+function! s:suite.rename_symbol_not_found_test() abort
+  let nrepl_ops = {}
+  let nrepl_ops['info'] = {'status': ['done', 'no-info']}
+  call s:ch.mock({'status_value': 'open', 'relay':
+        \{m -> get(nrepl_ops, m['op'], {'status': ['done']})}})
+
+
+  call iced#promise#wait(iced#nrepl#refactor#rename_symbol('dummy'))
+
+
+  call s:assert.equals(
+        \ s:io.get_last_args()['echomsg']['text'],
+        \ iced#message#get('not_found'),
+        \ )
+endfunction
 " }}}
 
 " vim:fdm=marker:fdl=0
