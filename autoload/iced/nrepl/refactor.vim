@@ -4,6 +4,7 @@ set cpo&vim
 let s:V = vital#iced#new()
 let s:D = s:V.import('Data.Dict')
 let s:L = s:V.import('Data.List')
+let s:S = s:V.import('Data.String')
 " g:iced#ns#favorites {{{
 let s:default_ns_favorites = {
       \ 'clj': {
@@ -387,11 +388,18 @@ function! s:got_var(var) abort
         \|| !has_key(a:var, 'column') || !has_key(a:var, 'line')
     return iced#message#error('not_found')
   endif
+
   let ns = a:var['ns']
   let name = a:var['name']
   let file = a:var['file']
   let column = a:var['column']
   let line = a:var['line']
+
+  " find_symbol prints exception for file a jar
+  if s:S.starts_with(file, 'zipfile:/')
+    return iced#message#error('not_found')
+  endif
+
   return iced#promise#call('iced#nrepl#op#refactor#find_symbol', [ns, name, file, line, column])
         \.then(funcref('s:found_symbols', [name]))
 endfunction

@@ -324,7 +324,6 @@ endfunction
 " TODO
 "
 " * definition form with multiline documentation
-" * symbol defined in jar
 "
 function! s:suite.rename_symbol_test() abort
   let def_file = tempname()
@@ -432,6 +431,29 @@ function! s:suite.rename_symbol_not_found_test() abort
         \{m -> get(nrepl_ops, m['op'], {'status': ['done']})}})
 
 
+  call iced#promise#wait(iced#nrepl#refactor#rename_symbol('dummy'))
+
+
+  call s:assert.equals(
+        \ s:io.get_last_args()['echomsg']['text'],
+        \ iced#message#get('not_found'),
+        \ )
+endfunction
+
+function! s:suite.rename_symbol_in_jar_test() abort
+  let nrepl_ops = {}
+  let nrepl_ops['info'] = {
+        \'ns': 'user',
+        \'name': 'bar',
+        \'file': 'zipfile:/path/to.jar::some/namespace.clj',
+        \'line': 2,
+        \'column': 1,
+        \'status': ['done']}
+  call s:ch.mock({'status_value': 'open', 'relay':
+        \{m -> get(nrepl_ops, m['op'], {'status': ['done']})}})
+
+
+  call s:io.mock({'input': 'new-name'})
   call iced#promise#wait(iced#nrepl#refactor#rename_symbol('dummy'))
 
 
