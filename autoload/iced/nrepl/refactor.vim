@@ -439,7 +439,7 @@ function! s:rename_occurrence(old_name, new_name, occurrence) abort
   " navigate to the occurrence
   call cmd.exe(printf(':normal! %s|', column))
 
-  " when occurence is definition the find-symbol reports whole form
+  " when occurrence is definition the find-symbol reports whole form
   if s:char_at('.') ==# '('
     " skip open paren
     call cmd.exe('normal! l')
