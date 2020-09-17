@@ -338,27 +338,26 @@ function! s:suite.rename_symbol_test() abort
         \';; bar',
         \'(let [bar (bar :bar))]'], refer_file)
 
-  let responses = {}
-  let responses['info'] = {
+  let nrepl_ops = {}
+  let nrepl_ops['info'] = {
         \'ns': 'user',
         \'name': 'bar',
         \'file': def_file,
         \'line': 2,
         \'column': 1,
         \'status': ['done']}
-  let responses['find-symbol'] = [
+  let nrepl_ops['find-symbol'] = [
         \{'occurrence': '{:file "'.def_file.'"   :line-beg 2 :col-beg 4}'},
         \{'occurrence': '{:file "'.alias_file.'" :line-beg 3 :col-beg 13}'},
         \{'occurrence': '{:file "'.refer_file.'" :line-beg 1 :col-beg 31}'},
         \{'occurrence': '{:file "'.refer_file.'" :line-beg 3 :col-beg 12}'},
         \{'status': ['done']}]
   call s:ch.mock({'status_value': 'open', 'relay':
-        \{m -> get(responses, m['op'], {'status': ['done']})}})
+        \{m -> get(nrepl_ops, m['op'], {'status': ['done']})}})
 
 
   call s:io.mock({'input': 'new-name'})
-  call iced#nrepl#refactor#rename_symbol('dummy')
-  sleep 1000m " TODO figure out how to wait for finished refactoring
+  call iced#promise#wait(iced#nrepl#refactor#rename_symbol('dummy'))
 
 
   call s:assert.equals(readfile(def_file), [
@@ -379,4 +378,5 @@ function! s:suite.rename_symbol_test() abort
   call delete(refer_file)
 endfunction
 " }}}
+
 " vim:fdm=marker:fdl=0
