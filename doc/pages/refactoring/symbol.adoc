@@ -1,0 +1,33 @@
+=== Symbol [[refactoring_symbol]]
+
+Following commands are available.
+
+[cols="30,20,50"]
+|===
+| Command | Default key mapping | Description
+
+| {help_html}#%3AIcedRenameSymbol[IcedRenameSymbol]
+| {plug_iced_rename_symbol}
+| Rename all occurrences of the symbol under cursor.
+
+|===
+
+==== Examples
+
+.IcedRenameSymbol (📍 means cursor position, and "bar" is inputed by user)
+[source,clojure]
+----
+;; before
+(defn foo [x]
+  (inc (* x 2)))
+
+(def usage
+  {:value (📍foo 21})
+
+;; after
+(defn bar [x]
+  (inc (* x 2)))
+
+(def usage
+  {:value (bar 21})
+----

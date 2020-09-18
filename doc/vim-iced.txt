@@ -509,6 +509,7 @@ REFACTORING                                              *vim-iced-refactoring*
   - |:IcedExtractFunction| (|<Plug>(iced_extract_function)|)
   - |:IcedAddArity| (|<Plug>(iced_add_arity)|)
   - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
+  - |:IcedRenameSymbol| (|<Plug>(iced_rename_symbol)|)
 
 
 ==============================================================================
@@ -1057,6 +1058,15 @@ COMMANDS                                                    *vim-iced-commands*
   If there is no `let` form in current top list,
   wrap the form with `let`.
 
+                                                               *:IcedRenameSymbol*
+:IcedRenameSymbol
+  Rename all occurrences of the symbol under cursor.
+
+  WARNING:
+    RenameSymbol command requires `borkdude/jet`.
+    https://github.com/borkdude/jet
+    vim-iced will confirm you to install `jet` automatically If not installed.
+
                                                             *:IcedBrowseTapped*
 :IcedBrowseTapped [{keys}]
 
@@ -1492,6 +1502,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                      *<Plug>(iced_move_to_let)*
 <Plug>(iced_move_to_let)
   Same as |:IcedMoveToLet|.
+
+                                                     *<Plug>(iced_rename_symbol)*
+<Plug>(iced_rename_symbol)
+  Same as |:IcedRenameSymbol|.
 
                                                    *<Plug>(iced_browse_tapped)*
 <Plug>(iced_browse_tapped)
@@ -2080,6 +2094,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>rtl  <Plug>(iced_thread_last)
   n       <Leader>ref  <Plug>(iced_extract_function)
   n       <Leader>rml  <Plug>(iced_move_to_let)
+  n       <Leader>rrs  <Plug>(iced_rename_symbol)
   n       K            <Plug>(iced_document_popup_open)
   n       <Leader>hb   <Plug>(iced_document_open)
   n       <Leader>hu   <Plug>(iced_use_case_open)
