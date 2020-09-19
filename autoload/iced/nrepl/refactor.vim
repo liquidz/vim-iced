@@ -395,7 +395,7 @@ function! s:got_var(var) abort
   let column = a:var['column']
   let line = a:var['line']
 
-  " find_symbol prints exception for file a jar
+  " find_symbol prints exception for a file in a jar
   if stridx(file, 'zipfile:/') == 0
     return iced#message#error('not_found')
   endif
@@ -423,7 +423,7 @@ function! s:found_symbols(old_name, symbols) abort
   try
     call map(occurrences, {i, v -> s:rename_occurrence(a:old_name, new_name, v)})
   finally
-    let ctx = iced#util#restore_context()
+    call iced#util#restore_context(ctx)
   endtry
 endfunction
 
