@@ -331,9 +331,9 @@ function! s:dummy_info(name) abort
 endfunction
 
 function! s:nrepl_mock(ops) abort
-call s:ch.mock({
-      \'status_value': 'open',
-      \'relay': {msg -> get(a:ops, msg['op'], {'status': ['done']})}})
+  call s:ch.mock({
+        \'status_value': 'open',
+        \'relay': {msg -> get(a:ops, msg['op'], {'status': ['done']})}})
 endfunction
 
 function! s:suite.rename_symbol_test() abort
@@ -447,6 +447,7 @@ endfunction
 
 function! s:suite.rename_symbol_not_found_test() abort
   call s:nrepl_mock({'info': {'status': ['done', 'no-info']}})
+  call s:io.mock()
 
   call iced#promise#wait(iced#nrepl#refactor#rename_symbol('dummy'))
 
@@ -460,6 +461,7 @@ function! s:suite.rename_symbol_in_jar_test() abort
   let info = s:dummy_info('bar')
   let info.file = 'zipfile:/path/to.jar::some/namespace.clj'
   call s:nrepl_mock({'info': info})
+  call s:io.mock()
 
   call iced#promise#wait(iced#nrepl#refactor#rename_symbol('dummy'))
 

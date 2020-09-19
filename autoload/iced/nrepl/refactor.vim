@@ -4,7 +4,6 @@ set cpo&vim
 let s:V = vital#iced#new()
 let s:D = s:V.import('Data.Dict')
 let s:L = s:V.import('Data.List')
-let s:S = s:V.import('Data.String')
 " g:iced#ns#favorites {{{
 let s:default_ns_favorites = {
       \ 'clj': {
@@ -378,6 +377,7 @@ endfunction " }}}
 
 " iced#nrepl#refactor#rename_symbol {{{
 function! iced#nrepl#refactor#rename_symbol(symbol) abort
+  call iced#message#echom('fetching')
   return iced#promise#call('iced#nrepl#var#get', [a:symbol])
         \.then(funcref('s:got_var'))
 endfunction
@@ -396,7 +396,7 @@ function! s:got_var(var) abort
   let line = a:var['line']
 
   " find_symbol prints exception for file a jar
-  if s:S.starts_with(file, 'zipfile:/')
+  if stridx(file, 'zipfile:/') == 0
     return iced#message#error('not_found')
   endif
 
@@ -419,7 +419,12 @@ function! s:found_symbols(old_name, symbols) abort
   " occurrence to the right should be renamed first to avoid shifting column numbers
   call sort(occurrences, {a, b -> b['col-beg'] - a['col-beg']}) 
 
-  call map(occurrences, {i, v -> s:rename_occurrence(a:old_name, new_name, v)})
+  let ctx = iced#util#save_context()
+  try
+    call map(occurrences, {i, v -> s:rename_occurrence(a:old_name, new_name, v)})
+  finally
+    let ctx = iced#util#restore_context()
+  endtry
 endfunction
 
 function! s:char_at(expr) abort

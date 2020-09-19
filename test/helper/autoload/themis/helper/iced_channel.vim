@@ -36,7 +36,7 @@ function! s:build_test_channel(opt) abort
     if has_key(self, 'relay') && type(self.relay) == v:t_func
       let sent_data = iced#system#get('bencode').decode(a:string)
       let responses = self.relay(sent_data)
-      if type(responses) !=# type([])
+      if type(responses) !=# v:t_list
         let responses = [responses]
       endif
 
