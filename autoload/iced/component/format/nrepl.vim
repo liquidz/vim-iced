@@ -18,6 +18,7 @@ function! s:set_indentation_rule() abort
 endfunction
 
 function! s:__format_finally(self, args) abort
+  call themis#log('FIXME __format_finaly')
   let current_bufnr = get(a:args, 'back_to_bufnr', bufnr('%'))
   let different_buffer = (current_bufnr != a:args.context.bufnr)
   if different_buffer | call iced#buffer#focus(a:args.context.bufnr) | endif
@@ -88,6 +89,8 @@ endfunction " }}}
 
 " format current form {{{
 function! s:__format_form(resp, self, finally_args) abort
+
+  call themis#log('FIXME __format_form')
   let current_bufnr = bufnr('%')
   if current_bufnr != a:finally_args.context.bufnr
     call iced#buffer#focus(a:finally_args.context.bufnr)
@@ -133,6 +136,7 @@ function! s:fmt.current_form() abort
 
   " Disable editing until the formatting process is completed
   setl nomodifiable
+  call themis#log('FIXME current_form')
   return iced#promise#call('iced#nrepl#op#iced#format_code', [codes, alias_dict])
         \.then({resp -> s:__format_form(resp, self, finally_args)})
         \.catch({_ -> s:__format_finally(self, finally_args)})

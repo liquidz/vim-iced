@@ -319,4 +319,3 @@ function! s:suite.add_arity_defmethod_test() abort
 endfunction
 " }}}
 
-" vim:fdm=marker:fdl=0

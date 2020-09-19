@@ -27,11 +27,21 @@ function! iced#nrepl#ns#util#search() abort
   return 1
 endfunction
 
+" NOTE: need to calculate lnum after calling `iced#format#current`
+function! s:__restview_after_replace(view) abort
+  call themis#log('FIXME s:__restview_after_replace')
+  let view = copy(a:view)
+  let after_lnum = len(split(iced#nrepl#ns#get(), '\r\?\n'))
+  let view['lnum'] = view['lnum'] + (after_lnum - before_lnum)
+  call winrestview(view)
+endfunction
+
 function! iced#nrepl#ns#util#replace(new_ns) abort
   let view = winsaveview()
   let before_lnum = 0
   let after_lnum = 0
   let reg_save = @@
+  let p = iced#promise#resolve('ok')
 
   try
     if iced#nrepl#ns#util#search() == 0
@@ -52,20 +62,26 @@ function! iced#nrepl#ns#util#replace(new_ns) abort
   finally
     let @@ = reg_save
     if iced#nrepl#ns#util#search() != 0
-      call iced#promise#wait(iced#format#current())
-
-      if iced#nrepl#current_session_key() ==# 'clj'
-        call iced#nrepl#ns#eval({_ -> ''})
-      else
-        call iced#nrepl#ns#load_current_file({_ -> ''})
-      endif
+      let p = iced#format#current()
+            \.then({_ -> (iced#nrepl#current_session_key() ==# 'clj')
+            \            ? icedpromise#call('iced#nrepl#ns#eval', [])
+            \            : icedpromise#call('iced#nrepl#ns#load_current_file', [])})
+            \.then({_ -> s:__restview_after_replace(view)})
+      " call iced#promise#wait(iced#format#current())
+      "
+      " if iced#nrepl#current_session_key() ==# 'clj'
+      "   call iced#nrepl#ns#eval({_ -> ''})
+      " else
+      "   call iced#nrepl#ns#load_current_file({_ -> ''})
+      " endif
     endif
 
-    " NOTE: need to calculate lnum after calling `iced#format#current`
-    let after_lnum = len(split(iced#nrepl#ns#get(), '\r\?\n'))
-    let view['lnum'] = view['lnum'] + (after_lnum - before_lnum)
-    call winrestview(view)
+    " let after_lnum = len(split(iced#nrepl#ns#get(), '\r\?\n'))
+    " let view['lnum'] = view['lnum'] + (after_lnum - before_lnum)
+    " call winrestview(view)
   endtry
+
+  return p
 endfunction
 
 function! iced#nrepl#ns#util#add_require_form(ns_code) abort

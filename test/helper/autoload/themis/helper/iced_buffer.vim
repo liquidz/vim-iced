@@ -47,6 +47,10 @@ function! s:helper.test_curpos(lines) abort
     let i = i+1
   endfor
 
+  call themis#log('FIXME [%s] [%s] [%s]', self.get_texts() ==# trim(join(expected_lines, "\n")),
+        \ cursor_pos[0] , current_pos[1]
+        \ )
+
   return self.get_texts() ==# trim(join(expected_lines, "\n"))
         \ && cursor_pos[0] == current_pos[1]
         \ && cursor_pos[1] == current_pos[2]

@@ -89,11 +89,14 @@ function! s:clean_ns(resp) abort
 
     let context = iced#util#save_context()
     try
-      call iced#nrepl#ns#util#replace(a:resp['ns'])
+      "call iced#nrepl#ns#util#replace(a:resp['ns'])
+      "let p = iced#nrepl#ns#util#replace(a:resp['ns'])
+      call iced#promise#sync('iced#nrepl#ns#util#replace', [a:resp['ns']])
+      call iced#message#info('cleaned')
+      "return p
     finally
       call iced#util#restore_context(context)
     endtry
-    call iced#message#info('cleaned')
   endif
 endfunction
 
