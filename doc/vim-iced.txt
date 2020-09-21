@@ -489,8 +489,10 @@ FORMATTING                                                *vim-iced-formatting*
 ------------------------------------------------------------------------------
 INDENTING                                                  *vim-iced-indenting*
 
-  vim-iced provides 'cljfmt' based auto indentation,
+  vim-iced provides auto indentation feature,
   and it is enabled by default.
+  Indent level is calculated by the set formatter,
+  so `cljfmt` formatter which is used by default may lead slow down vim/nvim.
 
   If you don't use vim-iced's auto indentation,
   you can disable it by |g:iced_enable_auto_indent| variable.
