@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. This change
 // {{{
 === Added
 * https://github.com/liquidz/vim-iced/issues/261[#261]: Added `:IcedRenameSymbol` command.
+* https://github.com/liquidz/vim-iced/issues/265[#265]: Added `g:iced#buffer#document#mods` option.
+
+=== Changed
+* Bump zprint to 1.0.1.
 
 === Fixed
 * https://github.com/liquidz/vim-iced/issues/264[#264]: Fixed command palette to show command messages correctly.
