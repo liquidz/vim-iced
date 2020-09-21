@@ -494,6 +494,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#formatting">9. Formatting</a>
 <ul class="sectlevel2">
 <li><a href="#formatting_customize">9.1. Customize formatter </a></li>
+<li><a href="#auto_indenting">9.2. Auto indenting</a></li>
 </ul>
 </li>
 <li><a href="#debugging">10. Debugging</a>
@@ -507,6 +508,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#refactoring_namespace">11.1. Namespace</a></li>
 <li><a href="#refactoring_function">11.2. Function</a></li>
 <li><a href="#refactoring_form">11.3. Form</a></li>
+<li><a href="#refactoring_symbol">11.4. Symbol</a></li>
 </ul>
 </li>
 <li><a href="#sideloader">12. Sideloader</a>
@@ -1617,6 +1619,25 @@ vim-iced will use the tool to format codes and calculate indent level.</p>
 </tr>
 </table>
 </div>
+</div>
+<div class="sect2">
+<h3 id="auto_indenting">9.2. Auto indenting</h3>
+<div class="paragraph">
+<p>vim-iced provides auto indentation feature, and it is enabled by default.</p>
+</div>
+<div class="paragraph">
+<p>Indent level is calculated by the set formatter,
+so <code>cljfmt</code> formatter which is used by default may lead slow down vim/nvim.</p>
+</div>
+<div class="paragraph">
+<p>If you don&#8217;t use vim-iced&#8217;s auto indentation,
+you can disable it by <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_auto_indent">g:iced_enable_auto_indent</a> variable.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim"><span class="k">let</span> <span class="nv">g:iced_enable_auto_indent</span> <span class="p">=</span> <span class="k">v</span><span class="p">:</span>false</code></pre>
+</div>
+</div>
 <div class="paragraph text-right">
 <p><span class="small"><a href="#top">Back to top</a></span></p>
 </div>
@@ -1918,6 +1939,54 @@ If there is no <code>let</code> form in current top list, wrap the form with <co
 </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">foo</span><span class="w"> </span><span class="mi">1</span><span class="w">
       </span><span class="n">bar</span><span class="w"> </span><span class="p">(</span><span class="nb">inc</span><span class="w"> </span><span class="n">foo</span><span class="p">)]</span><span class="w">
   </span><span class="n">bar</span><span class="p">)</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="refactoring_symbol">11.4. Symbol</h3>
+<div class="paragraph">
+<p>Following commands are available.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Command</th>
+<th class="tableblock halign-left valign-top">Default key mapping</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedRenameSymbol">IcedRenameSymbol</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;rrs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rename all occurrences of the symbol under cursor.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_examples_3">11.4.1. Examples</h4>
+<div class="listingblock">
+<div class="title">IcedRenameSymbol (📍 means cursor position, and "bar" is inputed by user)</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="clojure"><span class="c1">;; before</span><span class="w">
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">foo</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">inc</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">usage</span><span class="w">
+  </span><span class="p">{</span><span class="no">:value</span><span class="w"> </span><span class="p">(</span><span class="err">📍</span><span class="n">foo</span><span class="w"> </span><span class="mi">21</span><span class="p">})</span><span class="w">
+
+</span><span class="c1">;; after</span><span class="w">
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">bar</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">inc</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">usage</span><span class="w">
+  </span><span class="p">{</span><span class="no">:value</span><span class="w"> </span><span class="p">(</span><span class="nf">bar</span><span class="w"> </span><span class="mi">21</span><span class="p">})</span></code></pre>
 </div>
 </div>
 <div class="paragraph text-right">
@@ -3271,14 +3340,51 @@ This option is enabled when <code>g:iced#buffer#stdout#max_line</code> is a posi
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23buffer%23document%23mods">g:iced#buffer#document#mods</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>''</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Buffer position definition.<br>
+Following values are supported.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>vertical</code></p>
+</li>
+<li>
+<p><code>leftabove</code></p>
+</li>
+<li>
+<p><code>aboveleft</code></p>
+</li>
+<li>
+<p><code>rightbelow</code></p>
+</li>
+<li>
+<p><code>belowright</code></p>
+</li>
+<li>
+<p><code>topleft</code></p>
+</li>
+<li>
+<p><code>botright</code></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23buffer%23document%23height">g:iced#buffer#document#height</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>'previewheight'</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Document window height.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Document window height.</p>
+</div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23buffer%23document%23does_update_automatically">g:iced#buffer#document#does_update_automatically</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>v:false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>v:true</code> and document buffer is visible, update document buffer with document for the form under cursor.</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>If <code>v:true</code> and document buffer is visible, update document buffer with document for the form under cursor.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -4143,6 +4249,10 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 <td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;rml</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Move the form under cursor to nearest <a href="https://clojuredocs.org/clojure.core/let"><code>let</code></a> binding</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;rrs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rename all occurrences of the symbol under cursor.</p></td>
+</tr>
 </tbody>
 </table></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -4172,7 +4282,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-09-12 22:49:41 UTC
+Last updated 2020-09-21 23:42:38 UTC
 </div>
 </div>
 <style>
