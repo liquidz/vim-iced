@@ -104,6 +104,8 @@ See {help_html}#g%3Aiced_enable_default_key_mappings[help file] for whole defaul
 ! Convert form to use https://clojuredocs.org/clojure.core/-%3E%3E[`+->>+`] threading macro
 ! {plug_iced_move_to_let}
 ! Move the form under cursor to nearest https://clojuredocs.org/clojure.core/let[`let`] binding
+! {plug_iced_rename_symbol}
+! Rename all occurrences of the symbol under cursor.
 !===
 
 | *Others*

@@ -44,6 +44,7 @@
 :plug_iced_macroexpand_1_outer_list: <Leader>em
 :plug_iced_macroexpand_outer_list: <Leader>eM
 :plug_iced_move_to_let: <Leader>rml
+:plug_iced_rename_symbol: <Leader>rrs
 :plug_iced_require: <Leader>eb
 :plug_iced_source_popup_show: <Leader>hs
 :plug_iced_source_show: <Leader>hS

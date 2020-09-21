@@ -7,6 +7,11 @@ let s:Promise = s:V.import('Async.Promise')
 let s:default_timeout_ms = 3000
 let g:iced#promise#timeout_ms = get(g:, 'iced#promise#timeout_ms', s:default_timeout_ms)
 
+function! iced#promise#new(fn) abort
+  let Fn = (type(a:fn) == v:t_func) ? a:fn : function(a:fn)
+  return s:Promise.new(Fn)
+endfunction
+
 function! iced#promise#call(fn, args) abort
   let Fn = (type(a:fn) == v:t_func) ? a:fn : function(a:fn)
   let arg_type = type(a:args)

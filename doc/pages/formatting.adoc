@@ -44,3 +44,18 @@ vim-iced will use the tool to format codes and calculate indent level.
 ====
 These tools can be downloaded automatically if you want.
 ====
+
+=== Auto indenting [[auto_indenting]]
+
+vim-iced provides auto indentation feature, and it is enabled by default.
+
+Indent level is calculated by the set formatter,
+so `cljfmt` formatter which is used by default may lead slow down vim/nvim.
+
+If you don't use vim-iced's auto indentation,
+you can disable it by {help_html}#g%3Aiced_enable_auto_indent[g:iced_enable_auto_indent] variable.
+
+[source,vim]
+----
+let g:iced_enable_auto_indent = v:false
+----

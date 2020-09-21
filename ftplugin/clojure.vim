@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 20200
+let g:vim_iced_version = 20300
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -154,6 +154,7 @@ command!          IcedThreadLast            call iced#nrepl#refactor#thread_last
 command!          IcedExtractFunction       call iced#nrepl#refactor#extract_function()
 command!          IcedAddArity              call iced#nrepl#refactor#add_arity()
 command!          IcedMoveToLet             call iced#let#move_to_let()
+command! -nargs=? IcedRenameSymbol          call iced#nrepl#refactor#rename_symbol(<q-args>)
 
 command! -nargs=? -complete=custom,iced#nrepl#debug#complete_tapped
       \ IcedBrowseTapped                    call iced#nrepl#debug#browse_tapped(<q-args>)
@@ -268,6 +269,7 @@ nnoremap <silent> <Plug>(iced_thread_last)              :<C-u>IcedThreadLast<CR>
 nnoremap <silent> <Plug>(iced_extract_function)         :<C-u>IcedExtractFunction<CR>
 nnoremap <silent> <Plug>(iced_add_arity)                :<C-u>IcedAddArity<CR>
 nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
+nnoremap <silent> <Plug>(iced_rename_symbol)            :<C-u>IcedRenameSymbol<CR>
 
 nnoremap <silent> <Plug>(iced_browse_tapped)            :<C-u>IcedBrowseTapped<CR>
 nnoremap <silent> <Plug>(iced_clear_tapped)             :<C-u>IcedClearTapped<CR>
@@ -394,6 +396,7 @@ function! s:default_key_mappings() abort
   call s:define_mapping('nmap', '<Leader>ref', '<Plug>(iced_extract_function)')
   call s:define_mapping('nmap', '<Leader>raa', '<Plug>(iced_add_arity)')
   call s:define_mapping('nmap', '<Leader>rml', '<Plug>(iced_move_to_let)')
+  call s:define_mapping('nmap', '<Leader>rrs', '<Plug>(iced_rename_symbol)')
 
   "" Help/Document (<Leader>h)
   "" ------------------------------------------------------------------------

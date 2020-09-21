@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.2.0
+Version: 2.3.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -489,8 +489,10 @@ FORMATTING                                                *vim-iced-formatting*
 ------------------------------------------------------------------------------
 INDENTING                                                  *vim-iced-indenting*
 
-  vim-iced provides 'cljfmt' based auto indentation,
+  vim-iced provides auto indentation feature,
   and it is enabled by default.
+  Indent level is calculated by the set formatter,
+  so `cljfmt` formatter which is used by default may lead slow down vim/nvim.
 
   If you don't use vim-iced's auto indentation,
   you can disable it by |g:iced_enable_auto_indent| variable.
@@ -509,6 +511,7 @@ REFACTORING                                              *vim-iced-refactoring*
   - |:IcedExtractFunction| (|<Plug>(iced_extract_function)|)
   - |:IcedAddArity| (|<Plug>(iced_add_arity)|)
   - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
+  - |:IcedRenameSymbol| (|<Plug>(iced_rename_symbol)|)
 
 
 ==============================================================================
@@ -1057,6 +1060,15 @@ COMMANDS                                                    *vim-iced-commands*
   If there is no `let` form in current top list,
   wrap the form with `let`.
 
+                                                               *:IcedRenameSymbol*
+:IcedRenameSymbol
+  Rename all occurrences of the symbol under cursor.
+
+  WARNING:
+    RenameSymbol command requires `borkdude/jet`.
+    https://github.com/borkdude/jet
+    vim-iced will confirm you to install `jet` automatically If not installed.
+
                                                             *:IcedBrowseTapped*
 :IcedBrowseTapped [{keys}]
 
@@ -1493,6 +1505,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_move_to_let)
   Same as |:IcedMoveToLet|.
 
+                                                     *<Plug>(iced_rename_symbol)*
+<Plug>(iced_rename_symbol)
+  Same as |:IcedRenameSymbol|.
+
                                                    *<Plug>(iced_browse_tapped)*
 <Plug>(iced_browse_tapped)
   Same as |:IcedBrowseTapped|.
@@ -1801,6 +1817,18 @@ TONSKY'S RULE~
 ------------------------------------------------------------------------------
 DOCUMENTS                                      *vim-iced-customizing-documents*
 
+                                                  *g:iced#buffer#document#mods*
+g:iced#buffer#document#mods
+  Buffer position definition.
+  Following values are supported.
+  - {vertical}
+  - {leftabove}
+  - {aboveleft}
+  - {rightbelow}
+  - {belowright}
+  - {topleft}
+  - {botright}
+
                                                 *g:iced#buffer#document#height*
 g:iced#buffer#document#height
   Document window height.
@@ -2080,6 +2108,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>rtl  <Plug>(iced_thread_last)
   n       <Leader>ref  <Plug>(iced_extract_function)
   n       <Leader>rml  <Plug>(iced_move_to_let)
+  n       <Leader>rrs  <Plug>(iced_rename_symbol)
   n       K            <Plug>(iced_document_popup_open)
   n       <Leader>hb   <Plug>(iced_document_open)
   n       <Leader>hu   <Plug>(iced_use_case_open)

@@ -43,9 +43,22 @@ This option is enabled when `g:iced#buffer#stdout#max_line` is a positive number
 ==== Document [[configuration_advanced_document]]
 
 .Document buffer
-[cols="30,20,50"]
+[cols="30,20,50a"]
 |===
 | Option | Default value | Description
+
+| {help_html}#g%3Aiced%23buffer%23document%23mods[g:iced#buffer#document#mods]
+| `''`
+| Buffer position definition. +
+Following values are supported.
+
+- `vertical`
+- `leftabove`
+- `aboveleft`
+- `rightbelow`
+- `belowright`
+- `topleft`
+- `botright`
 
 | {help_html}#g%3Aiced%23buffer%23document%23height[g:iced#buffer#document#height]
 | `'previewheight'`
