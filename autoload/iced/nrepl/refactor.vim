@@ -375,5 +375,98 @@ function! iced#nrepl#refactor#add_arity() abort
   endtry
 endfunction " }}}
 
+" iced#nrepl#refactor#rename_symbol {{{
+function! iced#nrepl#refactor#rename_symbol(symbol) abort
+  call iced#message#echom('fetching')
+  return iced#promise#call('iced#nrepl#var#get', [a:symbol])
+        \.then(funcref('s:got_var'))
+endfunction
+
+function! s:got_var(var) abort
+  if !has_key(a:var, 'file')
+        \|| !has_key(a:var, 'ns') || !has_key(a:var, 'name')
+        \|| !has_key(a:var, 'column') || !has_key(a:var, 'line')
+    return iced#message#error('not_found')
+  endif
+
+  let ns = a:var['ns']
+  let name = a:var['name']
+  let file = a:var['file']
+  let column = a:var['column']
+  let line = a:var['line']
+
+  " find_symbol prints exception for a file in a jar
+  if stridx(file, 'zipfile:/') == 0
+    return iced#message#error('not_found')
+  endif
+
+  return iced#promise#call('iced#nrepl#op#refactor#find_symbol', [ns, name, file, line, column])
+        \.then(funcref('s:found_symbols', [name]))
+endfunction
+
+function! s:found_symbols(old_name, symbols) abort
+  let edn = iced#system#get('edn')
+
+  let io = iced#system#get('io')
+  let new_name = trim(io.input('New name: '))
+  if empty(new_name)
+    return iced#message#info('canceled')
+  endif
+
+  let symbols = filter(a:symbols, {i, v -> has_key(v, 'occurrence')})
+  let occurrences = map(symbols, {i, v -> iced#promise#sync(edn.decode, [v['occurrence']])})
+
+  " occurrence to the right should be renamed first to avoid shifting column numbers
+  call sort(occurrences, {a, b -> b['col-beg'] - a['col-beg']}) 
+
+  let ctx = iced#util#save_context()
+  try
+    call map(occurrences, {i, v -> s:rename_occurrence(a:old_name, new_name, v)})
+  finally
+    call iced#util#restore_context(ctx)
+  endtry
+endfunction
+
+function! s:char_at(expr) abort
+  let [_b, cursorline, cursorcol, _o] = getpos(a:expr)
+  return getline(cursorline)[cursorcol - 1]
+endfunction
+
+function! s:rename_occurrence(old_name, new_name, occurrence) abort
+  let line = a:occurrence['line-beg']
+  let file = a:occurrence['file']
+  let column = a:occurrence['col-beg']
+
+  let cmd = iced#system#get('ex_cmd')
+
+  call cmd.exe(printf(':edit +%s %s', line, file))
+
+  " navigate to the occurrence
+  call cmd.exe(printf(':normal! %s|', column))
+
+  " when occurrence is definition the find-symbol reports whole form
+  if s:char_at('.') ==# '('
+    " skip open paren
+    call cmd.exe('normal! l')
+    " skip definition keyword like def defmethod defn defmulti
+    call sexp#move_to_adjacent_element('n', 1, 1, 0, 0)
+
+    " when definition has metadata
+    if s:char_at('.') ==# '^'
+      " skip caret symbol
+      call cmd.exe('normal! l')
+      " skip metadata map
+      call sexp#move_to_adjacent_element('n',1, 1, 0, 0)
+    endif
+  endif
+
+  " substitute exactly at position
+  " \1 - matches all characters before col
+  " \2 - matches optional namespace
+  call cmd.exe(printf(':silent! s/\v^(.{%s})(.{-}\/)=%s/\1\2%s/', col('.') - 1, a:old_name, a:new_name))
+
+  call cmd.exe(':write')
+endfunction " }}}
+
 let s:save_cpo = &cpo
 set cpo&vim

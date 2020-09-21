@@ -60,6 +60,7 @@ Add missing
 Thread first/last
 Extract function
 Move to let
+Rename symbol
 
 |:thought_balloon:
 |Auto completion

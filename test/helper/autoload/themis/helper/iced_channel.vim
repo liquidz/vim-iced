@@ -35,22 +35,28 @@ function! s:build_test_channel(opt) abort
   function! dummy.sendraw(handle, string) abort
     if has_key(self, 'relay') && type(self.relay) == v:t_func
       let sent_data = iced#system#get('bencode').decode(a:string)
-      let resp_data = self.relay(sent_data)
-      if has_key(sent_data, 'id') && !has_key(resp_data, 'id')
-        let resp_data['id'] = sent_data['id']
+      let responses = self.relay(sent_data)
+      if type(responses) !=# v:t_list
+        let responses = [responses]
       endif
 
-      if get(sent_data, 'op') ==# 'describe' && !has_key(resp_data, 'ops')
-        let resp_data['ops'] = {
-              \ 'info': 1, 'complete': 1, 'test-var-query': 1, 'ns-path': 1,
-              \ 'fn-refs': 1, 'fn-deps': 1, 'namespace-aliases': 1,
-              \ }
-      endif
+      for resp_data in responses
+        if has_key(sent_data, 'id') && !has_key(resp_data, 'id')
+          let resp_data['id'] = sent_data['id']
+        endif
 
-      let resp_data = iced#system#get('bencode').encode(resp_data)
-      let Cb = (has_key(self, 'callback') && type(self.callback) == v:t_func)
-          \ ? self.callback : s:funcs.dispatcher
-      call Cb(self, resp_data)
+        if get(sent_data, 'op') ==# 'describe' && !has_key(resp_data, 'ops')
+          let resp_data['ops'] = {
+                \ 'info': 1, 'complete': 1, 'test-var-query': 1, 'ns-path': 1,
+                \ 'fn-refs': 1, 'fn-deps': 1, 'namespace-aliases': 1,
+                \ }
+        endif
+
+        let resp_data = iced#system#get('bencode').encode(resp_data)
+        let Cb = (has_key(self, 'callback') && type(self.callback) == v:t_func)
+            \ ? self.callback : s:funcs.dispatcher
+        call Cb(self, resp_data)
+      endfor
     elseif has_key(self, 'relay_raw') && type(self.relay_raw) == v:t_func
       let sent_data = iced#system#get('bencode').decode(a:string)
       let resp_data = self.relay_raw(sent_data)

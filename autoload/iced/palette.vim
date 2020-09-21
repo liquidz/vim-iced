@@ -21,6 +21,7 @@ let s:default_palette = [
       \ 'BrowseVarReferences', 'BrowseVarDependencies',
       \ 'CleanNs', 'CleanAll', 'AddNs', 'AddMissing',
       \ 'ExtractFunction', 'AddArity', 'MoveToLet',
+      \ 'RenameSymbol',
       \ 'BrowseTapped', 'ClearTapped',
       \ 'ToggleWarnOnReflection', 'ToggleTraceVar', 'ToggleTraceNs',
       \ 'InInitNs',

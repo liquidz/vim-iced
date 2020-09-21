@@ -5,3 +5,5 @@ include::refactoring/namespace.adoc[]
 include::refactoring/function.adoc[]
 
 include::refactoring/form.adoc[]
+
+include::refactoring/symbol.adoc[]
