@@ -54,7 +54,7 @@ function! s:run(candidate) abort
     let arr = split(cmd, ' ')
     if len(arr) == 1 || stridx(arr[-1], '{{') == -1
       call histadd('cmd', strpart(cmd, 1))
-      execute cmd
+      call iced#system#get('future').do({-> iced#system#get('ex_cmd').exe(cmd)})
     else
       " Remove last element, but remain last space
       let arr[-1] = ''
