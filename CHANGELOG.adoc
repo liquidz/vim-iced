@@ -1,8 +1,13 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
 === Added
 * https://github.com/liquidz/vim-iced/issues/261[#261]: Added `:IcedRenameSymbol` command.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/264[#264]: Fixed command palette to show command messages correctly.
+// }}}
 
 == 2.2.0 (2020-09-13)
 // {{{
