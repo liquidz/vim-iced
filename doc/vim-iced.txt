@@ -1817,6 +1817,18 @@ TONSKY'S RULE~
 ------------------------------------------------------------------------------
 DOCUMENTS                                      *vim-iced-customizing-documents*
 
+                                                  *g:iced#buffer#document#mods*
+g:iced#buffer#document#mods
+  Buffer position definition.
+  Following values are supported.
+  - {vertical}
+  - {leftabove}
+  - {aboveleft}
+  - {rightbelow}
+  - {belowright}
+  - {topleft}
+  - {botright}
+
                                                 *g:iced#buffer#document#height*
 g:iced#buffer#document#height
   Document window height.
