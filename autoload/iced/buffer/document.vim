@@ -4,6 +4,7 @@ set cpoptions&vim
 let s:bufname = 'iced_document'
 let s:default_filetype = 'markdown'
 
+let g:iced#buffer#document#mods = get(g:, 'iced#buffer#document#mods', 'belowright')
 let g:iced#buffer#document#height = get(g:, 'iced#buffer#document#height', &previewheight)
 
 function! s:initialize(bufnr) abort
@@ -26,13 +27,18 @@ function! iced#buffer#document#open(text, ...) abort
   let ft = get(a:, 1, s:default_filetype)
   call iced#buffer#set_var(s:bufname, '&filetype', ft)
   call iced#buffer#set_contents(s:bufname, a:text)
-  call iced#buffer#open(
-      \ s:bufname,
-      \ {'opener': 'split',
-      \  'mods': 'belowright',
-      \  'scroll_to_top': v:true,
-      \  'height': g:iced#buffer#document#height,
-      \ })
+
+  let option = {
+        \ 'opener': 'split',
+        \  'mods': g:iced#buffer#document#mods,
+        \  'scroll_to_top': v:true,
+        \ }
+  if g:iced#buffer#document#mods !=# 'vert'
+        \ && g:iced#buffer#document#mods !=# 'vertical'
+    let option['height'] = g:iced#buffer#document#height
+  endif
+
+  call iced#buffer#open(s:bufname, option)
 endfunction
 
 function! iced#buffer#document#update(text, ...) abort
