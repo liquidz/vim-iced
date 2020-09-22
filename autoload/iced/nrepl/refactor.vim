@@ -54,7 +54,7 @@ function! s:found_used_locals(resp) abort
     let @@ = empty(locals)
           \ ? printf('(%s)', func_name)
           \ : printf('(%s %s)', func_name, join(locals, ' '))
-    silent normal! gvp
+    silent normal! gv"0p
 
     let code = printf("(defn- %s [%s]\n  %s)\n\n",
           \ func_name, join(locals, ' '),
@@ -281,7 +281,7 @@ function! s:threading(fn) abort
         call iced#message#error_str(resp['error'])
       elseif has_key(resp, 'code')
         let @@ = resp['code']
-        silent normal! gvp
+        silent normal! gv"0p
       endif
     endif
   finally
@@ -356,10 +356,10 @@ function! iced#nrepl#refactor#add_arity() abort
       let arity_and_body = @@
       if beginning_var_name[1] == beginning_of_arity[1]
         let @@ = printf("\n  ([])\n  (%s)", arity_and_body)
-        silent normal! gvpj
+        silent normal! gv"0pj
       else
         let @@ = printf("([])\n  (%s)", arity_and_body)
-        silent normal! gvp
+        silent normal! gv"0p
       endif
     endif
 
@@ -417,7 +417,7 @@ function! s:found_symbols(old_name, symbols) abort
   let occurrences = map(symbols, {i, v -> iced#promise#sync(edn.decode, [v['occurrence']])})
 
   " occurrence to the right should be renamed first to avoid shifting column numbers
-  call sort(occurrences, {a, b -> b['col-beg'] - a['col-beg']}) 
+  call sort(occurrences, {a, b -> b['col-beg'] - a['col-beg']})
 
   let ctx = iced#util#save_context()
   try

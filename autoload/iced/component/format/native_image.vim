@@ -119,7 +119,7 @@ function! s:__current_form(result) abort
     let code = trim(join(res.buf, "\n"))
     if !empty(code)
       let @@ = code
-      silent normal! gvp
+      silent normal! gv"0p
     endif
   finally
     let res['_back_to_bufnr'] = current_bufnr
@@ -189,7 +189,7 @@ function! s:fmt.minimal(opt) abort
     let code = trim(join(d.buf, "\n"))
     if !empty(code)
       let @@ = iced#util#add_indent(ncol, code)
-      silent normal! gvp
+      silent normal! gv"0p
     endif
   finally
     let @@ = reg_save

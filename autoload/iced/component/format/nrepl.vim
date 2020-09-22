@@ -95,7 +95,7 @@ function! s:__format_form(resp, finally_args) abort
 
   if has_key(a:resp, 'formatted') && !empty(a:resp['formatted'])
     let @@ = a:resp['formatted']
-    silent normal! gvp
+    silent normal! gv"0p
   elseif has_key(a:resp, 'error')
     call iced#message#error_str(a:resp['error'])
   endif
@@ -170,7 +170,7 @@ function! s:fmt.minimal(opt) abort
     let resp = iced#nrepl#op#iced#sync#format_code(code, iced#nrepl#ns#alias_dict(ns_name))
     if has_key(resp, 'formatted') && !empty(resp['formatted'])
       let @@ = iced#util#add_indent(ncol, resp['formatted'])
-      silent normal! gvp
+      silent normal! gv"0p
     endif
   finally
     let @@ = reg_save
