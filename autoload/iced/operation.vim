@@ -44,7 +44,7 @@ endfunction
 function! s:replace_by_response_value(resp) abort
   if has_key(a:resp, 'value')
     let @@ = printf(';; %s', a:resp['value'])
-    silent normal! gvp
+		silent normal! gv"0p
   endif
 
   if has_key(a:resp, 'ex') && !empty(a:resp['ex'])

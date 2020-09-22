@@ -53,11 +53,11 @@ function! iced#let#move_to_let(...) abort
       let form = iced#util#add_indent(len(name)+1+6, form)
       let @@ = iced#util#add_indent(
             \ indent, printf("(let [%s %s]\n  %s)", name, form, name))
-      silent normal! gvp
+      silent normal! gv"0p
     else
       let pos = getcurpos()
       let @@ = name
-      silent normal! gvp
+      silent normal! gv"0p
       call setpos('.', pos)
 
       silent normal! vi[y
@@ -67,7 +67,7 @@ function! iced#let#move_to_let(...) abort
       let form = iced#util#add_indent(len(name)+1, form)
       let @@ = iced#util#add_indent(
             \ indent, printf("%s\n%s %s", bindings, name, form))
-      silent normal! gvp
+      silent normal! gv"0p
     endif
 
     let view['lnum'] = view['lnum'] + len(split(form, '\r\?\n'))
