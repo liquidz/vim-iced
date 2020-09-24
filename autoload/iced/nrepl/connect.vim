@@ -3,6 +3,7 @@ set cpoptions&vim
 
 let s:nrepl_port_file = '.nrepl-port'
 let s:jack_in_job = -1
+let s:is_auto_connecting = v:false
 
 let g:iced#nrepl#connect#iced_command = get(g:, 'iced#nrepl#connect#iced_command', 'iced')
 let g:iced#nrepl#connect#clj_command = get(g:, 'iced#nrepl#connect#clj_command', 'clojure')
@@ -55,10 +56,9 @@ function! iced#nrepl#connect#auto(...) abort
   return v:false
 endfunction
 
-function! s:wait_for_auto_connection(id) abort
-  if iced#nrepl#connect#auto(v:false)
-    call iced#system#get('timer').stop(a:id)
-  endif
+function! s:wait_for_auto_connection(_) abort
+  call iced#util#wait({-> !iced#nrepl#connect#auto(v:false)}, 5000)
+  let s:is_auto_connecting = v:false
 endfunction
 
 function! s:jack_in_callback(_, out) abort
@@ -74,10 +74,11 @@ function! s:jack_in_callback(_, out) abort
       echo line
       "" NOTE: Leiningen, Boot and Clojure CLI print the same text like below.
       if stridx(line, 'nREPL server started') != -1
+        let s:is_auto_connecting = v:true
         call iced#system#get('timer').start(
               \ 500,
               \ funcref('s:wait_for_auto_connection'),
-              \ {'repeat': 10})
+              \ )
       endif
     endif
   endfor
@@ -139,6 +140,8 @@ function! iced#nrepl#connect#instant(program) abort
 endfunction
 
 function! iced#nrepl#connect#reset() abort
+  if s:is_auto_connecting | return | endif
+
   let job = iced#system#get('job')
   if job.is_job_id(s:jack_in_job)
     call job.stop(s:jack_in_job)
