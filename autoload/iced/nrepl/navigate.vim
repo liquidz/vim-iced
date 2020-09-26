@@ -118,10 +118,27 @@ endfunction " }}}
 
 " iced#nrepl#navigate#jump_to_def {{{
 function! s:jump(resp) abort
-  if !has_key(a:resp, 'file') | return iced#message#error('jump_not_found') | endif
-  let path = a:resp['file']
-  let line = a:resp['line']
-  let column = get(a:resp, 'column', '0')
+  let path = ''
+  let line = 0
+  let column = 0
+
+  if !has_key(a:resp, 'file')
+    let kondo = iced#system#get('clj_kondo')
+    let d = kondo.is_analyzed()
+          \ ? kondo.var_definition(get(a:resp, 'ns'), get(a:resp, 'name'))
+          \ : v:false
+    if type(d) == v:t_dict
+      let path = d['filename']
+      let line = d['row']
+      let column = d['col']
+    else
+      return iced#message#error('jump_not_found')
+    endif
+  else
+    let path = a:resp['file']
+    let line = a:resp['line']
+    let column = get(a:resp, 'column', '0')
+  endif
 
   if expand('%:p') !=# path
     call iced#system#get('ex_cmd').exe(printf(':edit %s', path))
