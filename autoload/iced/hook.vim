@@ -59,5 +59,18 @@ function! iced#hook#run(hook_kind, params) abort
   endfor
 endfunction
 
+function! iced#hook#add(hook_kind, definition) abort
+  let hook = []
+  if has_key(g:iced#hook, a:hook_kind)
+    let hook = g:iced#hook[a:hook_kind]
+  endif
+  if type(hook) != v:t_list
+    let hook = [hook]
+  endif
+
+  let hook += [a:definition]
+  let g:iced#hook[a:hook_kind] = hook
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
