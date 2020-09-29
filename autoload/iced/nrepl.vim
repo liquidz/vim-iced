@@ -674,6 +674,17 @@ function! iced#nrepl#status() abort
   endif
 endfunction " }}}
 
+" mainly for multi session {{{
+function! iced#nrepl#current_connection() abort
+  return s:nrepl
+endfunction
+
+function! iced#nrepl#reset_connection(...) abort
+  let conn = get(a:, 1, s:initialize_nrepl())
+  let s:nrepl = conn
+  return conn
+endfunction " }}}
+
 call iced#nrepl#register_handler('eval', funcref('iced#nrepl#merge_response_handler'))
 call iced#nrepl#register_handler('load-file', funcref('iced#nrepl#merge_response_handler'))
 
