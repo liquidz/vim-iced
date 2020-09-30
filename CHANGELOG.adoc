@@ -1,6 +1,14 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Updated jumping to definition to support clj-kondo analysis.
+* Updated hooks to run multiple definitions at a time.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/271[#271]: Fixed 'IcedInstantConnect' and `IcedJackIn` to work correctly.
+// }}}
 
 == 2.3.1 (2020-09-23)
 // {{{
