@@ -9,6 +9,7 @@ let g:iced#nrepl#connect#iced_command = get(g:, 'iced#nrepl#connect#iced_command
 let g:iced#nrepl#connect#clj_command = get(g:, 'iced#nrepl#connect#clj_command', 'clojure')
 let g:iced#nrepl#connect#jack_in_command = get(g:, 'iced#nrepl#connect#jack_in_command',
       \ printf('%s repl', g:iced#nrepl#connect#iced_command))
+let g:iced#nrepl#connect#auto_connect_timeout = get(g:, 'iced#nrepl#connect#auto_connect_timeout', 5000)
 
 function! s:detect_port_from_nrepl_port_file() abort
   let path = findfile(s:nrepl_port_file, '.;')
@@ -57,7 +58,9 @@ function! iced#nrepl#connect#auto(...) abort
 endfunction
 
 function! s:wait_for_auto_connection(_) abort
-  call iced#util#wait({-> !iced#nrepl#connect#auto(v:false)}, 5000)
+  call iced#util#wait(
+        \ {-> !iced#nrepl#connect#auto(v:false)},
+        \ g:iced#nrepl#connect#auto_connect_timeout)
   let s:is_auto_connecting = v:false
 endfunction
 
