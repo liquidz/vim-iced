@@ -197,5 +197,17 @@ function! iced#util#list_to_dict(ls, key_fn, val_fn) abort
   return result
 endfunction
 
+function! iced#util#group_by(ls, key_fn) abort
+  let result = {}
+  for x in a:ls
+    let key = a:key_fn(x)
+    let grouped = get(result, key, [])
+    let grouped += [x]
+    let result[key] = grouped
+  endfor
+
+  return result
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
