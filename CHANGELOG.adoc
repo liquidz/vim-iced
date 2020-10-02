@@ -2,6 +2,10 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 // {{{
+=== Added
+* Added clj-kondo analysis support to testing under cursor.
+** When the var under the cursor is not a test, use clj-kondo's analysis to find tests referring to this var.
+
 === Changed
 * Updated jumping to definition to support clj-kondo analysis.
 * Updated hooks to run multiple definitions at a time.
