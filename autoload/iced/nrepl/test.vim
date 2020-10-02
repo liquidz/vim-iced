@@ -193,10 +193,29 @@ function! s:__under_cursor(var_info, test_vars) abort
     return iced#message#error('not_found')
   else
     " Form under the cursor is not a test, and current ns is NOT ns for test
-    let ns = iced#nrepl#navigate#cycle_ns(ns)
-    return iced#promise#call('iced#nrepl#ns#require', [ns])
-          \.then({_ -> iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [ns])})
-          \.then({test_vars -> s:__test_cycled_ns(ns, var_name, test_vars)})
+    let kondo = iced#system#get('clj_kondo')
+
+    if kondo.is_analyzed()
+      let references = kondo.references(ns, var_name)
+      let test_refs = filter(references, {_, v -> match(get(v, 'from-var', ''), '-test$') != -1})
+
+      let promises = []
+      let ns_test_dict = iced#util#group_by(test_refs, {v -> v.from})
+      for test_ns in keys(ns_test_dict)
+        let test_vars = map(get(ns_test_dict, test_ns, []),
+              \ {_, v -> printf('%s/%s', get(v, 'from'), get(v, 'from-var'))})
+
+        let p = iced#promise#call('iced#nrepl#ns#require', [test_ns])
+              \.then({_ -> s:__run_test_vars(test_ns, test_vars)})
+        let promises += [p]
+      endfor
+      return iced#promise#all(promises)
+    else
+      let ns = iced#nrepl#navigate#cycle_ns(ns)
+      return iced#promise#call('iced#nrepl#ns#require', [ns])
+            \.then({_ -> iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [ns])})
+            \.then({test_vars -> s:__test_cycled_ns(ns, var_name, test_vars)})
+    endif
   endif
 endfunction
 
