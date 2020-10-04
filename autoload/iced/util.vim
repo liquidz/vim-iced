@@ -5,13 +5,22 @@ set cpoptions&vim
 let g:iced#debug = get(g:, 'iced#debug', v:false)
 
 function! iced#util#wait(pred, timeout_ms) abort
-  let t = 0
-  while a:pred() && t < a:timeout_ms
-    sleep 1m
-    let t = t + 1
-  endwhile
+  if a:timeout_ms == -1
+    " wait forever
+    while a:pred()
+      sleep 1m
+    endwhile
 
-  return (t < a:timeout_ms)
+    return v:true
+  else
+    let t = 0
+    while a:pred() && t < a:timeout_ms
+      sleep 1m
+      let t = t + 1
+    endwhile
+
+    return (t < a:timeout_ms)
+  endif
 endfunction
 
 function! iced#util#escape(s) abort
