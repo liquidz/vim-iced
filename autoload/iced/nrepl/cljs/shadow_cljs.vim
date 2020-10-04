@@ -7,13 +7,15 @@ function! s:validate_config() abort
   let file = findfile('shadow-cljs.edn', '.;')
   if empty(file) | return | endif
 
-  let resp = iced#promise#sync('iced#script#shadow_cljs_validation', [file])
-  let value = trim(resp, '"')
+  let warn = ''
+  for line in readfile(file)
+    if stridx(line, 'iced-nrepl') != -1
+      let warn = 'Now, iced command supports shadow-cljs. Please see https://liquidz.github.io/vim-iced/#clojurescript_shadow_cljs'
+      break
+    endif
+  endfor
 
-  if empty(value) | return '' | endif
-  return printf("%s\n%s",
-        \ substitute(value, '\\n', '\n', 'g'),
-        \ iced#message#get('missing_config'))
+  return warn
 endfunction
 
 function! iced#nrepl#cljs#shadow_cljs#get_env(options) abort
