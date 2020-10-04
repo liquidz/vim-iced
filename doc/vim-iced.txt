@@ -1575,6 +1575,13 @@ g:iced#nrepl#connect#jack_in_command
   Command to start REPL in |:IcedJackIn|.
   Default value is `'iced repl'` .
 
+                                 *g:iced#nrepl#connect#auto_connect_timeout_ms*
+g:iced#nrepl#connect#auto_connect_timeout_ms
+  Timeout time for waiting auto connection.
+  Unit is milli sec.
+  When you set `-1`, vim-iced will wait forever.
+  Default value is `5000`.
+
                                                s*g:iced#paredit#slurp_max_depth*
 g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
