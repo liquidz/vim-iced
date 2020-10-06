@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file. This change
 * Bumped joker to 0.15.7.
 
 === Fixed
-* https://github.com/liquidz/vim-iced/issues/271[#271]: Fixed 'IcedInstantConnect' and `IcedJackIn` to work correctly.
+* https://github.com/liquidz/vim-iced/issues/271[#271]: Fixed `IcedInstantConnect` and `IcedJackIn` to work correctly.
 // }}}
 
 == 2.3.1 (2020-09-23)
