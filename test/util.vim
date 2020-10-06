@@ -141,3 +141,23 @@ function! s:suite.list_to_dict_test() abort
   call s:assert.equals(iced#util#list_to_dict(sample, {v -> v.k}, {v -> v.v}),
         \ {'one': 1, 'two': 2})
 endfunction
+
+function! s:suite.group_by_test() abort
+  let sample = [
+        \ {'name': 'foo', 'value': 1},
+        \ {'name': 'bar', 'value': 4},
+        \ {'name': 'foo', 'value': 2},
+        \ {'name': 'bar', 'value': 5},
+        \ {'name': 'foo', 'value': 3},
+        \ ]
+
+  call s:assert.equals(iced#util#group_by(sample, {v -> v.name}),
+        \ {'foo': [{'name': 'foo', 'value': 1},
+        \          {'name': 'foo', 'value': 2},
+        \          {'name': 'foo', 'value': 3},
+        \         ],
+        \  'bar': [{'name': 'bar', 'value': 4},
+        \          {'name': 'bar', 'value': 5},
+        \         ],
+        \ })
+endfunction

@@ -55,6 +55,10 @@ function! iced#promise#is_promise(x) abort
   return s:Promise.is_promise(a:x)
 endfunction
 
+function! iced#promise#all(promises) abort
+	return s:Promise.all(a:promises)
+endfunction
+
 " For debugging
 function! iced#promise#sleep(ms, ret) abort
   return s:Promise.new({resolve -> timer_start(a:ms, {-> resolve(a:ret)})})

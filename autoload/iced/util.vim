@@ -5,13 +5,22 @@ set cpoptions&vim
 let g:iced#debug = get(g:, 'iced#debug', v:false)
 
 function! iced#util#wait(pred, timeout_ms) abort
-  let t = 0
-  while a:pred() && t < a:timeout_ms
-    sleep 1m
-    let t = t + 1
-  endwhile
+  if a:timeout_ms == -1
+    " wait forever
+    while a:pred()
+      sleep 1m
+    endwhile
 
-  return (t < a:timeout_ms)
+    return v:true
+  else
+    let t = 0
+    while a:pred() && t < a:timeout_ms
+      sleep 1m
+      let t = t + 1
+    endwhile
+
+    return (t < a:timeout_ms)
+  endif
 endfunction
 
 function! iced#util#escape(s) abort
@@ -194,6 +203,18 @@ function! iced#util#list_to_dict(ls, key_fn, val_fn) abort
   for x in a:ls
     let result[a:key_fn(x)] = a:val_fn(x)
   endfor
+  return result
+endfunction
+
+function! iced#util#group_by(ls, key_fn) abort
+  let result = {}
+  for x in a:ls
+    let key = a:key_fn(x)
+    let grouped = get(result, key, [])
+    let grouped += [x]
+    let result[key] = grouped
+  endfor
+
   return result
 endfunction
 

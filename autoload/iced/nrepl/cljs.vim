@@ -44,10 +44,12 @@ function! iced#nrepl#cljs#check_switching_session(eval_resp, evaluated_code) abo
 
   let ns = a:eval_resp['ns']
   let ext = expand('%:e')
+  let env_name = get(s:using_env, 'name', '')
 
   if eq_to_clj_session && ns ==# g:iced#nrepl#init_cljs_ns
     let p = s:set_cljs_session(eval_session)
-    if ext !=# 'clj'
+    " shadow-cljs forces you to change current session to CLJS
+    if ext !=# 'clj' || env_name ==# 'shadow-cljs'
       call iced#nrepl#change_current_session('cljs')
       call iced#nrepl#ns#in()
       call iced#hook#run('session_switched', {'session': 'cljs'})

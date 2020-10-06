@@ -2,6 +2,36 @@
 
 Some events on vim-iced can be hooked, and you can execute any processing.
 
+
+{help_html}#g%3Aiced%23hook[g:iced#hook] ia the definition.
+This is a dictionary with hook event as a key,
+and the value is a dictionary or a list of dictionaries.
+
+.Definition example
+[source,vim]
+----
+let g:iced#hook = {
+    \ 'connected': {'type': 'function',
+    \               'exec': {_ -> iced#message#info_str('foo')}},
+    \ 'disconnected': [{'type': 'command',
+    \                   'exec': 'echom "bar"'}],
+    \ 'ns_required': {'type': 'eval',
+    \                 'exec': '(println "baz")'},
+    \ 'test_finished': {'type': 'shell',
+    \                   'exec': {v -> printf('tmux display-message "%s"', v.summary)}}
+    \ }
+----
+
+Another way, you can also use `iced#hook#add` function to add definitions.
+
+[source,vim]
+----
+call iced#hook#add('disconnected', {
+      \ 'type': 'command',
+      \ 'exec': 'echom "hello"',
+      \ })
+----
+
 ==== Event [[hook_event]]
 
 Following events can be hooked.
@@ -60,21 +90,3 @@ The shell command is executed in https://vim-jp.org/vimdoc-en/terminal.html[term
 | Process a event by a vim command.
 
 |===
-
-==== Example [[hook_example]]
-
-Here is a example to setting up hooks.
-
-[source,vim]
-----
-let g:iced#hook = {
-    \ 'connected': {'type': 'function',
-    \               'exec': {_ -> iced#message#info_str('foo')}},
-    \ 'disconnected': {'type': 'command',
-    \                  'exec': 'echom "bar"'},
-    \ 'ns_required': {'type': 'eval',
-    \                 'exec': '(println "baz")'},
-    \ 'test_finished': {'type': 'shell',
-    \                   'exec': {v -> printf('tmux display-message "%s"', v.summary)}}
-    \ }
-----

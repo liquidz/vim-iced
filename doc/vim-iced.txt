@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.3.1
+Version: 2.3.2
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -1575,6 +1575,13 @@ g:iced#nrepl#connect#jack_in_command
   Command to start REPL in |:IcedJackIn|.
   Default value is `'iced repl'` .
 
+                                 *g:iced#nrepl#connect#auto_connect_timeout_ms*
+g:iced#nrepl#connect#auto_connect_timeout_ms
+  Timeout time for waiting auto connection.
+  Unit is milli sec.
+  When you set `-1`, vim-iced will wait forever.
+  Default value is `5000`.
+
                                                s*g:iced#paredit#slurp_max_depth*
 g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
@@ -1946,38 +1953,51 @@ HOOKS                                              *vim-iced-customizing-hooks*
                                                                   *g:iced#hook*
 g:iced#hook
   Hook setting.
+  This is a dictionary with hook event as a key,
+  and the value is a dictionary or a list of dictionaries.
 
-  - Hook kinds
-    - connected         |hook_kind_connected|
-    - disconnected      |hook_kind_disconnected|
-    - test_finished     |hook_kind_test_finished|
-    - ns_required       |hook_kind_ns_required|
-    - ns_all_reloaded   |hook_kind_ns_all_reloaded|
-    - session_switched  |hook_kind_session_switched|
+  E.g. >
+  let g:iced#hook = {
+      \ 'test_finished': {
+      \   'type': 'shell',
+      \   'exec': {v -> printf('tmux display-message "%s"', v.summary)}},
+      \ 'disconnected': [{
+      \   'type': 'function',
+      \   'exec': {_ -> s:do_something()}}],
+      \ }
+<
+  Another way, you can also use `iced#hook#add` function to add definitions.
+>
+  call iced#hook#add('disconnected', {
+        \ 'type': 'command',
+        \ 'exec': 'echom "hello"',
+        \ })
+<
+
+  - Hook events
+    - connected         |hook_event_connected|
+    - disconnected      |hook_event_disconnected|
+    - test_finished     |hook_event_test_finished|
+    - ns_required       |hook_event_ns_required|
+    - ns_all_reloaded   |hook_event_ns_all_reloaded|
+    - session_switched  |hook_event_session_switched|
   - Hook report types
     - shell             |hook_report_shell|
     - eval              |hook_report_eval|
     - function          |hook_report_function|
     - command           |hook_report_command|
 
-  E.g. >
-  let g:iced#hook = {
-      \ 'test_finished':
-      \ {'type': 'shell',
-      \  'exec': {v -> printf('tmux display-message "%s"', v.summary)}}
-      \ }
-<
-CONNECTED                                                 *hook_kind_connected*
+CONNECTED                                                *hook_event_connected*
 
   Hooked when vim-iced is connected to nREPL.
   No parameters are passed to reporter.
 
-DISCONNECTED                                           *hook_kind_disconnected*
+DISCONNECTED                                          *hook_event_disconnected*
 
   Hooked when vim-iced is disconnected from nREPL.
   No parameters are passed to reporter.
 
-TEST FINISHED                                         *hook_kind_test_finished*
+TEST FINISHED                                        *hook_event_test_finished*
 
   Hooked when running test is finished.
   Following parameters are pass to reporter.
@@ -1987,15 +2007,15 @@ TEST FINISHED                                         *hook_kind_test_finished*
   - summary
     Test summary.
 
-NS REQUIRED                                             *hook_kind_ns_required*
+NS REQUIRED                                            *hook_event_ns_required*
 
   Hooked when `:IcedRequire` is finished.
 
-NS ALL RELOADED                                     *hook_kind_ns_all_reloaded*
+NS ALL RELOADED                                    *hook_event_ns_all_reloaded*
 
   Hooked when `:IcedRequireAll` is finished.
 
-SESSION SWITCHED                                   *hook_kind_session_switched*
+SESSION SWITCHED                                  *hook_event_session_switched*
 
   Hooked when current session is switched.
   Following parameters are pass to reporter.
