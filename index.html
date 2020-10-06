@@ -3090,6 +3090,37 @@ you can use this rule with <code>cljfmt</code> and <code>cljstyle</code>.</p>
 <div class="paragraph">
 <p>Some events on vim-iced can be hooked, and you can execute any processing.</p>
 </div>
+<div class="paragraph">
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23hook">g:iced#hook</a> ia the definition.
+This is a dictionary with hook event as a key,
+and the value is a dictionary or a list of dictionaries.</p>
+</div>
+<div class="listingblock">
+<div class="title">Definition example</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim"><span class="k">let</span> <span class="nv">g:iced</span>#hook <span class="p">=</span> <span class="p">{</span>
+<span class="se">    \</span> <span class="s1">'connected'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'function'</span><span class="p">,</span>
+<span class="se">    \</span>               <span class="s1">'exec'</span><span class="p">:</span> <span class="p">{</span>_ <span class="p">-&gt;</span> iced#message#info_str<span class="p">(</span><span class="s1">'foo'</span><span class="p">)}},</span>
+<span class="se">    \</span> <span class="s1">'disconnected'</span><span class="p">:</span> <span class="p">[{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'command'</span><span class="p">,</span>
+<span class="se">    \</span>                   <span class="s1">'exec'</span><span class="p">:</span> <span class="s1">'echom "bar"'</span><span class="p">}],</span>
+<span class="se">    \</span> <span class="s1">'ns_required'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'eval'</span><span class="p">,</span>
+<span class="se">    \</span>                 <span class="s1">'exec'</span><span class="p">:</span> <span class="s1">'(println "baz")'</span><span class="p">},</span>
+<span class="se">    \</span> <span class="s1">'test_finished'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'shell'</span><span class="p">,</span>
+<span class="se">    \</span>                   <span class="s1">'exec'</span><span class="p">:</span> <span class="p">{</span><span class="k">v</span> <span class="p">-&gt;</span> <span class="nb">printf</span><span class="p">(</span><span class="s1">'tmux display-message "%s"'</span><span class="p">,</span> <span class="k">v</span><span class="p">.</span>summary<span class="p">)}}</span>
+<span class="se">    \</span> <span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another way, you can also use <code>iced#hook#add</code> function to add definitions.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim"><span class="k">call</span> iced#hook#<span class="nb">add</span><span class="p">(</span><span class="s1">'disconnected'</span><span class="p">,</span> <span class="p">{</span>
+<span class="se">      \</span> <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'command'</span><span class="p">,</span>
+<span class="se">      \</span> <span class="s1">'exec'</span><span class="p">:</span> <span class="s1">'echom "hello"'</span><span class="p">,</span>
+<span class="se">      \</span> <span class="p">})</span></code></pre>
+</div>
+</div>
 <div class="sect3">
 <h4 id="hook_event">22.3.1. Event</h4>
 <div class="paragraph">
@@ -3180,26 +3211,6 @@ The shell command is executed in <a href="https://vim-jp.org/vimdoc-en/terminal.
 </tr>
 </tbody>
 </table>
-</div>
-<div class="sect3">
-<h4 id="hook_example">22.3.3. Example</h4>
-<div class="paragraph">
-<p>Here is a example to setting up hooks.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="vim"><span class="k">let</span> <span class="nv">g:iced</span>#hook <span class="p">=</span> <span class="p">{</span>
-<span class="se">    \</span> <span class="s1">'connected'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'function'</span><span class="p">,</span>
-<span class="se">    \</span>               <span class="s1">'exec'</span><span class="p">:</span> <span class="p">{</span>_ <span class="p">-&gt;</span> iced#message#info_str<span class="p">(</span><span class="s1">'foo'</span><span class="p">)}},</span>
-<span class="se">    \</span> <span class="s1">'disconnected'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'command'</span><span class="p">,</span>
-<span class="se">    \</span>                  <span class="s1">'exec'</span><span class="p">:</span> <span class="s1">'echom "bar"'</span><span class="p">},</span>
-<span class="se">    \</span> <span class="s1">'ns_required'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'eval'</span><span class="p">,</span>
-<span class="se">    \</span>                 <span class="s1">'exec'</span><span class="p">:</span> <span class="s1">'(println "baz")'</span><span class="p">},</span>
-<span class="se">    \</span> <span class="s1">'test_finished'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'shell'</span><span class="p">,</span>
-<span class="se">    \</span>                   <span class="s1">'exec'</span><span class="p">:</span> <span class="p">{</span><span class="k">v</span> <span class="p">-&gt;</span> <span class="nb">printf</span><span class="p">(</span><span class="s1">'tmux display-message "%s"'</span><span class="p">,</span> <span class="k">v</span><span class="p">.</span>summary<span class="p">)}}</span>
-<span class="se">    \</span> <span class="p">}</span></code></pre>
-</div>
-</div>
 </div>
 </div>
 <div class="sect2">
@@ -4282,7 +4293,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-09-22 21:25:46 UTC
+Last updated 2020-10-06 20:36:25 UTC
 </div>
 </div>
 <style>
