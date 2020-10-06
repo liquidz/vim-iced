@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This change
 === Changed
 * Updated jumping to definition to support clj-kondo analysis.
 * Updated hooks to run multiple definitions at a time.
+* Bumped joker to 0.15.7.
 
 === Fixed
 * https://github.com/liquidz/vim-iced/issues/271[#271]: Fixed 'IcedInstantConnect' and `IcedJackIn` to work correctly.
