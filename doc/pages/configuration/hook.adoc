@@ -3,7 +3,7 @@
 Some events on vim-iced can be hooked, and you can execute any processing.
 
 
-{help_html}#g%3Aiced%23hook[g:iced#hook] ia the definition.
+{help_html}#g%3Aiced%23hook[g:iced#hook] is the definition.
 This is a dictionary with hook event as a key,
 and the value is a dictionary or a list of dictionaries.
 
