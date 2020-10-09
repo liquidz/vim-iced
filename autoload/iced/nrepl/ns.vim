@@ -211,6 +211,20 @@ function! iced#nrepl#ns#does_exist(ns_name) abort
 endfunction
 
 function! iced#nrepl#ns#alias_dict(ns_name) abort
+  let kondo = iced#system#get('clj_kondo')
+  if kondo.is_analyzed()
+    let aliases = kondo.ns_aliases(a:ns_name)
+    for k in keys(aliases)
+      if len(aliases[k]) > 0
+        let aliases[k] = aliases[k][0]
+      else
+        unlet aliases[k]
+      endif
+    endfor
+
+    return aliases
+  endif
+
   try
     " NOTE: To avoid evaluating `ns-aliases` with non-existing namespace.
     if !iced#nrepl#ns#does_exist(a:ns_name)
