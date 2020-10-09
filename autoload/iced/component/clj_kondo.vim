@@ -146,6 +146,30 @@ function! s:kondo.namespace_usages() abort
   return json_decode(res[0])
 endfunction
 
+function! s:kondo.namespace_definitions() abort
+  if !g:iced_enable_clj_kondo_analysis
+    return {'error': 'clj-kondo: disabled'}
+  endif
+
+  let cache_name = self.namespace_definitions_cache_name()
+  if !filereadable(cache_name)
+    let ana = self.analysis()
+    return (has_key(ana, 'namespace-definitions'))
+          \ ? ana['namespace-definitions']
+          \ : {}
+  endif
+
+  let res = readfile(cache_name)
+  if empty(res)
+    let ana = self.analysis()
+    return (has_key(ana, 'namespace-definitions'))
+          \ ? ana['namespace-definitions']
+          \ : ana
+  endif
+
+  return json_decode(res[0])
+endfunction
+
 function! s:kondo.references(ns_name, var_name) abort
   let ana = self.analysis()
   let usages = get(ana, 'var-usages', [])
