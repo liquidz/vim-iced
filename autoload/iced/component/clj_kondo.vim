@@ -34,6 +34,10 @@ function! s:kondo.cache_name() abort
   return printf('%s/%s.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
 endfunction
 
+function! s:kondo.namespace_definitions_cache_name() abort
+  return printf('%s/%s_ns_definitions.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
+endfunction
+
 function! s:kondo.namespace_usages_cache_name() abort
   return printf('%s/%s_ns_usages.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
 endfunction
@@ -50,6 +54,13 @@ function! s:analyze__analyzed(callback, result) abort dict
           \ s:temp_name(ns_usage_cache_name),
           \ )]
     call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_usage_cache_name)})
+
+    let ns_definition_cache_name = self.namespace_definitions_cache_name()
+    let command = ['sh', '-c', printf('jq -c ''.analysis."namespace-definitions"'' %s > %s',
+          \ cache_name,
+          \ s:temp_name(ns_definition_cache_name),
+          \ )]
+    call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_definition_cache_name)})
   elseif executable('jet')
     let ns_usage_cache_name = self.namespace_usages_cache_name()
     let command = ['sh', '-c', printf('cat %s | jet --from json --to json --query ''["analysis" "namespace-usages"]'' > %s',
@@ -57,6 +68,13 @@ function! s:analyze__analyzed(callback, result) abort dict
           \ s:temp_name(ns_usage_cache_name),
           \ )]
     call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_usage_cache_name)})
+
+    let ns_definition_cache_name = self.namespace_definitions_cache_name()
+    let command = ['sh', '-c', printf('cat %s | jet --from json --to json --query ''["analysis" "namespace-definitions"]'' > %s',
+          \ cache_name,
+          \ s:temp_name(ns_definition_cache_name),
+          \ )]
+    call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_definition_cache_name)})
   endif
 
   let self.is_analyzing = v:false
