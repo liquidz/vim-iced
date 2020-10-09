@@ -203,7 +203,8 @@ function! s:kondo.used_ns_list() abort
   return s:L.uniq(result)
 endfunction
 
-function! s:kondo.ns_aliases() abort
+function! s:kondo.ns_aliases(...) abort
+  let from_ns = get(a:, 1, '')
   let usages = self.namespace_usages()
   let result = {}
   if empty(usages) | return result | endif
@@ -212,6 +213,10 @@ function! s:kondo.ns_aliases() abort
     let ns_name = get(usage, 'to', '')
     let alias_name = get(usage, 'alias', '')
     if empty(ns_name) || empty(alias_name) || alias_name ==# 'sut'
+      continue
+    endif
+
+    if !empty(from_ns) && usage['from'] !=# from_ns
       continue
     endif
 
