@@ -239,6 +239,17 @@ function! s:kondo.var_definition(ns_name, var_name) abort
   endfor
 endfunction
 
+function! s:kondo.ns_path(ns_name) abort
+  let definitions = self.namespace_definitions()
+  for definition in definitions
+    if get(definition, 'name') ==# a:ns_name
+      return get(definition, 'filename', '')
+    endif
+  endfor
+
+  return ''
+endfunction
+
 function! iced#component#clj_kondo#start(this) abort
   call iced#util#debug('start', 'clj-kondo')
 
