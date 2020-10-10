@@ -403,6 +403,9 @@ case "$1" in
                          $OPTIONS -Sdeps '{:deps {iced-repl/iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
                          -m nrepl.cmdline $(cli_middleware_args ${TARGET_MIDDLEWARES}) --interactive"
         elif [ $IS_SHADOW_CLJS -eq 1 ]; then
+            echo_info 'shadow-cljs project is detected'
+            echo_info 'For shadow-cljs project, start watching instead of starting REPL.'
+
             SHADOW_CLJS_CMD='npx shadow-cljs'
             if [[ ! -z "${ICED_REPL_SHADOW_CLJS_CMD}" ]]; then
               SHADOW_CLJS_CMD="${ICED_REPL_SHADOW_CLJS_CMD}"
