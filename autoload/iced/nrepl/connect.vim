@@ -33,6 +33,16 @@ function! s:detect_shadow_cljs_nrepl_port() abort
         \ : str2nr(readfile(path)[0]))
 endfunction
 
+function! s:__connect_nrepl(port) abort
+  call iced#repl#connect('nrepl', a:port)
+  return v:true
+endfunction
+
+function! s:__connect_shadow_cljs(port) abort
+  call iced#repl#connect('nrepl', a:port, {'cljs_env': 'shadow-cljs'})
+  return v:true
+endfunction
+
 function! iced#nrepl#connect#auto(...) abort
   let verbose = get(a:, 1, v:true)
   let shadow_cljs_port = s:detect_shadow_cljs_nrepl_port()
@@ -41,15 +51,16 @@ function! iced#nrepl#connect#auto(...) abort
   if shadow_cljs_port && nrepl_port
     call iced#selector({
           \ 'candidates': ['nREPL', 'shadow-cljs'],
-          \ 'accept': {_, s -> iced#repl#connect('nrepl', (s ==# 'nREPL') ? nrepl_port : shadow_cljs_port)}
+          \ 'accept': {_, s -> (s ==# 'nREPL')
+          \                    ? s:__connect_nrepl(nrepl_port)
+          \                    : s:__connect_shadow_cljs(shadow_cljs_port)}
           \ })
     return v:true
   else
-    let port = shadow_cljs_port ? shadow_cljs_port : nrepl_port
-
-    if port
-      call iced#repl#connect('nrepl', port)
-      return v:true
+    if shadow_cljs_port
+      return s:__connect_shadow_cljs(shadow_cljs_port)
+    elseif nrepl_port
+      return s:__connect_nrepl(nrepl_port)
     endif
   endif
 

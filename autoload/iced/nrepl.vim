@@ -437,6 +437,11 @@ function! s:connected(resp, opts) abort
 
     call iced#message#info('connected')
     call iced#hook#run('connected', {})
+
+    " auto cljs start
+    if has_key(a:opts, 'cljs_env')
+      call iced#nrepl#cljs#start_repl_via_env(get(a:opts, 'cljs_env'))
+    endif
   endif
 endfunction
 
