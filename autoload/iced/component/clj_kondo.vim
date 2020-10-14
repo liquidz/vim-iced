@@ -212,7 +212,7 @@ function! s:kondo.ns_aliases(...) abort
   for usage in usages
     let ns_name = get(usage, 'to', '')
     let alias_name = get(usage, 'alias', '')
-    if empty(ns_name) || empty(alias_name) || alias_name ==# 'sut'
+    if empty(ns_name) || empty(alias_name)
       continue
     endif
 
