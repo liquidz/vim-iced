@@ -1,58 +1,20 @@
 === shadow-cljs [[clojurescript_shadow_cljs]]
 
-[WARNING]
-====
-<<iced_command>> does not support shadow-cljs currently. +
-So you need to launch REPL manually.
-====
+To start CLJS REPL with shadow-cljs, you need following steps.
 
-To start CLJS REPL with shadow-cljs, you need 3 steps.
-
-1. Add definitions to <<clojurescript_shadow_cljs_edn>>
-2. Start to watch
-** `$ shadow-cljs watch {YOUR-BUILD-ID}`
-3. Access shadow-cljs's HTTP server in your browser
+1. Start to watch
+** `$ iced repl {YOUR-BUILD-ID}`
+*** In this case, `iced` command will start watching project instead of starting REPL.
+*** You need a https://shadow-cljs.github.io/docs/UsersGuide.html#nREPL[nREPL configuration file] to start watching, but `iced` command can generate it automatically.
+2. Access shadow-cljs's HTTP server in your browser
 ** E.g. http://localhost:8080
-4. Connect and start cljs-repl
+3. Connect to nREPL
 ** Execute {help_html}#%3AIcedConnect[IcedConnect] command to connect to REPL
-** Execute {help_html}#%3AIcedStartCljsRepl[IcedStartCljsRepl] command like follows
-*** `:IcedStartCljsRepl  shadow-cljs {YOUR-BUILD-ID}`
-
+*** For shadow-cljs, cljs-repl will be started automatically after connection.
+*** You don't need to specify your build ID anymore.
 
 If you would like to start CLJS REPL by hand, you can do it as follows.
 [source,vim]
 ----
 :IcedEvalRepl (shadow.cljs.devtools.api/repl :YOUR-BUILD-ID)
-----
-
-==== shadow-cljs.edn [[clojurescript_shadow_cljs_edn]]
-
-You need to modify `:dependencies` and `:nrepl` setting in `shadow-cljs.edn` as below.
-
-.shadow-cljs.edn
-[source,clojure]
-----
-{
- :dependencies [[refactor-nrepl "2.5.0"]
-                [cider/cider-nrepl "0.25.3"]
-                [iced-nrepl "1.0.5"]]
-
- :nrepl {:cider false
-         :middleware [cider.nrepl/wrap-classpath
-                      cider.nrepl/wrap-clojuredocs
-                      cider.nrepl/wrap-complete
-                      cider.nrepl/wrap-debug
-                      cider.nrepl/wrap-format
-                      cider.nrepl/wrap-info
-                      cider.nrepl/wrap-macroexpand
-                      cider.nrepl/wrap-ns
-                      cider.nrepl/wrap-out
-                      cider.nrepl/wrap-spec
-                      cider.nrepl/wrap-test
-                      cider.nrepl/wrap-trace
-                      cider.nrepl/wrap-undef
-                      cider.nrepl/wrap-xref
-                      refactor-nrepl.middleware/wrap-refactor
-                      iced.nrepl/wrap-iced]}
-}
 ----

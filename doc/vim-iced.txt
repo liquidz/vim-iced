@@ -30,7 +30,7 @@ CONTENTS                                                    *vim-iced-contents*
     Browsing tapped values     |vim-iced-debugging-browsing-tapped-values|
     Floating Window            |vim-iced-debugging-floating-window|
   Skeleton                     |vim-iced-skeleton|
-  Tag Jump                     |vim-iced-tag-jump|
+  Jump to definition           |vim-iced-jump-to-def|
   Editing S-exp                |vim-iced-editing-s-exp|
     Formatting                 |vim-iced-formatting|
     Indenting                  |vim-iced-indenting|
@@ -93,6 +93,16 @@ INSTALL                                                      *vim-iced-install*
 ICED COMMAND                                         *vim-iced-install-command*
 
   vim-iced provides `iced` command to use vim-iced easily.
+  Currently supports following tools.
+  - Leiningen
+    https://github.com/technomancy/leiningen
+  - Boot
+    https://github.com/boot-clj/boot
+  - Clojure CLI
+    https://clojure.org/guides/deps_and_cli
+  - shadow-cljs
+    https://github.com/thheller/shadow-cljs
+    See also |vim-iced-shadow-cljs|
 
   Add `$PATH` environment variable to `/path/to/vim-iced/bin`.
   E.g. export PATH=$PATH:~/src/github.com/liquidz/vim-iced/bin
@@ -115,6 +125,7 @@ ICED COMMAND                                         *vim-iced-install-command*
 ------------------------------------------------------------------------------
 MANUAL INSTALL                                      *vim-iced-install-manually*
 
+  If you don't like to use `iced` command, you can set up vim-iced manually.
 
                                                     *vim-iced-manual-leiningen*
 LEININGEN~
@@ -122,9 +133,9 @@ LEININGEN~
   $HOME/.lein/profile.clj
 >
   {:user
-   {:dependencies [[nrepl "0.8.1"]
-                   [iced-nrepl "1.0.5"]
-                   [cider/cider-nrepl "0.25.3"]]
+   {:dependencies [[nrepl "0.8.2"]
+                   [iced-nrepl "1.0.6"]
+                   [cider/cider-nrepl "0.25.4"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -152,8 +163,8 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.5.0"]
-      [cider/cider-nrepl "0.25.3"]
-      [iced-nrepl "1.0.5"]])
+      [cider/cider-nrepl "0.25.4"]
+      [iced-nrepl "1.0.6"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -176,33 +187,33 @@ BOOT~
                                                   *vim-iced-manual-shadow-cljs*
 SHADOW-CLJS~
 
-  WARNING: `iced` command does not support shadow-cljs currently.
-
   shadow-cljs.edn
 >
   {
    :dependencies [[refactor-nrepl "2.5.0"]
-                  [cider/cider-nrepl "0.25.3"]
-                  [iced-nrepl "1.0.5"]]
-
-   :nrepl {:cider false
-           :middleware [cider.nrepl/wrap-classpath
-                        cider.nrepl/wrap-clojuredocs
-                        cider.nrepl/wrap-complete
-                        cider.nrepl/wrap-debug
-                        cider.nrepl/wrap-format
-                        cider.nrepl/wrap-info
-                        cider.nrepl/wrap-macroexpand
-                        cider.nrepl/wrap-ns
-                        cider.nrepl/wrap-out
-                        cider.nrepl/wrap-spec
-                        cider.nrepl/wrap-test
-                        cider.nrepl/wrap-trace
-                        cider.nrepl/wrap-undef
-                        cider.nrepl/wrap-xref
-                        refactor-nrepl.middleware/wrap-refactor
-                        iced.nrepl/wrap-iced]}
+                  [cider/cider-nrepl "0.25.4"]
+                  [iced-nrepl "1.0.6"]]
   }
+<
+  .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
+>
+  {:cider false
+   :middleware [cider.nrepl/wrap-classpath
+                cider.nrepl/wrap-clojuredocs
+                cider.nrepl/wrap-complete
+                cider.nrepl/wrap-debug
+                cider.nrepl/wrap-format
+                cider.nrepl/wrap-info
+                cider.nrepl/wrap-macroexpand
+                cider.nrepl/wrap-ns
+                cider.nrepl/wrap-out
+                cider.nrepl/wrap-spec
+                cider.nrepl/wrap-test
+                cider.nrepl/wrap-trace
+                cider.nrepl/wrap-undef
+                cider.nrepl/wrap-xref
+                refactor-nrepl.middleware/wrap-refactor
+                iced.nrepl/wrap-iced]}
 <
   To start CLJS REPL, see |vim-iced-shadow-cljs|.
 
@@ -298,20 +309,24 @@ FIGWHEEL MAIN                                          *vim-iced-figwheel-main*
 ------------------------------------------------------------------------------
 SHADOW-CLJS                                              *vim-iced-shadow-cljs*
 
-  To start CLJS REPL with shadow-cljs, you need 3 steps.
+  To start CLJS REPL with shadow-cljs, you need following steps.
 
-  1. Add definitions to shadow-cljs.edn
-    See details: |vim-iced-manual-shadow-cljs|
+  1. Start to watch
+    `$ iced repl {YOUR-BUILD-ID}`
+      In this case, `iced` command will start watching project instead of
+      starting REPL.
+      You need a nREPL configuration file to start watching,
+      but `iced` command can generate it automatically.
+      https://shadow-cljs.github.io/docs/UsersGuide.html#nREPL
 
-  2. Start to watch
-    `$ shadow-cljs watch {build-id}`
-
-  3. Access shadow-cljs's HTTP server in your browser
+  2. Access shadow-cljs's HTTP server in your browser
     E.g. http://localhost:8080
-  
-  4. Connect and start cljs-repl
+
+  3. Connect to nREPL
     - |:IcedConnect|
-    - |:IcedStartCljsRepl| shadow-cljs {build-id}
+      For shadow-cljs, cljs-repl will be started automatically
+      after connection.
+      You don't need to specify your build ID anymore.
 
   If you would like to start CLJS REPL by hand, you can do it as follows.
   `:IcedEvalRepl (shadow.cljs.devtools.api/repl :build-id)`
@@ -383,7 +398,7 @@ PLAIN NREPL                                      *vim-iced-testing-plain-nrepl*
   your nREPL is plain or not.
   Following commands are also support simple test integration,
   so you just execute these commands as usual.
-  
+
   - |:IcedTestUnderCursor|
   - |:IcedTestNs|
   - |:IcedTestAll|
@@ -459,9 +474,11 @@ SKELETON                                                    *vim-iced-skeleton*
   - `*.cljc`
 
 ==============================================================================
-TAG JUMP                                                    *vim-iced-tag-jump*
+JUMP TO DEFINITION                    *vim-iced-tag-jump*  *vim-iced-jump-to-def*
 
   |:IcedDefJump| to jump to definition.
+  It is also supported to jump to qualified keywords.
+  
   To jump back, you can use default key mapping(<C-t>).
 
 ==============================================================================
@@ -541,7 +558,7 @@ STATIC ANALYSIS                                      *vim-iced-static-analysis*
 
   Currently vim-iced supports static analysis by clj-kondo.
   - https://github.com/borkdude/clj-kondo
-    
+
 ------------------------------------------------------------------------------
 CLJ-KONDO                                  *vim-iced-static-analysis-clj-kondo*
 
@@ -1556,7 +1573,7 @@ CUSTOMIZING                                              *vim-iced-customizing*
 g:iced#nrepl#host
   Connection host name.
   Default value is `'127.0.0.1'`.
- 
+
                                                      *g:iced#nrepl#buffer_size*
 g:iced#nrepl#buffer_size
   Threshold for nREPL response length.
@@ -1709,7 +1726,7 @@ g:iced#nrepl#source#finding_max_depth
   This value is used on enhanced source extraction.
   Default value is `3`.
   See also |g:iced_enable_enhanced_definition_extraction|.
-  
+
                                                *g:iced#repl#babashka_repl_type*
 g:iced#repl#babashka_repl_type
   REPL type of server launching by babashka.
