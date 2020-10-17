@@ -230,7 +230,6 @@ endfunction
 
 function! s:kondo.var_definition(ns_name, var_name) abort
   let ana = self.analysis()
-  let defs = get(ana, 'var-definitions', [])
   for d in get(ana, 'var-definitions', [])
     if get(d, 'ns', '') ==# a:ns_name
           \ && get(d, 'name', '') ==# a:var_name
