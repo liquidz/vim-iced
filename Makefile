@@ -1,4 +1,4 @@
-.PHONY: all vital test themis themis_nvim html document pip_install lint clj-lint
+.PHONY: vital test themis themis_nvim html document pip_install lint vim-lint clj-lint
 .PHONY: python_doctest bb_script_test version_check deps_check
 .PHONY: clean clean-all bin outdated repl
 
@@ -16,13 +16,30 @@ VITAL_MODULES = \
 		Vim.BufferManager \
 		Vim.Message
 
-all: vital bin test
+help:
+	@echo "Defined tasks:\n\
+  vital         Update vital modules\n\
+  test          Run following tests\n\
+                - themis\n\
+                - themis_nvim\n\
+                - python_doctest\n\
+                - bb_script_test\n\
+  document      Generate document html files to target/html\n\
+  lint          Run following linters\n\
+                - vim-lint\n\
+                - clj-lint\n\
+  bin           Generate bin/iced from clj/template/iced.bash\n\
+  outdated      Check dependencies are outedated or not\n\
+  "
 
 vital:
 	\rm -rf autoload/vital*
 	vim -c "Vitalize . --name=$(PLUGIN_NAME) $(VITAL_MODULES)" -c q
 
-test: themis lint python_doctest version_check deps_check
+callbag:
+	vim -c ":CallbagEmbed path=./autoload/iced/callbag.vim namespace=iced#callbag" -c q
+
+test: themis themis_nvim python_doctest bb_script_test
 
 .vim-themis:
 	git clone https://github.com/thinca/vim-themis .vim-themis
@@ -35,20 +52,24 @@ themis: .vim-themis .vim-sexp
 themis_nvim:
 	THEMIS_VIM=$(NVIM) ./.vim-themis/bin/themis
 
-html: doc/vim-iced.txt
+document: doc/vim-iced.txt
 	bash scripts/html.sh
-
-document:
 	bash scripts/asciidoctor.sh
 
-pip_install:
-	sudo pip3 install -r requirements.txt
+target/bin/vint:
+	mkdir -p target
+	pip3 install -r requirements.txt -t ./target
 
-lint:
+lint: vim-lint clj-lint
+
+vim-lint: target/bin/vint
 	bash scripts/lint.sh
 
-clj-lint:
-	clj-kondo --lint clj:test/clj
+bin/clj-kondo:
+	cd bin && bash ../installer/clj-kondo.sh
+
+clj-lint: bin/clj-kondo
+	./bin/clj-kondo --lint clj:test/clj
 
 python_doctest:
 	python3 -m doctest python/bencode.py
@@ -62,7 +83,7 @@ version_check:
 deps_check:
 	bash scripts/deps_check.sh
 
-coverage: themis
+coverage: target/bin/vint themis
 	bash scripts/coverage.sh
 
 clean:
