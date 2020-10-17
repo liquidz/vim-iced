@@ -420,7 +420,7 @@ case "$1" in
             fi
 
             if [ $HAS_SHADOW_CLJS_NREPL_CONFIG -eq 0 ]; then
-                echo 'It seems not to be nREPL configuratin file.'
+                echo 'It seems not to be nREPL configuration file.'
                 echo -n "Do you want to create configuration file to '$(pwd)/.nrepl.edn'? (Y/n): "
                 read ANSWER
                 if [ "${ANSWER}" = '' -o "${ANSWER}" = 'Y' -o "${ANSWER}" = 'y' ]; then
