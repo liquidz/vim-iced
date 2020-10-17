@@ -1,6 +1,24 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+
+* https://github.com/liquidz/vim-iced/issues/275[#275] Added support for jumping to qualified keyword.
+* https://github.com/liquidz/vim-iced/issues/274[#274] Added support for shadow-cljs in `iced` command.
+* https://github.com/liquidz/vim-iced/issues/276[#276] Added clj-kondo static analysis support to `UseCaseOpen`.
+
+=== Changed
+
+* Bumped nREPL to 0.8.2.
+* Bumped cider-nrepl to 0.25.4.
+* Bumped iced-nrepl to 1.0.6.
+
+=== Fixed
+
+* https://github.com/liquidz/vim-iced/issues/277[#277] Fixed parentheses in comments not to break code finding.
+* https://github.com/liquidz/vim-iced/issues/276[#276] Fixed not to timeout while using `IcedUseCaseOpen`.
+// }}}
 
 == 2.3.2 (2020-10-07)
 // {{{
