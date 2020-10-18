@@ -1075,7 +1075,8 @@ This will be done by <code>CursorHold</code> and <code>CursorHoldI</code> auto c
 <h3 id="_clojuredocs">5.2. ClojureDocs</h3>
 <div class="paragraph">
 <p><a href="https://clojuredocs.org">ClojureDocs</a> is a community-powered documentation and examples repository for the Clojure programming language.
-vim-iced provides the way to refer documents in ClojureDocs like docstring.</p>
+Vim-iced can display ClojureDocs reference information for a provided search term or the symbol under the cursor. It opens a temporary
+window split which can be closed with <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedDocumentClose">IcedDocumentClose</a>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1099,8 +1100,8 @@ vim-iced provides the way to refer documents in ClojureDocs like docstring.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedClojureDocsRefresh">IcedClojureDocsRefresh</a></p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IcedClojureDocsOpen</code> will create a cache file in your local machine.<br>
-If you get a outdated result, you can refresh cache file by this command.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IcedClojureDocsOpen</code> will create a cache file on your local machine.<br>
+If you get an out of date result, you can refresh the cache file with this command.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1110,7 +1111,7 @@ If you get a outdated result, you can refresh cache file by this command.</p></t
 <p>ClojureDocs does not have docs for ClojureScript currently.</p>
 </div>
 <div class="paragraph">
-<p>But if you would like to use Clojure documents instead of ClojureScript,
+<p>But if you would like to use Clojure documentation instead of ClojureScript,
 you can use it by enabling <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23clojuredocs%23use_clj_docs_on_cljs">g:iced#clojuredocs#use_clj_docs_on_cljs</a>.</p>
 </div>
 </div>
@@ -4293,7 +4294,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-10-07 05:00:42 UTC
+Last updated 2020-10-18 21:19:53 UTC
 </div>
 </div>
 <style>
