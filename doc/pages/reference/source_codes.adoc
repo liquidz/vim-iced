@@ -1,6 +1,6 @@
-=== Source codes
+=== Source code
 
-{help_html}#%3AIcedSourceShow[IcedSourceShow] or {help_html}#%3AIcedSourcePopupShow[IcedSourcePopupShow] is useful when you would like to refer the source code itself.
+{help_html}#%3AIcedSourceShow[IcedSourceShow] or {help_html}#%3AIcedSourcePopupShow[IcedSourcePopupShow] is useful when you would like to refer to the source code itself. The keyboard shortcuts will show the source code for the symbol under the cursor, the commands can be used to search for the source code of any symbol that's provided.
 
 [cols="30,20,50"]
 |===
@@ -8,11 +8,11 @@
 
 | {help_html}#%3AIcedSourcePopupShow[IcedSourcePopupShow]
 | {plug_iced_source_popup_show}
-| Show source codes in a popup window.
+| Shows the source code in a popup window.
 
 | {help_html}#%3AIcedSourceShow[IcedSourceShow]
 | {plug_iced_source_show}
-| Open a separeted buffer(<<document_buffer>>) and show source codes in it.
+| Opens a separate buffer(<<document_buffer>>) and shows the source code in it.
 
 |===
 
@@ -26,5 +26,5 @@ The difference from normal extraction is to extract source by not only `def` and
 [NOTE]
 ====
 https://github.com/borkdude/jet[borkdude/jet] is required currently. +
-vim-iced can download `jet` automatically if you want.
+vim-iced will offer to download `jet` automatically then the command is run.
 ====
