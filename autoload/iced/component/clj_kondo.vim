@@ -34,6 +34,10 @@ function! s:kondo.cache_name() abort
   return printf('%s/%s.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
 endfunction
 
+function! s:kondo.namespace_definitions_cache_name() abort
+  return printf('%s/%s_ns_definitions.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
+endfunction
+
 function! s:kondo.namespace_usages_cache_name() abort
   return printf('%s/%s_ns_usages.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
 endfunction
@@ -50,6 +54,13 @@ function! s:analyze__analyzed(callback, result) abort dict
           \ s:temp_name(ns_usage_cache_name),
           \ )]
     call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_usage_cache_name)})
+
+    let ns_definition_cache_name = self.namespace_definitions_cache_name()
+    let command = ['sh', '-c', printf('jq -c ''.analysis."namespace-definitions"'' %s > %s',
+          \ cache_name,
+          \ s:temp_name(ns_definition_cache_name),
+          \ )]
+    call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_definition_cache_name)})
   elseif executable('jet')
     let ns_usage_cache_name = self.namespace_usages_cache_name()
     let command = ['sh', '-c', printf('cat %s | jet --from json --to json --query ''["analysis" "namespace-usages"]'' > %s',
@@ -57,6 +68,13 @@ function! s:analyze__analyzed(callback, result) abort dict
           \ s:temp_name(ns_usage_cache_name),
           \ )]
     call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_usage_cache_name)})
+
+    let ns_definition_cache_name = self.namespace_definitions_cache_name()
+    let command = ['sh', '-c', printf('cat %s | jet --from json --to json --query ''["analysis" "namespace-definitions"]'' > %s',
+          \ cache_name,
+          \ s:temp_name(ns_definition_cache_name),
+          \ )]
+    call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_definition_cache_name)})
   endif
 
   let self.is_analyzing = v:false
@@ -128,6 +146,30 @@ function! s:kondo.namespace_usages() abort
   return json_decode(res[0])
 endfunction
 
+function! s:kondo.namespace_definitions() abort
+  if !g:iced_enable_clj_kondo_analysis
+    return {'error': 'clj-kondo: disabled'}
+  endif
+
+  let cache_name = self.namespace_definitions_cache_name()
+  if !filereadable(cache_name)
+    let ana = self.analysis()
+    return (has_key(ana, 'namespace-definitions'))
+          \ ? ana['namespace-definitions']
+          \ : {}
+  endif
+
+  let res = readfile(cache_name)
+  if empty(res)
+    let ana = self.analysis()
+    return (has_key(ana, 'namespace-definitions'))
+          \ ? ana['namespace-definitions']
+          \ : ana
+  endif
+
+  return json_decode(res[0])
+endfunction
+
 function! s:kondo.references(ns_name, var_name) abort
   let ana = self.analysis()
   let usages = get(ana, 'var-usages', [])
@@ -161,7 +203,8 @@ function! s:kondo.used_ns_list() abort
   return s:L.uniq(result)
 endfunction
 
-function! s:kondo.ns_aliases() abort
+function! s:kondo.ns_aliases(...) abort
+  let from_ns = get(a:, 1, '')
   let usages = self.namespace_usages()
   let result = {}
   if empty(usages) | return result | endif
@@ -169,7 +212,11 @@ function! s:kondo.ns_aliases() abort
   for usage in usages
     let ns_name = get(usage, 'to', '')
     let alias_name = get(usage, 'alias', '')
-    if empty(ns_name) || empty(alias_name) || alias_name ==# 'sut'
+    if empty(ns_name) || empty(alias_name)
+      continue
+    endif
+
+    if !empty(from_ns) && usage['from'] !=# from_ns
       continue
     endif
 
@@ -183,13 +230,23 @@ endfunction
 
 function! s:kondo.var_definition(ns_name, var_name) abort
   let ana = self.analysis()
-  let defs = get(ana, 'var-definitions', [])
   for d in get(ana, 'var-definitions', [])
     if get(d, 'ns', '') ==# a:ns_name
           \ && get(d, 'name', '') ==# a:var_name
       return d
     endif
   endfor
+endfunction
+
+function! s:kondo.ns_path(ns_name) abort
+  let definitions = self.namespace_definitions()
+  for definition in definitions
+    if get(definition, 'name') ==# a:ns_name
+      return get(definition, 'filename', '')
+    endif
+  endfor
+
+  return ''
 endfunction
 
 function! iced#component#clj_kondo#start(this) abort

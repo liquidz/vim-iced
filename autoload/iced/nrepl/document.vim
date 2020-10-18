@@ -306,6 +306,7 @@ function! s:show_usecase(info) abort
     return iced#message#error('invalid_format', a:info)
   endif
 
+  let kondo = iced#system#get('clj_kondo')
   let index = a:info['index']
   let ref = a:info['refs'][index]
   let ns = a:info['ns']
@@ -318,31 +319,38 @@ function! s:show_usecase(info) abort
     call iced#system#get('ex_cmd').silent_exe(printf(':read %s', ref['file']))
 
     " Detect ns alias in the ref file
-    let ref_ns = iced#nrepl#ns#name()
-    call iced#promise#sync('iced#nrepl#ns#require', [ref_ns])
-    let resp = iced#nrepl#op#cider#sync#ns_aliases(ref_ns)
-    if !has_key(resp, 'ns-aliases') | return iced#message#info('not_found') | endif
-
-    let alias = keys(filter(resp['ns-aliases'], {_, v -> v ==# ns}))
+    let ref_ns = iced#nrepl#ns#name_by_buf()
+    let aliases = []
+    if kondo.is_analyzed()
+      let alias_dict = kondo.ns_aliases(ref_ns)
+      let aliases = keys(filter(alias_dict, {_, v -> index(v, ns) != -1}))
+    else
+      call iced#promise#sync('iced#nrepl#ns#require', [ref_ns], v:null)
+      let resp = iced#promise#sync('iced#nrepl#op#cider#ns_aliases', [ref_ns], v:null)
+      let aliases = keys(filter(get(resp, 'ns-aliases', {}), {_, v -> v ==# ns}))
+    endif
 
     " Search ref's concrete position
     let names = [
-          \ empty(alias) ? symbol : printf('%s/%s', alias[0], symbol),
+          \ empty(aliases) ? symbol : printf('%s/%s', aliases[0], symbol),
           \ printf('%s/%s', ns, symbol),
           \ ]
     let pos = [0, 0]
 
-    call cursor(ref['line']+1, 1)
+    let start_line = ref['line']+1
+    call cursor(start_line, 1)
     for name in names
       if pos != [0, 0] | break | endif
-
       let pos = searchpos(printf('(%s ', name), 'n')
-      if pos == [0, 0]
-        let pos = searchpos(printf("(%s\n", name), 'n')
-      endif
-      if pos == [0, 0]
-        let pos = searchpos(printf('(%s)', name), 'n')
-      endif
+
+      if pos != [0, 0] | break | endif
+      let pos = searchpos(printf("(%s\n", name), 'n')
+
+      if pos != [0, 0] | break | endif
+      let pos = searchpos(printf('(%s)', name), 'n')
+
+      if pos != [0, 0] | break | endif
+      let pos = searchpos(printf('#''%s', name), 'n')
     endfor
 
     if pos == [0, 0] | return iced#message#info('not_found') | endif
@@ -351,7 +359,7 @@ function! s:show_usecase(info) abort
     silent normal! vaby
     let texts = join([
           \ printf(';; Use case for %s/%s (%d/%d)', ns, symbol, index+1, len(a:info['refs'])),
-          \ printf(';; %s:%d:%d', ref['file'], pos[0], pos[1]),
+          \ printf(';; %s:%d:%d', ref['file'], pos[0]-1, pos[1]),
           \ iced#util#del_indent(pos[1]-1, @@),
           \ ], "\n")
     call iced#buffer#document#open(texts, 'clojure')
@@ -360,33 +368,58 @@ function! s:show_usecase(info) abort
     call iced#buffer#temporary#end()
     let @@ = reg_save
   endtry
+
+  return v:true
 endfunction
 
-function! s:find_usecase(var_resp) abort
-  if !has_key(a:var_resp, 'ns') || !has_key(a:var_resp, 'name')
-    return iced#message#error('not_found')
-  endif
+function! s:find_usecase(args) abort
+  if len(a:args) != 3 | return | endif
+  let [refs, ns, name] = a:args
 
-  let ns = a:var_resp['ns']
-  let name = a:var_resp['name']
-  let resp = iced#promise#sync('iced#nrepl#op#cider#fn_refs', [ns, name])
-
-  let refs = filter(copy(resp['fn-refs']), {_, v -> filereadable(v['file'])})
   if empty(refs) | return iced#message#info('not_found') | endif
 
   let s:last_usecase_info = {
-        \ 'refs': refs,
+        \ 'refs': copy(refs),
         \ 'ns': ns,
         \ 'symbol': name,
         \ 'index': 0,
         \ }
 
-  call s:show_usecase(s:last_usecase_info)
+  return s:show_usecase(s:last_usecase_info)
+endfunction
+
+function! s:__usecase_find_references(var_resp) abort
+  if !has_key(a:var_resp, 'ns') || !has_key(a:var_resp, 'name')
+    return iced#message#error('not_found')
+  endif
+
+  let kondo = iced#system#get('clj_kondo')
+  let ns = a:var_resp['ns']
+  let name = a:var_resp['name']
+  let refs = []
+
+  if kondo.is_analyzed()
+    let refs = []
+    for ref in kondo.references(ns, name)
+      let refs += [{
+            \ 'file': get(ref, 'filename', ''),
+            \ 'line': get(ref, 'row', 1) - 1,
+            \ }]
+    endfor
+    return iced#promise#resolve([refs, ns, name])
+  else
+    return iced#promise#call('iced#nrepl#op#cider#fn_refs', [ns, name])
+          \.then({resp -> filter(resp['fn-refs'], {_, v -> filereadable(v['file'])})})
+          \.then({refs -> [refs, ns, name]})
+  endif
 endfunction
 
 function! iced#nrepl#document#usecase(symbol) abort
-  call iced#nrepl#ns#in({_ ->
-        \ iced#nrepl#var#get(a:symbol, funcref('s:find_usecase'))})
+  let ns = iced#nrepl#ns#name()
+  return iced#promise#call('iced#nrepl#ns#in', [])
+        \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
+        \.then({resp -> s:__usecase_find_references(resp)})
+        \.then({refs -> s:find_usecase(refs)})
 endfunction
 
 function! s:move_usecase(i) abort

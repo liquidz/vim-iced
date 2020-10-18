@@ -211,17 +211,32 @@ function! iced#nrepl#ns#does_exist(ns_name) abort
 endfunction
 
 function! iced#nrepl#ns#alias_dict(ns_name) abort
-  try
-    " NOTE: To avoid evaluating `ns-aliases` with non-existing namespace.
-    if !iced#nrepl#ns#does_exist(a:ns_name)
-      return {}
-    endif
+  let kondo = iced#system#get('clj_kondo')
 
-    let resp = iced#nrepl#op#cider#sync#ns_aliases(a:ns_name)
-    return get(resp, 'ns-aliases', {})
-  catch
-    return {}
-  endtry
+  if kondo.is_analyzed()
+    let aliases = kondo.ns_aliases(a:ns_name)
+    for k in keys(aliases)
+      if len(aliases[k]) > 0
+        let aliases[k] = aliases[k][0]
+      else
+        unlet aliases[k]
+      endif
+    endfor
+
+    return aliases
+  else
+    try
+      " NOTE: To avoid evaluating `ns-aliases` with non-existing namespace.
+      if !iced#nrepl#ns#does_exist(a:ns_name)
+        return {}
+      endif
+
+      let resp = iced#promise#sync('iced#nrepl#op#cider#ns_aliases', [a:ns_name], v:null)
+      return get(resp, 'ns-aliases', {})
+    catch
+      return {}
+    endtry
+  endif
 endfunction
 
 function! s:__find_existing_alias(ns_name, aliases) abort

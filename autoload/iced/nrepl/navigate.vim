@@ -10,6 +10,23 @@ let g:iced#related_ns#tail_patterns =
 
 let g:iced#var_references#cache_dir = get(g:, 'iced#var_references#cache_dir', '/tmp')
 
+" definitions to jump to qualified keyword
+let g:iced#qualified_key_def_prefixes = get(g:, 'iced#qualified_key_def_prefixes', [])
+let s:default_qualified_key_def_prefixes = [
+      \ '^',
+      \ 'reg-cofx',
+      \ 'reg-event-ctx',
+      \ 'reg-event-db',
+      \ 'reg-event-fx',
+      \ 'reg-fx',
+      \ 'reg-sub',
+      \ 'reg-sub-raw',
+      \ ]
+let s:qualified_key_def_prefix_regex = printf('\(%s\)',
+      \ join(map(s:default_qualified_key_def_prefixes + g:iced#qualified_key_def_prefixes,
+      \          {_, v -> printf('%s\s\+', v)}),
+      \      '\|'))
+
 function! s:apply_mode_to_file(mode, file) abort
   let cmd = ':edit'
   if a:mode ==# 'v'
@@ -117,10 +134,84 @@ function! iced#nrepl#navigate#related_ns() abort
 endfunction " }}}
 
 " iced#nrepl#navigate#jump_to_def {{{
-function! s:jump(resp) abort
+function! iced#nrepl#navigate#jump_to_def(symbol) abort
+  call iced#system#get('tagstack').add_here()
+
+  let symbol = empty(a:symbol)
+        \ ? iced#nrepl#var#cword()
+        \ : a:symbol
+
+  if stridx(symbol, '::') == 0
+    return s:jump_to_qualified_keyword(symbol)
+  else
+    return iced#nrepl#var#get(symbol, funcref('s:jump', [symbol]))
+  endif
+endfunction
+
+function! s:jump_to_qualified_keyword(keyword) abort
+  let current_ns_name = iced#nrepl#ns#name()
+  let ns_name = ''
+  let kw_name = ''
+
+  let slash_idx = stridx(a:keyword, '/')
+  if slash_idx == -1
+    let ns_name = current_ns_name
+    let kw_name = strpart(a:keyword, 2)
+  else
+    let alias_dict = iced#nrepl#ns#alias_dict(current_ns_name)
+    let ns_name = strpart(a:keyword, 2, slash_idx - 2)
+    let ns_name = get(alias_dict, ns_name, ns_name)
+    let kw_name = strpart(a:keyword, slash_idx + 1)
+  endif
+
+  let path = ''
+  if ns_name ==# current_ns_name
+    let path = expand('%:p')
+  else
+    let kondo = iced#system#get('clj_kondo')
+    if kondo.is_analyzed()
+      let path = kondo.ns_path(ns_name)
+    else
+      let res = iced#promise#sync('iced#nrepl#op#cider#ns_path', [ns_name])
+      let path = get(res, 'path', '')
+    endif
+
+    if empty(path)
+      return iced#message#error('jump_not_found')
+    endif
+  endif
+
+  " Open path
+  if expand('%:p') !=# path
+    call iced#system#get('ex_cmd').exe(printf(':edit %s', path))
+  endif
+
+  " Search qualified keyword by s:qualified_key_def_prefix_regex
+  let pattern = printf('%s::%s', s:qualified_key_def_prefix_regex, kw_name)
+  let curpos = getcurpos()
+  call cursor(1, 1)
+
+  let pos = searchpos(pattern, 'n')
+  if pos == [0, 0]
+    " When not found, search the first qualified keyword that appear
+    let pos = searchpos(printf('::%s', kw_name), 'n')
+    if pos == [0, 0]
+      return setpos('.', curpos)
+    endif
+  endif
+
+  call cursor(pos[0], pos[1])
+  normal! zz
+endfunction
+
+function! s:jump(base_symbol, resp) abort
   let path = ''
   let line = 0
   let column = 0
+
+  if iced#util#has_status(a:resp, 'no-info')
+    return iced#message#error('jump_not_found')
+  endif
 
   if !has_key(a:resp, 'file')
     let kondo = iced#system#get('clj_kondo')
@@ -148,11 +239,7 @@ function! s:jump(resp) abort
   normal! zz
   redraw!
 endfunction
-
-function! iced#nrepl#navigate#jump_to_def(symbol) abort
-  call iced#system#get('tagstack').add_here()
-  call iced#nrepl#var#get(a:symbol, funcref('s:jump'))
-endfunction " }}}
+" }}}
 
 " iced#nrepl#navigate#test {{{
 function! s:test_vars(var_name, test_vars) abort

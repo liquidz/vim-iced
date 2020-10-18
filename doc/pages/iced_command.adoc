@@ -10,12 +10,8 @@ Main purpose of this command is launching REPL with all features for vim-iced.
 - https://github.com/technomancy/leiningen[Leiningen]
 - https://github.com/boot-clj/boot[Boot]
 - https://clojure.org/guides/deps_and_cli[Clojure CLI]
-
-[WARNING]
-====
-https://github.com/thheller/shadow-cljs[shadow-cljs] is not supported by `iced` command for now.
-To work with shadow-cljs, see {help_html}#vim-iced-shadow-cljs[vim-iced-shadow-cljs section in help].
-====
+- https://github.com/thheller/shadow-cljs[shadow-cljs]
+-- See also <<clojurescript_shadow_cljs, shadow-cljs section>>.
 
 === Usage [[iced_usage]]
 

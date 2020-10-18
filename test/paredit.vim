@@ -5,6 +5,9 @@ let s:buf = themis#helper('iced_buffer')
 let s:ch = themis#helper('iced_channel')
 let s:funcs = s:scope.funcs('autoload/iced/nrepl.vim')
 
+let g:iced_enable_clj_kondo_analysis = v:false
+let g:iced_cache_directory = ''
+
 function! s:format_code_relay(msg) abort
   if a:msg['op'] ==# 'iced-format-code-with-indents'
     return {'status': ['done'], 'formatted': a:msg['code']}
@@ -70,6 +73,17 @@ function! s:suite.get_current_top_object_with_tag_test() abort
         \ ])
   let res = iced#paredit#get_current_top_object()
   call s:assert.equals(res['code'], "#?(:clj\n   (foo (bar)))")
+  call s:buf.stop_dummy()
+endfunction
+
+function! s:suite.get_current_top_object_with_comment_test() abort
+  call s:buf.start_dummy([
+        \ '(foo',
+        \ ' ;; baz)',
+        \ ' (bar|))',
+        \ ])
+  let res = iced#paredit#get_current_top_object()
+  call s:assert.equals(res['code'], "(foo\n ;; baz)\n (bar))")
   call s:buf.stop_dummy()
 endfunction
 

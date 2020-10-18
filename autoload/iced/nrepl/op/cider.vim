@@ -82,6 +82,17 @@ function! iced#nrepl#op#cider#ns_vars_with_meta(ns, callback) abort
       \ })
 endfunction " }}}
 
+""" ns-aliases {{{
+function! iced#nrepl#op#cider#ns_aliases(ns, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  return iced#nrepl#send({
+      \ 'op': 'ns-aliases',
+      \ 'session': iced#nrepl#current_session(),
+      \ 'ns': a:ns,
+      \ 'callback': a:callback,
+      \ })
+endfunction " }}}
+
 """ test-var-query {{{
 
 " var_query examples)

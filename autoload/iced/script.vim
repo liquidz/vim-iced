@@ -13,16 +13,5 @@ function! iced#script#empty_port(callback) abort
   return iced#system#get('job_out').redir(command, a:callback)
 endfunction
 
-function! iced#script#shadow_cljs_validation(shadow_cljs_config_path, callback) abort
-  call s:setup()
-  let command = printf('bb %s/clj/script/shadow_cljs_validation.clj %s %s',
-        \ g:vim_iced_home,
-        \ a:shadow_cljs_config_path,
-        \ g:vim_iced_home,
-        \ )
-
-  return iced#system#get('job_out').redir(command, a:callback)
-endfunction
-
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

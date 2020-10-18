@@ -4,6 +4,8 @@
 
 vim-iced provides {help_html}#%3AIcedDefJump[IcedDefJump] command for jumping to definition.
 
+It is also supported to jump to qualified keywords.
+
 If you jumped to a definition with above command, vim-iced add the current cursor position to Vim's https://vim-jp.org/vimdoc-en/tagsrch.html#tagstack[tag stack].
 So you can go back easily with https://vim-jp.org/vimdoc-en/tagsrch.html#CTRL-T[<C-t>].
 

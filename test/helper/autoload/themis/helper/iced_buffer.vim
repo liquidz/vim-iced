@@ -9,6 +9,11 @@ function! s:helper.start_dummy(lines) abort
   setl nobuflisted
   setl filetype=clojure
 
+  " copy from runtime/syntax/clojure.vim
+  " required by <Plug>(sexp_move_to_next_bracket)
+  syntax match clojureComment ";.*$"
+  syntax match clojureComment "#!.*$"
+
   let i = 1
   let cursor_pos = [1, 1]
   for line in a:lines

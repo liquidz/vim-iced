@@ -34,24 +34,6 @@ for TARGET in ${TARGETS[@]}; do
             echo "OK: ${DOC_NAME}"
         fi
     fi
-
-    # ----------------------------------------
-    # doc/pages/clojurescript/shadow_cljs.adoc
-    # ----------------------------------------
-    DOC_NAME=doc/pages/clojurescript/shadow_cljs.adoc
-    DOC=${SCRIPT_DIR}/../${DOC_NAME}
-    if [ "${TARGET}" = "nrepl" ]; then
-        echo "OK: ${DOC_NAME} => Skipped"
-        continue
-    else
-        HIT=$(grep "${TARGET}" ${DOC} | grep "${EXPECTED_VERSION}" | wc -l)
-        if [ ${HIT} -ne 1 ]; then
-            echo "NG: ${DOC_NAME} => Invalid document for ${TARGET} dependency."
-            exit 1
-        else
-            echo "OK: ${DOC_NAME}"
-        fi
-    fi
 done
 
 echo 'bin/iced: Expected to newer than deps.edn'
