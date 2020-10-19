@@ -1,8 +1,7 @@
 === Stdout buffer [[stdout_buffer]]
 
-Standard outputs will be outputted to dedicated buffer.
-
-vim-iced provides following commands to control stdout buffer.
+When evaluating a form the output from Clojure's standard output is sent to a dedicated buffer. 
+Vim-iced provides the following commands to control it's stdout buffer.
 
 [cols="30,20,50"]
 |===
