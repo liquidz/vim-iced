@@ -13,23 +13,31 @@ function! iced#nrepl#debug#quit() abort
   return Fn()
 endfunction
 
+function! iced#nrepl#debug#browse_tapped(key_str) abort
+  if empty(a:key_str)
+    return s:show_tapped_list()
+  endif
+
+  return s:browse_tapped_data(a:key_str)
+endfunction
+
+function! s:show_tapped_list() abort
+  return iced#promise#call('iced#nrepl#op#iced#list_tapped', [])
+        \.then({resp -> has_key(resp, 'error') ? iced#promise#reject(resp['error']) : resp})
+        \.then({resp -> map(get(resp, 'tapped', []), {i, v -> printf("%d: %s", i, get(v, 'value', ''))})})
+        \.then({candidates -> empty(candidates)
+        \                     ? iced#message#warning('not_found')
+        \                     : iced#selector({'candidates': candidates,
+        \                                      'accept': funcref('s:accept_tapped_value')})})
+        \.catch({error -> iced#message#error_str(error)})
+endfunction
+
 function! s:accept_tapped_value(_, x) abort
   let i = stridx(a:x, ': ')
   if i < 0 | return | endif
 
   let k = a:x[:i-1]
   call iced#nrepl#debug#browse_tapped(k)
-endfunction
-
-function! s:show_tapped_list() abort
-  return iced#promise#call('iced#nrepl#op#iced#list_tapped', [])
-        \.then({resp -> has_key(resp, 'error') ? iced#promise#reject(resp['error']) : resp})
-        \.then({resp -> map(get(resp, 'tapped', []), {i, v -> printf("%d: %s", i, v)})})
-        \.then({candidates -> empty(candidates)
-        \                     ? iced#message#warning('not_found')
-        \                     : iced#selector({'candidates': candidates,
-        \                                      'accept': funcref('s:accept_tapped_value')})})
-        \.catch({error -> iced#message#error_str(error)})
 endfunction
 
 function! s:browse_tapped_data(key_str) abort
@@ -51,13 +59,6 @@ function! s:browse_tapped_data(key_str) abort
   return iced#promise#resolve('')
 endfunction
 
-function! iced#nrepl#debug#browse_tapped(key_str) abort
-  if empty(a:key_str)
-    return s:show_tapped_list()
-  endif
-
-  return s:browse_tapped_data(a:key_str)
-endfunction
 
 function! iced#nrepl#debug#complete_tapped(arg_lead, cmd_line, cursor_pos) abort
   if !iced#nrepl#is_connected() | return '' | endif
