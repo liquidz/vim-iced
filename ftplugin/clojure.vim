@@ -158,6 +158,7 @@ command! -nargs=? IcedRenameSymbol          call iced#nrepl#refactor#rename_symb
 
 command! -nargs=? -complete=custom,iced#nrepl#debug#complete_tapped
       \ IcedBrowseTapped                    call iced#nrepl#debug#browse_tapped(<q-args>)
+command!          IcedDeleteTapped          call iced#nrepl#debug#delete_tapped()
 command!          IcedClearTapped           call iced#nrepl#debug#clear_tapped()
 command!
       \ IcedToggleWarnOnReflection          call iced#nrepl#debug#toggle_warn_on_reflection()
@@ -272,6 +273,7 @@ nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
 nnoremap <silent> <Plug>(iced_rename_symbol)            :<C-u>IcedRenameSymbol<CR>
 
 nnoremap <silent> <Plug>(iced_browse_tapped)            :<C-u>IcedBrowseTapped<CR>
+nnoremap <silent> <Plug>(iced_delete_tapped)            :<C-u>IcedDeleteTapped<CR>
 nnoremap <silent> <Plug>(iced_clear_tapped)             :<C-u>IcedClearTapped<CR>
 nnoremap <silent>
       \ <Plug>(iced_toggle_warn_on_reflection)          :<C-u>IcedToggleWarnOnReflection<CR>

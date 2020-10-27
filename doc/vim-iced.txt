@@ -444,7 +444,9 @@ BROWSING TAPPED VALUES              *vim-iced-debugging-browsing-tapped-values*
   See |:IcedBrowseTapped| for browsing key details.
 
   All tapped values are stored in memory.
-  So if you would like to delete them, execute |:IcedClearTapped| command.
+  So if you would like to delete them, execute following commands.
+  - |:IcedDeleteTapped| (delete one)
+  - |:IcedClearTapped| (delete all)
 
 ------------------------------------------------------------------------------
 FLOATING WINDOW                            *vim-iced-debugging-floating-window*
@@ -1101,6 +1103,12 @@ COMMANDS                                                    *vim-iced-commands*
 
   Key is mapped to |<Plug>(iced_browse_tapped)|.
 
+                                                            *:IcedDeleteTapped*
+:IcedDeleteTapped
+  Select one tapped value via `ctrlp.vim`, `fzf` or `vim-clap` interface,
+  and delete it.
+  Key is mapped to |<Plug>(iced_delete_tapped)|.
+
                                                              *:IcedClearTapped*
 :IcedClearTapped
   Clear all tapped values.
@@ -1529,6 +1537,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                    *<Plug>(iced_browse_tapped)*
 <Plug>(iced_browse_tapped)
   Same as |:IcedBrowseTapped|.
+
+                                                   *<Plug>(iced_delete_tapped)*
+<Plug>(iced_delete_tapped)
+  Same as |:IcedDeleteTapped|.
 
                                                     *<Plug>(iced_clear_tapped)*
 <Plug>(iced_clear_tapped)

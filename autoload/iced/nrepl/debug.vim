@@ -73,6 +73,26 @@ function! iced#nrepl#debug#complete_tapped(arg_lead, cmd_line, cursor_pos) abort
   return join(get(resp, 'complete', []), "\n")
 endfunction
 
+function! iced#nrepl#debug#delete_tapped() abort
+  return iced#promise#call('iced#nrepl#op#iced#list_tapped', [])
+        \.then({resp -> has_key(resp, 'error') ? iced#promise#reject(resp['error']) : resp})
+        \.then({resp -> map(get(resp, 'tapped', []), {i, v -> printf("%d: %s", i, get(v, 'value', ''))})})
+        \.then({candidates -> empty(candidates)
+        \                     ? iced#message#warning('not_found')
+        \                     : iced#selector({'candidates': candidates,
+        \                                      'accept': funcref('s:delete_tapped_value')})})
+        \.catch({error -> iced#message#error_str(error)})
+endfunction
+
+function! s:delete_tapped_value(_, x) abort
+  let i = stridx(a:x, ': ')
+  if i < 0 | return | endif
+
+  let k = str2nr(a:x[:i-1])
+  call iced#nrepl#op#iced#delete_tapped(k, {_ ->
+        \ iced#message#info('deleted', trim(strpart(a:x, i+1)))})
+endfunction
+
 function! iced#nrepl#debug#clear_tapped() abort
   return iced#promise#call('iced#nrepl#op#iced#clear_tapped', [])
         \.then({resp -> has_key(resp, 'error')
