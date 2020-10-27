@@ -69,6 +69,18 @@ function! iced#nrepl#op#iced#clear_tapped(callback) abort
         \ })
 endfunction " }}}
 
+""" delete-tapped {{{
+function! iced#nrepl#op#iced#delete_tapped(key, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'iced-delete-tapped',
+        \ 'session': iced#nrepl#current_session(),
+        \ 'key': a:key,
+        \ 'callback': a:callback,
+        \ })
+endfunction " }}}
+
 """ browse-tapped {{{
 function! iced#nrepl#op#iced#browse_tapped(keys, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
@@ -122,4 +134,3 @@ call iced#nrepl#register_handler('iced-pseudo-ns-path', function('iced#nrepl#pat
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
-" vim:fdm=marker:fdl=0
