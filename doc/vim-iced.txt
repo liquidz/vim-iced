@@ -257,7 +257,7 @@ REBEL READLINE~
       (reset! nrepl-server nil)
       (io/delete-file ".nrepl-port" true)
       (System/exit 0)))
-<  
+<
   Start the Rebel Readline REPL and from it's prompt start the nREPL server 
   using `start-nrepl-server!`, then in Vim do `:IcedConnect`.
 
