@@ -224,8 +224,9 @@ REBEL READLINE~
   If you use Rebel Readline or want to embed an nREPL in your application,
   then one approach is to create a `user.clj` with the following:
 >
-  (ns user (:require [nrepl.server :as nrepl-server]
-                  [clojure.java.io :as io]))
+  (ns user
+    (:require [nrepl.server :as nrepl-server]
+              [clojure.java.io :as io]))
   
   (def nrepl-port 7888)
   (defonce nrepl-server (atom nil))
