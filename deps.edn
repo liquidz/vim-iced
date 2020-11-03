@@ -23,7 +23,7 @@
 
  :aliases
  {:cljs {:__command_option__ true
-         :extra-deps {cider/piggieback {:mvn/version "0.5.1"}}
+         :extra-deps {cider/piggieback {:mvn/version "0.5.2"}}
          :__middlewares__ ["cider.piggieback/wrap-cljs-repl"]}
   :kaocha {:__command_option__ true
            :extra-deps {kaocha-nrepl/kaocha-nrepl {:mvn/version "1.0.3"}}
