@@ -105,7 +105,8 @@ endfunction
 
 function! s:__browse_tapped_show_list_test_relay(msg) abort
   if a:msg['op'] ==# 'iced-list-tapped'
-    return {'status': ['done'], 'tapped': ['foo', 'bar']}
+    return {'status': ['done'], 'tapped': [{'unique-id': '1', 'value': 'foo'},
+          \                                {'unique-id': '2', 'value': 'bar'}]}
   endif
   return {'status': ['done']}
 endfunction
