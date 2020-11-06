@@ -1,6 +1,23 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+
+* Added `IcedDeleteTapped` command.
+
+=== Changed
+
+* Bumped nREPL to 0.8.3.
+* Bumped iced-nrepl to 1.1.0.
+* Bumped piggieback to 0.5.2.
+* Updated `IcedBrowseReference` to support `defmulti` and `defmethod`.
+
+=== Fixed
+
+* Fixed native-image formatter to work even if stderr is output.
+** Checking if the exit code is `0`.
+// }}}
 
 == 2.4.0 (2020-10-19)
 // {{{
