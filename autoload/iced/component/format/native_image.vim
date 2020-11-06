@@ -10,13 +10,13 @@ let s:fmt = {
       \ }
 
 function! s:job_start_promise(job, resolve, code, d) abort
-  let job = a:job.start(a:d.command, {
+  let job_handle = a:job.start(a:d.command, {
        \ 'out_cb': funcref('s:out_cb', a:d),
        \ 'err_cb': funcref('s:err_cb', a:d),
-       \ 'exit_cb': {v -> a:resolve(call('s:exit_cb', [v], a:d))}
+       \ 'exit_cb': {v -> a:resolve(call('s:exit_cb', [a:job, v], a:d))}
        \ })
-  call a:job.sendraw(job, a:code)
-  call a:job.close_stdin(job)
+  call a:job.sendraw(job_handle, a:code)
+  call a:job.close_stdin(job_handle)
 endfunction
 
 function! s:__format_finally(args) abort
@@ -42,11 +42,17 @@ function! s:err_cb(_, out) abort dict
   let self.err = tmp
 endfunction
 
-function! s:exit_cb(...) abort dict
+function! s:exit_cb(job, id) abort dict
   let self._finished = v:true
+
+  let info = a:job.info(a:id)
   if !empty(self.err)
-    setl modifiable
-    return iced#message#error_str(trim(join(self.err, ' ')))
+    if get(info, 'exitval', 0) != 0
+      setl modifiable
+      return iced#message#error_str(trim(join(self.err, ' ')))
+    else
+      call iced#message#warning_str(trim(join(self.err, ' ')))
+    endif
   endif
 
   if has_key(self, 'callback')
@@ -178,12 +184,12 @@ function! s:fmt.minimal(opt) abort
     let code = @@
 
     let d = {'buf': [], 'err': [], '_finished': v:false}
-    let job = self.job.start(self.command, {
+    let job_handle = self.job.start(self.command, {
           \ 'out_cb': funcref('s:out_cb', d),
-          \ 'exit_cb': funcref('s:exit_cb', d),
+          \ 'exit_cb': {v -> call('s:exit_cb', [self.job, v], d)},
           \ })
-    call self.job.sendraw(job, code)
-    call self.job.close_stdin(job)
+    call self.job.sendraw(job_handle, code)
+    call self.job.close_stdin(job_handle)
     call iced#util#wait({-> d._finished == v:false}, 1000)
 
     let code = trim(join(d.buf, "\n"))
@@ -226,12 +232,12 @@ function! s:fmt.calculate_indent(lnum) abort
     let code = join(result, "\n")
 
     let d = {'buf': [], 'err': [], '_finished': v:false}
-    let job = self.job.start(self.command, {
+    let job_handle = self.job.start(self.command, {
           \ 'out_cb': funcref('s:out_cb', d),
-          \ 'exit_cb': funcref('s:exit_cb', d),
+          \ 'exit_cb': {v -> call('s:exit_cb', [self.job, v], d)},
           \ })
-    call self.job.sendraw(job, code)
-    call self.job.close_stdin(job)
+    call self.job.sendraw(job_handle, code)
+    call self.job.close_stdin(job_handle)
     call iced#util#wait({-> d._finished == v:false}, 1000)
 
     for line in d.buf
