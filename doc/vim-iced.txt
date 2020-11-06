@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.4.0
+Version: 2.5.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -133,8 +133,8 @@ LEININGEN~
   $HOME/.lein/profile.clj
 >
   {:user
-   {:dependencies [[nrepl "0.8.2"]
-                   [iced-nrepl "1.0.6"]
+   {:dependencies [[nrepl "0.8.3"]
+                   [iced-nrepl "1.1.0"]
                    [cider/cider-nrepl "0.25.4"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -164,7 +164,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.5.0"]
       [cider/cider-nrepl "0.25.4"]
-      [iced-nrepl "1.0.6"]])
+      [iced-nrepl "1.1.0"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -192,7 +192,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "2.5.0"]
                   [cider/cider-nrepl "0.25.4"]
-                  [iced-nrepl "1.0.6"]]
+                  [iced-nrepl "1.1.0"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -444,7 +444,9 @@ BROWSING TAPPED VALUES              *vim-iced-debugging-browsing-tapped-values*
   See |:IcedBrowseTapped| for browsing key details.
 
   All tapped values are stored in memory.
-  So if you would like to delete them, execute |:IcedClearTapped| command.
+  So if you would like to delete them, execute following commands.
+  - |:IcedDeleteTapped| (delete one)
+  - |:IcedClearTapped| (delete all)
 
 ------------------------------------------------------------------------------
 FLOATING WINDOW                            *vim-iced-debugging-floating-window*
@@ -1101,6 +1103,12 @@ COMMANDS                                                    *vim-iced-commands*
 
   Key is mapped to |<Plug>(iced_browse_tapped)|.
 
+                                                            *:IcedDeleteTapped*
+:IcedDeleteTapped
+  Select one tapped value via `ctrlp.vim`, `fzf` or `vim-clap` interface,
+  and delete it.
+  Key is mapped to |<Plug>(iced_delete_tapped)|.
+
                                                              *:IcedClearTapped*
 :IcedClearTapped
   Clear all tapped values.
@@ -1529,6 +1537,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                    *<Plug>(iced_browse_tapped)*
 <Plug>(iced_browse_tapped)
   Same as |:IcedBrowseTapped|.
+
+                                                   *<Plug>(iced_delete_tapped)*
+<Plug>(iced_delete_tapped)
+  Same as |:IcedDeleteTapped|.
 
                                                     *<Plug>(iced_clear_tapped)*
 <Plug>(iced_clear_tapped)

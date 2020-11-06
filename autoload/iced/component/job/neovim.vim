@@ -7,7 +7,7 @@ let s:job = {
 
 function! s:on_exit(callback_key, options, job, exit_code, event_type) abort dict
   let self.exitvals[a:job] = a:exit_code
-	return a:options[a:callback_key](a:job)
+  return a:options[a:callback_key](a:job)
 endfunction
 
 function! s:job.start(command, options) abort

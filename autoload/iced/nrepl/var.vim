@@ -38,10 +38,17 @@ function! s:extract_var_name(eval_resp, callback) abort
   if !has_key(a:eval_resp, 'value') | return iced#message#error('not_found') | endif
 
   let var = a:eval_resp['value']
-  let var = substitute(var, '^#''', '', '')
-  let i = stridx(var, '/')
-  let ns = var[0:i-1]
-  let var_name = strpart(var, i+1)
+  if stridx(var, '#''') == 0
+    let var = substitute(var, '^#''', '', '')
+    let i = stridx(var, '/')
+    let ns = var[0:i-1]
+    let var_name = strpart(var, i+1)
+  elseif stridx(var, '#multifn') == 0
+    let var_name = substitute(var, '^#multifn\[', '', '')
+    let var_name = substitute(var_name, ' [^ ]\+\]$', '', '')
+    let ns = iced#nrepl#ns#name_by_buf()
+    let var = printf('%s/%s', ns, var_name)
+  endif
 
   call a:callback({
         \ 'qualified_var': var,
@@ -98,6 +105,12 @@ function! iced#nrepl#var#extract_by_current_top_list(callback) abort
   let ret = iced#paredit#get_current_top_object('(', ')')
   let code = get(ret, 'code')
   if empty(code) | return iced#message#error('finding_code_error') | endif
+
+  " for defmulti, defmethod
+  let res = matchlist(code, '^([\r\n\t ]*\(defmulti\|defmethod\)\s\+\([^ \r\n]\+\)')
+  if len(res) >= 3
+    let code = res[2]
+  endif
 
   let pos = ret['curpos']
   let option = {'line': pos[1], 'column': pos[2]}

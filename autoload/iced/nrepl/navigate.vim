@@ -286,13 +286,27 @@ function! s:got_var_info(resp, callback) abort
   call a:callback(a:resp['ns'], a:resp['name'])
 endfunction
 
+function! s:get_name_from_clj_kondo_analysis(v) abort
+  let ns_name = get(a:v, 'from', '')
+  let var_name = get(a:v, 'from-var', '')
+
+  if empty(ns_name) && empty(var_name)
+    return ''
+  elseif empty(ns_name)
+    return var_name
+  elseif empty(var_name)
+    return ns_name
+  else
+    return printf('%s/%s', ns_name, var_name)
+  endif
+endfunction
+
 function! s:clj_kondo_analysis_to_fn_refs(analysis) abort
   return {'fn-refs': map(a:analysis, {_, v ->
-        \ {'file': get(v, 'filename', ''),
-        \  'name': (has_key(v, 'from') ? printf('%s/%s', get(v, 'from', ''), get(v, 'from-var', ''))
-        \                              : get(v, 'from-var', '')),
-        \  'line': get(v, 'row', 1),
-        \  }})}
+       \ {'file': get(v, 'filename', ''),
+       \  'name': s:get_name_from_clj_kondo_analysis(v),
+       \  'line': get(v, 'row', 1),
+       \  }})}
 endfunction
 
 function! s:clj_kondo_analysis_to_fn_deps(analysis) abort

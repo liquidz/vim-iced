@@ -22,7 +22,7 @@ let s:default_palette = [
       \ 'CleanNs', 'CleanAll', 'AddNs', 'AddMissing',
       \ 'ExtractFunction', 'AddArity', 'MoveToLet',
       \ 'RenameSymbol',
-      \ 'BrowseTapped', 'ClearTapped',
+      \ 'BrowseTapped', 'DeleteTapped', 'ClearTapped',
       \ 'ToggleWarnOnReflection', 'ToggleTraceVar', 'ToggleTraceNs',
       \ 'InInitNs',
       \ 'JumpToNextSign', 'JumpToPrevSign',
