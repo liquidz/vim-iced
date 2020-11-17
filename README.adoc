@@ -140,7 +140,7 @@ and https://github.com/liquidz/iced-nrepl[iced-nrepl].
 | https://github.com/liquidz/vim-iced-function-list[vim-iced-function-list]
 | Provides `:IcedBrowseFunction` command for jumping to functions in current namespace.
 
-.3+|:thought_balloon:
+.4+|:thought_balloon:
 | https://github.com/liquidz/vim-iced-coc-source[vim-iced-coc-source]
 | Provides auto completion by https://github.com/neoclide/coc.nvim[coc.nvim].
 
@@ -149,6 +149,10 @@ and https://github.com/liquidz/iced-nrepl[iced-nrepl].
 
 | https://github.com/nbardiuk/vim-iced-ncm2[vim-iced-ncm2]
 | Provides auto completion by https://github.com/ncm2/ncm2[ncm2].
+
+
+| https://github.com/tami5/vim-iced-compe[vim-iced-compe]
+| Provides auto completion by https://github.com/hrsh7th/nvim-compe[nvim-compe].
 
 |:ant:
 | https://github.com/liquidz/vim-iced-fern-debugger[vim-iced-fern-debugger]
