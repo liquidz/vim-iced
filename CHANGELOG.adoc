@@ -2,6 +2,14 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.5.1 (2020-11-18)
+// {{{
+=== Changed
+
+* Bump cljstyle to 0.14.0.
+* Bump zprint to 1.0.2.
+// }}}
+
 == 2.5.0 (2020-11-07)
 // {{{
 === Added
