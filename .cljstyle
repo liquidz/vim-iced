@@ -1,5 +1,4 @@
-{
- :list-indent-size 1
- :insert-padding-lines? false
- }
+{:rules {:indentation {:list-indent 1}
+         :blank-lines {:insert-padding? false}
+         :namespaces {:indent-size 1}}}
 ; vim:ft=clojure
