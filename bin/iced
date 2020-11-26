@@ -5,7 +5,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 PROJECT_DIR=$(cd $SCRIPT_DIR; cd ..; pwd)
 VERSION=$(grep 'Version: ' ${SCRIPT_DIR}/../doc/vim-iced.txt | cut -d' ' -f2)
 
-BASE_DEPENDENCIES='nrepl/nrepl:0.8.3 refactor-nrepl/refactor-nrepl:2.5.0 cider/cider-nrepl:0.25.4 iced-nrepl/iced-nrepl:1.1.0'
+BASE_DEPENDENCIES='nrepl/nrepl:0.8.3 refactor-nrepl/refactor-nrepl:2.5.0 cider/cider-nrepl:0.25.5 iced-nrepl/iced-nrepl:1.1.0'
 BASE_MIDDLEWARES='cider.nrepl/wrap-classpath cider.nrepl/wrap-clojuredocs cider.nrepl/wrap-complete cider.nrepl/wrap-debug cider.nrepl/wrap-format cider.nrepl/wrap-info cider.nrepl/wrap-macroexpand cider.nrepl/wrap-ns cider.nrepl/wrap-out cider.nrepl/wrap-spec cider.nrepl/wrap-test cider.nrepl/wrap-trace cider.nrepl/wrap-undef cider.nrepl/wrap-xref refactor-nrepl.middleware/wrap-refactor iced.nrepl/wrap-iced'
 
 CLJS_DEPENDENCIES='cider/piggieback:0.5.2'
