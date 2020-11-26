@@ -30,13 +30,8 @@ function! iced#nrepl#eval#err(err, ...) abort
   let opt = get(a:, 1, {})
   let is_verbose = get(opt, 'verbose', v:true)
 
-  if empty(a:err)
-    return iced#qf#clear()
-  endif
-
   let err_info = s:parse_error(a:err)
   if !empty(err_info)
-    call iced#qf#set([err_info])
     if is_verbose
       call iced#message#error_str(err_info['text'])
     endif
