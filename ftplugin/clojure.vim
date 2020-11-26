@@ -107,6 +107,7 @@ command!          IcedTestBufferOpen        call iced#buffer#error#open()
 command!          IcedStdoutBufferOpen      call iced#buffer#stdout#open()
 command!          IcedStdoutBufferClear     call iced#buffer#stdout#clear()
 command!          IcedStdoutBufferClose     call iced#buffer#stdout#close()
+command!          IcedStdoutBufferToggle    call iced#buffer#stdout#toggle()
 
 command! -nargs=? IcedDefJump               call iced#nrepl#navigate#jump_to_def(<q-args>)
 command! -nargs=1 -complete=custom,iced#nrepl#navigate#ns_complete
