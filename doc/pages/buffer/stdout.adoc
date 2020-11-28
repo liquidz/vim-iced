@@ -1,11 +1,15 @@
 === Stdout buffer [[stdout_buffer]]
 
-When evaluating a form the output from Clojure's standard output is sent to a dedicated buffer. 
+When evaluating a form the output from Clojure's standard output is sent to a dedicated buffer.
 Vim-iced provides the following commands to control it's stdout buffer.
 
 [cols="30,20,50"]
 |===
 | Command | Default key mapping | Description
+
+| {help_html}#%3AIcedStdoutBufferToggle[IcedStdoutBufferToggle]
+| {plug_iced_stdout_buffer_toggle}
+| Open stdout buffer.
 
 | {help_html}#%3AIcedStdoutBufferOpen[IcedStdoutBufferOpen]
 | {plug_iced_stdout_buffer_open}
