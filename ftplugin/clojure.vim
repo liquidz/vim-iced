@@ -385,8 +385,9 @@ function! s:default_key_mappings() abort
 
   "" Stdout buffer (<Leader>s)
   "" ------------------------------------------------------------------------
-  call s:define_mapping('nmap', '<Leader>ss', '<Plug>(iced_stdout_buffer_open)')
+  call s:define_mapping('nmap', '<Leader>ss', '<Plug>(iced_stdout_buffer_toggle)')
   call s:define_mapping('nmap', '<Leader>sl', '<Plug>(iced_stdout_buffer_clear)')
+  call s:define_mapping('nmap', '<Leader>so', '<Plug>(iced_stdout_buffer_open)')
   call s:define_mapping('nmap', '<Leader>sq', '<Plug>(iced_stdout_buffer_close)')
 
   "" Refactoring (<Leader>r)
