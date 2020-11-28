@@ -2,6 +2,18 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.6.0 (2020-11-29)
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/issues/291[#291]: Added `:IcedStdoutBufferToggle` command.
+
+=== Changed
+* Bumped cider-nrepl to 0.25.5.
+* Bumped iced-nrepl to 1.1.1.
+* Changed evaluating forms not to set quickfix.
+* Changed the default mapping for `<Leader>ss` from `:IcedStdoutBufferOpen` to `:IcedStdoutBufferToggle`.
+// }}}
+
 == 2.5.1 (2020-11-18)
 // {{{
 === Changed

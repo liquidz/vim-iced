@@ -11,7 +11,7 @@ let s:default_palette = [
       \ 'PrintLast',
       \ 'TestNs', 'TestAll', 'TestRedo', 'TestSpecCheck', 'TestRerunLast',
       \ 'TestBufferOpen',
-      \ 'StdoutBufferOpen', 'StdoutBufferClear', 'StdoutBufferClose',
+      \ 'StdoutBufferOpen', 'StdoutBufferClear', 'StdoutBufferClose', 'StdoutBufferToggle',
       \ 'DocumentClose', 'ClojureDocsRefresh',
       \ 'FormatAll',
       \ 'UseCaseOpen', 'NextUseCase', 'PrevUseCase',

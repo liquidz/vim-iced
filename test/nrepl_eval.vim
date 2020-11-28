@@ -16,23 +16,19 @@ let s:test_1_10_error =
 
 " iced#nrepl#eval#err {{{
 function! s:suite.err_with_1_9_or_above_test() abort
-  call s:qf.mock()
-  call s:qf.setlist([])
+  call s:io.mock()
   call iced#nrepl#eval#err(s:test_1_9_error, {})
-  call s:assert.equals(s:qf.get_last_args()['list'],
-        \ [{'filename': '/path/to/src.clj',
-        \   'lnum': '12',
-        \   'text': 'CompilerException java.lang.RuntimeException: Unable to resolve symbol: a in this context'}])
+  call s:assert.equals(s:io.get_last_args()['echomsg'],
+        \ {'hl': 'ErrorMsg',
+        \  'text': 'CompilerException java.lang.RuntimeException: Unable to resolve symbol: a in this context'})
 endfunction
 
 function! s:suite.err_with_1_10_or_later_test() abort
-  call s:qf.mock()
-  call s:qf.setlist([])
+  call s:io.mock()
   call iced#nrepl#eval#err(s:test_1_10_error, {})
-  call s:assert.equals(s:qf.get_last_args()['list'],
-        \ [{'filename': '/path/to/src.clj',
-        \   'lnum': '12',
-        \   'text': 'Unable to resolve symbol: a in this context'}])
+  call s:assert.equals(s:io.get_last_args()['echomsg'],
+        \ {'hl': 'ErrorMsg',
+        \  'text': 'Unable to resolve symbol: a in this context'})
 endfunction
 
 function! s:suite.err_with_invalid_message_test() abort

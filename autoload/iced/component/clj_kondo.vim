@@ -249,6 +249,13 @@ function! s:kondo.ns_path(ns_name) abort
   return ''
 endfunction
 
+function! s:kondo.ns_list() abort
+  let definitions = self.namespace_definitions()
+  let res = map(copy(definitions), {_, d -> get(d, 'name', '')})
+  let res = filter(res, {_, s -> !empty(s)})
+  return res
+endfunction
+
 function! iced#component#clj_kondo#start(this) abort
   call iced#util#debug('start', 'clj-kondo')
 

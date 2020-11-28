@@ -50,7 +50,8 @@
 :plug_iced_source_show: <Leader>hS
 :plug_iced_stdout_buffer_clear: <Leader>sl
 :plug_iced_stdout_buffer_close: <Leader>sq
-:plug_iced_stdout_buffer_open: <Leader>ss
+:plug_iced_stdout_buffer_open: <Leader>so
+:plug_iced_stdout_buffer_toggle: <Leader>ss
 :plug_iced_test_all: <Leader>tp
 :plug_iced_test_buffer_open: <Leader>to
 :plug_iced_test_buffer_open: <Leader>to

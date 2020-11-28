@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.5.1
+Version: 2.6.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -134,8 +134,8 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.8.3"]
-                   [iced-nrepl "1.1.0"]
-                   [cider/cider-nrepl "0.25.4"]]
+                   [iced-nrepl "1.1.1"]
+                   [cider/cider-nrepl "0.25.5"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -163,8 +163,8 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.5.0"]
-      [cider/cider-nrepl "0.25.4"]
-      [iced-nrepl "1.1.0"]])
+      [cider/cider-nrepl "0.25.5"]
+      [iced-nrepl "1.1.1"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -191,8 +191,8 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "2.5.0"]
-                  [cider/cider-nrepl "0.25.4"]
-                  [iced-nrepl "1.1.0"]]
+                  [cider/cider-nrepl "0.25.5"]
+                  [iced-nrepl "1.1.1"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -816,6 +816,11 @@ COMMANDS                                                    *vim-iced-commands*
   Close stdout buffer window.
   Key is mapped to |<Plug>(iced_stdout_buffer_close)|.
 
+                                                      *:IcedStdoutBufferToggle*
+:IcedStdoutBufferToggle
+  Toggle stdout buffer window.
+  Key is mapped to |<Plug>(iced_stdout_buffer_toggle)|.
+
                                                                  *:IcedDefJump*
 :IcedDefJump
   Jump cursor to definition of symbol under cursor.
@@ -1362,6 +1367,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                              *<Plug>(iced_stdout_buffer_close)*
 <Plug>(iced_stdout_buffer_close)
   Same as |:IcedStdoutBufferClose|.
+
+                                            *<Plug>(iced_stdout_buffer_toggle)*
+<Plug>(iced_stdout_buffer_toggle)
+  Same as |:IcedStdoutBufferToggle|.
 
                                                         *<Plug>(iced_def_jump)*
 <Plug>(iced_def_jump)
@@ -2145,7 +2154,8 @@ g:iced_enable_default_key_mappings
   n       <Leader>tn   <Plug>(iced_test_ns)
   n       <Leader>tp   <Plug>(iced_test_all)
   n       <Leader>tr   <Plug>(iced_test_redo)
-  n       <Leader>ss   <Plug>(iced_stdout_buffer_open)
+  n       <Leader>ss   <Plug>(iced_stdout_buffer_toggle)
+  n       <Leader>so   <Plug>(iced_stdout_buffer_open)
   n       <Leader>sl   <Plug>(iced_stdout_buffer_clear)
   n       <Leader>sq   <Plug>(iced_stdout_buffer_close)
   n       <Leader>rcn  <Plug>(iced_clean_ns)

@@ -114,5 +114,13 @@ function! iced#buffer#stdout#focus() abort
   call iced#buffer#focus(s:bufname)
 endfunction
 
+function! iced#buffer#stdout#toggle() abort
+  if iced#buffer#stdout#is_visible()
+    call iced#buffer#stdout#close()
+  else
+    call iced#buffer#stdout#open()
+  endif
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

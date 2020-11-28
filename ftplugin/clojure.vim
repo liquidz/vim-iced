@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 20501
+let g:vim_iced_version = 20600
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -107,6 +107,7 @@ command!          IcedTestBufferOpen        call iced#buffer#error#open()
 command!          IcedStdoutBufferOpen      call iced#buffer#stdout#open()
 command!          IcedStdoutBufferClear     call iced#buffer#stdout#clear()
 command!          IcedStdoutBufferClose     call iced#buffer#stdout#close()
+command!          IcedStdoutBufferToggle    call iced#buffer#stdout#toggle()
 
 command! -nargs=? IcedDefJump               call iced#nrepl#navigate#jump_to_def(<q-args>)
 command! -nargs=1 -complete=custom,iced#nrepl#navigate#ns_complete
@@ -225,6 +226,7 @@ nnoremap <silent> <Plug>(iced_test_buffer_open)         :<C-u>IcedTestBufferOpen
 nnoremap <silent> <Plug>(iced_stdout_buffer_open)       :<C-u>IcedStdoutBufferOpen<CR>
 nnoremap <silent> <Plug>(iced_stdout_buffer_clear)      :<C-u>IcedStdoutBufferClear<CR>
 nnoremap <silent> <Plug>(iced_stdout_buffer_close)      :<C-u>IcedStdoutBufferClose<CR>
+nnoremap <silent> <Plug>(iced_stdout_buffer_toggle)     :<C-u>IcedStdoutBufferToggle<CR>
 
 nnoremap <silent> <Plug>(iced_def_jump)                 :<C-u>IcedDefJump<CR>
 
@@ -383,8 +385,9 @@ function! s:default_key_mappings() abort
 
   "" Stdout buffer (<Leader>s)
   "" ------------------------------------------------------------------------
-  call s:define_mapping('nmap', '<Leader>ss', '<Plug>(iced_stdout_buffer_open)')
+  call s:define_mapping('nmap', '<Leader>ss', '<Plug>(iced_stdout_buffer_toggle)')
   call s:define_mapping('nmap', '<Leader>sl', '<Plug>(iced_stdout_buffer_clear)')
+  call s:define_mapping('nmap', '<Leader>so', '<Plug>(iced_stdout_buffer_open)')
   call s:define_mapping('nmap', '<Leader>sq', '<Plug>(iced_stdout_buffer_close)')
 
   "" Refactoring (<Leader>r)
