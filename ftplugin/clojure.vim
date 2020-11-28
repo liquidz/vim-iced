@@ -226,6 +226,7 @@ nnoremap <silent> <Plug>(iced_test_buffer_open)         :<C-u>IcedTestBufferOpen
 nnoremap <silent> <Plug>(iced_stdout_buffer_open)       :<C-u>IcedStdoutBufferOpen<CR>
 nnoremap <silent> <Plug>(iced_stdout_buffer_clear)      :<C-u>IcedStdoutBufferClear<CR>
 nnoremap <silent> <Plug>(iced_stdout_buffer_close)      :<C-u>IcedStdoutBufferClose<CR>
+nnoremap <silent> <Plug>(iced_stdout_buffer_toggle)     :<C-u>IcedStdoutBufferToggle<CR>
 
 nnoremap <silent> <Plug>(iced_def_jump)                 :<C-u>IcedDefJump<CR>
 
