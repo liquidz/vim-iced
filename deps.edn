@@ -31,8 +31,10 @@
 
   :jackin {;; Must be separeted from "clj/repl" path.
            ;; c.f. https://github.com/liquidz/vim-iced/issues/175#issuecomment-575543011
-           :paths ["clj/jackin"]
-           :extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}}}
-  :outdated {:extra-deps {antq/antq {:mvn/version "RELEASE"}}
+           :replace-paths ["clj/jackin"]
+           :extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}}
+           :main-opts ["-m" "iced-jackin"]}
+  :outdated {:extra-deps {antq/antq {:mvn/version "RELEASE"}
+                          org.slf4j/slf4j-nop {:mvn/version "RELEASE"}}
              :main-opts ["-m" "antq.core"]}
   :dev {}}}
