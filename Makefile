@@ -94,10 +94,10 @@ clan-all: clean
 	\rm -f bin/iced
 
 bin:
-	clojure -A:jackin -m iced-jackin
+	clojure -M:jackin
 
 outdated:
-	clojure -A:outdated --exclude 'nrepl/nrepl'
+	clojure -M:outdated --exclude 'nrepl/nrepl'
 
 repl:
 	clojure -R:jackin:dev -m iced-repl
