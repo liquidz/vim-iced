@@ -446,6 +446,8 @@ function! s:connected(resp, opts) abort
 endfunction
 
 function! iced#nrepl#connect(port, ...) abort
+  let opts = get(a:, 1, {})
+
   if iced#nrepl#is_connected()
     call iced#message#info('already_connected')
     return v:true
@@ -475,12 +477,13 @@ function! iced#nrepl#connect(port, ...) abort
 
     if !iced#nrepl#is_connected()
       let s:nrepl['channel'] = v:false
-      call iced#message#error('connect_error')
+      if get(opts, 'verbose', v:true)
+        call iced#message#error('connect_error')
+      endif
       return v:false
     endif
   endif
 
-  let opts = get(a:, 1, {})
   let resp = iced#promise#sync('iced#nrepl#clone', [])
   call s:connected(resp, opts)
   return v:true
