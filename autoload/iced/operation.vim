@@ -22,10 +22,9 @@ endfunction
 
 function! s:yank_and_out(resp) abort
   let value = get(a:resp, 'value', '')
-  if empty(value)
-    return
+  if ! empty(value)
+    call setreg(s:register, value)
   endif
-  call setreg(s:register, value)
   return iced#nrepl#eval#out(a:resp)
 endfunction
 
