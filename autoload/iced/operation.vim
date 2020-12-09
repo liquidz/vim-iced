@@ -1,6 +1,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:register = ''
+
 function! s:eval(f) abort
   let view = winsaveview()
   let reg_save = @@
@@ -18,8 +20,25 @@ function! s:eval(f) abort
   endtry
 endfunction
 
+function! s:yank_and_out(resp) abort
+  let value = get(a:resp, 'value', '')
+  if ! empty(value)
+    call setreg(s:register, value)
+  endif
+  return iced#nrepl#eval#out(a:resp)
+endfunction
+
 function! iced#operation#eval(type) abort
-  return s:eval({code -> iced#repl#execute('eval_code', code)})
+  let opt = {}
+  if s:register !=# '"'
+    let opt['callback'] = funcref('s:yank_and_out')
+  endif
+  return s:eval({code -> iced#repl#execute('eval_code', code, opt)})
+endfunction
+
+function! iced#operation#setup_eval() abort
+  let &operatorfunc = 'iced#operation#eval'
+  let s:register = v:register
 endfunction
 
 function! s:__eval_and_print(resp) abort
