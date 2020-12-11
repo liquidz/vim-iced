@@ -72,3 +72,21 @@ Last evaluated list is marked to {help_html}#g%3Aiced%23eval%23mark_at_last[g:ic
 |===
 
 For example, when you have a mark `m` on any position, `{plug_iced_eval_at_mark}m` will evaluate the outer list on the mark `m` from any position.
+
+=== Yank [[evaluation_yank]]
+
+The evaluated result is basically just displayed.
+When you specify a `register` like https://vim-jp.org/vimdoc-en/change.html#y[yank],
+{help_html}#%3CPlug%3E%28iced_eval%29[<Plug>(iced_eval)] operator will yank the result.
+
+E.g. `"x<Leader>ee` will yank a result to register `x`.
+
+WARNING: Yanking to `"` register is skipped for now.
+
+If you'd like to define a custom mapping, try below.
+[source,vim]
+----
+" mapping for "xee
+nmap <silent> ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
+----
+

@@ -7,7 +7,8 @@ vim-iced provides following operators.
 | Operator | Description
 
 | {help_html}#%3CPlug%3E%28iced_eval%29[<Plug>(iced_eval)]
-| Evaluate codes
+| Evaluate codes +
+This operator supports <<evaluation_yank>>.
 
 | {help_html}#%3CPlug%3E%28iced_eval_and_print%29[<Plug>(iced_eval_and_print)]
 | Evaluate code and print result to stdout buffer
