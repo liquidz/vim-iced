@@ -455,6 +455,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#evaluation_ranges">3.1. Ranges</a></li>
 <li><a href="#evaluation_results">3.2. Results</a></li>
 <li><a href="#evaluation_marks">3.3. Marks</a></li>
+<li><a href="#evaluation_yank">3.4. Yank</a></li>
 </ul>
 </li>
 <li><a href="#completion">4. Completion</a>
@@ -928,6 +929,38 @@ Last evaluated list is marked to <a href="https://liquidz.github.io/vim-iced/vim
 </table>
 <div class="paragraph">
 <p>For example, when you have a mark <code>m</code> on any position, <code>&lt;Leader&gt;eam</code> will evaluate the outer list on the mark <code>m</code> from any position.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="evaluation_yank">3.4. Yank</h3>
+<div class="paragraph">
+<p>The evaluated result is basically just displayed.
+When you specify a <code>register</code> like <a href="https://vim-jp.org/vimdoc-en/change.html#y">yank</a>,
+<a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3CPlug%3E%28iced_eval%29">&lt;Plug&gt;(iced_eval)</a> operator will yank the result.</p>
+</div>
+<div class="paragraph">
+<p>E.g. <code>"x&lt;Leader&gt;ee</code> will yank a result to register <code>x</code>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Yanking to <code>"</code> register is skipped for now.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If you&#8217;d like to define a custom mapping, try below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim"><span class="c">" mapping for "xee</span>
+nmap <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> ee <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>iced_eval<span class="p">)&lt;</span>Plug<span class="p">&gt;(</span>sexp_outer_list<span class="p">)</span>``</code></pre>
+</div>
 </div>
 <div class="paragraph text-right">
 <p><span class="small"><a href="#top">Back to top</a></span></p>
@@ -2631,7 +2664,8 @@ Concretely "when you open new" means the time when <a href="https://vim-jp.org/v
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3CPlug%3E%28iced_eval%29">&lt;Plug&gt;(iced_eval)</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Evaluate codes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Evaluate codes<br>
+This operator supports <a href="#evaluation_yank">Yank</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3CPlug%3E%28iced_eval_and_print%29">&lt;Plug&gt;(iced_eval_and_print)</a></p></td>
@@ -4264,7 +4298,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-11-28 23:03:20 UTC
+Last updated 2020-12-11 22:28:55 UTC
 </div>
 </div>
 <style>
@@ -4374,6 +4408,10 @@ pre.rouge .mo {
 pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
   color: #009999;
 }
+pre.rouge .sa {
+  color: #000000;
+  font-weight: bold;
+}
 pre.rouge .sb {
   color: #d14;
 }
@@ -4407,7 +4445,7 @@ pre.rouge .s1 {
 pre.rouge .ss {
   color: #990073;
 }
-pre.rouge .s, pre.rouge .sa, pre.rouge .dl {
+pre.rouge .s, pre.rouge .dl {
   color: #d14;
 }
 pre.rouge .na {
