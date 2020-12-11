@@ -1,6 +1,16 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+
+* https://github.com/liquidz/vim-iced/issues/298[#298]: Updated `<Plug>(iced_eval)` operator to support yanking.
+** https://liquidz.github.io/vim-iced/#evaluation_yank
+
+=== Fixed
+
+* https://github.com/liquidz/vim-iced/issues/296[#296]: Fixed instant connecting babashka to work after disconnecting in Neovim.
+// }}}
 
 == 2.6.0 (2020-11-29)
 // {{{
