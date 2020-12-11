@@ -89,7 +89,8 @@ function! s:suite.instant_test() abort
   call s:job.mock({'outs': ['nREPL server started']})
   call s:ch.mock({
     \ 'status_value': ['fail', 'fail',
-    \                  'fail', 'fail',  'open'],
+    \                  'fail', 'fail',
+    \                  'fail', 'open'],
     \ 'relay': funcref('s:auto_relay'),
     \ })
   let cwd = getcwd()

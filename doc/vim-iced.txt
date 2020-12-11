@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.6.0
+Version: 2.6.1
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -23,6 +23,7 @@ CONTENTS                                                    *vim-iced-contents*
     shadow-cljs                |vim-iced-shadow-cljs|
   Evaluating                   |vim-iced-evaluating|
     Stdout Buffer              |vim-iced-stdout-buffer|
+    Yank the result            |vim-iced-yank-the-result|
   Testing                      |vim-iced-testing|
     Plain nREPL                |vim-iced-testing-plain-nrepl|
   Debugging                    |vim-iced-debugging|
@@ -363,6 +364,22 @@ STDOUT BUFFER                                          *vim-iced-stdout-buffer*
   If you show buffer content in another application or display,
   |g:iced#buffer#stdout#file| option is available for writing file.
 
+------------------------------------------------------------------------------
+YANK THE RESULT                                      *vim-iced-yank-the-result*
+
+  The evaluated result is basically just displayed.
+  When you specify a {register} like |yank|,
+  |<Plug>(iced_eval)| operator will yank the result.
+
+  E.g. `"x<Leader>ee` will yank a result to register `x`.
+  WARNING:
+    Yanking to `"` register is skipped for now.
+
+  If you'd like to define a custom mapping, try below.
+>
+  " mapping for "xee
+  nmap <silent> ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
+<
 ==============================================================================
 TESTING                                                      *vim-iced-testing*
 
@@ -1238,6 +1255,9 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval)<Plug>(sexp_outer_top_list)``
 <
+  This operator supports yanking.
+  See |vim-iced-yank-the-result| for more information.
+
                                                   *<Plug>(iced_eval_and_print)*
 <Plug>(iced_eval_and_print)
   Evaluate code and print result to stdout buffer.

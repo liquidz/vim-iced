@@ -2,7 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:nrepl_port_file = '.nrepl-port'
-let s:jack_in_job = -1
+let s:running_job = -1
 let s:is_auto_connecting = v:false
 
 let g:iced#nrepl#connect#iced_command = get(g:, 'iced#nrepl#connect#iced_command', 'iced')
@@ -108,12 +108,12 @@ function! iced#nrepl#connect#jack_in(...) abort
   endif
 
   let job = iced#system#get('job')
-  if job.is_job_id(s:jack_in_job)
+  if job.is_job_id(s:running_job)
     return iced#message#error('already_running')
   endif
 
   let command = get(a:, 1, g:iced#nrepl#connect#jack_in_command)
-  let s:jack_in_job = job.start(command, {
+  let s:running_job = job.start(command, {
         \ 'out_cb': funcref('s:jack_in_callback'),
         \ })
 endfunction
@@ -127,16 +127,29 @@ function! s:__instant_clj() abort
   call iced#nrepl#connect#jack_in(cmd)
 endfunction
 
+function! s:try_connecting_to_babashka(port) abort
+  try
+    return iced#repl#connect('nrepl', a:port, {
+          \ 'with_iced_nrepl': v:false,
+          \ 'verbose': v:false,
+          \ })
+  catch
+    return v:false
+  endtry
+endfunction
+
 function! s:__instant_babashka(port) abort
   " NOTE: A job in vim may terminate when outputting long texts such as stack traces.
   "       So ignoring the standard output etc.
   let cmd = ['sh', '-c', printf('bb --nrepl-server %s > /dev/null 2>&1', a:port)]
-  call iced#job_start(cmd)
+  let s:running_job = iced#job_start(cmd)
 
+  let s:is_auto_connecting = v:true
   call iced#message#echom('connecting')
   let result = iced#util#wait({->
-        \ empty(iced#repl#connect('nrepl', a:port, {'with_iced_nrepl': v:false}))},
+        \ empty(s:try_connecting_to_babashka(a:port))},
         \ 3000)
+  let s:is_auto_connecting = v:false
 
   if result
     call iced#message#info('connected_to', printf('port %s', a:port))
@@ -146,6 +159,10 @@ function! s:__instant_babashka(port) abort
 endfunction
 
 function! iced#nrepl#connect#instant(program) abort
+  if iced#nrepl#is_connected()
+    return iced#message#info('already_connected')
+  endif
+
   if a:program ==# 'babashka'
     return iced#script#empty_port({port -> s:__instant_babashka(port)})
   else
@@ -157,11 +174,11 @@ function! iced#nrepl#connect#reset() abort
   if s:is_auto_connecting | return | endif
 
   let job = iced#system#get('job')
-  if job.is_job_id(s:jack_in_job)
-    call job.stop(s:jack_in_job)
+  if job.is_job_id(s:running_job)
+    call job.stop(s:running_job)
   endif
 
-  let s:jack_in_job = -1
+  let s:running_job = -1
 endfunction
 
 let &cpoptions = s:save_cpo
