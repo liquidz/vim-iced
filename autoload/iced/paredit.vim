@@ -96,6 +96,65 @@ function! s:is_in_range(current_pos, start_pos, end_pos) abort
         \ || (a:start_pos[1] <= a:current_pos[1] && a:current_pos[1] <= a:end_pos[1])
 endfunction
 
+function! s:vim_sexp_select_outer_list() abort
+  " https://github.com/guns/vim-sexp/blob/12292941903d9ac8151513189d2007e1ccfc95f0/plugin/sexp.vim#L251
+  return sexp#select_current_list('v', 0, 1)
+endfunction
+
+function! iced#paredit#get_current_top_form_raw(...) abort
+  let code = ''
+  let pos = ''
+  let target_level = get(a:, 1, -1) " -1 = top level
+  let level = 1
+
+  try
+    " move to start position of current outer list
+    while v:true
+      let @@ = ''
+      call s:vim_sexp_select_outer_list()
+      silent normal! y
+      " no matched parenthesis
+      if empty(@@)
+        break
+      endif
+
+      if col('.') == 1 || stridx(getline('.'), '#') == 0 || level == target_level
+        if level != target_level
+          call s:vim_sexp_select_outer_list()
+          " Use `o0` to wrap top level tag literal
+          silent normal! o0y
+        endif
+        let code = @@
+        let pos = getcurpos()
+        break
+      else
+        let level = level + 1
+        silent normal! h
+      endif
+    endwhile
+  finally
+    silent exe "normal! \<Esc>"
+  endtry
+
+  return {'code': code, 'curpos': pos}
+endfunction
+
+function! iced#paredit#get_current_top_form(...) abort
+  let target_level = get(a:, 1, -1)
+  let view = winsaveview()
+  let reg_save = @@
+  let res = ''
+
+  try
+    let res = iced#paredit#get_current_top_form_raw(target_level)
+  finally
+    let @@ = reg_save
+    call winrestview(view)
+  endtry
+
+  return res
+endfunction
+
 function! iced#paredit#get_current_top_object_raw(...) abort
   let open_char = get(a:, 1, '(')
   let close_char = get(a:, 2, ')')
