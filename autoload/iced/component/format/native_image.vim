@@ -134,9 +134,9 @@ function! s:__current_form(result) abort
 endfunction
 
 function! s:fmt.current_form() abort
-  " must be captured before iced#paredit#get_current_top_something
+  " must be captured before iced#paredit#get_current_top_form
   let context = iced#util#save_context()
-  let codes = get(iced#paredit#get_current_top_something(), 'code', '')
+  let codes = get(iced#paredit#get_current_top_form(), 'code', '')
 
   if empty(codes)
     call iced#message#warning('finding_code_error')
@@ -209,7 +209,7 @@ function! s:fmt.calculate_indent(lnum) abort
   let reg_save = @@
 
   try
-    let res = iced#paredit#get_current_top_something()
+    let res = iced#paredit#get_current_top_form()
     let code = get(res, 'code', '')
     if trim(code) ==# ''
       return GetClojureIndent()

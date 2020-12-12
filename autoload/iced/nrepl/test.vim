@@ -142,7 +142,7 @@ function! s:__fetch_test_vars_by_function_under_cursor(eval_resp, ns_name, callb
 endfunction
 
 function! iced#nrepl#test#fetch_test_vars_by_function_under_cursor(ns_name, callback) abort
-  let ret = iced#paredit#get_current_top_object('(', ')')
+  let ret = iced#paredit#get_current_top_form()
   let code = get(ret, 'code')
   if empty(code) | return iced#message#error('finding_code_error') | endif
 
