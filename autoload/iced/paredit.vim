@@ -96,9 +96,9 @@ function! s:is_in_range(current_pos, start_pos, end_pos) abort
         \ || (a:start_pos[1] <= a:current_pos[1] && a:current_pos[1] <= a:end_pos[1])
 endfunction
 
-function! s:vim_sexp_select_outer_list() abort
-  " https://github.com/guns/vim-sexp/blob/12292941903d9ac8151513189d2007e1ccfc95f0/plugin/sexp.vim#L251
-  return sexp#select_current_list('v', 0, 1)
+function! iced#paredit#select_outer_list() abort
+  " https://github.com/guns/vim-sexp/blob/12292941903d9ac8151513189d2007e1ccfc95f0/plugin/sexp.vim#L252
+  return sexp#select_current_list('o', 0, 1)
 endfunction
 
 function! iced#paredit#get_current_top_form_raw(...) abort
@@ -111,7 +111,7 @@ function! iced#paredit#get_current_top_form_raw(...) abort
     " move to start position of current outer list
     while v:true
       let @@ = ''
-      call s:vim_sexp_select_outer_list()
+      call iced#paredit#select_outer_list()
       silent normal! y
       " no matched parenthesis
       if empty(@@)
@@ -120,7 +120,7 @@ function! iced#paredit#get_current_top_form_raw(...) abort
 
       if col('.') == 1 || stridx(getline('.'), '#') == 0 || level == target_level
         if level != target_level
-          call s:vim_sexp_select_outer_list()
+          call iced#paredit#select_outer_list()
           " Use `o0` to wrap top level tag literal
           silent normal! o0y
         endif
@@ -233,7 +233,8 @@ function! iced#paredit#find_parent_form_raw(prefixes) abort
   try
     while v:true
       let @@ = ''
-      silent exe 'normal! vaby'
+      call iced#paredit#select_outer_list()
+      silent normal! y
       if empty(@@) | break | endif
 
       let code = @@

@@ -172,15 +172,8 @@ function! s:fmt.minimal(opt) abort
     endif
 
     let ncol = max([col('.')-1, 0])
-
-    let char = getline('.')[ncol]
-    if char ==# '['
-      silent normal! va[y
-    elseif char ==# '{'
-      silent normal! va{y
-    else
-      silent normal! va(y
-    endif
+    call iced#paredit#select_outer_list()
+    silent normal! y
     let code = @@
 
     let d = {'buf': [], 'err': [], '_finished': v:false}
