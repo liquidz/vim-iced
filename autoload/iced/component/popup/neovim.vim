@@ -55,6 +55,15 @@ function! s:popup.is_supported() abort
   return s:is_supported()
 endfunction
 
+function! s:auto_close(winid, opt) abort
+  call iced#system#get('popup').close(a:winid)
+
+  let Callback = get(a:opt, 'callback', '')
+  if type(Callback) == v:t_func
+    call Callback(a:winid)
+  endif
+endfunction
+
 function! s:popup.open(texts, ...) abort
   if !s:is_supported() | return | endif
   call iced#component#popup#neovim#moved()
@@ -147,7 +156,7 @@ function! s:popup.open(texts, ...) abort
 
   if get(opts, 'auto_close', v:true)
     let time = get(opts, 'close_time', self.config.time)
-    call iced#component#get('timer').start(time, {-> iced#component#get('popup').close(winid)})
+    call iced#system#get('timer').start(time, {-> s:auto_close(winid, opts)})
   endif
 
   let s:last_winid = winid
@@ -156,6 +165,7 @@ endfunction
 
 function! s:popup.move(window_id, options) abort
   let win_opts = nvim_win_get_config(a:window_id)
+  let win_opts['relative'] = 'editor'
   let wininfo = getwininfo(win_getid())[0]
 
   if has_key(a:options, 'line')

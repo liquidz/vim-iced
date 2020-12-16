@@ -88,6 +88,11 @@ function! s:popup.open(texts, ...) abort
     let win_opts['time'] = get(opts, 'close_time', self.config.time)
   endif
 
+  let Callback = get(opts, 'callback', '')
+  if type(Callback) == v:t_func
+    let win_opts['callback'] = {id, _ -> Callback(id)}
+  endif
+
   call extend(win_opts, iced#util#select_keys(opts,
         \ ['highlight', 'border', 'borderhighlight', 'title', 'moved', 'wrap']))
 
