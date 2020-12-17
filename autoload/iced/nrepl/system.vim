@@ -12,7 +12,11 @@ let s:system_info_code = join([
 function! iced#nrepl#system#info() abort
   let result = {}
 
-  if !iced#nrepl#is_connected() | return result | endif
+  if !iced#nrepl#is_connected()
+        \ || ! iced#nrepl#does_iced_nrepl_enabled()
+    return result
+  endif
+
   let resp = iced#eval_and_read(s:system_info_code)
 
   if type(resp) == v:t_dict && has_key(resp, 'value')
