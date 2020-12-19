@@ -96,6 +96,8 @@ function! iced#buffer#stdout#append(s) abort
         \ g:iced#buffer#stdout#deleting_line_delay,
         \ funcref('s:delete_old_lines'),
         \ )
+
+	silent call iced#system#get('notify').notify(s)
 endfunction
 
 function! iced#buffer#stdout#clear() abort

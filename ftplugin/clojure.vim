@@ -62,6 +62,10 @@ if !exists('g:iced_cache_directory')
   let g:iced_cache_directory = ''
 endif
 
+if !exists('g:iced_enable_notification')
+  let g:iced_enable_notification = v:true
+endif
+
 "" Commands {{{
 command! -nargs=? IcedConnect               call iced#repl#connect('nrepl', <q-args>)
 command! -nargs=1 IcedConnectSocketRepl     call iced#repl#connect('socket_repl', <q-args>)
