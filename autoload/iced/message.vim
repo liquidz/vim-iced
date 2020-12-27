@@ -29,7 +29,7 @@ function! s:echom(hl, s) abort
 
   if g:iced#message#enable_notify
     " TODO: support `hl`
-    call iced#system#get('notify').notify(a:s, {'highlight': a:hl})
+    call iced#system#get('notify').notify(a:s, {'title': 'Message'})
   endif
 endfunction
 
