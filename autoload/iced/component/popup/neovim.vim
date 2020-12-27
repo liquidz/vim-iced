@@ -83,7 +83,10 @@ function! s:popup.open(texts, ...) abort
   let wininfo = getwininfo(win_getid())[0]
   let title_width = len(get(opts, 'title', '')) + 3
   let eol_col = len(getline('.')) + 1
-  let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 2
+  let width = get(opts, 'width', -1)
+  if width == -1
+    let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 2
+  endif
 
   let max_width = wininfo['width'] - eol_col - 5
   let texts = copy(a:texts)

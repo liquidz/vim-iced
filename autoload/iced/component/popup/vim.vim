@@ -34,7 +34,10 @@ function! s:popup.open(texts, ...) abort
 
   let wininfo = getwininfo(win_getid())[0]
   let title_width = len(get(opts, 'title', '')) + 3
-  let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
+  let width = get(opts, 'width', -1)
+  if width == -1
+    let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
+  endif
   let min_height = len(a:texts)
 
   if min_height + 5 >= &lines - &cmdheight
