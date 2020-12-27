@@ -186,6 +186,14 @@ function! s:popup.move(window_id, options) abort
   call nvim_win_set_config(a:window_id, win_opts)
 endfunction
 
+function! s:popup.settext(window_id, texts) abort
+  let bufnr = winbufnr(a:window_id)
+  let info = getbufinfo(bufnr)[0]
+  let variables = get(info, 'variables', {})
+  let linecount = get(variables, 'linecount', len(a:texts))
+  call nvim_buf_set_lines(bufnr, 0, linecount, 0, a:texts)
+endfunction
+
 function! s:popup.close(window_id) abort
   if !s:is_supported() | return | endif
   if win_gotoid(a:window_id)

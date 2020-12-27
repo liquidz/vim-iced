@@ -124,6 +124,10 @@ function! s:popup.move(window_id, options) abort
   call popup_move(a:window_id, options)
 endfunction
 
+function! s:popup.settext(window_id, texts) abort
+  call popup_settext(a:window_id, a:texts)
+endfunction
+
 function! s:popup.close(window_id) abort
   if !self.is_supported() | return | endif
   call popup_close(a:window_id)
