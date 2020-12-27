@@ -97,7 +97,9 @@ function! iced#buffer#stdout#append(s) abort
         \ funcref('s:delete_old_lines'),
         \ )
 
-	silent call iced#system#get('notify').notify(s)
+  if ! iced#buffer#stdout#is_visible()
+    silent call iced#system#get('notify').notify(s, {'title': 'Stdout'})
+  endif
 endfunction
 
 function! iced#buffer#stdout#clear() abort
