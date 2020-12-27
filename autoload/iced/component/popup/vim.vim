@@ -49,12 +49,16 @@ function! s:popup.open(texts, ...) abort
   let line_type = type(line)
   if line_type == v:t_number
     let line = line + wininfo['winrow'] - 1
-  elseif line_type == v:t_string && line ==# 'near-cursor'
-    " NOTE: `+ 5` make the popup window not too low
-    if winline() + min_height + 5 > &lines
-      let line = winline() - min_height - 1
-    else
-      let line = winline() + wininfo['winrow']
+  elseif line_type == v:t_string
+    if line ==# 'near-cursor'
+      " NOTE: `+ 5` make the popup window not too low
+      if winline() + min_height + 5 > &lines
+        let line = winline() - min_height - 1
+      else
+        let line = winline() + wininfo['winrow']
+      endif
+    elseif line ==# 'top'
+      let line = wininfo['winrow']
     endif
   endif
 
