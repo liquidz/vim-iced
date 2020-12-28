@@ -126,6 +126,8 @@ function! s:popup.open(texts, ...) abort
       endif
     elseif line ==# 'top'
       let line = wininfo['winrow'] - 1
+    elseif line ==# 'bottom'
+      let line = wininfo['winrow'] +  wininfo['height'] - min_height - 1
     endif
   endif
 
