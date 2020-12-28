@@ -11,7 +11,7 @@ if stridx(join(s:supported_langs, ','), s:LM.get_lang()) == -1
   call s:msg.load(s:supported_langs[0])
 endif
 
-let g:iced#message#enable_notify = get(g:, 'iced#message#enable_notify', v:true)
+let g:iced#message#enable_notify = get(g:, 'iced#message#enable_notify', v:false)
 
 function! iced#message#get(k, ...) abort
   let msg = s:msg.get(a:k)
