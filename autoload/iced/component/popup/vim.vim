@@ -83,7 +83,7 @@ function! s:popup.open(texts, ...) abort
   endif
 
   let col = org_col + wininfo['wincol']
-  let max_width = &columns - wininfo['wincol'] - org_col
+  let max_width = &columns - wininfo['wincol'] - org_col + 1
   let win_opts = {
         \ 'line': line,
         \ 'col': col,
