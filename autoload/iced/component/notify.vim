@@ -24,8 +24,12 @@ function! s:collected(timer_id) abort dict
   let max_width = float2nr(win_width * g:iced#notify#max_width_rate)
   let max_height = float2nr(win_height * g:iced#notify#max_height_rate)
 
-  let lines = [printf(';; ---- %s ----', self.tmp_title)]
-  let lines += map(self.tmp_texts, {_, v -> iced#util#shorten(v, max_width)})
+  let lines = map(self.tmp_texts, {_, v -> iced#util#shorten(v, max_width)})
+  if len(lines) > max_height - 1
+    let lines = lines[((max_height - 1) * -1):]
+  endif
+  let lines = [printf(';; ---- %s ----', self.tmp_title)] + lines
+
   let self.texts += lines
   if len(self.texts) > max_height
     let self.texts = self.texts[(max_height * -1):]
@@ -36,7 +40,7 @@ function! s:collected(timer_id) abort dict
           \ 'auto_close': v:false,
           \ 'moved': 'any',
           \ 'width': max_width + 4,
-          \ 'line': has('nvim') ? 0 : 1,
+          \ 'line': (winline() <= win_height / 2) ? 'top' : 'bottom',
           \ 'col': 'right',
           \ 'highlight': 'TabLine',
           \ 'filetype': 'clojure',
