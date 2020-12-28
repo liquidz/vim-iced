@@ -62,6 +62,10 @@ function! iced#nrepl#does_iced_nrepl_enabled() abort
   return s:nrepl['iced_nrepl_enabled']
 endfunction
 
+function! iced#nrepl#set_iced_nrepl_enabled(bool) abort
+  let s:nrepl['iced_nrepl_enabled'] = a:bool
+endfunction
+
 function! s:set_message(id, msg) abort
   let s:messages[a:id] = a:msg
 endfunction
@@ -435,7 +439,7 @@ function! s:connected(resp, opts) abort
         return iced#message#error('no_iced_nrepl')
       endif
 
-      let s:nrepl['iced_nrepl_enabled'] = v:true
+      call iced#nrepl#set_iced_nrepl_enabled(v:true)
       silent call s:warm_up()
     endif
 
