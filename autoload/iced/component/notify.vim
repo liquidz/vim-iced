@@ -53,7 +53,6 @@ function! s:collected(timer_id) abort dict
 endfunction
 
 function! s:notify.notify(text, ...) abort
-  if ! g:iced_enable_notification | return | endif
   if empty(trim(a:text)) | return | endif
 
   let opt = get(a:, 1, {})
