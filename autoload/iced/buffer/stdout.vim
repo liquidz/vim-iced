@@ -16,6 +16,7 @@ let g:iced#buffer#stdout#max_line = get(g:, 'iced#buffer#stdout#max_line', -1)
 let g:iced#buffer#stdout#deleting_line_delay = get(g:, 'iced#buffer#stdout#deleting_line_delay', 1000)
 let g:iced#buffer#stdout#file = get(g:, 'iced#buffer#stdout#file', '')
 let g:iced#buffer#stdout#file_buffer_size = get(g:, 'iced#buffer#stdout#file_buffer_size', 256)
+let g:iced#buffer#stdout#enable_notify = get(g:, 'iced#buffer#stdout#enable_notify', v:true)
 
 function! s:delete_old_lines(_) abort
   let bufnr = iced#buffer#nr(s:bufname)
@@ -96,6 +97,11 @@ function! iced#buffer#stdout#append(s) abort
         \ g:iced#buffer#stdout#deleting_line_delay,
         \ funcref('s:delete_old_lines'),
         \ )
+
+  if ! iced#buffer#stdout#is_visible()
+        \ && g:iced#buffer#stdout#enable_notify
+    silent call iced#system#get('notify').notify(s, {'title': 'Stdout'})
+  endif
 endfunction
 
 function! iced#buffer#stdout#clear() abort

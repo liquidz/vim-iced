@@ -83,7 +83,10 @@ function! s:popup.open(texts, ...) abort
   let wininfo = getwininfo(win_getid())[0]
   let title_width = len(get(opts, 'title', '')) + 3
   let eol_col = len(getline('.')) + 1
-  let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 2
+  let width = get(opts, 'width', -1)
+  if width == -1
+    let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 2
+  endif
 
   let max_width = wininfo['width'] - eol_col - 5
   let texts = copy(a:texts)
@@ -113,12 +116,18 @@ function! s:popup.open(texts, ...) abort
   let line_type = type(line)
   if line_type == v:t_number
     let line = line + wininfo['winrow'] - 1
-  elseif line_type == v:t_string && line ==# 'near-cursor'
-    " NOTE: `+ 5` make the popup window not too low
-    if winline() + height + 5 > &lines
-      let line = winline() - height
-    else
-      let line = winline() + wininfo['winrow']
+  elseif line_type == v:t_string
+    if line ==# 'near-cursor'
+      " NOTE: `+ 5` make the popup window not too low
+      if winline() + height + 5 > &lines
+        let line = winline() - height
+      else
+        let line = winline() + wininfo['winrow']
+      endif
+    elseif line ==# 'top'
+      let line = wininfo['winrow'] - 1
+    elseif line ==# 'bottom'
+      let line = wininfo['winrow'] +  wininfo['height'] - min_height - 1
     endif
   endif
 
@@ -177,6 +186,14 @@ function! s:popup.move(window_id, options) abort
   endif
 
   call nvim_win_set_config(a:window_id, win_opts)
+endfunction
+
+function! s:popup.settext(window_id, texts) abort
+  let bufnr = winbufnr(a:window_id)
+  let info = getbufinfo(bufnr)[0]
+  let variables = get(info, 'variables', {})
+  let linecount = get(variables, 'linecount', len(a:texts))
+  call nvim_buf_set_lines(bufnr, 0, linecount, 0, a:texts)
 endfunction
 
 function! s:popup.close(window_id) abort

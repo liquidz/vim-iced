@@ -32,6 +32,8 @@ let s:org_system_map = {
       \                            'requires': ['timer']}
       \                         : {'start': 'iced#component#virtual_text#vim#start',
       \                            'requires': ['popup', 'ex_cmd']}),
+      \ 'notify':       {'start': 'iced#component#notify#start',
+      \                  'requires': ['popup', 'timer']},
       \ 'installer':    {'start': 'iced#component#installer#start',
       \                  'requires': ['io', 'job']},
       \ 'edn':          {'start': 'iced#component#edn#start',
