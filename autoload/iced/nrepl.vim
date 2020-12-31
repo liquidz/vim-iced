@@ -15,6 +15,7 @@ function! s:initialize_nrepl() abort
       \   'cljs_repl': '',
       \   },
       \ 'nrepl_version': {},
+      \ 'iced_nrepl_enabled': v:false,
       \ }
 endfunction
 let s:nrepl = s:initialize_nrepl()
@@ -55,6 +56,14 @@ endfunction
 
 function! iced#nrepl#version() abort
   return s:nrepl['nrepl_version']
+endfunction
+
+function! iced#nrepl#does_iced_nrepl_enabled() abort
+  return s:nrepl['iced_nrepl_enabled']
+endfunction
+
+function! iced#nrepl#set_iced_nrepl_enabled(bool) abort
+  let s:nrepl['iced_nrepl_enabled'] = a:bool
 endfunction
 
 function! s:set_message(id, msg) abort
@@ -430,6 +439,7 @@ function! s:connected(resp, opts) abort
         return iced#message#error('no_iced_nrepl')
       endif
 
+      call iced#nrepl#set_iced_nrepl_enabled(v:true)
       silent call s:warm_up()
     endif
 

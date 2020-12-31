@@ -1,4 +1,4 @@
-.PHONY: vital test themis themis_nvim html document pip_install lint vim-lint clj-lint
+.PHONY: vital test themis themis_nvim html document serve_document pip_install lint vim-lint clj-lint
 .PHONY: python_doctest bb_script_test version_check deps_check
 .PHONY: clean clean-all bin outdated repl
 
@@ -55,6 +55,9 @@ themis_nvim:
 document: doc/vim-iced.txt
 	bash scripts/html.sh
 	bash scripts/asciidoctor.sh
+
+serve_document:
+	(cd target/html && clj -Sdeps '{:deps {nasus/nasus {:mvn/version "LATEST"}}}' -m http.server)
 
 target/bin/vint:
 	mkdir -p target

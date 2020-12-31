@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.6.1
+Version: 2.7.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -39,6 +39,7 @@ CONTENTS                                                    *vim-iced-contents*
   Sideloader                   |vim-iced-sideloader|
   Static analysis              |vim-iced-static-analysis|
     clj-kondo                  |vim-iced-static-analysis-clj-kondo|
+  Notification                 |vim-iced-notification|
   Interface                    |vim-iced-interface|
     Commands                   |vim-iced-commands|
     Functions                  |vim-iced-functions|
@@ -56,6 +57,7 @@ CONTENTS                                                    *vim-iced-contents*
     Hooks                      |vim-iced-customizing-hooks|
     Popup window               |vim-iced-customizing-popup-window|
     Sideloader                 |vim-iced-customizing-sideloader|
+    Notification               |vim-iced-customizing-notification|
     Default keys               |vim-iced-customizing-default-keys|
   Changelog                    |vim-iced-changelog|
 
@@ -357,9 +359,18 @@ EVALUATING                                                *vim-iced-evaluating*
 ------------------------------------------------------------------------------
 STDOUT BUFFER                                          *vim-iced-stdout-buffer*
 
-  Standard outputs will be outputted to dedicated buffer.
-  |:IcedStdoutBufferOpen| to open it.
-  |:IcedStdoutBufferClear| to clear all outputted lines.
+  Standard outputs will be outputted to dedicated buffer
+  or displayed on popup notification (when the buffer is invisible).
+
+  For stdout buffer:
+    |:IcedStdoutBufferOpen| to open it.
+    |:IcedStdoutBufferClear| to clear all outputted lines.
+    |:IcedStdoutBufferToggle| to toggle visibility.
+
+  For notification:
+    See |vim-iced-notification| for more information.
+    If you don't use notification for standard output,
+    see |g:iced#buffer#stdout#enable_notify| option.
 
   If you show buffer content in another application or display,
   |g:iced#buffer#stdout#file| option is available for writing file.
@@ -597,6 +608,16 @@ CLJ-KONDO                                  *vim-iced-static-analysis-clj-kondo*
     - https://github.com/stedolan/jq
     - https://github.com/borkdude/jet
   - This leads to make |:IcedAddMissing| and |:IcedAddNs| more faster.
+
+==============================================================================
+NOTIFICATION                                            *vim-iced-notification*
+
+  A simple area to show some notification messages.
+  Notification area is popuped at {topright} or {bottomright}
+  (closer to the cursor to minimize eye movement).
+
+  Area size is calculated by the ratio to the current window size.
+  To customize the size, see |vim-iced-customizing-notification|.
 
 ==============================================================================
 INTERFACE                                                  *vim-iced-interface*
@@ -1832,6 +1853,11 @@ g:iced#buffer#stdout#deleting_line_delay
   number.
   Default value is `1000`.
 
+                                           *g:iced#buffer#stdout#enable_notify*
+g:iced#buffer#stdout#enable_notify
+  If {v:true}, display standard outputs on popup notification.
+  Default value is `v:true`.
+
 ------------------------------------------------------------------------------
 FORMATTER                                      *vim-iced-customizing-formatter*
 
@@ -2119,6 +2145,18 @@ g:iced#nrepl#enable_sideloader
 g:iced#source_root
   If you have `ghq`, `git config ghq.root` will be the value automatically.
   - https://github.com/x-motemen/ghq
+
+------------------------------------------------------------------------------
+NOTIFICATION                                *vim-iced-customizing-notification*
+
+                                                *g:iced#notify#max_height_rate*
+g:iced#notify#max_height_rate
+  Ratio of the notification area to the window height.
+  Default value is `0.2`.
+                                                 *g:iced#notify#max_width_rate*
+g:iced#notify#max_width_rate
+  Ratio of the notification area to the window width.
+  Default value is `0.3`.
 
 ------------------------------------------------------------------------------
 DEFAULT KEYS                                *vim-iced-customizing-default-keys*

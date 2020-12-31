@@ -34,7 +34,10 @@ function! s:popup.open(texts, ...) abort
 
   let wininfo = getwininfo(win_getid())[0]
   let title_width = len(get(opts, 'title', '')) + 3
-  let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
+  let width = get(opts, 'width', -1)
+  if width == -1
+    let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
+  endif
   let min_height = len(a:texts)
 
   if min_height + 5 >= &lines - &cmdheight
@@ -46,12 +49,18 @@ function! s:popup.open(texts, ...) abort
   let line_type = type(line)
   if line_type == v:t_number
     let line = line + wininfo['winrow'] - 1
-  elseif line_type == v:t_string && line ==# 'near-cursor'
-    " NOTE: `+ 5` make the popup window not too low
-    if winline() + min_height + 5 > &lines
-      let line = winline() - min_height - 1
-    else
-      let line = winline() + wininfo['winrow']
+  elseif line_type == v:t_string
+    if line ==# 'near-cursor'
+      " NOTE: `+ 5` make the popup window not too low
+      if winline() + min_height + 5 > &lines
+        let line = winline() - min_height - 1
+      else
+        let line = winline() + wininfo['winrow']
+      endif
+    elseif line ==# 'top'
+      let line = wininfo['winrow']
+    elseif line ==# 'bottom'
+      let line = wininfo['winrow'] +  wininfo['height'] - min_height
     endif
   endif
 
@@ -74,7 +83,7 @@ function! s:popup.open(texts, ...) abort
   endif
 
   let col = org_col + wininfo['wincol']
-  let max_width = &columns - wininfo['wincol'] - org_col
+  let max_width = &columns - wininfo['wincol'] - org_col + 1
   let win_opts = {
         \ 'line': line,
         \ 'col': col,
@@ -88,8 +97,13 @@ function! s:popup.open(texts, ...) abort
     let win_opts['time'] = get(opts, 'close_time', self.config.time)
   endif
 
+  let Callback = get(opts, 'callback', '')
+  if type(Callback) == v:t_func
+    let win_opts['callback'] = {id, _ -> Callback(id)}
+  endif
+
   call extend(win_opts, iced#util#select_keys(opts,
-        \ ['highlight', 'border', 'borderhighlight', 'title', 'moved', 'wrap']))
+        \ ['highlight', 'border', 'borderchars', 'borderhighlight', 'title', 'moved', 'wrap']))
 
   let winid = popup_create(a:texts, win_opts)
   call s:init_win(winid, opts)
@@ -110,6 +124,10 @@ function! s:popup.move(window_id, options) abort
   endif
 
   call popup_move(a:window_id, options)
+endfunction
+
+function! s:popup.settext(window_id, texts) abort
+  call popup_settext(a:window_id, a:texts)
 endfunction
 
 function! s:popup.close(window_id) abort

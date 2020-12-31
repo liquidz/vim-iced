@@ -94,6 +94,7 @@ function! s:suite.shorten_test() abort
 
     let text = '0123456789'
     call s:assert.equals(iced#util#shorten(text), '0123456789')
+    call s:assert.equals(iced#util#shorten(text, 5), '01...')
 
     " This test depends on the value of `v:echospace`, so it's OK if the long string is shortened"
     let text = ''

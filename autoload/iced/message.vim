@@ -11,6 +11,8 @@ if stridx(join(s:supported_langs, ','), s:LM.get_lang()) == -1
   call s:msg.load(s:supported_langs[0])
 endif
 
+let g:iced#message#enable_notify = get(g:, 'iced#message#enable_notify', v:false)
+
 function! iced#message#get(k, ...) abort
   let msg = s:msg.get(a:k)
   if !empty(a:000)
@@ -24,6 +26,10 @@ function! s:echom(hl, s) abort
   for line in split(a:s, '\r\?\n')
     call io.echomsg(a:hl, line)
   endfor
+
+  if g:iced#message#enable_notify
+    call iced#system#get('notify').notify(a:s, {'title': 'Message'})
+  endif
 endfunction
 
 function! iced#message#info_str(s) abort

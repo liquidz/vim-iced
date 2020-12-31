@@ -22,6 +22,11 @@ function! s:helper.open(texts, ...) abort
   return 123
 endfunction
 
+function! s:helper.settext(winid, texts) abort
+  let self.last_texts = copy(a:texts)
+  return v:true
+endfunction
+
 function! s:helper.close(winid) abort
   let self.opening = v:false
   let self.last_opts = {}

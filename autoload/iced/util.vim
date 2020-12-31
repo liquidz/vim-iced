@@ -152,7 +152,7 @@ function! iced#util#read_var(filename) abort
   return result
 endfunction
 
-function! iced#util#shorten(msg) abort
+function! iced#util#shorten(msg, ...) abort
   let max_length = 0
   if exists('v:echospace')
     let max_length = v:echospace + ((&cmdheight - 1) * &columns)
@@ -169,6 +169,7 @@ function! iced#util#shorten(msg) abort
     endif
   endif
 
+  let max_length = min([max_length, get(a:, 1, max_length)])
   let msg = substitute(a:msg, '\r\?\n', ' ', 'g')
   return (max_length >= 3 && len(msg) > max_length)
         \ ? strpart(msg, 0, max_length - 3).'...'

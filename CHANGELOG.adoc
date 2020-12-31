@@ -2,6 +2,14 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.7.0 (2020-12-31)
+
+// {{{
+=== Added
+
+* https://github.com/liquidz/vim-iced/issues/300[#300]: Added notification feature to display standard outputs on popup.
+// }}}
+
 == 2.6.1 (2020-12-12)
 // {{{
 === Changed
