@@ -2,6 +2,15 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.7.1 (2021-01-01)
+
+// {{{
+=== Changed
+
+* Updated the ClojureDocs export EDN URL.
+** See https://github.com/clojure-emacs/clojuredocs-export-edn/issues/3[clojuredocs-export-edn#3] for more information.
+// }}}
+
 == 2.7.0 (2020-12-31)
 
 // {{{
