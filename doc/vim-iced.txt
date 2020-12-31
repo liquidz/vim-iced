@@ -1935,7 +1935,7 @@ g:iced#buffer#document#does_update_automatically
 g:iced#clojuredocs#export_edn_url
   The URL exported from ClojureDocs.
   EDN format file is expected.
-  Default value is `https://clojuredocs-edn.netlify.com/export.edn`.
+  Default value is `https://github.com/clojure-emacs/clojuredocs-export-edn/raw/master/exports/export.compact.edn`.
 
                                       *g:iced#clojuredocs#use_clj_docs_on_cljs*
 g:iced#clojuredocs#use_clj_docs_on_cljs

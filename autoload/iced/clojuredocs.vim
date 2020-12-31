@@ -2,7 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let g:iced#clojuredocs#export_edn_url = get(g:, 'iced#clojuredocs#export_edn_url',
-      \ 'https://clojuredocs-edn.netlify.com/export.compact.edn')
+      \ 'https://github.com/clojure-emacs/clojuredocs-export-edn/raw/master/exports/export.compact.edn')
 
 let g:iced#clojuredocs#use_clj_docs_on_cljs =
       \ get(g:, 'iced#clojuredocs#use_clj_docs_on_cljs', v:false)
