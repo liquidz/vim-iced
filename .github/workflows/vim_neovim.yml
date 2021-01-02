@@ -38,4 +38,4 @@ jobs:
       - name: Run themis
         env:
           THEMIS_VIM: ${{ steps.vim.outputs.executable }}
-        run: ./.vim-themis/bin/themis --target 'iced\.nrepl\.connect '
+        run: ./.vim-themis/bin/themis
