@@ -12,6 +12,10 @@ let g:iced#nrepl#connect#jack_in_command = get(g:, 'iced#nrepl#connect#jack_in_c
 let g:iced#nrepl#connect#auto_connect_timeout_ms = get(g:, 'iced#nrepl#connect#auto_connect_timeout_ms', 5000)
 
 function! s:detect_port_from_nrepl_port_file() abort
+
+	call themis#log('s:detect_port_from_nrepl_port_file %s', getcwd())
+	call themis#log('FIXME %s %s', s:nrepl_port_file, readdir(getcwd()))
+
   let path = findfile(s:nrepl_port_file, '.;')
   if empty(path)
     return v:false
