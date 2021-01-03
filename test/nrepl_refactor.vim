@@ -424,6 +424,7 @@ function! s:suite.rename_symbol_test() abort
       \';; testing definition form with metadata'])
   call delete(def_newline_file)
 
+  call themis#log('FIXME file %s', expand('%:p'))
   execute printf(':cd %s', expand('<sfile>:p:h'))
 endfunction
 
