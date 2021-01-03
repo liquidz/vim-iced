@@ -397,38 +397,38 @@ function! s:suite.rename_symbol_test() abort
       \'   (defn new-name [] :bar)',
       \';; testing definition form not at column 1'
       \])
-  call delete(def_file)
+  " call delete(def_file)
 
   call s:assert.equals(readfile(alias_file), [
       \'(ns a (:require [user :as a.u])',
       \'(let [bar (a.u/new-name :bar))]',
       \';; testing symbol with namespace alias'
       \])
-  call delete(alias_file)
+  " call delete(alias_file)
 
   call s:assert.equals(readfile(refer_file), [
       \'(ns a (:require [user :refer [new-name]])',
       \'(let [bar (new-name :bar))]',
       \';; testing import using :refer'])
-  call delete(refer_file)
+  " call delete(refer_file)
 
   call s:assert.equals(readfile(sameline_file), [
       \'[new-name new-name]',
       \';; testing 2 occurrences on the same line'])
-  call delete(sameline_file)
+  " call delete(sameline_file)
 
   call s:assert.equals(readfile(def_newline_file), [
       \'(def ^{:doc " bar "',
       \'       :optional 123}',
       \' new-name)',
       \';; testing definition form with metadata'])
-  call delete(def_newline_file)
+  " call delete(def_newline_file)
 
-  execute printf(':cd %s', expand('<sfile>:p:h'))
-  "execute printf(':edit %s', expand('<sfile>:p'))
-  edit README.adoc
-
-  call themis#log('FIXME file %s, %s', getcwd(), expand('%:p'))
+  " execute printf(':cd %s', expand('<sfile>:p:h'))
+  " "execute printf(':edit %s', expand('<sfile>:p'))
+  " edit README.adoc
+  "
+  " call themis#log('FIXME file %s, %s', getcwd(), expand('%:p'))
 endfunction
 
 function! s:suite.rename_symbol_no_user_input_test() abort
