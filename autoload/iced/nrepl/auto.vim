@@ -8,6 +8,7 @@ let s:is_bufenter_enabled = v:false
 function! s:auto_switching_session() abort
   if ! g:iced#nrepl#auto#does_switch_session | return | endif
   if iced#nrepl#check_session_validity(v:false) | return | endif
+  if iced#nrepl#cljs#is_current_env_shadow_cljs() | return | endif
 
   let ext = expand('%:e')
   if ext ==# 'cljs' && iced#nrepl#cljs_session() !=# ''
