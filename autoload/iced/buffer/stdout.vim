@@ -45,6 +45,7 @@ function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&buftype', 'nofile')
   call setbufvar(a:bufnr, '&filetype', 'clojure')
   call setbufvar(a:bufnr, '&swapfile', 0)
+  call setbufvar(a:bufnr, '&wrap', 0)
 
   for line in split(g:iced#buffer#stdout#init_text, '\r\?\n')
     silent call iced#compat#appendbufline(a:bufnr, '$', line)
