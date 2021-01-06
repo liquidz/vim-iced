@@ -180,6 +180,10 @@ function! iced#nrepl#cljs#stop_repl_via_env() abort
   endif
 endfunction
 
+function! iced#nrepl#cljs#is_current_env_shadow_cljs() abort
+  return (get(s:using_env, 'name', '') ==# 'shadow-cljs')
+endfunction
+
 " c.f. :h :command-completion-custom
 function! iced#nrepl#cljs#env_complete(arg_lead, cmd_line, cursor_pos) abort
   return join(keys(s:env), "\n")
