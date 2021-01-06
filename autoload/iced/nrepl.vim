@@ -684,7 +684,7 @@ function! iced#nrepl#status() abort
     return 'evaluating'
   else
     let k = iced#nrepl#current_session_key()
-    if iced#nrepl#cljs_session() ==# ''
+    if iced#nrepl#cljs_session() ==# '' || iced#nrepl#cljs#is_current_env_shadow_cljs()
       return toupper(k)
     else
       return (k ==# 'clj') ? 'CLJ(cljs)' : 'CLJS(clj)'
