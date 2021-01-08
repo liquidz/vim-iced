@@ -100,7 +100,7 @@ bin:
 	clojure -M:jackin
 
 outdated:
-	clojure -M:outdated --exclude 'nrepl/nrepl'
+	clojure -M:outdated --exclude 'nrepl/nrepl' --upgrade
 
 repl:
 	clojure -R:jackin:dev -m iced-repl
