@@ -2057,7 +2057,6 @@ g:iced#hook
         \ 'exec': 'echom "hello"',
         \ })
 <
-
   - Hook events
     - connected         |hook_event_connected|
     - disconnected      |hook_event_disconnected|
@@ -2065,6 +2064,7 @@ g:iced#hook
     - ns_required       |hook_event_ns_required|
     - ns_all_reloaded   |hook_event_ns_all_reloaded|
     - session_switched  |hook_event_session_switched|
+    - eval_prepared     |hook_event_eval_prepared|
   - Hook report types
     - shell             |hook_report_shell|
     - eval              |hook_report_eval|
@@ -2106,6 +2106,17 @@ SESSION SWITCHED                                  *hook_event_session_switched*
 
   - session
     Destination session type. "clj" or "cljs".
+
+EVAL PREPARED                                        *hook_event_eval_prepared*
+
+  Hooked before the start of evaluation.
+  Following parameters are pass to reporter.
+
+  - code
+    Evaluation code.
+  - option
+    Evaluation option.
+    This option contains `id`, `file`, `line`, `column`, `verbose` and so on.
 
 ------------------------------------------------------------------------------
 POPUP WINDOW                                *vim-iced-customizing-popup-window*
