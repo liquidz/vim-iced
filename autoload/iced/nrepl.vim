@@ -594,6 +594,7 @@ function! iced#nrepl#eval(code, ...) abort
     let msg['nrepl.middleware.print/print'] = get(s:printer_dict, g:iced#nrepl#printer, s:printer_dict['default'])
   endif
 
+  call iced#hook#run('eval_prepared', {'code': a:code, 'option': option})
   call iced#nrepl#send(msg)
 endfunction
 
