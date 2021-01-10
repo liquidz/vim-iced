@@ -114,10 +114,25 @@ function! s:suite.append_test() abort
   call iced#buffer#focus(s:bufname)
   call s:assert.equals(line('.'), 1)
 
+  " scroll_to_bottom
+  let another_buf_name = 'iced_another_buffer_test'
+  call iced#buffer#init(another_buf_name)
+
+  " scroll_to_bottom is enabled because it is another buffer
+  call iced#buffer#open(s:bufname)
+  call iced#buffer#open(another_buf_name)
+  call iced#buffer#focus(another_buf_name)
   call iced#buffer#append(s:bufname, 'baz', {'scroll_to_bottom': v:true})
   call s:assert.equals(getbufline(nr, 1, '$'), ['', 'foo', 'bar', 'baz'])
   call iced#buffer#focus(s:bufname)
   call s:assert.equals(line('.'), 4)
 
+  " scroll_to_bottom is disabled because it is the same buffer
+  call iced#buffer#focus(s:bufname)
+  call iced#buffer#append(s:bufname, 'eol', {'scroll_to_bottom': v:true})
+  call s:assert.equals(getbufline(nr, 1, '$'), ['', 'foo', 'bar', 'baz', 'eol'])
+  call s:assert.equals(line('.'), 4)
+
+  call iced#buffer#close(another_buf_name)
   call iced#buffer#close(s:bufname)
 endfunction
