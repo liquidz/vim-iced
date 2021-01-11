@@ -31,6 +31,7 @@ let s:default_ns_favorites = {
       \ }
 let g:iced#ns#favorites
       \ = get(g:, 'iced#ns#favorites', s:default_ns_favorites) " }}}
+let g:iced#ns#class_map = get(g:, 'iced#ns#class_map', {})
 
 " iced#nrepl#refactor#extract_function {{{
 function! s:found_used_locals(resp) abort
@@ -199,13 +200,33 @@ function! s:__add_missing_by_clj_kondo_analysis(symbol) abort
   return s:__add_missing_ns_select_candidates(symbol_alias, ns_candidates)
 endfunction
 
+function! s:__add_missing_java_class_select_candidates(resp) abort
+  let candidates = get(a:resp, 'candidates', [])
+  if empty(candidates)
+    return iced#message#error('not_found')
+  endif
+
+  if len(candidates) == 1
+    return iced#nrepl#ns#util#add_class(candidates[0])
+  else
+    return iced#selector({
+          \ 'candidates': candidates,
+          \ 'accept': {_, class_name -> iced#nrepl#ns#util#add_class(class_name)}
+          \ })
+  endif
+endfunction
+
 function! iced#nrepl#refactor#add_missing_ns(symbol) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   let kondo = iced#system#get('clj_kondo')
   let symbol = empty(a:symbol) ? iced#nrepl#var#cword() : a:symbol
+  let c = char2nr(symbol)
 
-  if kondo.is_analyzed()
+  if c >= 65 && c <= 90
+    return iced#promise#call('iced#nrepl#op#iced#java_class_candidates', [symbol, g:iced#ns#class_map])
+          \.then(funcref('s:__add_missing_java_class_select_candidates'))
+  elseif kondo.is_analyzed()
     return s:__add_missing_by_clj_kondo_analysis(symbol)
   elseif iced#nrepl#is_supported_op('resolve-missing')
     call iced#nrepl#op#refactor#add_missing(symbol, {resp ->
