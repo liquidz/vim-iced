@@ -130,6 +130,19 @@ function! iced#nrepl#op#iced#format_code(code, alias_map, callback) abort
         \ })
 endfunction
 
+function! iced#nrepl#op#iced#java_class_candidates(symbol, class_map, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'iced-java-class-candidates',
+        \ 'session': iced#nrepl#current_session(),
+        \ 'symbol': a:symbol,
+        \ 'class-map': a:class_map,
+        \ 'callback': a:callback,
+        \ })
+endfunction
+
 call iced#nrepl#register_handler('iced-pseudo-ns-path', function('iced#nrepl#path_translation_handler', [['path']]))
 
 let &cpoptions = s:save_cpo
