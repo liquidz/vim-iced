@@ -12,8 +12,7 @@ let g:iced#nrepl#connect#jack_in_command = get(g:, 'iced#nrepl#connect#jack_in_c
 let g:iced#nrepl#connect#auto_connect_timeout_ms = get(g:, 'iced#nrepl#connect#auto_connect_timeout_ms', 5000)
 
 function! s:detect_port_from_nrepl_port_file() abort
-  " NOTE: '.;' is not aware of current working directory(?)
-  let path = findfile(s:nrepl_port_file, printf('%s;', getcwd()))
+  let path = findfile(s:nrepl_port_file, '.;')
   if empty(path)
     return v:false
   else
@@ -25,8 +24,7 @@ function! s:detect_port_from_nrepl_port_file() abort
 endfunction
 
 function! s:detect_shadow_cljs_nrepl_port() abort
-  " NOTE: '.;' is not aware of current working directory(?)
-  let dot_shadow_cljs = finddir('.shadow-cljs', printf('%s;', getcwd()))
+  let dot_shadow_cljs = finddir('.shadow-cljs', '.;')
   if empty(dot_shadow_cljs) | return v:false | endif
 
   let path = findfile('nrepl.port', dot_shadow_cljs)
