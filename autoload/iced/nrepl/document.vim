@@ -178,7 +178,9 @@ function! iced#nrepl#document#popup_open(symbol) abort
   endif
 
   if iced#nrepl#is_supported_op('info')
-    if !iced#nrepl#check_session_validity() | return | endif
+    if !iced#nrepl#check_session_validity()
+      return iced#promise#resolve(v:false)
+    endif
     return iced#promise#call('iced#nrepl#ns#in', [])
           \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
           \.then({resp -> s:generate_doc(resp)})
