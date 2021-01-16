@@ -1,6 +1,23 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* Added `eval_prepared` hook type.
+
+=== Changed
+
+* Bumped cider-nrepl to 0.25.6
+* Bumped iced-nrepl to 1.1.2
+* Updated vital.vim modules to be latest.
+* Changed stdout buffer to set `nowrap` option.
+* Changed stdout buffer not to scroll bottom when you are in the stdout buffer.
+
+=== Fixed
+
+* Fixed not to switch clj/cljs session for shadow-cljs automatically.
+* Fixed Vim's virtualtext to fit the current window size.
+// }}}
 
 == 2.7.1 (2021-01-01)
 
