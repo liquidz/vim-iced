@@ -66,10 +66,18 @@ Following events can be hooked.
 | Hooked when current session is switched.
 
 | eval_prepared
-| `code`: Hooked when current session is switched. +
+| `code`: The code to be evalated. +
 `option`: Evaluation option.
 | Hooked before the start of evaluation. +
 The `option` parameter contains `id`, `file`, `line`, `column`, `verbose` and so on.
+
+| evaluated
+| `result`: Result map respnsed by nREPL server. +
+`option`: Evaluation option.
+| Hooked after evaluation. +
+
+The `result` parameter contains `id`, `status`, `ns`, `value` and so on. +
+The `option` parameter contains `line`, `column`, `verbose`, `code` and so on.
 
 |===
 
