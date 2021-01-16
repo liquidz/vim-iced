@@ -12,6 +12,7 @@
   'cache_cleared':             'Cache cleared.',
   'canceled':                  'Canceled.',
   'canceled_cljs_repl':        'Canceled to start CLJS repl.',
+  'class_exists':              'Class "%s" already exists.',
   'cleaned':                   'Cleaned.',
   'cleared':                   'Cleared.',
   'clojuredocs_cljs_error':    'Tried searching for "%s", but ClojureDocs does not have docs for ClojureScript.',
