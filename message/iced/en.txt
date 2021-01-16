@@ -12,6 +12,7 @@
   'cache_cleared':             'Cache cleared.',
   'canceled':                  'Cancelled.',
   'canceled_cljs_repl':        'Cancelled starting the CLJS repl.',
+  'class_exists':              'Class "%s" already exists.',
   'cleaned':                   'Cleaned.',
   'cleared':                   'Cleared.',
   'clj_kondo_analyzing':       'Analyzing yet. Please wait a moment...',
