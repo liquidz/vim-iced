@@ -65,6 +65,12 @@ Following events can be hooked.
 | `session`: Destination session type. "clj" or "cljs".
 | Hooked when current session is switched.
 
+| eval_prepared
+| `code`: Hooked when current session is switched. +
+`option`: Evaluation option.
+| Hooked before the start of evaluation. +
+The `option` parameter contains `id`, `file`, `line`, `column`, `verbose` and so on.
+
 |===
 
 ==== Reporter [[hook_reporter]]

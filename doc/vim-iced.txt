@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.7.1
+Version: 2.7.2
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -137,8 +137,8 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.8.3"]
-                   [iced-nrepl "1.1.1"]
-                   [cider/cider-nrepl "0.25.5"]]
+                   [iced-nrepl "1.1.2"]
+                   [cider/cider-nrepl "0.25.6"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -166,8 +166,8 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.5.0"]
-      [cider/cider-nrepl "0.25.5"]
-      [iced-nrepl "1.1.1"]])
+      [cider/cider-nrepl "0.25.6"]
+      [iced-nrepl "1.1.2"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -194,8 +194,8 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "2.5.0"]
-                  [cider/cider-nrepl "0.25.5"]
-                  [iced-nrepl "1.1.1"]]
+                  [cider/cider-nrepl "0.25.6"]
+                  [iced-nrepl "1.1.2"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -2057,7 +2057,6 @@ g:iced#hook
         \ 'exec': 'echom "hello"',
         \ })
 <
-
   - Hook events
     - connected         |hook_event_connected|
     - disconnected      |hook_event_disconnected|
@@ -2065,6 +2064,7 @@ g:iced#hook
     - ns_required       |hook_event_ns_required|
     - ns_all_reloaded   |hook_event_ns_all_reloaded|
     - session_switched  |hook_event_session_switched|
+    - eval_prepared     |hook_event_eval_prepared|
   - Hook report types
     - shell             |hook_report_shell|
     - eval              |hook_report_eval|
@@ -2106,6 +2106,17 @@ SESSION SWITCHED                                  *hook_event_session_switched*
 
   - session
     Destination session type. "clj" or "cljs".
+
+EVAL PREPARED                                        *hook_event_eval_prepared*
+
+  Hooked before the start of evaluation.
+  Following parameters are pass to reporter.
+
+  - code
+    Evaluation code.
+  - option
+    Evaluation option.
+    This option contains `id`, `file`, `line`, `column`, `verbose` and so on.
 
 ------------------------------------------------------------------------------
 POPUP WINDOW                                *vim-iced-customizing-popup-window*

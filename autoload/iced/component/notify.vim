@@ -35,6 +35,9 @@ function! s:collected(timer_id) abort dict
     let self.texts = self.texts[(max_height * -1):]
   endif
 
+  " Shorten texts already added because max_width can be changed with window size.
+  let self.texts = map(self.texts, {_, v -> iced#util#shorten(v, max_width)})
+
   if empty(self.popup_id) || winbufnr(self.popup_id) == -1
     let popup_opt = {
           \ 'auto_close': v:false,

@@ -127,7 +127,9 @@ function! iced#buffer#append(bufname, s, ...) abort
     silent call iced#compat#appendbufline(nr, '$', line)
   endfor
 
-  if get(opt, 'scroll_to_bottom', v:false) && iced#buffer#is_visible(a:bufname)
+  if get(opt, 'scroll_to_bottom', v:false)
+        \ && iced#buffer#is_visible(a:bufname)
+        \ && bufnr('%') != nr
     call iced#system#get('timer').start_lazily('scroll_to_bottom', 500, funcref('s:scroll_to_bottom', [nr]))
   endif
 endfunction

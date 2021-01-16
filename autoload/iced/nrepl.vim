@@ -594,6 +594,7 @@ function! iced#nrepl#eval(code, ...) abort
     let msg['nrepl.middleware.print/print'] = get(s:printer_dict, g:iced#nrepl#printer, s:printer_dict['default'])
   endif
 
+  call iced#hook#run('eval_prepared', {'code': a:code, 'option': option})
   call iced#nrepl#send(msg)
 endfunction
 
@@ -684,7 +685,7 @@ function! iced#nrepl#status() abort
     return 'evaluating'
   else
     let k = iced#nrepl#current_session_key()
-    if iced#nrepl#cljs_session() ==# ''
+    if iced#nrepl#cljs_session() ==# '' || iced#nrepl#cljs#is_current_env_shadow_cljs()
       return toupper(k)
     else
       return (k ==# 'clj') ? 'CLJ(cljs)' : 'CLJS(clj)'

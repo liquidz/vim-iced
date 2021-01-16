@@ -95,7 +95,7 @@ function! iced#nrepl#ns#eval(callback) abort
   if empty(code)
     call a:callback('')
   else
-    call iced#nrepl#eval(code, {resp -> s:buffer_ns_loaded() && a:callback(resp)})
+    call iced#nrepl#eval(code, {'verbose': v:false}, {resp -> s:buffer_ns_loaded() && a:callback(resp)})
   endif
 endfunction
 
@@ -114,14 +114,14 @@ function! iced#nrepl#ns#in(...) abort
   let ns_name = empty(ns_name) ? iced#nrepl#ns#name() : ns_name
   let Callback = (type(Callback) == v:t_func) ? Callback : {_ -> ''}
   if empty(ns_name) | return | endif
-  call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), {resp ->
+  call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), {'verbose': v:false},  {resp ->
         \ s:buffer_ns_loaded() && Callback(resp)})
 endfunction
 
 function! iced#nrepl#ns#require(ns_name, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let code = printf('(clojure.core/require ''%s)', a:ns_name)
-  call iced#nrepl#eval(code, {resp -> s:buffer_ns_loaded() && a:callback(resp)})
+  call iced#nrepl#eval(code, {'verbose': v:false}, {resp -> s:buffer_ns_loaded() && a:callback(resp)})
 endfunction
 
 function! s:cljs_load_file(callback) abort

@@ -3,6 +3,9 @@ let s:assert = themis#helper('assert')
 let s:buf = themis#helper('iced_buffer')
 let s:ch = themis#helper('iced_channel')
 
+let g:iced_enable_clj_kondo_analysis = v:false
+let g:iced_cache_directory = ''
+
 function! s:format_relay(msg) abort
   if a:msg['op'] ==# 'format-code-with-indents'
     return {'status': ['done'], 'formatted': a:msg['code']}

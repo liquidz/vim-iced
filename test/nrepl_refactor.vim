@@ -4,6 +4,9 @@ let s:buf = themis#helper('iced_buffer')
 let s:ch = themis#helper('iced_channel')
 let s:io = themis#helper('iced_io')
 
+let g:iced_enable_clj_kondo_analysis = v:false
+let g:iced_cache_directory = ''
+
 " extract_function {{{
 function! s:extract_function_relay(locals, msg) abort
   if a:msg['op'] ==# 'find-used-locals'
@@ -384,6 +387,9 @@ function! s:suite.rename_symbol_test() abort
         \  {'status': ['done']}]})
 
 
+  call iced#system#reset_component('job')
+  call iced#system#reset_component('edn')
+  call iced#system#reset_component('ex_cmd')
   call s:io.mock({'input': 'new-name'})
   call iced#promise#wait(iced#nrepl#refactor#rename_symbol('dummy'))
 

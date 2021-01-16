@@ -107,7 +107,7 @@
   'undefined':                 'Undefined %s.',
   'unexpected_error':          'Unexpected error: %s',
   'unknown':                    '"%s" is unknown.',
-  'unknown_hook_type':         'Hook type "%s" is unknown.',
+  'unknown_hook_type':         'Hook type "%s" is unknown or not supported.',
   'untraced':                  'Untraced.',
   'used_locals_error':         'Failed to fetch used-locals: %s.',
   'var_references_found':      'Found %d references.',

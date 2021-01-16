@@ -9,21 +9,7 @@ let s:vt = {
 
 function! s:vt.set(text, ...) abort
   let opt = get(a:, 1, {})
-  let col = get(opt, 'col', col('$') + 3)
-  let popup_opts = {
-        \ 'iced_context': {'last_col': col},
-        \ 'col': col,
-        \ 'highlight': get(opt, 'highlight', 'Comment'),
-        \ }
-
-  if has_key(opt, 'line')
-    let popup_opts['line'] = opt.line
-  endif
-
-  if get(opt, 'auto_clear', v:false)
-    let popup_opts['moved'] = 'any'
-    let popup_opts['auto_close'] = v:false
-  endif
+  let wininfo = getwininfo(win_getid())[0]
 
   " Close last virtual text window if same position
   let ctx = self.popup.get_context(self.last_winid)
@@ -31,7 +17,31 @@ function! s:vt.set(text, ...) abort
     call self.popup.close(self.last_winid)
   endif
 
-  let self.last_winid = self.popup.open([a:text], popup_opts)
+  " col
+  let col = get(opt, 'col', col('$') + 3)
+  " line
+  let line = get(opt, 'line', winline())
+  " width
+  let max_width = wininfo['width'] - col
+  if max_width < 0
+    let col = wincol()
+    let max_width = wininfo['width'] - col
+    let line += 1
+  endif
+  let text = iced#util#shorten(a:text, max_width)
+
+  let popup_opts = {
+        \ 'iced_context': {'last_col': col},
+        \ 'col': col,
+        \ 'line': line,
+        \ 'highlight': get(opt, 'highlight', 'Comment'),
+        \ }
+  if get(opt, 'auto_clear', v:false)
+    let popup_opts['moved'] = 'any'
+    let popup_opts['auto_close'] = v:false
+  endif
+
+  let self.last_winid = self.popup.open([text], popup_opts)
   return self.last_winid
 endfunction
 
