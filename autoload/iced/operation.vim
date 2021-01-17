@@ -80,6 +80,24 @@ function! iced#operation#eval_and_replace(type) abort
         \ funcref('s:replace_by_response_value'))})
 endfunction
 
+function! iced#operation#eval_and_comment(type) abort
+  let opt = {'callback': funcref('s:__eval_and_comment')}
+  return s:eval({code -> iced#nrepl#eval#code(code, opt)})
+endfunction
+
+function! s:__eval_and_comment(resp) abort
+  if has_key(a:resp, 'value')
+    let lnum = line('.')
+    let line = getline(lnum)
+    if line =~ ';; => .\+$'
+      let idx = strridx(line, ';; => ')
+      call setline(lnum, printf('%s;; => %s', line[0:idx-1], a:resp['value']))
+    else
+      call setline(lnum, printf('%s ;; => %s', line, a:resp['value']))
+    endif
+  endif
+endfunction
+
 function! iced#operation#macroexpand(type) abort
   let view = winsaveview()
   let reg_save = @@
