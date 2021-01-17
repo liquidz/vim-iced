@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 2.7.3 (2021-01-18)
 // {{{
 === Added
 * Added `evaluated` hook type.
@@ -9,6 +11,7 @@ All notable changes to this project will be documented in this file. This change
 
 === Changed
 * Changed browsing references/dependencies to use https://vim-jp.org/vimdoc-en/quickfix.html#location-list[location list] instead of quickfix list.
+* Bump zprint to 1.1.0.
 // }}}
 
 == 2.7.2 (2021-01-16)
