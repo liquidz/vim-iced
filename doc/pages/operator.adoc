@@ -19,6 +19,9 @@ This operator supports <<evaluation_yank>>.
 | {help_html}#%3CPlug%3E%28iced_eval_and_replace%29[<Plug>(iced_eval_and_replace)]
 | Evaluate code and replace it by the evaluation result
 
+| {help_html}#%3CPlug%3E%28iced_eval_and_comment%29[<Plug>(iced_eval_and_comment)]
+| Evaluate code and add the result as a comment in current end of line
+
 |===
 
 It is useful to combinate these operators with {vim_sexp}'s motions like follows.
@@ -43,5 +46,10 @@ aug MyClojureSetting
       \ <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_list)``
   au FileType clojure nmap <buffer> <Leader>ert
       \ <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_top_list)``
+
+  au FileType clojure nmap <buffer> <Leader>ece
+      \ <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_list)``
+  au FileType clojure nmap <buffer> <Leader>ect
+      \ <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_top_list)``
 aug END
 ----
