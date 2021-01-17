@@ -89,7 +89,7 @@ function! s:__eval_and_comment(resp) abort
   if has_key(a:resp, 'value')
     let lnum = line('.')
     let line = getline(lnum)
-    if line =~ ';; => .\+$'
+    if line =~# ';; => .\+$'
       let idx = strridx(line, ';; => ')
       call setline(lnum, printf('%s;; => %s', line[0:idx-1], a:resp['value']))
     else
