@@ -1306,6 +1306,15 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_top_list)``
 <
+                                                *<Plug>(iced_eval_and_comment)*
+<Plug>(iced_eval_and_comment)
+  Evaluate code and add the result as a comment in current end of line.
+  Followings are examples for working with {vim-sexp}.
+>
+  <Plug>(iced_eval_and_comment)<Plug>(sexp_inner_element)``
+  <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_list)``
+  <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_top_list)``
+<
                                                          *<Plug>(iced_eval_ns)*
 <Plug>(iced_eval_ns)
   Same as |:IcedEvalNs|.
