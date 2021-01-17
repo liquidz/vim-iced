@@ -2896,6 +2896,10 @@ This operator supports <a href="#evaluation_yank">Yank</a>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3CPlug%3E%28iced_eval_and_replace%29">&lt;Plug&gt;(iced_eval_and_replace)</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Evaluate code and replace it by the evaluation result</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3CPlug%3E%28iced_eval_and_comment%29">&lt;Plug&gt;(iced_eval_and_comment)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Evaluate code and add the result as a comment in current end of line</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -2921,6 +2925,11 @@ This operator supports <a href="#evaluation_yank">Yank</a>.</p></td>
 <span class="se">      \</span> <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>iced_eval_and_replace<span class="p">)&lt;</span>Plug<span class="p">&gt;(</span>sexp_outer_list<span class="p">)</span>``
   <span class="k">au</span> <span class="nb">FileType</span> clojure nmap <span class="p">&lt;</span><span class="k">buffer</span><span class="p">&gt;</span> <span class="p">&lt;</span>Leader<span class="p">&gt;</span>ert
 <span class="se">      \</span> <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>iced_eval_and_replace<span class="p">)&lt;</span>Plug<span class="p">&gt;(</span>sexp_outer_top_list<span class="p">)</span>``
+
+  <span class="k">au</span> <span class="nb">FileType</span> clojure nmap <span class="p">&lt;</span><span class="k">buffer</span><span class="p">&gt;</span> <span class="p">&lt;</span>Leader<span class="p">&gt;</span>ece
+<span class="se">      \</span> <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>iced_eval_and_comment<span class="p">)&lt;</span>Plug<span class="p">&gt;(</span>sexp_outer_list<span class="p">)</span>``
+  <span class="k">au</span> <span class="nb">FileType</span> clojure nmap <span class="p">&lt;</span><span class="k">buffer</span><span class="p">&gt;</span> <span class="p">&lt;</span>Leader<span class="p">&gt;</span>ect
+<span class="se">      \</span> <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>iced_eval_and_comment<span class="p">)&lt;</span>Plug<span class="p">&gt;(</span>sexp_outer_top_list<span class="p">)</span>``
 aug END</code></pre>
 </div>
 </div>
@@ -3402,10 +3411,18 @@ and the value is a dictionary or a list of dictionaries.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">eval_prepared</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>code</code>: Hooked when current session is switched.<br>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>code</code>: The code to be evalated.<br>
 <code>option</code>: Evaluation option.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Hooked before the start of evaluation.<br>
 The <code>option</code> parameter contains <code>id</code>, <code>file</code>, <code>line</code>, <code>column</code>, <code>verbose</code> and so on.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">evaluated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>result</code>: Result map respnsed by nREPL server.<br>
+<code>option</code>: Evaluation option.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hooked after evaluation.<br></p>
+<p class="tableblock">The <code>result</code> parameter contains <code>id</code>, <code>status</code>, <code>ns</code>, <code>value</code> and so on.<br>
+The <code>option</code> parameter contains <code>line</code>, <code>column</code>, <code>verbose</code>, <code>code</code> and so on.</p></td>
 </tr>
 </tbody>
 </table>
@@ -4529,7 +4546,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-01-16 00:16:30 UTC
+Last updated 2021-01-17 21:55:09 UTC
 </div>
 </div>
 </body>
