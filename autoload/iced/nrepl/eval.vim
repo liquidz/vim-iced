@@ -64,6 +64,8 @@ function! iced#nrepl#eval#out(resp, ...) abort
 
   call iced#nrepl#eval#err(get(a:resp, 'err', ''), opt)
 
+  call iced#system#get('future').do({-> iced#hook#run('evaluated', {'result': a:resp, 'option': opt})})
+
   if has_key(opt, 'code')
     return iced#nrepl#cljs#check_switching_session(a:resp, opt.code)
   endif

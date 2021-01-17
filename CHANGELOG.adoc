@@ -2,6 +2,18 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.7.3 (2021-01-18)
+// {{{
+=== Added
+* Added `evaluated` hook type.
+* Added `iced_eval_and_comment` operator to evaluate code and add the result as a comment in current end of line.
+** `:h <Plug>(iced_eval_and_comment)`
+
+=== Changed
+* Changed browsing references/dependencies to use https://vim-jp.org/vimdoc-en/quickfix.html#location-list[location list] instead of quickfix list.
+* Bump zprint to 1.1.0.
+// }}}
+
 == 2.7.2 (2021-01-16)
 // {{{
 === Added

@@ -272,8 +272,8 @@ function! s:set_xref_resp_to_quickfix(key, resp) abort
         \ }})
   if empty(xrefs) | return iced#message#info('not_found') | endif
 
-  call iced#system#get('quickfix').setlist(xrefs)
-  call iced#system#get('ex_cmd').silent_exe(':cwindow')
+  call iced#system#get('quickfix').setloclist(win_getid(), xrefs)
+  call iced#system#get('ex_cmd').silent_exe(':lwindow')
 endfunction
 
 let s:fn_refs_callback = function('s:set_xref_resp_to_quickfix', ['fn-refs'])

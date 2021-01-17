@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.7.2
+Version: 2.7.3
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -1306,6 +1306,15 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval_and_replace)<Plug>(sexp_outer_top_list)``
 <
+                                                *<Plug>(iced_eval_and_comment)*
+<Plug>(iced_eval_and_comment)
+  Evaluate code and add the result as a comment in current end of line.
+  Followings are examples for working with {vim-sexp}.
+>
+  <Plug>(iced_eval_and_comment)<Plug>(sexp_inner_element)``
+  <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_list)``
+  <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_top_list)``
+<
                                                          *<Plug>(iced_eval_ns)*
 <Plug>(iced_eval_ns)
   Same as |:IcedEvalNs|.
@@ -2065,6 +2074,7 @@ g:iced#hook
     - ns_all_reloaded   |hook_event_ns_all_reloaded|
     - session_switched  |hook_event_session_switched|
     - eval_prepared     |hook_event_eval_prepared|
+    - evaluated         |hook_event_evaluated|
   - Hook report types
     - shell             |hook_report_shell|
     - eval              |hook_report_eval|
@@ -2117,6 +2127,18 @@ EVAL PREPARED                                        *hook_event_eval_prepared*
   - option
     Evaluation option.
     This option contains `id`, `file`, `line`, `column`, `verbose` and so on.
+
+EVALUATED                                                *hook_event_evaluated*
+
+  Hooked after evaluation.
+  Following parameters are pass to reporter.
+
+  - result
+    Result map respnsed by nREPL server.
+    This map contains `id`, `status`, `ns`, `value` and so on.
+  - option
+    Evaluation option.
+    This option contains `line`, `column`, `verbose`, `code` and so on.
 
 ------------------------------------------------------------------------------
 POPUP WINDOW                                *vim-iced-customizing-popup-window*

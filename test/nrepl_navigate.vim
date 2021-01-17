@@ -182,8 +182,8 @@ function! s:suite.browse_var_references_test() abort
   call s:setup({'channel': funcref('s:browse_var_references_relay')})
 
   call iced#nrepl#navigate#browse_var_references('foo/bar')
-  let qf_list = s:qf.get_last_args()['list']
-  call s:assert.equals(qf_list, [
+  let loc_list = get(s:qf.get_last_args(), 'loclist', [])
+  call s:assert.equals(loc_list, [
         \ {'filename': s:temp_file, 'lnum': 12, 'text': 'hello: doc hello'},
         \ ])
 
@@ -210,8 +210,8 @@ function! s:suite.browse_var_dependencies_test() abort
   call s:setup({'channel': funcref('s:browse_var_dependencies_relay')})
 
   call iced#nrepl#navigate#browse_var_dependencies('foo/bar')
-  let qf_list = s:qf.get_last_args()['list']
-  call s:assert.equals(qf_list, [
+  let loc_list = get(s:qf.get_last_args(), 'loclist', [])
+  call s:assert.equals(loc_list, [
         \ {'filename': s:temp_file, 'lnum': 56, 'text': 'world: doc world'}
         \ ])
 
@@ -241,8 +241,8 @@ function! s:suite.browse_references_nrepl_test() abort
   let g:iced_enable_clj_kondo_analysis = v:false
 
   call iced#nrepl#navigate#browse_references()
-  let qf_list = s:qf.get_last_args()['list']
-  call s:assert.equals(qf_list, [
+  let loc_list = get(s:qf.get_last_args(), 'loclist', [])
+  call s:assert.equals(loc_list, [
         \ {'lnum': 12, 'filename': s:temp_file, 'text': 'nrepl hello: doc nrepl hello'},
         \ ])
 
@@ -265,8 +265,8 @@ function! s:suite.browse_references_clj_kondo_test() abort
 
   call iced#nrepl#navigate#browse_references()
 
-  let qf_list = s:qf.get_last_args()['list']
-  call s:assert.equals(qf_list, [
+  let loc_list = get(s:qf.get_last_args(), 'loclist', [])
+  call s:assert.equals(loc_list, [
         \ {'lnum': 1, 'filename': s:temp_file, 'text': 'A/a'},
         \ {'lnum': 2, 'filename': s:temp_file, 'text': 'B/b'},
         \ ])
@@ -297,8 +297,8 @@ function! s:suite.browse_dependencies_nrepl_test() abort
   let g:iced_enable_clj_kondo_analysis = v:false
 
   call iced#nrepl#navigate#browse_dependencies()
-  let qf_list = s:qf.get_last_args()['list']
-  call s:assert.equals(qf_list, [
+  let loc_list = get(s:qf.get_last_args(), 'loclist', [])
+  call s:assert.equals(loc_list, [
         \ {'lnum': 12, 'filename': s:temp_file, 'text': 'nrepl hello: doc nrepl hello'},
         \ ])
 
@@ -328,8 +328,8 @@ function! s:suite.browse_dependencies_clj_kondo_test() abort
 
   call iced#nrepl#navigate#browse_dependencies()
 
-  let qf_list = s:qf.get_last_args()['list']
-  call s:assert.equals(qf_list, [
+  let loc_list = get(s:qf.get_last_args(), 'loclist', [])
+  call s:assert.equals(loc_list, [
         \ {'lnum': 1, 'filename': s:temp_file, 'text': 'X/v'},
         \ {'lnum': 2, 'filename': s:temp_file, 'text': 'X/w'},
        \ ])
