@@ -2,7 +2,7 @@
 
 set -e
 
-version='1.0.2'
+version='1.1.0'
 # NOTE: macOS has a same named command, so add '-clj' postfix
 file='zprint-clj'
 if [ "$(uname)" == 'Darwin' ]; then
