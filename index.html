@@ -2435,10 +2435,24 @@ Analyzed data is cached at <a href="https://liquidz.github.io/vim-iced/vim-iced.
 <li>
 <p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedAddNs">IcedAddNs</a></p>
 </li>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedDefJump">IcedDefJump</a></p>
+</li>
 </ul>
 </div>
 <div class="sect3">
-<h4 id="_tips">13.1.1. Tips</h4>
+<h4 id="_local_analysis">13.1.1. Local analysis</h4>
+<div class="paragraph">
+<p>From clj-kondo v2021.01.20, local analysis is supported.
+It can be used to support jumping to local vars.</p>
+</div>
+<div class="paragraph">
+<p>This feature is disabled by default.
+To enable, set <code>v:true</code> to <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_clj_kondo_local_analysis">g:iced_enable_clj_kondo_local_analysis</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tips">13.1.2. Tips</h4>
 <div class="paragraph">
 <p>Cached files will be separated to var definition/usage and ns definition/usage automatically if you have <a href="https://github.com/stedolan/jq">jq</a> or <a href="https://github.com/borkdude/jet">jet</a>.</p>
 </div>
@@ -4546,7 +4560,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-01-17 21:55:09 UTC
+Last updated 2021-01-20 21:32:36 UTC
 </div>
 </div>
 </body>
