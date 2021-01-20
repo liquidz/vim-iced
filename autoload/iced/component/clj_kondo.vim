@@ -336,6 +336,22 @@ function! s:kondo.var_definition(ns_name, var_name) abort
   endfor
 endfunction
 
+function! s:kondo.local_definition(filename, row, name) abort
+  for usage in self.local_usages()
+    if get(usage, 'filename', '') ==# a:filename
+          \ && get(usage, 'row', 0) == a:row
+          \ && get(usage, 'name', '') ==# a:name
+      for definition in self.local_definitions()
+        if get(definition, 'id') == get(usage, 'id')
+          return definition
+        endif
+      endfor
+
+      return {}
+    endif
+  endfor
+endfunction
+
 function! s:kondo.ns_path(ns_name) abort
   let definitions = self.namespace_definitions()
   for definition in definitions
