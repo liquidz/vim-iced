@@ -54,6 +54,10 @@ if !exists('g:iced_enable_clj_kondo_analysis')
   let g:iced_enable_clj_kondo_analysis = v:false
 endif
 
+if !exists('g:iced_enable_clj_kondo_local_analysis')
+  let g:iced_enable_clj_kondo_local_analysis = v:false
+endif
+
 if !exists('g:iced_default_key_mapping_leader')
   let g:iced_default_key_mapping_leader = '<Leader>'
 endif
