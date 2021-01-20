@@ -42,6 +42,14 @@ function! s:kondo.namespace_usages_cache_name() abort
   return printf('%s/%s_ns_usages.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
 endfunction
 
+function! s:kondo.local_definitions_cache_name() abort
+  return printf('%s/%s_local_definitions.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
+endfunction
+
+function! s:kondo.local_usages_cache_name() abort
+  return printf('%s/%s_local_usages.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
+endfunction
+
 function! s:analyze__analyzed(callback, result) abort dict
   let cache_name = self.cache_name()
   call s:rename_temp_file(cache_name)
@@ -61,6 +69,22 @@ function! s:analyze__analyzed(callback, result) abort dict
           \ s:temp_name(ns_definition_cache_name),
           \ )]
     call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_definition_cache_name)})
+
+    if g:iced_enable_clj_kondo_local_analysis
+      let local_usage_cache_name = self.local_usages_cache_name()
+      let command = ['sh', '-c', printf('jq -c ''.analysis."local-usages"'' %s > %s',
+            \ cache_name,
+            \ s:temp_name(local_usage_cache_name),
+            \ )]
+      call self.job_out.redir(command, {_ -> s:rename_temp_file(local_usage_cache_name)})
+
+      let local_definition_cache_name = self.local_definitions_cache_name()
+      let command = ['sh', '-c', printf('jq -c ''.analysis."locals"'' %s > %s',
+            \ cache_name,
+            \ s:temp_name(local_definition_cache_name),
+            \ )]
+      call self.job_out.redir(command, {_ -> s:rename_temp_file(local_definition_cache_name)})
+    endif
   elseif executable('jet')
     let ns_usage_cache_name = self.namespace_usages_cache_name()
     let command = ['sh', '-c', printf('cat %s | jet --from json --to json --query ''["analysis" "namespace-usages"]'' > %s',
@@ -75,6 +99,22 @@ function! s:analyze__analyzed(callback, result) abort dict
           \ s:temp_name(ns_definition_cache_name),
           \ )]
     call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_definition_cache_name)})
+
+    if g:iced_enable_clj_kondo_local_analysis
+      let local_usage_cache_name = self.local_usages_cache_name()
+      let command = ['sh', '-c', printf('cat %s | jet --from json --to json --query ''["analysis" "local-usages"]'' > %s',
+            \ cache_name,
+            \ s:temp_name(local_usage_cache_name),
+            \ )]
+      call self.job_out.redir(command, {_ -> s:rename_temp_file(local_usage_cache_name)})
+
+      let local_definition_cache_name = self.local_definitions_cache_name()
+      let command = ['sh', '-c', printf('cat %s | jet --from json --to json --query ''["analysis" "locals"]'' > %s',
+            \ cache_name,
+            \ s:temp_name(local_definition_cache_name),
+            \ )]
+      call self.job_out.redir(command, {_ -> s:rename_temp_file(local_definition_cache_name)})
+    endif
   endif
 
   let self.is_analyzing = v:false
