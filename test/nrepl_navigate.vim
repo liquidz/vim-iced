@@ -13,6 +13,7 @@ let s:temp_file = tempname()
 
 function! s:setup(opts) abort " {{{
   let g:iced_enable_clj_kondo_analysis = v:false
+  let g:iced_enable_clj_kondo_local_analysis = v:false
   let g:iced_cache_directory = ''
 
   call writefile([''], s:temp_file)
