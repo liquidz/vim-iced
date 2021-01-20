@@ -7,6 +7,7 @@ let s:kondo = ''
 function! s:setup() abort
   let g:iced_cache_directory = '/tmp'
   let g:iced_enable_clj_kondo_analysis = v:true
+  let g:iced_enable_clj_kondo_local_analysis = v:true
 
   call s:job_out.mock({'outs': ['']})
   call iced#system#reset_component('clj_kondo')
@@ -15,6 +16,7 @@ endfunction
 
 function! s:teardown() abort
   let g:iced_enable_clj_kondo_analysis = v:false
+  let g:iced_enable_clj_kondo_local_analysis = v:false
   let s:kondo = ''
 endfunction
 

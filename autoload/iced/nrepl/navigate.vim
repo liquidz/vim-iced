@@ -141,8 +141,16 @@ function! iced#nrepl#navigate#jump_to_def(symbol) abort
         \ ? iced#nrepl#var#cword()
         \ : a:symbol
 
+  let kondo = iced#system#get('clj_kondo')
   if stridx(symbol, '::') == 0
     return s:jump_to_qualified_keyword(symbol)
+  elseif kondo.is_analyzed() && g:iced_enable_clj_kondo_local_analysis
+    let local_def = kondo.local_definition(expand('%:p'), line('.'), symbol)
+    if ! empty(local_def)
+      return s:jump_to_local_definition(local_def)
+    else
+      return iced#nrepl#var#get(symbol, funcref('s:jump', [symbol]))
+    endif
   else
     return iced#nrepl#var#get(symbol, funcref('s:jump', [symbol]))
   endif
@@ -202,6 +210,13 @@ function! s:jump_to_qualified_keyword(keyword) abort
 
   call cursor(pos[0], pos[1])
   normal! zz
+endfunction
+
+function!  s:jump_to_local_definition(local_def) abort
+  let row = get(a:local_def, 'row', 1)
+  let col = get(a:local_def, 'col', 1)
+
+  call cursor(row, col)
 endfunction
 
 function! s:jump(base_symbol, resp) abort

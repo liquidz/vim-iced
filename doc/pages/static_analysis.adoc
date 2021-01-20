@@ -14,6 +14,16 @@ Analyzed data is cached at {help_html}#g%3Aiced_cache_directory[g:iced_cache_dir
 - {help_html}#%3AIcedBrowseDependencies[IcedBrowseDependencies]
 - {help_html}#%3AIcedAddMissing[IcedAddMissing]
 - {help_html}#%3AIcedAddNs[IcedAddNs]
+- {help_html}#%3AIcedDefJump[IcedDefJump]
+
+
+==== Local analysis
+
+From clj-kondo v2021.01.20, local analysis is supported.
+It can be used to support jumping to local vars.
+
+This feature is disabled by default.
+To enable, set `v:true` to {help_html}#g%3Aiced_enable_clj_kondo_local_analysis[g:iced_enable_clj_kondo_local_analysis].
 
 ==== Tips
 

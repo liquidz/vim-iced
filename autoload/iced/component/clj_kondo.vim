@@ -42,6 +42,14 @@ function! s:kondo.namespace_usages_cache_name() abort
   return printf('%s/%s_ns_usages.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
 endfunction
 
+function! s:kondo.local_definitions_cache_name() abort
+  return printf('%s/%s_local_definitions.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
+endfunction
+
+function! s:kondo.local_usages_cache_name() abort
+  return printf('%s/%s_local_usages.json', self.cache_dir, substitute(s:user_dir(), '/', '_', 'g'))
+endfunction
+
 function! s:analyze__analyzed(callback, result) abort dict
   let cache_name = self.cache_name()
   call s:rename_temp_file(cache_name)
@@ -61,6 +69,22 @@ function! s:analyze__analyzed(callback, result) abort dict
           \ s:temp_name(ns_definition_cache_name),
           \ )]
     call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_definition_cache_name)})
+
+    if g:iced_enable_clj_kondo_local_analysis
+      let local_usage_cache_name = self.local_usages_cache_name()
+      let command = ['sh', '-c', printf('jq -c ''.analysis."local-usages"'' %s > %s',
+            \ cache_name,
+            \ s:temp_name(local_usage_cache_name),
+            \ )]
+      call self.job_out.redir(command, {_ -> s:rename_temp_file(local_usage_cache_name)})
+
+      let local_definition_cache_name = self.local_definitions_cache_name()
+      let command = ['sh', '-c', printf('jq -c ''.analysis."locals"'' %s > %s',
+            \ cache_name,
+            \ s:temp_name(local_definition_cache_name),
+            \ )]
+      call self.job_out.redir(command, {_ -> s:rename_temp_file(local_definition_cache_name)})
+    endif
   elseif executable('jet')
     let ns_usage_cache_name = self.namespace_usages_cache_name()
     let command = ['sh', '-c', printf('cat %s | jet --from json --to json --query ''["analysis" "namespace-usages"]'' > %s',
@@ -75,6 +99,22 @@ function! s:analyze__analyzed(callback, result) abort dict
           \ s:temp_name(ns_definition_cache_name),
           \ )]
     call self.job_out.redir(command, {_ -> s:rename_temp_file(ns_definition_cache_name)})
+
+    if g:iced_enable_clj_kondo_local_analysis
+      let local_usage_cache_name = self.local_usages_cache_name()
+      let command = ['sh', '-c', printf('cat %s | jet --from json --to json --query ''["analysis" "local-usages"]'' > %s',
+            \ cache_name,
+            \ s:temp_name(local_usage_cache_name),
+            \ )]
+      call self.job_out.redir(command, {_ -> s:rename_temp_file(local_usage_cache_name)})
+
+      let local_definition_cache_name = self.local_definitions_cache_name()
+      let command = ['sh', '-c', printf('cat %s | jet --from json --to json --query ''["analysis" "locals"]'' > %s',
+            \ cache_name,
+            \ s:temp_name(local_definition_cache_name),
+            \ )]
+      call self.job_out.redir(command, {_ -> s:rename_temp_file(local_definition_cache_name)})
+    endif
   endif
 
   let self.is_analyzing = v:false
@@ -90,8 +130,12 @@ function! s:kondo.analyze(callback) abort
 
   let self.is_analyzing = v:true
   " NOTE: Using `writefile` will freeze vim/nvim just a little
-  let command = ['sh', '-c', printf('clj-kondo --parallel --lint %s --config ''{:output {:analysis true :format :json}}'' > %s',
+  let config = g:iced_enable_clj_kondo_local_analysis
+        \ ? '{:output {:analysis {:locals true} :format :json}}'
+        \ : '{:output {:analysis true :format :json}}'
+  let command = ['sh', '-c', printf('clj-kondo --parallel --lint %s --config ''%s'' > %s',
         \ s:user_dir(),
+        \ config,
         \ s:temp_name(self.cache_name()),
         \ )]
   call self.job_out.redir(command, funcref('s:analyze__analyzed', [a:callback], self))
@@ -170,6 +214,60 @@ function! s:kondo.namespace_definitions() abort
   return json_decode(res[0])
 endfunction
 
+function! s:kondo.local_usages() abort
+  if !g:iced_enable_clj_kondo_analysis
+    return {'error': 'clj-kondo: disabled'}
+  endif
+  if !g:iced_enable_clj_kondo_local_analysis
+    return {'error': 'clj-kondo local analysis: disabled'}
+  endif
+
+  let cache_name = self.local_usages_cache_name()
+  if !filereadable(cache_name)
+    let ana = self.analysis()
+    return (has_key(ana, 'local-usages'))
+          \ ? ana['local-usages']
+          \ : {}
+  endif
+
+  let res = readfile(cache_name)
+  if empty(res)
+    let ana = self.analysis()
+    return (has_key(ana, 'local-usages'))
+          \ ? ana['local-usages']
+          \ : ana
+  endif
+
+  return json_decode(res[0])
+endfunction
+
+function! s:kondo.local_definitions() abort
+  if !g:iced_enable_clj_kondo_analysis
+    return {'error': 'clj-kondo: disabled'}
+  endif
+  if !g:iced_enable_clj_kondo_local_analysis
+    return {'error': 'clj-kondo local analysis: disabled'}
+  endif
+
+  let cache_name = self.local_definitions_cache_name()
+  if !filereadable(cache_name)
+    let ana = self.analysis()
+    return (has_key(ana, 'localss'))
+          \ ? ana['locals']
+          \ : {}
+  endif
+
+  let res = readfile(cache_name)
+  if empty(res)
+    let ana = self.analysis()
+    return (has_key(ana, 'locals'))
+          \ ? ana['locals']
+          \ : ana
+  endif
+
+  return json_decode(res[0])
+endfunction
+
 function! s:kondo.references(ns_name, var_name) abort
   let ana = self.analysis()
   let usages = get(ana, 'var-usages', [])
@@ -234,6 +332,22 @@ function! s:kondo.var_definition(ns_name, var_name) abort
     if get(d, 'ns', '') ==# a:ns_name
           \ && get(d, 'name', '') ==# a:var_name
       return d
+    endif
+  endfor
+endfunction
+
+function! s:kondo.local_definition(filename, row, name) abort
+  for usage in self.local_usages()
+    if get(usage, 'filename', '') ==# a:filename
+          \ && get(usage, 'row', 0) == a:row
+          \ && get(usage, 'name', '') ==# a:name
+      for definition in self.local_definitions()
+        if get(definition, 'id') == get(usage, 'id')
+          return definition
+        endif
+      endfor
+
+      return {}
     endif
   endfor
 endfunction

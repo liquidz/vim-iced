@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 20703
+let g:vim_iced_version = 20704
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -52,6 +52,10 @@ endif
 
 if !exists('g:iced_enable_clj_kondo_analysis')
   let g:iced_enable_clj_kondo_analysis = v:false
+endif
+
+if !exists('g:iced_enable_clj_kondo_local_analysis')
+  let g:iced_enable_clj_kondo_local_analysis = v:false
 endif
 
 if !exists('g:iced_default_key_mapping_leader')

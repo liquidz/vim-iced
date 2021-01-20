@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.7.3
+Version: 2.7.4
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -601,6 +601,12 @@ CLJ-KONDO                                  *vim-iced-static-analysis-clj-kondo*
   - |:IcedBrowseDependencies|
   - |:IcedAddMissing|
   - |:IcedAddNs|
+  - |:IcedDefJump|
+
+  LOCAL ANALYSIS
+  From clj-kondo v2021.01.20, local analysis is supported.
+  This can be used to support jumping to local vars.
+  To enable, see |g:iced_enable_clj_kondo_local_analysis|.
 
   TIPS
   - Cached files will be separated to var definition/usage and
@@ -1818,6 +1824,13 @@ g:iced_cache_directory
                                              *g:iced_enable_clj_kondo_analysis*
 g:iced_enable_clj_kondo_analysis
   If {v:true}, enable clj-kondo's analysis.
+  If `clj-kondo` is not installed, will install automatically.
+  Default value is `v:false`.
+  See also |vim-iced-static-analysis-clj-kondo|.
+
+                                       *g:iced_enable_clj_kondo_local_analysis*
+g:iced_enable_clj_kondo_local_analysis
+  If {v:true}, enable clj-kondo's local analysis.
   If `clj-kondo` is not installed, will install automatically.
   Default value is `v:false`.
   See also |vim-iced-static-analysis-clj-kondo|.
