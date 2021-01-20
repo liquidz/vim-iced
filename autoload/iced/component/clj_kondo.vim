@@ -214,6 +214,33 @@ function! s:kondo.namespace_definitions() abort
   return json_decode(res[0])
 endfunction
 
+function! s:kondo.local_usages() abort
+  if !g:iced_enable_clj_kondo_analysis
+    return {'error': 'clj-kondo: disabled'}
+  endif
+  if !g:iced_enable_clj_kondo_local_analysis
+    return {'error': 'clj-kondo local analysis: disabled'}
+  endif
+
+  let cache_name = self.local_usages_cache_name()
+  if !filereadable(cache_name)
+    let ana = self.analysis()
+    return (has_key(ana, 'local-usages'))
+          \ ? ana['local-usages']
+          \ : {}
+  endif
+
+  let res = readfile(cache_name)
+  if empty(res)
+    let ana = self.analysis()
+    return (has_key(ana, 'local-usages'))
+          \ ? ana['local-usages']
+          \ : ana
+  endif
+
+  return json_decode(res[0])
+endfunction
+
 function! s:kondo.references(ns_name, var_name) abort
   let ana = self.analysis()
   let usages = get(ana, 'var-usages', [])
