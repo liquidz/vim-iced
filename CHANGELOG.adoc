@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This change
 === Changed
 * Update `:IcedDefJump` to support jumping to local vars.
 ** Required enabling `g:iced_enable_clj_kondo_local_analysis` option.
+* Bump zprint to 1.1.1.
 // }}}
 
 == 2.7.3 (2021-01-18)
