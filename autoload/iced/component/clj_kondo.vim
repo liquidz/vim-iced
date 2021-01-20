@@ -133,7 +133,7 @@ function! s:kondo.analyze(callback) abort
   let config = g:iced_enable_clj_kondo_local_analysis
         \ ? '{:output {:analysis {:locals true} :format :json}}'
         \ : '{:output {:analysis true :format :json}}'
-	let command = ['sh', '-c', printf('clj-kondo --parallel --lint %s --config ''%s'' > %s',
+  let command = ['sh', '-c', printf('clj-kondo --parallel --lint %s --config ''%s'' > %s',
         \ s:user_dir(),
         \ config,
         \ s:temp_name(self.cache_name()),
