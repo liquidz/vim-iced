@@ -81,15 +81,33 @@ function! s:popup.open(texts, ...) abort
   endif
 
   let wininfo = getwininfo(win_getid())[0]
+  let max_width = float2nr(wininfo['width'] * 0.95)
+
+  " simulate `wrap` option because nvim's floating window
+  " does not support `max_height`
+  let texts = []
+  if get(opts, 'wrap', 1)
+    for text in a:texts
+      if len(text) > max_width
+        let texts += iced#util#split_by_length(text, max_width)
+      else
+        let texts += [text]
+      endif
+    endfor
+  else
+    let texts = copy(a:texts)
+  endif
+
   let title_width = len(get(opts, 'title', '')) + 3
   let eol_col = len(getline('.')) + 1
   let width = get(opts, 'width', -1)
   if width == -1
-    let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 2
+    let width = max(map(copy(texts), {_, v -> len(v)}) + [title_width]) + 2
+  endif
+  if width > max_width
+    let width = max_width
   endif
 
-  let max_width = wininfo['width'] - eol_col - 5
-  let texts = copy(a:texts)
   if has_key(opts, 'border')
     let pseudo_border = printf(' ; %s ', iced#util#char_repeat(width - 4, '-'))
 
