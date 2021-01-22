@@ -33,10 +33,15 @@ function! s:popup.open(texts, ...) abort
   endif
 
   let wininfo = getwininfo(win_getid())[0]
+  let max_width = float2nr(wininfo['width'] * 0.95)
+
   let title_width = len(get(opts, 'title', '')) + 3
   let width = get(opts, 'width', -1)
   if width == -1
     let width = max(map(copy(a:texts), {_, v -> len(v)}) + [title_width]) + 1
+  endif
+  if width > max_width
+    let width = max_width
   endif
   let min_height = len(a:texts)
 
@@ -83,7 +88,6 @@ function! s:popup.open(texts, ...) abort
   endif
 
   let col = org_col + wininfo['wincol']
-  let max_width = &columns - wininfo['wincol'] - org_col + 1
   let win_opts = {
         \ 'line': line,
         \ 'col': col,
