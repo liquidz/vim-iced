@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.7.4
+Version: 2.7.5
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -138,7 +138,7 @@ LEININGEN~
   {:user
    {:dependencies [[nrepl "0.8.3"]
                    [iced-nrepl "1.1.2"]
-                   [cider/cider-nrepl "0.25.6"]]
+                   [cider/cider-nrepl "0.25.7"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -166,7 +166,7 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.5.0"]
-      [cider/cider-nrepl "0.25.6"]
+      [cider/cider-nrepl "0.25.7"]
       [iced-nrepl "1.1.2"]])
 
   (swap! boot.repl/*default-middleware* concat
@@ -194,7 +194,7 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "2.5.0"]
-                  [cider/cider-nrepl "0.25.6"]
+                  [cider/cider-nrepl "0.25.7"]
                   [iced-nrepl "1.1.2"]]
   }
 <

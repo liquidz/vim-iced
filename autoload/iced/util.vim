@@ -219,5 +219,16 @@ function! iced#util#group_by(ls, key_fn) abort
   return result
 endfunction
 
+function! iced#util#split_by_length(s, len) abort
+  let s = a:s
+  let res = []
+  while ! empty(s)
+    let res += [strpart(s, 0, a:len)]
+    let s = strpart(s, a:len)
+  endwhile
+
+  return res
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

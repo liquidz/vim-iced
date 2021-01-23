@@ -162,3 +162,8 @@ function! s:suite.group_by_test() abort
         \         ],
         \ })
 endfunction
+
+function! s:suite.split_by_length_test() abort
+  call s:assert.equals(iced#util#split_by_length('foobar', 3), ['foo', 'bar'])
+  call s:assert.equals(iced#util#split_by_length('fooobarr', 3), ['foo', 'oba', 'rr'])
+endfunction

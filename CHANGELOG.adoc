@@ -2,6 +2,15 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.7.5 (2021-01-24)
+// {{{
+=== Changed
+* Bumped cider-nrepl to 0.25.7
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/309[#309]: Fixed popup window to work `wrap` correctly.
+// }}}
+
 == 2.7.4 (2021-01-21)
 // {{{
 === Added
