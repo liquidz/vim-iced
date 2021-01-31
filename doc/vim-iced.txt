@@ -236,7 +236,9 @@ REBEL READLINE~
     https://github.com/clojure-emacs/cider-nrepl/issues/447"
     []
     (require 'cider.nrepl)
-    (map resolve (var-get (ns-resolve 'cider.nrepl 'cider-middleware))))
+    (map ns-resolve 
+       ['cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl] 
+       ['wrap-classpath 'wrap-clojuredocs 'wrap-complete 'wrap-debug 'wrap-format 'wrap-info 'wrap-macroexpand 'wrap-ns 'wrap-out 'wrap-spec 'wrap-test 'wrap-trace 'wrap-undef 'wrap-xref]))
 
   (defn dev-middleware []
     (mapcat (fn [[ns syms]] (require ns) (map (partial ns-resolve ns) syms))
