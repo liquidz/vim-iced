@@ -241,6 +241,11 @@ REBEL READLINE~
   (defn dev-middleware []
     (mapcat (fn [[ns syms]] (require ns) (map (partial ns-resolve ns) syms))
     [['refactor-nrepl.middleware ['wrap-refactor]] ['iced.nrepl ['wrap-iced]]]))
+    
+  (defn nrepl-handler
+    "Re-implement cider-nrepl-handler so we can add middleware to the default list"
+    []
+    (apply nrepl-server/default-handler (concat (cider-middleware) (dev-middleware))))
    
   (defn start-nrepl-server! []
     (reset!
