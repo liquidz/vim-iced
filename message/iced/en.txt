@@ -36,7 +36,7 @@
   'finish_to_grep':            'Finished grepping: %s',
   'finish_to_install':         'Finish installing: %s',
   'finish_to_refresh':         'Finish refreshing %s.',
-  'grep_not_found':            'Didn't find "%s" in this project.',
+  'grep_not_found':            'Didn''t find "%s" in this project.',
   'hit_var_reference_cache':   'Hit var references cache.',
   'interrupted':               'Interrupted.',
   'invalid_cljs_env':          'Invalid CLJS environment.',
