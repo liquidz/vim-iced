@@ -9,6 +9,7 @@ let g:iced#related_ns#tail_patterns =
       \ get(g:, 'iced#related_ns#tail_patterns', ['', '-test', '-spec', '\.spec'])
 
 let g:iced#var_references#cache_dir = get(g:, 'iced#var_references#cache_dir', '/tmp')
+let g:iced#navigate#prefer_local_jump = get(g:, 'iced#navigate#prefer_local_jump', v:false)
 
 " definitions to jump to qualified keyword
 let g:iced#qualified_key_def_prefixes = get(g:, 'iced#qualified_key_def_prefixes', [])
@@ -144,7 +145,7 @@ function! iced#nrepl#navigate#jump_to_def(symbol) abort
   let kondo = iced#system#get('clj_kondo')
   if stridx(symbol, '::') == 0
     return s:jump_to_qualified_keyword(symbol)
-  elseif kondo.is_analyzed() && g:iced_enable_clj_kondo_local_analysis
+  elseif kondo.is_analyzed() && g:iced_enable_clj_kondo_local_analysis && g:iced#navigate#prefer_local_jump
     let local_def = kondo.local_definition(expand('%:p'), line('.'), symbol)
     if ! empty(local_def)
       return s:jump_to_local_definition(local_def)
@@ -225,7 +226,15 @@ function! s:jump(base_symbol, resp) abort
   let column = 0
 
   if iced#util#has_status(a:resp, 'no-info')
-    return iced#message#error('jump_not_found')
+    if ! g:iced#navigate#prefer_local_jump
+      let kondo = iced#system#get('clj_kondo')
+      let local_def = kondo.local_definition(expand('%:p'), line('.'), a:base_symbol)
+      if ! empty(local_def)
+        return s:jump_to_local_definition(local_def)
+      endif
+    else
+      return iced#message#error('jump_not_found')
+    endif
   endif
 
   if !has_key(a:resp, 'file')
