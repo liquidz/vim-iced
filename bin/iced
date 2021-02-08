@@ -399,9 +399,17 @@ case "$1" in
               echo_info "Overwrite Clojure CLI command with '${CLOJURE_CLI_CMD}'"
             fi
 
+            CLOJURE_CLI_VERSION=$(clojure -Sdescribe | head -1 |  cut -d' ' -f2 | tr -d '"')
+            MIN_MAIN_VERSION="1.10.1.672"
+            if [ "$(printf '%s\n' "$MIN_MAIN_VERSION" "$CLOJURE_CLI_VERSION" | sort -V | head -n1)" = "$MIN_MAIN_VERSION" ]; then
+                MAIN_FLAG="-M -m"
+            else
+                MAIN_FLAG="-m"
+            fi
+
             run "$CLOJURE_CLI_CMD \
                          $OPTIONS -Sdeps '{:deps {iced-repl/iced-repl {:local/root \"${PROJECT_DIR}\"} $(cli_deps_args ${TARGET_DEPENDENCIES}) }}' \
-                         -m nrepl.cmdline $(cli_middleware_args ${TARGET_MIDDLEWARES}) --interactive"
+                         $MAIN_FLAG nrepl.cmdline $(cli_middleware_args ${TARGET_MIDDLEWARES}) --interactive"
         elif [ $IS_SHADOW_CLJS -eq 1 ]; then
             echo_info 'shadow-cljs project is detected'
             echo_info 'For shadow-cljs project, start watching instead of starting REPL.'
