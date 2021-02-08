@@ -28,7 +28,19 @@ function! s:vt.set(text, ...) abort
     let max_width = wininfo['width'] - col
     let line += 1
   endif
-  let text = iced#util#shorten(a:text, max_width)
+
+  " Wrap texts
+  let indent_num = get(opt, 'indent', 0)
+  let texts = [strpart(a:text, 0, max_width)]
+  let rest_texts = iced#util#split_by_length(
+        \ strpart(a:text, max_width),
+        \ max_width - indent_num,
+        \ )
+  if indent_num > 0
+    let spc = iced#util#char_repeat(indent_num, ' ')
+    let rest_texts = map(rest_texts, {_, v -> printf('%s%s', spc, v)})
+  endif
+  let texts += rest_texts
 
   let popup_opts = {
         \ 'iced_context': {'last_col': col},
@@ -41,7 +53,7 @@ function! s:vt.set(text, ...) abort
     let popup_opts['auto_close'] = v:false
   endif
 
-  let self.last_winid = self.popup.open([text], popup_opts)
+  let self.last_winid = self.popup.open(texts, popup_opts)
   return self.last_winid
 endfunction
 
