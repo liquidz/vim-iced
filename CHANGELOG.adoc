@@ -2,6 +2,7 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.7.6 (2021-02-11)
 // {{{
 === Added
 * https://github.com/liquidz/vim-iced/issues/311[#311]: Supported newer main invocation for Clojure CLI.
