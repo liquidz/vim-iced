@@ -557,9 +557,11 @@ SKELETON                                                    *vim-iced-skeleton*
 JUMP TO DEFINITION                    *vim-iced-tag-jump*  *vim-iced-jump-to-def*
 
   |:IcedDefJump| to jump to definition.
-  It is also supported to jump to qualified keywords.
-  
+  It is also supported to jump to qualified keywords and local vars.
+
   To jump back, you can use default key mapping(<C-t>).
+
+  See also |g:iced#navigate#prefer_local_jump|.
 
 ==============================================================================
 EDITING S-EXP                                          *vim-iced-editing-s-exp*
@@ -1884,6 +1886,11 @@ g:iced_enable_clj_kondo_local_analysis
   If `clj-kondo` is not installed, will install automatically.
   Default value is `v:false`.
   See also |vim-iced-static-analysis-clj-kondo|.
+
+                                            *g:iced#navigate#prefer_local_jump*
+g:iced#navigate#prefer_local_jump
+  If {v:true}, change the behavior of |:IcedDefJump| to prefer local jumping.
+  Default value is `v:false`.
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
