@@ -400,15 +400,42 @@ function! s:got_var(var) abort
     return iced#message#error('not_found')
   endif
 
-  return iced#promise#call('iced#nrepl#op#refactor#find_symbol', [ns, name, file, line, column])
-        \.then(funcref('s:found_symbols', [name]))
+  let kondo = iced#system#get('clj_kondo')
+  if kondo.is_analyzed()
+    let references = kondo.references(ns, name)
+    let definition = kondo.var_definition(ns, name)
+    if ! empty(definition)
+      let references += [definition]
+    endif
+
+    if empty(references)
+      return iced#message#error('not_found')
+    endif
+
+    let io = iced#system#get('io')
+    let new_name = trim(io.input('New name: ', name))
+    let occurrences = map(references, {_, v -> {
+          \ 'file': get(v, 'filename'),
+          \ 'name': printf('%s/%s', get(v, 'to', get(v, 'ns')), get(v, 'name')),
+          \ 'line-beg': get(v, 'name-row'),
+          \ 'line-end': get(v, 'name-end-row'),
+          \ 'col-beg': get(v, 'name-col'),
+          \ 'col-end': get(v, 'name-end-col'),
+          \ }})
+    call s:rename_occurrences(occurrences, name, new_name)
+    return iced#promise#resolve(v:true)
+
+  else
+    return iced#promise#call('iced#nrepl#op#refactor#find_symbol', [ns, name, file, line, column])
+          \.then(funcref('s:found_symbols', [name]))
+  endif
 endfunction
 
 function! s:found_symbols(old_name, symbols) abort
   let edn = iced#system#get('edn')
 
   let io = iced#system#get('io')
-  let new_name = trim(io.input('New name: '))
+  let new_name = trim(io.input('New name: ', a:old_name))
   if empty(new_name)
     return iced#message#info('canceled')
   endif
@@ -416,12 +443,17 @@ function! s:found_symbols(old_name, symbols) abort
   let symbols = filter(a:symbols, {i, v -> has_key(v, 'occurrence')})
   let occurrences = map(symbols, {i, v -> iced#promise#sync(edn.decode, [v['occurrence']])})
 
+  return s:rename_occurrences(occurrences, a:old_name, new_name)
+endfunction
+
+function! s:rename_occurrences(occurrences, old_name, new_name) abort
+  let occurrences = copy(a:occurrences)
   " occurrence to the right should be renamed first to avoid shifting column numbers
   call sort(occurrences, {a, b -> b['col-beg'] - a['col-beg']})
 
   let ctx = iced#util#save_context()
   try
-    call map(occurrences, {i, v -> s:rename_occurrence(a:old_name, new_name, v)})
+    call map(occurrences, {i, v -> s:rename_occurrence(a:old_name, a:new_name, v)})
   finally
     call iced#util#restore_context(ctx)
   endtry

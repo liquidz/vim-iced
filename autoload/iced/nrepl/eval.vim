@@ -51,6 +51,7 @@ function! iced#nrepl#eval#out(resp, ...) abort
       let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
       let virtual_text_opt['highlight'] = 'Comment'
       let virtual_text_opt['auto_clear'] = v:true
+      let virtual_text_opt['indent'] = 3 " len('=> ')
 
       call iced#system#get('virtual_text').set(
             \ printf('=> %s', a:resp['value']),

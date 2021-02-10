@@ -2,6 +2,17 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 2.7.6 (2021-02-11)
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/issues/311[#311]: Supported newer main invocation for Clojure CLI.
+* Added `g:iced#navigate#prefer_local_jump` option.
+** Change the behavior of `:IcedDefJump` to prefer local jumping.
+
+=== Changed
+* Changed `:IcedDefJump` not to prefer local jumping.
+// }}}
+
 == 2.7.5 (2021-01-24)
 // {{{
 === Changed
