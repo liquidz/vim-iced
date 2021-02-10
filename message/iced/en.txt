@@ -11,7 +11,7 @@
   'auto_connect':              'Auto connecting...',
   'cache_cleared':             'Cache cleared.',
   'canceled':                  'Cancelled.',
-  'canceled_cljs_repl':        'Cancelled startin the CLJS repl.',
+  'canceled_cljs_repl':        'Cancelled starting the CLJS repl.',
   'cleaned':                   'Cleaned.',
   'cleared':                   'Cleared.',
   'clojuredocs_cljs_error':    'Tried searching for "%s", but ClojureDocs does not have docs for ClojureScript.',
