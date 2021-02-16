@@ -1,10 +1,11 @@
 iced
-621cda4f832d2f43f3b15cdbfb70ca36b219efc2
+f3681f09ee1e7de20960e1fb38fdfb59c3978f30
 
 Async.Promise
 Data.Dict
 Data.List
 Data.String
+Data.String.Interpolation
 Locale.Message
 Vim.Buffer
 Vim.BufferManager
