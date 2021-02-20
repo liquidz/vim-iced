@@ -160,6 +160,7 @@ command!          IcedExtractFunction       call iced#nrepl#refactor#extract_fun
 command!          IcedAddArity              call iced#nrepl#refactor#add_arity()
 command!          IcedMoveToLet             call iced#let#move_to_let()
 command! -nargs=? IcedRenameSymbol          call iced#nrepl#refactor#rename_symbol(<q-args>)
+command!          IcedYankNsName            call iced#nrepl#ns#yank_name()
 
 command! -nargs=? -complete=custom,iced#nrepl#debug#complete_tapped
       \ IcedBrowseTapped                    call iced#nrepl#debug#browse_tapped(<q-args>)
@@ -278,6 +279,7 @@ nnoremap <silent> <Plug>(iced_extract_function)         :<C-u>IcedExtractFunctio
 nnoremap <silent> <Plug>(iced_add_arity)                :<C-u>IcedAddArity<CR>
 nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
 nnoremap <silent> <Plug>(iced_rename_symbol)            :<C-u>IcedRenameSymbol<CR>
+nnoremap <silent> <Plug>(iced_yank_ns_name)             :<C-u>IcedYankNsName<CR>
 
 nnoremap <silent> <Plug>(iced_browse_tapped)            :<C-u>IcedBrowseTapped<CR>
 nnoremap <silent> <Plug>(iced_delete_tapped)            :<C-u>IcedDeleteTapped<CR>
@@ -445,10 +447,11 @@ function! s:default_key_mappings() abort
 
   "" Misc
   "" ------------------------------------------------------------------------
-  call s:define_mapping('nmap', '==',        '<Plug>(iced_format)')
-  call s:define_mapping('nmap', '=G',        '<Plug>(iced_format_all)')
-  call s:define_mapping('nmap', '<Leader>*', '<Plug>(iced_grep)')
-  call s:define_mapping('nmap', '<Leader>/', ':<C-u>IcedGrep<Space>')
+  call s:define_mapping('nmap', '==',         '<Plug>(iced_format)')
+  call s:define_mapping('nmap', '=G',         '<Plug>(iced_format_all)')
+  call s:define_mapping('nmap', '<Leader>*',  '<Plug>(iced_grep)')
+  call s:define_mapping('nmap', '<Leader>/',  ':<C-u>IcedGrep<Space>')
+  call s:define_mapping('nmap', '<Leader>yn', '<Plug>(iced_yank_ns_name)')
 endfunction
 
 if exists('g:iced_enable_default_key_mappings')

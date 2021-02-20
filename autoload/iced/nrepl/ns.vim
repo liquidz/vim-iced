@@ -286,5 +286,9 @@ function! iced#nrepl#ns#unalias(alias_name, ...) abort
   return iced#nrepl#eval(code, Callback)
 endfunction
 
+function! iced#nrepl#ns#yank_name() abort
+  call setreg('""', iced#nrepl#ns#name_by_buf())
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
