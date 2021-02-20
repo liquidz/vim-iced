@@ -50,7 +50,6 @@ function! s:kondo.analyzed(cache_name, callback) abort
 
   call writefile([printf('sqlite3 %s < %s', s:temp_name(self.db_name), sql_file)],
         \ shell_file, 'a')
-  "call self.job_out.redir(['sh', shell_file], {_ -> s:imported_to_sqlite(self.db_name, rm_files)})
   call self.job_out.redir(['sh', shell_file], {_ -> s:analyzed__analyzed(self.db_name, rm_files, a:callback)})
 endfunction
 
