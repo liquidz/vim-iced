@@ -11,6 +11,7 @@ VITAL_MODULES = \
 		Data.Dict \
 		Data.List \
 		Data.String \
+		Data.String.Interpolation \
 		Locale.Message \
 		Vim.Buffer \
 		Vim.BufferManager \

@@ -14,6 +14,7 @@
   'canceled_cljs_repl':        'Cancelled starting the CLJS repl.',
   'cleaned':                   'Cleaned.',
   'cleared':                   'Cleared.',
+  'clj_kondo_analyzing':       'Analyzing yet. Please wait a moment...',
   'clojuredocs_cljs_error':    'Tried searching for "%s", but ClojureDocs does not have docs for ClojureScript.',
   'clojuredocs_not_found':     'Cannot find "%s" in ClojureDocs.',
   'component_error':           'Failed to start component: %s.',

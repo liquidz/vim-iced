@@ -402,6 +402,10 @@ function! s:got_var(var) abort
 
   let kondo = iced#system#get('clj_kondo')
   if kondo.is_analyzed()
+    if kondo.is_analyzing()
+      return iced#message#warning('clj_kondo_analyzing')
+    endif
+
     let references = kondo.references(ns, name)
     let definition = kondo.var_definition(ns, name)
     if ! empty(definition)
@@ -414,6 +418,10 @@ function! s:got_var(var) abort
 
     let io = iced#system#get('io')
     let new_name = trim(io.input('New name: ', name))
+    if empty(new_name)
+      return iced#message#info('canceled')
+    endif
+
     let occurrences = map(references, {_, v -> {
           \ 'file': get(v, 'filename'),
           \ 'name': printf('%s/%s', get(v, 'to', get(v, 'ns')), get(v, 'name')),
