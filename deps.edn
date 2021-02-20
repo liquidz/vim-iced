@@ -1,6 +1,6 @@
 {:paths ["clj/repl"]
  :deps {nrepl/nrepl {:mvn/version "0.8.3"}
-        refactor-nrepl/refactor-nrepl {:mvn/version "2.5.0"}
+        refactor-nrepl/refactor-nrepl {:mvn/version "2.5.1"}
         cider/cider-nrepl {:mvn/version "0.25.7"}
         iced-nrepl/iced-nrepl {:mvn/version "1.1.2"}}
  :__middlewares__
