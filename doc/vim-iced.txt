@@ -1274,6 +1274,10 @@ COMMANDS                                                    *vim-iced-commands*
   Key is mapped to |<Plug>(iced_start_sideloader)|.
   See also |vim-iced-sideloader|.
 
+                                                              *:IcedYankNsName*
+:IcedYankNsName
+  Yank the current namespace name into `"` register.
+
 ------------------------------------------------------------------------------
 FUNCTIONS                                                  *vim-iced-functions*
 
@@ -1694,6 +1698,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                  *<Plug>(iced_stop_sideloader)*
 <Plug>(iced_stop_sideloader)
   Same as |:IcedStopSideloader|.
+
+                                                    *<Plug>(iced_yank_ns_name)*
+<Plug>(iced_yank_ns_name)
+  Same as |:IcedYankNsName|.
 
 ==============================================================================
 CUSTOMIZING                                              *vim-iced-customizing*
@@ -2352,6 +2360,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>dlt  <Plug>(iced_clear_tapped)
   n       <Leader>*    <Plug>(iced_grep)
   n       <Leader>/    :<C-u>IcedGrep<Space>
+  n       <Leader>yn   <Plug>(iced_yank_ns_name)
   n       ==           <Plug>(iced_format)
   n       =G           <Plug>(iced_format_all)
 
