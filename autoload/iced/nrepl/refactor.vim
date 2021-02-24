@@ -424,7 +424,12 @@ function! s:got_var(var) abort
   let kondo = iced#system#get('clj_kondo')
   if kondo.is_analyzed()
     if kondo.is_analyzing()
-      return iced#message#warning('clj_kondo_analyzing')
+      let res = iced#system#get('io').input(iced#message#get('clj_kondo_analyzing'))
+      " for line break
+      echom ' '
+      if res !=# '' && res !=# 'y' && res !=# 'Y'
+        return iced#message#warning('canceled')
+      endif
     endif
 
     let references = kondo.references(ns, name)
