@@ -57,7 +57,7 @@ function! s:kondo.analyze(callback) abort
 
   let self.__is_analyzing = v:true
   let config = g:iced_enable_clj_kondo_local_analysis
-       \ ? '{:output {:analysis {:locals true} :format :json}}'
+       \ ? '{:output {:analysis {:locals true :keywords true} :format :json}}'
        \ : '{:output {:analysis true :format :json}}'
   " NOTE: Using `writefile` will freeze vim/nvim just a little
   let command = ['sh', '-c', printf('clj-kondo --parallel --lint %s --config ''%s'' > %s',
@@ -123,9 +123,7 @@ function! s:kondo.namespace_definitions() abort
   endif
 
   let ana = self.analysis()
-  return (has_key(ana, 'namespace-definitions'))
-        \ ? ana['namespace-definitions']
-        \ : {}
+  return get(ana, 'namespace-definitions', [])
 endfunction
 
 function! s:kondo.local_usages() abort
@@ -141,9 +139,7 @@ function! s:kondo.local_usages() abort
   endif
 
   let ana = self.analysis()
-  return (has_key(ana, 'local-usages'))
-        \ ? ana['local-usages']
-        \ : []
+  return get(ana, 'local-usages', [])
 endfunction
 
 function! s:kondo.local_definitions() abort
@@ -159,9 +155,54 @@ function! s:kondo.local_definitions() abort
   endif
 
   let ana = self.analysis()
-  return (has_key(ana, 'locals'))
-        \ ? ana['locals']
-        \ : []
+  return get(ana, 'locals', [])
+endfunction
+
+function! s:kondo.keywords() abort
+  if !g:iced_enable_clj_kondo_analysis
+    return {'error': 'clj-kondo: disabled'}
+  endif
+  if !g:iced_enable_clj_kondo_local_analysis
+    return {'error': 'clj-kondo local analysis: disabled'}
+  endif
+
+  if has_key(self.option, 'keywords')
+    return self.option.keywords()
+  endif
+
+  let ana = self.analysis()
+  return get(ana, 'keywords', [])
+endfunction
+
+function! s:kondo.keyword_usages(kw_name) abort
+  if !g:iced_enable_clj_kondo_analysis
+    return {'error': 'clj-kondo: disabled'}
+  endif
+  if !g:iced_enable_clj_kondo_local_analysis
+    return {'error': 'clj-kondo local analysis: disabled'}
+  endif
+
+  if has_key(self.option, 'keyword_usages')
+    return self.option.keyword_usages(a:kw_name)
+  endif
+
+  let ns = ''
+  let name = ''
+  let idx = stridx(a:kw_name, '/')
+
+  if idx != -1
+    let ns = a:kw_name[0:idx-1]
+    let name = a:kw_name[idx+1:]
+  else
+    let name = a:kw_name
+  endif
+
+  let kws = copy(self.keywords())
+  if ! empty(ns)
+    return filter(kws, {_, v -> get(v, 'ns', '') ==# ns && get(v, 'name', '') ==# name})
+  else
+    return filter(kws, {_, v -> get(v, 'name', '') ==# name})
+  endif
 endfunction
 
 function! s:kondo.references(ns_name, var_name) abort

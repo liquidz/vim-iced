@@ -30,7 +30,7 @@ function! s:kondo.analyzed(cache_name, callback) abort
   let tmp = tempname()
   let shell_file = printf('%s.sh', tmp)
   let sql_file = printf('%s.sql', tmp)
-  let key_arr = ['var-definitions', 'var-usages', 'namespace-usages', 'namespace-definitions', 'local-usages', 'locals']
+  let key_arr = ['var-definitions', 'var-usages', 'namespace-usages', 'namespace-definitions', 'local-usages', 'locals', 'keywords']
   let rm_files = [shell_file, sql_file]
 
   for key in key_arr
@@ -93,6 +93,27 @@ function! s:kondo.local_definition(filename, row, name) abort
         \ {'filename': a:filename, 'row': a:row, 'name': a:name})
   let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
   return (empty(res) ? {} : json_decode(res))
+endfunction
+
+function! s:kondo.keyword_usages(kw_name) abort
+  if ! filereadable(self.db_name) | return {} | endif
+
+  let sql = ''
+  let idx = stridx(a:kw_name, '/')
+
+  if idx != -1
+    let sql = s:I.interpolate('select keywords.json from keywords where json_extract(keywords.json, "$.ns") = "${ns}" and json_extract(keywords.json, "$.name") = "${name}"',
+        \ {'ns': a:kw_name[0:idx-1],
+        \  'name': a:kw_name[idx+1:]})
+  else
+    let sql = s:I.interpolate('select keywords.json from keywords where json_extract(keywords.json, "$.name") = "${name}"',
+        \ {'name': a:kw_name})
+  endif
+
+  let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
+  if empty(res) | return [] | endif
+  let res = printf('[%s]', substitute(res, '\n', ',', 'g'))
+  return json_decode(res)
 endfunction
 
 function! iced#component#clj_kondo#sqlite#start(this) abort

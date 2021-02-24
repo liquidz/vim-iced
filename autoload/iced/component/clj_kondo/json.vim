@@ -34,6 +34,10 @@ function! s:kondo.local_usages_cache_name() abort
   return printf('%s/%s_local_usages.json', self.cache_dir, substitute(self.user_dir, '/', '_', 'g'))
 endfunction
 
+function! s:kondo.keywords_cache_name() abort
+  return printf('%s/%s_keywords.json', self.cache_dir, substitute(self.user_dir, '/', '_', 'g'))
+endfunction
+
 function! s:kondo.analyzed(cache_name, callback) abort
   let partials = {
         \ 'namespace-usages': self.namespace_usages_cache_name(),
@@ -43,6 +47,7 @@ function! s:kondo.analyzed(cache_name, callback) abort
     call extend(partials, {
           \ 'local-usages': self.local_usages_cache_name(),
           \ 'locals': self.local_definitions_cache_name(),
+          \ 'keywords': self.keywords_cache_name(),
           \ })
   endif
 
@@ -104,6 +109,16 @@ endfunction
 
 function! s:kondo.local_usages() abort
   let cache_name = self.local_usages_cache_name()
+  if !filereadable(cache_name) | return [] | endif
+
+  let res = readfile(cache_name)
+  if empty(res) | return [] | endif
+
+  return json_decode(res[0])
+endfunction
+
+function! s:kondo.keywords() abort
+  let cache_name = self.keywords_cache_name()
   if !filereadable(cache_name) | return [] | endif
 
   let res = readfile(cache_name)
