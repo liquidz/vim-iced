@@ -1825,7 +1825,7 @@ g:iced#nrepl#complete#ignore_context
                                        *g:iced_enable_enhanced_cljs_completion*
 g:iced_enable_enhanced_cljs_completion
   If {v:true}, enable enhanced ClojureScript completion.
-  Default value is `v:true`.
+  Default value is `v:false`.
 
                                                           *g:iced#clap#options*
 g:iced#clap#options

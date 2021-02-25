@@ -43,7 +43,7 @@ if !exists('g:iced_enable_enhanced_cljs_completion')
 endif
 
 if !exists('g:iced_enable_enhanced_definition_extraction')
-  let g:iced_enable_enhanced_definition_extraction = v:true
+  let g:iced_enable_enhanced_definition_extraction = v:false
 endif
 
 if !exists('g:iced_formatter')
