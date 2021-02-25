@@ -10,7 +10,7 @@ BASE_MIDDLEWARES='cider.nrepl/wrap-classpath cider.nrepl/wrap-clojuredocs cider.
 
 CLJS_DEPENDENCIES='cider/piggieback:0.5.2'
 CLJS_MIDDLEWARES='cider.piggieback/wrap-cljs-repl'
-KAOCHA_DEPENDENCIES='kaocha-nrepl/kaocha-nrepl:1.0.3'
+KAOCHA_DEPENDENCIES='kaocha-nrepl/kaocha-nrepl:1.0.4'
 KAOCHA_MIDDLEWARES='kaocha-nrepl.core/wrap-kaocha'
 
 IS_LEININGEN=0
