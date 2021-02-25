@@ -142,10 +142,8 @@ command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
 command!          IcedBrowseRelatedNamespace call iced#nrepl#navigate#related_ns()
 command!          IcedBrowseSpec             call iced#nrepl#spec#browse()
 command!          IcedBrowseTestUnderCursor  call iced#nrepl#navigate#test()
-command!          IcedBrowseReferences       call iced#nrepl#navigate#browse_references()
-command!          IcedBrowseDependencies     call iced#nrepl#navigate#browse_dependencies()
-command! -nargs=? IcedBrowseVarReferences    call iced#nrepl#navigate#browse_var_references(<q-args>)
-command! -nargs=? IcedBrowseVarDependencies  call iced#nrepl#navigate#browse_var_dependencies(<q-args>)
+command! -nargs=? IcedBrowseReferences       call iced#nrepl#navigate#browse_references(<q-args>)
+command! -nargs=? IcedBrowseDependencies     call iced#nrepl#navigate#browse_dependencies(<q-args>)
 
 command!          IcedClearNsCache          call iced#nrepl#ns#clear_cache()
 command!          IcedClearCtrlpCache       call ctrlp#iced#cache#clear()
@@ -263,8 +261,6 @@ nnoremap <silent> <Plug>(iced_browse_spec)              :<C-u>IcedBrowseSpec<CR>
 nnoremap <silent> <Plug>(iced_browse_test_under_cursor) :<C-u>IcedBrowseTestUnderCursor<CR>
 nnoremap <silent> <Plug>(iced_browse_references)        :<C-u>IcedBrowseReferences<CR>
 nnoremap <silent> <Plug>(iced_browse_dependencies)      :<C-u>IcedBrowseDependencies<CR>
-nnoremap <silent> <Plug>(iced_browse_var_references)    :<C-u>IcedBrowseVarReferences<CR>
-nnoremap <silent> <Plug>(iced_browse_var_dependencies)  :<C-u>IcedBrowseVarDependencies<CR>
 
 nnoremap <silent> <Plug>(iced_clear_ns_cache)           :<C-u>IcedClearNsCache<CR>
 nnoremap <silent> <Plug>(iced_clear_ctrlp_cache)        :<C-u>IcedClearCtrlpCache<CR>
@@ -430,8 +426,6 @@ function! s:default_key_mappings() abort
   call s:define_mapping('nmap', '<Leader>bt',  '<Plug>(iced_browse_test_under_cursor)')
   call s:define_mapping('nmap', '<Leader>br',  '<Plug>(iced_browse_references)')
   call s:define_mapping('nmap', '<Leader>bd',  '<Plug>(iced_browse_dependencies)')
-  call s:define_mapping('nmap', '<Leader>bvr', '<Plug>(iced_browse_var_references)')
-  call s:define_mapping('nmap', '<Leader>bvd', '<Plug>(iced_browse_var_dependencies)')
 
   "" Jumping cursor (<Leader>j)
   "" ------------------------------------------------------------------------
