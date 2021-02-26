@@ -1139,6 +1139,12 @@ COMMANDS                                                    *vim-iced-commands*
   Namespaces and its aliases are cached for performance.
   |:IcedClearNsCache| will clear this cache.
 
+  If {symbol} is a Java class, vim-iced will find candidates by pre-defined
+  class mappings.
+  https://github.com/liquidz/iced-nrepl/blob/main/resources/java_classes.edn
+
+  To add your own classes, see |g:iced#ns#class_map| option.
+
                                                                    *:IcedAddNs*
 :IcedAddNs [{ns}]
   Add require to `ns` form.
@@ -1899,6 +1905,18 @@ g:iced_enable_clj_kondo_local_analysis
 g:iced#navigate#prefer_local_jump
   If {v:true}, change the behavior of |:IcedDefJump| to prefer local jumping.
   Default value is `v:false`.
+
+                                                          *g:iced#ns#class_map*
+g:iced#ns#class_map
+  Custom class mappings for |:IcedAddMissing| command.
+
+  E.g. >
+  let g:iced#ns#class_map = {
+        \ "foo.bar": ["Baz"],
+        \ "java.sql": ["Timestamp"],
+        \ }
+<
+  Default value is `{}`.
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
