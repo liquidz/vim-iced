@@ -138,7 +138,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.8.3"]
-                   [iced-nrepl "1.1.2"]
+                   [iced-nrepl "1.2.0"]
                    [cider/cider-nrepl "0.25.7"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -155,7 +155,7 @@ LEININGEN~
                                       cider.nrepl/wrap-undef
                                       cider.nrepl/wrap-xref
                                       iced.nrepl/wrap-iced]}
-    :plugins [[refactor-nrepl "2.5.0"]]}}
+    :plugins [[refactor-nrepl "2.5.1"]]}}
 <
 
                                                          *vim-iced-manual-boot*
@@ -166,9 +166,9 @@ BOOT~
   (require (quote boot.repl))
 
   (swap! boot.repl/*default-dependencies* concat
-    '[[refactor-nrepl "2.5.0"]
+    '[[refactor-nrepl "2.5.1"]
       [cider/cider-nrepl "0.25.7"]
-      [iced-nrepl "1.1.2"]])
+      [iced-nrepl "1.2.0"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -194,9 +194,9 @@ SHADOW-CLJS~
   shadow-cljs.edn
 >
   {
-   :dependencies [[refactor-nrepl "2.5.0"]
+   :dependencies [[refactor-nrepl "2.5.1"]
                   [cider/cider-nrepl "0.25.7"]
-                  [iced-nrepl "1.1.2"]]
+                  [iced-nrepl "1.2.0"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
