@@ -210,20 +210,26 @@ function! s:kondo.references(ns_name, var_name) abort
     return self.option.references(a:ns_name, a:var_name)
   endif
 
+  " Remove quote if exists
+  let var_name = trim(a:var_name, "'")
+
   let ana = self.analysis()
   let usages = get(ana, 'var-usages', [])
   return filter(usages, {_, usage ->
         \ (get(usage, 'to', '') ==# a:ns_name
-        \  && get(usage, 'name', '') ==# a:var_name)})
+        \  && get(usage, 'name', '') ==# var_name)})
 endfunction
 
 function! s:kondo.dependencies(ns_name, var_name) abort
+  " Remove quote if exists
+  let var_name = trim(a:var_name, "'")
+
   let ana = self.analysis()
   let usages = get(ana, 'var-usages', [])
   let definitions = get(ana, 'var-definitions', [])
   let dependencies = filter(usages, {_, usage ->
         \ (get(usage, 'from', '') ==# a:ns_name
-        \  && get(usage, 'from-var', '') ==# a:var_name
+        \  && get(usage, 'from-var', '') ==# var_name
         \  && get(usage, 'to', '') !=# 'clojure.core')})
   let deps_dict = iced#util#list_to_dict(dependencies,
         \ {d -> printf('%s/%s', get(d, 'to', ''), get(d, 'name', ''))}, {d -> v:true})
@@ -272,10 +278,12 @@ function! s:kondo.ns_aliases(...) abort
 endfunction
 
 function! s:kondo.var_definition(ns_name, var_name) abort
+  " Remove quote if exists
+  let var_name = trim(a:var_name, "'")
   let ana = self.analysis()
   for d in get(ana, 'var-definitions', [])
     if get(d, 'ns', '') ==# a:ns_name
-          \ && get(d, 'name', '') ==# a:var_name
+          \ && get(d, 'name', '') ==# var_name
       return d
     endif
   endfor
@@ -286,10 +294,13 @@ function! s:kondo.local_definition(filename, row, name) abort
     return self.option.local_definition(a:filename, a:row, a:name)
   endif
 
+  " Remove quote if exists
+  let name = trim(a:name, "'")
+
   for usage in self.local_usages()
     if get(usage, 'filename', '') ==# a:filename
           \ && get(usage, 'row', 0) == a:row
-          \ && get(usage, 'name', '') ==# a:name
+          \ && get(usage, 'name', '') ==# name
       for definition in self.local_definitions()
         if get(definition, 'id') == get(usage, 'id')
           return definition

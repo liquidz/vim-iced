@@ -61,9 +61,11 @@ endfunction
 function! s:kondo.references(ns_name, var_name) abort
   if ! filereadable(self.db_name) | return [] | endif
 
+  " Remove quote if exists
+  let var_name = trim(a:var_name, "'")
   let sql = s:I.interpolate('select * from var_usages where json_extract(json, "$.to") = "${ns_name}" and json_extract(json, "$.name") = "${var_name}"',
         \ {'ns_name': a:ns_name,
-        \  'var_name': a:var_name})
+        \  'var_name': var_name})
   let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
 
   if empty(res) | return [] | endif
@@ -89,8 +91,10 @@ endfunction
 function! s:kondo.local_definition(filename, row, name) abort
   if ! filereadable(self.db_name) | return {} | endif
 
+  " Remove quote if exists
+  let name = trim(a:name, "'")
   let sql = s:I.interpolate('select locals.json from local_usages inner join locals on json_extract(locals.json, "$.id") = json_extract(local_usages.json, "$.id") where json_extract(local_usages.json, "$.filename") = "${filename}" and json_extract(local_usages.json, "$.row") = ${row} and json_extract(local_usages.json, "$.name") = "${name}" limit 1',
-        \ {'filename': a:filename, 'row': a:row, 'name': a:name})
+        \ {'filename': a:filename, 'row': a:row, 'name': name})
   let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
   return (empty(res) ? {} : json_decode(res))
 endfunction
