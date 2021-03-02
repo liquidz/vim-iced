@@ -1874,7 +1874,7 @@ g:iced#nrepl#source#finding_max_depth
 g:iced#repl#babashka_repl_type
   REPL type of server launching by babashka.
   `'socket'` or `'nrepl'` can be set.
-  Default value is `'socket'`.
+  Default value is `'nrepl'`.
 
                                                        *g:iced_cache_directory*
 g:iced_cache_directory
