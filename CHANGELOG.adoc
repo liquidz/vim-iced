@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file. This change
 
 === Changed
 * Bumped refactor-nrepl to 2.5.1.
-* Bumped iced-nrepl to 1.2.0.
+* Bumped iced-nrepl to 1.2.1.
 * Update `IcedAddMissing` command to support to add missing classes.
 * (Breaking) Changed default value for `g:iced_enable_enhanced_definition_extraction` option to `v:false`.
 ** `v:true` will lead taking time for `IcedSourceShow` by default.
