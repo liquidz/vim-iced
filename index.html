@@ -944,7 +944,11 @@ With above vim-plug setting,  <code>~/.vim/plugged/vim-iced/bin</code> is the di
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="shell"><span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/path/to/repo/vim-iced/bin</code></pre>
+<pre class="rouge highlight"><code data-lang="shell"><span class="c"># For bash or zsh</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:~/.vim/plugged/vim-iced/bin
+
+<span class="c"># For fish</span>
+<span class="nv">$ </span><span class="nb">set</span> <span class="nt">-x</span> PATH ~/.vim/plugged/vim-iced/bin <span class="nv">$PATH</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1510,11 +1514,14 @@ If no arguments are passed, the keyword under the cursor is used.</p></td>
 <p>vim-iced provides <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedDefJump">IcedDefJump</a> command for jumping to definition.</p>
 </div>
 <div class="paragraph">
-<p>It is also supported to jump to qualified keywords.</p>
+<p>It is also supported to jump to qualified keywords and local vars.</p>
 </div>
 <div class="paragraph">
 <p>If you jumped to a definition with above command, vim-iced add the current cursor position to Vim&#8217;s <a href="https://vim-jp.org/vimdoc-en/tagsrch.html#tagstack">tag stack</a>.
 So you can go back easily with <a href="https://vim-jp.org/vimdoc-en/tagsrch.html#CTRL-T">&lt;C-t&gt;</a>.</p>
+</div>
+<div class="paragraph">
+<p>See also <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23navigate%23prefer_local_jump">g:iced#navigate#prefer_local_jump</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2720,6 +2727,22 @@ The code will be passed to <code>cider.piggieback/cljs-repl</code>.</p></td>
 <h3 id="clojurescript_shadow_cljs">15.2. shadow-cljs</h3>
 <div class="paragraph">
 <p>To start CLJS REPL with shadow-cljs, you need following steps.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>iced</code> command uses the existence of <code>shadow-cljs.edn</code> file for detecting shadow-cljs project for now.
+Thus, if you are using shadow-cljs via Leiningen, you need to setup manually (c.f. <a href="https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-manual-shadow-cljs">Manual Install</a>)
+instead of the following steps.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -4560,7 +4583,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-01-20 21:32:36 UTC
+Last updated 2021-03-05 23:19:30 UTC
 </div>
 </div>
 </body>
