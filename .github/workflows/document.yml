@@ -16,7 +16,7 @@ jobs:
         if: github.ref == 'refs/heads/dev'
         run: asciidoctor -o target/html/index.html doc/pages/index.adoc -a 'help_html=https://vim-iced-nightly.netlify.com/vim-iced.html'
       - name: build html for PROD
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         run: asciidoctor -o target/html/index.html doc/pages/index.adoc
 
       - uses: actions/upload-artifact@master
@@ -62,7 +62,7 @@ jobs:
           args: deploy --dir=document --prod
 
   deploy:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     needs: [asciidoc, help]
     runs-on: ubuntu-latest
     steps:
