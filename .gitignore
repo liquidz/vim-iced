@@ -19,3 +19,4 @@ coverage.xml
 .clj-kondo/.cache
 /vimhelp
 .DS_Store
+**/.lsp

@@ -114,5 +114,44 @@ function! iced#nrepl#ns#util#add(ns_name, symbol_alias) abort
   call iced#nrepl#ns#util#replace(code)
 endfunction
 
+function! iced#nrepl#ns#util#add_class(class_name) abort
+  let code = iced#nrepl#ns#get()
+  let code = iced#nrepl#ns#util#add_import_form(code)
+  let code = iced#nrepl#ns#util#add_class_to_import(code, a:class_name)
+  call iced#nrepl#ns#util#replace(code)
+endfunction
+
+function! iced#nrepl#ns#util#add_import_form(ns_code) abort
+  let i = stridx(a:ns_code, '(:import')
+  if i != -1
+    return a:ns_code
+  endif
+
+  let i = strridx(a:ns_code, ')')
+  let head = a:ns_code[0:i-1]
+  let tail = strpart(a:ns_code, i)
+  return printf("%s\n(:import)%s", head, tail)
+endfunction
+
+function! iced#nrepl#ns#util#add_class_to_import(ns_code, class_name) abort
+  let prefix = '(:import'
+  let impstart = stridx(a:ns_code, prefix)
+
+  let name = split(a:class_name, '\.', v:true)[-1]
+  if empty(name) | return | endif
+
+  let head = trim(a:ns_code[0:impstart+(len(prefix)-1)])
+  let tail = trim(strpart(a:ns_code, impstart + len(prefix)))
+
+  for postfix in [')', "\r", "\n", "\t", ' ']
+    if stridx(tail, printf('%s%s', name, postfix)) != -1
+      call iced#message#info('class_exists', name)
+      return a:ns_code
+    endif
+  endfor
+
+  return printf("%s\n%s\n%s", head, a:class_name, tail)
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

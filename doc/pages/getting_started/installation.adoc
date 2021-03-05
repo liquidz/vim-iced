@@ -66,7 +66,11 @@ With above vim-plug setting,  `~/.vim/plugged/vim-iced/bin` is the directory to 
 
 [source,shell]
 ----
-$ export PATH=$PATH:/path/to/repo/vim-iced/bin
+# For bash or zsh
+$ export PATH=$PATH:~/.vim/plugged/vim-iced/bin
+
+# For fish
+$ set -x PATH ~/.vim/plugged/vim-iced/bin $PATH
 ----
 
 To confirm setup, run the following command.

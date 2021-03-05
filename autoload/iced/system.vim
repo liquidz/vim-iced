@@ -54,8 +54,14 @@ let s:org_system_map = {
       \                         'requires': ['installer', 'format_native_image']},
       \ 'find':         {'start': 'iced#component#find#start',
       \                  'requires': ['job_out']},
+      \ 'clj_kondo_option': {'start': (executable('jq') && executable('sqlite3')
+      \                               ? 'iced#component#clj_kondo#sqlite#start'
+      \                               : ((executable('jq') || executable('jet'))
+      \                                 ? 'iced#component#clj_kondo#json#start'
+      \                                 : 'iced#component#nop#start')),
+      \                      'requires': ['job_out']},
       \ 'clj_kondo':    {'start': 'iced#component#clj_kondo#start',
-      \                  'requires': ['installer', 'job_out']},
+      \                  'requires': ['installer', 'job_out', 'clj_kondo_option']},
       \ }
 let s:system_map = copy(s:org_system_map)
 

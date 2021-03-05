@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 20706
+let g:vim_iced_version = 30000
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -43,7 +43,7 @@ if !exists('g:iced_enable_enhanced_cljs_completion')
 endif
 
 if !exists('g:iced_enable_enhanced_definition_extraction')
-  let g:iced_enable_enhanced_definition_extraction = v:true
+  let g:iced_enable_enhanced_definition_extraction = v:false
 endif
 
 if !exists('g:iced_formatter')
@@ -142,10 +142,8 @@ command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
 command!          IcedBrowseRelatedNamespace call iced#nrepl#navigate#related_ns()
 command!          IcedBrowseSpec             call iced#nrepl#spec#browse()
 command!          IcedBrowseTestUnderCursor  call iced#nrepl#navigate#test()
-command!          IcedBrowseReferences       call iced#nrepl#navigate#browse_references()
-command!          IcedBrowseDependencies     call iced#nrepl#navigate#browse_dependencies()
-command! -nargs=? IcedBrowseVarReferences    call iced#nrepl#navigate#browse_var_references(<q-args>)
-command! -nargs=? IcedBrowseVarDependencies  call iced#nrepl#navigate#browse_var_dependencies(<q-args>)
+command! -nargs=? IcedBrowseReferences       call iced#nrepl#navigate#browse_references(<q-args>)
+command! -nargs=? IcedBrowseDependencies     call iced#nrepl#navigate#browse_dependencies(<q-args>)
 
 command!          IcedClearNsCache          call iced#nrepl#ns#clear_cache()
 command!          IcedClearCtrlpCache       call ctrlp#iced#cache#clear()
@@ -160,6 +158,7 @@ command!          IcedExtractFunction       call iced#nrepl#refactor#extract_fun
 command!          IcedAddArity              call iced#nrepl#refactor#add_arity()
 command!          IcedMoveToLet             call iced#let#move_to_let()
 command! -nargs=? IcedRenameSymbol          call iced#nrepl#refactor#rename_symbol(<q-args>)
+command!          IcedYankNsName            call iced#nrepl#ns#yank_name()
 
 command! -nargs=? -complete=custom,iced#nrepl#debug#complete_tapped
       \ IcedBrowseTapped                    call iced#nrepl#debug#browse_tapped(<q-args>)
@@ -262,8 +261,6 @@ nnoremap <silent> <Plug>(iced_browse_spec)              :<C-u>IcedBrowseSpec<CR>
 nnoremap <silent> <Plug>(iced_browse_test_under_cursor) :<C-u>IcedBrowseTestUnderCursor<CR>
 nnoremap <silent> <Plug>(iced_browse_references)        :<C-u>IcedBrowseReferences<CR>
 nnoremap <silent> <Plug>(iced_browse_dependencies)      :<C-u>IcedBrowseDependencies<CR>
-nnoremap <silent> <Plug>(iced_browse_var_references)    :<C-u>IcedBrowseVarReferences<CR>
-nnoremap <silent> <Plug>(iced_browse_var_dependencies)  :<C-u>IcedBrowseVarDependencies<CR>
 
 nnoremap <silent> <Plug>(iced_clear_ns_cache)           :<C-u>IcedClearNsCache<CR>
 nnoremap <silent> <Plug>(iced_clear_ctrlp_cache)        :<C-u>IcedClearCtrlpCache<CR>
@@ -278,6 +275,7 @@ nnoremap <silent> <Plug>(iced_extract_function)         :<C-u>IcedExtractFunctio
 nnoremap <silent> <Plug>(iced_add_arity)                :<C-u>IcedAddArity<CR>
 nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
 nnoremap <silent> <Plug>(iced_rename_symbol)            :<C-u>IcedRenameSymbol<CR>
+nnoremap <silent> <Plug>(iced_yank_ns_name)             :<C-u>IcedYankNsName<CR>
 
 nnoremap <silent> <Plug>(iced_browse_tapped)            :<C-u>IcedBrowseTapped<CR>
 nnoremap <silent> <Plug>(iced_delete_tapped)            :<C-u>IcedDeleteTapped<CR>
@@ -428,8 +426,6 @@ function! s:default_key_mappings() abort
   call s:define_mapping('nmap', '<Leader>bt',  '<Plug>(iced_browse_test_under_cursor)')
   call s:define_mapping('nmap', '<Leader>br',  '<Plug>(iced_browse_references)')
   call s:define_mapping('nmap', '<Leader>bd',  '<Plug>(iced_browse_dependencies)')
-  call s:define_mapping('nmap', '<Leader>bvr', '<Plug>(iced_browse_var_references)')
-  call s:define_mapping('nmap', '<Leader>bvd', '<Plug>(iced_browse_var_dependencies)')
 
   "" Jumping cursor (<Leader>j)
   "" ------------------------------------------------------------------------
@@ -445,10 +441,11 @@ function! s:default_key_mappings() abort
 
   "" Misc
   "" ------------------------------------------------------------------------
-  call s:define_mapping('nmap', '==',        '<Plug>(iced_format)')
-  call s:define_mapping('nmap', '=G',        '<Plug>(iced_format_all)')
-  call s:define_mapping('nmap', '<Leader>*', '<Plug>(iced_grep)')
-  call s:define_mapping('nmap', '<Leader>/', ':<C-u>IcedGrep<Space>')
+  call s:define_mapping('nmap', '==',         '<Plug>(iced_format)')
+  call s:define_mapping('nmap', '=G',         '<Plug>(iced_format_all)')
+  call s:define_mapping('nmap', '<Leader>*',  '<Plug>(iced_grep)')
+  call s:define_mapping('nmap', '<Leader>/',  ':<C-u>IcedGrep<Space>')
+  call s:define_mapping('nmap', '<Leader>yn', '<Plug>(iced_yank_ns_name)')
 endfunction
 
 if exists('g:iced_enable_default_key_mappings')

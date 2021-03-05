@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 2.7.6
+Version: 3.0.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -138,7 +138,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.8.3"]
-                   [iced-nrepl "1.1.2"]
+                   [iced-nrepl "1.2.1"]
                    [cider/cider-nrepl "0.25.7"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -155,7 +155,7 @@ LEININGEN~
                                       cider.nrepl/wrap-undef
                                       cider.nrepl/wrap-xref
                                       iced.nrepl/wrap-iced]}
-    :plugins [[refactor-nrepl "2.5.0"]]}}
+    :plugins [[refactor-nrepl "2.5.1"]]}}
 <
 
                                                          *vim-iced-manual-boot*
@@ -166,9 +166,9 @@ BOOT~
   (require (quote boot.repl))
 
   (swap! boot.repl/*default-dependencies* concat
-    '[[refactor-nrepl "2.5.0"]
+    '[[refactor-nrepl "2.5.1"]
       [cider/cider-nrepl "0.25.7"]
-      [iced-nrepl "1.1.2"]])
+      [iced-nrepl "1.2.1"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -194,9 +194,9 @@ SHADOW-CLJS~
   shadow-cljs.edn
 >
   {
-   :dependencies [[refactor-nrepl "2.5.0"]
+   :dependencies [[refactor-nrepl "2.5.1"]
                   [cider/cider-nrepl "0.25.7"]
-                  [iced-nrepl "1.1.2"]]
+                  [iced-nrepl "1.2.1"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -1139,6 +1139,12 @@ COMMANDS                                                    *vim-iced-commands*
   Namespaces and its aliases are cached for performance.
   |:IcedClearNsCache| will clear this cache.
 
+  If {symbol} is a Java class, vim-iced will find candidates by pre-defined
+  class mappings.
+  https://github.com/liquidz/iced-nrepl/blob/main/resources/java_classes.edn
+
+  To add your own classes, see |g:iced#ns#class_map| option.
+
                                                                    *:IcedAddNs*
 :IcedAddNs [{ns}]
   Add require to `ns` form.
@@ -1273,6 +1279,10 @@ COMMANDS                                                    *vim-iced-commands*
 
   Key is mapped to |<Plug>(iced_start_sideloader)|.
   See also |vim-iced-sideloader|.
+
+                                                              *:IcedYankNsName*
+:IcedYankNsName
+  Yank the current namespace name into `"` register.
 
 ------------------------------------------------------------------------------
 FUNCTIONS                                                  *vim-iced-functions*
@@ -1695,6 +1705,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_stop_sideloader)
   Same as |:IcedStopSideloader|.
 
+                                                    *<Plug>(iced_yank_ns_name)*
+<Plug>(iced_yank_ns_name)
+  Same as |:IcedYankNsName|.
+
 ==============================================================================
 CUSTOMIZING                                              *vim-iced-customizing*
 
@@ -1817,7 +1831,7 @@ g:iced#nrepl#complete#ignore_context
                                        *g:iced_enable_enhanced_cljs_completion*
 g:iced_enable_enhanced_cljs_completion
   If {v:true}, enable enhanced ClojureScript completion.
-  Default value is `v:true`.
+  Default value is `v:false`.
 
                                                           *g:iced#clap#options*
 g:iced#clap#options
@@ -1860,7 +1874,7 @@ g:iced#nrepl#source#finding_max_depth
 g:iced#repl#babashka_repl_type
   REPL type of server launching by babashka.
   `'socket'` or `'nrepl'` can be set.
-  Default value is `'socket'`.
+  Default value is `'nrepl'`.
 
                                                        *g:iced_cache_directory*
 g:iced_cache_directory
@@ -1891,6 +1905,18 @@ g:iced_enable_clj_kondo_local_analysis
 g:iced#navigate#prefer_local_jump
   If {v:true}, change the behavior of |:IcedDefJump| to prefer local jumping.
   Default value is `v:false`.
+
+                                                          *g:iced#ns#class_map*
+g:iced#ns#class_map
+  Custom class mappings for |:IcedAddMissing| command.
+
+  E.g. >
+  let g:iced#ns#class_map = {
+        \ "foo.bar": ["Baz"],
+        \ "java.sql": ["Timestamp"],
+        \ }
+<
+  Default value is `{}`.
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
@@ -2352,6 +2378,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>dlt  <Plug>(iced_clear_tapped)
   n       <Leader>*    <Plug>(iced_grep)
   n       <Leader>/    :<C-u>IcedGrep<Space>
+  n       <Leader>yn   <Plug>(iced_yank_ns_name)
   n       ==           <Plug>(iced_format)
   n       =G           <Plug>(iced_format_all)
 

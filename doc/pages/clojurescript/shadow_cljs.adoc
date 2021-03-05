@@ -2,6 +2,13 @@
 
 To start CLJS REPL with shadow-cljs, you need following steps.
 
+[WARNING]
+====
+`iced` command uses the existence of `shadow-cljs.edn` file for detecting shadow-cljs project for now.
+Thus, if you are using shadow-cljs via Leiningen, you need to setup manually (c.f. {help_html}#vim-iced-manual-shadow-cljs[Manual Install])
+instead of the following steps.
+====
+
 1. Start to watch
 ** `$ iced repl {YOUR-BUILD-ID}`
 *** In this case, `iced` command will start watching project instead of starting REPL.

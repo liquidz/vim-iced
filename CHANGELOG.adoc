@@ -2,6 +2,33 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.0.0 (2021-03-06)
+// {{{
+=== Added
+* Added support SQLite3 in clj-kondo component for performance.
+** When you have `jq` and `sqlite3` command, clj-kondo component will store analyzed result into SQLite database.
+*** The performance for finding references and local definitions will improve dramatically.
+* Added `IcedYankNsName` command.
+* Added support for referencing keywords to `:IcedBrowseReferences`.
+** Required clj-kondo `v2021.02.13` or later, and required enabling `g:iced_enable_clj_kondo_analysis` and `g:iced_enable_clj_kondo_local_analysis`.
+
+=== Changed
+* Bumped refactor-nrepl to 2.5.1.
+* Bumped iced-nrepl to 1.2.1.
+* Update `IcedAddMissing` command to support to add missing classes.
+* (Breaking) Changed default value for `g:iced_enable_enhanced_definition_extraction` option to `v:false`.
+** `v:true` will lead taking time for `IcedSourceShow` by default.
+* (Breaking) Changed default value for `g:iced#repl#babashka_repl_type` option to `'nrepl'`.
+
+=== Fixed
+* Fixed clj-kondo component to be able to handle quoted symbols.
+
+=== Removed
+* (Breaking) Removed `:IcedBrowseVarReferences` and `:IcedBrowseVarDependencies` commands.
+** `:IcedBrowseReferences` / `:IcedBrowseDependencies` behaves as same as `:IcedBrowseVarReferences` and `:IcedBrowseVarDependencies` instead.
+*** Thus original `:IcedBrowseReferences` and `:IcedBrowseDependencies` behaviors are removed.
+// }}}
+
 == 2.7.6 (2021-02-11)
 // {{{
 === Added

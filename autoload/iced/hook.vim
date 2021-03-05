@@ -17,7 +17,9 @@ endfunction
 
 function! s:run_by_evaluating(exec, params) abort
   let code = s:extract_string(a:exec, a:params)
-  return iced#nrepl#eval#code(code)
+  return iced#nrepl#eval#code(code, {
+        \ 'ignore_session_validity': v:true,
+        \ })
 endfunction
 
 function! s:run_by_function(exec, params) abort

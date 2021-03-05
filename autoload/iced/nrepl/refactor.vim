@@ -31,6 +31,7 @@ let s:default_ns_favorites = {
       \ }
 let g:iced#ns#favorites
       \ = get(g:, 'iced#ns#favorites', s:default_ns_favorites) " }}}
+let g:iced#ns#class_map = get(g:, 'iced#ns#class_map', {})
 
 " iced#nrepl#refactor#extract_function {{{
 function! s:found_used_locals(resp) abort
@@ -199,13 +200,33 @@ function! s:__add_missing_by_clj_kondo_analysis(symbol) abort
   return s:__add_missing_ns_select_candidates(symbol_alias, ns_candidates)
 endfunction
 
+function! s:__add_missing_java_class_select_candidates(resp) abort
+  let candidates = get(a:resp, 'candidates', [])
+  if empty(candidates)
+    return iced#message#error('not_found')
+  endif
+
+  if len(candidates) == 1
+    return iced#nrepl#ns#util#add_class(candidates[0])
+  else
+    return iced#selector({
+          \ 'candidates': candidates,
+          \ 'accept': {_, class_name -> iced#nrepl#ns#util#add_class(class_name)}
+          \ })
+  endif
+endfunction
+
 function! iced#nrepl#refactor#add_missing_ns(symbol) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   let kondo = iced#system#get('clj_kondo')
   let symbol = empty(a:symbol) ? iced#nrepl#var#cword() : a:symbol
+  let c = char2nr(symbol)
 
-  if kondo.is_analyzed()
+  if c >= 65 && c <= 90
+    return iced#promise#call('iced#nrepl#op#iced#java_class_candidates', [symbol, g:iced#ns#class_map])
+          \.then(funcref('s:__add_missing_java_class_select_candidates'))
+  elseif kondo.is_analyzed()
     return s:__add_missing_by_clj_kondo_analysis(symbol)
   elseif iced#nrepl#is_supported_op('resolve-missing')
     call iced#nrepl#op#refactor#add_missing(symbol, {resp ->
@@ -402,6 +423,15 @@ function! s:got_var(var) abort
 
   let kondo = iced#system#get('clj_kondo')
   if kondo.is_analyzed()
+    if kondo.is_analyzing()
+      let res = iced#system#get('io').input(iced#message#get('clj_kondo_analyzing'))
+      " for line break
+      echom ' '
+      if res !=# '' && res !=# 'y' && res !=# 'Y'
+        return iced#message#warning('canceled')
+      endif
+    endif
+
     let references = kondo.references(ns, name)
     let definition = kondo.var_definition(ns, name)
     if ! empty(definition)
@@ -414,6 +444,10 @@ function! s:got_var(var) abort
 
     let io = iced#system#get('io')
     let new_name = trim(io.input('New name: ', name))
+    if empty(new_name)
+      return iced#message#info('canceled')
+    endif
+
     let occurrences = map(references, {_, v -> {
           \ 'file': get(v, 'filename'),
           \ 'name': printf('%s/%s', get(v, 'to', get(v, 'ns')), get(v, 'name')),
