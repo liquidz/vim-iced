@@ -18,7 +18,6 @@ let s:default_palette = [
       \ 'CycleSrcAndTest', 'Grep',
       \ 'BrowseRelatedNamespace', 'BrowseSpec', 'BrowseTestUnderCursor',
       \ 'BrowseReferences', 'BrowseDependencies',
-      \ 'BrowseVarReferences', 'BrowseVarDependencies',
       \ 'CleanNs', 'CleanAll', 'AddNs', 'AddMissing',
       \ 'ExtractFunction', 'AddArity', 'MoveToLet',
       \ 'RenameSymbol',
