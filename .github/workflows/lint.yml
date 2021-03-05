@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # c.f. https://github.com/borkdude/clj-kondo/blob/master/doc/ci-integration.md#linter-output-integration
-      - name: Lint by clj-kondo
-        run: docker run --rm -v $(pwd):/tmp/work -w /tmp/work borkdude/clj-kondo clj-kondo --parallel --lint clj:test/clj --config '{:output {:pattern "::{{level}} file={{filename}},line={{row}},col={{col}}::{{message}}"}}'
+      - uses: DeLaGuardo/setup-clj-kondo@master
+        with:
+          version: '2021.03.03'
+      - run: clj-kondo --parallel --lint clj:test/clj --config '{:output {:pattern "::{{level}} file={{filename}},line={{row}},col={{col}}::{{message}}"}}

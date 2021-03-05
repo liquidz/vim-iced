@@ -2,7 +2,7 @@ name: document
 on:
   push:
     branches:
-      - master
+      - main
       - dev
 jobs:
   asciidoc:
