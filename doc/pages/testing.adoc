@@ -69,7 +69,7 @@ vim-iced can download `jet` automatically if you want.
 ====
 
 vim-iced basically requires nREPL with some middlewares.
-But in some case, you may need to use plain nREPL such as https://github.com/borkdude/babashka/blob/master/doc/repl.md#nrepl[babashka.nrepl].
+But in some case, you may need to use plain nREPL such as https://book.babashka.org/#_nrepl[babashka.nrepl].
 
 In this case, vim-iced provides simple test integration which has less
 functionality than https://docs.cider.mx/cider-nrepl/nrepl-api/ops.html#test-var-query[cider-nrepl's one].
