@@ -1,18 +1,29 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:selector = {}
+let s:selector = {
+      \ 'ctrlp': {'runtimepath':  'plugin/ctrlp.vim',
+      \           'run': {config -> ctrlp#iced#start(config)}},
+      \ 'fzf': {'runtimepath': 'plugin/fzf.vim',
+      \         'run': {config -> fzf#iced#start(config)}},
+      \ 'clap': {'runtimepath': 'plugin/clap.vim',
+      \          'run': {config -> clap#provider#iced#start(config)}},
+      \ }
+
+let g:iced#selector#search_order = get(g:, 'iced#selector#search_order', ['ctrlp', 'fzf', 'clap'])
 
 function! s:selector.select(config) abort
-  if globpath(&runtimepath, 'plugin/ctrlp.vim') !=# ''
-    return ctrlp#iced#start(a:config)
-  elseif globpath(&runtimepath, 'plugin/fzf.vim') !=# ''
-    return fzf#iced#start(a:config)
-  elseif globpath(&runtimepath, 'plugin/clap.vim') !=# ''
-    return clap#provider#iced#start(a:config)
-  else
-    return iced#message#error('no_selector')
-  end
+  for target_name in g:iced#selector#search_order
+    if ! has_key(self, target_name)
+      call iced#message#error('unknown', target_name)
+      continue
+    endif
+
+    if globpath(&runtimepath, self[target_name]['runtimepath']) !=# ''
+      return self[target_name]['run'](a:config)
+    endif
+  endfor
+  return iced#message#error('no_selector')
 endfunction
 
 function! iced#component#selector#start(_) abort
