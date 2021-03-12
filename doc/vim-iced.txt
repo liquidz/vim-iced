@@ -1918,6 +1918,17 @@ g:iced#ns#class_map
 <
   Default value is `{}`.
 
+                                                 *g:iced#selector#search_order*
+g:iced#selector#search_order
+  Search order for installed selectors.
+  vim-iced will search runtimepath with this order,
+  and use the first one found.
+  Default value is `['crlp','fzf','clap']`.
+
+  If you'd like to use a specific selector, you can set like below. >
+  let g:iced#selector#search_order = ['clap']
+<
+
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
 
