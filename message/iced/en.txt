@@ -58,7 +58,7 @@
   'no_more_use_cases':         'No more use cases.',
   'no_piggieback':             'Piggieback is not enabled. Please launch repl with `iced repl --with-cljs` command.',
   'no_port_file':              '.nrepl-port was not found.',
-  'no_selector':               'CtrlP or Fzf needed to select candidates is not installed.',
+  'no_selector':               'CtrlP, Fzf or vim-clap needed to select candidates is not installed.',
   'no_session':                'Session does not exist: %s.',
   'no_spec':                   'No spec form is found.',
   'no_test_summary':           'No tests to run.',

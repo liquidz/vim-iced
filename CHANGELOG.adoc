@@ -2,6 +2,12 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.0.1 (2021-03-13)
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/issues/318[#318]: Added `g:iced#selector#search_order` to be able to specify selector searching order.
+// }}}
+
 == 3.0.0 (2021-03-06)
 // {{{
 === Added
