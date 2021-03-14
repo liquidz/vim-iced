@@ -431,22 +431,35 @@ function! s:connected(resp, opts) abort
     let initial_session = get(a:opts, 'initial_session', 'clj')
     call iced#nrepl#set_session(initial_session, session)
     call iced#nrepl#change_current_session(initial_session)
+
+    let start = reltime()
     let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
+    echom printf('DEBUG iced#nrepl#ns#name_by_var(SYNC): %s', reltimefloat(reltime(start)))
 
     if get(a:opts, 'with_iced_nrepl', v:true)
+      let start = reltime()
       " Check if nREPL middlewares are enabled
       if !iced#nrepl#is_supported_op('iced-version')
         return iced#message#error('no_iced_nrepl')
       endif
+      echom printf('DEBUG describe(iced#nrepl#is_supported_op): %s', reltimefloat(reltime(start)))
 
+      let start = reltime()
       call iced#nrepl#set_iced_nrepl_enabled(v:true)
-      silent call s:warm_up()
+      echom printf('DEBUG iced#nrepl#set_iced_nrepl_enabled: %s', reltimefloat(reltime(start)))
+
+      let start = reltime()
+      "silent call s:warm_up()
+      call s:warm_up()
+      echom printf('DEBUG s:warm_up: %s', reltimefloat(reltime(start)))
     endif
 
     call iced#nrepl#auto#enable_bufenter(v:true)
 
     call iced#message#info('connected')
     call iced#hook#run('connected', {})
+
+    echom printf('DEBUG connected: %s', reltimefloat(reltime(g:start)))
 
     " auto cljs start
     if has_key(a:opts, 'cljs_env')
@@ -494,7 +507,10 @@ function! iced#nrepl#connect(port, ...) abort
     endif
   endif
 
+  let start = reltime()
   let resp = iced#promise#sync('iced#nrepl#clone', [])
+  echom printf('DEBUG iced#nrepl#clone(SYNC): %s', reltimefloat(reltime(start)))
+
   call s:connected(resp, opts)
   return v:true
 endfunction

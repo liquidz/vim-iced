@@ -45,8 +45,13 @@ endfunction
 
 function! iced#nrepl#connect#auto(...) abort
   let verbose = get(a:, 1, v:true)
+
+  let start = reltime()
   let shadow_cljs_port = s:detect_shadow_cljs_nrepl_port()
+  echom printf('DEBUG s:detect_shadow_cljs_nrepl_port: %s', reltimefloat(reltime(start)))
+  let start = reltime()
   let nrepl_port = s:detect_port_from_nrepl_port_file()
+  echom printf('DEBUG s:detect_port_from_nrepl_port_file: %s', reltimefloat(reltime(start)))
 
   if shadow_cljs_port && nrepl_port
     call iced#selector({

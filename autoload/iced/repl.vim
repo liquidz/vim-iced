@@ -17,7 +17,13 @@ function! iced#repl#is_connected() abort
   return s:repl.is_connected()
 endfunction
 
+let g:start = []
 function! iced#repl#connect(target, ...) abort
+
+  if empty(g:start)
+    let g:start = reltime()
+  endif
+
   let s:repl = iced#system#get(a:target)
   if empty(s:repl)
     return iced#message#error('connect_error')
