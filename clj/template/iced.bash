@@ -63,7 +63,7 @@ function iced_repl_usage() {
     echo ""
     echo "The --dependency option adds extra dependency."
     echo "VALUE format is 'PACKAGE_NAME:VERSION'."
-    echo "For example: --dependency=iced-nrepl:0.4.3"
+    echo "For example: --dependency=com.github.liquidz/iced-nrepl:0.4.3"
     echo ""
     echo "The --middleware option adds extra nrepl middleware."
     echo "For example: --middleware=iced.nrepl/wrap-iced"

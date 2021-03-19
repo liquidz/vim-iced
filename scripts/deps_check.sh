@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
-TARGETS=("nrepl" "cider/cider-nrepl" "refactor-nrepl" "iced-nrepl")
+TARGETS=("nrepl" "cider/cider-nrepl" "refactor-nrepl" "com.github.liquidz/iced-nrepl")
 
 for TARGET in ${TARGETS[@]}; do
     EXPECTED_VERSION=$(grep "${TARGET} " ${SCRIPT_DIR}/../deps.edn \

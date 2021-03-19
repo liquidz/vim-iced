@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.0.1
+Version: 3.0.2
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -138,7 +138,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.8.3"]
-                   [iced-nrepl "1.2.1"]
+                   [com.github.liquidz/iced-nrepl "1.2.2"]
                    [cider/cider-nrepl "0.25.7"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -168,7 +168,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.5.1"]
       [cider/cider-nrepl "0.25.7"]
-      [iced-nrepl "1.2.1"]])
+      [com.github.liquidz/iced-nrepl "1.2.2"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -196,7 +196,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "2.5.1"]
                   [cider/cider-nrepl "0.25.7"]
-                  [iced-nrepl "1.2.1"]]
+                  [com.github.liquidz/iced-nrepl "1.2.2"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -1532,6 +1532,7 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   Configurable options are:
   - |g:iced_enable_auto_document|
   - |g:iced_enable_popup_document|
+  - |g:iced#nrepl#auto#document_delay|
 
                                                    *<Plug>(iced_use_case_open)*
 <Plug>(iced_use_case_open)
@@ -1742,7 +1743,7 @@ g:iced#nrepl#connect#auto_connect_timeout_ms
   When you set `-1`, vim-iced will wait forever.
   Default value is `5000`.
 
-                                               s*g:iced#paredit#slurp_max_depth*
+                                                *g:iced#paredit#slurp_max_depth*
 g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
   Default value is `5`.
@@ -2071,7 +2072,7 @@ AUTO DOCUMENT~
                                                   *g:iced_enable_auto_document*
 g:iced_enable_auto_document
   Enable automatic displaying one-line document.
-  This will be done by |CursorHold| and |CursorHoldI| auto command.
+  This will be done by |CursorMoved| / |CursorMovedI| auto command and |timer|.
 
   The value should be one of `'normal'`, `'insert'` or `'any'`.
   Otherwise, this option will be disabled.
@@ -2081,7 +2082,9 @@ g:iced_enable_auto_document
   `'every'` : Enabled on normal and insert mode.
 
   Default value is `'none'`.
-  See also |g:iced_enable_popup_document|.
+  See also:
+  - |g:iced_enable_popup_document|
+  - |g:iced#nrepl#auto#document_delay|
 
                                                  *g:iced_enable_popup_document*
 g:iced_enable_popup_document
@@ -2102,6 +2105,12 @@ g:iced_max_distance_for_auto_document
   See also |g:iced_enable_auto_document|.
 
   Default value is `2`.
+
+                                             *g:iced#nrepl#auto#document_delay*
+g:iced#nrepl#auto#document_delay
+  Delay time for displaying one-line document.
+  Unit is milli sec.
+  Default value is `500`.
 
 ------------------------------------------------------------------------------
 AUTO INDENT                                  *vim-iced-customizing-auto-indent*

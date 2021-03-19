@@ -31,7 +31,9 @@ function! iced#nrepl#cljs#figwheel_main#get_env(options) abort
   endif
 
   let s:build_id = a:options[0]
-  return {'pre-code': funcref('s:pre_code'),
+  return {
+        \ 'name': 'figwheel-main',
+        \ 'pre-code': funcref('s:pre_code'),
         \ 'env-code': funcref('s:env_code'),
         \ 'post-code': funcref('s:post_code')}
 endfunction

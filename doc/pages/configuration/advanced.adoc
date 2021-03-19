@@ -78,7 +78,7 @@ Following values are supported.
 | {help_html}#g%3Aiced_enable_auto_document[g:iced_enable_auto_document]
 | `'none'`
 | Enable automatic displaying one-line document. +
-This will be done by https://vim-jp.org/vimdoc-en/autocmd.html#CursorHold[CursorHold] and https://vim-jp.org/vimdoc-en/autocmd.html#CursorHoldI[CursorHoldI] auto command. +
+This will be done by https://vim-jp.org/vimdoc-en/autocmd.html#CursorMoved[CursorMoved] / https://vim-jp.org/vimdoc-en/autocmd.html#CursorMovedI[CursorMovedI] auto command and https://vim-jp.org/vimdoc-en/eval.html#timer[timer]. +
  +
 The value should be one of `'normal'`, `'insert'` or `'any'`. +
 Otherwise, this option will be disabled.
@@ -100,7 +100,12 @@ Otherwise, this option will be disabled.
 | {help_html}#g%3Aiced_max_distance_for_auto_document[g:iced_max_distance_for_auto_document]
 | `2`
 | Max line distance to display one-line document. +
-See also |g:iced_enable_auto_document|.
+See also {help_html}#g%3Aiced_enable_auto_document[g:iced_enable_auto_document].
+
+| {help_html}#g%3Aiced%23nrepl%23auto%23document_delay[g:iced#nrepl#auto#document_delay]
+| `500`
+| Delay time for displaying one-line document. +
+Unit is milli sec.
 
 |===
 

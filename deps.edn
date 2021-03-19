@@ -2,7 +2,7 @@
  :deps {nrepl/nrepl {:mvn/version "0.8.3"}
         refactor-nrepl/refactor-nrepl {:mvn/version "2.5.1"}
         cider/cider-nrepl {:mvn/version "0.25.7"}
-        iced-nrepl/iced-nrepl {:mvn/version "1.2.1"}}
+        com.github.liquidz/iced-nrepl {:mvn/version "1.2.2"}}
  :__middlewares__
  ["cider.nrepl/wrap-classpath"
   "cider.nrepl/wrap-clojuredocs"
@@ -34,7 +34,7 @@
            :replace-paths ["clj/jackin"]
            :extra-deps {org.panchromatic/mokuhan {:mvn/version "0.1.1"}}
            :main-opts ["-m" "iced-jackin"]}
-  :outdated {:extra-deps {antq/antq {:mvn/version "RELEASE"}
+  :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}
                           org.slf4j/slf4j-nop {:mvn/version "RELEASE"}}
              :main-opts ["-m" "antq.core"]}
   :dev {}}}
