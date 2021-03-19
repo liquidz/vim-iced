@@ -3,7 +3,7 @@
                 ;; this is wrong
                 [refactor-nrepl "987"]
                 ;; missing deps
-                ; [iced-nrepl "456"]
+                ; [com.github.liquidz/iced-nrepl "456"]
                 ]
 
  :nrepl {:cider false
