@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 3.0.2 (2021-03-20)
 // {{{
 === Changed
 * Changed one-line document to use `timer` feature instead of `CursorHold`/`CursorHoldI` auto command.
