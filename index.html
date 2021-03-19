@@ -1337,10 +1337,17 @@ Plug <span class="s1">'tami5/vim-iced-compe'</span><span class="p">,</span> <spa
 <div class="paragraph">
 <p>The implicit way is the Auto Document feature.
 This feature will automatically display a one-line documentation string on the right of cursor line.
-This will be done by <code>CursorHold</code> and <code>CursorHoldI</code> auto command.</p>
+This will be done by <a href="https://vim-jp.org/vimdoc-en/autocmd.html#CursorMoved">CursorMoved</a> / <a href="https://vim-jp.org/vimdoc-en/autocmd.html#CursorMovedI">CursorMovedI</a> auto command and <a href="https://vim-jp.org/vimdoc-en/eval.html#timer">timer</a>.</p>
 </div>
-<div class="paragraph">
-<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_auto_document">g:iced_enable_auto_document</a> is a configuration to enable auto document feature.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_auto_document">g:iced_enable_auto_document</a>: Enable auto document feature.</p>
+</li>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23nrepl%23auto%23document_delay">g:iced#nrepl#auto#document_delay</a>: Define delay time for displaying auto document.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -3709,7 +3716,7 @@ Following values are supported.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>'none'</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Enable automatic displaying one-line document.<br>
-This will be done by <a href="https://vim-jp.org/vimdoc-en/autocmd.html#CursorHold">CursorHold</a> and <a href="https://vim-jp.org/vimdoc-en/autocmd.html#CursorHoldI">CursorHoldI</a> auto command.<br>
+This will be done by <a href="https://vim-jp.org/vimdoc-en/autocmd.html#CursorMoved">CursorMoved</a> / <a href="https://vim-jp.org/vimdoc-en/autocmd.html#CursorMovedI">CursorMovedI</a> auto command and <a href="https://vim-jp.org/vimdoc-en/eval.html#timer">timer</a>.<br>
 <br>
 The value should be one of <code>'normal'</code>, <code>'insert'</code> or <code>'any'</code>.<br>
 Otherwise, this option will be disabled.</p>
@@ -3755,7 +3762,15 @@ Otherwise, this option will be disabled.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Max line distance to display one-line document.<br>
-See also</p>
+See also <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_auto_document">g:iced_enable_auto_document</a>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23nrepl%23auto%23document_delay">g:iced#nrepl#auto#document_delay</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>500</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Delay time for displaying one-line document.<br>
+Unit is milli sec.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -4583,7 +4598,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-03-12 22:12:27 UTC
+Last updated 2021-03-19 23:58:10 UTC
 </div>
 </div>
 </body>
