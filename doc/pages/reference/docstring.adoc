@@ -20,6 +20,8 @@ The explicit way is to execute one of the following commands.
 
 The implicit way is the Auto Document feature.
 This feature will automatically display a one-line documentation string on the right of cursor line.
-This will be done by `CursorHold` and `CursorHoldI` auto command.
+This will be done by https://vim-jp.org/vimdoc-en/autocmd.html#CursorMoved[CursorMoved] / https://vim-jp.org/vimdoc-en/autocmd.html#CursorMovedI[CursorMovedI] auto command and https://vim-jp.org/vimdoc-en/eval.html#timer[timer].
 
-{help_html}#g%3Aiced_enable_auto_document[g:iced_enable_auto_document] is a configuration to enable auto document feature.
+- {help_html}#g%3Aiced_enable_auto_document[g:iced_enable_auto_document]: Enable auto document feature.
+- {help_html}#g%3Aiced%23nrepl%23auto%23document_delay[g:iced#nrepl#auto#document_delay]: Define delay time for displaying auto document.
+
