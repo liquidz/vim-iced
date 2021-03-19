@@ -1,6 +1,13 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Changed one-line document to use `timer` feature instead of `CursorHold`/`CursorHoldI` auto command.
+** Now you can adjust delay time for displaying one-line document with `g:iced#nrepl#auto#document_delay` option.
+* Bumped iced-nrepl to 1.2.2.
+* Bumped joker to 0.16.0.
+// }}}
 
 == 3.0.1 (2021-03-13)
 // {{{
