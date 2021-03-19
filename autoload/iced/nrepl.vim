@@ -14,6 +14,9 @@ function! s:initialize_nrepl() abort
       \   'cljs': '',
       \   'cljs_repl': '',
       \   },
+      \ 'cljs': {
+      \   'env': {},
+      \   },
       \ 'nrepl_version': {},
       \ 'iced_nrepl_enabled': v:false,
       \ }
@@ -125,6 +128,14 @@ endfunction
 
 function! iced#nrepl#cljs_session() abort
   return s:nrepl['sessions']['cljs']
+endfunction
+
+function! iced#nrepl#set_cljs_env(env) abort
+  let s:nrepl['cljs']['env'] = copy(a:env)
+endfunction
+
+function! iced#nrepl#get_cljs_env() abort
+  return s:nrepl['cljs']['env']
 endfunction
 
 function! iced#nrepl#check_session_validity(...) abort

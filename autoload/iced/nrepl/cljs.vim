@@ -2,8 +2,6 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let g:iced#cljs#default_env = get(g:, 'iced#cljs#default_env', 'figwheel-sidecar')
-let s:using_env = {}
-let s:env_options = []
 let s:quit_code = ':cljs/quit'
 
 let s:env = {
@@ -44,7 +42,7 @@ function! iced#nrepl#cljs#check_switching_session(eval_resp, evaluated_code) abo
 
   let ns = a:eval_resp['ns']
   let ext = expand('%:e')
-  let env_name = get(s:using_env, 'name', '')
+  let env_name = get(iced#nrepl#get_cljs_env(), 'name', '')
 
   if eq_to_clj_session && ns ==# g:iced#nrepl#init_cljs_ns
     let p = s:set_cljs_session(eval_session)
@@ -58,7 +56,7 @@ function! iced#nrepl#cljs#check_switching_session(eval_resp, evaluated_code) abo
     call iced#message#info('started_cljs_repl')
     return p
   elseif eq_to_cljs_session
-      \ && !get(s:using_env, 'ignore-quit-detecting', v:false)
+      \ && !get(iced#nrepl#get_cljs_env(), 'ignore-quit-detecting', v:false)
       \ && a:evaluated_code ==# s:quit_code
     call s:unset_cljs_session()
     call iced#nrepl#change_current_session('clj')
@@ -127,8 +125,7 @@ function! iced#nrepl#cljs#stop_repl(...) abort
 endfunction
 
 function! iced#nrepl#cljs#reset() abort
-  let s:using_env = {}
-  let s:env_options = []
+  call iced#nrepl#set_cljs_env({})
 endfunction
 
 function! iced#nrepl#cljs#start_repl_via_env(env_key, ...) abort
@@ -137,7 +134,7 @@ function! iced#nrepl#cljs#start_repl_via_env(env_key, ...) abort
     return iced#message#error('invalid_cljs_env')
   endif
 
-  if empty(s:using_env)
+  if empty(iced#nrepl#get_cljs_env())
     let env = s:env[env_key](a:000)
     if type(env) != v:t_dict | return iced#message#error_str(env) | endif
 
@@ -163,17 +160,17 @@ function! iced#nrepl#cljs#start_repl_via_env(env_key, ...) abort
     let opt = copy(env)
     call extend(opt, {'pre': pre_code})
     if iced#nrepl#cljs#start_repl(env_code, opt)
-      let s:using_env = env
+      call iced#nrepl#set_cljs_env(env)
     endif
   endif
 endfunction
 
 function! iced#nrepl#cljs#stop_repl_via_env() abort
-  if !empty(s:using_env)
-    let Post_code_f = get(s:using_env, 'post-code', '')
+  if !empty(iced#nrepl#get_cljs_env())
+    let Post_code_f = get(iced#nrepl#get_cljs_env(), 'post-code', '')
     let post_code = type(Post_code_f) == v:t_func ? Post_code_f() : ''
     if iced#nrepl#cljs#stop_repl({'post': post_code})
-      let s:using_env = {}
+      call iced#nrepl#set_cljs_env({})
     endif
   else
     call iced#nrepl#cljs#stop_repl()
@@ -181,7 +178,7 @@ function! iced#nrepl#cljs#stop_repl_via_env() abort
 endfunction
 
 function! iced#nrepl#cljs#is_current_env_shadow_cljs() abort
-  return (get(s:using_env, 'name', '') ==# 'shadow-cljs')
+  return (get(iced#nrepl#get_cljs_env(), 'name', '') ==# 'shadow-cljs')
 endfunction
 
 " c.f. :h :command-completion-custom
