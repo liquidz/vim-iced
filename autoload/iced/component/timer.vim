@@ -12,10 +12,18 @@ function! s:timer.stop(timer) abort
   return timer_stop(a:timer)
 endfunction
 
+function! s:start_lazily_callback(id, callback, _) abort dict
+  let self.ids[a:id] = -1
+  return a:callback()
+endfunction
+
 function! s:timer.start_lazily(id, time, callback, ...) abort
   let timer_id = get(self.ids, a:id, -1)
   if timer_id != -1 | call self.stop(timer_id) | endif
-  let self.ids[a:id] = self.start(a:time, a:callback, get(a:, 1, {}))
+  let self.ids[a:id] = self.start(
+        \ a:time,
+        \ funcref('s:start_lazily_callback', [a:id, a:callback], self),
+        \ get(a:, 1, {}))
 endfunction
 
 function! iced#component#timer#start(_) abort
