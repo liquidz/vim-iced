@@ -1532,6 +1532,7 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   Configurable options are:
   - |g:iced_enable_auto_document|
   - |g:iced_enable_popup_document|
+  - |g:iced#nrepl#auto#document_delay|
 
                                                    *<Plug>(iced_use_case_open)*
 <Plug>(iced_use_case_open)
@@ -1742,7 +1743,7 @@ g:iced#nrepl#connect#auto_connect_timeout_ms
   When you set `-1`, vim-iced will wait forever.
   Default value is `5000`.
 
-                                               s*g:iced#paredit#slurp_max_depth*
+                                                *g:iced#paredit#slurp_max_depth*
 g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
   Default value is `5`.
@@ -2071,7 +2072,7 @@ AUTO DOCUMENT~
                                                   *g:iced_enable_auto_document*
 g:iced_enable_auto_document
   Enable automatic displaying one-line document.
-  This will be done by |CursorHold| and |CursorHoldI| auto command.
+  This will be done by |CursorMoved| / |CursorMovedI| auto command and |timer|.
 
   The value should be one of `'normal'`, `'insert'` or `'any'`.
   Otherwise, this option will be disabled.
@@ -2081,7 +2082,9 @@ g:iced_enable_auto_document
   `'every'` : Enabled on normal and insert mode.
 
   Default value is `'none'`.
-  See also |g:iced_enable_popup_document|.
+  See also:
+  - |g:iced_enable_popup_document|
+  - |g:iced#nrepl#auto#document_delay|
 
                                                  *g:iced_enable_popup_document*
 g:iced_enable_popup_document
@@ -2102,6 +2105,12 @@ g:iced_max_distance_for_auto_document
   See also |g:iced_enable_auto_document|.
 
   Default value is `2`.
+
+                                             *g:iced#nrepl#auto#document_delay*
+g:iced#nrepl#auto#document_delay
+  Delay time for displaying one-line document.
+  Unit is milli sec.
+  Default value is `500`.
 
 ------------------------------------------------------------------------------
 AUTO INDENT                                  *vim-iced-customizing-auto-indent*
