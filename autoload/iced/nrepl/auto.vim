@@ -2,6 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let g:iced#nrepl#auto#does_switch_session = get(g:, 'iced#nrepl#auto#does_switch_session', v:false)
+let g:iced#nrepl#auto#document_delay = get(g:, 'iced#nrepl#auto#document_delay', 500)
 let s:leaving = v:false
 let s:is_bufenter_enabled = v:false
 
@@ -61,6 +62,14 @@ endfunction
 function! iced#nrepl#auto#enable_bufenter(bool) abort
   if type(a:bool) != v:t_bool | return | endif
   let s:is_bufenter_enabled = a:bool
+endfunction
+
+function! iced#nrepl#auto#cursor_moved() abort
+  let timer = iced#system#get('timer')
+  call timer.start_lazily(
+        \ 'document_current_form',
+        \ g:iced#nrepl#auto#document_delay,
+        \ {-> iced#nrepl#document#current_form()})
 endfunction
 
 let &cpoptions = s:save_cpo

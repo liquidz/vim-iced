@@ -314,7 +314,7 @@ if g:iced_enable_auto_document ==# 'normal'
       \ || g:iced_enable_auto_document ==# 'every'
   aug vim_iced_auto_document_normal
     au!
-    au CursorHold *.clj,*.cljs,*.cljc call iced#nrepl#document#current_form()
+    au CursorMoved *.clj,*.cljs,*.cljc call iced#nrepl#auto#cursor_moved()
   aug END
 endif
 
@@ -322,7 +322,7 @@ if g:iced_enable_auto_document ==# 'insert'
       \ || g:iced_enable_auto_document ==# 'every'
   aug vim_iced_auto_document_insert
     au!
-    au CursorHoldI *.clj,*.cljs,*.cljc call iced#nrepl#document#current_form()
+    au CursorMovedI *.clj,*.cljs,*.cljc call iced#nrepl#auto#cursor_moved()
   aug END
 endif
 
