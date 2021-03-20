@@ -1,6 +1,10 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Fixed
+* Fixed `E119: Not enough arguments for function` about timer component.
+// }}}
 
 == 3.0.2 (2021-03-20)
 // {{{
