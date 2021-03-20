@@ -18,7 +18,7 @@ let g:iced#buffer#stdout#file = get(g:, 'iced#buffer#stdout#file', '')
 let g:iced#buffer#stdout#file_buffer_size = get(g:, 'iced#buffer#stdout#file_buffer_size', 256)
 let g:iced#buffer#stdout#enable_notify = get(g:, 'iced#buffer#stdout#enable_notify', v:true)
 
-function! s:delete_old_lines(_) abort
+function! s:delete_old_lines() abort
   let bufnr = iced#buffer#nr(s:bufname)
   let buflen = len(getbufline(bufnr, 0, '$'))
   if g:iced#buffer#stdout#max_line > 0 && buflen > g:iced#buffer#stdout#max_line
@@ -69,7 +69,7 @@ function! iced#buffer#stdout#open() abort
 endfunction
 
 let s:write_file_buffer = []
-function! s:flush_writing_file(_) abort
+function! s:flush_writing_file() abort
   let tmp = copy(s:write_file_buffer)
   let s:write_file_buffer = []
   call writefile(tmp, g:iced#buffer#stdout#file, 'a')
