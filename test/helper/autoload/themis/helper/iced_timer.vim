@@ -12,7 +12,7 @@ function! s:helper.stop(timer) abort
 endfunction
 
 function! s:helper.start_lazily(id, timer, callback, ...) abort
-  return a:callback(-1)
+  return a:callback()
 endfunction
 
 function! s:helper.mock() abort

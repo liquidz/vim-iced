@@ -103,7 +103,7 @@ function! iced#buffer#open(bufname, ...) abort
   endtry
 endfunction
 
-function! s:scroll_to_bottom(nr, _) abort
+function! s:scroll_to_bottom(nr) abort
   let current_window = winnr()
   let last_window = winnr('#')
   try
