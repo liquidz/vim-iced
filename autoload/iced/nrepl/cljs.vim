@@ -27,6 +27,10 @@ function! s:unset_cljs_session() abort
   call iced#nrepl#set_session('cljs', '')
 endfunction
 
+function! iced#nrepl#cljs#env_name() abort
+  return get(iced#nrepl#get_cljs_env(), 'name', '')
+endfunction
+
 function! iced#nrepl#cljs#check_switching_session(eval_resp, evaluated_code) abort
   if !has_key(a:eval_resp, 'ns') || !has_key(a:eval_resp, 'session')
     return iced#promise#resolve('')
@@ -42,7 +46,7 @@ function! iced#nrepl#cljs#check_switching_session(eval_resp, evaluated_code) abo
 
   let ns = a:eval_resp['ns']
   let ext = expand('%:e')
-  let env_name = get(iced#nrepl#get_cljs_env(), 'name', '')
+  let env_name = iced#nrepl#cljs#env_name()
 
   if eq_to_clj_session && ns ==# g:iced#nrepl#init_cljs_ns
     let p = s:set_cljs_session(eval_session)
@@ -178,7 +182,7 @@ function! iced#nrepl#cljs#stop_repl_via_env() abort
 endfunction
 
 function! iced#nrepl#cljs#is_current_env_shadow_cljs() abort
-  return (get(iced#nrepl#get_cljs_env(), 'name', '') ==# 'shadow-cljs')
+  return (iced#nrepl#cljs#env_name() ==# 'shadow-cljs')
 endfunction
 
 " c.f. :h :command-completion-custom
