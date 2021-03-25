@@ -2183,6 +2183,7 @@ g:iced#hook
         \ })
 <
   - Hook events
+    - connect_prepared  |hook_event_connect_prepared|
     - connected         |hook_event_connected|
     - disconnected      |hook_event_disconnected|
     - test_finished     |hook_event_test_finished|
@@ -2196,6 +2197,18 @@ g:iced#hook
     - eval              |hook_report_eval|
     - function          |hook_report_function|
     - command           |hook_report_command|
+
+
+CONNECT PREPARED                                  *hook_event_connect_prepared*
+
+  Hooked before the start of connection.
+  This hook only allows `function` hook type.
+  c.f. |hook_report_function|
+
+  Following list is passed to reporter. 
+  e.g. `[{'label': 'nREPL', 'type': 'nrepl', 'port': 12345}]`
+
+  Reporter should return a list of dictionary which has same parameters.
 
 CONNECTED                                                *hook_event_connected*
 
