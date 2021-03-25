@@ -1,6 +1,10 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* Added `connect_prepared` hook.
+// }}}
 
 == 3.0.3 (2021-03-21)
 // {{{
