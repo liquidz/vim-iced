@@ -2210,7 +2210,7 @@ DISCONNECTED                                          *hook_event_disconnected*
 TEST FINISHED                                        *hook_event_test_finished*
 
   Hooked when running test is finished.
-  Following parameters are pass to reporter.
+  Following parameters are passed to reporter.
 
   - result
     Test result. "succeeded" or "failed".
@@ -2228,7 +2228,7 @@ NS ALL RELOADED                                    *hook_event_ns_all_reloaded*
 SESSION SWITCHED                                  *hook_event_session_switched*
 
   Hooked when current session is switched.
-  Following parameters are pass to reporter.
+  Following parameters are passed to reporter.
 
   - session
     Destination session type. "clj" or "cljs".
@@ -2236,7 +2236,7 @@ SESSION SWITCHED                                  *hook_event_session_switched*
 EVAL PREPARED                                        *hook_event_eval_prepared*
 
   Hooked before the start of evaluation.
-  Following parameters are pass to reporter.
+  Following parameters are passed to reporter.
 
   - code
     Evaluation code.
@@ -2247,7 +2247,7 @@ EVAL PREPARED                                        *hook_event_eval_prepared*
 EVALUATED                                                *hook_event_evaluated*
 
   Hooked after evaluation.
-  Following parameters are pass to reporter.
+  Following parameters are passed to reporter.
 
   - result
     Result map respnsed by nREPL server.
