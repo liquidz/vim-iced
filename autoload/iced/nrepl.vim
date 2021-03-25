@@ -533,8 +533,10 @@ function! iced#nrepl#close(session, callback) abort
       \ })
 endfunction
 
-function! iced#nrepl#is_connected() abort " {{{
-  return (s:status(s:nrepl['channel']) ==# 'open')
+function! iced#nrepl#is_connected(...) abort " {{{
+  let conn = get(a:, 1, s:nrepl)
+  if ! has_key(conn, 'channel') | return v:false | endif
+  return (s:status(conn['channel']) ==# 'open')
 endfunction " }}}
 
 function! iced#nrepl#disconnect() abort " {{{
