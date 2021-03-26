@@ -43,25 +43,52 @@ function! s:__connect_shadow_cljs(port) abort
   return v:true
 endfunction
 
+function! s:__connect_selected(selected) abort
+  let name = a:selected['type']
+  let port = a:selected['port']
+  return (name ==# 'nrepl')
+        \ ? s:__connect_nrepl(port)
+        \ : s:__connect_shadow_cljs(port)
+endfunction
+
 function! iced#nrepl#connect#auto(...) abort
   let verbose = get(a:, 1, v:true)
   let shadow_cljs_port = s:detect_shadow_cljs_nrepl_port()
   let nrepl_port = s:detect_port_from_nrepl_port_file()
+  let candidates = []
 
-  if shadow_cljs_port && nrepl_port
+  if nrepl_port
+    let candidates += [{
+         \ 'label': 'nREPL',
+         \ 'type': 'nrepl',
+         \ 'port': nrepl_port}]
+  endif
+
+  if shadow_cljs_port
+    let candidates += [{
+         \ 'label': 'shadow-cljs',
+         \ 'type': 'shadow-cljs',
+         \ 'port': shadow_cljs_port}]
+  endif
+
+  " Only 'function' hook type is available
+  let hook_results = iced#hook#run('connect_prepared',
+       \ candidates,
+       \ {'shell': v:false,
+       \  'eval': v:false,
+       \  'command': v:false})
+  let filtered_candidates = filter(hook_results, {_, v -> type(v) == v:t_list})[0]
+
+  let filtered_count = len(filtered_candidates)
+  if filtered_count == 1
+    return s:__connect_selected(filtered_candidates[0])
+  elseif filtered_count > 1
     call iced#selector({
-          \ 'candidates': ['nREPL', 'shadow-cljs'],
-          \ 'accept': {_, s -> (s ==# 'nREPL')
-          \                    ? s:__connect_nrepl(nrepl_port)
-          \                    : s:__connect_shadow_cljs(shadow_cljs_port)}
-          \ })
+         \ 'candidates': map(copy(filtered_candidates), {_, v -> v['label']}),
+         \ 'accept': {_, s -> s:__connect_selected(
+         \                      filter(copy(filtered_candidates), {_, v -> v['label'] ==# s})[0])},
+         \ })
     return v:true
-  else
-    if shadow_cljs_port
-      return s:__connect_shadow_cljs(shadow_cljs_port)
-    elseif nrepl_port
-      return s:__connect_nrepl(nrepl_port)
-    endif
   endif
 
   if verbose | call iced#message#error('no_port_file') | endif

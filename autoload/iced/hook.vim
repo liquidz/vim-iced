@@ -32,8 +32,11 @@ function! s:run_by_command(exec) abort
   return iced#system#get('ex_cmd').exe(a:exec)
 endfunction
 
+" Returns hooked results as a list
 function! iced#hook#run(hook_kind, params, ...) abort
-  if !has_key(g:iced#hook, a:hook_kind) | return | endif
+  if !has_key(g:iced#hook, a:hook_kind)
+    return [a:params]
+  endif
 
   let opt = get(a:, 1, {})
   let shell_available = get(opt, 'shell', v:true)
@@ -46,26 +49,30 @@ function! iced#hook#run(hook_kind, params, ...) abort
     let hooks = [hooks]
   endif
 
+  let result = []
   for hook in hooks
     if !has_key(hook, 'type') || !has_key(hook, 'exec')
-      return iced#message#error('invalid_hook')
+      call iced#message#error('invalid_hook')
+      continue
     endif
 
     let exec_type = hook['type']
     let Exec_body = hook['exec']
 
     if shell_available && exec_type ==# 'shell'
-      return s:run_by_shell(Exec_body, a:params)
+      let result += [s:run_by_shell(Exec_body, a:params)]
     elseif eval_available && exec_type ==# 'eval'
-      return s:run_by_evaluating(Exec_body, a:params)
+      let result += [s:run_by_evaluating(Exec_body, a:params)]
     elseif function_available && exec_type ==# 'function'
-      return s:run_by_function(Exec_body, a:params)
+      let result += [s:run_by_function(Exec_body, a:params)]
     elseif command_available && exec_type ==# 'command'
-      return s:run_by_command(Exec_body)
+      let result += [s:run_by_command(Exec_body)]
     else
-      return iced#message#error('unknown_hook_type', exec_type)
+      call iced#message#error('unknown_hook_type', exec_type)
     endif
   endfor
+
+  return result
 endfunction
 
 function! iced#hook#add(hook_kind, definition) abort

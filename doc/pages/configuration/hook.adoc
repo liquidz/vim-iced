@@ -40,6 +40,12 @@ Following events can be hooked.
 |===
 | Event key | Event parameters | Description
 
+| connect_prepared
+| `[{'label': 'nREPL', 'type': 'nrepl', 'port': 12345}]`
+| Hooked before the start of connection. +
+This hook only allows `function` hook type. +
+Reporter should return a list of dictionary which has same parameters.
+
 | connected
 | -
 | Hooked when vim-iced is connected to nREPL.

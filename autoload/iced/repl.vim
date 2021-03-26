@@ -18,6 +18,7 @@ function! iced#repl#is_connected() abort
 endfunction
 
 function! iced#repl#connect(target, ...) abort
+  let org_repl = s:repl
   let s:repl = iced#system#get(a:target)
   if empty(s:repl)
     return iced#message#error('connect_error')
@@ -25,7 +26,8 @@ function! iced#repl#connect(target, ...) abort
 
   let result = call(s:repl.connect, a:000)
   if !result
-    let s:repl = {}
+    let s:repl = org_repl
+    return {}
   endif
 
   return s:repl
