@@ -4,7 +4,7 @@ set cpoptions&vim
 function! iced#nrepl#var#cword() abort
   let isk = &iskeyword
   try
-    setlocal iskeyword=@,48-57,_,192-255,?,-,*,!,+,/,=,<,>,.,:,$,#,%,&,'
+    let &iskeyword = '@,48-57,_,192-255,?,-,*,!,+,/,=,<,>,.,:,$,#,%,&,39'
     return expand('<cword>')
   finally
     let &iskeyword = isk
