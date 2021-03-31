@@ -135,14 +135,18 @@ function! iced#nrepl#navigate#related_ns() abort
 endfunction " }}}
 
 " iced#nrepl#navigate#jump_to_def {{{
-function! iced#nrepl#navigate#jump_to_def(symbol, ...) abort
+" arguments signatures:
+"   []                 -> use cword as symbol
+"   [symbol]           -> use 'edit' as jump_cmd
+"   [symbol, jump_cmd]
+"   ['.', jump_cmd]    -> '.' is a dummy symbol, use cword
+function! iced#nrepl#navigate#jump_to_def(...) abort
   call iced#system#get('tagstack').add_here()
 
-  let symbol = empty(a:symbol)
+  let jump_cmd = a:0 > 1 ? a:2 : 'edit'
+  let symbol = (a:0 == 0 || a:1 == '.')
         \ ? iced#nrepl#var#cword()
-        \ : a:symbol
-
-  let jump_cmd = a:0 > 0 ? a:1 : 'edit'
+        \ : a:1
 
   let kondo = iced#system#get('clj_kondo')
   if stridx(symbol, '::') == 0
