@@ -262,7 +262,7 @@ function! s:jump(base_symbol, jump_cmd, resp) abort
   endif
 
   if expand('%:p') !=# path
-    call iced#system#get('ex_cmd').exe(printf('%s %s', a:jump_cmd, path))
+    call iced#system#get('ex_cmd').exe(printf(':%s %s', a:jump_cmd, path))
   endif
 
   call cursor(line, column)
