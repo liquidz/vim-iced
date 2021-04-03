@@ -144,7 +144,7 @@ function! iced#nrepl#navigate#jump_to_def(...) abort
   call iced#system#get('tagstack').add_here()
 
   let jump_cmd = a:0 > 1 ? a:2 : 'edit'
-  let symbol = (a:0 == 0 || a:1 == '.')
+  let symbol = (a:0 == 0 || a:1 ==# '.')
         \ ? iced#nrepl#var#cword()
         \ : a:1
 
