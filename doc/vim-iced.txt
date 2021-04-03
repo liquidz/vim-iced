@@ -925,7 +925,9 @@ COMMANDS                                                    *vim-iced-commands*
 
   To specify {jump-cmd} while still use symbol under cursor automatically,
   pass '.' as first argument.
-
+  E.g. >
+  :nmap <buffer> g<C-]> :<C-u>IcedDefJump . tabedit<CR>
+<
   Key is mapped to |<Plug>(iced_def_jump)|.
 
                                                                   *:IcedOpenNs*
