@@ -113,7 +113,7 @@ command!          IcedStdoutBufferClear     call iced#buffer#stdout#clear()
 command!          IcedStdoutBufferClose     call iced#buffer#stdout#close()
 command!          IcedStdoutBufferToggle    call iced#buffer#stdout#toggle()
 
-command! -nargs=? IcedDefJump               call iced#nrepl#navigate#jump_to_def(<q-args>)
+command! -nargs=* IcedDefJump               call iced#nrepl#navigate#jump_to_def(<f-args>)
 command! -nargs=1 -complete=custom,iced#nrepl#navigate#ns_complete
       \ IcedOpenNs                          call iced#nrepl#navigate#open_ns('e', <q-args>)
 

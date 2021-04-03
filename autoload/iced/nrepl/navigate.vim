@@ -135,12 +135,18 @@ function! iced#nrepl#navigate#related_ns() abort
 endfunction " }}}
 
 " iced#nrepl#navigate#jump_to_def {{{
-function! iced#nrepl#navigate#jump_to_def(symbol) abort
+" arguments signatures:
+"   []                 -> use cword as symbol
+"   [symbol]           -> use 'edit' as jump_cmd
+"   [symbol, jump_cmd]
+"   ['.', jump_cmd]    -> '.' is a dummy symbol, use cword
+function! iced#nrepl#navigate#jump_to_def(...) abort
   call iced#system#get('tagstack').add_here()
 
-  let symbol = empty(a:symbol)
+  let jump_cmd = a:0 > 1 ? a:2 : 'edit'
+  let symbol = (a:0 == 0 || a:1 == '.')
         \ ? iced#nrepl#var#cword()
-        \ : a:symbol
+        \ : a:1
 
   let kondo = iced#system#get('clj_kondo')
   if stridx(symbol, '::') == 0
@@ -150,10 +156,10 @@ function! iced#nrepl#navigate#jump_to_def(symbol) abort
     if ! empty(local_def)
       return s:jump_to_local_definition(local_def)
     else
-      return iced#nrepl#var#get(symbol, funcref('s:jump', [symbol]))
+      return iced#nrepl#var#get(symbol, funcref('s:jump', [symbol, jump_cmd]))
     endif
   else
-    return iced#nrepl#var#get(symbol, funcref('s:jump', [symbol]))
+    return iced#nrepl#var#get(symbol, funcref('s:jump', [symbol, jump_cmd]))
   endif
 endfunction
 
@@ -220,7 +226,7 @@ function!  s:jump_to_local_definition(local_def) abort
   call cursor(row, col)
 endfunction
 
-function! s:jump(base_symbol, resp) abort
+function! s:jump(base_symbol, jump_cmd, resp) abort
   let path = ''
   let line = 0
   let column = 0
@@ -256,7 +262,7 @@ function! s:jump(base_symbol, resp) abort
   endif
 
   if expand('%:p') !=# path
-    call iced#system#get('ex_cmd').exe(printf(':edit %s', path))
+    call iced#system#get('ex_cmd').exe(printf(':%s %s', a:jump_cmd, path))
   endif
 
   call cursor(line, column)

@@ -918,8 +918,16 @@ COMMANDS                                                    *vim-iced-commands*
   Key is mapped to |<Plug>(iced_stdout_buffer_toggle)|.
 
                                                                  *:IcedDefJump*
-:IcedDefJump
-  Jump cursor to definition of symbol under cursor.
+:IcedDefJump [{symbol}, {jump-cmd}]
+  Jump cursor to definition of {symbol} (default to symbol under cursor).
+
+  {jump-cmd} is used to specify how to open the new buffer, default to |edit|.
+
+  To specify {jump-cmd} while still use symbol under cursor automatically,
+  pass '.' as first argument.
+  E.g. >
+  :nmap <buffer> g<C-]> :<C-u>IcedDefJump . tabedit<CR>
+<
   Key is mapped to |<Plug>(iced_def_jump)|.
 
                                                                   *:IcedOpenNs*
