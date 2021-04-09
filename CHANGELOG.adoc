@@ -1,6 +1,17 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+
+* Bumped iced-nrepl to 1.2.3.
+* Bumped jet installer to 0.0.15.
+
+=== Fixed
+
+* Fixed `IcedBrowseReferences` to work with qualified keywords correctly.
+** Especially keywords like `::foo` or `::foo/bar`
+// }}}
 
 == 3.1.1 (2021-04-04)
 // {{{
