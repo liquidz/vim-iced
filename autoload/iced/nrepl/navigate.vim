@@ -358,6 +358,27 @@ function! s:clj_kondo_analysis_to_fn_deps(analysis) abort
         \  }})}
 endfunction
 
+function! s:expand_qualified_keyword_by_clj_kondo(kw) abort
+  let kw = a:kw
+  let arr = split(a:kw, '/')
+  let ns_name = iced#nrepl#ns#name_by_buf()
+
+  if len(arr) == 2
+    let kondo = iced#system#get('clj_kondo')
+    let aliases = kondo.ns_aliases(ns_name)
+    let names = get(aliases, arr[0], [])
+
+    if empty(names)
+      return ''
+    endif
+
+    let ns_name = names[0]
+    let kw = arr[1]
+  endif
+
+  return printf('%s/%s', ns_name, kw)
+endfunction
+
 function! iced#nrepl#navigate#browse_references(symbol) abort
   if !iced#nrepl#is_connected()
     return iced#message#error('not_connected')
@@ -368,7 +389,13 @@ function! iced#nrepl#navigate#browse_references(symbol) abort
 
   if kondo.is_analyzed()
     " Use clj-kondo's analysis
-    if stridx(symbol, ':') == 0
+    if stridx(symbol, '::')  == 0
+      let symbol = s:expand_qualified_keyword_by_clj_kondo(symbol[2:])
+      if empty(symbol)
+        return iced#message#warning('not_found')
+      endif
+      call s:fn_refs_callback(s:clj_kondo_analysis_to_fn_refs(kondo.keyword_usages(symbol)))
+    elseif stridx(symbol, ':') == 0
       call s:fn_refs_callback(s:clj_kondo_analysis_to_fn_refs(kondo.keyword_usages(symbol[1:])))
     else
       call iced#nrepl#ns#in({_ -> iced#nrepl#var#get(symbol, {resp ->
