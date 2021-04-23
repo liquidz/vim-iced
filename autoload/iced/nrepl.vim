@@ -438,31 +438,40 @@ endfunction
 
 function! s:connected(resp, opts) abort
   if has_key(a:resp, 'new-session')
-    let session = a:resp['new-session']
-    let initial_session = get(a:opts, 'initial_session', 'clj')
-    call iced#nrepl#set_session(initial_session, session)
-    call iced#nrepl#change_current_session(initial_session)
-    let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
+    try
+      let session = a:resp['new-session']
+      let initial_session = get(a:opts, 'initial_session', 'clj')
+      call iced#nrepl#set_session(initial_session, session)
+      call iced#nrepl#change_current_session(initial_session)
+      let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
 
-    if get(a:opts, 'with_iced_nrepl', v:true)
-      " Check if nREPL middlewares are enabled
-      if !iced#nrepl#is_supported_op('iced-version')
-        return iced#message#error('no_iced_nrepl')
+      if get(a:opts, 'with_iced_nrepl', v:true)
+        " Check if nREPL middlewares are enabled
+        if !iced#nrepl#is_supported_op('iced-version')
+          return iced#message#error('no_iced_nrepl')
+        endif
+
+        call iced#nrepl#set_iced_nrepl_enabled(v:true)
+        silent call s:warm_up()
       endif
 
-      call iced#nrepl#set_iced_nrepl_enabled(v:true)
-      silent call s:warm_up()
-    endif
+      call iced#nrepl#auto#enable_bufenter(v:true)
 
-    call iced#nrepl#auto#enable_bufenter(v:true)
+      call iced#message#info('connected')
+      call iced#hook#run('connected', {})
 
-    call iced#message#info('connected')
-    call iced#hook#run('connected', {})
-
-    " auto cljs start
-    if has_key(a:opts, 'cljs_env')
-      call iced#nrepl#cljs#start_repl_via_env(get(a:opts, 'cljs_env'))
-    endif
+      " auto cljs start
+      if has_key(a:opts, 'cljs_env')
+        call iced#nrepl#cljs#start_repl_via_env(get(a:opts, 'cljs_env'))
+      endif
+    catch
+      " Failed to initialize
+      call iced#message#error('unexpected_error', v:exception)
+      call iced#nrepl#disconnect()
+    endtry
+  else
+    " Invalid response from clone op
+    call iced#nrepl#disconnect()
   endif
 endfunction
 
