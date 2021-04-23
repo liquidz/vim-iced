@@ -505,7 +505,8 @@ function! iced#nrepl#connect(port, ...) abort
     endif
   endif
 
-  let resp = iced#promise#sync('iced#nrepl#clone', [])
+  " NOTE: wait for ever
+  let resp = iced#promise#sync('iced#nrepl#clone', [], v:null)
   call s:connected(resp, opts)
   return v:true
 endfunction
