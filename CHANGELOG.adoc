@@ -3,9 +3,13 @@ All notable changes to this project will be documented in this file. This change
 == Unreleased (dev)
 
 // {{{
-=== Fixed
+=== Changed
+* Bumped cider-nrepl to 0.26.0.
+* Bumped iced-nrepl to 1.2.4.
 
+=== Fixed
 * Fixed skeleton feature to also apply for empty files.
+* Fixed to disconnect when connection initializing is failed.
 // }}}
 
 == 3.1.2 (2021-04-10)
