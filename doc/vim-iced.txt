@@ -230,28 +230,28 @@ REBEL READLINE~
   (ns user
     (:require [nrepl.server :as nrepl-server]
               [clojure.java.io :as io]))
-  
+
   (def nrepl-port 7888)
   (defonce nrepl-server (atom nil))
 
   (defn cider-middleware
-    "Get cider middleware, see 
+    "Get cider middleware, see
     https://github.com/clojure-emacs/cider-nrepl/issues/447"
     []
     (require 'cider.nrepl)
-    (map ns-resolve 
-       ['cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl] 
+    (map ns-resolve
+       ['cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl]
        ['wrap-classpath 'wrap-clojuredocs 'wrap-complete 'wrap-debug 'wrap-format 'wrap-info 'wrap-macroexpand 'wrap-ns 'wrap-out 'wrap-spec 'wrap-test 'wrap-trace 'wrap-undef 'wrap-xref]))
 
   (defn dev-middleware []
     (mapcat (fn [[ns syms]] (require ns) (map (partial ns-resolve ns) syms))
     [['refactor-nrepl.middleware ['wrap-refactor]] ['iced.nrepl ['wrap-iced]]]))
-    
+
   (defn nrepl-handler
     "Re-implement cider-nrepl-handler so we can add middleware to the default list"
     []
     (apply nrepl-server/default-handler (concat (cider-middleware) (dev-middleware))))
-   
+
   (defn start-nrepl-server! []
     (reset!
       nrepl-server
@@ -267,7 +267,7 @@ REBEL READLINE~
       (io/delete-file ".nrepl-port" true)
       (System/exit 0)))
 <
-  Start the Rebel Readline REPL and from it's prompt start the nREPL server 
+  Start the Rebel Readline REPL and from it's prompt start the nREPL server
   using `start-nrepl-server!`, then in Vim do `:IcedConnect`.
 
 ==============================================================================
@@ -819,8 +819,7 @@ COMMANDS                                                    *vim-iced-commands*
 
                                                         *:IcedEvalOuterTopList*
 :IcedEvalOuterTopList
-  Work same as `<Plug>(iced_eval)<Plug>(sexp_outer_top_list)`,
-  without scrolling.
+  Evaluate topmost form that is not a comment where the cursor currently is.
   Key is mapped to |<Plug>(iced_eval_outer_top_list)|.
 
                                                               *:IcedEvalAtMark*
@@ -2213,7 +2212,7 @@ CONNECT PREPARED                                  *hook_event_connect_prepared*
   This hook only allows `function` hook type.
   c.f. |hook_report_function|
 
-  Following list is passed to reporter. 
+  Following list is passed to reporter.
   e.g. `[{'label': 'nREPL', 'type': 'nrepl', 'port': 12345}]`
 
   Reporter should return a list of dictionary which has same parameters.
