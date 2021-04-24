@@ -6,10 +6,12 @@ All notable changes to this project will be documented in this file. This change
 === Changed
 * Bumped cider-nrepl to 0.26.0.
 * Bumped iced-nrepl to 1.2.4.
+* Bumped joker to 0.17.0.
 
 === Fixed
 * Fixed skeleton feature to also apply for empty files.
-* Fixed to disconnect when connection initializing is failed.
+* Fixed to disconnect if the initialization fails when connecting.
+** To avoid halfway states.
 // }}}
 
 == 3.1.2 (2021-04-10)
