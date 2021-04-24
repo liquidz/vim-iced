@@ -2,6 +2,7 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.1.3 (2021-04-24)
 // {{{
 === Changed
 * Bumped cider-nrepl to 0.26.0.
