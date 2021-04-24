@@ -7,11 +7,13 @@ function! s:assoc(d, k, v) abort
   return d
 endfunction
 
-function! iced#nrepl#sync#send(data) abort
+function! iced#nrepl#sync#send(data, ...) abort
+  let timeout = get(a:, 1, g:iced#promise#timeout_ms)
   let [result, error] = iced#promise#wait(
         \ iced#promise#call(
         \   'iced#nrepl#send',
-        \   {resolve -> [s:assoc(a:data, 'callback', resolve)]}))
+        \   {resolve -> [s:assoc(a:data, 'callback', resolve)]}),
+        \ timeout)
 
   if error isnot# v:null
     if has_key(a:data, 'session')
@@ -50,12 +52,14 @@ endfunction
 function! iced#nrepl#sync#eval(code, ...) abort
   let option = get(a:, 1, {})
   let session  = get(option, 'session_id', iced#nrepl#current_session())
+  let timeout = get(option, 'timeout', g:iced#promise#timeout_ms)
 
   return iced#nrepl#sync#send({
-        \ 'id': iced#nrepl#id(),
-        \ 'op': 'eval',
-        \ 'code': a:code,
-        \ 'session': session})
+        \   'id': iced#nrepl#id(),
+        \   'op': 'eval',
+        \   'code': a:code,
+        \   'session': session},
+        \ timeout)
 endfunction
 
 let &cpoptions = s:save_cpo

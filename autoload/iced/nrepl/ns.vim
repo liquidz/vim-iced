@@ -50,7 +50,8 @@ endfunction
 
 function! iced#nrepl#ns#name_by_var(...) abort
   let session = get(a:, 1, iced#nrepl#current_session())
-  let resp = iced#nrepl#sync#eval('(ns-name *ns*)', {'session_id': session})
+  " NOTE: wait for ever
+  let resp = iced#nrepl#sync#eval('(ns-name *ns*)', {'session_id': session, 'timeout': v:null})
   if type(resp) != v:t_dict || !has_key(resp, 'value')
     return ''
   endif

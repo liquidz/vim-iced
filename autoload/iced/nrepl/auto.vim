@@ -41,6 +41,11 @@ endfunction
 
 function! iced#nrepl#auto#bufread() abort
   if !iced#nrepl#is_connected() | return | endif
+
+  if line('$') == 1 && empty(getline(1))
+    call iced#skeleton#new()
+  endif
+
   call s:auto_switching_session()
   if !iced#nrepl#check_session_validity(v:false) | return | endif
 
