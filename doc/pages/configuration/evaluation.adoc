@@ -2,16 +2,24 @@
 
 ==== Eval inside comment [[eval_inside_comment]]
 
-`comment` form is useful for checking behavior.
+`comment` form is useful during development for checking behavior.
 You can use <<evaluate_outer_list>> range to evaluate codes inside `comment` form,
-but it is bored that some cursor movements are required.
+but it is cumbersome as some cursor movements are required.
 
+{help_html}#%3AIcedEvalOuterTopList[IcedEvalOuterTopList] helps by selecting different code to be evaluated when the current top form is a `comment`.
+If the cursor is in a form nested inside the comment, the code to be evaluated will be the cursor's topmost form in the comment, rather than the comment form itself.
 
-{help_html}#g%3Aiced%23eval%23inside_comment[g:iced#eval#inside_comment] is a configuration that allow you to evaluate inside `comment` form with <<evaluate_outer_top_list>> range, and it is enabled by default.
+When the cursor is otherwise at the same depth as the `comment` form itself, the `comment` will be evaluated as a `do` form.
+This can be configured by {help_html}#g%3Aiced%23eval%23inside_comment[g:iced#eval#inside_comment], and it is enabled by default.
 
 .Example (📍 means cursor position)
 [source,clojure]
 ----
-(comment📍      ;; Execute `:IcedEvalOuterTopList`
-  (+ 1 2 3))    ;; => 6
+(comment
+  (print (📍"Hello"))   ;; Execute `:IcedEvalOuterTopList`
+  (print ("world")))    ;; => hello
+
+(comment
+📍(print ("hello"))     ;; Execute `:IcedEvalOuterTopList`
+  (print ("world")))    ;; => helloworld
 ----

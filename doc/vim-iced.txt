@@ -820,6 +820,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                         *:IcedEvalOuterTopList*
 :IcedEvalOuterTopList
   Evaluate topmost form that is not a comment where the cursor currently is.
+  See also https://liquidz.github.io/vim-iced/#configuration_evaluation
   Key is mapped to |<Plug>(iced_eval_outer_top_list)|.
 
                                                               *:IcedEvalAtMark*
