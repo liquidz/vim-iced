@@ -224,11 +224,11 @@ function! iced#paredit#get_outer_list() abort
 endfunction
 
 " from vim-sexp
-function! s:get_visual_marks()
+function! s:get_visual_marks() abort
     return [getpos("'<"), getpos("'>")]
 endfunction
 
-function! s:set_visual_marks(marks)
+function! s:set_visual_marks(marks) abort
     call setpos("'<", a:marks[0])
     call setpos("'>", a:marks[1])
 endfunction
