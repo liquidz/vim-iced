@@ -223,5 +223,74 @@ function! iced#paredit#get_outer_list() abort
   return code
 endfunction
 
+" from vim-sexp
+function! s:get_visual_marks() abort
+    return [getpos("'<"), getpos("'>")]
+endfunction
+
+function! s:set_visual_marks(marks) abort
+    call setpos("'<", a:marks[0])
+    call setpos("'>", a:marks[1])
+endfunction
+
+" Return visually selected text without changing selection state and registers
+function! s:get_visual_selection() abort
+    let reg_save = @@
+    silent normal! y
+    let result = @@
+    let @@ = reg_save
+    silent normal! gv
+    return result
+endfunction
+
+function! s:get_visual_selection_and_pos() abort
+    let reg_save = @@
+    silent normal! y
+    let code = @@
+    let pos = getcurpos()
+    let @@ = reg_save
+    silent normal! gv
+    return {'code': code, 'curpos': pos}
+endfunction
+
+function! s:select_top_list(top_code) abort
+    let reg_save = @@
+    try
+        while (v:true)
+            call sexp#select_current_list('v', 0, 1)
+            let current_marks = s:get_visual_marks()
+
+            call sexp#docount(2, 'sexp#select_current_list', 'v', 0, 1)
+            let next_code = s:get_visual_selection()
+
+            if (next_code ==# a:top_code) | break | endif
+        endwhile
+        call s:set_visual_marks(current_marks)
+        normal! gv
+    finally
+        let @@ = reg_save
+    endtry
+endfunction
+
+function! iced#paredit#get_top_list_in_comment() abort
+    let view = winsaveview()
+    let curpos = getpos('.')
+
+    " First use vim-sexp optimized top form selector
+    call sexp#select_current_top_list('v', 0)
+    let top_code = s:get_visual_selection()
+
+    if (stridx(top_code, '(comment') == 0)
+        " Select up one by one if the top list is a (comment ...) form
+        execute "normal! \<Esc>"
+        call setpos('.', curpos)
+        call s:select_top_list(top_code)
+    endif
+    let ret = s:get_visual_selection_and_pos()
+    execute "normal! \<Esc>"
+    call winrestview(view)
+    return ret
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
