@@ -16,10 +16,10 @@ This can be configured by {help_html}#g%3Aiced%23eval%23inside_comment[g:iced#ev
 [source,clojure]
 ----
 (comment
-  (print (📍"Hello"))   ;; Execute `:IcedEvalOuterTopList`
-  (print ("world")))    ;; => hello
+  (print (📍str "hello"))   ;; Execute `:IcedEvalOuterTopList`
+  (print (str "world")))    ;; => hello
 
 (comment
-📍(print ("hello"))     ;; Execute `:IcedEvalOuterTopList`
-  (print ("world")))    ;; => helloworld
+📍(print (str "hello"))     ;; Execute `:IcedEvalOuterTopList`
+  (print (str "world")))    ;; => helloworld
 ----
