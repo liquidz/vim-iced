@@ -35,6 +35,7 @@ CONTENTS                                                    *vim-iced-contents*
   Jump to definition           |vim-iced-jump-to-def|
   Editing S-exp                |vim-iced-editing-s-exp|
     Formatting                 |vim-iced-formatting|
+      Format on writing files  |vim-iced-formatting-on-writing-files|
     Indenting                  |vim-iced-indenting|
     Refactoring                |vim-iced-refactoring|
   Sideloader                   |vim-iced-sideloader|
@@ -585,6 +586,24 @@ FORMATTING                                                *vim-iced-formatting*
 <
   See also |vim-iced-customizing-formatter|.
 
+                                         *vim-iced-formatting-on-writing-files*
+FORMAT ON WRITING FILES~
+
+  vim-iced also provides following sync commands.
+  - |:IcedFormatSync|
+  - |:IcedFormatSyncAll|
+
+  These commands are useful to format on writing files.
+>
+  aug VimIcedAutoFormatOnWriting
+    au!
+    " Format whole buffer on writing files
+    au BufWritePre *.clj,*.cljs,*.cljc,*.edn execute ':IcedFormatSyncAll'
+
+    " Format only current form on writing files
+    " au BufWritePre *.clj,*.cljs,*.cljc,*.edn execute ':IcedFormatSync'
+  aug END
+<
 ------------------------------------------------------------------------------
 INDENTING                                                  *vim-iced-indenting*
 
@@ -1076,6 +1095,16 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedFormatAll
   Reformat current buffer.
   Key is mapped to |<Plug>(iced_format_all)|.
+
+                                                              *:IcedFormatSync*
+:IcedFormatSync
+  Same as |:IcedFormat|, but it's done synchronously.
+  Key is mapped to |<Plug>(iced_format_sync)|.
+  
+                                                           *:IcedFormatSyncAll*
+:IcedFormatSyncAll
+  Same as |:IcedFormatAll|, but it's done synchronously.
+  Key is mapped to |<Plug>(iced_format_sync_all)|.
 
                                                          *:IcedCycleSrcAndTest*
 :IcedCycleSrcAndTest
@@ -1601,6 +1630,14 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                       *<Plug>(iced_format_all)*
 <Plug>(iced_format_all)
   Same as |:IcedFormatAll|.
+
+                                                     *<Plug>(iced_format_sync)*
+<Plug>(iced_format_sync)
+  Same as |:IcedFormatSync|.
+
+                                                 *<Plug>(iced_format_sync_all)*
+<Plug>(iced_format_sync_all)
+  Same as |:IcedFormatSyncAll|.
 
                                               *<Plug>(iced_cycle_src_and_test)*
 <Plug>(iced_cycle_src_and_test)
