@@ -136,6 +136,8 @@ command!          IcedSlurp                 call iced#paredit#deep_slurp()
 command!          IcedBarf                  call iced#paredit#barf()
 command!          IcedFormat                call iced#format#current()
 command!          IcedFormatAll             call iced#format#all()
+command!          IcedFormatSync            call iced#format#sync_current()
+command!          IcedFormatSyncAll         call iced#format#sync_all()
 command!          IcedCycleSrcAndTest       call iced#nrepl#navigate#cycle_src_and_test()
 command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
 
@@ -253,6 +255,8 @@ nnoremap <silent> <Plug>(iced_slurp)                    :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                     :<C-u>IcedBarf<CR>
 nnoremap <silent> <Plug>(iced_format)                   :<C-u>IcedFormat<CR>
 nnoremap <silent> <Plug>(iced_format_all)               :<C-u>IcedFormatAll<CR>
+nnoremap <silent> <Plug>(iced_format_sync)              :<C-u>IcedFormatSync<CR>
+nnoremap <silent> <Plug>(iced_format_sync_all)          :<C-u>IcedFormatSyncAll<CR>
 nnoremap <silent> <Plug>(iced_cycle_src_and_test)       :<C-u>IcedCycleSrcAndTest<CR>
 nnoremap <silent> <Plug>(iced_grep)                     :<C-u>IcedGrep<CR>
 

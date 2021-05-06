@@ -7,8 +7,22 @@ function! iced#format#all() abort
   return iced#system#get(s:formatter).all()
 endfunction
 
+function! iced#format#sync_all() abort
+  let p = iced#format#all()
+  return (iced#promise#is_promise(p))
+        \ ? iced#promise#wait(p)
+        \ : p
+endfunction
+
 function! iced#format#current() abort
   return iced#system#get(s:formatter).current_form()
+endfunction
+
+function! iced#format#sync_current() abort
+  let p = iced#format#current()
+  return (iced#promise#is_promise(p))
+        \ ? iced#promise#wait(p)
+        \ : p
 endfunction
 
 function! iced#format#minimal(...) abort
