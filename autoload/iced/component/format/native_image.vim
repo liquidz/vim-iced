@@ -95,7 +95,9 @@ endfunction
 function! s:fmt.all() abort
   let context = iced#util#save_context()
   let codes = trim(join(getline(1, '$'), "\n"))
-  if empty(codes) | return | endif
+  if empty(codes)
+    return iced#promise#reject('ng')
+  endif
 
   " Disable editing until the formatting process is completed
   setl nomodifiable
