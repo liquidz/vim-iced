@@ -272,6 +272,30 @@ function! iced#nrepl#op#cider#clojuredocs_refresh_cache(export_edn_url, callback
         \ })
 endfunction " }}}
 
+function! iced#nrepl#op#cider#refresh(option, callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  let msg = {
+        \ 'id': iced#nrepl#id(),
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ }
+
+  if has_key(a:option, 'all')
+    let msg['op'] = 'refresh-all'
+  else
+    let msg['op'] = 'refresh'
+  endif
+
+  if has_key(a:option, 'before')
+    let msg['before'] = a:option['before']
+  endif
+  if has_key(a:option, 'after')
+    let msg['after'] = a:option['after']
+  endif
+
+  call iced#nrepl#send(msg)
+endfunction
+
 call iced#nrepl#register_handler('info', function('iced#nrepl#comp_handler', [
       \ [function('iced#nrepl#merge_response_handler'),
       \  function('iced#nrepl#path_translation_handler', [['file']])]]))
