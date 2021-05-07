@@ -7,7 +7,7 @@ let s:default_palette = [
       \ 'StartCljsRepl {{env}}',
       \ 'QuitCljsRepl', 'CycleSession',
       \ 'EvalNs', 'Undef', 'UndefAllInNs', 'UnaliasNs',
-      \ 'Require', 'RequireAll',
+      \ 'Require', 'RequireAll', 'Refresh', 'RefreshAll',
       \ 'PrintLast',
       \ 'TestNs', 'TestAll', 'TestRedo', 'TestSpecCheck', 'TestRerunLast',
       \ 'TestBufferOpen',

@@ -100,6 +100,9 @@ command!          IcedPrintLast             call iced#nrepl#eval#print_last()
 command!          IcedMacroExpandOuterList  call iced#nrepl#macro#expand_outer_list()
 command!          IcedMacroExpand1OuterList call iced#nrepl#macro#expand_1_outer_list()
 
+command!          IcedRefresh               call iced#nrepl#ns#refresh()
+command!          IcedRefreshAll            call iced#nrepl#ns#refresh_all()
+
 command!          IcedTestNs                call iced#nrepl#test#ns()
 command!          IcedTestAll               call iced#nrepl#test#all()
 command!          IcedTestRedo              call iced#nrepl#test#redo()
@@ -220,6 +223,9 @@ nnoremap <silent> <Plug>(iced_eval_last_outer_top_list) :<C-u>IcedEvalLastOuterT
 nnoremap <silent> <Plug>(iced_print_last)               :<C-u>IcedPrintLast<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_outer_list)   :<C-u>IcedMacroExpandOuterList<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_1_outer_list) :<C-u>IcedMacroExpand1OuterList<CR>
+
+nnoremap <silent> <Plug>(iced_refresh)                  :<C-u>IcedRefresh<CR>
+nnoremap <silent> <Plug>(iced_refresh_all)              :<C-u>IcedRefreshAll<CR>
 
 nnoremap <silent> <Plug>(iced_test_ns)                  :<C-u>IcedTestNs<CR>
 nnoremap <silent> <Plug>(iced_test_all)                 :<C-u>IcedTestAll<CR>
@@ -379,6 +385,7 @@ function! s:default_key_mappings() abort
   call s:define_mapping('nmap', '<Leader>eU', '<Plug>(iced_undef_all_in_ns)')
   call s:define_mapping('nmap', '<Leader>eM', '<Plug>(iced_macroexpand_outer_list)')
   call s:define_mapping('nmap', '<Leader>em', '<Plug>(iced_macroexpand_1_outer_list)')
+  call s:define_mapping('nmap', '<Leader>enr', '<Plug>(iced_refresh)')
 
   "" Testing (<Leader>t)
   "" ------------------------------------------------------------------------
