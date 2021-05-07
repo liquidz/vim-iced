@@ -29,6 +29,26 @@ let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
 
 TIP: See also <<customizing_indent_rules>>
 
+=== Format on writing files [[format_on_writing_files]]
+
+vim-iced also provides following sync commands.
+
+- {help_html}#%3AIcedFormatSync[IcedFormatSync]
+- {help_html}#%3AIcedFormatSyncAll[IcedFormatSyncAll]
+
+These commands are useful to format on writing files.
+[source,vim]
+----
+aug VimIcedAutoFormatOnWriting
+  au!
+  " Format whole buffer on writing files
+  au BufWritePre *.clj,*.cljs,*.cljc,*.edn execute ':IcedFormatSyncAll'
+
+  " Format only current form on writing files
+  " au BufWritePre *.clj,*.cljs,*.cljc,*.edn execute ':IcedFormatSync'
+aug END
+----
+
 === Customize formatter  [[formatting_customize]]
 
 vim-iced also supports following (GraalVM powered) code formatting tools.
