@@ -871,6 +871,25 @@ COMMANDS                                                    *vim-iced-commands*
   without scrolling.
   Key is mapped to |<Plug>(iced_macroexpand_1_outer_list)|.
 
+                                                                 *:IcedRefresh*
+:IcedRefresh
+  Reload all changed files in all directories on the classpath.
+  Key is mapped to |<Plug>(iced_refresh)|.
+
+  See also:
+  - |g:iced#nrepl#ns#refresh_before_fn|
+  - |g:iced#nrepl#ns#refresh_after_fn|
+
+                                                              *:IcedRefreshAll*
+:IcedRefreshAll
+  Reload all files in all directories on the classpath.
+  Key is mapped to |<Plug>(iced_refresh_all)|.
+
+                                                            *:IcedRefreshClear*
+:IcedRefreshClear
+  Clear refreshing status.
+  Key is mapped to |<Plug>(iced_refresh_clear)|.
+
                                                          *:IcedTestUnderCursor*
 :IcedTestUnderCursor
   Run test under cursor.
@@ -1483,6 +1502,18 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_macroexpand_1_outer_list)
   Same as |:IcedMacroExpand1OuterList|.
 
+                                                         *<Plug>(iced_refresh)*
+<Plug>(iced_refresh)
+  Same as |:IcedRefresh|.
+
+                                                     *<Plug>(iced_refresh_all)*
+<Plug>(iced_refresh_all)
+  Same as |:IcedRefreshAll|.
+
+                                                   *<Plug>(iced_refresh_clear)*
+<Plug>(iced_refresh_clear)
+  Same as |:IcedRefreshClear|.
+
                                                          *<Plug>(iced_test_ns)*
 <Plug>(iced_test_ns)
   Same as |:IcedTestNs|.
@@ -1974,6 +2005,17 @@ g:iced#selector#search_order
   If you'd like to use a specific selector, you can set like below. >
   let g:iced#selector#search_order = ['clap']
 <
+                                            *g:iced#nrepl#ns#refresh_before_fn*
+g:iced#nrepl#ns#refresh_before_fn
+  A qualified function name to evaluate before |:IcedRefresh|.
+  The function should be zero-arity.
+  Default value is `''`. (Not to evaluate)
+
+                                             *g:iced#nrepl#ns#refresh_after_fn*
+g:iced#nrepl#ns#refresh_after_fn
+  A qualified function name to evaluate after |:IcedRefresh|.
+  The function should be zero-arity.
+  Default value is `''`. (Not to evaluate)
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
@@ -2412,6 +2454,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>eQ   <Plug>(iced_interrupt_all)
   n       <Leader>eM   <Plug>(iced_macroexpand_outer_list)
   n       <Leader>em   <Plug>(iced_macroexpand_1_outer_list)
+  n       <Leader>enr  <Plug>(iced_refresh)
   n       <Leader>tt   <Plug>(iced_test_under_cursor)
   n       <Leader>tl   <Plug>(iced_test_rerun_last)
   n       <Leader>ts   <Plug>(iced_test_spec_check)
