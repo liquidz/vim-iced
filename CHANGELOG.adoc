@@ -2,6 +2,7 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.3.0 (2021-05-09)
 // {{{
 === Added
 * Added `IcedFormatSync` and `IcedFormatSyncAll` commands.
