@@ -708,8 +708,9 @@ pre.rouge {
 </li>
 <li><a href="#formatting">9. Formatting</a>
 <ul class="sectlevel2">
-<li><a href="#formatting_customize">9.1. Customize formatter </a></li>
-<li><a href="#auto_indenting">9.2. Auto indenting</a></li>
+<li><a href="#format_on_writing_files">9.1. Format on writing files</a></li>
+<li><a href="#formatting_customize">9.2. Customize formatter </a></li>
+<li><a href="#auto_indenting">9.3. Auto indenting</a></li>
 </ul>
 </li>
 <li><a href="#debugging">10. Debugging</a>
@@ -1867,7 +1868,38 @@ See also <a href="#customizing_indent_rules">Customizing indent rules</a>
 </table>
 </div>
 <div class="sect2">
-<h3 id="formatting_customize">9.1. Customize formatter </h3>
+<h3 id="format_on_writing_files">9.1. Format on writing files</h3>
+<div class="paragraph">
+<p>vim-iced also provides following sync commands.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedFormatSync">IcedFormatSync</a></p>
+</li>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedFormatSyncAll">IcedFormatSyncAll</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These commands are useful to format on writing files.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim">aug VimIcedAutoFormatOnWriting
+  <span class="k">au</span><span class="p">!</span>
+  <span class="c">" Format whole buffer on writing files</span>
+  <span class="k">au</span> <span class="nb">BufWritePre</span> *<span class="p">.</span>clj<span class="p">,</span>*<span class="p">.</span>cljs<span class="p">,</span>*<span class="p">.</span>cljc<span class="p">,</span>*<span class="p">.</span>edn <span class="nb">execute</span> <span class="s1">':IcedFormatSyncAll'</span>
+
+  <span class="c">" Format only current form on writing files</span>
+  <span class="c">" au BufWritePre *.clj,*.cljs,*.cljc,*.edn execute ':IcedFormatSync'</span>
+aug END</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="formatting_customize">9.2. Customize formatter </h3>
 <div class="paragraph">
 <p>vim-iced also supports following (GraalVM powered) code formatting tools.</p>
 </div>
@@ -1904,7 +1936,7 @@ vim-iced will use the tool to format codes and calculate indent level.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="auto_indenting">9.2. Auto indenting</h3>
+<h3 id="auto_indenting">9.3. Auto indenting</h3>
 <div class="paragraph">
 <p>vim-iced provides auto indentation feature, and it is enabled by default.</p>
 </div>
@@ -3937,8 +3969,26 @@ nmap &lt;Nop&gt;(iced_macroexpand_outer_list) &lt;Plug&gt;(iced_macroexpand_oute
 <div class="sect2">
 <h3 id="_reloaded_workflows">23.4. Reloaded workflows</h3>
 <div class="paragraph">
-<p>If you are managing lifecycle of components with <a href="https://github.com/stuartsierra/component">Stuart Sierra&#8217;s component</a>, <a href="https://github.com/weavejester/integrant">integrant</a> or etc, key mappings like follows are useful.</p>
+<p>If you are managing lifecycle of components with <a href="https://github.com/stuartsierra/component">Stuart Sierra&#8217;s component</a>, <a href="https://github.com/weavejester/integrant">integrant</a> or etc, following configurations are useful.</p>
 </div>
+<div class="sect3">
+<h4 id="_cider_way">23.4.1. CIDER way</h4>
+<div class="paragraph">
+<p>vim-iced provides <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedRefresh">IcedRefresh</a> command as same as the <a href="https://docs.cider.mx/cider/usage/misc_features.html#reloading-code">cider-ns-refresh</a> feature.
+And it also support before/after hooks like follows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim"><span class="k">let</span> <span class="nv">g:iced</span>#nrepl#ns#refresh_before_fn <span class="p">=</span> <span class="s1">'user/stop'</span>
+<span class="k">let</span> <span class="nv">g:iced</span>#nrepl#ns#refresh_before_fn <span class="p">=</span> <span class="s1">'user/start'</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this configuration, you can insert executions of functions before and after refreshing files when you execute <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedRefresh">IcedRefresh</a> command.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_manual_way">23.4.2. Manual way</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="vim">aug MyClojureSetting
@@ -3951,6 +4001,7 @@ aug END</code></pre>
 </div>
 <div class="paragraph text-right">
 <p><span class="small"><a href="#top">Back to top</a></span></p>
+</div>
 </div>
 </div>
 </div>
@@ -4432,6 +4483,10 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 <td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;eq</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Interrupt code evaluation</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&lt;Leader&gt;enr</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reload all changed files</p></td>
+</tr>
 </tbody>
 </table></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -4612,7 +4667,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-05-03 03:22:09 UTC
+Last updated 2021-05-08 23:27:14 UTC
 </div>
 </div>
 </body>
