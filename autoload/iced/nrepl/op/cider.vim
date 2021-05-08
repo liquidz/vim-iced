@@ -296,6 +296,16 @@ function! iced#nrepl#op#cider#refresh(option, callback) abort
   call iced#nrepl#send(msg)
 endfunction
 
+function! iced#nrepl#op#cider#refresh_clear(callback) abort
+  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
+  call iced#nrepl#send({
+        \ 'id': iced#nrepl#id(),
+        \ 'op': 'refresh-clear',
+        \ 'session': iced#nrepl#current_session(),
+        \ 'callback': a:callback,
+        \ })
+endfunction
+
 call iced#nrepl#register_handler('info', function('iced#nrepl#comp_handler', [
       \ [function('iced#nrepl#merge_response_handler'),
       \  function('iced#nrepl#path_translation_handler', [['file']])]]))
