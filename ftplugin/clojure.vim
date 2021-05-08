@@ -102,6 +102,7 @@ command!          IcedMacroExpand1OuterList call iced#nrepl#macro#expand_1_outer
 
 command!          IcedRefresh               call iced#nrepl#ns#refresh()
 command!          IcedRefreshAll            call iced#nrepl#ns#refresh_all()
+command!          IcedRefreshClear          call iced#nrepl#ns#refresh_clear()
 
 command!          IcedTestNs                call iced#nrepl#test#ns()
 command!          IcedTestAll               call iced#nrepl#test#all()
@@ -226,6 +227,7 @@ nnoremap <silent> <Plug>(iced_macroexpand_1_outer_list) :<C-u>IcedMacroExpand1Ou
 
 nnoremap <silent> <Plug>(iced_refresh)                  :<C-u>IcedRefresh<CR>
 nnoremap <silent> <Plug>(iced_refresh_all)              :<C-u>IcedRefreshAll<CR>
+nnoremap <silent> <Plug>(iced_refresh_clear)            :<C-u>IcedRefreshClear<CR>
 
 nnoremap <silent> <Plug>(iced_test_ns)                  :<C-u>IcedTestNs<CR>
 nnoremap <silent> <Plug>(iced_test_all)                 :<C-u>IcedTestAll<CR>

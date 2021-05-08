@@ -337,5 +337,10 @@ function! iced#nrepl#ns#refresh_all() abort
         \.then(funcref('s:__refresh', [message]))
 endfunction
 
+function! iced#nrepl#ns#refresh_clear() abort
+  return iced#promise#call('iced#nrepl#op#cider#refresh_clear', [])
+        \.then({_ -> iced#message#info('cleared')})
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
