@@ -35,6 +35,8 @@ See {help_html}#g%3Aiced_enable_default_key_mappings[help file] for whole defaul
 ! Require current namespace
 ! {plug_iced_interrupt}
 ! Interrupt code evaluation
+! {plug_iced_refresh}
+! Reload all changed files
 !===
 
 | *<<macro>>*

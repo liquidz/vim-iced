@@ -84,7 +84,24 @@ nmap <Nop>(iced_macroexpand_outer_list) <Plug>(iced_macroexpand_outer_list) <3>
 
 === Reloaded workflows
 
-If you are managing lifecycle of components with https://github.com/stuartsierra/component[Stuart Sierra's component], https://github.com/weavejester/integrant[integrant] or etc, key mappings like follows are useful.
+//If you are managing lifecycle of components with https://github.com/stuartsierra/component[Stuart Sierra's component], https://github.com/weavejester/integrant[integrant] or etc, key mappings like follows are useful.
+If you are managing lifecycle of components with https://github.com/stuartsierra/component[Stuart Sierra's component], https://github.com/weavejester/integrant[integrant] or etc, following configurations are useful.
+
+==== CIDER way
+
+vim-iced provides {help_html}#%3AIcedRefresh[IcedRefresh] command as same as the https://docs.cider.mx/cider/usage/misc_features.html#reloading-code[cider-ns-refresh] feature.
+And it also support before/after hooks like follows.
+
+
+[source,vim]
+----
+let g:iced#nrepl#ns#refresh_before_fn = 'user/stop'
+let g:iced#nrepl#ns#refresh_before_fn = 'user/start'
+----
+
+With this configuration, you can insert executions of functions before and after refreshing files when you execute {help_html}#%3AIcedRefresh[IcedRefresh] command.
+
+==== Manual way
 
 [source,vim]
 ----
