@@ -2009,12 +2009,18 @@ g:iced#selector#search_order
 g:iced#nrepl#ns#refresh_before_fn
   A qualified function name to evaluate before |:IcedRefresh|.
   The function should be zero-arity.
+  E.g. >
+  let g:iced#nrepl#ns#refresh_before_fn = 'user/stop'
+<
   Default value is `''`. (Not to evaluate)
 
                                              *g:iced#nrepl#ns#refresh_after_fn*
 g:iced#nrepl#ns#refresh_after_fn
   A qualified function name to evaluate after |:IcedRefresh|.
   The function should be zero-arity.
+  E.g. >
+  let g:iced#nrepl#ns#refresh_before_fn = 'user/start'
+<
   Default value is `''`. (Not to evaluate)
 
 ------------------------------------------------------------------------------
