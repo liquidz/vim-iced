@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 30200
+let g:vim_iced_version = 30300
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -100,6 +100,10 @@ command!          IcedPrintLast             call iced#nrepl#eval#print_last()
 command!          IcedMacroExpandOuterList  call iced#nrepl#macro#expand_outer_list()
 command!          IcedMacroExpand1OuterList call iced#nrepl#macro#expand_1_outer_list()
 
+command!          IcedRefresh               call iced#nrepl#ns#refresh()
+command!          IcedRefreshAll            call iced#nrepl#ns#refresh_all()
+command!          IcedRefreshClear          call iced#nrepl#ns#refresh_clear()
+
 command!          IcedTestNs                call iced#nrepl#test#ns()
 command!          IcedTestAll               call iced#nrepl#test#all()
 command!          IcedTestRedo              call iced#nrepl#test#redo()
@@ -136,6 +140,8 @@ command!          IcedSlurp                 call iced#paredit#deep_slurp()
 command!          IcedBarf                  call iced#paredit#barf()
 command!          IcedFormat                call iced#format#current()
 command!          IcedFormatAll             call iced#format#all()
+command!          IcedFormatSync            call iced#format#sync_current()
+command!          IcedFormatSyncAll         call iced#format#sync_all()
 command!          IcedCycleSrcAndTest       call iced#nrepl#navigate#cycle_src_and_test()
 command! -nargs=? IcedGrep                  call iced#grep#exe(<q-args>)
 
@@ -219,6 +225,10 @@ nnoremap <silent> <Plug>(iced_print_last)               :<C-u>IcedPrintLast<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_outer_list)   :<C-u>IcedMacroExpandOuterList<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_1_outer_list) :<C-u>IcedMacroExpand1OuterList<CR>
 
+nnoremap <silent> <Plug>(iced_refresh)                  :<C-u>IcedRefresh<CR>
+nnoremap <silent> <Plug>(iced_refresh_all)              :<C-u>IcedRefreshAll<CR>
+nnoremap <silent> <Plug>(iced_refresh_clear)            :<C-u>IcedRefreshClear<CR>
+
 nnoremap <silent> <Plug>(iced_test_ns)                  :<C-u>IcedTestNs<CR>
 nnoremap <silent> <Plug>(iced_test_all)                 :<C-u>IcedTestAll<CR>
 nnoremap <silent> <Plug>(iced_test_redo)                :<C-u>IcedTestRedo<CR>
@@ -253,6 +263,8 @@ nnoremap <silent> <Plug>(iced_slurp)                    :<C-u>IcedSlurp<CR>
 nnoremap <silent> <Plug>(iced_barf)                     :<C-u>IcedBarf<CR>
 nnoremap <silent> <Plug>(iced_format)                   :<C-u>IcedFormat<CR>
 nnoremap <silent> <Plug>(iced_format_all)               :<C-u>IcedFormatAll<CR>
+nnoremap <silent> <Plug>(iced_format_sync)              :<C-u>IcedFormatSync<CR>
+nnoremap <silent> <Plug>(iced_format_sync_all)          :<C-u>IcedFormatSyncAll<CR>
 nnoremap <silent> <Plug>(iced_cycle_src_and_test)       :<C-u>IcedCycleSrcAndTest<CR>
 nnoremap <silent> <Plug>(iced_grep)                     :<C-u>IcedGrep<CR>
 
@@ -375,6 +387,7 @@ function! s:default_key_mappings() abort
   call s:define_mapping('nmap', '<Leader>eU', '<Plug>(iced_undef_all_in_ns)')
   call s:define_mapping('nmap', '<Leader>eM', '<Plug>(iced_macroexpand_outer_list)')
   call s:define_mapping('nmap', '<Leader>em', '<Plug>(iced_macroexpand_1_outer_list)')
+  call s:define_mapping('nmap', '<Leader>enr', '<Plug>(iced_refresh)')
 
   "" Testing (<Leader>t)
   "" ------------------------------------------------------------------------

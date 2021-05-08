@@ -2,6 +2,20 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.3.0 (2021-05-09)
+// {{{
+=== Added
+* Added `IcedFormatSync` and `IcedFormatSyncAll` commands.
+** Added help for formatting on save.
+*** https://liquidz.github.io/vim-iced/#format_on_writing_files
+* Added `IcedRefresh`, `IcedRefreshAll` and `IcedRefreshClear` commands.
+** Updated documents for reloaded workflows.
+*** https://liquidz.github.io/vim-iced/#_reloaded_workflows
+
+=== Changed
+* Bumped zprint to 1.1.2.
+// }}}
+
 == 3.2.0 (2021-04-26)
 // {{{
 === Changed

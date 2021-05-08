@@ -1,6 +1,9 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+let g:iced#nrepl#ns#refresh_before_fn = get(g:, 'iced#nrepl#ns#refresh_before_fn', '')
+let g:iced#nrepl#ns#refresh_after_fn = get(g:, 'iced#nrepl#ns#refresh_after_fn', '')
+
 let s:V = vital#iced#new()
 let s:D = s:V.import('Data.Dict')
 
@@ -289,6 +292,54 @@ endfunction
 
 function! iced#nrepl#ns#yank_name() abort
   call setreg('""', iced#nrepl#ns#name_by_buf())
+endfunction
+
+function! s:__gen_refresh_option() abort
+  let option = {}
+
+  if ! empty(g:iced#nrepl#ns#refresh_before_fn)
+    let option['before'] = g:iced#nrepl#ns#refresh_before_fn
+  endif
+
+  if ! empty(g:iced#nrepl#ns#refresh_after_fn)
+    let option['after'] = g:iced#nrepl#ns#refresh_after_fn
+  endif
+
+  return option
+endfunction
+
+function! s:__refresh(message, resp) abort
+  for resp in iced#util#ensure_array(a:resp)
+    if has_key(resp, 'err')
+      return iced#message#error_str(resp['err'])
+    endif
+  endfor
+
+  call iced#message#info('finish_to_refresh', a:message)
+endfunction
+
+function! iced#nrepl#ns#refresh() abort
+  let message = 'all changed files'
+  let option = s:__gen_refresh_option()
+
+  call iced#message#info('start_to_refresh', message)
+  return iced#promise#call('iced#nrepl#op#cider#refresh', [option])
+        \.then(funcref('s:__refresh', [message]))
+endfunction
+
+function! iced#nrepl#ns#refresh_all() abort
+  let message = 'all files'
+  let option = s:__gen_refresh_option()
+  let option['all'] = v:true
+
+  call iced#message#info('start_to_refresh', message)
+  return iced#promise#call('iced#nrepl#op#cider#refresh', [option])
+        \.then(funcref('s:__refresh', [message]))
+endfunction
+
+function! iced#nrepl#ns#refresh_clear() abort
+  return iced#promise#call('iced#nrepl#op#cider#refresh_clear', [])
+        \.then({_ -> iced#message#info('cleared')})
 endfunction
 
 let &cpoptions = s:save_cpo

@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.2.0
+Version: 3.3.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -35,6 +35,7 @@ CONTENTS                                                    *vim-iced-contents*
   Jump to definition           |vim-iced-jump-to-def|
   Editing S-exp                |vim-iced-editing-s-exp|
     Formatting                 |vim-iced-formatting|
+      Format on writing files  |vim-iced-formatting-on-writing-files|
     Indenting                  |vim-iced-indenting|
     Refactoring                |vim-iced-refactoring|
   Sideloader                   |vim-iced-sideloader|
@@ -585,6 +586,24 @@ FORMATTING                                                *vim-iced-formatting*
 <
   See also |vim-iced-customizing-formatter|.
 
+                                         *vim-iced-formatting-on-writing-files*
+FORMAT ON WRITING FILES~
+
+  vim-iced also provides following sync commands.
+  - |:IcedFormatSync|
+  - |:IcedFormatSyncAll|
+
+  These commands are useful to format on writing files.
+>
+  aug VimIcedAutoFormatOnWriting
+    au!
+    " Format whole buffer on writing files
+    au BufWritePre *.clj,*.cljs,*.cljc,*.edn execute ':IcedFormatSyncAll'
+
+    " Format only current form on writing files
+    " au BufWritePre *.clj,*.cljs,*.cljc,*.edn execute ':IcedFormatSync'
+  aug END
+<
 ------------------------------------------------------------------------------
 INDENTING                                                  *vim-iced-indenting*
 
@@ -852,6 +871,25 @@ COMMANDS                                                    *vim-iced-commands*
   without scrolling.
   Key is mapped to |<Plug>(iced_macroexpand_1_outer_list)|.
 
+                                                                 *:IcedRefresh*
+:IcedRefresh
+  Reload all changed files in all directories on the classpath.
+  Key is mapped to |<Plug>(iced_refresh)|.
+
+  See also:
+  - |g:iced#nrepl#ns#refresh_before_fn|
+  - |g:iced#nrepl#ns#refresh_after_fn|
+
+                                                              *:IcedRefreshAll*
+:IcedRefreshAll
+  Reload all files in all directories on the classpath.
+  Key is mapped to |<Plug>(iced_refresh_all)|.
+
+                                                            *:IcedRefreshClear*
+:IcedRefreshClear
+  Clear refreshing status.
+  Key is mapped to |<Plug>(iced_refresh_clear)|.
+
                                                          *:IcedTestUnderCursor*
 :IcedTestUnderCursor
   Run test under cursor.
@@ -1076,6 +1114,16 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedFormatAll
   Reformat current buffer.
   Key is mapped to |<Plug>(iced_format_all)|.
+
+                                                              *:IcedFormatSync*
+:IcedFormatSync
+  Same as |:IcedFormat|, but it's done synchronously.
+  Key is mapped to |<Plug>(iced_format_sync)|.
+  
+                                                           *:IcedFormatSyncAll*
+:IcedFormatSyncAll
+  Same as |:IcedFormatAll|, but it's done synchronously.
+  Key is mapped to |<Plug>(iced_format_sync_all)|.
 
                                                          *:IcedCycleSrcAndTest*
 :IcedCycleSrcAndTest
@@ -1454,6 +1502,18 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_macroexpand_1_outer_list)
   Same as |:IcedMacroExpand1OuterList|.
 
+                                                         *<Plug>(iced_refresh)*
+<Plug>(iced_refresh)
+  Same as |:IcedRefresh|.
+
+                                                     *<Plug>(iced_refresh_all)*
+<Plug>(iced_refresh_all)
+  Same as |:IcedRefreshAll|.
+
+                                                   *<Plug>(iced_refresh_clear)*
+<Plug>(iced_refresh_clear)
+  Same as |:IcedRefreshClear|.
+
                                                          *<Plug>(iced_test_ns)*
 <Plug>(iced_test_ns)
   Same as |:IcedTestNs|.
@@ -1601,6 +1661,14 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                       *<Plug>(iced_format_all)*
 <Plug>(iced_format_all)
   Same as |:IcedFormatAll|.
+
+                                                     *<Plug>(iced_format_sync)*
+<Plug>(iced_format_sync)
+  Same as |:IcedFormatSync|.
+
+                                                 *<Plug>(iced_format_sync_all)*
+<Plug>(iced_format_sync_all)
+  Same as |:IcedFormatSyncAll|.
 
                                               *<Plug>(iced_cycle_src_and_test)*
 <Plug>(iced_cycle_src_and_test)
@@ -1937,6 +2005,23 @@ g:iced#selector#search_order
   If you'd like to use a specific selector, you can set like below. >
   let g:iced#selector#search_order = ['clap']
 <
+                                            *g:iced#nrepl#ns#refresh_before_fn*
+g:iced#nrepl#ns#refresh_before_fn
+  A qualified function name to evaluate before |:IcedRefresh|.
+  The function should be zero-arity.
+  E.g. >
+  let g:iced#nrepl#ns#refresh_before_fn = 'user/stop'
+<
+  Default value is `''`. (Not to evaluate)
+
+                                             *g:iced#nrepl#ns#refresh_after_fn*
+g:iced#nrepl#ns#refresh_after_fn
+  A qualified function name to evaluate after |:IcedRefresh|.
+  The function should be zero-arity.
+  E.g. >
+  let g:iced#nrepl#ns#refresh_before_fn = 'user/start'
+<
+  Default value is `''`. (Not to evaluate)
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
@@ -2375,6 +2460,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>eQ   <Plug>(iced_interrupt_all)
   n       <Leader>eM   <Plug>(iced_macroexpand_outer_list)
   n       <Leader>em   <Plug>(iced_macroexpand_1_outer_list)
+  n       <Leader>enr  <Plug>(iced_refresh)
   n       <Leader>tt   <Plug>(iced_test_under_cursor)
   n       <Leader>tl   <Plug>(iced_test_rerun_last)
   n       <Leader>ts   <Plug>(iced_test_spec_check)
