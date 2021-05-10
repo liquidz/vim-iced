@@ -96,7 +96,7 @@ And it also support before/after hooks like follows.
 [source,vim]
 ----
 let g:iced#nrepl#ns#refresh_before_fn = 'user/stop'
-let g:iced#nrepl#ns#refresh_before_fn = 'user/start'
+let g:iced#nrepl#ns#refresh_after_fn = 'user/start'
 ----
 
 With this configuration, you can insert executions of functions before and after refreshing files when you execute {help_html}#%3AIcedRefresh[IcedRefresh] command.
