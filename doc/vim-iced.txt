@@ -2277,6 +2277,7 @@ g:iced#hook
 <
   - Hook events
     - connect_prepared  |hook_event_connect_prepared|
+    - connecting        |hook_event_connecting|
     - connected         |hook_event_connected|
     - disconnected      |hook_event_disconnected|
     - test_finished     |hook_event_test_finished|
@@ -2302,6 +2303,19 @@ CONNECT PREPARED                                  *hook_event_connect_prepared*
   e.g. `[{'label': 'nREPL', 'type': 'nrepl', 'port': 12345}]`
 
   Reporter should return a list of dictionary which has same parameters.
+
+CONNECTING                                              *hook_event_connecting*
+
+  Hooked just before connecting.
+  Following parameters are passed to reporter.
+
+  - host
+    Host name to connect.
+  - port
+    Port number to connect.
+
+  If any hook functions return `{'cancel': 'message'}`,
+  vim-iced will cancel to connect.
 
 CONNECTED                                                *hook_event_connected*
 

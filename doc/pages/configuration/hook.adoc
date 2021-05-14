@@ -46,6 +46,12 @@ Following events can be hooked.
 This hook only allows `function` hook type. +
 Reporter should return a list of dictionary which has same parameters.
 
+| connecting
+| `host`: Host name to connect +
+`port`: Port number to connect
+| Hooked just before connecting. +
+If any hook functions return `{'cancel': 'message'}`, vim-iced will cancel to connect.
+
 | connected
 | -
 | Hooked when vim-iced is connected to nREPL.
