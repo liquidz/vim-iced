@@ -4,6 +4,7 @@ set cpo&vim
 let g:iced#eval#inside_comment = get(g:, 'iced#eval#inside_comment', v:true)
 let g:iced#eval#mark_at_last = get(g:, 'iced#eval#mark_at_last', '1')
 let g:iced#repl#babashka_repl_type = get(g:, 'iced#repl#babashka_repl_type', 'nrepl')
+let g:iced#repl#ignore_connected = get(g:, 'iced#repl#ignore_connected', v:false)
 
 let s:repl = {}
 

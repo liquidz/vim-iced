@@ -478,7 +478,7 @@ endfunction
 function! iced#nrepl#connect(port, ...) abort
   let opts = get(a:, 1, {})
 
-  if iced#nrepl#is_connected()
+  if !g:iced#repl#ignore_connected && iced#nrepl#is_connected()
     call iced#message#info('already_connected')
     return v:true
   endif

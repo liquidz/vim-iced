@@ -107,7 +107,7 @@ function! iced#socket_repl#connect(port, ...) abort
   let opt = get(a:, 1, {})
   let verbose = get(opt, 'verbose', v:true)
 
-  if iced#socket_repl#is_connected()
+  if !g:iced#repl#ignore_connected && iced#socket_repl#is_connected()
     if verbose
       call iced#message#info('already_connected')
     endif
