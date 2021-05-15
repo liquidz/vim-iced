@@ -478,23 +478,34 @@ endfunction
 function! iced#nrepl#connect(port, ...) abort
   let opts = get(a:, 1, {})
 
-  if iced#nrepl#is_connected()
+  if !g:iced#repl#ignore_connected && iced#nrepl#is_connected()
     call iced#message#info('already_connected')
     return v:true
   endif
 
-  call iced#nrepl#reset()
+  if empty(a:port)
+    return iced#nrepl#connect#auto()
+  endif
+
+  let hook_results = iced#hook#run('connecting', {'host': g:iced#nrepl#host, 'port': a:port})
+  for hook_result in hook_results
+    if type(hook_result) == v:t_dict && has_key(hook_result, 'cancel')
+      if (type(hook_result['cancel']) == v:t_string)
+        call iced#message#info_str(hook_result['cancel'])
+      endif
+      return v:false
+    endif
+  endfor
 
   " NOTE: Initialize buffers here to avoid firing `bufenter` autocmd
   "       after connection established
+  call iced#nrepl#reset()
+  call iced#nrepl#auto#enable_bufenter(v:false)
   silent call iced#buffer#stdout#init()
   silent call iced#buffer#document#init()
   silent call iced#buffer#error#init()
   silent call iced#buffer#temporary#init()
-
-  if empty(a:port)
-    return iced#nrepl#connect#auto()
-  endif
+  call iced#nrepl#auto#enable_bufenter(v:true)
 
   if !iced#nrepl#is_connected()
     let address = printf('%s:%d', g:iced#nrepl#host, a:port)

@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.3.0
+Version: 3.4.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -139,7 +139,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.8.3"]
-                   [com.github.liquidz/iced-nrepl "1.2.4"]
+                   [com.github.liquidz/iced-nrepl "1.2.5"]
                    [cider/cider-nrepl "0.26.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -169,7 +169,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.5.1"]
       [cider/cider-nrepl "0.26.0"]
-      [com.github.liquidz/iced-nrepl "1.2.4"]])
+      [com.github.liquidz/iced-nrepl "1.2.5"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -197,7 +197,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "2.5.1"]
                   [cider/cider-nrepl "0.26.0"]
-                  [com.github.liquidz/iced-nrepl "1.2.4"]]
+                  [com.github.liquidz/iced-nrepl "1.2.5"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -2277,6 +2277,7 @@ g:iced#hook
 <
   - Hook events
     - connect_prepared  |hook_event_connect_prepared|
+    - connecting        |hook_event_connecting|
     - connected         |hook_event_connected|
     - disconnected      |hook_event_disconnected|
     - test_finished     |hook_event_test_finished|
@@ -2302,6 +2303,19 @@ CONNECT PREPARED                                  *hook_event_connect_prepared*
   e.g. `[{'label': 'nREPL', 'type': 'nrepl', 'port': 12345}]`
 
   Reporter should return a list of dictionary which has same parameters.
+
+CONNECTING                                              *hook_event_connecting*
+
+  Hooked just before connecting.
+  Following parameters are passed to reporter.
+
+  - host
+    Host name to connect.
+  - port
+    Port number to connect.
+
+  If any hook functions return `{'cancel': 'message'}`,
+  vim-iced will cancel to connect.
 
 CONNECTED                                                *hook_event_connected*
 

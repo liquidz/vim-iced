@@ -29,7 +29,9 @@ function! iced#nrepl#cljs#shadow_cljs#get_env(options) abort
     let s:build_id = trim(a:options[0], ' :')
   else
     " fetch running build ids
-    let build_ids = get(iced#eval_and_read(s:get_build_ids_code), 'value', [])
+    " `v:null` means to wait for ever
+    call iced#message#info('wait_a_minute')
+    let build_ids = get(iced#eval_and_read(s:get_build_ids_code, '', v:null), 'value', [])
     if empty(build_ids) && len(a:options) <= 0
       return iced#message#get('argument_missing', 'build-id is required.')
     endif

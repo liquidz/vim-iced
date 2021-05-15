@@ -1,7 +1,3 @@
-.PHONY: vital test themis themis_nvim html document serve_document pip_install lint vim-lint clj-lint
-.PHONY: python_doctest bb_script_test version_check deps_check
-.PHONY: clean clean-all bin outdated repl
-
 PWD=$(shell pwd)
 NVIM=$(shell which nvim)
 
@@ -17,6 +13,7 @@ VITAL_MODULES = \
 		Vim.BufferManager \
 		Vim.Message
 
+.PHONY: help
 help:
 	@echo "Defined tasks:\n\
   vital         Update vital modules\n\
@@ -33,13 +30,12 @@ help:
   outdated      Check dependencies are outedated or not\n\
   "
 
+.PHONY: vital
 vital:
 	\rm -rf autoload/vital*
 	vim -c "Vitalize . --name=$(PLUGIN_NAME) $(VITAL_MODULES)" -c q
 
-callbag:
-	vim -c ":CallbagEmbed path=./autoload/iced/callbag.vim namespace=iced#callbag" -c q
-
+.PHONY: test
 test: themis themis_nvim python_doctest bb_script_test
 
 .vim-themis:
@@ -47,16 +43,20 @@ test: themis themis_nvim python_doctest bb_script_test
 .vim-sexp:
 	git clone https://github.com/guns/vim-sexp .vim-sexp
 
+.PHONY: themis
 themis: .vim-themis .vim-sexp
 	./.vim-themis/bin/themis
 
+.PHONY: themis_nvim
 themis_nvim:
 	THEMIS_VIM=$(NVIM) ./.vim-themis/bin/themis
 
+.PHONY: document
 document: doc/vim-iced.txt
 	bash scripts/html.sh
 	bash scripts/asciidoctor.sh
 
+.PHONY: serve_document
 serve_document:
 	(cd target/html && clj -Sdeps '{:deps {nasus/nasus {:mvn/version "LATEST"}}}' -m http.server)
 
@@ -64,44 +64,57 @@ target/bin/vint:
 	mkdir -p target
 	pip3 install -r requirements.txt -t ./target
 
+.PHONY: lint
 lint: vim-lint clj-lint
 
+.PHONY: vim-lint
 vim-lint: target/bin/vint
 	bash scripts/lint.sh
 
 bin/clj-kondo:
 	cd bin && bash ../installer/clj-kondo.sh
 
+.PHONY: clj-lint
 clj-lint: bin/clj-kondo
 	./bin/clj-kondo --lint clj:test/clj
 
+.PHONY: python_doctest
 python_doctest:
 	python3 -m doctest python/bencode.py
 
+.PHONY: bb_script_test
 bb_script_test:
 	bash scripts/bb_script_test.sh
 
+.PHONY: version_check
 version_check:
 	bash scripts/version_check.sh
 
+.PHONY: deps_check
 deps_check:
 	bash scripts/deps_check.sh
 
+.PHONY: coverage
 coverage: target/bin/vint themis
 	bash scripts/coverage.sh
 
+.PHONY: clean
 clean:
 	\rm -rf target .vim-sexp .vim-themis
 
+.PHONY: clean-all
 clan-all: clean
 	\rm -rf autoload/vital*
 	\rm -f bin/iced
 
+.PHONY: bin
 bin:
 	clojure -M:jackin
 
+.PHONY: outdated
 outdated:
 	clojure -M:outdated --exclude 'nrepl/nrepl' --upgrade
 
+.PHONY: repl
 repl:
 	clojure -R:jackin:dev -m iced-repl
