@@ -113,6 +113,7 @@
   'untraced':                  'Untraced.',
   'used_locals_error':         'Failed to fetch used-locals: %s.',
   'var_references_found':      'Found %d references.',
+  'wait_a_minute':             'Wait a minute. It may take some time.',
 
   '___EOF___': ''
 }
