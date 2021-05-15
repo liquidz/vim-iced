@@ -35,7 +35,8 @@ function! iced#eval_and_read(code, ...) abort
     call iced#nrepl#send(msg)
     return v:true
   else
-    return s:json_resp(iced#nrepl#sync#send(msg))
+    let timeout = get(a:, 2, g:iced#promise#timeout_ms)
+    return s:json_resp(iced#nrepl#sync#send(msg, timeout))
   endif
 endfunction
 
