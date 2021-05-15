@@ -3469,6 +3469,13 @@ This hook only allows <code>function</code> hook type.<br>
 Reporter should return a list of dictionary which has same parameters.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">connecting</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>host</code>: Host name to connect<br>
+<code>port</code>: Port number to connect</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hooked just before connecting.<br>
+If any hook functions return <code>{'cancel': 'message'}</code>, vim-iced will cancel to connect.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">connected</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Hooked when vim-iced is connected to nREPL.</p></td>
@@ -4667,7 +4674,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-05-10 02:33:23 UTC
+Last updated 2021-05-15 23:50:18 UTC
 </div>
 </div>
 </body>
