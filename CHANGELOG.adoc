@@ -2,6 +2,18 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Added
+* Added `connecting` hook.
+** https://liquidz.github.io/vim-iced/#hook
+
+=== Changed
+* Bump iced-nrepl to 1.2.5.
+
+=== Fixed
+* Fixed shadow-cljs initialization process not to be timed out.
+// }}}
+
 == 3.3.0 (2021-05-09)
 // {{{
 === Added
