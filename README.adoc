@@ -158,6 +158,10 @@ and https://github.com/liquidz/iced-nrepl[iced-nrepl].
 | https://github.com/liquidz/vim-iced-fern-debugger[vim-iced-fern-debugger]
 | Provides tree views for debugging results and tapped values by https://github.com/lambdalisue/fern.vim[fern.vim].
 
+|:books:
+| https://github.com/liquidz/vim-iced-multi-session
+| Provides multi session support like connecting to nREPL and shadow-cljs.
+
 |===
 
 == License
