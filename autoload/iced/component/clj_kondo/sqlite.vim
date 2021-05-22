@@ -120,6 +120,17 @@ function! s:kondo.keyword_usages(kw_name) abort
   return json_decode(res)
 endfunction
 
+function! s:kondo.ns_path(ns_name) abort
+  if ! filereadable(self.db_name) | return '' | endif
+  let sql = printf(
+        \ 'select json_extract(namespace_definitions.json, "$.filename") from namespace_definitions where json_extract(namespace_definitions.json, "$.name") = "%s"',
+        \ a:ns_name,
+        \ )
+  let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
+  if empty(res) | return '' | endif
+  return res
+endfunction
+
 function! s:kondo.ns_list() abort
   if ! filereadable(self.db_name) | return [] | endif
   let sql = 'select json_quote(json_extract(namespace_definitions.json, "$.name")) from namespace_definitions'
