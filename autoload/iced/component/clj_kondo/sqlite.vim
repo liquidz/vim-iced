@@ -120,6 +120,16 @@ function! s:kondo.keyword_usages(kw_name) abort
   return json_decode(res)
 endfunction
 
+function! s:kondo.ns_list() abort
+  if ! filereadable(self.db_name) | return [] | endif
+  let sql = 'select json_quote(json_extract(namespace_definitions.json, "$.name")) from namespace_definitions'
+
+  let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
+  if empty(res) | return [] | endif
+  let res = printf('[%s]', substitute(res, '\n', ',', 'g'))
+  return json_decode(res)
+endfunction
+
 function! iced#component#clj_kondo#sqlite#start(this) abort
   call iced#util#debug('start', 'clj-kondo.sqlite')
   let s:kondo.job_out = a:this['job_out']
