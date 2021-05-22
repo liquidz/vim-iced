@@ -112,7 +112,7 @@ function! iced#nrepl#navigate#cycle_src_and_test() abort
 endfunction " }}}
 
 " iced#nrepl#navigate#related_ns {{{
-function! s:ns_list(resp) abort
+function! s:__related_ns_list(resp) abort
   if !has_key(a:resp, 'project-ns-list') | return iced#message#error('ns_list_error') | endif
 
   let ns = iced#nrepl#ns#name()
@@ -130,8 +130,15 @@ function! s:ns_list(resp) abort
 endfunction
 
 function! iced#nrepl#navigate#related_ns() abort
+  let kondo = iced#system#get('clj_kondo')
+
   call iced#message#info('fetching')
-  call iced#nrepl#op#iced#project_ns_list(funcref('s:ns_list'))
+  if kondo.is_analyzed()
+    let resp = {'project-ns-list': kondo.ns_list()}
+    call s:__related_ns_list(resp)
+  else
+    call iced#nrepl#op#iced#project_ns_list(funcref('s:__related_ns_list'))
+  endif
 endfunction " }}}
 
 " iced#nrepl#navigate#jump_to_def {{{
