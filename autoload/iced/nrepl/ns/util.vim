@@ -53,12 +53,7 @@ function! iced#nrepl#ns#util#replace(new_ns) abort
     let @@ = reg_save
     if iced#nrepl#ns#util#search() != 0
       call iced#promise#wait(iced#format#current())
-
-      if iced#nrepl#current_session_key() ==# 'clj'
-        call iced#nrepl#ns#eval({_ -> ''})
-      else
-        call iced#nrepl#ns#load_current_file({_ -> ''})
-      endif
+      call iced#nrepl#ns#eval({_ -> ''})
     endif
 
     " NOTE: need to calculate lnum after calling `iced#format#current`
