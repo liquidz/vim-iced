@@ -158,7 +158,7 @@ function! iced#nrepl#ns#load_current_file(...) abort
   let Cb = (type(Cb) == v:t_func) ? Cb : funcref('s:required')
   if ! iced#nrepl#check_session_validity() | return | endif
 
-  if iced#nrepl#current_session_key() ==# 'clj'
+  if iced#nrepl#is_supported_op('load-file')
     call iced#nrepl#load_file({resp -> s:buffer_ns_loaded() && s:loaded(resp, Cb)})
   else
     call s:cljs_load_file({resp -> s:buffer_ns_loaded() && Cb(resp)})
