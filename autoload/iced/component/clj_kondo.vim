@@ -313,6 +313,10 @@ function! s:kondo.local_definition(filename, row, name) abort
 endfunction
 
 function! s:kondo.ns_path(ns_name) abort
+  if has_key(self.option, 'ns_path')
+    return self.option.ns_path(a:ns_name)
+  endif
+
   let definitions = self.namespace_definitions()
   for definition in definitions
     if get(definition, 'name') ==# a:ns_name
@@ -324,6 +328,10 @@ function! s:kondo.ns_path(ns_name) abort
 endfunction
 
 function! s:kondo.ns_list() abort
+  if has_key(self.option, 'ns_list')
+    return self.option.ns_list()
+  endif
+
   let definitions = self.namespace_definitions()
   let res = map(copy(definitions), {_, d -> get(d, 'name', '')})
   let res = filter(res, {_, s -> !empty(s)})

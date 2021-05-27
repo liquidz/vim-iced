@@ -21,16 +21,9 @@ function! iced#nrepl#ns#require_if_not_loaded_promise() abort
     return iced#promise#resolve(v:false)
   endif
 
-  if iced#nrepl#current_session_key() ==# 'clj'
-    " NOTE: For midje user, requiring ns leads running tests.
-    "       So vim-iced evaluates ns form in CLJ session.
-    return iced#promise#call('iced#nrepl#ns#eval', [])
-  else
-    " NOTE: In shadow-cljs, evaluating only ns form clears all vars evaluated before.
-    "       So vim-iced requires ns in CLJS session.
-    let ns_name = iced#nrepl#ns#name()
-    return iced#promise#call('iced#nrepl#ns#require', [ns_name])
-  endif
+  " NOTE: For midje user, requiring ns leads running tests.
+  "       So vim-iced evaluates ns form in CLJ session.
+  return iced#promise#call('iced#nrepl#ns#eval', [])
 endfunction
 
 function! iced#nrepl#ns#get() abort
@@ -165,7 +158,7 @@ function! iced#nrepl#ns#load_current_file(...) abort
   let Cb = (type(Cb) == v:t_func) ? Cb : funcref('s:required')
   if ! iced#nrepl#check_session_validity() | return | endif
 
-  if iced#nrepl#current_session_key() ==# 'clj'
+  if iced#nrepl#is_supported_op('load-file')
     call iced#nrepl#load_file({resp -> s:buffer_ns_loaded() && s:loaded(resp, Cb)})
   else
     call s:cljs_load_file({resp -> s:buffer_ns_loaded() && Cb(resp)})

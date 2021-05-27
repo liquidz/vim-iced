@@ -78,6 +78,7 @@ Supports followings currently.
 - https://github.com/weavejester/cljfmt[cljfmt] via nREPL
 - https://github.com/greglook/cljstyle[cljstyle]
 - https://github.com/kkinnear/zprint[zprint]
+- https://github.com/candid82/joker[joker]
 
 |:mag:
 |Reference
@@ -101,6 +102,10 @@ Browsing tapped values https://twitter.com/uochan/status/1146982101662572544[:mo
 Supports followings currently.
 - https://github.com/bhauman/figwheel-main[Figwheel Main], https://github.com/bhauman/lein-figwheel[lein-figwheel]
 - https://github.com/thheller/shadow-cljs[shadow-cljs]
+
+|:sunglasses:
+|Static analysis
+|Boost performance with static analysis powered by https://github.com/clj-kondo/clj-kondo[clj-kondo]
 
 |:electric_plug:
 |Socket REPL

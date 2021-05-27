@@ -261,6 +261,9 @@ function! iced#nrepl#test#ns() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let ns = iced#nrepl#ns#name()
 
+  " NOTE: Reload ns to match iced#nrepl#test#under_cursor's behavior
+  call iced#repl#execute('load_current_file')
+
   if iced#nrepl#is_supported_op('test-var-query')
     return iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [ns])
           \.then(funcref('s:__ns', [ns]))

@@ -10,6 +10,8 @@ function! s:setup() abort
   let g:iced_enable_clj_kondo_local_analysis = v:true
 
   call s:job_out.mock({'outs': ['']})
+  " DO NOT USE clj_kondo_option
+  call iced#system#set_component('clj_kondo_option', {'start': 'iced#component#nop#start'})
   call iced#system#reset_component('clj_kondo')
   let s:kondo = iced#system#get('clj_kondo')
 endfunction
@@ -18,6 +20,7 @@ function! s:teardown() abort
   let g:iced_enable_clj_kondo_analysis = v:false
   let g:iced_enable_clj_kondo_local_analysis = v:false
   let s:kondo = ''
+  call iced#system#reset_component('clj_kondo_option')
 endfunction
 
 function! s:suite.cache_name_test() abort

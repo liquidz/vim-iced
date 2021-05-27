@@ -2,6 +2,19 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.4.1 (2021-05-28)
+// {{{
+=== Changed
+* https://github.com/liquidz/vim-iced/pull/292[#292]: Updated `IcedTestNs` to reload ns before running tests to match the `IcedTestUnderCursor` 's behavior.
+* Updated `IcedBrowseRelatedNamespace` command to support clj-kondo component.
+** With clj-kondo and sqlite3, this update improve the performance.
+* Bumped iced-nrepl to 1.2.6.
+
+=== Fixed
+* Fixed to reflect changes for ns form correctly in shadow-cljs.
+** E.g.  When you use `IcedAddNs` or `IcedAddMissing`, it wasn't reflected and you were required to re-evaluate the ns form until now.  But now you can use added ns aliases immediately.
+// }}}
+
 == 3.4.0 (2021-05-16)
 // {{{
 === Added
