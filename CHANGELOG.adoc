@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file. This change
 
 === Fixed
 * Fixed to reflect changes for ns form correctly in shadow-cljs.
-** E.g.  When you use `IcedAddNs` or `IcedAddMissing`, it wasn't reflected and you were required to re-evaluate the ns form until now.  But now you can use added ns aliases immediatly.
+** E.g.  When you use `IcedAddNs` or `IcedAddMissing`, it wasn't reflected and you were required to re-evaluate the ns form until now.  But now you can use added ns aliases immediately.
 // }}}
 
 == 3.4.0 (2021-05-16)
