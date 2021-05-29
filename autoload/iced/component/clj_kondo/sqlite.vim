@@ -79,7 +79,7 @@ function! s:kondo.ns_aliases(...) abort
         \ ? ''
         \ : s:I.interpolate('and json_extract(json, "$.from") = "${from_ns}"', {'from_ns': from_ns})
   let sql = s:I.interpolate(
-        \ 'select group_concat(json_str) from (select 1 as id, json_quote(json_extract(json, "$.alias")) || ": [" || group_concat(distinct json_quote(json_extract(json, "$.to"))) || "]" as json_str from namespace_usages where json_extract(json, "$.alias") is not null ${where} group by json_extract(json, "$.alias")) group by id',
+        \ 'select group_concat(json_str) from (select 1 as id, json_quote(json_extract(json, "$.alias")) || ": [" || group_concat(distinct json_quote(json_extract(json, "$.to"))) || "]" as json_str from namespace_usages where json_extract(json, "$.alias") is not null and json_type(json, "$.alias") = "text" ${where} group by json_extract(json, "$.alias")) group by id',
         \ {'where': where})
   let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
 
