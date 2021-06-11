@@ -10,6 +10,7 @@ let g:iced#nrepl#connect#clj_command = get(g:, 'iced#nrepl#connect#clj_command',
 let g:iced#nrepl#connect#jack_in_command = get(g:, 'iced#nrepl#connect#jack_in_command',
       \ printf('%s repl', g:iced#nrepl#connect#iced_command))
 let g:iced#nrepl#connect#auto_connect_timeout_ms = get(g:, 'iced#nrepl#connect#auto_connect_timeout_ms', 5000)
+let g:iced#nrepl#connect#prefer = get(g:, 'iced#nrepl#connect#prefer', '')
 
 function! s:detect_port_from_nrepl_port_file() abort
   let path = findfile(s:nrepl_port_file, '.;')
@@ -80,8 +81,19 @@ function! iced#nrepl#connect#auto(...) abort
   let filtered_candidates = filter(hook_results, {_, v -> type(v) == v:t_list})[0]
 
   let filtered_count = len(filtered_candidates)
+
+  " There is only one candidate, so connect to it.
   if filtered_count == 1
     return s:__connect_selected(filtered_candidates[0])
+  " There are some candidates, but preferred option is defined.
+  " If the preferred candidate exists, connect to it.
+  elseif filtered_count > 1 && ! empty(g:iced#nrepl#connect#prefer)
+    for candidate in filtered_candidates
+      if get(candidate, 'type', '') ==# g:iced#nrepl#connect#prefer
+        return s:__connect_selected(candidate)
+      endif
+    endfor
+  " There are some candidates, select one to connect.
   elseif filtered_count > 1
     call iced#selector({
          \ 'candidates': map(copy(filtered_candidates), {_, v -> v['label']}),
