@@ -706,6 +706,11 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedConnect [{port}]
   Make connection to nREPL.
   If {port} is not passed, {port} is detected by '.nrepl-port' automatically.
+
+  See also following commands:
+  - |g:iced#nrepl#connect#auto_connect_timeout_ms|
+  - |g:iced#nrepl#connect#prefer|
+
   Key is mapped to |<Plug>(iced_connect)|.
 
                                                        *:IcedConnectSocketRepl*
@@ -1811,6 +1816,15 @@ g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded
 g:iced#nrepl#connect#jack_in_command
   Command to start REPL in |:IcedJackIn|.
   Default value is `'iced repl'` .
+
+                                                  *g:iced#nrepl#connect#prefer*
+g:iced#nrepl#connect#prefer
+  Preferred connection candidate when you have multiple connection candidates
+  on |:IcedConnect|.
+  The value must be one of `''`, `'nrepl'` or `'shadow-cljs'`.
+
+  If `''`, it is required to select a conncation candidate manually.
+  Default value is `''` .
 
                                  *g:iced#nrepl#connect#auto_connect_timeout_ms*
 g:iced#nrepl#connect#auto_connect_timeout_ms
