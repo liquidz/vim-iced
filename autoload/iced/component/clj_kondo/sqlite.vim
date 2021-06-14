@@ -120,6 +120,30 @@ function! s:kondo.keyword_usages(kw_name) abort
   return json_decode(res)
 endfunction
 
+function! s:kondo.keyword_definition(filename, kw_name) abort
+  if ! filereadable(self.db_name) | return {} | endif
+
+  let sql = ''
+  let kw_name = substitute(a:kw_name, '^:\+', '', 'g')
+  let idx = stridx(kw_name, '/')
+
+  if idx != -1
+    let sql = s:I.interpolate('select * from keywords where json_extract(json, "$.ns") || "/" || json_extract(json, "$.name") in (select json_extract(json, "$.ns") || "/" || json_extract(json, "$.name") from keywords where json_extract(json, "$.filename") = "${filename}" and json_extract(json, "$.alias") = "${alias}" and json_extract(json, "$.name") = "${name}") and json_extract(json, "$.reg") is not null',
+          \ {'filename': a:filename,
+          \  'alias': kw_name[0:idx-1],
+          \  'name': kw_name[idx+1:]})
+  else
+    let sql = s:I.interpolate('select * from keywords where json_extract(json, "$.filename") = "${filename}" and json_extract(json, "$.alias") is null and json_extract(json, "$.name") = "${name}" and json_extract(json, "$.reg") is not null',
+          \ {'filename': a:filename,
+          \  'name': kw_name})
+  endif
+
+  let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
+  if empty(res) | return [] | endif
+  let res = substitute(res, '\n', ',', 'g')
+  return json_decode(res)
+endfunction
+
 function! s:kondo.ns_path(ns_name) abort
   if ! filereadable(self.db_name) | return '' | endif
   let sql = printf(
