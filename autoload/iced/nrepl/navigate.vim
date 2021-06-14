@@ -156,7 +156,11 @@ function! iced#nrepl#navigate#jump_to_def(...) abort
         \ : a:1
 
   let kondo = iced#system#get('clj_kondo')
-  if stridx(symbol, '::') == 0
+  let is_keyword = (stridx(symbol, '::') == 0)
+
+  if is_keyword && kondo.is_analyzed() && g:iced_enable_clj_kondo_local_analysis
+    return s:jump_to_qualified_keyword_by_clj_kondo(symbol)
+  elseif is_keyword
     return s:jump_to_qualified_keyword(symbol)
   elseif kondo.is_analyzed() && g:iced_enable_clj_kondo_local_analysis && g:iced#navigate#prefer_local_jump
     let local_def = kondo.local_definition(expand('%:p'), line('.'), symbol)
@@ -170,7 +174,29 @@ function! iced#nrepl#navigate#jump_to_def(...) abort
   endif
 endfunction
 
+function! s:jump_to_qualified_keyword_by_clj_kondo(keyword) abort
+  let kondo = iced#system#get('clj_kondo')
+  call iced#message#info('fetching')
+  let definition = kondo.keyword_definition(expand('%:p'), a:keyword)
+
+  if empty(definition)
+    return iced#message#error('jump_not_found')
+  endif
+
+  let path = get(definition, 'filename', '')
+  " Open path
+  if expand('%:p') !=# path
+    call iced#system#get('ex_cmd').exe(printf(':edit %s', path))
+  endif
+  " Move cursor
+  call cursor(get(definition, 'row', 0), get(definition, 'col', 0))
+  normal! zz
+
+  return
+endfunction
+
 function! s:jump_to_qualified_keyword(keyword) abort
+  let kondo = iced#system#get('clj_kondo')
   let current_ns_name = iced#nrepl#ns#name()
   let ns_name = ''
   let kw_name = ''
@@ -181,16 +207,15 @@ function! s:jump_to_qualified_keyword(keyword) abort
     let kw_name = strpart(a:keyword, 2)
   else
     let alias_dict = iced#nrepl#ns#alias_dict(current_ns_name)
+    let kw_name = strpart(a:keyword, slash_idx + 1)
     let ns_name = strpart(a:keyword, 2, slash_idx - 2)
     let ns_name = get(alias_dict, ns_name, ns_name)
-    let kw_name = strpart(a:keyword, slash_idx + 1)
   endif
 
   let path = ''
   if ns_name ==# current_ns_name
     let path = expand('%:p')
   else
-    let kondo = iced#system#get('clj_kondo')
     if kondo.is_analyzed()
       let path = kondo.ns_path(ns_name)
     else
