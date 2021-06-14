@@ -2,6 +2,7 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.5.0 (2021-06-15)
 // {{{
 === Added
 * https://github.com/liquidz/vim-iced/issues/344[#344] Added `g:iced#nrepl#connect#prefer` option.
