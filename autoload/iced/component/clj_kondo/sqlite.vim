@@ -79,7 +79,7 @@ function! s:kondo.ns_aliases(...) abort
         \ ? ''
         \ : s:I.interpolate('and json_extract(json, "$.from") = "${from_ns}"', {'from_ns': from_ns})
   let sql = s:I.interpolate(
-        \ 'select group_concat(json_str) from (select 1 as id, json_quote(json_extract(json, "$.alias")) || ": [" || group_concat(distinct json_quote(json_extract(json, "$.to"))) || "]" as json_str from namespace_usages where json_extract(json, "$.alias") is not null ${where} group by json_extract(json, "$.alias")) group by id',
+        \ 'select group_concat(json_str) from (select 1 as id, json_quote(json_extract(json, "$.alias")) || ": [" || group_concat(distinct json_quote(json_extract(json, "$.to"))) || "]" as json_str from namespace_usages where json_extract(json, "$.alias") is not null and json_type(json, "$.alias") = "text" ${where} group by json_extract(json, "$.alias")) group by id',
         \ {'where': where})
   let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
 
@@ -117,6 +117,30 @@ function! s:kondo.keyword_usages(kw_name) abort
   let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
   if empty(res) | return [] | endif
   let res = printf('[%s]', substitute(res, '\n', ',', 'g'))
+  return json_decode(res)
+endfunction
+
+function! s:kondo.keyword_definition(filename, kw_name) abort
+  if ! filereadable(self.db_name) | return {} | endif
+
+  let sql = ''
+  let kw_name = substitute(a:kw_name, '^:\+', '', 'g')
+  let idx = stridx(kw_name, '/')
+
+  if idx != -1
+    let sql = s:I.interpolate('select * from keywords where json_extract(json, "$.ns") || "/" || json_extract(json, "$.name") in (select json_extract(json, "$.ns") || "/" || json_extract(json, "$.name") from keywords where json_extract(json, "$.filename") = "${filename}" and json_extract(json, "$.alias") = "${alias}" and json_extract(json, "$.name") = "${name}") and json_extract(json, "$.reg") is not null',
+          \ {'filename': a:filename,
+          \  'alias': kw_name[0:idx-1],
+          \  'name': kw_name[idx+1:]})
+  else
+    let sql = s:I.interpolate('select * from keywords where json_extract(json, "$.filename") = "${filename}" and json_extract(json, "$.alias") is null and json_extract(json, "$.name") = "${name}" and json_extract(json, "$.reg") is not null',
+          \ {'filename': a:filename,
+          \  'name': kw_name})
+  endif
+
+  let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
+  if empty(res) | return [] | endif
+  let res = substitute(res, '\n', ',', 'g')
   return json_decode(res)
 endfunction
 

@@ -205,6 +205,48 @@ function! s:kondo.keyword_usages(kw_name) abort
   endif
 endfunction
 
+function! s:kondo.keyword_definition(filename, kw_name) abort
+  if !g:iced_enable_clj_kondo_analysis
+    return {'error': 'clj-kondo: disabled'}
+  endif
+  if !g:iced_enable_clj_kondo_local_analysis
+    return {'error': 'clj-kondo local analysis: disabled'}
+  endif
+
+  if has_key(self.option, 'keyword_definition')
+    return self.option.keyword_definition(a:filename, a:kw_name)
+  endif
+
+  let ns = ''
+  let name = ''
+  let kw_name = substitute(a:kw_name, '^:\+', '', 'g')
+  let idx = stridx(kw_name, '/')
+
+  if idx != -1
+    let ns = kw_name[0:idx-1]
+    let name = kw_name[idx+1:]
+  else
+    let name = kw_name
+  endif
+
+  let kws = copy(self.keywords())
+  if ! empty(ns)
+    let targets = filter(copy(kws), {_, v -> get(v, 'filename', '') ==# a:filename && get(v, 'alias', '') ==# ns && get(v, 'name', '') ==# name})
+    if empty(targets) | return {} | endif
+
+    let target_ns = get(targets[0], 'ns', '')
+    let target_name = get(targets[0], 'name', '')
+
+    let results = filter(copy(kws), {_, v -> get(v, 'ns', '') ==# target_ns && get(v, 'name', '') ==# target_name && get(v, 'reg', '') !=# '' })
+    if empty(results) | return {} | endif
+    return results[0]
+  else
+    let results = filter(kws, {_, v -> get(v, 'filename', '') ==# a:filename && get(v, 'alias') ==# '' && get(v, 'name', '') ==# name && get(v, 'reg', '') !=# ''})
+    if empty(results) | return {} | endif
+    return results[0]
+  endif
+endfunction
+
 function! s:kondo.references(ns_name, var_name) abort
   if has_key(self.option, 'references')
     return self.option.references(a:ns_name, a:var_name)

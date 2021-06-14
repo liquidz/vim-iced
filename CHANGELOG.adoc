@@ -2,6 +2,18 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.5.0 (2021-06-15)
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/issues/344[#344] Added `g:iced#nrepl#connect#prefer` option.
+
+=== Changed
+* https://github.com/liquidz/vim-iced/issues/343[#343] Updated `IcedDefJump` to support more accurate jumping to keyword definition.
+
+=== Fixed
+* Fixed clj-kondo sqlite3 component to avoid JSON decode error.
+// }}}
+
 == 3.4.1 (2021-05-28)
 // {{{
 === Changed

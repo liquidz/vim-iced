@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.4.1
+Version: 3.5.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -559,6 +559,9 @@ JUMP TO DEFINITION                    *vim-iced-tag-jump*  *vim-iced-jump-to-def
 
   |:IcedDefJump| to jump to definition.
   It is also supported to jump to qualified keywords and local vars.
+  
+  If the jump destination for keyword is inaccurate or the jump is slow, enabling clj-kondo feature may improve the result.
+  - |vim-iced-static-analysis-clj-kondo|
 
   To jump back, you can use default key mapping(<C-t>).
 
@@ -684,6 +687,10 @@ CLJ-KONDO                                  *vim-iced-static-analysis-clj-kondo*
     ns definition/usage automatically if you have `jq` or `jet`.
     - https://github.com/stedolan/jq
     - https://github.com/borkdude/jet
+  - For more advance, if you have `jq` and `sqlite3`,
+    vim-iced will store analyzed result into SQLite database.
+    - The performance will improve dramatically.
+    - https://www.sqlite.org/index.html
   - This leads to make |:IcedAddMissing| and |:IcedAddNs| more faster.
 
 ==============================================================================
@@ -706,6 +713,11 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedConnect [{port}]
   Make connection to nREPL.
   If {port} is not passed, {port} is detected by '.nrepl-port' automatically.
+
+  See also following commands:
+  - |g:iced#nrepl#connect#auto_connect_timeout_ms|
+  - |g:iced#nrepl#connect#prefer|
+
   Key is mapped to |<Plug>(iced_connect)|.
 
                                                        *:IcedConnectSocketRepl*
@@ -1811,6 +1823,15 @@ g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded
 g:iced#nrepl#connect#jack_in_command
   Command to start REPL in |:IcedJackIn|.
   Default value is `'iced repl'` .
+
+                                                  *g:iced#nrepl#connect#prefer*
+g:iced#nrepl#connect#prefer
+  Preferred connection candidate when you have multiple connection candidates
+  on |:IcedConnect|.
+  The value must be one of `''`, `'nrepl'` or `'shadow-cljs'`.
+
+  If `''`, it is required to select a conncation candidate manually.
+  Default value is `''` .
 
                                  *g:iced#nrepl#connect#auto_connect_timeout_ms*
 g:iced#nrepl#connect#auto_connect_timeout_ms
