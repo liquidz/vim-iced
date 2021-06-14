@@ -559,6 +559,9 @@ JUMP TO DEFINITION                    *vim-iced-tag-jump*  *vim-iced-jump-to-def
 
   |:IcedDefJump| to jump to definition.
   It is also supported to jump to qualified keywords and local vars.
+  
+  If the jump destination for keyword is inaccurate or the jump is slow, enabling clj-kondo feature may improve the result.
+  - |vim-iced-static-analysis-clj-kondo|
 
   To jump back, you can use default key mapping(<C-t>).
 
@@ -684,6 +687,10 @@ CLJ-KONDO                                  *vim-iced-static-analysis-clj-kondo*
     ns definition/usage automatically if you have `jq` or `jet`.
     - https://github.com/stedolan/jq
     - https://github.com/borkdude/jet
+  - For more advance, if you have `jq` and `sqlite3`,
+    vim-iced will store analyzed result into SQLite database.
+    - The performance will improve dramatically.
+    - https://www.sqlite.org/index.html
   - This leads to make |:IcedAddMissing| and |:IcedAddNs| more faster.
 
 ==============================================================================
