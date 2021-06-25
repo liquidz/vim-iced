@@ -11,3 +11,5 @@ include::reference/use_cases.adoc[]
 
 include::reference/clojure_spec.adoc[]
 
+include::reference/javadoc.adoc[]
+
