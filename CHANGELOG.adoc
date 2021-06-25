@@ -2,6 +2,7 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.5.1 (2021-06-26)
 // {{{
 === Added
 * Added `IcedJavaDocument` command
