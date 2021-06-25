@@ -2,6 +2,18 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Added
+* Added `IcedJavaDocument` command
+** https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedJavaDocument
+
+=== Changed
+* Bumped iced-nrepl to 1.2.7.
+
+=== Fixed
+* Fixed `IcedAddMissing` command to work with fully qualified keywords.
+// }}}
+
 == 3.5.0 (2021-06-15)
 // {{{
 === Added
