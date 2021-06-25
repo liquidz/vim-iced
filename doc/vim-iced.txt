@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.5.0
+Version: 3.5.1
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -1049,6 +1049,18 @@ COMMANDS                                                    *vim-iced-commands*
   Close document window.
   Key is mapped to |<Plug>(iced_document_close)|.
 
+                                                            *:IcedJavaDocument*
+:IcedJavaDocument [{class_name}]
+  Opens a browser window displaying the javadoc for {class_name}.
+  c.f. https://clojuredocs.org/clojure.java.javadoc/javadoc
+
+  If {class_name} is not passed,
+  the result of `clojure.core/class` for the form under cursor is used.
+  For example, running this command over `(clojure.java.io/resource "...")`
+  will open a document page for `java.net.URL`.
+
+  Key is mapped to |<Plug>(iced_java_document)|.
+
                                                               *:IcedSourceShow*
 :IcedSourceShow [{symbol}]
   Open a window, and show source codes for {symbol}
@@ -1629,6 +1641,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                   *<Plug>(iced_document_close)*
 <Plug>(iced_document_close)
   Same as |:IcedDocumentClose|.
+
+                                                   *<Plug>(iced_java_document)*
+<Plug>(iced_java_document)
+  Same as |:IcedJavaDocument|.
 
                                                      *<Plug>(iced_source_show)*
 <Plug>(iced_source_show)
