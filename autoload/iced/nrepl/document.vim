@@ -462,6 +462,28 @@ function! iced#nrepl#document#close() abort
   call iced#buffer#document#close()
 endfunction
 
+function! s:__javadoc(resp) abort
+  if ! has_key(a:resp, 'value')
+    return iced#message#error('not_found')
+  endif
+
+  let class_name = get(a:resp, 'value')
+  let code = printf('(do (require ''clojure.java.javadoc) (clojure.java.javadoc/javadoc %s))',
+        \ class_name)
+  return iced#nrepl#eval#code(code)
+endfunction
+
+function! iced#nrepl#document#javadoc(...) abort
+  let class_name = get(a:, 1, '')
+  if empty(class_name)
+    let code = printf('(class %s)', iced#paredit#get_outer_list())
+    call iced#nrepl#eval#code(code, {'callback': funcref('s:__javadoc')})
+  else
+    let dummy_resp = {'value': class_name}
+    return s:__javadoc(dummy_resp)
+  endif
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
 " vim:fdm=marker:fdl=0

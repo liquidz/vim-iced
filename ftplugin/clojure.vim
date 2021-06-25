@@ -128,6 +128,7 @@ command! -nargs=? IcedUseCaseOpen           call iced#nrepl#document#usecase(<q-
 command!          IcedNextUseCase           call iced#nrepl#document#next_usecase()
 command!          IcedPrevUseCase           call iced#nrepl#document#prev_usecase()
 command!          IcedDocumentClose         call iced#nrepl#document#close()
+command! -nargs=? IcedJavaDocument          call iced#nrepl#document#javadoc(<q-args>)
 command! -nargs=? IcedSourceShow            call iced#nrepl#source#show(<q-args>)
 command! -nargs=? IcedSourcePopupShow       call iced#nrepl#source#popup_show(<q-args>)
 command!          IcedCommandPalette        call iced#palette#show()
@@ -251,6 +252,7 @@ nnoremap <silent> <Plug>(iced_use_case_open)            :<C-u>IcedUseCaseOpen<CR
 nnoremap <silent> <Plug>(iced_next_use_case)            :<C-u>IcedNextUseCase<CR>
 nnoremap <silent> <Plug>(iced_prev_use_case)            :<C-u>IcedPrevUseCase<CR>
 nnoremap <silent> <Plug>(iced_document_close)           :<C-u>IcedDocumentClose<CR>
+nnoremap <silent> <Plug>(iced_java_document)            :<C-u>IcedJavaDocument<CR>
 nnoremap <silent> <Plug>(iced_source_show)              :<C-u>IcedSourceShow<CR>
 nnoremap <silent> <Plug>(iced_source_popup_show)        :<C-u>IcedSourcePopupShow<CR>
 nnoremap <silent> <Plug>(iced_command_palette)          :<C-u>IcedCommandPalette<CR>
