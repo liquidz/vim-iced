@@ -12,7 +12,7 @@ let s:default_palette = [
       \ 'TestNs', 'TestAll', 'TestRedo', 'TestSpecCheck', 'TestRerunLast',
       \ 'TestBufferOpen',
       \ 'StdoutBufferOpen', 'StdoutBufferClear', 'StdoutBufferClose', 'StdoutBufferToggle',
-      \ 'DocumentClose', 'ClojureDocsRefresh',
+      \ 'JavaDocument', 'DocumentClose', 'ClojureDocsRefresh',
       \ 'FormatAll',
       \ 'UseCaseOpen', 'NextUseCase', 'PrevUseCase',
       \ 'CycleSrcAndTest', 'Grep',

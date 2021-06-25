@@ -121,7 +121,8 @@ function! s:parse_candidates(candidates) abort
 endfunction
 
 function! s:symbol_to_alias(symbol) abort
-  let arr = split(a:symbol, '/')
+  let symbol = substitute(a:symbol, '^:\+', '', 'g')
+  let arr = split(symbol, '/')
   if len(arr) == 2 || stridx(a:symbol, '/') != -1
     return arr[0]
   endif
