@@ -13,6 +13,15 @@ Main purpose of this command is launching REPL with all features for vim-iced.
 - https://github.com/thheller/shadow-cljs[shadow-cljs]
 -- See also <<clojurescript_shadow_cljs, shadow-cljs section>>.
 
+[WARNING]
+====
+The `iced` command will automatically search project files (such as "project.clj", "shadow-cljs.edn" and etc) and launch the appropriate REPL for the project.
+
+When multiple projects are found, *the priority is given in the order listed above*.
+
+If you want to specify project type, use `--force-X` option as below.
+====
+
 === Usage [[iced_usage]]
 
 [source,shell]
@@ -50,6 +59,9 @@ https://github.com/borkdude/babashka[Babashka].
 
 | `--force-clojure-cli`
 | Force to use Clojure CLI.
+
+| `--force-shadow-cljs`
+| Force to use shadow-cljs.
 
 | `--dependency=VALUE`
 | Adds extra dependency. +
