@@ -52,7 +52,13 @@ function! s:ch.close(handler) abort
 endfunction
 
 function! s:ch.status(handler) abort
-  return (self['is_connected'] ? 'open' : 'closed')
+  if type(a:handler) != v:t_dict
+    return 'closed'
+  elseif self['is_connected']
+    return 'open'
+  else
+    return 'closed'
+  endif
 endfunction
 
 function! s:ch.sendraw(handler, string) abort
