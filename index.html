@@ -2540,6 +2540,26 @@ Main purpose of this command is launching REPL with all features for vim-iced.</
 </li>
 </ul>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>iced</code> command will automatically search project files (such as "project.clj", "shadow-cljs.edn" and etc) and launch the appropriate REPL for the project.</p>
+</div>
+<div class="paragraph">
+<p>When multiple projects are found, <strong>the priority is given in the order listed above</strong>.</p>
+</div>
+<div class="paragraph">
+<p>If you want to specify project type, use <code>--force-X</code> option as below.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="iced_usage">14.2. Usage</h3>
@@ -2609,6 +2629,12 @@ file(eg. project.clj) contains 'org.clojure/clojurescript' dependency.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--force-clojure-cli</code></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Force to use Clojure CLI.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--force-shadow-cljs</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Force to use shadow-cljs.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -4677,7 +4703,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-06-25 23:09:45 UTC
+Last updated 2021-07-03 22:16:13 UTC
 </div>
 </div>
 </body>
