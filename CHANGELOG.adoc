@@ -2,6 +2,17 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.5.2 (2021-07-04)
+// {{{
+=== Changed
+* Updated document page for `iced` command to clarify project priorities.
+** https://liquidz.github.io/vim-iced/#iced_supports
+
+=== Fixed
+* Fixed babashka installer to work.
+* Fixed session management to work https://github.com/liquidz/vim-iced-multi-session[vim-iced-multi-session] with Neovim.
+// }}}
+
 == 3.5.1 (2021-06-26)
 // {{{
 === Added

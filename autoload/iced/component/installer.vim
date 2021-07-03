@@ -88,7 +88,7 @@ function! s:installer.reinstall(fullname, ...) abort
   endif
 
   if delete(iced_bin) != 0
-    return iced#message#error('delete-error')
+    call iced#message#error('delete-error')
   endif
 
   return self.install(name, {'force': v:true}, Callback)
