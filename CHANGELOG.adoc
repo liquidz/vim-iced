@@ -2,6 +2,16 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.5.3 (2021-07-11)
+// {{{
+=== Fixed
+* Fixed to refer vars which ends with quote correctly.
+** Some commands such as `IcedDefJump` and `IcedDocumentOpen` will correctly work with vars ending with quotes.
+* Fixed `IcedTestUnderCursor` command to fall back to manipulation with nREPL when test vars are not found in clj-kondo analysis data.
+** When test vars are not found in clj-kondo analysis data, the test process had been exited silently until now.
+* Fixed native image formatter not to add unnecessary newlines with Neovim.
+// }}}
+
 == 3.5.2 (2021-07-04)
 // {{{
 === Changed

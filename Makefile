@@ -94,6 +94,9 @@ version_check:
 deps_check:
 	bash scripts/deps_check.sh
 
+.PHONY: check
+check: version_check deps_check
+
 .PHONY: coverage
 coverage: target/bin/vint themis
 	bash scripts/coverage.sh

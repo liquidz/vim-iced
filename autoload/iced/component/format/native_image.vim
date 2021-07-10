@@ -32,7 +32,17 @@ function! s:__format_finally(args) abort
 endfunction
 
 function! s:out_cb(_, out) abort dict
-  call extend(self.buf, iced#util#ensure_array(a:out))
+  let out_arr = iced#util#ensure_array(a:out)
+  let out_len = len(out_arr)
+
+  " NOTE: In neovim, a:out will be an array of string.
+  if out_len > 1 && ! empty(self.buf)
+    " Concat self.buf[TAIL] and out_arr[HEAD] for neovim
+    let self.buf[-1] = printf('%s%s', self.buf[-1], out_arr[0])
+    call extend(self.buf, out_arr[1:])
+  else
+    call extend(self.buf, out_arr)
+  endif
 endfunction
 
 function! s:err_cb(_, out) abort dict
