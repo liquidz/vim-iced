@@ -346,6 +346,7 @@ if has('nvim') && exists('*nvim_open_win')
   aug vim_iced_close_document_popup
     au!
     au CursorMoved *.clj,*.cljs,*.cljc call iced#component#popup#neovim#moved()
+    au CursorMovedI *.clj,*.cljs,*.cljc call iced#component#popup#neovim#moved()
   aug END
 endif
 "" }}}
