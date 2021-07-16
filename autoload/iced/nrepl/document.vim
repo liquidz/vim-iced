@@ -138,10 +138,10 @@ function! s:view_doc_on_popup(doc) abort
   endif
 
   let doc = printf(' %s', a:doc)
-  if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
   try
     let s:popup_winid = popup.open(split(doc, '\r\?\n'), {
           \ 'iced_context': s:popup_context({'type': 'full document'}),
+          \ 'group': '_document_',
           \ 'line': 'near-cursor',
           \ 'col': col('.'),
           \ 'filetype': 'help',
@@ -223,9 +223,6 @@ function! s:one_line_doc(resp) abort
     let popup = iced#system#get('popup')
     if popup.is_supported()
           \ && s:enable_popup_one_line_document
-
-      if s:popup_winid != -1 | call popup.close(s:popup_winid) | endif
-
       let popup_args = trim(get(a:resp, 'arglists-str', ''))
       let popup_args = substitute(popup_args, '\r\?\n', " \n ", 'g')
       let popup_args = printf(' %s ', popup_args)
@@ -238,6 +235,7 @@ function! s:one_line_doc(resp) abort
       let lnum = winline() - len(popup_args)
       let popup_opts = {
             \ 'iced_context': s:popup_context({'type': 'one-line document', 'name': name}),
+            \ 'group': '_document_',
             \ 'line': (lnum < 0) ? winline() + 1 : lnum,
             \ 'col': 'right',
             \ 'auto_close': v:false,

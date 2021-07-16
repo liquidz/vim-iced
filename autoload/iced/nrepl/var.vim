@@ -80,7 +80,9 @@ function! iced#nrepl#var#get(...) abort
   endif
 
   " Remove the beginning quote if exists
-  let symbol = trim(symbol, "'", 1)
+  " NOTE: nvim 0.4.4 does not support the 3rd arity
+  " let symbol = trim(symbol, "'", 1)
+  let symbol = substitute(symbol, '^''\+', '', 'g')
 
   if type(Callback) != v:t_func
     return

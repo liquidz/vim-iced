@@ -2,11 +2,13 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:default_filetype = 'clojure'
+let s:default_border = [' ', '=' , ' ', ' ', ' ', '=', ' ', ' ']
 let s:last_winid = -1
 
 let s:popup = {
       \ 'env': 'neovim',
       \ 'config': {},
+      \ 'groups': {},
       \ }
 
 let g:iced#popup#neovim#winhighlight = get(g:, 'iced#popup#neovim#winhighlight', 'Normal:NormalFloat')
@@ -108,7 +110,7 @@ function! s:popup.open(texts, ...) abort
     let width = max_width
   endif
 
-  if has_key(opts, 'border')
+  if has_key(opts, 'border') && !has('nvim-0.5')
     let pseudo_border = printf(' ; %s ', iced#util#char_repeat(width - 4, '-'))
 
     if has_key(opts, 'title')
@@ -133,14 +135,17 @@ function! s:popup.open(texts, ...) abort
   let line = get(opts, 'line', winline())
   let line_type = type(line)
   if line_type == v:t_number
-    let line = line + wininfo['winrow'] - 1
+    let line = line - 1 + wininfo['winrow'] - 1
   elseif line_type == v:t_string
     if line ==# 'near-cursor'
       " NOTE: `+ 5` make the popup window not too low
       if winline() + height + 5 > &lines
         let line = winline() - height
+        if has_key(opts, 'border') && has('nvim-0.5')
+          let line -= 2
+        endif
       else
-        let line = winline() + wininfo['winrow']
+        let line = winline() + wininfo['winrow'] - 1
       endif
     elseif line ==# 'top'
       let line = wininfo['winrow'] - 1
@@ -173,6 +178,14 @@ function! s:popup.open(texts, ...) abort
         \ 'style': g:iced#popup#neovim#style,
         \ }
 
+  if has_key(opts, 'border') && has('nvim-0.5')
+    let border = get(opts, 'border')
+    let win_opts['border'] = empty(border)
+          \ ? s:default_border
+          \ : border
+  endif
+
+  " Open popup
   call nvim_buf_set_lines(bufnr, 0, len(texts), 0, texts)
   let winid = nvim_open_win(bufnr, v:false, win_opts)
   call s:init_win(winid, opts)
@@ -184,6 +197,16 @@ function! s:popup.open(texts, ...) abort
   if get(opts, 'auto_close', v:true)
     let time = get(opts, 'close_time', self.config.time)
     call iced#system#get('timer').start(time, {-> s:auto_close(winid, opts)})
+  endif
+
+  " Popup group
+  let popup_group = get(opts, 'group')
+  if ! empty(popup_group)
+    let opened_winid = get(self.groups, popup_group)
+    if ! empty(opened_winid)
+      call self.close(opened_winid)
+    endif
+    let self.groups[popup_group] = winid
   endif
 
   let s:last_winid = winid

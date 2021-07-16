@@ -2,6 +2,16 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.5.4 (2021-07-17)
+// {{{
+=== Fixed
+* Fixed to close document popup when the cursor is moved in insertion mode for Neovim.
+* Fixed to work with Neovim 0.4.4.
+** v3.5.3 broke backward compatibility.
+* Fixed popup position with Neovim.
+* Fixed popup component not to show same group, such as document and source, at the same time.
+// }}}
+
 == 3.5.3 (2021-07-11)
 // {{{
 === Fixed

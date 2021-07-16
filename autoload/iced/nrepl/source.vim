@@ -147,6 +147,7 @@ function! iced#nrepl#source#popup_show(symbol) abort
         \               ? iced#message#error('not_found')
         \               : iced#system#get('popup').open(
         \                   split(code, '\r\?\n'), {
+        \                   'group': '_document_',
         \                   'line': 'near-cursor',
         \                   'col': 'near-cursor',
         \                   'filetype': 'clojure',
