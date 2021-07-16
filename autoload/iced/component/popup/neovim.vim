@@ -2,6 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:default_filetype = 'clojure'
+let s:default_border = [' ', '=' , ' ', ' ', ' ', '=', ' ', ' ']
 let s:last_winid = -1
 
 let s:popup = {
@@ -108,7 +109,7 @@ function! s:popup.open(texts, ...) abort
     let width = max_width
   endif
 
-  if has_key(opts, 'border')
+  if has_key(opts, 'border') && !has('nvim-0.5')
     let pseudo_border = printf(' ; %s ', iced#util#char_repeat(width - 4, '-'))
 
     if has_key(opts, 'title')
@@ -139,6 +140,9 @@ function! s:popup.open(texts, ...) abort
       " NOTE: `+ 5` make the popup window not too low
       if winline() + height + 5 > &lines
         let line = winline() - height
+        if has_key(opts, 'border') && has('nvim-0.5')
+          let line -= 2
+        endif
       else
         let line = winline() + wininfo['winrow'] - 1
       endif
@@ -172,6 +176,13 @@ function! s:popup.open(texts, ...) abort
         \ 'height': height,
         \ 'style': g:iced#popup#neovim#style,
         \ }
+
+  if has_key(opts, 'border') && has('nvim-0.5')
+    let border = get(opts, 'border')
+    let win_opts['border'] = empty(border)
+          \ ? s:default_border
+          \ : border
+  endif
 
   call nvim_buf_set_lines(bufnr, 0, len(texts), 0, texts)
   let winid = nvim_open_win(bufnr, v:false, win_opts)
