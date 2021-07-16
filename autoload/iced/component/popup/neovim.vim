@@ -8,6 +8,7 @@ let s:last_winid = -1
 let s:popup = {
       \ 'env': 'neovim',
       \ 'config': {},
+      \ 'groups': {},
       \ }
 
 let g:iced#popup#neovim#winhighlight = get(g:, 'iced#popup#neovim#winhighlight', 'Normal:NormalFloat')
@@ -184,6 +185,7 @@ function! s:popup.open(texts, ...) abort
           \ : border
   endif
 
+  " Open popup
   call nvim_buf_set_lines(bufnr, 0, len(texts), 0, texts)
   let winid = nvim_open_win(bufnr, v:false, win_opts)
   call s:init_win(winid, opts)
@@ -195,6 +197,16 @@ function! s:popup.open(texts, ...) abort
   if get(opts, 'auto_close', v:true)
     let time = get(opts, 'close_time', self.config.time)
     call iced#system#get('timer').start(time, {-> s:auto_close(winid, opts)})
+  endif
+
+  " Popup group
+  let popup_group = get(opts, 'group')
+  if ! empty(popup_group)
+    let opened_winid = get(self.groups, popup_group)
+    if ! empty(opened_winid)
+      call self.close(opened_winid)
+    endif
+    let self.groups[popup_group] = winid
   endif
 
   let s:last_winid = winid

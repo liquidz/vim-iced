@@ -4,6 +4,7 @@ set cpoptions&vim
 let s:popup = {
       \ 'env': 'vim',
       \ 'config': {},
+      \ 'groups': {},
       \ }
 
 function! s:init_win(winid, opts) abort
@@ -109,8 +110,19 @@ function! s:popup.open(texts, ...) abort
   call extend(win_opts, iced#util#select_keys(opts,
         \ ['highlight', 'border', 'borderchars', 'borderhighlight', 'title', 'moved', 'wrap']))
 
+  " Open popup
   let winid = popup_create(a:texts, win_opts)
   call s:init_win(winid, opts)
+
+  " Popup group
+  let popup_group = get(opts, 'group')
+  if ! empty(popup_group)
+    let opened_winid = get(self.groups, popup_group)
+    if ! empty(opened_winid)
+      call self.close(opened_winid)
+    endif
+    let self.groups[popup_group] = winid
+  endif
 
   return winid
 endfunction
