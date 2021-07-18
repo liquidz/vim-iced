@@ -1,6 +1,10 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/353[#353]: Fixed to trim too long virtual texts to show within a window for Vim.
+// }}}
 
 == 3.5.4 (2021-07-17)
 // {{{
