@@ -25,6 +25,10 @@ function! s:popup.get_context(winid) abort
   return getwinvar(a:winid, 'iced_context', {})
 endfunction
 
+function! s:popup.overflowed_lnum(texts) abort
+  return (len(a:texts) + 5) - (&lines - &cmdheight)
+endfunction
+
 function! s:popup.open(texts, ...) abort
   if !self.is_supported() | return | endif
 
@@ -46,7 +50,7 @@ function! s:popup.open(texts, ...) abort
   endif
   let min_height = len(a:texts)
 
-  if min_height + 5 >= &lines - &cmdheight
+  if self.overflowed_lnum(a:texts) >= 0
     throw 'vim-iced: too long texts to show in popup'
   endif
 

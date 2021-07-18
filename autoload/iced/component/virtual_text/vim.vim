@@ -53,6 +53,12 @@ function! s:vt.set(text, ...) abort
     let popup_opts['auto_close'] = v:false
   endif
 
+  " NOTE: trim lines to show virtual text within a window
+  let overflowed_lnum = self.popup.overflowed_lnum(texts)
+  if overflowed_lnum >= 0
+    let texts = texts[0:(len(texts) - overflowed_lnum - 5)]
+  endif
+
   let self.last_winid = self.popup.open(texts, popup_opts)
   return self.last_winid
 endfunction
