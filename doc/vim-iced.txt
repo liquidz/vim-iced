@@ -139,7 +139,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.8.3"]
-                   [com.github.liquidz/iced-nrepl "1.2.7"]
+                   [com.github.liquidz/iced-nrepl "1.2.8"]
                    [cider/cider-nrepl "0.26.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -169,7 +169,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "2.5.1"]
       [cider/cider-nrepl "0.26.0"]
-      [com.github.liquidz/iced-nrepl "1.2.7"]])
+      [com.github.liquidz/iced-nrepl "1.2.8"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -197,7 +197,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "2.5.1"]
                   [cider/cider-nrepl "0.26.0"]
-                  [com.github.liquidz/iced-nrepl "1.2.7"]]
+                  [com.github.liquidz/iced-nrepl "1.2.8"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
