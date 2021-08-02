@@ -2,6 +2,12 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Changed
+* https://github.com/liquidz/vim-iced/issues/357[#357]: Updated to add line numbers to testing error output.
+* Bumped iced-nrepl to 1.2.8.
+// }}}
+
 == 3.5.5 (2021-07-19)
 // {{{
 === Fixed
