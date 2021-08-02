@@ -32,19 +32,22 @@ function! iced#nrepl#test#done(parsed_response) abort
   endif
 
   for err in errors
+    let lnum = ''
+
     if has_key(err, 'lnum')
       call sign.place(s:sign_name, err['lnum'], err['filename'], err['var'])
+      let lnum = printf(' (Line: %s)', err['lnum'])
     endif
 
     if has_key(err, 'actual') && !empty(err['actual'])
       if has_key(err, 'expected') && !empty(err['expected'])
         let expected_and_actuals = expected_and_actuals + [
-              \ printf(';; %s', err['text']),
+              \ printf(';; %s%s', err['text'], lnum),
               \ s:__dict_to_str(err, ['expected', 'actual', 'diffs']),
               \ '']
       else
         let expected_and_actuals = expected_and_actuals + [
-              \ printf(';; %s', err['text']),
+              \ printf(';; %s%s', err['text'], lnum),
               \ err['actual'],
               \ '']
       endif
