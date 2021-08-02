@@ -37,7 +37,13 @@ for TARGET in ${TARGETS[@]}; do
 done
 
 echo 'bin/iced: Expected to newer than deps.edn'
-if [ ${SCRIPT_DIR}/../deps.edn -nt ${SCRIPT_DIR}/../bin/iced ]; then
+make bin
+if [ $? -ne 0 ]; then
+    echo 'NG: failed to build iced command'
+    exit 1
+fi
+git diff --exit-code ${SCRIPT_DIR}/../bin/iced
+if [ $? -ne 0 ]; then
     echo 'NG: iced command seems not up-to-date'
     exit 1
 else
