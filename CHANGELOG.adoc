@@ -2,6 +2,7 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.5.7 (2021-08-04)
 // {{{
 === Changed
 * https://github.com/liquidz/vim-iced/issues/359[#359]: Downgraded cider-nrepl to 0.25.11 for now.
