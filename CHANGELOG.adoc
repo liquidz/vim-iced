@@ -2,6 +2,12 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Changed
+* https://github.com/liquidz/vim-iced/issues/359[#359]: Downgraded cider-nrepl to 0.25.11 for now.
+** With cider-nrepl 0.26.0, logs from `clojure.tools.logging` does not appear on REPL which is started via Clojure CLI.
+// }}}
+
 == 3.5.6 (2021-08-03)
 // {{{
 === Changed
