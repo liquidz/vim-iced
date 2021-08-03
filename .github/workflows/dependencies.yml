@@ -10,4 +10,4 @@ jobs:
       - uses: actions/checkout@v2
       - uses: liquidz/antq-action@v1
         with:
-          excludes: 'nrepl/nrepl cider/cider-nrepl'
+          excludes: 'nrepl/nrepl cider/cider-nrepl@0.26.0'
