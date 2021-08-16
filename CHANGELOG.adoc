@@ -2,6 +2,13 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Added
+* Added support for ClojureScript test integration on plain nREPL with following commands.
+** `:IcedTestUnderCursor`, `:IcedTestNs`
+** `:IcedTestAll` is not supported for now.
+// }}}
+
 == 3.5.7 (2021-08-04)
 // {{{
 === Changed
