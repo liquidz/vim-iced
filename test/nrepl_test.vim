@@ -32,6 +32,7 @@ function s:setup(...) abort " {{{
 
   silent call iced#buffer#error#init()
   silent call iced#nrepl#reset()
+  silent call iced#nrepl#change_current_session('clj')
   let g:vim_iced_home = expand('<sfile>:p:h')
 endfunction " }}}
 function s:teardown() abort " {{{
@@ -328,6 +329,7 @@ function! s:suite.under_cursor_with_plain_nrepl_success_test() abort
 
   call s:buf.stop_dummy()
   call s:teardown()
+  call iced#system#get('edn').close()
 endfunction
 
 function! s:suite.under_cursor_with_plain_nrepl_fail_test() abort
@@ -347,6 +349,7 @@ function! s:suite.under_cursor_with_plain_nrepl_fail_test() abort
 
   call s:buf.stop_dummy()
   call s:teardown()
+  call iced#system#get('edn').close()
 endfunction
 
 function! s:suite.under_cursor_with_plain_nrepl_error_test() abort
@@ -366,6 +369,7 @@ function! s:suite.under_cursor_with_plain_nrepl_error_test() abort
 
   call s:buf.stop_dummy()
   call s:teardown()
+  call iced#system#get('edn').close()
 endfunction
 
 " ==============================================
@@ -409,6 +413,7 @@ function! s:suite.ns_test() abort
 
   call s:buf.stop_dummy()
   call s:teardown()
+  call iced#system#get('edn').close()
 endfunction
 
 function! s:suite.ns_with_non_test_ns_test() abort
@@ -437,6 +442,7 @@ function! s:suite.ns_with_non_test_ns_test() abort
 
   call s:buf.stop_dummy()
   call s:teardown()
+  call iced#system#get('edn').close()
 endfunction
 
 " ==============================================
@@ -458,6 +464,7 @@ function! s:suite.ns_with_plain_success_test() abort
 
   call s:buf.stop_dummy()
   call s:teardown()
+  call iced#system#get('edn').close()
 endfunction
 
 function! s:suite.ns_with_plain_fail_test() abort
@@ -478,6 +485,7 @@ function! s:suite.ns_with_plain_fail_test() abort
 
   call s:buf.stop_dummy()
   call s:teardown()
+  call iced#system#get('edn').close()
 endfunction
 
 " ==============================================
@@ -518,6 +526,7 @@ function! s:suite.all_test() abort
 
   call s:buf.stop_dummy()
   call s:teardown()
+  call iced#system#get('edn').close()
 endfunction
 
 function! s:suite.all_with_plain_success_test() abort
@@ -535,11 +544,13 @@ function! s:suite.all_with_plain_success_test() abort
 
   call s:buf.stop_dummy()
   call s:teardown()
+  call iced#system#get('edn').close()
 endfunction
 
 function! s:suite.all_with_plain_fail_test() abort
   call s:setup()
   call iced#system#reset_component('job')
+  call iced#system#reset_component('edn')
   call s:buf.start_dummy(['(ns bar.baz|)'])
 
   let edn = '{:summary {:fail 2, :var 1, :error 0, :pass 0, :test 1}, :results {"foo.core" {"bar-fail" ({:type :fail, :expected "1", :actual "2", :file "dummy", :message nil, :ns "foo.core", :var "bar-fail"} {:type :fail, :expected "2", :actual "3", :file "dummy", :message nil, :ns "foo.core", :var "baz-fail"})}}, :testing-ns "foo.core"}'
@@ -555,6 +566,7 @@ function! s:suite.all_with_plain_fail_test() abort
 
   call s:buf.stop_dummy()
   call s:teardown()
+  call iced#system#get('edn').close()
 endfunction
 
 " ==============================================
@@ -594,7 +606,7 @@ function! s:suite.redo_test() abort
   call iced#nrepl#change_current_session('clj')
 
   let p = iced#nrepl#test#redo()
-	call iced#promise#wait(p)
+  call iced#promise#wait(p)
 
   call s:assert.equals(s:qf.get_last_args()['list'], [{
         \ 'lnum': 1,
