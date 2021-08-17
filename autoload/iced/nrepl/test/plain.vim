@@ -24,8 +24,11 @@ function! s:decode_edn(resp) abort
 endfunction
 
 function! s:ignore_keys() abort
-  " for babashka.nrepl, line number may be wrong currently
   if has_key(iced#nrepl#version(), 'babashka')
+    " for babashka.nrepl, line number may be wrong currently
+    return ':line'
+  elseif iced#nrepl#current_session_key() ==# 'cljs'
+    " for shadow-cljs repl, line number may be wrong currently
     return ':line'
   endif
   return ''
