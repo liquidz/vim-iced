@@ -24,11 +24,25 @@ function! s:decode_edn(resp) abort
 endfunction
 
 function! s:ignore_keys() abort
-  " for babashka.nrepl, line number may be wrong currently
   if has_key(iced#nrepl#version(), 'babashka')
+    " for babashka.nrepl, line number may be wrong currently
+    return ':line'
+  elseif iced#nrepl#current_session_key() ==# 'cljs'
+    " for shadow-cljs repl, line number may be wrong currently
     return ':line'
   endif
   return ''
+endfunction
+
+function! s:readfile(filepath) abort
+  return join(readfile(a:filepath), "\n")
+endfunction
+
+function! s:read_running_test_var_template() abort
+  let template_file_name = (iced#nrepl#current_session_key() ==# 'cljs')
+        \ ? 'run_test_var.cljs'
+        \ : 'run_test_var.clj'
+  return s:readfile(printf('%s/clj/template/%s', g:vim_iced_home, template_file_name))
 endfunction
 
 function! s:test_var_using_clojure_test_directly(resp) abort
@@ -36,9 +50,8 @@ function! s:test_var_using_clojure_test_directly(resp) abort
   if empty(var) || var ==# 'nil'
     return iced#message#error('not_found')
   endif
-
   let vars_code = printf("(list #'%s)", var)
-  let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
+  let code = s:read_running_test_var_template()
   let code = printf(code, s:ignore_keys(), vars_code)
 
   return iced#promise#call('iced#nrepl#eval', [code])
@@ -55,7 +68,7 @@ endfunction
 
 function! s:test_ns_using_clojure_test_directly(ns_name) abort
   let vars_code = printf("(vals (ns-interns '%s))", a:ns_name)
-  let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
+  let code = s:read_running_test_var_template()
   let code = printf(code, s:ignore_keys(), vars_code)
 
   return iced#promise#call('iced#nrepl#eval', [code])
@@ -70,6 +83,10 @@ function! iced#nrepl#test#plain#ns(ns_name) abort
 endfunction
 
 function! s:test_all_using_clojure_test_directly() abort
+  if iced#nrepl#current_session_key() ==# 'cljs'
+    return iced#promise#reject(iced#message#get('not_supported'))
+  endif
+
   let ns = iced#nrepl#ns#name_by_buf()
   let ns_arr = split(ns, '\.')
   if len(ns_arr) == 0
@@ -77,10 +94,10 @@ function! s:test_all_using_clojure_test_directly() abort
   endif
 
   let root_ns = ns_arr[0]
-  let vars_code = join(readfile(printf('%s/clj/template/related_all_vars.clj', g:vim_iced_home)), "\n")
+  let vars_code = s:readfile(printf('%s/clj/template/related_all_vars.clj', g:vim_iced_home))
   let vars_code = printf(vars_code, root_ns)
 
-  let code = join(readfile(printf('%s/clj/template/run_test_var.clj', g:vim_iced_home)), "\n")
+  let code = s:read_running_test_var_template()
   let code = printf(code, s:ignore_keys(), vars_code)
 
   return iced#promise#call('iced#nrepl#eval', [code])

@@ -229,7 +229,8 @@ function! s:__under_cursor(var_info, test_vars) abort
 endfunction
 
 function! iced#nrepl#test#under_cursor() abort
-  if iced#nrepl#is_supported_op('test-var-query')
+  if iced#nrepl#current_session_key() ==# 'clj'
+        \ && iced#nrepl#is_supported_op('test-var-query')
     return iced#promise#call('iced#nrepl#var#extract_by_current_top_list', [])
           \.then({resp -> iced#cache#set('iced#nrepl#test#under_cursor', resp)})
           \.then({resp -> iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [resp['ns']])})
@@ -237,6 +238,7 @@ function! iced#nrepl#test#under_cursor() abort
   else
     " Use simple test integration when there is no `test-var-query` op.
     return iced#nrepl#test#plain#under_cursor()
+          \.catch({msg -> iced#message#error_str(msg)})
   endif
 endfunction "}}}
 
@@ -273,12 +275,14 @@ function! iced#nrepl#test#ns() abort
   " NOTE: Reload ns to match iced#nrepl#test#under_cursor's behavior
   call iced#repl#execute('load_current_file')
 
-  if iced#nrepl#is_supported_op('test-var-query')
+  if iced#nrepl#current_session_key() ==# 'clj'
+        \ && iced#nrepl#is_supported_op('test-var-query')
     return iced#promise#call('iced#nrepl#test#test_vars_by_ns_name', [ns])
           \.then(funcref('s:__ns', [ns]))
   else
     " Use simple test integration when there is no `test-var-query` op.
     return iced#nrepl#test#plain#ns(ns)
+          \.catch({msg -> iced#message#error_str(msg)})
   endif
 endfunction " }}}
 
@@ -286,7 +290,8 @@ endfunction " }}}
 function! iced#nrepl#test#all() abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
-  if iced#nrepl#is_supported_op('test-var-query')
+  if iced#nrepl#current_session_key() ==# 'clj'
+        \ && iced#nrepl#is_supported_op('test-var-query')
     let query = {
           \ 'ns-query': {'project?': 'true', 'load-project-ns?': 'true'}
           \ }
@@ -299,6 +304,7 @@ function! iced#nrepl#test#all() abort
   else
     " Use simple test integration when there is no `test-var-query` op.
     return iced#nrepl#test#plain#all()
+          \.catch({msg -> iced#message#error_str(msg)})
   endif
 endfunction " }}}
 

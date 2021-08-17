@@ -19,6 +19,13 @@ function! s:edn.decode(text, callback) abort
   endif
 endfunction
 
+function! s:edn.close() abort
+  if self.available
+    call self.job.stop(self.jet)
+    let s:edn.available = v:false
+  endif
+endfunction
+
 function! s:out_callback(_, resp) abort dict
   try
     for resp in iced#util#ensure_array(a:resp)
