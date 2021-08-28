@@ -62,7 +62,8 @@ function! s:collect_errors_and_passes(resp) abort
             continue
           endif
 
-          if is_ns_path_op_supported
+          let filename = get(test, 'file')
+          if !filereadable(filename) && is_ns_path_op_supported
             let ns_path_resp = iced#nrepl#op#cider#sync#ns_path(ns_name)
 
             if type(ns_path_resp) != v:t_dict || !has_key(ns_path_resp, 'path')
@@ -80,8 +81,6 @@ function! s:collect_errors_and_passes(resp) abort
             else
               let filename = ns_path_resp['path']
             endif
-          else
-            let filename = get(test, 'file')
           endif
 
           let err = {
