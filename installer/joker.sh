@@ -2,7 +2,7 @@
 
 set -e
 
-version='0.17.1'
+version='0.17.2'
 file='joker.zip'
 if [ "$(uname)" == 'Darwin' ]; then
     os='mac'
