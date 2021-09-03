@@ -31,7 +31,7 @@ endfunction
 
 function! s:extract_actual_values(test) abort
   if !has_key(a:test, 'diffs') || type(a:test['diffs']) != v:t_list
-    return {'actual': trim(get(a:test, 'actual', ''))}
+    return {'actual': iced#util#delete_color_code(trim(get(a:test, 'actual', '')))}
   endif
 
   let diffs = a:test['diffs'][0]
@@ -63,6 +63,7 @@ function! s:collect_errors_and_passes(resp) abort
           endif
 
           let filename = get(test, 'file')
+          let filename = (type(filename) == v:t_string) ? filename : ''
           if !filereadable(filename) && is_ns_path_op_supported
             let ns_path_resp = iced#nrepl#op#cider#sync#ns_path(ns_name)
 
