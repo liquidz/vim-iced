@@ -2,6 +2,11 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Fixed
+* Fixed a unexpected exceptions during clojure.test errors.
+// }}}
+
 == 3.6.1 (2021-08-29)
 // {{{
 === Changed
