@@ -2105,6 +2105,12 @@ g:iced#buffer#stdout#enable_notify
   If {v:true}, display standard outputs on popup notification.
   Default value is `v:true`.
 
+                                                    *g:iced#buffer#stdout#size*
+g:iced#buffer#stdout#size
+  If specified, stdout buffer will be opened with the specified size.
+  Otherwise, opened with the half size of the current window.
+  Default value is `v:null`.
+
 ------------------------------------------------------------------------------
 FORMATTER                                      *vim-iced-customizing-formatter*
 
