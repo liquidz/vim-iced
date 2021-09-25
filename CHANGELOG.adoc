@@ -2,6 +2,7 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.6.3 (2021-09-26)
 // {{{
 === Added
 * https://github.com/liquidz/vim-iced/issues/366[#366]: Added `g:iced#buffer#stdout#size` option.
