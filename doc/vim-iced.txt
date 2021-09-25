@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.6.2
+Version: 3.6.3
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -2104,6 +2104,12 @@ g:iced#buffer#stdout#deleting_line_delay
 g:iced#buffer#stdout#enable_notify
   If {v:true}, display standard outputs on popup notification.
   Default value is `v:true`.
+
+                                                    *g:iced#buffer#stdout#size*
+g:iced#buffer#stdout#size
+  If specified, stdout buffer will be opened with the specified size.
+  Otherwise, opened with the half size of the current window.
+  Default value is `v:null`.
 
 ------------------------------------------------------------------------------
 FORMATTER                                      *vim-iced-customizing-formatter*

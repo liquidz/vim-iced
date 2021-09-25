@@ -17,6 +17,7 @@ let g:iced#buffer#stdout#deleting_line_delay = get(g:, 'iced#buffer#stdout#delet
 let g:iced#buffer#stdout#file = get(g:, 'iced#buffer#stdout#file', '')
 let g:iced#buffer#stdout#file_buffer_size = get(g:, 'iced#buffer#stdout#file_buffer_size', 256)
 let g:iced#buffer#stdout#enable_notify = get(g:, 'iced#buffer#stdout#enable_notify', v:true)
+let g:iced#buffer#stdout#size = get(g:, 'iced#buffer#stdout#size', v:null)
 
 function! s:delete_old_lines() abort
   let bufnr = iced#buffer#nr(s:bufname)
@@ -62,10 +63,16 @@ function! iced#buffer#stdout#init() abort
 endfunction
 
 function! iced#buffer#stdout#open() abort
-  call iced#buffer#open(
-      \ s:bufname,
-      \ {'mods': g:iced#buffer#stdout#mods,
-      \  'scroll_to_bottom': v:true})
+  let opt = {
+        \ 'mods': g:iced#buffer#stdout#mods,
+        \ 'scroll_to_bottom': v:true,
+        \ }
+
+  if type(g:iced#buffer#stdout#size) == v:t_number
+    let opt['opener'] = printf('%dsplit', g:iced#buffer#stdout#size)
+  endif
+
+  call iced#buffer#open(s:bufname, opt)
 endfunction
 
 let s:write_file_buffer = []
