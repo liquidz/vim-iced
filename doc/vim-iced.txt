@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.6.3
+Version: 3.7.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -772,6 +772,8 @@ COMMANDS                                                    *vim-iced-commands*
   - `babashka`
     Launch babashka REPL
     See also |g:iced#repl#babashka_repl_type| option.
+  - `nbb`
+    Launch nbb REPL
 
   Key is mapped to |<Plug>(iced_instant_connect)|.
 
