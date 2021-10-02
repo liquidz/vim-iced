@@ -197,6 +197,37 @@ function! s:__instant_babashka(port) abort
   endif
 endfunction
 
+function! s:try_connecting_to_nbb(port) abort
+  try
+    return iced#repl#connect('nrepl', a:port, {
+          \ 'with_iced_nrepl': v:false,
+          \ 'verbose': v:false,
+          \ })
+  catch
+    return v:false
+  endtry
+endfunction
+
+function! s:__instant_nbb(port) abort
+  " NOTE: A job in vim may terminate when outputting long texts such as stack traces.
+  "       So ignoring the standard output etc.
+  let cmd = ['sh', '-c', printf('nbb nrepl-server :port %s > /dev/null 2>&1', a:port)]
+  let s:running_job = iced#job_start(cmd)
+
+  let s:is_auto_connecting = v:true
+  call iced#message#echom('connecting')
+  let result = iced#util#wait({->
+        \ empty(s:try_connecting_to_nbb(a:port))},
+        \ 3000)
+  let s:is_auto_connecting = v:false
+
+  if result
+    call iced#message#info('connected_to', printf('port %s', a:port))
+  else
+    call iced#message#error('connect_error')
+  endif
+endfunction
+
 function! iced#nrepl#connect#instant(program) abort
   if iced#nrepl#is_connected()
     return iced#message#info('already_connected')
@@ -204,6 +235,8 @@ function! iced#nrepl#connect#instant(program) abort
 
   if a:program ==# 'babashka'
     return iced#script#empty_port({port -> s:__instant_babashka(port)})
+  elseif a:program ==# 'nbb'
+    return iced#script#empty_port({port -> s:__instant_nbb(port)})
   else
     return s:__instant_clj()
   endif

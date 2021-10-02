@@ -772,6 +772,8 @@ COMMANDS                                                    *vim-iced-commands*
   - `babashka`
     Launch babashka REPL
     See also |g:iced#repl#babashka_repl_type| option.
+  - `nbb`
+    Launch nbb REPL
 
   Key is mapped to |<Plug>(iced_instant_connect)|.
 
