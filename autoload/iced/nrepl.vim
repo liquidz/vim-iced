@@ -162,7 +162,7 @@ function! s:get_message_id(x) abort
   let result = get(a:x, 'id', get(a:x, 'original-id', -1))
 
   " babashka returns 'unknown'
-  if result ==# 'unknown'
+  if type(result) != v:t_number
     return -1
   endif
   return result
@@ -436,6 +436,12 @@ function! s:status(ch) abort
   endtry
 endfunction
 
+function! s:is_cljs_session(timeout_msec) abort
+  let resp = iced#promise#sync('iced#nrepl#eval', ["(if (resolve 'js/window') true false)"], a:timeout_msec)
+  let value = get(resp, 'value', 'false')
+  return (type(value) == v:t_string && value ==# 'true')
+endfunction
+
 function! s:connected(resp, opts) abort
   if has_key(a:resp, 'new-session')
     try
@@ -443,6 +449,16 @@ function! s:connected(resp, opts) abort
       let initial_session = get(a:opts, 'initial_session', 'clj')
       call iced#nrepl#set_session(initial_session, session)
       call iced#nrepl#change_current_session(initial_session)
+
+      try
+        if s:is_cljs_session(500)
+          call iced#nrepl#set_session('cljs', session)
+          call iced#nrepl#change_current_session('cljs')
+        endif
+      catch
+        " ignore
+      endtry
+
       let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
 
       if get(a:opts, 'with_iced_nrepl', v:true)
