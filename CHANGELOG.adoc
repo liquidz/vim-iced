@@ -2,6 +2,13 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Added
+* Added support for ClojureScript REPL like https://github.com/borkdude/nbb[borkdude/nbb].
+* Added `nbb` as a target for `:IcedInstantConnect` command.
+** Now you can connect nbb REPL quickly via executing `:IcedInstantConnect nbb`.
+// }}}
+
 == 3.6.3 (2021-09-26)
 // {{{
 === Added
