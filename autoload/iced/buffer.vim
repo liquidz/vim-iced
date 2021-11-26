@@ -52,9 +52,14 @@ function! iced#buffer#init(bufname, ...) abort
   let s:info[a:bufname] = manager.open(a:bufname)
 
   let InitFn = get(a:, 1, '')
+  let bufnr = iced#buffer#nr(a:bufname)
+  " HACK: Disable vim-lsp's diagnostics by default
+  call setbufvar(bufnr, 'lsp_diagnostics_enabled', 0)
+
   if type(InitFn) == v:t_func
-    call InitFn(iced#buffer#nr(a:bufname))
+    call InitFn(bufnr)
   endif
+
   silent execute ':q'
   return s:info[a:bufname]
 endfunction

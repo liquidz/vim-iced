@@ -25,6 +25,9 @@ function! s:init_win(winid, opts) abort
   call setwinvar(a:winid, '&signcolumn', 'no')
 
   let bufnr = winbufnr(a:winid)
+  " HACK: To avoid vim-lsp activation
+  call setbufvar(bufnr, '&buftype', 'terminal')
+
   call setbufvar(bufnr, '&filetype', get(a:opts, 'filetype', s:default_filetype))
   call setbufvar(bufnr, '&swapfile', 0)
   call setbufvar(bufnr, '&wrap', 0)
