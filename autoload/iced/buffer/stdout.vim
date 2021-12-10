@@ -56,6 +56,13 @@ function! s:initialize(bufnr) abort
   if !empty(g:iced#buffer#stdout#file)
     call writefile(getbufline(a:bufnr, 1, '$'), g:iced#buffer#stdout#file)
   endif
+
+  " NOTE: In ftplugin/clojure.vim, these autocmd are registered to *.clj, *.cljs, and *.cljc,
+  "       but not to stdout buffer.
+  "       So we required to register explicitly.
+  if has('nvim')
+    call iced#component#popup#neovim#register_moved_autocmd(a:bufnr)
+  endif
 endfunction
 
 function! iced#buffer#stdout#init() abort

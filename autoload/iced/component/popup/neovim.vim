@@ -266,6 +266,14 @@ function! iced#component#popup#neovim#moved() abort
   endif
 endfunction
 
+" NOTE: Neovim does not have `moved` option for floating window.
+"       So vim-iced must close floating window explicitly.
+function! iced#component#popup#neovim#register_moved_autocmd(bufnr) abort
+  silent execute printf('au! * <buffer=%s>', a:bufnr)
+  silent execute printf('au CursorMoved <buffer=%s> call iced#component#popup#neovim#moved()', a:bufnr)
+  silent execute printf('au CursorMovedI <buffer=%s> call iced#component#popup#neovim#moved()', a:bufnr)
+endfunction
+
 function! iced#component#popup#neovim#start(this) abort
   call iced#util#debug('start', 'neovim popup')
   let d = deepcopy(s:popup)
