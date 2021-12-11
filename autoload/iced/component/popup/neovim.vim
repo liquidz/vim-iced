@@ -25,6 +25,9 @@ function! s:init_win(winid, opts) abort
   call setwinvar(a:winid, '&signcolumn', 'no')
 
   let bufnr = winbufnr(a:winid)
+  " HACK: To avoid vim-lsp activation
+  call setbufvar(bufnr, '&buftype', 'terminal')
+
   call setbufvar(bufnr, '&filetype', get(a:opts, 'filetype', s:default_filetype))
   call setbufvar(bufnr, '&swapfile', 0)
   call setbufvar(bufnr, '&wrap', 0)
@@ -261,6 +264,14 @@ function! iced#component#popup#neovim#moved() abort
   elseif type(moved) == v:t_list && (line != base_line || col < moved[0] || col > moved[1])
     return s:popup.close(s:last_winid)
   endif
+endfunction
+
+" NOTE: Neovim does not have `moved` option for floating window.
+"       So vim-iced must close floating window explicitly.
+function! iced#component#popup#neovim#register_moved_autocmd(bufnr) abort
+  silent execute printf('au! * <buffer=%s>', a:bufnr)
+  silent execute printf('au CursorMoved <buffer=%s> call iced#component#popup#neovim#moved()', a:bufnr)
+  silent execute printf('au CursorMovedI <buffer=%s> call iced#component#popup#neovim#moved()', a:bufnr)
 endfunction
 
 function! iced#component#popup#neovim#start(this) abort

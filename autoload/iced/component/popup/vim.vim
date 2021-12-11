@@ -12,6 +12,9 @@ function! s:init_win(winid, opts) abort
   call setwinvar(a:winid, '&breakindent', 1)
 
   let bufnr = winbufnr(a:winid)
+  " HACK: To avoid vim-lsp activation
+  call setbufvar(bufnr, '&buftype', 'terminal')
+
   if has_key(a:opts, 'filetype')
     call setbufvar(bufnr, '&filetype', a:opts['filetype'])
   endif

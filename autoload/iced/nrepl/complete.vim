@@ -78,8 +78,9 @@ function! s:context() abort
 endfunction
 
 function! iced#nrepl#complete#candidates(base, callback) abort
-  if empty(a:base) || !iced#nrepl#is_connected() || !iced#nrepl#check_session_validity()
-    return a:callback([])
+  if empty(a:base) || !iced#nrepl#is_connected() || !iced#nrepl#check_session_validity(v:false)
+    call a:callback([])
+    return v:true
   endif
 
   if iced#nrepl#is_supported_op('complete')
@@ -99,7 +100,8 @@ function! iced#nrepl#complete#candidates(base, callback) abort
       \ 'ns': iced#nrepl#ns#name(),
       \ 'callback': {resp -> a:callback(s:candidates(resp))}})
   else
-    return a:callback([])
+    call a:callback([])
+    return v:true
   endif
 
   return v:true
