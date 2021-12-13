@@ -43,10 +43,14 @@ endfunction
 function! s:initialize(bufnr) abort
   call setbufvar(a:bufnr, '&bufhidden', 'hide')
   call setbufvar(a:bufnr, '&buflisted', 0)
-  call setbufvar(a:bufnr, '&buftype', 'nofile')
   call setbufvar(a:bufnr, '&filetype', 'clojure')
   call setbufvar(a:bufnr, '&swapfile', 0)
   call setbufvar(a:bufnr, '&wrap', 0)
+
+  " HACK: coc.nvim does not work with 'nofile' buftype.
+  "       To avoid the limitation, change buftype lazily.
+  " FIXME: This is workaround for now.
+  call iced#system#get('timer').start(250, {_ -> setbufvar(a:bufnr, '&buftype', 'nofile')})
 
   for line in split(g:iced#buffer#stdout#init_text, '\r\?\n')
     silent call iced#compat#appendbufline(a:bufnr, '$', line)
