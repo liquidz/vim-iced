@@ -102,7 +102,10 @@ function! iced#nrepl#ns#eval(callback) abort
   if empty(code)
     call a:callback('')
   else
-    call iced#nrepl#eval(code, {'verbose': v:false}, {resp -> s:buffer_ns_loaded() && a:callback(resp)})
+    call iced#nrepl#eval(
+          \ code,
+          \ {'verbose': v:false, 'ns': iced#nrepl#ns#name_by_buf()},
+          \ {resp -> s:buffer_ns_created() && a:callback(resp)})
   endif
 endfunction
 
@@ -128,7 +131,10 @@ endfunction
 function! iced#nrepl#ns#require(ns_name, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let code = printf('(clojure.core/require ''%s)', a:ns_name)
-  call iced#nrepl#eval(code, {'verbose': v:false}, {resp -> s:buffer_ns_loaded() && a:callback(resp)})
+  call iced#nrepl#eval(
+        \ code,
+        \ {'verbose': v:false, 'ns': iced#nrepl#ns#name_by_buf()},
+        \ {resp -> s:buffer_ns_created() && a:callback(resp)})
 endfunction
 
 function! s:cljs_load_file(callback) abort
@@ -169,9 +175,9 @@ function! iced#nrepl#ns#load_current_file(...) abort
   if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#is_supported_op('load-file')
-    call iced#nrepl#load_file({resp -> s:buffer_ns_loaded() && s:loaded(resp, Cb)})
+    call iced#nrepl#load_file({resp -> s:buffer_ns_created() && s:loaded(resp, Cb)})
   else
-    call s:cljs_load_file({resp -> s:buffer_ns_loaded() && Cb(resp)})
+    call s:cljs_load_file({resp -> s:buffer_ns_created() && Cb(resp)})
   endif
 endfunction
 
