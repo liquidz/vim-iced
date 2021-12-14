@@ -415,11 +415,8 @@ function! s:warm_up() abort
   endif
 
   if iced#nrepl#check_session_validity(v:false)
-    if iced#nrepl#ns#name() ==# s:nrepl['init_ns']
-      call iced#nrepl#ns#in()
-    else
-      call iced#nrepl#ns#load_current_file({_ -> ''})
-    endif
+        \ && iced#nrepl#ns#name_by_buf() !=# s:nrepl['init_ns']
+    call iced#nrepl#ns#load_current_file({_ -> ''})
   endif
   call iced#format#set_indentexpr()
 
