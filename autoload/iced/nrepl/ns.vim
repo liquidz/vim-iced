@@ -262,7 +262,7 @@ function! iced#nrepl#ns#unalias(alias_name, ...) abort
   endif
 
   let code = printf("(ns-unalias '%s '%s)", ns_name, alias_name)
-  return iced#nrepl#eval(code, Callback)
+  return iced#nrepl#eval(code, {'ns': ns_name}, Callback)
 endfunction
 
 function! iced#nrepl#ns#yank_name() abort
