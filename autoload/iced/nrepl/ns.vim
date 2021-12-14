@@ -7,23 +7,33 @@ let g:iced#nrepl#ns#refresh_after_fn = get(g:, 'iced#nrepl#ns#refresh_after_fn',
 let s:V = vital#iced#new()
 let s:D = s:V.import('Data.Dict')
 
-function! s:buffer_ns_loaded() abort
-  let b:iced_ns_loaded = 1
+let s:create_ns_code = join([
+      \ '(when-not (clojure.core/find-ns ''%s)',
+      \ '  (clojure.core/create-ns ''%s))',
+      \ ])
+
+function! s:buffer_ns_created() abort
+  let b:iced_ns_created = 1
   return v:true
 endfunction
 
-function! iced#nrepl#ns#require_if_not_loaded_promise() abort
-  if exists('b:iced_ns_loaded')
-    return iced#promise#resolve(v:true)
-  endif
+function! iced#nrepl#ns#create() abort
+  if exists('b:iced_ns_created') | return | endif
+  if !iced#nrepl#is_connected() | return | endif
 
-  if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect()
-    return iced#promise#resolve(v:false)
-  endif
+  let ns_name = iced#nrepl#ns#name_by_buf()
+  if ns_name ==# '' | return | endif
 
+  let create_code = printf(s:create_ns_code, ns_name, ns_name)
   " NOTE: For midje user, requiring ns leads running tests.
-  "       So vim-iced evaluates ns form in CLJ session.
-  return iced#promise#call('iced#nrepl#ns#eval', [])
+  "       So vim-iced only evaluates ns form in CLJ session.
+  let Require_fn = function('iced#nrepl#ns#eval')
+
+  return iced#nrepl#eval(create_code, {resp ->
+      \ (get(resp, 'value', 'nil') ==# 'nil')
+      \ ? s:buffer_ns_created()
+      \ : iced#promise#call(Require_fn, []).then({_ -> s:buffer_ns_created()})
+      \ })
 endfunction
 
 function! iced#nrepl#ns#get() abort
