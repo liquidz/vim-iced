@@ -2,6 +2,15 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.7.2 (2021-12-18)
+// {{{
+=== Fixed
+* https://github.com/liquidz/vim-iced-coc-source/issues/4[vim-iced-coc-source#4]: Updated to change stdout buffer's buftype lazily.
+** coc.nvim https://github.com/neoclide/coc.nvim/blob/master/history.md#2018-08-16[does not work in buffers which buftype is 'nofile'], and to avoid this limitation, change stdout buffer's buftype lazily.
+***
+* Fixed error handling when extracting a var.
+// }}}
+
 == 3.7.1 (2021-12-12)
 // {{{
 === Changed
