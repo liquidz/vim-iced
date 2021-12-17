@@ -38,6 +38,7 @@ function! s:extract_var_name(eval_resp, callback) abort
   if !has_key(a:eval_resp, 'value') | return iced#message#error('not_found') | endif
 
   let var = a:eval_resp['value']
+  let ns = ''
   if stridx(var, '#''') == 0
     let var = substitute(var, '^#''', '', '')
     let i = stridx(var, '/')
@@ -48,6 +49,10 @@ function! s:extract_var_name(eval_resp, callback) abort
     let var_name = substitute(var_name, ' [^ ]\+\]$', '', '')
     let ns = iced#nrepl#ns#name_by_buf()
     let var = printf('%s/%s', ns, var_name)
+  endif
+
+  if empty(ns)
+    return iced#message#error('not_found')
   endif
 
   call a:callback({
