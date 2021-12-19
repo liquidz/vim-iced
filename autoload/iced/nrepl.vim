@@ -249,7 +249,7 @@ function! s:dispatcher(ch, resp) abort
   "" To avoid freezing vim/nvim when too large values are returned.
   "" c.f. https://github.com/liquidz/vim-iced/issues/219
   if text_len > g:iced#nrepl#buffer_size
-    call iced#message#error('too_large_values')
+    call iced#message#warning('too_large_values')
     if g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded
       let s:response_buffer = ''
       let s:messages = {}

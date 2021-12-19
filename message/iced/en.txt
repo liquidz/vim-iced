@@ -103,7 +103,7 @@
   'timeout':                   'Timed out.',
   'toggle_warn_on_reflection': 'Toggled *warn-on-reflection* to %s.',
   'too_deep_to_slurp':         'Too deep to slurp.',
-  'too_large_values':          'Timed out because evaluated values are too large.',
+  'too_large_values':          'Evaluating values too large may freeze vim. See: g:iced#nrepl#skip_evaluation_when_buffer_size_is_exceeded',
   'try_connect':               'Not connected. Try `:IcedConnect <port>`',
   'unaliased':                 'Unaliased "%s".',
   'undefined':                 'Undefined %s.',
@@ -117,4 +117,4 @@
 
   '___EOF___': ''
 }
-#vim:ft=ruby
+# vim:ft=ruby
