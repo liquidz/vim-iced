@@ -4,7 +4,7 @@ def __decode_string(b, start=0):
     """
     >>> __decode_string(b'3:foo3:bar')
     {'value': 'foo', 'start': 5}
-    >> __decode_string(b'3:foo3:bar', start=5)
+    >>> __decode_string(b'3:foo3:bar', start=5)
     {'value': 'bar', 'start': 10}
     >>> __decode_string(b'0:3:bar')
     {'value': '', 'start': 2}
