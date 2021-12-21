@@ -1,76 +1,80 @@
 #!/usr/bin/python3
 
-def __decode_string(s):
+def __decode_string(b, start=0):
     """
-    >>> __decode_string('3:foo3:bar')
-    {'value': 'foo', 'rest': '3:bar'}
-    >>> __decode_string('0:3:bar')
-    {'value': '', 'rest': '3:bar'}
+    >>> __decode_string(b'3:foo3:bar')
+    {'value': 'foo', 'start': 5}
+    >>> __decode_string(b'3:foo3:bar', start=5)
+    {'value': 'bar', 'start': 10}
+    >>> __decode_string(b'0:3:bar')
+    {'value': '', 'start': 2}
     """
-    i = s.find(':')
-    if i == -1:
-        raise Exception('failed to decode string token', s)
-    else:
-        l = int(s[:i])
-        b = s[i+1:].encode()
-        return {'value': b[:l].decode(encoding='utf-8'), 'rest': b[l:].decode(encoding='utf-8')}
+    cpos = b.find(b':', start)
+    if cpos == -1:
+        raise Exception('failed to decode string token', b[start:])
+    l = int(b[start:cpos])
+    return {'value': b[cpos+1:cpos+1+l].decode(encoding='utf-8'), 'start': cpos+1+l}
 
-def __decode_integer(s):
+def __decode_integer(b, start=0):
     """
-    >>> __decode_integer('i123e3:foo')
-    {'value': 123, 'rest': '3:foo'}
+    >>> __decode_integer(b'i123e3:foo')
+    {'value': 123, 'start': 5}
+    >>> __decode_integer(b'i123ei4567e', start=5)
+    {'value': 4567, 'start': 11}
     """
-    i = s.find('e')
-    if i == -1:
+    epos = b.find(b'e', start)
+    if epos == -1:
         raise Exception('failed to decode integer token')
-    else:
-        return {'value': int(s[1:i]), 'rest': s[i+1:]}
+    return {'value': int(b[start+1:epos]), 'start': epos+1}
 
-def __decode_list(s):
+def __decode_list(b, start=0):
     """
-    >>> __decode_list('li123e3:foo0:e3:bar')
-    {'value': [123, 'foo', ''], 'rest': '3:bar'}
-    >>> __decode_list('le3:bar')
-    {'value': [], 'rest': '3:bar'}
-    >>> __decode_list('llee3:bar')
-    {'value': [[]], 'rest': '3:bar'}
+    >>> __decode_list(b'li123e3:foo0:e3:bar')
+    {'value': [123, 'foo', ''], 'start': 14}
+    >>> __decode_list(b'lel3:bare')
+    {'value': [], 'start': 2}
+    >>> __decode_list(b'lel3:bare', start=2)
+    {'value': ['bar'], 'start': 9}
+    >>> __decode_list(b'llee3:bar')
+    {'value': [[]], 'start': 4}
     """
-    rest = s[1:]
+    start += 1
     result = []
-    while rest[0] != 'e':
-        decoded = __decode(rest)
+    while chr(b[start]) != 'e':
+        decoded = __decode(b, start)
         result.append(decoded['value'])
-        rest = decoded['rest']
-    return {'value': result, 'rest': rest[1:]}
+        start = decoded['start']
+    return {'value': result, 'start': start+1}
 
-def __decode_dict(s):
+def __decode_dict(b, start=0):
     """
-    >>> __decode_dict('d3:fooi123ee3:bar')
-    {'value': {'foo': 123}, 'rest': '3:bar'}
-    >>> __decode_dict('de3:bar')
-    {'value': {}, 'rest': '3:bar'}
+    >>> __decode_dict(b'd3:fooi123ee3:bar')
+    {'value': {'foo': 123}, 'start': 12}
+    >>> __decode_dict(b'de3:bar')
+    {'value': {}, 'start': 2}
+    >>> __decode_dict(b'ded3:bari1ee', start=2)
+    {'value': {'bar': 1}, 'start': 12}
     """
-    rest = s[1:]
+    start += 1
     result = {}
-    while rest[0] != 'e':
-        k = __decode(rest)
-        v = __decode(k['rest'])
+    while chr(b[start]) != 'e':
+        k = __decode(b, start)
+        v = __decode(b, k['start'])
         result[k['value']] = v['value']
-        rest = v['rest']
-    return {'value': result, 'rest': rest[1:]}
+        start = v['start']
+    return {'value': result, 'start': start+1}
 
-def __decode(s):
-    c = s[0]
+def __decode(b, start=0):
+    c = chr(b[start])
     if c in {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}:
-        return __decode_string(s)
+        return __decode_string(b, start)
     elif c == 'i':
-        return __decode_integer(s)
+        return __decode_integer(b, start)
     elif c == 'l':
-        return __decode_list(s)
+        return __decode_list(b, start)
     elif c == 'd':
-        return __decode_dict(s)
-    else:
-        raise Exception('invalid token')
+        return __decode_dict(b, start)
+    raise Exception('invalid token ' + c)
 
 def iced_bencode_decode(s):
     """
@@ -92,16 +96,16 @@ def iced_bencode_decode(s):
     '__FAILED__'
     """
     result = []
-    rest = s
+    b = s.encode('utf-8')
+    start = 0
     try:
-        while rest != '':
-            ret = __decode(rest)
+        while start < len(b):
+            ret = __decode(b, start)
             result.append(ret['value'])
-            rest = ret['rest']
+            start = ret['start']
         if len(result) == 1:
             return result[0]
-        else:
-            return result
+        return result
     except Exception:
         return '__FAILED__'
 
@@ -135,5 +139,4 @@ def iced_vim_repr(x):
     elif t is dict:
         ret = [iced_vim_repr(k) + ':' + iced_vim_repr(v) for k,v in x.items()]
         return '{' + ','.join(ret) + '}'
-    else:
-        raise Exception
+    raise Exception
