@@ -4,6 +4,8 @@ def __decode_string(b, start=0):
     """
     >>> __decode_string(b'3:foo3:bar')
     {'value': 'foo', 'start': 5}
+    >> __decode_string(b'3:foo3:bar', start=5)
+    {'value': 'bar', 'start': 10}
     >>> __decode_string(b'0:3:bar')
     {'value': '', 'start': 2}
     """
@@ -17,6 +19,8 @@ def __decode_integer(b, start=0):
     """
     >>> __decode_integer(b'i123e3:foo')
     {'value': 123, 'start': 5}
+    >>> __decode_integer(b'i123ei4567e', start=5)
+    {'value': 4567, 'start': 11}
     """
     epos = b.find(b'e', start)
     if epos == -1:
@@ -27,8 +31,10 @@ def __decode_list(b, start=0):
     """
     >>> __decode_list(b'li123e3:foo0:e3:bar')
     {'value': [123, 'foo', ''], 'start': 14}
-    >>> __decode_list(b'le3:bar')
+    >>> __decode_list(b'lel3:bare')
     {'value': [], 'start': 2}
+    >>> __decode_list(b'lel3:bare', start=2)
+    {'value': ['bar'], 'start': 9}
     >>> __decode_list(b'llee3:bar')
     {'value': [[]], 'start': 4}
     """
@@ -46,6 +52,8 @@ def __decode_dict(b, start=0):
     {'value': {'foo': 123}, 'start': 12}
     >>> __decode_dict(b'de3:bar')
     {'value': {}, 'start': 2}
+    >>> __decode_dict(b'ded3:bari1ee', start=2)
+    {'value': {'bar': 1}, 'start': 12}
     """
     start += 1
     result = {}
@@ -88,11 +96,11 @@ def iced_bencode_decode(s):
     '__FAILED__'
     """
     result = []
-    s = s.encode('utf-8')
+    b = s.encode('utf-8')
     start = 0
     try:
-        while start < len(s):
-            ret = __decode(s, start)
+        while start < len(b):
+            ret = __decode(b, start)
             result.append(ret['value'])
             start = ret['start']
         if len(result) == 1:
