@@ -116,7 +116,7 @@ bin:
 
 .PHONY: outdated
 outdated:
-	clojure -M:outdated --exclude 'nrepl/nrepl' --upgrade
+	clojure -M:outdated --upgrade
 
 .PHONY: repl
 repl:
