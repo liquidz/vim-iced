@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file. This change
 * Bumped joker to 0.18.0.
 
 === Fixed
-* https://github.com/liquidz/vim-iced/issues/376[#376]: Improved evaluation perfomance for large values in Neovim.
+* https://github.com/liquidz/vim-iced/issues/376[#376]: Improved evaluation performance for large values in Neovim.
 // }}}
 
 == 3.7.2 (2021-12-18)
