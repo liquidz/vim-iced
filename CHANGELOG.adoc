@@ -2,6 +2,7 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.7.3 (2021-12-29)
 // {{{
 === Changed
 * Bumped nrepl to 0.9.0.
