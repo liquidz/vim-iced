@@ -65,7 +65,8 @@ function! s:suite.bufenter_in_clj_file_test() abort
   call s:test.clear_messages()
   call iced#nrepl#auto#bufenter()
   call s:assert.equals(iced#nrepl#current_session(), 'clj-session')
-  call s:assert.equals(s:test.get_messages()[0]['code'], '(in-ns ''clj.foo)')
+  call s:assert.equals(s:test.get_messages()[0]['code'], '(when-not (clojure.core/find-ns ''clj.foo)   (clojure.core/create-ns ''clj.foo))')
+  unlet b:iced_ns_created
 
   " Switched session
   call iced#nrepl#change_current_session('cljs')
@@ -74,7 +75,8 @@ function! s:suite.bufenter_in_clj_file_test() abort
   call s:assert.equals(iced#nrepl#current_session(), 'cljs-session')
   call iced#nrepl#auto#bufenter()
   call s:assert.equals(iced#nrepl#current_session(), 'clj-session')
-  call s:assert.equals(s:test.get_messages()[0]['code'], '(in-ns ''clj.foo)')
+  call s:assert.equals(s:test.get_messages()[0]['code'], '(when-not (clojure.core/find-ns ''clj.foo)   (clojure.core/create-ns ''clj.foo))')
+  unlet b:iced_ns_created
 
   call s:teardown()
   let g:iced#nrepl#auto#does_switch_session = v:false
@@ -89,7 +91,8 @@ function! s:suite.bufenter_in_cljs_file_test() abort
   call s:test.clear_messages()
   call iced#nrepl#auto#bufenter()
   call s:assert.equals(iced#nrepl#current_session(), 'cljs-session')
-  call s:assert.equals(s:test.get_messages()[0]['code'], '(in-ns ''cljs.bar)')
+  call s:assert.equals(s:test.get_messages()[0]['code'], '(when-not (clojure.core/find-ns ''cljs.bar)   (clojure.core/create-ns ''cljs.bar))')
+  unlet b:iced_ns_created
 
   " Switched session
   call iced#nrepl#change_current_session('clj')
@@ -98,7 +101,8 @@ function! s:suite.bufenter_in_cljs_file_test() abort
   call s:assert.equals(iced#nrepl#current_session(), 'clj-session')
   call iced#nrepl#auto#bufenter()
   call s:assert.equals(iced#nrepl#current_session(), 'cljs-session')
-  call s:assert.equals(s:test.get_messages()[0]['code'], '(in-ns ''cljs.bar)')
+  call s:assert.equals(s:test.get_messages()[0]['code'], '(when-not (clojure.core/find-ns ''cljs.bar)   (clojure.core/create-ns ''cljs.bar))')
+  unlet b:iced_ns_created
 
   call s:teardown()
   let g:iced#nrepl#auto#does_switch_session = v:false
