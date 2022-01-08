@@ -189,7 +189,13 @@ function! iced#util#normalize_path(path) abort
   let path = substitute(a:path, '^file:', '', '')
   " NOTE: jar:file:/path/to/jarfile.jar!/path/to/file.clj
   if stridx(path, 'jar:') == 0
-    let path = substitute(path, '^jar:file:', 'zipfile:', '')
+    " cf. https://github.com/vim/vim/compare/v8.2.3605...v8.2.3606
+    if has('patch-8.2.3606') || has('nvim')
+      let path = substitute(path, '^jar:file:', 'zipfile://', '')
+    else
+      let path = substitute(path, '^jar:file:', 'zipfile:', '')
+    endif
+
     let path = substitute(path, '!/', '::', '')
   endif
   return path

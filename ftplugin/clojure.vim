@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 30703
+let g:vim_iced_version = 30704
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -85,7 +85,7 @@ command! -nargs=+ -complete=custom,iced#nrepl#cljs#env_complete
 command!          IcedQuitCljsRepl          call iced#nrepl#cljs#stop_repl_via_env()
 command!          IcedCycleSession          call iced#nrepl#cljs#cycle_session()
 
-command! -nargs=1 IcedEval                  call iced#repl#execute('eval_code', <q-args>, {'ignore_session_validity': v:true})
+command! -nargs=1 IcedEval                  call iced#repl#execute('eval_code', <q-args>, {'ignore_session_validity': v:true, 'ignore_ns': v:true})
 command!          IcedEvalNs                call iced#nrepl#eval#ns()
 command! -range   IcedEvalVisual            call iced#nrepl#eval#visual()
 command!          IcedRequire               call iced#repl#execute('load_current_file')
@@ -176,8 +176,6 @@ command!
 
 command! -nargs=? IcedToggleTraceVar        call iced#nrepl#trace#toggle_var(<q-args>)
 command! -nargs=? IcedToggleTraceNs         call iced#nrepl#trace#toggle_ns(<q-args>)
-
-command!          IcedInInitNs              call iced#nrepl#ns#in_init_ns()
 
 command!          IcedJumpToNextSign        call iced#system#get('sign').jump_to_next()
 command!          IcedJumpToPrevSign        call iced#system#get('sign').jump_to_prev()
@@ -299,8 +297,6 @@ nnoremap <silent>
 
 nnoremap <silent> <Plug>(iced_toggle_trace_ns)          :<C-u>IcedToggleTraceNs<CR>
 nnoremap <silent> <Plug>(iced_toggle_trace_var)         :<C-u>IcedToggleTraceVar<CR>
-
-nnoremap <silent> <Plug>(iced_in_init_ns)               :<C-u>IcedInInitNs<CR>
 
 nnoremap <silent> <Plug>(iced_jump_to_next_sign)        :<C-u>IcedJumpToNextSign<CR>
 nnoremap <silent> <Plug>(iced_jump_to_prev_sign)        :<C-u>IcedJumpToPrevSign<CR>

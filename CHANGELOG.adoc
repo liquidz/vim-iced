@@ -2,6 +2,15 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.7.4 (2022-01-09)
+// {{{
+=== Changed
+* https://github.com/liquidz/vim-iced/issues/225[#225] https://github.com/liquidz/vim-iced/issues/372[#372]: Updated to use `ns` optional parameter in evaluating code.
+
+=== Fixed
+* Fixed to open zip file correctly on v8.2.3606 or later.
+// }}}
+
 == 3.7.3 (2021-12-29)
 // {{{
 === Changed

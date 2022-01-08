@@ -118,8 +118,8 @@ endfunction
 
 function! s:generate_doc_by_meta(symbol) abort
   let code = iced#socket_repl#document#code(a:symbol)
-  return iced#promise#call('iced#nrepl#ns#in', [])
-        \.then({_ -> iced#promise#call('iced#nrepl#eval', [code])})
+  let opt = {'ns': iced#nrepl#ns#name_by_buf()}
+  return iced#promise#call('iced#nrepl#eval', [code, opt])
         \.then({resp -> get(resp, 'value', '')})
         \.then({value -> substitute(value, '\(^"\|"$\)', '', 'g')})
         \.then({value -> substitute(trim(value), '\\n', "\n", 'g')})
@@ -160,8 +160,7 @@ endfunction
 function! iced#nrepl#document#open(symbol) abort
   if iced#nrepl#is_supported_op('info')
     if !iced#nrepl#check_session_validity() | return | endif
-    return iced#promise#call('iced#nrepl#ns#in', [])
-          \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
+    return iced#promise#call('iced#nrepl#var#get', [a:symbol])
           \.then({resp -> s:generate_doc(resp)})
           \.then(funcref('s:view_doc_on_buffer'))
   else
@@ -181,8 +180,7 @@ function! iced#nrepl#document#popup_open(symbol) abort
     if !iced#nrepl#check_session_validity()
       return iced#promise#resolve(v:false)
     endif
-    return iced#promise#call('iced#nrepl#ns#in', [])
-          \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
+    return iced#promise#call('iced#nrepl#var#get', [a:symbol])
           \.then({resp -> s:generate_doc(resp)})
           \.then(funcref('s:view_doc_on_popup'))
   else
@@ -416,8 +414,7 @@ endfunction
 
 function! iced#nrepl#document#usecase(symbol) abort
   let ns = iced#nrepl#ns#name()
-  return iced#promise#call('iced#nrepl#ns#in', [])
-        \.then({_ -> iced#promise#call('iced#nrepl#var#get', [a:symbol])})
+  return iced#promise#call('iced#nrepl#var#get', [a:symbol])
         \.then({resp -> s:__usecase_find_references(resp)})
         \.then({refs -> s:find_usecase(refs)})
 endfunction

@@ -7,23 +7,33 @@ let g:iced#nrepl#ns#refresh_after_fn = get(g:, 'iced#nrepl#ns#refresh_after_fn',
 let s:V = vital#iced#new()
 let s:D = s:V.import('Data.Dict')
 
-function! s:buffer_ns_loaded() abort
-  let b:iced_ns_loaded = 1
+let s:create_ns_code = join([
+      \ '(when-not (clojure.core/find-ns ''%s)',
+      \ '  (clojure.core/create-ns ''%s))',
+      \ ])
+
+function! s:buffer_ns_created() abort
+  let b:iced_ns_created = 1
   return v:true
 endfunction
 
-function! iced#nrepl#ns#require_if_not_loaded_promise() abort
-  if exists('b:iced_ns_loaded')
-    return iced#promise#resolve(v:true)
-  endif
+function! iced#nrepl#ns#create() abort
+  if exists('b:iced_ns_created') | return | endif
+  if !iced#nrepl#is_connected() | return | endif
 
-  if !iced#nrepl#is_connected() && !iced#nrepl#auto_connect()
-    return iced#promise#resolve(v:false)
-  endif
+  let ns_name = iced#nrepl#ns#name_by_buf()
+  if ns_name ==# '' | return | endif
 
+  let create_code = printf(s:create_ns_code, ns_name, ns_name)
   " NOTE: For midje user, requiring ns leads running tests.
-  "       So vim-iced evaluates ns form in CLJ session.
-  return iced#promise#call('iced#nrepl#ns#eval', [])
+  "       So vim-iced only evaluates ns form in CLJ session.
+  let Require_fn = function('iced#nrepl#ns#eval')
+
+  return iced#nrepl#eval(create_code, {resp ->
+      \ (get(resp, 'value', 'nil') ==# 'nil')
+      \ ? s:buffer_ns_created()
+      \ : iced#promise#call(Require_fn, []).then({_ -> s:buffer_ns_created()})
+      \ })
 endfunction
 
 function! iced#nrepl#ns#get() abort
@@ -92,33 +102,20 @@ function! iced#nrepl#ns#eval(callback) abort
   if empty(code)
     call a:callback('')
   else
-    call iced#nrepl#eval(code, {'verbose': v:false}, {resp -> s:buffer_ns_loaded() && a:callback(resp)})
+    call iced#nrepl#eval(
+          \ code,
+          \ {'verbose': v:false, 'ns': iced#nrepl#ns#name_by_buf()},
+          \ {resp -> s:buffer_ns_created() && a:callback(resp)})
   endif
-endfunction
-
-function! iced#nrepl#ns#in(...) abort
-  let ns_name = ''
-  let Callback = ''
-
-  if a:0 == 1
-    let ns_name = iced#nrepl#ns#name()
-    let Callback = get(a:, 1, {_ -> ''})
-  elseif a:0 == 2
-    let ns_name = get(a:, 1, '')
-    let Callback = get(a:, 2, {_ -> ''})
-  endif
-
-  let ns_name = empty(ns_name) ? iced#nrepl#ns#name() : ns_name
-  let Callback = (type(Callback) == v:t_func) ? Callback : {_ -> ''}
-  if empty(ns_name) | return | endif
-  call iced#nrepl#eval(printf('(in-ns ''%s)', ns_name), {'verbose': v:false},  {resp ->
-        \ s:buffer_ns_loaded() && Callback(resp)})
 endfunction
 
 function! iced#nrepl#ns#require(ns_name, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   let code = printf('(clojure.core/require ''%s)', a:ns_name)
-  call iced#nrepl#eval(code, {'verbose': v:false}, {resp -> s:buffer_ns_loaded() && a:callback(resp)})
+  call iced#nrepl#eval(
+        \ code,
+        \ {'verbose': v:false, 'ns': iced#nrepl#ns#name_by_buf()},
+        \ {resp -> s:buffer_ns_created() && a:callback(resp)})
 endfunction
 
 function! s:cljs_load_file(callback) abort
@@ -141,7 +138,6 @@ function! s:loaded(resp, callback) abort
   elseif has_key(a:resp, 'err')
     return iced#nrepl#eval#err(a:resp['err'])
   endif
-  call iced#nrepl#ns#in(a:callback)
 endfunction
 
 function! s:required(resp) abort
@@ -159,9 +155,9 @@ function! iced#nrepl#ns#load_current_file(...) abort
   if ! iced#nrepl#check_session_validity() | return | endif
 
   if iced#nrepl#is_supported_op('load-file')
-    call iced#nrepl#load_file({resp -> s:buffer_ns_loaded() && s:loaded(resp, Cb)})
+    call iced#nrepl#load_file({resp -> s:buffer_ns_created() && s:loaded(resp, Cb)})
   else
-    call s:cljs_load_file({resp -> s:buffer_ns_loaded() && Cb(resp)})
+    call s:cljs_load_file({resp -> s:buffer_ns_created() && Cb(resp)})
   endif
 endfunction
 
@@ -178,24 +174,10 @@ function! iced#nrepl#ns#reload_all() abort
   if iced#nrepl#current_session_key() ==# 'clj'
     let ns = iced#nrepl#ns#name()
     let code = printf('(clojure.core/require ''%s :reload-all)', ns)
-    call iced#nrepl#eval(code, Cb)
+    call iced#nrepl#eval(code, {'ns': ns},  Cb)
   else
     call s:cljs_load_file(Cb)
   endif
-endfunction
-
-function! iced#nrepl#ns#in_init_ns() abort
-  if iced#nrepl#current_session_key() ==# 'cljs'
-    return iced#message#error('invalid_session', 'clj')
-  endif
-
-  let ns_name = iced#nrepl#init_ns()
-  if empty(ns_name)
-    call iced#message#warn('not_found')
-    return
-  endif
-
-  call iced#nrepl#ns#in(ns_name, {resp -> iced#nrepl#eval#out(resp)})
 endfunction
 
 function! iced#nrepl#ns#does_exist(ns_name) abort
@@ -280,7 +262,7 @@ function! iced#nrepl#ns#unalias(alias_name, ...) abort
   endif
 
   let code = printf("(ns-unalias '%s '%s)", ns_name, alias_name)
-  return iced#nrepl#eval(code, Callback)
+  return iced#nrepl#eval(code, {'ns': ns_name}, Callback)
 endfunction
 
 function! iced#nrepl#ns#yank_name() abort

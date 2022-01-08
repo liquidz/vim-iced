@@ -171,6 +171,6 @@ and https://github.com/liquidz/iced-nrepl[iced-nrepl].
 
 == License
 
-Copyright (c) 2018-2021 http://twitter.com/uochan[Masashi Iizuka]
+Copyright (c) 2018-2022 http://twitter.com/uochan[Masashi Iizuka]
 
 Distributed under the MIT License.

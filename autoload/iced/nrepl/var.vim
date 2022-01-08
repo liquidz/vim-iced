@@ -120,7 +120,7 @@ function! iced#nrepl#var#extract_by_current_top_list(callback) abort
   endif
 
   let pos = ret['curpos']
-  let option = {'line': pos[1], 'column': pos[2]}
+  let option = {'line': pos[1], 'column': pos[2], 'ns': iced#nrepl#ns#name_by_buf()}
   call iced#nrepl#eval(code, option, {resp ->
         \ s:extract_var_name(resp, a:callback)})
 endfunction

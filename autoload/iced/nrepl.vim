@@ -415,11 +415,8 @@ function! s:warm_up() abort
   endif
 
   if iced#nrepl#check_session_validity(v:false)
-    if iced#nrepl#ns#name() ==# s:nrepl['init_ns']
-      call iced#nrepl#ns#in()
-    else
-      call iced#nrepl#ns#load_current_file({_ -> ''})
-    endif
+        \ && iced#nrepl#ns#name_by_buf() !=# s:nrepl['init_ns']
+    call iced#nrepl#ns#load_current_file({_ -> ''})
   endif
   call iced#format#set_indentexpr()
 
@@ -639,6 +636,11 @@ function! iced#nrepl#eval(code, ...) abort
         \ 'verbose': get(option, 'verbose', v:true),
         \ 'callback': Callback,
         \ }
+
+  let ns_name = get(option, 'ns', '')
+  if !empty(ns_name)
+    let msg['ns'] = ns_name
+  endif
 
   if has_key(option, 'use-printer?')
     let msg['nrepl.middleware.print/print'] = get(s:printer_dict, g:iced#nrepl#printer, s:printer_dict['default'])
