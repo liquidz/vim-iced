@@ -102,9 +102,15 @@ function! iced#nrepl#eval#code(code, ...) abort
     unlet opt['callback']
   endif
 
+  if !get(opt, 'ignore_ns', v:false)
+    let ns_name = iced#nrepl#ns#name_by_buf()
+    if !empty(ns_name)
+      let opt['ns'] = ns_name
+    endif
+  endif
+
   try
-    return iced#nrepl#ns#require_if_not_loaded_promise()
-          \.then({_ -> iced#promise#call('iced#nrepl#eval', [code, opt])})
+    return iced#promise#call('iced#nrepl#eval', [code, opt])
           \.then(Callback)
   finally
     let @@ = reg_save
