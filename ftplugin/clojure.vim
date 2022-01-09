@@ -336,13 +336,24 @@ if g:iced_enable_auto_document ==# 'insert'
   aug END
 endif
 
+function! s:register_cursor_moved_autocmd() abort
+  if bufname('%') ==# '' || &filetype !=# 'clojure'
+    return
+  endif
+
+  aug vim_iced_close_document_popup_apply
+    au!
+    au CursorMoved <buffer> call iced#component#popup#neovim#moved()
+    au CursorMovedI <buffer> call iced#component#popup#neovim#moved()
+  aug END
+endfunction
+
 " NOTE: Neovim does not have `moved` option for floating window.
 "       So vim-iced must close floating window explicitly.
 if has('nvim') && exists('*nvim_open_win')
   aug vim_iced_close_document_popup
     au!
-    au CursorMoved *.clj,*.cljs,*.cljc call iced#component#popup#neovim#moved()
-    au CursorMovedI *.clj,*.cljs,*.cljc call iced#component#popup#neovim#moved()
+    au BufEnter * call s:register_cursor_moved_autocmd()
   aug END
 endif
 "" }}}
