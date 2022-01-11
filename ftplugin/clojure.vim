@@ -2,7 +2,7 @@ if exists('g:loaded_vim_iced')
   finish
 endif
 let g:loaded_vim_iced = 1
-let g:vim_iced_version = 30704
+let g:vim_iced_version = 30705
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
@@ -336,13 +336,24 @@ if g:iced_enable_auto_document ==# 'insert'
   aug END
 endif
 
+function! s:register_cursor_moved_autocmd() abort
+  if bufname('%') ==# '' || &filetype !=# 'clojure'
+    return
+  endif
+
+  aug vim_iced_close_document_popup_apply
+    au!
+    au CursorMoved <buffer> call iced#component#popup#neovim#moved()
+    au CursorMovedI <buffer> call iced#component#popup#neovim#moved()
+  aug END
+endfunction
+
 " NOTE: Neovim does not have `moved` option for floating window.
 "       So vim-iced must close floating window explicitly.
 if has('nvim') && exists('*nvim_open_win')
   aug vim_iced_close_document_popup
     au!
-    au CursorMoved *.clj,*.cljs,*.cljc call iced#component#popup#neovim#moved()
-    au CursorMovedI *.clj,*.cljs,*.cljc call iced#component#popup#neovim#moved()
+    au BufEnter * call s:register_cursor_moved_autocmd()
   aug END
 endif
 "" }}}

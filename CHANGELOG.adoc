@@ -2,6 +2,16 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.7.5 (2022-01-12)
+// {{{
+=== Changed
+* Refactored vim virtualtext component to use text properties.
+** https://vim-jp.org/vimdoc-en/textprop.html
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/370[#370]: Fixed popup window not to get stuck for files with no extension.
+// }}}
+
 == 3.7.4 (2022-01-09)
 // {{{
 === Changed

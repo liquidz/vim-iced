@@ -95,10 +95,11 @@ function! s:popup.open(texts, ...) abort
     let org_col = wininfo['width'] - width
   endif
 
+  let has_textprop = has_key(opts, 'textprop')
   let col = org_col + wininfo['wincol']
   let win_opts = {
-        \ 'line': line,
-        \ 'col': col,
+        \ 'line': (has_textprop ? -1 : line),
+        \ 'col': (has_textprop ? -1 : col),
         \ 'minwidth': width,
         \ 'maxwidth': max_width,
         \ 'minheight': min_height,
@@ -115,7 +116,8 @@ function! s:popup.open(texts, ...) abort
   endif
 
   call extend(win_opts, iced#util#select_keys(opts,
-        \ ['highlight', 'border', 'borderchars', 'borderhighlight', 'title', 'moved', 'wrap']))
+        \ ['highlight', 'border', 'borderchars', 'borderhighlight',
+        \  'title', 'moved', 'wrap', 'textprop', 'textpropid', 'mask']))
 
   " Open popup
   let winid = popup_create(a:texts, win_opts)

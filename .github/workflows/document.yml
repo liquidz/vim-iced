@@ -44,22 +44,22 @@ jobs:
           name: document
           path: target/html
 
-  # nightly-deploy:
-  #   if: github.ref == 'refs/heads/dev'
-  #   needs: [asciidoc, help]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions/download-artifact@master
-  #       with:
-  #         name: document
-  #         path: document
-  #     - uses: netlify/actions/cli@master
-  #       env:
-  #         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_PERSONAL_ACCESS_TOKEN }}
-  #         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-  #       with:
-  #         args: deploy --dir=document --prod
+  nightly-deploy:
+    if: github.ref == 'refs/heads/dev'
+    needs: [asciidoc, help]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@master
+        with:
+          name: document
+          path: document
+      - uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_PERSONAL_ACCESS_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        with:
+          args: deploy --dir=document --prod
 
   deploy:
     if: github.ref == 'refs/heads/main'
