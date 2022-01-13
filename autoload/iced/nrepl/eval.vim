@@ -213,5 +213,9 @@ function! iced#nrepl#eval#visual() abort " range
   endif
 endfunction
 
+function! iced#nrepl#eval#clear_inline_result() abort
+  call iced#system#get('virtual_text').clear()
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

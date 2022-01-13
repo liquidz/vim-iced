@@ -154,6 +154,7 @@ command! -nargs=? IcedBrowseDependencies     call iced#nrepl#navigate#browse_dep
 
 command!          IcedClearNsCache          call iced#nrepl#ns#clear_cache()
 command!          IcedClearCtrlpCache       call ctrlp#iced#cache#clear()
+command!          IcedClearInlineResult     call iced#nrepl#eval#clear_inline_result()
 
 command!          IcedCleanNs               call iced#nrepl#refactor#clean_ns()
 command!          IcedCleanAll              call iced#nrepl#refactor#clean_all()
@@ -276,6 +277,7 @@ nnoremap <silent> <Plug>(iced_browse_dependencies)      :<C-u>IcedBrowseDependen
 
 nnoremap <silent> <Plug>(iced_clear_ns_cache)           :<C-u>IcedClearNsCache<CR>
 nnoremap <silent> <Plug>(iced_clear_ctrlp_cache)        :<C-u>IcedClearCtrlpCache<CR>
+nnoremap <silent> <Plug>(iced_clear_inline_result)      :<C-u>IcedClearInlineResult<CR>
 
 nnoremap <silent> <Plug>(iced_clean_ns)                 :<C-u>IcedCleanNs<CR>
 nnoremap <silent> <Plug>(iced_clean_all)                :<C-u>IcedCleanAll<CR>

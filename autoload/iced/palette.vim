@@ -27,7 +27,7 @@ let s:default_palette = [
       \ 'JumpToNextSign', 'JumpToPrevSign',
       \ 'JumpToLet',
       \ 'StartSideloader', 'StopSideloader',
-      \ 'ClearNsCache',
+      \ 'ClearNsCache', 'ClearInlineResult',
       \ 'UpdateTool {{tool-name}}>',
       \ ]
 
