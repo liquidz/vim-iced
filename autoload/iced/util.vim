@@ -236,5 +236,17 @@ function! iced#util#split_by_length(s, len) abort
   return res
 endfunction
 
+function! iced#util#store_and_slide_registers(v) abort
+  let @9 = @8
+  let @8 = @7
+  let @7 = @6
+  let @6 = @5
+  let @5 = @4
+  let @4 = @3
+  let @3 = @2
+  let @2 = @1
+  let @1 = a:v
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo

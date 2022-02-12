@@ -46,7 +46,12 @@ function! iced#nrepl#eval#out(resp, ...) abort
   let opt = get(a:, 1, {})
   if has_key(a:resp, 'value')
     if get(opt, 'verbose', v:true)
-      echo iced#util#shorten(a:resp['value'])
+      let value = a:resp['value']
+      echo iced#util#shorten(value)
+
+      if index(g:iced#eval#values_to_skip_storing_register, value) == -1
+        call iced#util#store_and_slide_registers(value)
+      endif
 
       let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
       let virtual_text_opt['highlight'] = 'Comment'
@@ -58,7 +63,7 @@ function! iced#nrepl#eval#out(resp, ...) abort
       let virtual_text_opt['indent'] = 3 " len('=> ')
 
       call iced#system#get('virtual_text').set(
-            \ printf('=> %s', a:resp['value']),
+            \ printf('=> %s', value),
             \ virtual_text_opt)
     endif
   endif
