@@ -57,8 +57,8 @@ function! s:kondo.analyze(callback) abort
 
   let self.__is_analyzing = v:true
   let config = g:iced_enable_clj_kondo_local_analysis
-       \ ? '{:output {:analysis {:locals true :keywords true} :format :json}}'
-       \ : '{:output {:analysis true :format :json}}'
+       \ ? '{:output {:analysis {:protocol-impls true :locals true :keywords true} :format :json}}'
+       \ : '{:output {:analysis {:protocol-impls true} :format :json}}'
   " NOTE: Using `writefile` will freeze vim/nvim just a little
   let command = ['sh', '-c', printf('clj-kondo --parallel --lint %s --config ''%s'' > %s',
         \ self.user_dir,
@@ -378,6 +378,40 @@ function! s:kondo.ns_list() abort
   let res = map(copy(definitions), {_, d -> get(d, 'name', '')})
   let res = filter(res, {_, s -> !empty(s)})
   return res
+endfunction
+
+function! s:kondo.protocols() abort
+  if !g:iced_enable_clj_kondo_analysis
+    return {'error': 'clj-kondo: disabled'}
+  endif
+
+  if has_key(self.option, 'protocols')
+    return self.option.protocols()
+  endif
+
+  let ana = self.analysis()
+  return get(ana, 'protocol-impls', [])
+endfunction
+
+function! s:kondo.protocol_implementations(protocol_ns, protocol_name, method_name) abort
+  if has_key(self.option, 'protocol_implementations')
+    return self.option.protocol_implementations(a:protocol_ns, a:protocol_name, a:method_name)
+  endif
+
+  let protocols = copy(self.protocols())
+  if empty(a:method_name)
+    call filter(protocols, {_, v ->
+          \ get(v, 'protocol-ns') ==# a:protocol_ns
+          \ && get(v, 'protocol-name') ==# a:protocol_name
+          \ })
+  else
+    call filter(protocols, {_, v ->
+          \ get(v, 'protocol-ns') ==# a:protocol_ns
+          \ && get(v, 'protocol-name') ==# a:protocol_name
+          \ && get(v, 'method-name') ==# a:method_name
+          \ })
+  endif
+  return protocols
 endfunction
 
 function! iced#component#clj_kondo#start(this) abort
