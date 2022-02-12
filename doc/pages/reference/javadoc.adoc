@@ -1,0 +1,16 @@
+=== Javadoc
+
+vim-iced provides following commands to integrate with https://clojuredocs.org/clojure.java.javadoc/javadoc[clojure.java.javadoc].
+
+
+
+[cols="30,70"]
+|===
+| Command |  Description
+
+| {help_html}#%3AIcedJavaDocument[IcedJavaDocument]
+|  Opens a browser window displaying the javadoc for a `class_name`. +
+Basically the result of `clojure.core/class` for the form under cursor is used. +
+For example, running this command over `(clojure.java.io/resource "...")` will open a document page for `java.net.URL`.
+
+|===
