@@ -275,7 +275,9 @@ function! s:jump(base_symbol, jump_cmd, resp) abort
     endif
   endif
 
-  if has_key(a:resp, 'protocol') && kondo.is_analyzed()
+  if path ==# ''
+        \ && has_key(a:resp, 'protocol')
+        \ && kondo.is_analyzed()
     let protocol_var = get(a:resp, 'protocol')
     let var = substitute(protocol_var, '^#''', '', '')
     let i = stridx(var, '/')
@@ -285,13 +287,11 @@ function! s:jump(base_symbol, jump_cmd, resp) abort
     let impls = kondo.protocol_implementations(protocol_ns, protocol_name, get(a:resp, 'name'))
     call filter(impls, {_, v -> filereadable(v['filename'])})
 
-    if empty(impls)
-      return iced#message#info('not_found')
-    elseif len(impls) == 1
+    if len(impls) == 1
       let path = get(impls[0], 'filename')
       let line = get(impls[0], 'name-row', 1)
       let column = get(impls[0], 'name-col', 1)
-    else
+    elseif len(impls) > 1
       call map(impls, {_, v -> {
             \ 'filename': get(v, 'filename'),
             \ 'text': printf('%s.%s',
@@ -302,23 +302,28 @@ function! s:jump(base_symbol, jump_cmd, resp) abort
             \ }})
       call iced#system#get('quickfix').setloclist(win_getid(), impls)
       call iced#system#get('ex_cmd').silent_exe(':lwindow')
+      return
     endif
-  elseif !has_key(a:resp, 'file')
-    let kondo = iced#system#get('clj_kondo')
-    let d = kondo.is_analyzed()
-          \ ? kondo.var_definition(get(a:resp, 'ns'), get(a:resp, 'name'))
-          \ : v:false
-    if type(d) == v:t_dict
-      let path = d['filename']
-      let line = d['row']
-      let column = d['col']
+  endif
+
+  if path ==# ''
+    if !has_key(a:resp, 'file')
+      let kondo = iced#system#get('clj_kondo')
+      let d = kondo.is_analyzed()
+            \ ? kondo.var_definition(get(a:resp, 'ns'), get(a:resp, 'name'))
+            \ : v:false
+      if type(d) == v:t_dict
+        let path = d['filename']
+        let line = d['row']
+        let column = d['col']
+      else
+        return iced#message#error('jump_not_found')
+      endif
     else
-      return iced#message#error('jump_not_found')
+      let path = a:resp['file']
+      let line = a:resp['line']
+      let column = get(a:resp, 'column', '0')
     endif
-  else
-    let path = a:resp['file']
-    let line = a:resp['line']
-    let column = get(a:resp, 'column', '0')
   endif
 
   if expand('%:p') !=# path
