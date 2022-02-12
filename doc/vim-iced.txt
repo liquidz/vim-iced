@@ -429,7 +429,15 @@ STDOUT BUFFER                                          *vim-iced-stdout-buffer*
 ------------------------------------------------------------------------------
 YANK THE RESULT                                      *vim-iced-yank-the-result*
 
-  The evaluated result is basically just displayed.
+  The evaluated result is yanked to numbered registers.
+  cf. |quote_number|
+
+  Like vim's behavior, iced shifts the previous result of register 1 into
+  register 2, 2 into 3, and so forth.
+  
+  If you have values you don't want to store,
+  See |g:iced#eval#values_to_skip_storing_register|.
+
   When you specify a {register} like |yank|,
   |<Plug>(iced_eval)| operator will yank the result.
 
@@ -1870,6 +1878,11 @@ g:iced#eval#mark_at_last
   The mark to set last evaluated position.
   It is recommended to use the mark which can be used by globally.
   Default value is `1`.
+
+                                  *g:iced#eval#values_to_skip_storing_register*
+g:iced#eval#values_to_skip_storing_register
+  Evaluated values not to store to numbered registers.
+  Default value is `['nil', 'true', 'false']`.
 
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
