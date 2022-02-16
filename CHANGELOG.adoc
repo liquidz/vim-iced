@@ -2,6 +2,18 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Added
+* Added feature to store evaluated result to numbered registers.
+** Like vim's behavior, iced shifts the previous result of register 1 into register 2, 2 into 3, and so forth.
+* https://github.com/liquidz/vim-iced/issues/383[#383]: Added support for jumping protocol implementations.
+** This feature requires clj-kondo v2022.02.09 or later.
+
+=== Changed
+* Bumped cider-nrepl to 0.28.2.
+* Bumped refactor-nrepl to 3.3.2.
+// }}}
+
 == 3.7.5 (2022-01-12)
 // {{{
 === Changed
