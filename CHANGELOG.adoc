@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. This change
 === Changed
 * Bumped cider-nrepl to 0.28.2.
 * Bumped refactor-nrepl to 3.3.2.
+* Bumped zprint to 1.2.2.
 // }}}
 
 == 3.7.5 (2022-01-12)
