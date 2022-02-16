@@ -57,49 +57,59 @@ function! s:popup.open(texts, ...) abort
     throw 'vim-iced: too long texts to show in popup'
   endif
 
+  let has_textprop = has_key(opts, 'textprop')
+
   " line
-  let line = get(opts, 'line', winline())
-  let line_type = type(line)
-  if line_type == v:t_number
-    let line = line - 1 + wininfo['winrow']
-  elseif line_type == v:t_string
-    if line ==# 'near-cursor'
-      " NOTE: `+ 5` make the popup window not too low
-      if winline() + min_height + 5 > &lines
-        let line = winline() - min_height - 1
-      else
-        let line = winline() + wininfo['winrow']
+  if has_textprop
+    let line = -1
+  else
+    let line = get(opts, 'line', winline())
+    let line_type = type(line)
+    if line_type == v:t_number
+      let line = line - 1 + wininfo['winrow']
+    elseif line_type == v:t_string
+      if line ==# 'near-cursor'
+        " NOTE: `+ 5` make the popup window not too low
+        if winline() + min_height + 5 > &lines
+          let line = winline() - min_height - 1
+        else
+          let line = winline() + wininfo['winrow']
+        endif
+      elseif line ==# 'top'
+        let line = wininfo['winrow']
+      elseif line ==# 'bottom'
+        let line = wininfo['winrow'] +  wininfo['height'] - min_height
       endif
-    elseif line ==# 'top'
-      let line = wininfo['winrow']
-    elseif line ==# 'bottom'
-      let line = wininfo['winrow'] +  wininfo['height'] - min_height
     endif
   endif
 
   " col
-  let org_col = get(opts, 'col', len(getline('.')) + 1)
-  if type(org_col) == v:t_string
-    if org_col ==# 'right'
-      let org_col = wininfo['width'] - width
-    elseif org_col ==# 'near-cursor'
-      let org_col = wincol()
-    else
-      return iced#message#error('unexpected_error', printf('invalid column "%s"', org_col))
-    endif
+  if has_textprop
+    let col = -1
   else
-    let org_col = org_col - 1
-  endif
-  " Align right when column goes off the screen
-  if org_col + width > wininfo['width']
-    let org_col = wininfo['width'] - width
+    let org_col = get(opts, 'col', len(getline('.')) + 1)
+    if type(org_col) == v:t_string
+      if org_col ==# 'right'
+        let org_col = wininfo['width'] - width
+      elseif org_col ==# 'near-cursor'
+        let org_col = wincol()
+      else
+        return iced#message#error('unexpected_error', printf('invalid column "%s"', org_col))
+      endif
+    else
+      let org_col = org_col - 1
+    endif
+    " Align right when column goes off the screen
+    if org_col + width > wininfo['width']
+      let org_col = wininfo['width'] - width
+    endif
+
+    let col = org_col + wininfo['wincol']
   endif
 
-  let has_textprop = has_key(opts, 'textprop')
-  let col = org_col + wininfo['wincol']
   let win_opts = {
-        \ 'line': (has_textprop ? -1 : line),
-        \ 'col': (has_textprop ? -1 : col),
+        \ 'line': line,
+        \ 'col': col,
         \ 'minwidth': width,
         \ 'maxwidth': max_width,
         \ 'minheight': min_height,

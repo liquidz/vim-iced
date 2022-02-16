@@ -38,10 +38,15 @@ function! s:kondo.keywords_cache_name() abort
   return printf('%s/%s_keywords.json', self.cache_dir, substitute(self.user_dir, '/', '_', 'g'))
 endfunction
 
+function! s:kondo.protocol_impls_cache_name() abort
+  return printf('%s/%s_protocols.json', self.cache_dir, substitute(self.user_dir, '/', '_', 'g'))
+endfunction
+
 function! s:kondo.analyzed(cache_name, callback) abort
   let partials = {
         \ 'namespace-usages': self.namespace_usages_cache_name(),
         \ 'namespace-definitions': self.namespace_definitions_cache_name(),
+        \ 'protocol-impls': self.protocol_impls_cache_name(),
         \ }
   if g:iced_enable_clj_kondo_local_analysis
     call extend(partials, {
@@ -124,6 +129,14 @@ function! s:kondo.keywords() abort
   let res = readfile(cache_name)
   if empty(res) | return [] | endif
 
+  return json_decode(res[0])
+endfunction
+
+function! s:kondo.protocols() abort
+  let cache_name = self.protocol_impls_cache_name()
+  if !filereadable(cache_name) | return [] | endif
+
+  let res = readfile(cache_name)
   return json_decode(res[0])
 endfunction
 

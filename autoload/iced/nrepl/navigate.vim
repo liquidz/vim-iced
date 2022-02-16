@@ -262,10 +262,10 @@ function! s:jump(base_symbol, jump_cmd, resp) abort
   let path = ''
   let line = 0
   let column = 0
+  let kondo = iced#system#get('clj_kondo')
 
   if iced#util#has_status(a:resp, 'no-info')
     if ! g:iced#navigate#prefer_local_jump
-      let kondo = iced#system#get('clj_kondo')
       let local_def = kondo.local_definition(expand('%:p'), line('.'), a:base_symbol)
       if ! empty(local_def)
         return s:jump_to_local_definition(local_def)
@@ -275,22 +275,55 @@ function! s:jump(base_symbol, jump_cmd, resp) abort
     endif
   endif
 
-  if !has_key(a:resp, 'file')
-    let kondo = iced#system#get('clj_kondo')
-    let d = kondo.is_analyzed()
-          \ ? kondo.var_definition(get(a:resp, 'ns'), get(a:resp, 'name'))
-          \ : v:false
-    if type(d) == v:t_dict
-      let path = d['filename']
-      let line = d['row']
-      let column = d['col']
-    else
-      return iced#message#error('jump_not_found')
+  if path ==# ''
+        \ && has_key(a:resp, 'protocol')
+        \ && kondo.is_analyzed()
+    let protocol_var = get(a:resp, 'protocol')
+    let var = substitute(protocol_var, '^#''', '', '')
+    let i = stridx(var, '/')
+    let protocol_ns = var[0:i-1]
+    let protocol_name = strpart(var, i+1)
+
+    let impls = kondo.protocol_implementations(protocol_ns, protocol_name, get(a:resp, 'name'))
+    call filter(impls, {_, v -> filereadable(v['filename'])})
+
+    if len(impls) == 1
+      let path = get(impls[0], 'filename')
+      let line = get(impls[0], 'name-row', 1)
+      let column = get(impls[0], 'name-col', 1)
+    elseif len(impls) > 1
+      call map(impls, {_, v -> {
+            \ 'filename': get(v, 'filename'),
+            \ 'text': printf('%s.%s',
+            \                get(v, 'protocol-name'),
+            \                get(v, 'method-name'),
+            \               ),
+            \ 'lnum': get(v, 'name-row', 1),
+            \ }})
+      call iced#system#get('quickfix').setloclist(win_getid(), impls)
+      call iced#system#get('ex_cmd').silent_exe(':lwindow')
+      return
     endif
-  else
-    let path = a:resp['file']
-    let line = a:resp['line']
-    let column = get(a:resp, 'column', '0')
+  endif
+
+  if path ==# ''
+    if !has_key(a:resp, 'file')
+      let kondo = iced#system#get('clj_kondo')
+      let d = kondo.is_analyzed()
+            \ ? kondo.var_definition(get(a:resp, 'ns'), get(a:resp, 'name'))
+            \ : v:false
+      if type(d) == v:t_dict
+        let path = d['filename']
+        let line = d['row']
+        let column = d['col']
+      else
+        return iced#message#error('jump_not_found')
+      endif
+    else
+      let path = a:resp['file']
+      let line = a:resp['line']
+      let column = get(a:resp, 'column', '0')
+    endif
   endif
 
   if expand('%:p') !=# path

@@ -46,15 +46,24 @@ function! iced#nrepl#eval#out(resp, ...) abort
   let opt = get(a:, 1, {})
   if has_key(a:resp, 'value')
     if get(opt, 'verbose', v:true)
-      echo iced#util#shorten(a:resp['value'])
+      let value = a:resp['value']
+      echo iced#util#shorten(value)
+
+      if index(g:iced#eval#values_to_skip_storing_register, value) == -1
+        call iced#util#store_and_slide_registers(value)
+      endif
 
       let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
       let virtual_text_opt['highlight'] = 'Comment'
-      let virtual_text_opt['auto_clear'] = v:true
+      if g:iced#eval#keep_inline_result
+        let virtual_text_opt['auto_clear'] = v:false
+      else
+        let virtual_text_opt['auto_clear'] = v:true
+      endif
       let virtual_text_opt['indent'] = 3 " len('=> ')
 
       call iced#system#get('virtual_text').set(
-            \ printf('=> %s', a:resp['value']),
+            \ printf('=> %s', value),
             \ virtual_text_opt)
     endif
   endif
@@ -207,6 +216,10 @@ function! iced#nrepl#eval#visual() abort " range
   if type(Fn) == v:t_func
     return s:eval_visual(Fn)
   endif
+endfunction
+
+function! iced#nrepl#eval#clear_inline_result() abort
+  call iced#system#get('virtual_text').clear()
 endfunction
 
 let &cpoptions = s:save_cpo

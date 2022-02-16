@@ -6,12 +6,31 @@ let s:vt = {
       \ 'ex_cmd': '',
       \ 'last_winid': v:null,
       \ 'textprop_id': 0,
+      \ 'winids': {},
+      \ 'id_limit': 10000,
       \ }
 
 " Text property
 let s:textprop_type = 'iced_virtual_text'
 call prop_type_delete(s:textprop_type, {})
 call prop_type_add(s:textprop_type, {})
+
+function! s:id_for_current_line() abort
+  return printf('%s:%s', bufnr('%'), line('.'))
+endfunction
+
+function! s:vt.inc_textprop_id() abort
+  if self.textprop_id > self.id_limit
+    let self.textprop_id = 0
+  endif
+  let self.textprop_id += 1
+
+  call prop_remove({
+        \ 'type': s:textprop_type,
+        \ 'id': self.textprop_id,
+        \ 'both': v:true,
+        \ })
+endfunction
 
 function! s:vt.set(text, ...) abort
   let opt = get(a:, 1, {})
@@ -45,7 +64,7 @@ function! s:vt.set(text, ...) abort
   " To mask first 2 chars (:h popup-mask)
   let texts = map(texts, {_, v -> printf('  %s', v)})
 
-  let self.textprop_id += 1
+  call self.inc_textprop_id()
   call prop_add(line('.'), col('$'), {
         \ 'id': self.textprop_id,
         \ 'type': s:textprop_type,
@@ -61,6 +80,8 @@ function! s:vt.set(text, ...) abort
   if get(opt, 'auto_clear', v:false)
     let popup_opts['moved'] = 'any'
     let popup_opts['auto_close'] = v:false
+  else
+    let popup_opts['auto_close'] = v:false
   endif
 
   " NOTE: trim lines to show virtual text within a window
@@ -69,18 +90,26 @@ function! s:vt.set(text, ...) abort
     let texts = texts[0:(len(texts) - overflowed_lnum - 5)]
   endif
 
-  " Close last virtual text window if same position
-  let ctx = self.popup.get_context(self.last_winid)
-  if has_key(ctx, 'last_col') && col == ctx['last_col']
-    call self.popup.close(self.last_winid)
+  " Close virtual text window in the same location
+  let winids_id = s:id_for_current_line()
+  let winid = get(self.winids, winids_id)
+  if ! empty(winid)
+    call self.popup.close(winid)
+    unlet self.winids[winids_id]
   endif
 
-  let self.last_winid = self.popup.open(texts, popup_opts)
-  return self.last_winid
+  " When auto_clear is enabled, store only one winid
+  if get(opt, 'auto_clear', v:false)
+    let self.winids = {}
+  endif
+  let self.winids[winids_id] = self.popup.open(texts, popup_opts)
+
+  return self.winids[winids_id]
 endfunction
 
 function! s:vt.clear(...) abort
-  call self.ex_cmd.silent_exe(':popupclear')
+  call prop_clear(1, line('$'), {'type': s:textprop_type})
+  let self.winids = {}
 endfunction
 
 function! iced#component#virtual_text#vim#start(this) abort

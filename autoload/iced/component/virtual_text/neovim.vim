@@ -22,8 +22,13 @@ endfunction
 function! s:vt.clear(...) abort
   let opt = get(a:, 1, {})
   let buf = get(opt, 'buffer', bufnr('%'))
-  let line = get(opt, 'line', line('.') -1)
-  call nvim_buf_clear_namespace(buf, self.ns, line, line + 1)
+
+  if empty(opt)
+    call nvim_buf_clear_namespace(buf, self.ns, 1, line('$'))
+  else
+    let line = get(opt, 'line', line('.') -1)
+    call nvim_buf_clear_namespace(buf, self.ns, line, line + 1)
+  endif
 endfunction
 
 function! iced#component#virtual_text#neovim#start(this) abort

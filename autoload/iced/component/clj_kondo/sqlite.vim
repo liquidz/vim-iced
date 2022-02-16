@@ -30,7 +30,7 @@ function! s:kondo.analyzed(cache_name, callback) abort
   let tmp = tempname()
   let shell_file = printf('%s.sh', tmp)
   let sql_file = printf('%s.sql', tmp)
-  let key_arr = ['var-definitions', 'var-usages', 'namespace-usages', 'namespace-definitions', 'local-usages', 'locals', 'keywords']
+  let key_arr = ['var-definitions', 'var-usages', 'namespace-usages', 'namespace-definitions', 'local-usages', 'locals', 'keywords', 'protocol-impls']
   let rm_files = [shell_file, sql_file]
 
   for key in key_arr
@@ -158,6 +158,25 @@ endfunction
 function! s:kondo.ns_list() abort
   if ! filereadable(self.db_name) | return [] | endif
   let sql = 'select json_quote(json_extract(namespace_definitions.json, "$.name")) from namespace_definitions'
+
+  let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
+  if empty(res) | return [] | endif
+  let res = printf('[%s]', substitute(res, '\n', ',', 'g'))
+  return json_decode(res)
+endfunction
+
+function! s:kondo.protocol_implementations(protocol_ns, protocol_name, method_name) abort
+  if ! filereadable(self.db_name) | return [] | endif
+  let sql = printf('select * from protocol_impls where json_extract(protocol_impls.json, "$.protocol-ns") = "%s" and json_extract(protocol_impls.json, "$.protocol-name") = "%s"',
+        \ a:protocol_ns,
+        \ a:protocol_name,
+        \ )
+  if !empty(a:method_name)
+    let sql = printf('%s and json_extract(protocol_impls.json, "$.method-name") = "%s"',
+          \ sql,
+          \ a:method_name,
+          \ )
+  endif
 
   let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
   if empty(res) | return [] | endif
