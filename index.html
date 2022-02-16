@@ -686,6 +686,7 @@ pre.rouge {
 <li><a href="#_source_code">5.3. Source code</a></li>
 <li><a href="#_use_cases">5.4. Use cases</a></li>
 <li><a href="#clojure_spec">5.5. clojure.spec</a></li>
+<li><a href="#_javadoc">5.6. Javadoc</a></li>
 </ul>
 </li>
 <li><a href="#navigation">6. Navigation</a>
@@ -1154,8 +1155,14 @@ Last evaluated list is marked to <a href="https://liquidz.github.io/vim-iced/vim
 <div class="sect2">
 <h3 id="evaluation_yank">3.4. Yank</h3>
 <div class="paragraph">
-<p>The evaluated result is basically just displayed.
-When you specify a <code>register</code> like <a href="https://vim-jp.org/vimdoc-en/change.html#y">yank</a>,
+<p>The evaluated result is yanked to <a href="https://vim-jp.org/vimdoc-en/change.html#quote_number">numbered registers</a>.
+Like vim&#8217;s behavior, iced shifts the previous result of register 1 into register 2, 2 into 3, and so forth.</p>
+</div>
+<div class="paragraph">
+<p>If you have values you don&#8217;t want to store, See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23eval%23values_to_skip_storing_register">g:iced#eval#values_to_skip_storing_register</a>.</p>
+</div>
+<div class="paragraph">
+<p>When you specify a <code>register</code> like <a href="https://vim-jp.org/vimdoc-en/change.html#y">yank</a>,
 <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3CPlug%3E%28iced_eval%29">&lt;Plug&gt;(iced_eval)</a> operator will yank the result.</p>
 </div>
 <div class="paragraph">
@@ -1505,9 +1512,32 @@ If no arguments are passed, the keyword under the cursor is used.</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>Unresolved directive in reference.adoc - include::reference/javadoc.adoc[]</p>
 </div>
+<div class="sect2">
+<h3 id="_javadoc">5.6. Javadoc</h3>
+<div class="paragraph">
+<p>vim-iced provides following commands to integrate with <a href="https://clojuredocs.org/clojure.java.javadoc/javadoc">clojure.java.javadoc</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Command</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedJavaDocument">IcedJavaDocument</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Opens a browser window displaying the javadoc for a <code>class_name</code>.<br>
+Basically the result of <code>clojure.core/class</code> for the form under cursor is used.<br>
+For example, running this command over <code>(clojure.java.io/resource "&#8230;&#8203;")</code> will open a document page for <code>java.net.URL</code>.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph text-right">
 <p><span class="small"><a href="#top">Back to top</a></span></p>
 </div>
@@ -1523,14 +1553,40 @@ If no arguments are passed, the keyword under the cursor is used.</p></td>
 <p>vim-iced provides <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedDefJump">IcedDefJump</a> command for jumping to definition.</p>
 </div>
 <div class="paragraph">
-<p>It supports jumping to qualified keywords and local vars, can also specify using split window, tab, or other ways to open target location.</p>
+<p>It supports jumping to</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>qualified keywords</p>
+</li>
+<li>
+<p>local vars</p>
+</li>
+<li>
+<p>protocol implementations (requires clj-kondo v2022.02.09 or later)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Can also specify using split window, tab, or other ways to open target location.</p>
 </div>
 <div class="paragraph">
 <p>If you jumped to a definition with above command, vim-iced add the current cursor position to Vim&#8217;s <a href="https://vim-jp.org/vimdoc-en/tagsrch.html#tagstack">tag stack</a>.
 So you can go back easily with <a href="https://vim-jp.org/vimdoc-en/tagsrch.html#CTRL-T">&lt;C-t&gt;</a>.</p>
 </div>
 <div class="paragraph">
-<p>See also <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23navigate%23prefer_local_jump">g:iced#navigate#prefer_local_jump</a>.</p>
+<p>See also:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23navigate%23prefer_local_jump">g:iced#navigate#prefer_local_jump</a>.</p>
+</li>
+<li>
+<p><a href="https://liquidz.github.io/vim-iced/vim-iced.html#vim-iced-protocol-jump">vim-iced-protocol-jump</a>.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -4704,7 +4760,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-01-11 21:24:30 UTC
+Last updated 2022-02-16 21:13:48 UTC
 </div>
 </div>
 </body>
