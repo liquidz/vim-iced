@@ -567,13 +567,24 @@ JUMP TO DEFINITION                    *vim-iced-tag-jump*  *vim-iced-jump-to-def
 
   |:IcedDefJump| to jump to definition.
   It is also supported to jump to qualified keywords and local vars.
-  
+
   If the jump destination for keyword is inaccurate or the jump is slow, enabling clj-kondo feature may improve the result.
   - |vim-iced-static-analysis-clj-kondo|
 
   To jump back, you can use default key mapping(<C-t>).
 
-  See also |g:iced#navigate#prefer_local_jump|.
+  See also:
+  - |g:iced#navigate#prefer_local_jump|.
+  - |vim-iced-protocol-jump|
+
+------------------------------------------------------------------------------
+JUMP TO PROTOCOL                                       *vim-iced-protocol-jump*
+
+  WARNING: This feature requires clj-kondo v2022.02.09 or later.
+
+  |:IcedDefJump| also supports jumping to protocol implementations.
+  If there is only one implementation, jump to the implementation immediately.
+  If there are multiple implementations, iced set them to the |location-list|.
 
 ==============================================================================
 EDITING S-EXP                                          *vim-iced-editing-s-exp*
