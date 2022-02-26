@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.8.0
+Version: 3.8.1
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -140,7 +140,7 @@ LEININGEN~
   {:user
    {:dependencies [[nrepl "0.9.0"]
                    [com.github.liquidz/iced-nrepl "1.2.8"]
-                   [cider/cider-nrepl "0.28.2"]]
+                   [cider/cider-nrepl "0.28.3"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -168,7 +168,7 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "3.3.2"]
-      [cider/cider-nrepl "0.28.2"]
+      [cider/cider-nrepl "0.28.3"]
       [com.github.liquidz/iced-nrepl "1.2.8"]])
 
   (swap! boot.repl/*default-middleware* concat
@@ -196,7 +196,7 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "3.3.2"]
-                  [cider/cider-nrepl "0.28.2"]
+                  [cider/cider-nrepl "0.28.3"]
                   [com.github.liquidz/iced-nrepl "1.2.8"]]
   }
 <
@@ -2045,6 +2045,20 @@ g:iced#ns#class_map
   let g:iced#ns#class_map = {
         \ "foo.bar": ["Baz"],
         \ "java.sql": ["Timestamp"],
+        \ }
+<
+  Default value is `{}`.
+
+                                                     *g:iced#selector#external*
+g:iced#selector#external
+  Dictionary to define external selectors.
+  The key of dictionary is a selector name for
+  specifying |g:iced#selector#search_order|.
+  The value of dictionary is a selector definition as follows.
+  E.g. >
+  let g:iced#selector#external = {
+        \ 'selector_name': {'runtimepath': '/path/to/external/plugin',
+        \                   'run': {config -> your_function(config)}},
         \ }
 <
   Default value is `{}`.

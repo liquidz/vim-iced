@@ -2,6 +2,15 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.8.1 (2022-02-27)
+// {{{
+=== Added
+* Added support fro external selectors.
+
+=== Changed
+* Bumped cider-nrepl to 0.28.3.
+// }}}
+
 == 3.8.0 (2022-02-17)
 // {{{
 === Added
