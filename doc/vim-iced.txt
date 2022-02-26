@@ -2049,6 +2049,20 @@ g:iced#ns#class_map
 <
   Default value is `{}`.
 
+                                                     *g:iced#selector#external*
+g:iced#selector#external
+  Dictionary to define external selectors.
+  The key of dictionary is a selector name for
+  specifying |g:iced#selector#search_order|.
+  The value of dictionary is a selector definition as follows.
+  E.g. >
+  let g:iced#selector#external = {
+        \ 'selector_name': {'runtimepath': '/path/to/external/plugin',
+        \                   'run': {config -> your_function(config)}},
+        \ }
+<
+  Default value is `{}`.
+
                                                  *g:iced#selector#search_order*
 g:iced#selector#search_order
   Search order for installed selectors.
