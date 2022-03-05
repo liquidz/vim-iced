@@ -36,6 +36,11 @@ function! iced#nrepl#ns#create() abort
       \ })
 endfunction
 
+function! iced#nrepl#ns#is_created() abort
+  return exists('b:iced_ns_created')
+        \ && b:iced_ns_created == 1
+endfunction
+
 function! iced#nrepl#ns#get() abort
   let view = winsaveview()
   let reg_save = @@
