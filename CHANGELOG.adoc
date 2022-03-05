@@ -2,6 +2,15 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Changed
+* Bumped refactor-nrepl to 3.4.0.
+
+=== Fixed
+* Fixed to work on nREPL without iced-nrepl.
+** Fixed not to occur errors, especially when evaluating ns forms.
+// }}}
+
 == 3.8.1 (2022-02-27)
 // {{{
 === Added
