@@ -113,7 +113,7 @@ function! iced#nrepl#eval#code(code, ...) abort
 
   if !get(opt, 'ignore_ns', v:false)
     let ns_name = iced#nrepl#ns#name_by_buf()
-    if !empty(ns_name)
+    if !empty(ns_name) && iced#nrepl#ns#is_created()
       let opt['ns'] = ns_name
     endif
   endif
