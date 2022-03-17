@@ -82,6 +82,13 @@ nmap <Nop>(iced_macroexpand_outer_list) <Plug>(iced_macroexpand_outer_list) <3>
 <3> Disable default mapping `{plug_iced_macroexpand_outer_list}` for `iced_macroexpand_outer_list`.
 
 
+=== Disabling paredit
+
+By default https://github.com/guns/vim-sexp[vim-sexp]'s paredit mode is enabled.  If you prefer to add parentheses individually, you can disable this behavior by turning off vim-sexp's key mappings for clojure files (and scheme, lisp, and timl files).  Just add `let g:sexp_filetypes=''` to one of your startup files.  This won't change vim-iced's functions.
+
+If you do want to keep some of vim-sexp's key mappings, follow the instructions at `:help sexp-explicit-mappings`.  Copy the function definition for `s:vim_sexp_mappings()` along with the following `augroup` block into a startup file.  Then delete the lines in `s:vim_sexp_mappings()` for any key mappings that you don't want.
+
+
 === Reloaded workflows
 
 //If you are managing lifecycle of components with https://github.com/stuartsierra/component[Stuart Sierra's component], https://github.com/weavejester/integrant[integrant] or etc, key mappings like follows are useful.
@@ -112,3 +119,25 @@ aug MyClojureSetting
   au FileType clojure nnoremap <buffer> <Leader>Go :<C-u>IcedEval (user/reset)<CR>
 aug END
 ----
+
+=== Miscellaneous
+
+By default https://github.com/guns/vim-sexp[vim-sexp]'s paredit mode is
+enabled.  If, for example, you don't want typing '(' to insert a pair of parentheses, 
+you can turn this off by disabling vim-sexp's key mappings, and
+possibly adding back vim-sexp key mappings that you want to keep.  This
+won't affect vim-iced.
+
+To disable vim-sexp's key mappings, put a line like `let
+g:sexp_filetypes=''` in a startup file such as your vimrc.
+(`g:sexp_filetypes` is normally set to "clojure,scheme,lisp,timl",
+which are the filetypes for which vim-sexp's mappings are normally
+enabled.)  
+
+To re-enable some of vim-sexp's key mappings, follow the instructions at
+`:help sexp-explicit-mappings` to define a function like
+`s:vim_sexp_mappings()` that is listed there.  For example, to keep all vim-sexp
+mappings except the the ones that cause matching delimiters to be
+inserted automatically, delete the last several lines from the the
+definition of `s:vim_sexp_mappings()`.  Then follow the instructions
+below the function definition.
