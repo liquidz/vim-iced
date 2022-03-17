@@ -94,7 +94,7 @@ If you also want to turn off other vim-sexp key mappings for clojure files (and 
 ----
 let g:sexp_filetypes=''
 ----
-You can then specify any vim-sexp key mappings that you want to keep by following the the instructions at `:help sexp-explicit-mappings`.  Place the resulting code including the `augroup` block into a startup file.
+Then specify any vim-sexp key mappings that you want to keep by following the the instructions at `:help sexp-explicit-mappings`.  Place the resulting code (including the `augroup` block) into a startup file.
 
 
 === Reloaded workflows
