@@ -84,8 +84,11 @@ nmap <Nop>(iced_macroexpand_outer_list) <Plug>(iced_macroexpand_outer_list) <3>
 
 === Disabling paredit
 
-By default https://github.com/guns/vim-sexp[vim-sexp]'s paredit mode is enabled.  If you prefer to add parentheses individually, you can disable this behavior by turning off vim-sexp's key mappings for clojure files (and scheme, lisp, and timl files).  Just add `let g:sexp_filetypes=''` to one of your startup files.  This won't change vim-iced's functions.
-
+By default https://github.com/guns/vim-sexp[vim-sexp]'s paredit mode is enabled.  If you prefer to add parentheses individually, you can disable this behavior by turning off vim-sexp's key mappings for clojure files (and scheme, lisp, and timl files).  Just add the following line to one of your startup files.  This won't change vim-iced's functions.
+[source,vim]
+----
+let g:sexp_filetypes=''
+----
 If you do want to keep some of vim-sexp's key mappings, follow the instructions at `:help sexp-explicit-mappings`.  Copy the function definition for `s:vim_sexp_mappings()` along with the following `augroup` block into a startup file.  Then delete the lines in `s:vim_sexp_mappings()` for any key mappings that you don't want.
 
 
