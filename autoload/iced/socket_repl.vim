@@ -30,7 +30,8 @@ function! s:default_callback(resp) abort
     echo iced#util#shorten(value)
     call iced#system#get('virtual_text').set(
           \ printf('=> %s', value),
-          \ {'highlight': 'Comment', 'auto_clear': v:true})
+          \ {'highlight': g:iced#eval#popup_highlight,
+          \  'auto_clear': v:true})
   endif
 endfunction
 

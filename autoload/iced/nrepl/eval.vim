@@ -54,7 +54,7 @@ function! iced#nrepl#eval#out(resp, ...) abort
       endif
 
       let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
-      let virtual_text_opt['highlight'] = 'Comment'
+      let virtual_text_opt['highlight'] = g:iced#eval#popup_highlight
       if g:iced#eval#keep_inline_result
         let virtual_text_opt['auto_clear'] = v:false
       else
