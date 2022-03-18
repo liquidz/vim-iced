@@ -1894,6 +1894,11 @@ g:iced#eval#mark_at_last
 g:iced#eval#values_to_skip_storing_register
   Evaluated values not to store to numbered registers.
   Default value is `['nil', 'true', 'false']`.
+  
+                                                  *g:iced#eval#popup_highlight*
+g:iced#eval#popup_highlight
+  The highlight setting for popup to display evaluated result.
+  Default value is `'Comment'`.
 
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
