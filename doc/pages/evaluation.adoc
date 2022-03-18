@@ -48,6 +48,8 @@ However, the displayed result is only the returned value, so for example, the co
 
 The contents output to standard output are displayed on the <<stdout_buffer>>.
 
+The highlight setting for popup can be modified by {help_html}#g%3Aiced%23eval%23popup_highlight[g:iced#eval#popup_highlight].
+
 === Marks [[evaluation_marks]]
 
 vim-iced also provides ways to evaluate forms by Vim's https://vim-jp.org/vimdoc-en/motion.html#mark-motions[mark].
