@@ -790,7 +790,8 @@ pre.rouge {
 <li><a href="#tips_vim_submode">23.1. vim-submode</a></li>
 <li><a href="#tips_auto_connection">23.2. Auto connection</a></li>
 <li><a href="#tips_overwriting_mappings">23.3. Overwriting mappings</a></li>
-<li><a href="#_reloaded_workflows">23.4. Reloaded workflows</a></li>
+<li><a href="#_disabling_paredit">23.4. Disabling paredit</a></li>
+<li><a href="#_reloaded_workflows">23.5. Reloaded workflows</a></li>
 </ul>
 </li>
 <li><a href="#external_integration">24. External integration</a>
@@ -4060,12 +4061,34 @@ nmap &lt;Nop&gt;(iced_macroexpand_outer_list) &lt;Plug&gt;(iced_macroexpand_oute
 </div>
 </div>
 <div class="sect2">
-<h3 id="_reloaded_workflows">23.4. Reloaded workflows</h3>
+<h3 id="_disabling_paredit">23.4. Disabling paredit</h3>
+<div class="paragraph">
+<p>By default <a href="https://github.com/guns/vim-sexp">vim-sexp</a>'s paredit mode is enabled.  If you want to be able to add parentheses individually, you can disable that behavior by adding the following line to one of your startup files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim"><span class="k">let</span> <span class="nv">g:sexp_enable_insert_mode_mappings</span><span class="p">=</span><span class="m">0</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you also want to turn off other vim-sexp key mappings for clojure files (and scheme, lisp, and timl files), add the following line to one of your startup files instead of the preceding one:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim"><span class="k">let</span> <span class="nv">g:sexp_filetypes</span><span class="p">=</span><span class="s1">''</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then specify any vim-sexp key mappings that you want to keep by following the the instructions at <code>:help sexp-explicit-mappings</code>.  Place the resulting code (including the <code>augroup</code> block) into a startup file.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_reloaded_workflows">23.5. Reloaded workflows</h3>
 <div class="paragraph">
 <p>If you are managing lifecycle of components with <a href="https://github.com/stuartsierra/component">Stuart Sierra&#8217;s component</a>, <a href="https://github.com/weavejester/integrant">integrant</a> or etc, following configurations are useful.</p>
 </div>
 <div class="sect3">
-<h4 id="_cider_way">23.4.1. CIDER way</h4>
+<h4 id="_cider_way">23.5.1. CIDER way</h4>
 <div class="paragraph">
 <p>vim-iced provides <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3AIcedRefresh">IcedRefresh</a> command as same as the <a href="https://docs.cider.mx/cider/usage/misc_features.html#reloading-code">cider-ns-refresh</a> feature.
 And it also support before/after hooks like follows.</p>
@@ -4081,7 +4104,7 @@ And it also support before/after hooks like follows.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_manual_way">23.4.2. Manual way</h4>
+<h4 id="_manual_way">23.5.2. Manual way</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="vim">aug MyClojureSetting
@@ -4760,7 +4783,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-03-05 22:02:58 UTC
+Last updated 2022-03-18 21:19:01 UTC
 </div>
 </div>
 </body>
