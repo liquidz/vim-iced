@@ -82,6 +82,21 @@ nmap <Nop>(iced_macroexpand_outer_list) <Plug>(iced_macroexpand_outer_list) <3>
 <3> Disable default mapping `{plug_iced_macroexpand_outer_list}` for `iced_macroexpand_outer_list`.
 
 
+=== Disabling paredit
+
+By default https://github.com/guns/vim-sexp[vim-sexp]'s paredit mode is enabled.  If you want to be able to add parentheses individually, you can disable that behavior by adding the following line to one of your startup files:
+[source,vim]
+----
+let g:sexp_enable_insert_mode_mappings=0
+----
+If you also want to turn off other vim-sexp key mappings for clojure files (and scheme, lisp, and timl files), add the following line to one of your startup files instead of the preceding one: 
+[source,vim]
+----
+let g:sexp_filetypes=''
+----
+Then specify any vim-sexp key mappings that you want to keep by following the the instructions at `:help sexp-explicit-mappings`.  Place the resulting code (including the `augroup` block) into a startup file.
+
+
 === Reloaded workflows
 
 //If you are managing lifecycle of components with https://github.com/stuartsierra/component[Stuart Sierra's component], https://github.com/weavejester/integrant[integrant] or etc, key mappings like follows are useful.
