@@ -127,25 +127,3 @@ aug MyClojureSetting
   au FileType clojure nnoremap <buffer> <Leader>Go :<C-u>IcedEval (user/reset)<CR>
 aug END
 ----
-
-=== Miscellaneous
-
-By default https://github.com/guns/vim-sexp[vim-sexp]'s paredit mode is
-enabled.  If, for example, you don't want typing '(' to insert a pair of parentheses, 
-you can turn this off by disabling vim-sexp's key mappings, and
-possibly adding back vim-sexp key mappings that you want to keep.  This
-won't affect vim-iced.
-
-To disable vim-sexp's key mappings, put a line like `let
-g:sexp_filetypes=''` in a startup file such as your vimrc.
-(`g:sexp_filetypes` is normally set to "clojure,scheme,lisp,timl",
-which are the filetypes for which vim-sexp's mappings are normally
-enabled.)  
-
-To re-enable some of vim-sexp's key mappings, follow the instructions at
-`:help sexp-explicit-mappings` to define a function like
-`s:vim_sexp_mappings()` that is listed there.  For example, to keep all vim-sexp
-mappings except the the ones that cause matching delimiters to be
-inserted automatically, delete the last several lines from the the
-definition of `s:vim_sexp_mappings()`.  Then follow the instructions
-below the function definition.
