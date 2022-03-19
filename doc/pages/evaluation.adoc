@@ -44,9 +44,11 @@ TIP: See also <<eval_inside_comment>>
 === Results [[evaluation_results]]
 
 The evaluation result is echoed on command-line and displayed in a popup at the end of line.
-However, the displayed result is only the returned value, so for example, the contents output by `println` are not diplayed.
+However, the displayed result is only the returned value, so for example, the contents output by `println` are not displayed.
 
 The contents output to standard output are displayed on the <<stdout_buffer>>.
+
+The highlight setting for popup can be modified by {help_html}#g%3Aiced%23eval%23popup_highlight[g:iced#eval#popup_highlight].
 
 === Marks [[evaluation_marks]]
 

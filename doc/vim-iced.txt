@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.8.2
+Version: 3.8.3
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -156,7 +156,7 @@ LEININGEN~
                                       cider.nrepl/wrap-undef
                                       cider.nrepl/wrap-xref
                                       iced.nrepl/wrap-iced]}
-    :plugins [[refactor-nrepl "3.4.0"]]}}
+    :plugins [[refactor-nrepl "3.5.2"]]}}
 <
 
                                                          *vim-iced-manual-boot*
@@ -167,7 +167,7 @@ BOOT~
   (require (quote boot.repl))
 
   (swap! boot.repl/*default-dependencies* concat
-    '[[refactor-nrepl "3.4.0"]
+    '[[refactor-nrepl "3.5.2"]
       [cider/cider-nrepl "0.28.3"]
       [com.github.liquidz/iced-nrepl "1.2.8"]])
 
@@ -195,7 +195,7 @@ SHADOW-CLJS~
   shadow-cljs.edn
 >
   {
-   :dependencies [[refactor-nrepl "3.4.0"]
+   :dependencies [[refactor-nrepl "3.5.2"]
                   [cider/cider-nrepl "0.28.3"]
                   [com.github.liquidz/iced-nrepl "1.2.8"]]
   }
@@ -1894,6 +1894,11 @@ g:iced#eval#mark_at_last
 g:iced#eval#values_to_skip_storing_register
   Evaluated values not to store to numbered registers.
   Default value is `['nil', 'true', 'false']`.
+  
+                                                  *g:iced#eval#popup_highlight*
+g:iced#eval#popup_highlight
+  The highlight setting for popup to display evaluated result.
+  Default value is `'Comment'`.
 
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height

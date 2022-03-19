@@ -15,5 +15,5 @@ jobs:
       - uses: actions/checkout@v3
       - uses: DeLaGuardo/setup-clj-kondo@master
         with:
-          version: '2022.03.04'
+          version: '2022.03.09'
       - run: clj-kondo --parallel --lint clj:test/clj --config '{:output {:pattern "::{{level}} file={{filename}},line={{row}},col={{col}}::{{message}}"}}'
