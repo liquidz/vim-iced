@@ -2,6 +2,17 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/issues/389[#389]: Added `g:iced#eval#popup_highlight` option to change the highlight setting for popup to display evaluated result.
+** https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23eval%23popup_highlight
+
+=== Changed
+* https://github.com/liquidz/vim-iced/pull/391[#391]: Added document for disabling paredit.
+** https://liquidz.github.io/vim-iced/#_disabling_paredit
+* Bumped refactor-nrepl to 3.5.2.
+// }}}
+
 == 3.8.2 (2022-03-06)
 // {{{
 === Changed
