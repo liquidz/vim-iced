@@ -2,6 +2,7 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.8.4 (2022-04-02)
 // {{{
 === Changed
 * https://github.com/liquidz/iced-nrepl/issues/19[iced-nrepl#19] https://github.com/liquidz/iced-nrepl/issues/21[iced-nrepl#21]: Bumped iced-nrepl to 1.2.9.
