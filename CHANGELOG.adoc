@@ -2,6 +2,15 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Changed
+* https://github.com/liquidz/iced-nrepl/issues/19[iced-nrepl#19] https://github.com/liquidz/iced-nrepl/issues/21[iced-nrepl#21]: Bumped iced-nrepl to 1.2.9.
+
+=== Fixed
+* Fixed `ns_required` hook to work correctly.
+* https://github.com/liquidz/vim-iced/issues/393[#393]: Fixed not to fold texts in floating window for neovim.
+// }}}
+
 == 3.8.3 (2022-03-20)
 // {{{
 === Added
