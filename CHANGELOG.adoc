@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This change
 // {{{
 === Changed
 * https://github.com/liquidz/iced-nrepl/issues/19[iced-nrepl#19] https://github.com/liquidz/iced-nrepl/issues/21[iced-nrepl#21]: Bumped iced-nrepl to 1.2.9.
+* Bumped joker to 1.0.0.
 
 === Fixed
 * Fixed `ns_required` hook to work correctly.
