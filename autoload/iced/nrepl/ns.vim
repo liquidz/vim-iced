@@ -29,11 +29,12 @@ function! iced#nrepl#ns#create() abort
   "       So vim-iced only evaluates ns form in CLJ session.
   let Require_fn = function('iced#nrepl#ns#eval')
 
-  return iced#nrepl#eval(create_code, {resp ->
+  call iced#nrepl#eval(create_code, {resp ->
       \ (get(resp, 'value', 'nil') ==# 'nil')
       \ ? s:buffer_ns_created()
       \ : iced#promise#call(Require_fn, []).then({_ -> s:buffer_ns_created()})
       \ })
+  return ns_name
 endfunction
 
 function! iced#nrepl#ns#is_created() abort
@@ -143,11 +144,14 @@ function! s:loaded(resp, callback) abort
   elseif has_key(a:resp, 'err')
     return iced#nrepl#eval#err(a:resp['err'])
   endif
+
+  return a:callback(a:resp)
 endfunction
 
 function! s:required(resp) abort
   call iced#message#info('required')
   call iced#hook#run('ns_required', {'response': a:resp})
+  return v:true
 endfunction
 
 function! iced#nrepl#ns#load_current_file(...) abort
