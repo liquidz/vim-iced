@@ -32,6 +32,7 @@ function! s:init_win(winid, opts) abort
   call setbufvar(bufnr, '&swapfile', 0)
   call setbufvar(bufnr, '&wrap', 0)
   call setbufvar(bufnr, '&winhl', g:iced#popup#neovim#winhighlight)
+  call setbufvar(bufnr, '&foldlevel', 9999)
 endfunction
 
 function! s:popup.get_context(winid) abort

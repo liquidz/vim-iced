@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.8.3
+Version: 3.8.4
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -139,7 +139,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.9.0"]
-                   [com.github.liquidz/iced-nrepl "1.2.8"]
+                   [com.github.liquidz/iced-nrepl "1.2.9"]
                    [cider/cider-nrepl "0.28.3"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -169,7 +169,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "3.5.2"]
       [cider/cider-nrepl "0.28.3"]
-      [com.github.liquidz/iced-nrepl "1.2.8"]])
+      [com.github.liquidz/iced-nrepl "1.2.9"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -197,7 +197,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "3.5.2"]
                   [cider/cider-nrepl "0.28.3"]
-                  [com.github.liquidz/iced-nrepl "1.2.8"]]
+                  [com.github.liquidz/iced-nrepl "1.2.9"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
