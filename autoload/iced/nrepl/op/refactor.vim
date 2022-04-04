@@ -87,9 +87,15 @@ function! s:parse_aliases_value(v) abort
   let result = {}
   if empty(a:v) | return result | endif
   let v = trim(a:v)
+
   for pair in split(trim(a:v), ',')
-    let [alias, name] = split(pair, '(')
-    let result[trim(alias)] = split(substitute(name, '[()]', '', 'g'), ' \+')
+    if stridx(pair, '(') != -1
+      let [alias, name] = split(pair, '(')
+      let result[trim(alias)] = split(substitute(name, '[()]', '', 'g'), ' \+')
+    elseif stridx(pair, '[') != -1
+      let [alias, name] = split(pair, '[')
+      let result[trim(alias)] = split(substitute(name, '[\[\]]', '', 'g'), ' \+')
+    endif
   endfor
   return result
 endfunction
