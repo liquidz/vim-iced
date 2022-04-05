@@ -2,6 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 let g:iced#refactor#prefix_rewriting = get(g:, 'iced#refactor#prefix_rewriting', v:false)
+let g:iced#refactor#insert_newline_after_require = get(g:, 'iced#refactor#insert_newline_after_require', v:true)
 
 let s:cache = iced#cache#factory(expand('<sfile>'))
 
@@ -14,10 +15,12 @@ function! iced#nrepl#op#refactor#clean_ns(callback) abort
 
   let path = expand('%:p')
   let prefix_rewriting = (g:iced#refactor#prefix_rewriting ? 'true' : 'false')
+  let insert_newline_after_require = (g:iced#refactor#insert_newline_after_require ? 'true' : 'false')
   call iced#nrepl#send({
       \ 'op': 'clean-ns',
       \ 'path': path,
       \ 'prefix-rewriting': prefix_rewriting,
+      \ 'insert-newline-after-require': insert_newline_after_require,
       \ 'session': iced#nrepl#current_session(),
       \ 'callback': a:callback,
       \ })
@@ -87,9 +90,15 @@ function! s:parse_aliases_value(v) abort
   let result = {}
   if empty(a:v) | return result | endif
   let v = trim(a:v)
+
   for pair in split(trim(a:v), ',')
-    let [alias, name] = split(pair, '(')
-    let result[trim(alias)] = split(substitute(name, '[()]', '', 'g'), ' \+')
+    if stridx(pair, '(') != -1
+      let [alias, name] = split(pair, '(')
+      let result[trim(alias)] = split(substitute(name, '[()]', '', 'g'), ' \+')
+    elseif stridx(pair, '[') != -1
+      let [alias, name] = split(pair, '[')
+      let result[trim(alias)] = split(substitute(name, '[\[\]]', '', 'g'), ' \+')
+    endif
   endfor
   return result
 endfunction

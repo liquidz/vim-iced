@@ -20,6 +20,9 @@ Following commands are available.
 
 |===
 
+If you don't want to place a newline after the `:require` and `:import` tokens with `IcedCleanNs` command,
+Please see {help_html}#g%3Aiced%23refactor%23insert_newline_after_require[g:iced#refactor#insert_newline_after_require]  option.
+
 ==== Cache
 
 Namespaces and its aliases are cached for performance.

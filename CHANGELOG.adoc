@@ -2,6 +2,20 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.8.5 (2022-04-06)
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/issues/396[#396]: Added `g:iced#refactor#insert_newline_after_require` option.
+** With vim-iced v3.7.3 or later, `:IcedCleanNs` place a newline after the `:require` and `:import` tokens by default. (This behavior changed by https://github.com/clojure-emacs/refactor-nrepl[refactor-nrepl])
+** If you don't like this behavior, please set this option to be `v:false`.
+
+=== Changed
+* Bumped iced-nrepl to 1.2.10.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/396[#396]: Fixed `E688` error when executing `IcedAddNs` command.
+// }}}
+
 == 3.8.4 (2022-04-02)
 // {{{
 === Changed

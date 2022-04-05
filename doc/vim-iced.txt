@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.8.4
+Version: 3.8.5
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -139,7 +139,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.9.0"]
-                   [com.github.liquidz/iced-nrepl "1.2.9"]
+                   [com.github.liquidz/iced-nrepl "1.2.10"]
                    [cider/cider-nrepl "0.28.3"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -169,7 +169,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "3.5.2"]
       [cider/cider-nrepl "0.28.3"]
-      [com.github.liquidz/iced-nrepl "1.2.9"]])
+      [com.github.liquidz/iced-nrepl "1.2.10"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -197,7 +197,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "3.5.2"]
                   [cider/cider-nrepl "0.28.3"]
-                  [com.github.liquidz/iced-nrepl "1.2.9"]]
+                  [com.github.liquidz/iced-nrepl "1.2.10"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -653,6 +653,8 @@ REFACTORING                                              *vim-iced-refactoring*
   - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
   - |:IcedRenameSymbol| (|<Plug>(iced_rename_symbol)|)
 
+  See also:
+  - |g:iced#refactor#insert_newline_after_require|
 
 ==============================================================================
 SIDELOADER                                                *vim-iced-sideloader*
@@ -1950,6 +1952,12 @@ g:iced#refactor#prefix_rewriting
   Should `clean-ns` favor prefix forms in the ns macro?
   c.f. https://github.com/clojure-emacs/refactor-nrepl#available-features
   Default value is `v:false`.
+
+                                 *g:iced#refactor#insert_newline_after_require*
+g:iced#refactor#insert_newline_after_require
+  If {v:true}, |:IcedCleanNs| place a newline after the `:require` and `:import`
+  tokens.
+  Default value is `v:true`.
 
                                         *g:iced#nrepl#auto#does_switch_session*
 g:iced#nrepl#auto#does_switch_session
