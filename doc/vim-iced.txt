@@ -653,6 +653,8 @@ REFACTORING                                              *vim-iced-refactoring*
   - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
   - |:IcedRenameSymbol| (|<Plug>(iced_rename_symbol)|)
 
+  See also:
+  - |g:iced#refactor#insert_newline_after_require|
 
 ==============================================================================
 SIDELOADER                                                *vim-iced-sideloader*
@@ -1950,6 +1952,12 @@ g:iced#refactor#prefix_rewriting
   Should `clean-ns` favor prefix forms in the ns macro?
   c.f. https://github.com/clojure-emacs/refactor-nrepl#available-features
   Default value is `v:false`.
+
+                                 *g:iced#refactor#insert_newline_after_require*
+g:iced#refactor#insert_newline_after_require
+  If {v:true}, |:IcedCleanNs| place a newline after the `:require` and `:import`
+  tokens.
+  Default value is `v:true`.
 
                                         *g:iced#nrepl#auto#does_switch_session*
 g:iced#nrepl#auto#does_switch_session
