@@ -2,6 +2,7 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.8.5 (2022-04-06)
 // {{{
 === Added
 * https://github.com/liquidz/vim-iced/issues/396[#396]: Added `g:iced#refactor#insert_newline_after_require` option.
