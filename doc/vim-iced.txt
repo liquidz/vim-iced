@@ -2092,7 +2092,7 @@ g:iced#nrepl#ns#refresh_after_fn
   A qualified function name to evaluate after |:IcedRefresh|.
   The function should be zero-arity.
   E.g. >
-  let g:iced#nrepl#ns#refresh_before_fn = 'user/start'
+  let g:iced#nrepl#ns#refresh_after_fn = 'user/start'
 <
   Default value is `''`. (Not to evaluate)
 
