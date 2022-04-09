@@ -24,6 +24,10 @@ function! s:setup() abort
   let g:iced#nrepl#connect#iced_command = 'ls'
   let g:iced#nrepl#connect#clj_command = 'ls'
   let g:iced#nrepl#connect#jack_in_command = 'ls -ltr'
+
+  " Update the last modified time
+  let port_file = printf('%s/.nrepl-port', s:default_dir)
+  call writefile(readfile(port_file), port_file)
 endfunction
 
 function! s:suite.auto_test() abort
