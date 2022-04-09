@@ -12,26 +12,39 @@ let g:iced#nrepl#connect#jack_in_command = get(g:, 'iced#nrepl#connect#jack_in_c
 let g:iced#nrepl#connect#auto_connect_timeout_ms = get(g:, 'iced#nrepl#connect#auto_connect_timeout_ms', 5000)
 let g:iced#nrepl#connect#prefer = get(g:, 'iced#nrepl#connect#prefer', '')
 
-function! s:detect_port_from_nrepl_port_file() abort
+function! s:detect_port_from_nrepl_port_file(threshold_time) abort
   let path = findfile(s:nrepl_port_file, '.;')
   if empty(path)
     return v:false
-  else
-    let lines = readfile(path)
-    return (empty(lines))
-          \ ? v:false
-          \ : str2nr(lines[0])
   endif
+
+  if getftime(path) < a:threshold_time
+    return v:false
+  endif
+
+  let lines = readfile(path)
+  return (empty(lines))
+        \ ? v:false
+        \ : str2nr(lines[0])
 endfunction
 
-function! s:detect_shadow_cljs_nrepl_port() abort
+function! s:detect_shadow_cljs_nrepl_port(threshold_time) abort
   let dot_shadow_cljs = finddir('.shadow-cljs', '.;')
   if empty(dot_shadow_cljs) | return v:false | endif
 
   let path = findfile('nrepl.port', dot_shadow_cljs)
-  return (empty(path)
+  if empty(path)
+    return v:false
+  endif
+
+  if getftime(path) < a:threshold_time
+    return v:false
+  endif
+
+  let lines = readfile(path)
+  return (empty(lines))
         \ ? v:false
-        \ : str2nr(readfile(path)[0]))
+        \ : str2nr(lines[0])
 endfunction
 
 function! s:__connect_nrepl(port) abort
@@ -54,8 +67,9 @@ endfunction
 
 function! iced#nrepl#connect#auto(...) abort
   let verbose = get(a:, 1, v:true)
-  let shadow_cljs_port = s:detect_shadow_cljs_nrepl_port()
-  let nrepl_port = s:detect_port_from_nrepl_port_file()
+  let threshold_time = get(a:, 2, 0)
+  let shadow_cljs_port = s:detect_shadow_cljs_nrepl_port(threshold_time)
+  let nrepl_port = s:detect_port_from_nrepl_port_file(threshold_time)
   let candidates = []
 
   if nrepl_port
@@ -107,14 +121,14 @@ function! iced#nrepl#connect#auto(...) abort
   return v:false
 endfunction
 
-function! s:wait_for_auto_connection(_) abort
+function! s:wait_for_auto_connection(threshold_time) abort
   call iced#util#wait(
-        \ {-> !iced#nrepl#connect#auto(v:false)},
+        \ {-> !iced#nrepl#connect#auto(v:false, a:threshold_time)},
         \ g:iced#nrepl#connect#auto_connect_timeout_ms)
   let s:is_auto_connecting = v:false
 endfunction
 
-function! s:jack_in_callback(_, out) abort
+function! s:jack_in_callback(threshold_time, _, out) abort
   let connected = iced#nrepl#is_connected()
 
   for line in iced#util#ensure_array(a:out)
@@ -130,7 +144,7 @@ function! s:jack_in_callback(_, out) abort
         let s:is_auto_connecting = v:true
         call iced#system#get('timer').start(
               \ 500,
-              \ funcref('s:wait_for_auto_connection'),
+              \ {_ -> s:wait_for_auto_connection(a:threshold_time)},
               \ )
       endif
     endif
@@ -151,9 +165,10 @@ function! iced#nrepl#connect#jack_in(...) abort
     return iced#message#error('already_running')
   endif
 
+  let current_time = localtime()
   let command = get(a:, 1, g:iced#nrepl#connect#jack_in_command)
   let s:running_job = job.start(command, {
-        \ 'out_cb': funcref('s:jack_in_callback'),
+        \ 'out_cb': funcref('s:jack_in_callback', [current_time]),
         \ })
 endfunction
 
