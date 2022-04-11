@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file. This change
 
 == 3.8.6 (2022-04-12)
 // {{{
+=== Changed
+* Bumped jet to 0.1.1.
+
 === Fixed
 * https://github.com/liquidz/vim-iced/issues/401[#401]: Fixed `IcedJackIn` to wait launching nREPL server correctly.
 ** When `.nrepl-port` file already exists, `IcedJackIn` had a possibility to connect to the port written in the old `.nrepl-port` file.
