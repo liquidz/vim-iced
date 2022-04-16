@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. This change
 // {{{
 === Changed
 * Updated to handle `*.cljd` file as Clojure file.
+* Bumped zprint to 1.2.3.
 // }}}
 
 == 3.8.6 (2022-04-12)
