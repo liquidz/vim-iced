@@ -2,6 +2,11 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+// {{{
+=== Changed
+* Updated to handle `*.cljd` file as Clojure file.
+// }}}
+
 == 3.8.6 (2022-04-12)
 // {{{
 === Changed
