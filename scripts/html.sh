@@ -131,7 +131,7 @@ EOS
 )
 
 if [ ! -e ./vimhelp ]; then
-    curl -L https://raw.githubusercontent.com/liquidz/clj-vimhelp/master/script/download | bash
+    curl -L https://raw.githubusercontent.com/liquidz/clj-vimhelp/main/script/download | bash
 fi
 
 mkdir -p target/html
