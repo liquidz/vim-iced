@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 3.9.0 (2022-05-20)
 // {{{
 === Added
 * Added `g:iced#nrepl#ns#does_load_for_new_ns` option.
