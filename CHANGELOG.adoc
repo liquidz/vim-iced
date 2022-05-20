@@ -2,6 +2,22 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.9.0 (2022-05-20)
+// {{{
+=== Added
+* Added `g:iced#nrepl#ns#does_load_for_new_ns` option.
+
+=== Changed
+* Bumped cider-nrepl to 0.28.4.
+* Bumped iced-nrepl to 1.2.11.
+* (Should not breaking) Changed to load whole file contents by default when entering new buffer which has non-loaded namespaces.
+** For https://github.com/marick/Midje[Midje] users, loading namespace leads running tests, so setting false to `g:iced#nrepl#ns#does_load_for_new_ns` option is recommended for Midje users.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/408[#408]: Fixed test result to contain both of context and message.
+* Fixed `bufenter` autocmd to check session validity.
+// }}}
+
 == 3.8.7 (2022-04-16)
 // {{{
 === Changed

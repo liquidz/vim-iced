@@ -20,9 +20,14 @@ set cpoptions&vim
 "   :is_success Bool
 
 function! s:error_message(test) abort
-  if has_key(a:test, 'context') && !empty(a:test['context'])
+  let has_context = (has_key(a:test, 'context') && !empty(a:test['context']))
+  let has_message = (has_key(a:test, 'message') && !empty(a:test['message']))
+
+  if has_context && has_message
+    return printf('%s: %s / %s', a:test['var'], a:test['context'], a:test['message'])
+  elseif has_context
     return printf('%s: %s', a:test['var'], a:test['context'])
-  elseif has_key(a:test, 'message') && !empty(a:test['message'])
+  elseif has_message
     return printf('%s: %s', a:test['var'], a:test['message'])
   else
     return a:test['var']

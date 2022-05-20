@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.8.7
+Version: 3.9.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -139,8 +139,8 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.9.0"]
-                   [com.github.liquidz/iced-nrepl "1.2.10"]
-                   [cider/cider-nrepl "0.28.3"]]
+                   [com.github.liquidz/iced-nrepl "1.2.11"]
+                   [cider/cider-nrepl "0.28.4"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -168,8 +168,8 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "3.5.2"]
-      [cider/cider-nrepl "0.28.3"]
-      [com.github.liquidz/iced-nrepl "1.2.10"]])
+      [cider/cider-nrepl "0.28.4"]
+      [com.github.liquidz/iced-nrepl "1.2.11"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -196,8 +196,8 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "3.5.2"]
-                  [cider/cider-nrepl "0.28.3"]
-                  [com.github.liquidz/iced-nrepl "1.2.10"]]
+                  [cider/cider-nrepl "0.28.4"]
+                  [com.github.liquidz/iced-nrepl "1.2.11"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -2103,6 +2103,18 @@ g:iced#nrepl#ns#refresh_after_fn
   let g:iced#nrepl#ns#refresh_after_fn = 'user/start'
 <
   Default value is `''`. (Not to evaluate)
+
+                                         *g:iced#nrepl#ns#does_load_for_new_ns*
+g:iced#nrepl#ns#does_load_for_new_ns
+  If {v:true}, vim-iced will load whole file contents when entering new
+  namespaces.
+  Otherwise, vim-iced will evaluate only `ns` form.
+
+  NOTE: For Midje user, loading ns leads running tests.
+        So Midje users should set v:false.
+        https://github.com/marick/Midje
+
+  Default value is `v:true`.
 
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
