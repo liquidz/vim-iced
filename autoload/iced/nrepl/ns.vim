@@ -3,6 +3,7 @@ set cpoptions&vim
 
 let g:iced#nrepl#ns#refresh_before_fn = get(g:, 'iced#nrepl#ns#refresh_before_fn', '')
 let g:iced#nrepl#ns#refresh_after_fn = get(g:, 'iced#nrepl#ns#refresh_after_fn', '')
+let g:iced#nrepl#ns#does_load_for_new_ns = get(g:, 'iced#nrepl#ns#does_load_for_new_ns', v:true)
 
 let s:V = vital#iced#new()
 let s:D = s:V.import('Data.Dict')
@@ -26,8 +27,10 @@ function! iced#nrepl#ns#create() abort
 
   let create_code = printf(s:create_ns_code, ns_name, ns_name)
   " NOTE: For midje user, requiring ns leads running tests.
-  "       So vim-iced only evaluates ns form in CLJ session.
-  let Require_fn = function('iced#nrepl#ns#eval')
+  "       So these users should set v:false to g:iced#nrepl#ns#does_load_for_new_ns
+  let Require_fn = (g:iced#nrepl#ns#does_load_for_new_ns == v:true)
+        \ ? function('iced#nrepl#ns#load_current_file')
+        \ : function('iced#nrepl#ns#eval')
 
   call iced#nrepl#eval(create_code, {resp ->
       \ (get(resp, 'value', 'nil') ==# 'nil')
