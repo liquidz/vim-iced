@@ -2104,6 +2104,18 @@ g:iced#nrepl#ns#refresh_after_fn
 <
   Default value is `''`. (Not to evaluate)
 
+                                         *g:iced#nrepl#ns#does_load_for_new_ns*
+g:iced#nrepl#ns#does_load_for_new_ns
+  If {v:true}, vim-iced will load whole file contents when entering new
+  namespaces.
+  Otherwise, vim-iced will evaluate only `ns` form.
+
+  NOTE: For Midje user, loading ns leads running tests.
+        So Midje users should set v:false.
+        https://github.com/marick/Midje
+
+  Default value is `v:true`.
+
 ------------------------------------------------------------------------------
 STDOUT BUFFER                              *vim-iced-customizing-stdout-buffer*
 
