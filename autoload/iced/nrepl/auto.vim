@@ -26,6 +26,8 @@ function! iced#nrepl#auto#bufenter() abort
 
   if !iced#nrepl#is_connected() | return | endif
   call s:auto_switching_session()
+
+  if !iced#nrepl#check_session_validity(v:false) | return | endif
   call iced#nrepl#ns#create()
 endfunction
 
