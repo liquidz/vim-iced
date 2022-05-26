@@ -402,7 +402,11 @@ case "$1" in
             CLOJURE_CLI_VERSION=$(clojure -Sdescribe | head -1 |  cut -d' ' -f2 | tr -d '"')
             MIN_MAIN_VERSION="1.10.1.672"
             if [ "$(printf '%s\n' "$MIN_MAIN_VERSION" "$CLOJURE_CLI_VERSION" | sort -V | head -n1)" = "$MIN_MAIN_VERSION" ]; then
-                MAIN_FLAG="-M -m"
+                if [[ "$OPTIONS" =~ "-M:" ]]; then
+                    MAIN_FLAG="-m"
+                else
+                    MAIN_FLAG="-M -m"
+                fi
             else
                 MAIN_FLAG="-m"
             fi
