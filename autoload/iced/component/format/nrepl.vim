@@ -3,6 +3,7 @@ set cpoptions&vim
 
 let g:iced#format#does_overwrite_rules = get(g:, 'iced#format#does_overwrite_rules', v:false)
 let g:iced#format#rule = get(g:, 'iced#format#rule', {})
+let g:iced#format#options = get(g:, 'iced#format#options', {})
 
 let s:fmt = {
       \ 'sign': '',
@@ -75,11 +76,12 @@ function! s:fmt.all() abort
         \ 'context': context,
         \ 'signs': copy(self.sign.list_in_buffer()),
         \ }
+  let options = map(copy(g:iced#format#options), {_, v -> type(v) == v:t_bool ? (v ? 1 : 0) : v})
 
   " Disable editing until the formatting process is completed
   setl nomodifiable
   return iced#promise#new({resolve ->
-        \   iced#nrepl#op#iced#format_code(codes, alias_dict, {resp ->
+        \   iced#nrepl#op#iced#format_code(codes, alias_dict, options, {resp ->
         \     resolve(s:__format_finally(self, s:__format_all(resp, finally_args)))
         \   })
         \ })
@@ -126,11 +128,12 @@ function! s:fmt.current_form() abort
         \ 'context': context,
         \ 'signs': copy(self.sign.list_in_buffer()),
         \ }
+  let options = map(copy(g:iced#format#options), {_, v -> type(v) == v:t_bool ? (v ? 1 : 0) : v})
 
   " Disable editing until the formatting process is completed
   setl nomodifiable
   return iced#promise#new({resolve ->
-        \   iced#nrepl#op#iced#format_code(codes, alias_dict, {resp ->
+        \   iced#nrepl#op#iced#format_code(codes, alias_dict, options, {resp ->
         \     resolve(s:__format_finally(self, s:__format_form(resp, finally_args)))
         \   })
         \ })
