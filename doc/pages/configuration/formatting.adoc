@@ -53,3 +53,19 @@ Add following `:indents` setting to your `.cljstyle`.
  :indents ^:replace {#"^\w" [[:inner 0]]}
  }
 ----
+
+==== Extra configuration for cljfmt
+
+While `g:iced#format#rule` is a option for indentation rules,
+{help_html}#g%3Aiced%23format%23options[g:iced#format#options] is a option for cljfmt's other configurations such as `:remove-surrounding-whitespace?`, `:remove-trailing-whitespace?` and so on.
+
+.E.g.
+[source,vim]
+----
+let g:iced#format#options = {
+      \ 'remove-consecutive-blank-lines?': v:false,
+      \ 'remove-multiple-non-indenting-spaces?': v:true,
+      \ }
+----
+
+See https://github.com/weavejester/cljfmt#configuration[cljfmt's README] for more information.
