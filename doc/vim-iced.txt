@@ -2213,7 +2213,19 @@ TONSKY'S RULE~
     {
      :indents ^:replace {#"^\w" [[:inner 0]]}
      }
->
+<
+                                                        *g:iced#format#options*
+g:iced#format#options
+  Extra configuration map for cljfmt.
+  cf. https://github.com/weavejester/cljfmt#configuration
+  Default valud is `{}`.
+
+  e.g. >
+  let g:iced#format#options = {
+    \ 'remove-consecutive-blank-lines?': v:false,
+    \ 'remove-multiple-non-indenting-spaces?': v:true,
+    \ }
+<
 ------------------------------------------------------------------------------
 DOCUMENTS                                      *vim-iced-customizing-documents*
 
