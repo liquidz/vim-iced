@@ -8,6 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: liquidz/antq-action@v1
+      - uses: liquidz/antq-action@main
         # with:
         #   excludes: 'nrepl/nrepl cider/cider-nrepl@0.26.0 refactor-nrepl/refactor-nrepl@3.0.0-pr301'
