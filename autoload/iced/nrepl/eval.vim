@@ -61,12 +61,13 @@ function! s:print_stack_trace(resp) abort
         call iced#buffer#stdout#append(text)
 
         let file_url = get(item, 'file-url')
+        let var = get(item, 'var')
         if ! empty(file_url)
           call add(errors, {
                 \ 'filename': iced#util#normalize_path(file_url),
                 \ 'lnum': line,
                 \ 'end_lnum': line,
-                \ 'text': name,
+                \ 'text': (empty(var) ? name : var),
                 \ 'type': 'E',
                 \ })
         endif
