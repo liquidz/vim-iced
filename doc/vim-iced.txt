@@ -2218,7 +2218,7 @@ TONSKY'S RULE~
 g:iced#format#options
   Extra configuration map for cljfmt.
   cf. https://github.com/weavejester/cljfmt#configuration
-  Default valud is `{}`.
+  Default value is `{}`.
 
   e.g. >
   let g:iced#format#options = {
