@@ -3499,6 +3499,25 @@ you can use this rule with <code>cljfmt</code> and <code>cljstyle</code>.</p>
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_extra_configuration_for_cljfmt">22.2.3. Extra configuration for cljfmt</h4>
+<div class="paragraph">
+<p>While <code>g:iced#format#rule</code> is a option for indentation rules,
+<a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23format%23options">g:iced#format#options</a> is a option for cljfmt&#8217;s other configurations such as <code>:remove-surrounding-whitespace?</code>, <code>:remove-trailing-whitespace?</code> and so on.</p>
+</div>
+<div class="listingblock">
+<div class="title">E.g.</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim"><span class="k">let</span> <span class="nv">g:iced</span>#format#<span class="k">options</span> <span class="p">=</span> <span class="p">{</span>
+<span class="se">      \</span> <span class="s1">'remove-consecutive-blank-lines?'</span><span class="p">:</span> <span class="k">v</span><span class="p">:</span>false<span class="p">,</span>
+<span class="se">      \</span> <span class="s1">'remove-multiple-non-indenting-spaces?'</span><span class="p">:</span> <span class="k">v</span><span class="p">:</span>true<span class="p">,</span>
+<span class="se">      \</span> <span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="https://github.com/weavejester/cljfmt#configuration">cljfmt&#8217;s README</a> for more information.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="hook">22.3. Hook</h3>
@@ -4790,7 +4809,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-05-27 10:09:34 UTC
+Last updated 2022-06-10 21:58:40 UTC
 </div>
 </div>
 </body>
