@@ -117,7 +117,7 @@ function! iced#nrepl#op#iced#complete_tapped(keys, callback) abort
         \ })
 endfunction " }}}
 
-function! iced#nrepl#op#iced#format_code(code, alias_map, callback) abort
+function! iced#nrepl#op#iced#format_code(code, alias_map, extra_config, callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
 
   call iced#nrepl#send({
@@ -126,6 +126,7 @@ function! iced#nrepl#op#iced#format_code(code, alias_map, callback) abort
         \ 'session': iced#nrepl#current_session(),
         \ 'code': a:code,
         \ 'alias-map': a:alias_map,
+        \ 'extra-config': a:extra_config,
         \ 'callback': a:callback,
         \ })
 endfunction

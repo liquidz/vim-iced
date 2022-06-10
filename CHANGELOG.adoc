@@ -2,6 +2,18 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.9.1 (2022-06-11)
+// {{{
+=== Changed
+* https://github.com/liquidz/vim-iced/issues/411[#411]: Updated internal formatter to be able to customizing.
+** Added `g:iced#format#options` option.
+** See https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced%23format%23options for details.
+* Bumped iced-nrepl to 1.2.12.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/pull/412[#412]: Fixed `iced` command to allow using `-M` option for Clojure CLI.
+// }}}
+
 == 3.9.0 (2022-05-20)
 // {{{
 === Added

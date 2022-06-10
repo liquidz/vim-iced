@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.9.0
+Version: 3.9.1
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -139,7 +139,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "0.9.0"]
-                   [com.github.liquidz/iced-nrepl "1.2.11"]
+                   [com.github.liquidz/iced-nrepl "1.2.12"]
                    [cider/cider-nrepl "0.28.4"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -169,7 +169,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "3.5.2"]
       [cider/cider-nrepl "0.28.4"]
-      [com.github.liquidz/iced-nrepl "1.2.11"]])
+      [com.github.liquidz/iced-nrepl "1.2.12"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -197,7 +197,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "3.5.2"]
                   [cider/cider-nrepl "0.28.4"]
-                  [com.github.liquidz/iced-nrepl "1.2.11"]]
+                  [com.github.liquidz/iced-nrepl "1.2.12"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -2213,7 +2213,19 @@ TONSKY'S RULE~
     {
      :indents ^:replace {#"^\w" [[:inner 0]]}
      }
->
+<
+                                                        *g:iced#format#options*
+g:iced#format#options
+  Extra configuration map for cljfmt.
+  cf. https://github.com/weavejester/cljfmt#configuration
+  Default value is `{}`.
+
+  e.g. >
+  let g:iced#format#options = {
+    \ 'remove-consecutive-blank-lines?': v:false,
+    \ 'remove-multiple-non-indenting-spaces?': v:true,
+    \ }
+<
 ------------------------------------------------------------------------------
 DOCUMENTS                                      *vim-iced-customizing-documents*
 
