@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.9.1
+Version: 3.9.2
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -150,6 +150,8 @@ LEININGEN~
                                       cider.nrepl/wrap-macroexpand
                                       cider.nrepl/wrap-ns
                                       cider.nrepl/wrap-out
+                                      cider.nrepl/wrap-refresh
+                                      cider.nrepl/wrap-stacktrace
                                       cider.nrepl/wrap-spec
                                       cider.nrepl/wrap-test
                                       cider.nrepl/wrap-trace
@@ -181,6 +183,8 @@ BOOT~
       cider.nrepl/wrap-macroexpand
       cider.nrepl/wrap-ns
       cider.nrepl/wrap-out
+      cider.nrepl/wrap-refresh
+      cider.nrepl/wrap-stacktrace
       cider.nrepl/wrap-spec
       cider.nrepl/wrap-test
       cider.nrepl/wrap-trace
@@ -212,6 +216,8 @@ SHADOW-CLJS~
                 cider.nrepl/wrap-macroexpand
                 cider.nrepl/wrap-ns
                 cider.nrepl/wrap-out
+                cider.nrepl/wrap-refresh
+                cider.nrepl/wrap-stacktrace
                 cider.nrepl/wrap-spec
                 cider.nrepl/wrap-test
                 cider.nrepl/wrap-trace
@@ -242,7 +248,7 @@ REBEL READLINE~
     (require 'cider.nrepl)
     (map ns-resolve
        ['cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl 'cider.nrepl]
-       ['wrap-classpath 'wrap-clojuredocs 'wrap-complete 'wrap-debug 'wrap-format 'wrap-info 'wrap-macroexpand 'wrap-ns 'wrap-out 'wrap-spec 'wrap-test 'wrap-trace 'wrap-undef 'wrap-xref]))
+       ['wrap-classpath 'wrap-clojuredocs 'wrap-complete 'wrap-debug 'wrap-format 'wrap-info 'wrap-macroexpand 'wrap-ns 'wrap-out 'wrap-refresh 'wrap-stacktrace 'wrap-spec 'wrap-test 'wrap-trace 'wrap-undef 'wrap-xref]))
 
   (defn dev-middleware []
     (mapcat (fn [[ns syms]] (require ns) (map (partial ns-resolve ns) syms))

@@ -42,6 +42,56 @@ function! iced#nrepl#eval#err(err, ...) abort
   endif
 endfunction
 
+" NOTE: Each stacktrace format is like below
+"       {'file': 'form-init11159443384990986285.clj',
+"        'flags': ['project', 'repl', 'clj'],
+"        'ns': 'foo.core',
+"        'name': 'foo.core$boom/invokeStatic',
+"        'method': 'invokeStatic',
+"        'line': 9,
+"        'fn': 'boom',
+"        'class': 'foo.core$boom',
+"        'file-url': 'file:/private/tmp/foo/ src/foo/core.clj',
+"        'type': 'clj',
+"        'var': 'foo.core/boom'}
+function! s:print_stack_trace(resp) abort
+  let errors = []
+
+  if type(a:resp) == v:t_list
+    for resp in a:resp
+      let class = get(resp, 'class', '')
+      if empty(class) | continue | endif
+      let stacktrace = get(resp, 'stacktrace', [])
+      if empty(stacktrace) | continue | endif
+
+      call iced#buffer#stdout#append(class)
+      for item in stacktrace
+        let name = get(item, 'name')
+        let file = get(item, 'file')
+        let line = get(item, 'line')
+        let text = printf('  at %s(%s:%d)', name, file, line)
+        call iced#buffer#stdout#append(text)
+
+        let file_url = get(item, 'file-url')
+        let var = get(item, 'var')
+        if ! empty(file_url)
+          call add(errors, {
+                \ 'filename': iced#util#normalize_path(file_url),
+                \ 'lnum': line,
+                \ 'end_lnum': line,
+                \ 'text': (empty(var) ? name : var),
+                \ 'type': 'E',
+                \ })
+        endif
+      endfor
+    endfor
+  endif
+
+  if ! empty(errors)
+    call iced#qf#set(errors)
+  endif
+endfunction
+
 function! iced#nrepl#eval#out(resp, ...) abort
   let opt = get(a:, 1, {})
   if has_key(a:resp, 'value')
@@ -69,7 +119,7 @@ function! iced#nrepl#eval#out(resp, ...) abort
   endif
 
   if has_key(a:resp, 'ex') && !empty(a:resp['ex'])
-    call iced#message#error_str(a:resp['ex'])
+    call iced#nrepl#op#cider#stacktrace(funcref('s:print_stack_trace'))
   endif
 
   call iced#nrepl#eval#err(get(a:resp, 'err', ''), opt)

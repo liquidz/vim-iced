@@ -2,6 +2,13 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.9.2 (2022-06-12)
+// {{{
+=== Changed
+* https://github.com/liquidz/vim-iced/issues/414[#414]: Updated to show full stack trace to Stdout buffer when exception occurred.
+** And also, jumpable files will be added to https://vim-jp.org/vimdoc-en/quickfix.html[quickfix] which make you easy to jump to the exact line which throws the exception.
+// }}}
+
 == 3.9.1 (2022-06-11)
 // {{{
 === Changed
