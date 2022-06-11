@@ -42,6 +42,18 @@ function! iced#nrepl#eval#err(err, ...) abort
   endif
 endfunction
 
+" NOTE: Each stacktrace format is like below
+"       {'file': 'form-init11159443384990986285.clj',
+"        'flags': ['project', 'repl', 'clj'],
+"        'ns': 'foo.core',
+"        'name': 'foo.core$boom/invokeStatic',
+"        'method': 'invokeStatic',
+"        'line': 9,
+"        'fn': 'boom',
+"        'class': 'foo.core$boom',
+"        'file-url': 'file:/private/tmp/foo/ src/foo/core.clj',
+"        'type': 'clj',
+"        'var': 'foo.core/boom'}
 function! s:print_stack_trace(resp) abort
   let errors = []
 
