@@ -174,7 +174,7 @@ function! iced#paredit#find_parent_form_raw(prefixes) abort
   try
     while v:true
       let @@ = ''
-      silent exe 'normal! vaby'
+      silent exe 'keepjumps normal! vaby'
       if empty(@@) | break | endif
 
       let code = @@
@@ -201,7 +201,7 @@ endfunction
 
 function! iced#paredit#get_outer_list_raw() abort
   try
-    silent normal! va(y
+    keepjumps silent normal! va(y
   finally
     silent exe "normal! \<Esc>"
   endtry

@@ -374,14 +374,14 @@ function! iced#nrepl#refactor#add_arity() abort
       " For single arity
       silent normal! v
       call setpos('.', beginning_of_defn)
-      silent normal! %hy
+      keepjumps silent normal! %hy
       let arity_and_body = @@
       if beginning_var_name[1] == beginning_of_arity[1]
         let @@ = printf("\n  ([])\n  (%s)", arity_and_body)
-        silent normal! gv"0pj
+        keepjumps silent normal! gv"0pj
       else
         let @@ = printf("([])\n  (%s)", arity_and_body)
-        silent normal! gv"0p
+        keepjumps silent normal! gv"0p
       endif
     endif
 
