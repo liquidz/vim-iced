@@ -248,5 +248,11 @@ function! iced#util#store_and_slide_registers(v) abort
   let @1 = a:v
 endfunction
 
+function! iced#util#add_curpos_to_jumplist() abort
+  " :h jumplist
+  " > You can explicitly add a jump by setting the ' mark with "m'".
+  silent normal! m'
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
