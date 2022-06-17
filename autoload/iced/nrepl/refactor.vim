@@ -144,8 +144,11 @@ function! s:__add_missing_ns_select_candidates(symbol_alias, candidates) abort
        \ 'accept': {_, ns_name -> s:__add_missing_ns_add(ns_name, a:symbol_alias)}
        \ })
   else
-    return iced#message#echom('no_candidates')
+    call iced#message#echom('no_candidates')
+    return v:false
   endif
+
+  return v:true
 endfunction
 
 function! s:__add_missing_ns_ns_alias_candidates(symbol_alias, ns_candidates, alias_dict) abort
@@ -226,13 +229,23 @@ function! iced#nrepl#refactor#add_missing_ns(symbol) abort
 
   if c >= 65 && c <= 90
     return iced#promise#call('iced#nrepl#op#iced#java_class_candidates', [symbol, g:iced#ns#class_map])
-          \.then(funcref('s:__add_missing_java_class_select_candidates'))
-  elseif kondo.is_analyzed()
-    return s:__add_missing_by_clj_kondo_analysis(symbol)
-  elseif iced#nrepl#is_supported_op('resolve-missing')
+         \.then(funcref('s:__add_missing_java_class_select_candidates'))
+  endif
+
+  let added = v:false
+  if kondo.is_analyzed()
+        \ && s:__add_missing_by_clj_kondo_analysis(symbol)
+    let added = v:true
+  endif
+
+  if ! added
+        \ && iced#nrepl#is_supported_op('resolve-missing')
     call iced#nrepl#op#refactor#add_missing(symbol, {resp ->
-         \ s:__add_missing_ns_resolve_missing(symbol, resp)})
-  else
+          \ s:__add_missing_ns_resolve_missing(symbol, resp)})
+    let added = v:true
+  endif
+
+  if ! added
     return iced#message#error('not_supported')
   endif
 endfunction " }}}
