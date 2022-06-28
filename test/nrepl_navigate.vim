@@ -104,7 +104,7 @@ function! s:suite.jump_to_def_test() abort
   call iced#nrepl#navigate#jump_to_def('dummy')
   call s:assert.equals(
         \ s:ex_cmd.get_last_args(),
-        \ {'exe': ':edit /path/to/file.clj'})
+        \ {'exe': ':keepjumps edit /path/to/file.clj'})
 
   call s:teardown()
 endfunction
@@ -120,7 +120,7 @@ function! s:suite.jump_to_def_in_jar_test() abort
   call iced#nrepl#navigate#jump_to_def('dummy')
   call s:assert.equals(
         \ s:ex_cmd.get_last_args(),
-        \ {'exe': ':edit zipfile:///path/to/jarfile.jar::path/to/file.clj'})
+        \ {'exe': ':keepjumps edit zipfile:///path/to/jarfile.jar::path/to/file.clj'})
 
   call s:teardown()
 endfunction
