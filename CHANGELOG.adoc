@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This change
 * https://github.com/liquidz/vim-iced/issues/417[#417]: Updated `IcedDefJump` to support `jumplist`.
 ** See `:h jumplist` for jumplist.
 * Bumped cider-nrepl 0.28.5.
+* Bumped jet to 0.2.18.
 
 === Fixed
 * Fixed some commands not to add extra jumplist.
