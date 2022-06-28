@@ -3,12 +3,12 @@
 set -e
 
 version='0.2.18'
-file='jet.zip'
+file='jet.tar.gz'
 if [ "$(uname)" == 'Darwin' ]; then
     os='macos'
 else
     os='linux'
 fi
-url="https://github.com/borkdude/jet/releases/download/v${version}/jet-${version}-${os}-amd64.zip"
+url="https://github.com/borkdude/jet/releases/download/v${version}/jet-${version}-${os}-amd64.tar.gz"
 
-curl -L -o ${file} ${url} && unzip ${file} && rm -f ${file}
+curl -L -o ${file} ${url} && tar xvf ${file} && rm -f ${file}
