@@ -1,6 +1,19 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* https://github.com/liquidz/vim-iced/issues/417[#417]: Updated `IcedDefJump` to support `jumplist`.
+** See `:h jumplist` for jumplist.
+* Bumped cider-nrepl 0.28.5.
+
+=== Fixed
+* Fixed some commands not to add extra jumplist.
+** `IcedAddArity``
+** `IcedAddNs``
+** `IcedFormat``
+* Fixed `IcedAddMissing` to fallback to nREPL when failed to add missings by clj-kondo.
+// }}}
 
 == 3.9.2 (2022-06-12)
 // {{{
