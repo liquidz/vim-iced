@@ -325,105 +325,104 @@ endfunction
 
 " rename_symbol {{{
 function! s:dummy_info(name) abort
-  return {
-        \'ns': 'ns',
-        \'name': a:name,
-        \'file': 'file',
-        \'line': 1,
-        \'column': 1,
-        \'status': ['done']}
+  return {'ns': 'ns',
+        \ 'name': a:name,
+        \ 'file': 'file',
+        \ 'line': 1,
+        \ 'column': 1,
+        \ 'status': ['done']}
 endfunction
 
 function! s:nrepl_mock(ops) abort
   call s:ch.mock({
-        \'status_value': 'open',
-        \'relay': {msg -> get(a:ops, msg['op'], {'status': ['done']})}})
+        \ 'status_value': 'open',
+        \ 'relay': {msg -> get(a:ops, msg['op'], {'status': ['done']})}})
 endfunction
 
 function! s:suite.rename_symbol_test() abort
   let def_file = tempname()
   call writefile([
-        \'   (defn bar [] :bar)',
-        \';; testing definition form not at column 1'],
-        \def_file)
+        \ '   (defn bar [] :bar)',
+        \ ';; testing definition form not at column 1'],
+        \ def_file)
 
   let alias_file = tempname()
   call writefile([
-        \'(ns a (:require [user :as a.u])',
-        \'(let [bar (a.u/bar :bar))]',
-        \';; testing symbol with namespace alias'],
-        \alias_file)
+        \ '(ns a (:require [user :as a.u])',
+        \ '(let [bar (a.u/bar :bar))]',
+        \ ';; testing symbol with namespace alias'],
+        \ alias_file)
 
   let refer_file = tempname()
   call writefile([
-        \'(ns a (:require [user :refer [bar]])',
-        \'(let [bar (bar :bar))]',
-        \';; testing import using :refer'],
-        \refer_file)
+        \ '(ns a (:require [user :refer [bar]])',
+        \ '(let [bar (bar :bar))]',
+        \ ';; testing import using :refer'],
+        \ refer_file)
 
   let sameline_file = tempname()
   call writefile([
-        \'[bar bar]',
-        \';; testing 2 occurrences on the same line'],
-        \sameline_file)
+        \ '[bar bar]',
+        \ ';; testing 2 occurrences on the same line'],
+        \ sameline_file)
 
   let def_newline_file = tempname()
   call writefile([
-        \'(def ^{:doc " bar "',
-        \'       :optional 123}',
-        \' bar)',
-        \';; testing definition form with metadata'],
-        \def_newline_file)
+        \ '(def ^{:doc " bar "',
+        \ '       :optional 123}',
+        \ ' bar)',
+        \ ';; testing definition form with metadata'],
+        \ def_newline_file)
 
   call s:nrepl_mock({
-        \'info': s:dummy_info('bar'),
-        \'find-symbol': [
-        \  {'occurrence': '{:file "'.def_file.'"   :line-beg 1 :col-beg 4}'},
-        \  {'occurrence': '{:file "'.alias_file.'" :line-beg 2 :col-beg 12}'},
-        \  {'occurrence': '{:file "'.refer_file.'" :line-beg 1 :col-beg 31}'},
-        \  {'occurrence': '{:file "'.refer_file.'" :line-beg 2 :col-beg 12}'},
-        \  {'occurrence': '{:file "'.sameline_file.'" :line-beg 1 :col-beg 2}'},
-        \  {'occurrence': '{:file "'.sameline_file.'" :line-beg 1 :col-beg 6}'},
-        \  {'occurrence': '{:file "'.def_newline_file.'" :line-beg 1 :col-beg 1}'},
-        \  {'status': ['done']}]})
-
+        \ 'info': s:dummy_info('bar'),
+        \ 'find-symbol': [
+        \   {'occurrence': printf('{:file "%s" :line-beg 1 :col-beg 4}', def_file)},
+        \   {'occurrence': printf('{:file "%s" :line-beg 2 :col-beg 12}', alias_file)},
+        \   {'occurrence': printf('{:file "%s" :line-beg 1 :col-beg 31}', refer_file)},
+        \   {'occurrence': printf('{:file "%s" :line-beg 2 :col-beg 12}', refer_file)},
+        \   {'occurrence': printf('{:file "%s" :line-beg 1 :col-beg 2}', sameline_file)},
+        \   {'occurrence': printf('{:file "%s" :line-beg 1 :col-beg 6}', sameline_file)},
+        \   {'occurrence': printf('{:file "%s" :line-beg 1 :col-beg 1}', def_newline_file)},
+        \   {'status': ['done']}]})
 
   call iced#system#reset_component('job')
   call iced#system#reset_component('edn')
   call iced#system#reset_component('ex_cmd')
   call s:io.mock({'input': 'new-name'})
+  setl hidden
+
   call iced#promise#wait(iced#nrepl#refactor#rename_symbol('dummy'))
 
-
   call s:assert.equals(readfile(def_file), [
-        \'   (defn new-name [] :bar)',
-        \';; testing definition form not at column 1'
-        \])
+        \ '   (defn new-name [] :bar)',
+        \ ';; testing definition form not at column 1'
+        \ ])
   call delete(def_file)
 
   call s:assert.equals(readfile(alias_file), [
-        \'(ns a (:require [user :as a.u])',
-        \'(let [bar (a.u/new-name :bar))]',
-        \';; testing symbol with namespace alias'
-        \])
+       \ '(ns a (:require [user :as a.u])',
+       \ '(let [bar (a.u/new-name :bar))]',
+       \ ';; testing symbol with namespace alias'
+       \ ])
   call delete(alias_file)
 
   call s:assert.equals(readfile(refer_file), [
-        \'(ns a (:require [user :refer [new-name]])',
-        \'(let [bar (new-name :bar))]',
-        \';; testing import using :refer'])
+       \ '(ns a (:require [user :refer [new-name]])',
+       \ '(let [bar (new-name :bar))]',
+       \ ';; testing import using :refer'])
   call delete(refer_file)
 
   call s:assert.equals(readfile(sameline_file), [
-        \'[new-name new-name]',
-        \';; testing 2 occurrences on the same line'])
+       \ '[new-name new-name]',
+       \ ';; testing 2 occurrences on the same line'])
   call delete(sameline_file)
 
   call s:assert.equals(readfile(def_newline_file), [
-        \'(def ^{:doc " bar "',
-        \'       :optional 123}',
-        \' new-name)',
-        \';; testing definition form with metadata'])
+       \ '(def ^{:doc " bar "',
+       \ '       :optional 123}',
+       \ ' new-name)',
+       \ ';; testing definition form with metadata'])
   call delete(def_newline_file)
 endfunction
 
@@ -433,10 +432,10 @@ function! s:suite.rename_symbol_no_user_input_test() abort
   call writefile(original_src, def_file)
 
   call s:nrepl_mock({
-        \'info': s:dummy_info('bar'),
-        \'find-symbol': [
-        \  {'occurrence': '{:file "'.def_file.'"   :line-beg 2 :col-beg 4}'},
-        \  {'status': ['done']}]})
+       \ 'info': s:dummy_info('bar'),
+       \ 'find-symbol': [
+       \   {'occurrence': '{:file "'.def_file.'"   :line-beg 2 :col-beg 4}'},
+       \   {'status': ['done']}]})
 
 
   call s:io.mock({'input': ' '})
@@ -447,9 +446,9 @@ function! s:suite.rename_symbol_no_user_input_test() abort
   call delete(def_file)
 
   call s:assert.equals(
-        \ s:io.get_last_args()['echomsg']['text'],
-        \ iced#message#get('canceled'),
-        \ )
+       \ s:io.get_last_args()['echomsg']['text'],
+       \ iced#message#get('canceled'),
+       \ )
 endfunction
 
 function! s:suite.rename_symbol_not_found_test() abort
@@ -459,9 +458,9 @@ function! s:suite.rename_symbol_not_found_test() abort
   call iced#promise#wait(iced#nrepl#refactor#rename_symbol('dummy'))
 
   call s:assert.equals(
-        \ s:io.get_last_args()['echomsg']['text'],
-        \ iced#message#get('not_found'),
-        \ )
+       \ s:io.get_last_args()['echomsg']['text'],
+       \ iced#message#get('not_found'),
+       \ )
 endfunction
 
 function! s:suite.rename_symbol_in_jar_test() abort
@@ -473,9 +472,9 @@ function! s:suite.rename_symbol_in_jar_test() abort
   call iced#promise#wait(iced#nrepl#refactor#rename_symbol('dummy'))
 
   call s:assert.equals(
-        \ s:io.get_last_args()['echomsg']['text'],
-        \ iced#message#get('not_found'),
-        \ )
+       \ s:io.get_last_args()['echomsg']['text'],
+       \ iced#message#get('not_found'),
+       \ )
 endfunction " }}}
 
 " vim:fdm=marker:fdl=0

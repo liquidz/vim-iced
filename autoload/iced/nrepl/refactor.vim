@@ -419,8 +419,10 @@ endfunction
 
 function! s:got_var(var) abort
   if !has_key(a:var, 'file')
-        \|| !has_key(a:var, 'ns') || !has_key(a:var, 'name')
-        \|| !has_key(a:var, 'column') || !has_key(a:var, 'line')
+        \ || !has_key(a:var, 'ns')
+        \ || !has_key(a:var, 'name')
+        \ || !has_key(a:var, 'column')
+        \ || !has_key(a:var, 'line')
     return iced#message#error('not_found')
   endif
 
