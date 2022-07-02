@@ -8,6 +8,7 @@ let s:bufname = 'iced_buffer_test'
 function! s:init_buf() abort
   call s:holder.clear()
   call s:timer.mock()
+  call iced#buffer#reset()
   let info = iced#buffer#init(s:bufname, s:holder.run)
   let nr = info['bufnr']
   call setbufvar(nr, '&bufhidden', 'hide')
@@ -24,7 +25,6 @@ function! s:suite.init_test() abort
 
   call s:assert.equals(type(info['bufnr']), v:t_number)
   call s:assert.equals(info['bufname'], s:bufname)
-  call s:assert.true(info['loaded'])
   call s:assert.equals(s:holder.get_args(), [[info['bufnr']]])
 
   call s:assert.equals(iced#buffer#nr(s:bufname), info['bufnr'])
