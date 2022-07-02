@@ -16,6 +16,7 @@ function! s:setup() abort
   call s:io.mock() " to install `jet` automatically
   call iced#system#reset_component('job') " to use real `edn` component
   call iced#system#reset_component('edn')
+  call iced#system#reset_component('ex_cmd')
 endfunction
 
 function! s:teardown() abort
