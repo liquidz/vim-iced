@@ -99,6 +99,12 @@ function! iced#system#reset_component(name) abort
   call iced#system#set_component(a:name, s:org_system_map[a:name])
 endfunction
 
+function! iced#system#reset_all_components() abort
+  for name in keys(s:org_system_map)
+    call iced#system#reset_component(name)
+  endfor
+endfunction
+
 function! iced#system#get(name) abort
   if has_key(s:component_cache, a:name)
     return s:component_cache[a:name]

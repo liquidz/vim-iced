@@ -10,13 +10,11 @@ function! s:setup() abort
   let g:iced_enable_popup_document = 'every'
   let g:iced_enable_enhanced_definition_extraction = v:false
 
+  call iced#system#reset_all_components()
   call s:popup.mock()
   call s:popup.close(0)
   call s:sys.set_dummies()
   call s:io.mock() " to install `jet` automatically
-  call iced#system#reset_component('job') " to use real `edn` component
-  call iced#system#reset_component('edn')
-  call iced#system#reset_component('ex_cmd')
 endfunction
 
 function! s:teardown() abort
@@ -75,7 +73,6 @@ function! s:suite.popup_show_test() abort
         \ 'file': printf('%s/test/resources/source/foo.clj', expand('<sfile>:p:h')),
         \ 'line': 5,
         \ }])})
-  call iced#system#reset_component('ex_cmd')
 
   let p = iced#nrepl#source#popup_show('dummy')
   call iced#promise#wait(p)
