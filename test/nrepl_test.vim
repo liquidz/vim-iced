@@ -16,6 +16,7 @@ let s:temp_bar = tempname()
 
 function s:setup(...) abort " {{{
   let opts = get(a:, 1, {})
+  call iced#system#reset_all_components()
   call s:ex.mock()
   call s:qf.mock()
   call s:sign.mock()
@@ -317,8 +318,6 @@ endfunction
 
 function! s:suite.under_cursor_with_plain_nrepl_success_test() abort
   call s:setup()
-  call iced#system#reset_component('job')
-
   let edn = '{:summary {:fail 0, :var 1, :error 0, :pass 1, :test 1}, :results {"foo.core" {"bar-success" ({:type :pass, :expected "1", :actual "1", :message nil, :ns "foo.core", :var "bar-success"})}}, :testing-ns "foo.core"}'
   call s:ch.mock({'status_value': 'open', 'relay': funcref('s:plain_test_relay', [edn])})
   call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
@@ -334,8 +333,6 @@ endfunction
 
 function! s:suite.under_cursor_with_plain_nrepl_fail_test() abort
   call s:setup()
-  call iced#system#reset_component('job')
-
   let edn = '{:summary {:fail 1, :var 1, :error 0, :pass 0, :test 1}, :results {"foo.core" {"bar-fail" ({:type :fail, :expected "1", :actual "2", :message nil, :ns "foo.core", :var "bar-fail", :file "dummy"})}}, :testing-ns "foo.core"}'
   call s:ch.mock({'status_value': 'open', 'relay': funcref('s:plain_test_relay', [edn])})
   call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
@@ -354,8 +351,6 @@ endfunction
 
 function! s:suite.under_cursor_with_plain_nrepl_error_test() abort
   call s:setup()
-  call iced#system#reset_component('job')
-
   let edn = '{:summary {:fail 0, :var 1, :error 1, :pass 0, :test 1}, :results {"foo.core" {"bar-error" ({:type :error, :expected "1", :actual "class clojure.lang.ExceptionInfo: foo{:bar 3}", :message nil, :ns "foo.core", :var "bar-error", :file "dummy"})}}, :testing-ns "foo.core"}'
   call s:ch.mock({'status_value': 'open', 'relay': funcref('s:plain_test_relay', [edn])})
   call s:buf.start_dummy(['(ns foo.bar)', '(some codes|)'])
@@ -378,7 +373,6 @@ endfunction
 
 function! s:suite.ns_test() abort
   call s:setup()
-
   let r = s:build_under_cursor_relay()
   let opts = {'test-results': [{
         \ 'context': 'dummy context',
@@ -391,7 +385,6 @@ function! s:suite.ns_test() abort
         \ 'type': 'fail',
         \ 'var': 'dummy-var'}],
         \ }
-
   call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   call s:buf.start_dummy(['(ns foo.bar-test)', '(some codes|)'])
 
@@ -418,7 +411,6 @@ endfunction
 
 function! s:suite.ns_with_non_test_ns_test() abort
   call s:setup({'no_temp_files': v:true})
-
   let r = s:build_under_cursor_relay()
   let opts = {
         \ 'test-results': [{'context': 'dummy context',
@@ -428,7 +420,6 @@ function! s:suite.ns_with_non_test_ns_test() abort
         \                   'var': 'dummy-var'}],
         \ 'ns-vars-with-meta': {},
         \ }
-
   call s:ch.mock({'status_value': 'open', 'relay': {v -> r.relay(opts,v)}})
   "" NOTE: the ns name does not end with '-test'
   call s:buf.start_dummy(['(ns bar.baz)', '(some codes|)'])
@@ -451,7 +442,6 @@ endfunction
 
 function! s:suite.ns_with_plain_success_test() abort
   call s:setup()
-  call iced#system#reset_component('job')
   call s:buf.start_dummy(['(ns bar.baz|)'])
 
   let edn = '{:summary {:fail 0, :var 1, :error 0, :pass 1, :test 1}, :results {"foo.core" {"bar-success" ({:type :pass, :expected "1", :actual "1", :message nil, :ns "foo.core", :var "bar-success"})}}, :testing-ns "foo.core"}'
@@ -469,7 +459,6 @@ endfunction
 
 function! s:suite.ns_with_plain_fail_test() abort
   call s:setup()
-  call iced#system#reset_component('job')
   call s:buf.start_dummy(['(ns bar.baz|)'])
 
   let edn = '{:summary {:fail 2, :var 1, :error 0, :pass 0, :test 1}, :results {"foo.core" {"bar-fail" ({:type :fail, :expected "1", :actual "2", :file "dummy", :message nil, :ns "foo.core", :var "bar-fail"} {:type :fail, :expected "2", :actual "3", :file "dummy", :message nil, :ns "foo.core", :var "baz-fail"})}}, :testing-ns "foo.core"}'
@@ -531,7 +520,6 @@ endfunction
 
 function! s:suite.all_with_plain_success_test() abort
   call s:setup()
-  call iced#system#reset_component('job')
   call s:buf.start_dummy(['(ns bar.baz|)'])
 
   let edn = '{:summary {:fail 0, :var 1, :error 0, :pass 1, :test 1}, :results {"foo.core" {"bar-success" ({:type :pass, :expected "1", :actual "1", :message nil, :ns "foo.core", :var "bar-success"})}}, :testing-ns "foo.core"}'
@@ -549,8 +537,6 @@ endfunction
 
 function! s:suite.all_with_plain_fail_test() abort
   call s:setup()
-  call iced#system#reset_component('job')
-  call iced#system#reset_component('edn')
   call s:buf.start_dummy(['(ns bar.baz|)'])
 
   let edn = '{:summary {:fail 2, :var 1, :error 0, :pass 0, :test 1}, :results {"foo.core" {"bar-fail" ({:type :fail, :expected "1", :actual "2", :file "dummy", :message nil, :ns "foo.core", :var "bar-fail"} {:type :fail, :expected "2", :actual "3", :file "dummy", :message nil, :ns "foo.core", :var "baz-fail"})}}, :testing-ns "foo.core"}'
