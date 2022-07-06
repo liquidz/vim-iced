@@ -158,7 +158,7 @@ LEININGEN~
                                       cider.nrepl/wrap-undef
                                       cider.nrepl/wrap-xref
                                       iced.nrepl/wrap-iced]}
-    :plugins [[refactor-nrepl "3.5.2"]]}}
+    :plugins [[refactor-nrepl "3.5.3"]]}}
 <
 
                                                          *vim-iced-manual-boot*
@@ -169,7 +169,7 @@ BOOT~
   (require (quote boot.repl))
 
   (swap! boot.repl/*default-dependencies* concat
-    '[[refactor-nrepl "3.5.2"]
+    '[[refactor-nrepl "3.5.3"]
       [cider/cider-nrepl "0.28.5"]
       [com.github.liquidz/iced-nrepl "1.2.12"]])
 
@@ -199,7 +199,7 @@ SHADOW-CLJS~
   shadow-cljs.edn
 >
   {
-   :dependencies [[refactor-nrepl "3.5.2"]
+   :dependencies [[refactor-nrepl "3.5.3"]
                   [cider/cider-nrepl "0.28.5"]
                   [com.github.liquidz/iced-nrepl "1.2.12"]]
   }
