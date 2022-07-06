@@ -2,12 +2,13 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
-== 3.9.3 (2022-06-29)
+== 3.9.3 (2022-07-07)
 // {{{
 === Changed
 * https://github.com/liquidz/vim-iced/issues/417[#417]: Updated `IcedDefJump` to support `jumplist`.
 ** See `:h jumplist` for jumplist.
 * Bumped cider-nrepl 0.28.5.
+* Bumped refactor-nrepl to 3.5.3.
 * Bumped jet to 0.2.18.
 
 === Fixed
