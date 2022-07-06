@@ -4,6 +4,7 @@ let s:holder = themis#helper('iced_holder')
 
 function! s:suite.open_test() abort
   let info = iced#buffer#document#init()
+  call iced#buffer#document#close()
 
   call s:assert.false(iced#buffer#document#is_visible())
   call iced#buffer#document#open("hello\nworld")

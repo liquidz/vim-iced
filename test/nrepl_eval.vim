@@ -52,6 +52,9 @@ function! s:suite.code_test() abort
   call s:ch.mock({'status_value': 'open', 'relay': funcref('s:code_relay')})
   call s:vt.mock()
 
+  let g:iced#eval#values_to_skip_storing_register = []
+  let g:iced#eval#keep_inline_result = v:false
+  let g:iced#eval#popup_highlight = 'Comment'
   let g:iced#eval#inside_comment = v:false
   let p =  iced#nrepl#eval#code('(comment (+ 1 2 3))')
   call iced#promise#wait(p)

@@ -38,7 +38,7 @@ function! iced#nrepl#ns#util#replace(new_ns) abort
       call iced#message#error('ns_not_found')
       return
     endif
-    silent normal! dab
+    keepjumps silent normal! dab
 
     let new_ns = trim(a:new_ns)
     let before_lnum = len(split(@@, '\r\?\n'))

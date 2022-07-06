@@ -97,7 +97,7 @@ function! s:__format_form(resp, finally_args) abort
 
   if has_key(a:resp, 'formatted') && !empty(a:resp['formatted'])
     let @@ = a:resp['formatted']
-    silent normal! gv"0p
+    keepjumps silent normal! gv"0p
   elseif has_key(a:resp, 'error')
     call iced#message#error_str(a:resp['error'])
   endif
@@ -156,24 +156,24 @@ function! s:fmt.minimal(opt) abort
   try
     if jump_to_its_match
       " NOTE: vim-sexp's slurp move cursor to tail of form
-      normal! %
+      keepjumps normal! %
     endif
 
     let ncol = max([col('.')-1, 0])
 
     let char = getline('.')[ncol]
     if char ==# '['
-      silent normal! va[y
+      keepjumps silent normal! va[y
     elseif char ==# '{'
-      silent normal! va{y
+      keepjumps silent normal! va{y
     else
-      silent normal! va(y
+      keepjumps silent normal! va(y
     endif
     let code = @@
     let resp = iced#nrepl#op#iced#sync#format_code(code, iced#nrepl#ns#alias_dict(ns_name))
     if has_key(resp, 'formatted') && !empty(resp['formatted'])
       let @@ = iced#util#add_indent(ncol, resp['formatted'])
-      silent normal! gv"0p
+      keepjumps silent normal! gv"0p
     endif
   finally
     let @@ = reg_save

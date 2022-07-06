@@ -114,16 +114,17 @@ function! iced#paredit#get_current_top_object_raw(...) abort
         call setpos('.', start_pos)
         " move to pair
         " NOTE: `%` may be matched to parentheses in comment block without matchit.vim
-        silent exe "normal \<Plug>(sexp_move_to_next_bracket)"
+        " NOTE: <Plug>(sexp_move_to_next_bracket) changes jumplist
+        call sexp#move_to_nearest_bracket('n', 1)
         let end_pos = getcurpos()
 
         if s:is_in_range(pos, start_pos, end_pos)
           " select end_pos to start_pos
           call setpos('.', end_pos)
-          silent exe 'normal! v'
+          silent exe 'keepjumps normal! v'
           call setpos('.', start_pos)
           " NOTE: `0` is to wrap top level tag literal
-          silent exe 'normal! 0y'
+          silent exe 'keepjumps normal! 0y'
 
           let result = {
                \ 'code': @@,
@@ -174,7 +175,7 @@ function! iced#paredit#find_parent_form_raw(prefixes) abort
   try
     while v:true
       let @@ = ''
-      silent exe 'normal! vaby'
+      silent exe 'keepjumps normal! vaby'
       if empty(@@) | break | endif
 
       let code = @@
@@ -201,7 +202,7 @@ endfunction
 
 function! iced#paredit#get_outer_list_raw() abort
   try
-    silent normal! va(y
+    keepjumps silent normal! va(y
   finally
     silent exe "normal! \<Esc>"
   endtry

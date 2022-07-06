@@ -52,7 +52,7 @@ function! iced#component#edn#start(this) abort
   else
     let s:edn.available = v:true
     let s:edn.job = a:this['job']
-    let s:edn.jet = s:edn.job.start('jet --to json', {
+    let s:edn.jet = s:edn.job.start('jet --no-pretty --to json', {
           \ 'out_cb': funcref('s:out_callback', s:edn),
           \ 'drop': 'never',
           \ })

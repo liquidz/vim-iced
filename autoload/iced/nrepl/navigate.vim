@@ -255,6 +255,7 @@ function!  s:jump_to_local_definition(local_def) abort
   let row = get(a:local_def, 'row', 1)
   let col = get(a:local_def, 'col', 1)
 
+  call iced#util#add_curpos_to_jumplist()
   call cursor(row, col)
 endfunction
 
@@ -326,12 +327,13 @@ function! s:jump(base_symbol, jump_cmd, resp) abort
     endif
   endif
 
+  call iced#util#add_curpos_to_jumplist()
   if expand('%:p') !=# path
-    call iced#system#get('ex_cmd').exe(printf(':%s %s', a:jump_cmd, path))
+    call iced#system#get('ex_cmd').exe(printf(':keepjumps %s %s', a:jump_cmd, path))
   endif
-
   call cursor(line, column)
   normal! zz
+
   redraw!
 endfunction
 " }}}

@@ -175,5 +175,10 @@ function! iced#buffer#close(bufname) abort
   endif
 endfunction
 
+function! iced#buffer#reset() abort
+  let s:manager = ''
+  let s:info = {}
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

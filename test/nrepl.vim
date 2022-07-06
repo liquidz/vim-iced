@@ -221,6 +221,7 @@ function! s:suite.path_translation_handler_with_normalize_path_test() abort
 endfunction
 
 function! s:suite.status_test() abort
+  call iced#nrepl#reset()
   call s:ch.mock({'status_value': 'fail'})
   call s:assert.equals(iced#nrepl#status(), 'not connected')
 

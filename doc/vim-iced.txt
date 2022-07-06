@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.9.2
+Version: 3.9.3
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -140,7 +140,7 @@ LEININGEN~
   {:user
    {:dependencies [[nrepl "0.9.0"]
                    [com.github.liquidz/iced-nrepl "1.2.12"]
-                   [cider/cider-nrepl "0.28.4"]]
+                   [cider/cider-nrepl "0.28.5"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -158,7 +158,7 @@ LEININGEN~
                                       cider.nrepl/wrap-undef
                                       cider.nrepl/wrap-xref
                                       iced.nrepl/wrap-iced]}
-    :plugins [[refactor-nrepl "3.5.2"]]}}
+    :plugins [[refactor-nrepl "3.5.3"]]}}
 <
 
                                                          *vim-iced-manual-boot*
@@ -169,8 +169,8 @@ BOOT~
   (require (quote boot.repl))
 
   (swap! boot.repl/*default-dependencies* concat
-    '[[refactor-nrepl "3.5.2"]
-      [cider/cider-nrepl "0.28.4"]
+    '[[refactor-nrepl "3.5.3"]
+      [cider/cider-nrepl "0.28.5"]
       [com.github.liquidz/iced-nrepl "1.2.12"]])
 
   (swap! boot.repl/*default-middleware* concat
@@ -199,8 +199,8 @@ SHADOW-CLJS~
   shadow-cljs.edn
 >
   {
-   :dependencies [[refactor-nrepl "3.5.2"]
-                  [cider/cider-nrepl "0.28.4"]
+   :dependencies [[refactor-nrepl "3.5.3"]
+                  [cider/cider-nrepl "0.28.5"]
                   [com.github.liquidz/iced-nrepl "1.2.12"]]
   }
 <
