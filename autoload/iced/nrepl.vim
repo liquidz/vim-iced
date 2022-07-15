@@ -434,7 +434,7 @@ function! s:status(ch) abort
 endfunction
 
 function! s:is_cljs_session(timeout_msec) abort
-  let resp = iced#promise#sync('iced#nrepl#eval', ["(if (resolve 'js/window') true false)"], a:timeout_msec)
+  let resp = iced#promise#sync('iced#nrepl#eval', ["(if (resolve 'js/window) true false)"], a:timeout_msec)
   let value = get(resp, 'value', 'false')
   return (type(value) == v:t_string && value ==# 'true')
 endfunction
