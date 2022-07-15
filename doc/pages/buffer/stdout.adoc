@@ -25,7 +25,16 @@ Vim-iced provides the following commands to control it's stdout buffer.
 
 |===
 
+==== Notification
+
 In addition to the stdout buffer, standard output can be displayed on popup notification when stdout buffer is invisible.
 If you don't use notification for standard output, see {help_html}#g%3Aiced%23buffer%23stdout%23enable_notify[g:iced#buffer#stdout#enable_notify] option.
 
 See also {help_html}#vim-iced-notification[vim-iced-notification] for more information.
+
+==== Delimiters
+
+It is useful to have a delimited line in the unit of output to limit the range of what you want to see.
+
+See {help_html}#g%3Aiced%23buffer%23stdout%23enable_delimiter[g:iced#buffer#stdout#enable_delimiter] for more information.
+
