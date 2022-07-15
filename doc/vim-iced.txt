@@ -1,6 +1,6 @@
 *vim-iced.txt*      Clojure interactive development environment for Vim8/Neovim
 
-Version: 3.9.3
+Version: 3.10.0
 Author : Masashi Iizuka <liquidz.uo+vim@gmail.com>
 License: MIT LICENSE
 
@@ -428,6 +428,11 @@ STDOUT BUFFER                                          *vim-iced-stdout-buffer*
     See |vim-iced-notification| for more information.
     If you don't use notification for standard output,
     see |g:iced#buffer#stdout#enable_notify| option.
+
+  For delimiters:
+    It is useful to have a delimited line in the unit of output
+    to limit the range of what you want to see.
+    See |g:iced#buffer#stdout#enable_delimiter| for more information.
 
   If you show buffer content in another application or display,
   |g:iced#buffer#stdout#file| option is available for writing file.
@@ -2172,6 +2177,25 @@ g:iced#buffer#stdout#size
   If specified, stdout buffer will be opened with the specified size.
   Otherwise, opened with the half size of the current window.
   Default value is `v:null`.
+
+                                         *g:iced#buffer#stdout#enable_delimiter*
+g:iced#buffer#stdout#enable_delimiter
+  If {v:true}, a delimiter line is appended after specified delays.
+  See followings for delimiter line and delay:
+  - |g:iced#buffer#stdout#delimiter_delay|
+  - |g:iced#buffer#stdout#delimiter_line|
+  Default value is `v:true`.
+
+                                          *g:iced#buffer#stdout#delimiter_delay*
+g:iced#buffer#stdout#delimiter_delay
+  A delay time for |g:iced#buffer#stdout#enable_delimiter|.
+  Unit is milli sec.
+  Default value is `500`.
+
+                                           *g:iced#buffer#stdout#delimiter_line*
+g:iced#buffer#stdout#delimiter_line
+  A delimiter line for |g:iced#buffer#stdout#enable_delimiter|.
+  Default value is `';; ----------'`.
 
 ------------------------------------------------------------------------------
 FORMATTER                                      *vim-iced-customizing-formatter*

@@ -216,6 +216,7 @@ function! s:try_connecting_to_nbb(port) abort
   try
     return iced#repl#connect('nrepl', a:port, {
           \ 'with_iced_nrepl': v:false,
+          \ 'initial_session': 'cljs',
           \ 'verbose': v:false,
           \ })
   catch

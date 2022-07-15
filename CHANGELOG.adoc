@@ -2,6 +2,19 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.10.0 (2022-07-16)
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/issues/421[#421]: Added support for delimiter lines to stdout buffer.
+** Added following options for this support.
+*** `g:iced#buffer#stdout#enable_delimiter`
+*** `g:iced#buffer#stdout#delimiter_delay`
+*** `g:iced#buffer#stdout#delimiter_line`
+
+=== Fixed
+* Fixed connection for `nbb` to force CLJS session.
+// }}}
+
 == 3.9.3 (2022-07-07)
 // {{{
 === Changed

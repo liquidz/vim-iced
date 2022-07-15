@@ -18,6 +18,9 @@ let g:iced#buffer#stdout#file = get(g:, 'iced#buffer#stdout#file', '')
 let g:iced#buffer#stdout#file_buffer_size = get(g:, 'iced#buffer#stdout#file_buffer_size', 256)
 let g:iced#buffer#stdout#enable_notify = get(g:, 'iced#buffer#stdout#enable_notify', v:true)
 let g:iced#buffer#stdout#size = get(g:, 'iced#buffer#stdout#size', v:null)
+let g:iced#buffer#stdout#enable_delimiter = get(g:, 'iced#buffer#stdout#enable_delimiter', v:true)
+let g:iced#buffer#stdout#delimiter_delay = get(g:, 'iced#buffer#stdout#delimiter_delay', 500)
+let g:iced#buffer#stdout#delimiter_line = get(g:, 'iced#buffer#stdout#delimiter_line', printf(";; %s\n", iced#util#char_repeat(10, '-')))
 
 function! s:delete_old_lines() abort
   let bufnr = iced#buffer#nr(s:bufname)
@@ -116,6 +119,15 @@ function! iced#buffer#stdout#append(s) abort
         \ g:iced#buffer#stdout#deleting_line_delay,
         \ funcref('s:delete_old_lines'),
         \ )
+
+  if g:iced#buffer#stdout#enable_delimiter
+        \ && a:s !=# g:iced#buffer#stdout#delimiter_line
+    call timer.start_lazily(
+          \ 'append_delimiter',
+          \ g:iced#buffer#stdout#delimiter_delay,
+          \ {-> iced#buffer#stdout#append(g:iced#buffer#stdout#delimiter_line)},
+          \ )
+  endif
 
   if ! iced#buffer#stdout#is_visible()
         \ && g:iced#buffer#stdout#enable_notify
