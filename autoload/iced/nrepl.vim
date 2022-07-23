@@ -439,6 +439,11 @@ function! s:is_cljs_session(timeout_msec) abort
   return (type(value) == v:t_string && value ==# 'true')
 endfunction
 
+function! s:is_nbb_nrepl(describe_resp) abort
+  let vers = get(a:describe_resp, 'versions', {})
+  return has_key(vers, 'nbb-nrepl')
+endfunction
+
 function! s:connected(resp, opts) abort
   if has_key(a:resp, 'new-session')
     try
@@ -447,14 +452,29 @@ function! s:connected(resp, opts) abort
       call iced#nrepl#set_session(initial_session, session)
       call iced#nrepl#change_current_session(initial_session)
 
+      let describe_resp = {}
       try
-        if s:is_cljs_session(500)
-          call iced#nrepl#set_session('cljs', session)
-          call iced#nrepl#change_current_session('cljs')
-        endif
+        let describe_resp = iced#promise#sync('iced#nrepl#describe', [], 500)
       catch
         " ignore
       endtry
+
+      if iced#nrepl#current_session_key() ==# 'clj'
+        if s:is_nbb_nrepl(describe_resp)
+          call iced#nrepl#set_session('cljs', session)
+          call iced#nrepl#change_current_session('cljs')
+          let a:opts['with_iced_nrepl'] = v:false
+        else
+          try
+            if s:is_cljs_session(500)
+              call iced#nrepl#set_session('cljs', session)
+              call iced#nrepl#change_current_session('cljs')
+            endif
+          catch
+            " ignore
+          endtry
+        endif
+      endif
 
       let s:nrepl['init_ns'] = iced#nrepl#ns#name_by_var()
 
