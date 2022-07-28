@@ -285,7 +285,7 @@ function! iced#paredit#get_top_list_in_comment() abort
     let view = winsaveview()
     let curpos = getpos('.')
 
-    " NOTE: `sexp#select_current_top_list` cannnot correctly select codes
+    " NOTE: `sexp#select_current_top_list` cannot correctly select codes
     "       including reader conditionals like below
     "       > #?(:clj :foo
     "       >    :cljs :bar)
