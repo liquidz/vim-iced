@@ -235,15 +235,6 @@ function! s:set_visual_marks(marks) abort
 endfunction
 
 " Return visually selected text without changing selection state and registers
-function! s:get_visual_selection() abort
-    let reg_save = @@
-    silent normal! y
-    let result = @@
-    let @@ = reg_save
-    silent normal! gv
-    return result
-endfunction
-
 function! s:get_visual_selection_and_pos() abort
     let reg_save = @@
     silent normal! y
@@ -262,7 +253,7 @@ function! s:select_top_list(top_code) abort
             let current_marks = s:get_visual_marks()
 
             call sexp#docount(2, 'sexp#select_current_list', 'v', 0, 1)
-            let next_code = s:get_visual_selection()
+            let next_code = get(s:get_visual_selection_and_pos(), 'code', '')
 
             if (next_code ==# a:top_code) | break | endif
         endwhile
@@ -273,13 +264,33 @@ function! s:select_top_list(top_code) abort
     endtry
 endfunction
 
+function! s:select_current_top_list() abort
+  let current_line = line('.')
+  let start_line = search('^\S', 'bW')
+
+  call search('(', 'cW')
+  silent normal! %
+  let end_pos = getcurpos()
+
+  if start_line > current_line || current_line > end_pos[1]
+    return ''
+  endif
+
+  call cursor(start_line, 1)
+  silent normal! v
+  call cursor(end_pos[1], end_pos[2])
+endfunction
+
 function! iced#paredit#get_top_list_in_comment() abort
     let view = winsaveview()
     let curpos = getpos('.')
 
-    " First use vim-sexp optimized top form selector
-    call sexp#select_current_top_list('v', 0)
-    let top_code = s:get_visual_selection()
+    " NOTE: `sexp#select_current_top_list` cannot correctly select codes
+    "       including reader conditionals like below
+    "       > #?(:clj :foo
+    "       >    :cljs :bar)
+    call s:select_current_top_list()
+    let top_code = get(s:get_visual_selection_and_pos(), 'code', '')
 
     if (stridx(top_code, '(comment') == 0)
         " Select up one by one if the top list is a (comment ...) form

@@ -2,6 +2,18 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.10.1 (2022-07-29)
+// {{{
+=== Changed
+* Applied idiomatic namespace aliases in style guide to default values for `g:iced#ns#favorites`.
+** https://github.com/bbatsov/clojure-style-guide#use-idiomatic-namespace-aliases
+* Bumped iced-nrepl to 1.2.13.
+
+=== Fixed
+* Fixed nbb connection to detect CLJS session correctly.
+* https://github.com/liquidz/vim-iced/issues/423[#423]: Fixed a bug about evaluating reader conditionals.
+// }}}
+
 == 3.10.0 (2022-07-16)
 // {{{
 === Added
