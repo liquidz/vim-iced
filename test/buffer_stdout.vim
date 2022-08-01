@@ -20,14 +20,21 @@ function! s:suite.append_test() abort
   let nr = iced#buffer#stdout#init()['bufnr']
   call iced#buffer#stdout#clear()
 
-  let init_text_len = len(split(g:iced#buffer#stdout#init_text, '\r\?\n'))
-  call s:assert.equals(getbufline(nr, init_text_len + 1, '$'), [])
+  let org_enable_delimiter = g:iced#buffer#stdout#enable_delimiter
+  let g:iced#buffer#stdout#enable_delimiter = v:false
 
-  call iced#buffer#stdout#append("foo\nbar")
-  call s:assert.equals(getbufline(nr, init_text_len + 1, '$'), ['foo', 'bar'])
+  try
+    let init_text_len = len(split(g:iced#buffer#stdout#init_text, '\r\?\n'))
+    call s:assert.equals(getbufline(nr, init_text_len + 1, '$'), [])
 
-  call iced#buffer#stdout#append('[32mbaz[m')
-  call s:assert.equals(getbufline(nr, init_text_len + 1, '$'), ['foo', 'bar', 'baz'])
+    call iced#buffer#stdout#append("foo\nbar")
+    call s:assert.equals(getbufline(nr, init_text_len + 1, '$'), ['foo', 'bar'])
+
+    call iced#buffer#stdout#append('[32mbaz[m')
+    call s:assert.equals(getbufline(nr, init_text_len + 1, '$'), ['foo', 'bar', 'baz'])
+  finally
+    let g:iced#buffer#stdout#enable_delimiter = org_enable_delimiter
+  endtry
 endfunction
 
 function! s:suite.append_notify_test() abort
