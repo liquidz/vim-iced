@@ -285,12 +285,20 @@ function! iced#paredit#get_top_list_in_comment() abort
     let view = winsaveview()
     let curpos = getpos('.')
 
-    " NOTE: `sexp#select_current_top_list` cannot correctly select codes
-    "       including reader conditionals like below
-    "       > #?(:clj :foo
-    "       >    :cljs :bar)
-    call s:select_current_top_list()
+    " First use vim-sexp optimized top form selector
+    call sexp#select_current_top_list('v', 0)
     let top_code = get(s:get_visual_selection_and_pos(), 'code', '')
+
+    " FIXME: s:select_current_top_list could not select the following form correctly
+    " > (defn foo []
+    " >   ;; \"bar\")
+    " >   \"bar\")
+    " " NOTE: `sexp#select_current_top_list` cannot correctly select codes
+    " "       including reader conditionals like below
+    " "       > #?(:clj :foo
+    " "       >    :cljs :bar)
+    " call s:select_current_top_list()
+    " let top_code = get(s:get_visual_selection_and_pos(), 'code', '')
 
     if (stridx(top_code, '(comment') == 0)
         " Select up one by one if the top list is a (comment ...) form
