@@ -125,7 +125,9 @@ function! iced#buffer#stdout#append(s) abort
     call timer.start_lazily(
           \ 'append_delimiter',
           \ g:iced#buffer#stdout#delimiter_delay,
-          \ {-> iced#buffer#stdout#append(g:iced#buffer#stdout#delimiter_line)},
+          \ {-> (g:iced#buffer#stdout#enable_delimiter)
+          \     ? iced#buffer#stdout#append(g:iced#buffer#stdout#delimiter_line)
+          \     : ''},
           \ )
   endif
 

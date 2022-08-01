@@ -2,6 +2,16 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.10.2 (2022-08-02)
+// {{{
+=== Changed
+* Bumped refactor-nrepl to 3.5.4.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/425[#425]: Reverted https://github.com/liquidz/vim-iced/issues/423[#423] for now.
+* Fixed not to append stdout buffer's delimiters after disabling.
+// }}}
+
 == 3.10.1 (2022-07-29)
 // {{{
 === Changed
