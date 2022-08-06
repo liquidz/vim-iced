@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: DeLaGuardo/setup-clj-kondo@master
+      - uses: DeLaGuardo/setup-clojure@master
         with:
-          version: '2022.06.22'
+          clj-kondo: latest
       - run: clj-kondo --parallel --lint clj:test/clj --config '{:output {:pattern "::{{level}} file={{filename}},line={{row}},col={{col}}::{{message}}"}}'
