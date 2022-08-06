@@ -8,7 +8,6 @@ let s:L = s:V.import('Data.List')
 let g:iced#related_ns#tail_patterns =
       \ get(g:, 'iced#related_ns#tail_patterns', ['', '-test', '-spec', '\.spec'])
 
-let g:iced#var_references#cache_dir = get(g:, 'iced#var_references#cache_dir', '/tmp')
 let g:iced#navigate#prefer_local_jump = get(g:, 'iced#navigate#prefer_local_jump', v:false)
 
 " definitions to jump to qualified keyword
