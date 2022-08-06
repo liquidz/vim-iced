@@ -361,16 +361,31 @@ function! s:set_xref_resp_to_quickfix(key, resp) abort
   endif
 
   let xrefs = copy(a:resp[a:key])
-  call filter(xrefs, {_, v -> filereadable(v['file'])})
-  call map(xrefs, {_, v -> {
-        \ 'filename': v['file'],
-        \ 'text': (has_key(v, 'doc') ? printf('%s: %s', v['name'], v['doc']) : v['name']),
-        \ 'lnum': v['line'],
-        \ }})
-  if empty(xrefs) | return iced#message#info('not_found') | endif
 
-  call iced#system#get('quickfix').setloclist(win_getid(), xrefs)
-  call iced#system#get('ex_cmd').silent_exe(':lwindow')
+  if len(xrefs) == 1
+    let xref = xrefs[0]
+    let file = get(xref, 'file', '')
+    if filereadable(file)
+      call iced#util#add_curpos_to_jumplist()
+      if expand('%:p') !=# file
+        call iced#system#get('ex_cmd').exe(printf(':keepjumps edit %s', file))
+      endif
+      call cursor(get(xref, 'line', 1), 1)
+      normal! zz
+      redraw!
+    endif
+  else
+    call filter(xrefs, {_, v -> filereadable(v['file'])})
+    call map(xrefs, {_, v -> {
+          \ 'filename': v['file'],
+          \ 'text': (has_key(v, 'doc') ? printf('%s: %s', v['name'], v['doc']) : v['name']),
+          \ 'lnum': v['line'],
+          \ }})
+    if empty(xrefs) | return iced#message#info('not_found') | endif
+
+    call iced#system#get('quickfix').setloclist(win_getid(), xrefs)
+    call iced#system#get('ex_cmd').silent_exe(':lwindow')
+  endif
 endfunction
 
 let s:fn_refs_callback = function('s:set_xref_resp_to_quickfix', ['fn-refs'])
