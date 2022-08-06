@@ -1,6 +1,15 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Bumped iced-nrepl to 1.2.458.
+* Bumped zprint to 1.2.4.
+* Changed to use setup-clojure action instead of setup-clj-kondo.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/423[#423]: Fixed again a bug about evaluating reader conditionals.
+// }}}
 
 == 3.10.2 (2022-08-02)
 // {{{
