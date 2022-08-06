@@ -266,39 +266,39 @@ endfunction
 
 function! s:select_current_top_list() abort
   let current_line = line('.')
+  " Search nearest top form
   let start_line = search('^\S', 'bW')
-
+  " Move to first opening parenthesis
   call search('(', 'cW')
-  silent normal! %
-  let end_pos = getcurpos()
+  " WARN: `normal! %` may be move to closing parenthesis in comments.
+  "       `sexp#select_current_list` can ignore parenthesis in comments.
+  call sexp#select_current_list('v', 0, 0)
 
+  let end_pos = getcurpos()
   if start_line > current_line || current_line > end_pos[1]
-    return ''
+    silent exe "normal! \<Esc>"
+    return
   endif
 
-  call cursor(start_line, 1)
-  silent normal! v
-  call cursor(end_pos[1], end_pos[2])
+  " Expand selection to contain reader literals
+  silent normal! o0
 endfunction
 
 function! iced#paredit#get_top_list_in_comment() abort
-    let view = winsaveview()
+  let view = winsaveview()
+  try
     let curpos = getpos('.')
 
-    " First use vim-sexp optimized top form selector
-    call sexp#select_current_top_list('v', 0)
-    let top_code = get(s:get_visual_selection_and_pos(), 'code', '')
+    " NOTE: `sexp#select_current_top_list` cannot correctly select codes
+    "       including reader conditionals like below
+    "       > #?(:clj :foo
+    "       >    :cljs :bar)
+    call s:select_current_top_list()
+    if mode() !=# 'v'
+      return {'code': '', 'curpos': curpos}
+    endif
 
-    " FIXME: s:select_current_top_list could not select the following form correctly
-    " > (defn foo []
-    " >   ;; \"bar\")
-    " >   \"bar\")
-    " " NOTE: `sexp#select_current_top_list` cannot correctly select codes
-    " "       including reader conditionals like below
-    " "       > #?(:clj :foo
-    " "       >    :cljs :bar)
-    " call s:select_current_top_list()
-    " let top_code = get(s:get_visual_selection_and_pos(), 'code', '')
+    let top_code = get(s:get_visual_selection_and_pos(), 'code', '')
 
     if (stridx(top_code, '(comment') == 0)
         " Select up one by one if the top list is a (comment ...) form
@@ -308,8 +308,10 @@ function! iced#paredit#get_top_list_in_comment() abort
     endif
     let ret = s:get_visual_selection_and_pos()
     execute "normal! \<Esc>"
-    call winrestview(view)
     return ret
+  finally
+    call winrestview(view)
+  endtry
 endfunction
 
 let &cpo = s:save_cpo
