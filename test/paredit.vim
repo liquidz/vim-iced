@@ -265,7 +265,17 @@ function! s:suite.get_top_list_in_comment_test() abort
   call s:assert.equals(res['code'], "(foo\n (bar))")
   call s:buf.stop_dummy()
 
-  " FIXME
+  " the beginning of the form
+  call s:buf.start_dummy([
+       \ '(dummy)',
+       \ '',
+       \ '|(foo',
+       \ ' (bar))',
+       \ ])
+  let res = iced#paredit#get_top_list_in_comment()
+  call s:assert.equals(res['code'], "(foo\n (bar))")
+  call s:buf.stop_dummy()
+
   " reader conditionals
   call s:buf.start_dummy([
       \ '#?(:clj :foo',

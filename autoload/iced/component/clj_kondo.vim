@@ -257,9 +257,10 @@ function! s:kondo.references(ns_name, var_name) abort
 
   let ana = self.analysis()
   let usages = get(ana, 'var-usages', [])
-  return filter(usages, {_, usage ->
+  let usages = filter(usages, {_, usage ->
         \ (get(usage, 'to', '') ==# a:ns_name
         \  && get(usage, 'name', '') ==# var_name)})
+  return sort(usages, {x, y -> (x['filename'] ==# y['filename']) ? 0 : (x['filename'] < y['filename']) ? -1 : 1})
 endfunction
 
 function! s:kondo.dependencies(ns_name, var_name) abort
@@ -276,8 +277,9 @@ function! s:kondo.dependencies(ns_name, var_name) abort
   let deps_dict = iced#util#list_to_dict(dependencies,
         \ {d -> printf('%s/%s', get(d, 'to', ''), get(d, 'name', ''))}, {d -> v:true})
 
-  return filter(definitions, {_, definition ->
+  let definitions = filter(definitions, {_, definition ->
         \ has_key(deps_dict, printf('%s/%s', get(definition, 'ns', ''), get(definition, 'name', '')))})
+  return sort(definitions, {x, y -> (x['filename'] ==# y['filename']) ? 0 : (x['filename'] < y['filename']) ? -1 : 1})
 endfunction
 
 function! s:kondo.used_ns_list() abort

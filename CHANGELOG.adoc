@@ -2,6 +2,16 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.10.4 (2022-08-10)
+// {{{
+=== Changed
+* Changed `IcedBrowseReferences` and `IcedBrowseDependencies` results to sort by filename.
+* Changed `IcedBrowseReferences` and `IcedBrowseDependencies` to jump instantly if there is only one candidate.
+
+=== Fixed
+* Fixed `IcedEvalOuterTopList` to work corrently on the beginning of forms.
+// }}}
+
 == 3.10.3 (2022-08-07)
 // {{{
 === Changed

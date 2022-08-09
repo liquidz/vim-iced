@@ -8,7 +8,6 @@ let s:L = s:V.import('Data.List')
 let g:iced#related_ns#tail_patterns =
       \ get(g:, 'iced#related_ns#tail_patterns', ['', '-test', '-spec', '\.spec'])
 
-let g:iced#var_references#cache_dir = get(g:, 'iced#var_references#cache_dir', '/tmp')
 let g:iced#navigate#prefer_local_jump = get(g:, 'iced#navigate#prefer_local_jump', v:false)
 
 " definitions to jump to qualified keyword
@@ -28,15 +27,31 @@ let s:qualified_key_def_prefix_regex = printf('\(%s\)',
       \          {_, v -> printf('%s\s\+', v)}),
       \      '\|'))
 
-function! s:apply_mode_to_file(mode, file) abort
-  let cmd = ':edit'
-  if a:mode ==# 'v'
-    let cmd = ':split'
-  elseif a:mode ==# 't'
-    let cmd = ':tabedit'
+function! s:raw_jump(jump_cmd, path, line, column) abort
+  call iced#util#add_curpos_to_jumplist()
+  if expand('%:p') !=# a:path
+    call iced#system#get('ex_cmd').exe(printf(':keepjumps %s %s', a:jump_cmd, a:path))
   endif
+  call cursor(a:line, a:column)
+  normal! zz
+
+  redraw!
+endfunction
+
+function! s:mode_to_command(mode) abort
+  let cmd = 'edit'
+  if a:mode ==# 'v'
+    let cmd = 'split'
+  elseif a:mode ==# 't'
+    let cmd = 'tabedit'
+  endif
+  return cmd
+endfunction
+
+function! s:apply_mode_to_file(mode, file) abort
+  let cmd = s:mode_to_command(a:mode)
   call iced#system#get('tagstack').add_here()
-  call iced#system#get('ex_cmd').exe(printf('%s %s', cmd, a:file))
+  call iced#system#get('ex_cmd').exe(printf(':%s %s', cmd, a:file))
 endfunction
 
 " iced#nrepl#navigate#open_ns {{{
@@ -327,14 +342,7 @@ function! s:jump(base_symbol, jump_cmd, resp) abort
     endif
   endif
 
-  call iced#util#add_curpos_to_jumplist()
-  if expand('%:p') !=# path
-    call iced#system#get('ex_cmd').exe(printf(':keepjumps %s %s', a:jump_cmd, path))
-  endif
-  call cursor(line, column)
-  normal! zz
-
-  redraw!
+  call s:raw_jump(a:jump_cmd, path, line, column)
 endfunction
 " }}}
 
@@ -361,16 +369,25 @@ function! s:set_xref_resp_to_quickfix(key, resp) abort
   endif
 
   let xrefs = copy(a:resp[a:key])
-  call filter(xrefs, {_, v -> filereadable(v['file'])})
-  call map(xrefs, {_, v -> {
-        \ 'filename': v['file'],
-        \ 'text': (has_key(v, 'doc') ? printf('%s: %s', v['name'], v['doc']) : v['name']),
-        \ 'lnum': v['line'],
-        \ }})
-  if empty(xrefs) | return iced#message#info('not_found') | endif
 
-  call iced#system#get('quickfix').setloclist(win_getid(), xrefs)
-  call iced#system#get('ex_cmd').silent_exe(':lwindow')
+  if len(xrefs) == 1
+    let xref = xrefs[0]
+    let file = get(xref, 'file', '')
+    if filereadable(file)
+      call s:raw_jump('edit', file, get(xref, 'line', 1), 1)
+    endif
+  else
+    call filter(xrefs, {_, v -> filereadable(v['file'])})
+    call map(xrefs, {_, v -> {
+          \ 'filename': v['file'],
+          \ 'text': (has_key(v, 'doc') ? printf('%s: %s', v['name'], v['doc']) : v['name']),
+          \ 'lnum': v['line'],
+          \ }})
+    if empty(xrefs) | return iced#message#info('not_found') | endif
+
+    call iced#system#get('quickfix').setloclist(win_getid(), xrefs)
+    call iced#system#get('ex_cmd').silent_exe(':lwindow')
+  endif
 endfunction
 
 let s:fn_refs_callback = function('s:set_xref_resp_to_quickfix', ['fn-refs'])
