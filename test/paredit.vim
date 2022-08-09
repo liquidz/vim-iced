@@ -265,7 +265,7 @@ function! s:suite.get_top_list_in_comment_test() abort
   call s:assert.equals(res['code'], "(foo\n (bar))")
   call s:buf.stop_dummy()
 
-  " the begining of the form
+  " the beginning of the form
   call s:buf.start_dummy([
        \ '(dummy)',
        \ '',
