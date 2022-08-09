@@ -267,7 +267,7 @@ endfunction
 function! s:select_current_top_list() abort
   let current_line = line('.')
   " Search nearest top form
-  let start_line = search('^\S', 'bW')
+  let start_line = search('^\S', 'bcW')
   " Move to first opening parenthesis
   call search('(', 'cW')
   " WARN: `normal! %` may be move to closing parenthesis in comments.
