@@ -3,6 +3,7 @@ set cpoptions&vim
 
 let s:component_cache = {}
 let s:nvim = has('nvim')
+let s:vim9 = has('patch-9.0.181')
 
 let s:org_system_map = {
       \ 'vim_bencode':  {'start': 'iced#component#bencode#vim#start'},
@@ -30,8 +31,10 @@ let s:org_system_map = {
       \                  'requires': ['popup_config']},
       \ 'virtual_text': (s:nvim ? {'start': 'iced#component#virtual_text#neovim#start',
       \                            'requires': ['timer']}
-      \                         : {'start': 'iced#component#virtual_text#vim#start',
-      \                            'requires': ['popup', 'ex_cmd']}),
+      \                         : (s:vim9 ? {'start': 'iced#component#virtual_text#vim9#start',
+      \                                      'requires': ['timer']}
+      \                                   : {'start': 'iced#component#virtual_text#vim#start',
+      \                                      'requires': ['popup', 'ex_cmd']})),
       \ 'notify':       {'start': 'iced#component#notify#start',
       \                  'requires': ['popup', 'timer']},
       \ 'installer':    {'start': 'iced#component#installer#start',
