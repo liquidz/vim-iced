@@ -15,6 +15,7 @@ function! s:vt.set(text, ...) abort
     call prop_type_add(self.textprop_type, {'highlight': get(opt, 'highlight', 'Comment')})
   endif
 
+  call prop_clear(line)
   call prop_add(line, 0, {
         \ 'type': self.textprop_type,
         \ 'text': printf(' %s', a:text),
