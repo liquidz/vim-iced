@@ -64,19 +64,25 @@ function! s:vt.set(text, ...) abort
   " To mask first 2 chars (:h popup-mask)
   let texts = map(texts, {_, v -> printf('  %s', v)})
 
-  call self.inc_textprop_id()
-  call prop_add(line('.'), col('$'), {
-        \ 'id': self.textprop_id,
-        \ 'type': s:textprop_type,
-        \ })
-
+  let align = get(opt, 'align', 'after')
   let popup_opts = {
         \ 'iced_context': {'last_col': col},
-        \ 'textprop': s:textprop_type,
-        \ 'textpropid': self.textprop_id,
         \ 'highlight': get(opt, 'highlight', 'Comment'),
         \ 'mask': [[1, 2, 1, 1]],
         \ }
+  if align ==# 'right'
+    let popup_opts['col'] = 'right'
+  else
+    call self.inc_textprop_id()
+    call prop_add(line('.'), col('$'), {
+          \ 'id': self.textprop_id,
+          \ 'type': s:textprop_type,
+          \ })
+
+    let popup_opts['textprop'] = s:textprop_type
+    let popup_opts['textpropid'] = self.textprop_id
+  endif
+
   if get(opt, 'auto_clear', v:false)
     let popup_opts['moved'] = 'any'
     let popup_opts['auto_close'] = v:false
@@ -109,6 +115,10 @@ endfunction
 
 function! s:vt.clear(...) abort
   call prop_clear(1, line('$'), {'type': s:textprop_type})
+
+  for winid in values(self.winids)
+    call self.popup.close(winid)
+  endfor
   let self.winids = {}
 endfunction
 
