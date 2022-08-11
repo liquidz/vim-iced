@@ -107,16 +107,18 @@ function! iced#nrepl#eval#out(resp, ...) abort
       let virtual_text_opt['highlight'] = g:iced#eval#popup_highlight
       let virtual_text_opt['align'] = g:iced#eval#popup_align
 
+      let is_right_aligned = (g:iced#eval#popup_align ==# 'right')
+
       if g:iced#eval#keep_inline_result
         let virtual_text_opt['auto_clear'] = v:false
       else
         let virtual_text_opt['auto_clear'] = v:true
       endif
-      let virtual_text_opt['indent'] = 3 " len('=> ')
 
-      call iced#system#get('virtual_text').set(
-            \ printf('=> %s', value),
-            \ virtual_text_opt)
+      let text = is_right_aligned ? value : printf('=> %s', value)
+      let virtual_text_opt['indent'] = is_right_aligned ? 0 : 3 " len('=> ')
+
+      call iced#system#get('virtual_text').set(text, virtual_text_opt)
     endif
   endif
 
