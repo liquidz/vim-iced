@@ -1,6 +1,8 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+let s:working_spinners = {}
+
 function! s:parse_error(err) abort
   " Clojure 1.9 or above
   let err = matchstr(a:err, ', compiling:(.\+:\d\+:\d\+)')
@@ -92,8 +94,41 @@ function! s:print_stack_trace(resp) abort
   endif
 endfunction
 
+function! s:line_uniq_key() abort
+  return printf('%d-%d', bufnr('%'), line('.'))
+endfunction
+
+function! s:start_spinner__spinner(uniq_key, ...) abort
+  let opt = get(a:, 1, {})
+  let line = get(opt, 'line', line('.'))
+  let idx = get(opt, 'index', 0)
+  let idx = idx >= len(g:iced#eval#popup_spinner_texts) ? 0 : idx
+
+  if has_key(s:working_spinners, a:uniq_key)
+    call iced#system#get('virtual_text').set(g:iced#eval#popup_spinner_texts[idx], {
+          \ 'highlight': g:iced#eval#popup_highlight,
+          \ 'align': g:iced#eval#popup_align,
+          \ 'line': line,
+          \ 'auto_clear': v:false,
+          \ 'indent': 0,
+          \ })
+
+    return iced#system#get('timer').start(100, {-> s:start_spinner__spinner(a:uniq_key, {'index': idx + 1, 'line': line})})
+  endif
+endfunction
+
+function! s:start_spinner(uniq_key) abort
+  let s:working_spinners[a:uniq_key] = v:true
+  return iced#system#get('timer').start(200, {-> s:start_spinner__spinner(a:uniq_key)})
+endfunction
+
 function! iced#nrepl#eval#out(resp, ...) abort
   let opt = get(a:, 1, {})
+
+  if has_key(opt, 'spinner_key')
+    unlet s:working_spinners[opt['spinner_key']]
+  endif
+
   if has_key(a:resp, 'value')
     if get(opt, 'verbose', v:true)
       let value = a:resp['value']
@@ -105,6 +140,7 @@ function! iced#nrepl#eval#out(resp, ...) abort
 
       let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
       let virtual_text_opt['highlight'] = g:iced#eval#popup_highlight
+      let virtual_text_opt['line'] = get(opt, 'line', line('.'))
       let virtual_text_opt['align'] = g:iced#eval#popup_align
 
       let is_right_aligned = (g:iced#eval#popup_align ==# 'right')
@@ -156,9 +192,12 @@ function! iced#nrepl#eval#code(code, ...) abort
   let view = winsaveview()
   let reg_save = @@
 
+  let spinner_key = s:line_uniq_key()
   let code = iced#nrepl#eval#normalize_code(a:code)
   let out_opt = copy(opt)
   let out_opt['code'] = code
+  let out_opt['line'] = line('.')
+  let out_opt['spinner_key'] = spinner_key
 
   let Callback = get(opt, 'callback', {resp -> iced#nrepl#eval#out(resp, out_opt)})
   if has_key(opt, 'callback')
@@ -173,6 +212,7 @@ function! iced#nrepl#eval#code(code, ...) abort
   endif
 
   try
+    call s:start_spinner(spinner_key)
     return iced#promise#call('iced#nrepl#eval', [code, opt])
           \.then(Callback)
   finally
