@@ -16,6 +16,8 @@ function! s:vt.set(text, ...) abort
   let line = get(opt, 'line', line('.') -1)
   let hl = get(opt, 'highlight', 'Normal')
   let align = get(opt, 'align', 'after')
+
+  call nvim_buf_clear_namespace(buf, self.ns, line, line + 1)
   call nvim_buf_set_extmark(buf, self.ns, line, 0, {
         \ 'virt_text': [[a:text, hl]],
         \ 'virt_text_pos': s:text_align_to_virt_text_pos(align)
