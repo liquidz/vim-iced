@@ -105,6 +105,8 @@ function! iced#nrepl#eval#out(resp, ...) abort
 
       let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
       let virtual_text_opt['highlight'] = g:iced#eval#popup_highlight
+      let virtual_text_opt['align'] = g:iced#eval#popup_align
+
       if g:iced#eval#keep_inline_result
         let virtual_text_opt['auto_clear'] = v:false
       else
