@@ -113,7 +113,9 @@ function! s:start_spinner__spinner(uniq_key, ...) abort
           \ 'indent': 0,
           \ })
 
-    return iced#system#get('timer').start(100, {-> s:start_spinner__spinner(a:uniq_key, {'index': idx + 1, 'line': line})})
+    return iced#system#get('timer').start(
+          \ g:iced#eval#popup_spinner_interval,
+          \ {-> s:start_spinner__spinner(a:uniq_key, {'index': idx + 1, 'line': line})})
   endif
 endfunction
 
