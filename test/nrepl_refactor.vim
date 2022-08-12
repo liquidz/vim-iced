@@ -78,33 +78,6 @@ function! s:suite.clean_ns_test() abort
 endfunction
 " }}}
 
-" thread_first/last {{{
-function! s:thread_relay(msg) abort
-  if a:msg['op'] ==# 'iced-refactor-thread-first'
-    return {'status': ['done'], 'code': '(thread first refactored)'}
-  elseif a:msg['op'] ==# 'iced-refactor-thread-last'
-    return {'status': ['done'], 'code': '(thread last refactored)'}
-  endif
-  return {'status': ['done']}
-endfunction
-
-function! s:suite.thread_first_test() abort
-  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:thread_relay')})
-  call s:buf.start_dummy(['(foo (bar (baz 1) 2)|)'])
-  call iced#nrepl#refactor#thread_first()
-  call s:assert.equals(s:buf.get_texts(), '(thread first refactored)')
-  call s:buf.stop_dummy()
-endfunction
-
-function! s:suite.thread_last_test() abort
-  call s:ch.mock({'status_value': 'open', 'relay': funcref('s:thread_relay')})
-  call s:buf.start_dummy(['(foo (bar (baz 1) 2)|)'])
-  call iced#nrepl#refactor#thread_last()
-  call s:assert.equals(s:buf.get_texts(), '(thread last refactored)')
-  call s:buf.stop_dummy()
-endfunction
-" }}}
-
 " add_arity {{{
 function! s:add_arity_relay(msg) abort
   if a:msg['op'] ==# 'iced-format-code-with-indents'

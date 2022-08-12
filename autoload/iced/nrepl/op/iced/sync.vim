@@ -43,27 +43,5 @@ function! iced#nrepl#op#iced#sync#calculate_indent_level(code, line_num, alias_m
         \ })
 endfunction
 
-function! iced#nrepl#op#iced#sync#refactor_thread_first(code) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-
-  return iced#nrepl#sync#send({
-        \ 'id': iced#nrepl#id(),
-        \ 'op': 'iced-refactor-thread-first',
-        \ 'session': iced#nrepl#current_session(),
-        \ 'code': a:code,
-        \ })
-endfunction
-
-function! iced#nrepl#op#iced#sync#refactor_thread_last(code) abort
-  if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
-
-  return iced#nrepl#sync#send({
-        \ 'id': iced#nrepl#id(),
-        \ 'op': 'iced-refactor-thread-last',
-        \ 'session': iced#nrepl#current_session(),
-        \ 'code': a:code,
-        \ })
-endfunction
-
 let &cpo = s:save_cpo
 unlet s:save_cpo

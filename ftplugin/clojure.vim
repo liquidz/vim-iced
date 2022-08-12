@@ -165,8 +165,6 @@ command!          IcedCleanNs               call iced#nrepl#refactor#clean_ns()
 command!          IcedCleanAll              call iced#nrepl#refactor#clean_all()
 command! -nargs=? IcedAddMissing            call iced#nrepl#refactor#add_missing_ns(<q-args>)
 command! -nargs=? IcedAddNs                 call iced#nrepl#refactor#add_ns(<q-args>)
-command!          IcedThreadFirst           call iced#nrepl#refactor#thread_first()
-command!          IcedThreadLast            call iced#nrepl#refactor#thread_last()
 command!          IcedExtractFunction       call iced#nrepl#refactor#extract_function()
 command!          IcedAddArity              call iced#nrepl#refactor#add_arity()
 command!          IcedMoveToLet             call iced#let#move_to_let()
@@ -288,8 +286,6 @@ nnoremap <silent> <Plug>(iced_clean_ns)                 :<C-u>IcedCleanNs<CR>
 nnoremap <silent> <Plug>(iced_clean_all)                :<C-u>IcedCleanAll<CR>
 nnoremap <silent> <Plug>(iced_add_missing)              :<C-u>IcedAddMissing<CR>
 nnoremap <silent> <Plug>(iced_add_ns)                   :<C-u>IcedAddNs<CR>
-nnoremap <silent> <Plug>(iced_thread_first)             :<C-u>IcedThreadFirst<CR>
-nnoremap <silent> <Plug>(iced_thread_last)              :<C-u>IcedThreadLast<CR>
 nnoremap <silent> <Plug>(iced_extract_function)         :<C-u>IcedExtractFunction<CR>
 nnoremap <silent> <Plug>(iced_add_arity)                :<C-u>IcedAddArity<CR>
 nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
@@ -429,8 +425,6 @@ function! s:default_key_mappings() abort
   call s:define_mapping('nmap', '<Leader>rca', '<Plug>(iced_clean_all)')
   call s:define_mapping('nmap', '<Leader>ram', '<Plug>(iced_add_missing)')
   call s:define_mapping('nmap', '<Leader>ran', '<Plug>(iced_add_ns)')
-  call s:define_mapping('nmap', '<Leader>rtf', '<Plug>(iced_thread_first)')
-  call s:define_mapping('nmap', '<Leader>rtl', '<Plug>(iced_thread_last)')
   call s:define_mapping('nmap', '<Leader>ref', '<Plug>(iced_extract_function)')
   call s:define_mapping('nmap', '<Leader>raa', '<Plug>(iced_add_arity)')
   call s:define_mapping('nmap', '<Leader>rml', '<Plug>(iced_move_to_let)')
