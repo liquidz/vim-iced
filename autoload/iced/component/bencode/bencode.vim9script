@@ -1,0 +1,132 @@
+if !has('vim9script') | finish | endif
+vim9script
+
+def EncodeString(s: string): string
+  return printf('%d:%s', strlen(s), s)
+enddef
+
+def EncodeNumber(i: number): string
+  return printf('i%de', i)
+enddef
+
+def EncodeList(coll: list<any>): string
+  var result: list<string> = []
+  for x in coll
+    add(result, Encode(x))
+  endfor
+  return printf('l%se', join(result, ''))
+enddef
+
+def EncodeDictionary(dict: dict<any>): string
+  var result: list<string> = []
+  for k in keys(dict)
+    add(result, Encode(k))
+    add(result, Encode(dict[k]))
+  endfor
+  return printf('d%se', join(result, ''))
+enddef
+
+export def Encode(x: any): string
+  const t = type(x)
+  if t == v:t_string
+    return EncodeString(x)
+  elseif t == v:t_number
+    return EncodeNumber(x)
+  elseif t == v:t_list
+    return EncodeList(x)
+  elseif t == v:t_dict
+    return EncodeDictionary(x)
+  elseif t == 7 # v:none or v:null
+    return EncodeString('')
+  endif
+  return ''
+enddef
+
+def DecodeString(s: string): dict<any>
+  const i = stridx(s, ':')
+  if i == -1
+     throw 'Failed to parse string token'
+  endif
+  const len = str2nr(strpart(s, 0, i))
+  return {'value': strpart(s, i + 1, len), 'rest': strpart(s, i + len + 1)}
+enddef
+
+def DecodeNumber(s: string): dict<any>
+  const i = stridx(s, 'e')
+  if i == -1
+    throw 'Failed to parse integer token'
+  endif
+  return {'value': str2nr(strpart(s, 1, i - 1)), 'rest': strpart(s, i + 1)}
+enddef
+
+def DecodeList(s: string): dict<any>
+  var result: list<any> = []
+  var tmp = strpart(s, 1)
+
+  while tmp[0] != 'e'
+    const decoded = DecodeRaw(tmp)
+    add(result, decoded.value)
+    tmp = trim(decoded.rest)
+  endwhile
+
+  return {'value': result, 'rest': strpart(tmp, 1)}
+enddef
+
+def DecodeDictionary(s: string): dict<any>
+  var result: dict<any> = {}
+  var tmp = strpart(s, 1)
+
+  while tmp[0] != 'e'
+    const k = DecodeRaw(tmp)
+    const v = DecodeRaw(trim(k.rest))
+    result[k.value] = v.value
+    tmp = trim(v.rest)
+  endwhile
+
+  return {'value': result, 'rest': strpart(tmp, 1)}
+enddef
+
+def DecodeRaw(s: string): dict<any>
+  const c = s[0]
+  var result: dict<any> = {}
+
+  if c == 'i'
+    result = DecodeNumber(s)
+  elseif c =~ '[0-9]'
+    result = DecodeString(s)
+  elseif c == 'l'
+    result = DecodeList(s)
+  elseif c == 'd'
+    result = DecodeDictionary(s)
+  else
+    throw 'Failed to parse bencode.'
+  endif
+
+  return result
+enddef
+
+export def Decode(s: string): any
+  var result: list<any> = []
+  var decoding: bool = true
+  var tmp = s
+
+  while decoding
+    const decoded = DecodeRaw(tmp)
+    if ! has_key(decoded, 'value')
+      decoding = false
+    else
+      add(result, decoded.value)
+      tmp = trim(decoded.rest)
+
+      if tmp == ''
+        decoding = false
+      endif
+    endif
+  endwhile
+
+  if len(result) == 1
+    return result[0]
+  endif
+  return result
+enddef
+# vim:ft=vim
