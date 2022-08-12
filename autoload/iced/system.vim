@@ -7,8 +7,9 @@ let s:vim9 = has('patch-9.0.181')
 
 let s:org_system_map = {
       \ 'vim_bencode':  {'start': 'iced#component#bencode#vim#start'},
-      \ 'bencode':      {'start': 'iced#component#bencode#start',
-      \                  'requires': ['vim_bencode']},
+      \ 'bencode':      (s:vim9 ? {'start': 'iced#component#bencode#vim9#start'}
+      \                         : {'start': 'iced#component#bencode#start',
+      \                            'requires': ['vim_bencode']}),
       \ 'channel':      {'start': (s:nvim ? 'iced#component#channel#neovim#start'
       \                                   : 'iced#component#channel#vim#start')},
       \ 'ex_cmd':       {'start': 'iced#component#ex_cmd#start'},
