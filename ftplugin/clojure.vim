@@ -166,7 +166,6 @@ command!          IcedCleanAll              call iced#nrepl#refactor#clean_all()
 command! -nargs=? IcedAddMissing            call iced#nrepl#refactor#add_missing_ns(<q-args>)
 command! -nargs=? IcedAddNs                 call iced#nrepl#refactor#add_ns(<q-args>)
 command!          IcedAddArity              call iced#nrepl#refactor#add_arity()
-command!          IcedMoveToLet             call iced#let#move_to_let()
 command! -nargs=? IcedRenameSymbol          call iced#nrepl#refactor#rename_symbol(<q-args>)
 command!          IcedYankNsName            call iced#nrepl#ns#yank_name()
 
@@ -286,7 +285,6 @@ nnoremap <silent> <Plug>(iced_clean_all)                :<C-u>IcedCleanAll<CR>
 nnoremap <silent> <Plug>(iced_add_missing)              :<C-u>IcedAddMissing<CR>
 nnoremap <silent> <Plug>(iced_add_ns)                   :<C-u>IcedAddNs<CR>
 nnoremap <silent> <Plug>(iced_add_arity)                :<C-u>IcedAddArity<CR>
-nnoremap <silent> <Plug>(iced_move_to_let)              :<C-u>IcedMoveToLet<CR>
 nnoremap <silent> <Plug>(iced_rename_symbol)            :<C-u>IcedRenameSymbol<CR>
 nnoremap <silent> <Plug>(iced_yank_ns_name)             :<C-u>IcedYankNsName<CR>
 
@@ -424,7 +422,6 @@ function! s:default_key_mappings() abort
   call s:define_mapping('nmap', '<Leader>ram', '<Plug>(iced_add_missing)')
   call s:define_mapping('nmap', '<Leader>ran', '<Plug>(iced_add_ns)')
   call s:define_mapping('nmap', '<Leader>raa', '<Plug>(iced_add_arity)')
-  call s:define_mapping('nmap', '<Leader>rml', '<Plug>(iced_move_to_let)')
   call s:define_mapping('nmap', '<Leader>rrs', '<Plug>(iced_rename_symbol)')
 
   "" Help/Document (<Leader>h)
