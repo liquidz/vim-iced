@@ -1,0 +1,22 @@
+{:lib com.github.liquidz/vim-iced
+ :version "3.10.{{git/commit-count}}"
+ :documents [{:file "doc/vim-iced.txt"
+              :match "^Version: "
+              :action :replace
+              :text "Version: {{version}}"}
+             {:file "CHANGELOG.adoc"
+              :match "Unreleased"
+              :action :append-after
+              :text "\n== {{version}} ({{now/yyyy}}-{{now/mm}}-{{now/dd}})"}
+             {:file "ftplugin/clojure.vim"
+              :match "s:iced_major ="
+              :action :replace
+              :text "let s:iced_major = {{version/major}}"}
+             {:file "ftplugin/clojure.vim"
+              :match "s:iced_minor ="
+              :action :replace
+              :text "let s:iced_minor = {{version/minor}}"}
+             {:file "ftplugin/clojure.vim"
+              :match "s:iced_patch ="
+              :action :replace
+              :text "let s:iced_patch = {{version/patch}}"}]}
