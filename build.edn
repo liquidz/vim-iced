@@ -19,4 +19,5 @@
              {:file "ftplugin/clojure.vim"
               :match "s:iced_patch ="
               :action :replace
-              :text "let s:iced_patch = {{version/patch}}"}]}
+              :text "let s:iced_patch = {{version/patch}}"}]
+ :github-actions? true}

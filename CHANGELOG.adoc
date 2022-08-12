@@ -1,8 +1,6 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
-
-== 3.10.3055 (2022-08-12)
 // {{{
 === Changed
 * Updated to use https://github.com/liquidz/build.edn[build.edn] for releasing workflow.
