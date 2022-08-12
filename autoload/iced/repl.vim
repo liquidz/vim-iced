@@ -8,6 +8,7 @@ let g:iced#eval#values_to_skip_storing_register = get(g:, 'iced#eval#values_to_s
 let g:iced#eval#popup_highlight = get(g:, 'iced#eval#popup_highlight', 'Comment')
 let g:iced#eval#popup_align = get(g:, 'iced#eval#popup_align', 'after')
 let g:iced#eval#popup_spinner_texts = get(g:, 'iced#eval#popup_spinner_texts', ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'])
+let g:iced#eval#popup_spinner_interval = get(g:, 'iced#eval#popup_spinner_interval', 100)
 let g:iced#repl#babashka_repl_type = get(g:, 'iced#repl#babashka_repl_type', 'nrepl')
 let g:iced#repl#ignore_connected = get(g:, 'iced#repl#ignore_connected', v:false)
 
