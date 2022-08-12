@@ -13,7 +13,8 @@ endfunction
 function! s:vt.set(text, ...) abort
   let opt = get(a:, 1, {})
   let buf = get(opt, 'buffer', bufnr('%'))
-  let line = get(opt, 'line', line('.') -1)
+  let line = get(opt, 'line', '')
+  let line = empty(line) ? line('.') - 1 : line - 1
   let hl = get(opt, 'highlight', 'Normal')
   let align = get(opt, 'align', 'after')
 
