@@ -6,14 +6,6 @@ Following commands are available.
 |===
 | Command | Default key mapping | Description
 
-| {help_html}#%3AIcedThreadFirst[IcedThreadFirst]
-| {plug_iced_thread_first}
-| Convert current outer form to use `->` threading macro.
-
-| {help_html}#%3AIcedThreadLast[IcedThreadLast]
-| {plug_iced_thread_last}
-| Convert current outer form to use `->>` threading macro.
-
 | {help_html}#%3AIcedMoveToLet[IcedMoveToLet]
 | {plug_iced_move_to_let}
 |  Move the form under cursor to nearest `let` binding. +
@@ -22,24 +14,6 @@ If there is no `let` form in current top list, wrap the form with `let`.
 |===
 
 ==== Examples
-
-.IcedThreadFirst
-[source,clojure]
-----
-;; before
-(foo (bar (baz "hello")))
-;; after
-(-> "hello" baz bar foo)
-----
-
-.IcedThreadLast
-[source,clojure]
-----
-;; before
-(foo yy (bar xx "hello"))
-;; after
-(->> "hello" (bar xx) (foo yy))
-----
 
 .IcedMoveToLet (📍 means cursor position, and "bar" is inputed by user)
 [source,clojure]

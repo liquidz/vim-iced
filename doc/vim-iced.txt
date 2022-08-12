@@ -657,8 +657,6 @@ REFACTORING                                              *vim-iced-refactoring*
   - |:IcedCleanNs| (|<Plug>(iced_clean_ns)|)
   - |:IcedCleanAll| (|<Plug>(iced_clean_all)|)
   - |:IcedAddMissing| (|<Plug>(iced_add_missing)|)
-  - |:IcedThreadFirst| (|<Plug>(iced_thread_first)|)
-  - |:IcedThreadLast| (|<Plug>(iced_thread_last)|)
   - |:IcedExtractFunction| (|<Plug>(iced_extract_function)|)
   - |:IcedAddArity| (|<Plug>(iced_add_arity)|)
   - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
@@ -1268,24 +1266,6 @@ COMMANDS                                                    *vim-iced-commands*
   Namespaces and its aliases are cached for performance.
   |:IcedClearNsCache| will clear this cache.
 
-                                                             *:IcedThreadFirst*
-:IcedThreadFirst
-  Convert current outer form to use `->` threading macro.
-  E.g. >
-  ;; before
-  (foo (bar (baz "hello")))
-  ;; after
-  (-> "hello" baz bar foo)
-<
-                                                              *:IcedThreadLast*
-:IcedThreadLast
-  Convert current outer form to use `->>` threading macro.
-  E.g. >
-  ;; before
-  (foo yy (bar xx "hello"))
-  ;; after
-  (->> "hello" (bar xx) (foo yy))
-<
                                                          *:IcedExtractFunction*
 :IcedExtractFunction
   Extract the form under cursor as a function.
@@ -1770,14 +1750,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                           *<Plug>(iced_add_ns)*
 <Plug>(iced_add_ns)
   Same as |:IcedAddNs|.
-
-                                                    *<Plug>(iced_thread_first)*
-<Plug>(iced_thread_first)
-  Same as |:IcedThreadFirst|.
-
-                                                     *<Plug>(iced_thread_last)*
-<Plug>(iced_thread_last)
-  Same as |:IcedThreadLast|.
 
                                                 *<Plug>(iced_extract_function)*
 <Plug>(iced_extract_function)
@@ -2632,8 +2604,6 @@ g:iced_enable_default_key_mappings
   n       <Leader>raa  <Plug>(iced_add_arity)
   n       <Leader>ram  <Plug>(iced_add_missing)
   n       <Leader>ran  <Plug>(iced_add_ns)
-  n       <Leader>rtf  <Plug>(iced_thread_first)
-  n       <Leader>rtl  <Plug>(iced_thread_last)
   n       <Leader>ref  <Plug>(iced_extract_function)
   n       <Leader>rml  <Plug>(iced_move_to_let)
   n       <Leader>rrs  <Plug>(iced_rename_symbol)

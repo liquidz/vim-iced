@@ -61,8 +61,6 @@
 :plug_iced_test_rerun_last: <Leader>tl
 :plug_iced_test_spec_check: <Leader>ts
 :plug_iced_test_under_cursor: <Leader>tt
-:plug_iced_thread_first: <Leader>rtf
-:plug_iced_thread_last: <Leader>rtl
 
 // }}}
 
