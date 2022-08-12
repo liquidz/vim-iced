@@ -1,0 +1,50 @@
+name: Tag and Release
+on: workflow_dispatch
+
+jobs:
+  change-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.document.outputs.version }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: 11
+      - uses: DeLaGuardo/setup-clojure@master
+        with:
+          cli: latest
+      - uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: clojure-m2-${{ hashFiles('deps.edn') }}
+      - name: Update and commit version file
+        id: document
+        run: |
+          clojure -T:build update-documents
+          git diff
+          git config --global user.email "github-actions@example.com"
+          git config --global user.name "github-actions"
+          git add -A
+          git commit -m "Update for release [skip ci]" || exit 0
+          git push
+
+  tag-and-release:
+    needs: [change-version]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: git pull origin main
+
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.change-version.outputs.version }}
+          release_name: ${{ needs.change-version.outputs.version }}
+          body: released
+          draft: false
+          prerelease: false
