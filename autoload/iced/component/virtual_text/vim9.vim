@@ -30,13 +30,11 @@ endfunction
 
 function! s:vt.clear(...) abort
   let opt = get(a:, 1, {})
-  let buf = get(opt, 'buffer', bufnr('%'))
-
   if empty(opt)
     call prop_clear(1, line('$'))
   else
-    let line = get(opt, 'line', line('.') -1)
-    call prop_clear(line, line('$'))
+    let line = get(opt, 'line', line('.'))
+    call prop_clear(line, line)
   endif
 endfunction
 
