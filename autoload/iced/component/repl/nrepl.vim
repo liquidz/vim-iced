@@ -6,6 +6,7 @@ let s:nrepl = {
       \ 'disconnect': function('iced#nrepl#disconnect'),
       \ 'env': 'nrepl',
       \ 'eval_code': function('iced#nrepl#eval#code'),
+      \ 'eval_code_isolatedy': function('iced#nrepl#eval#code_isolatedly'),
       \ 'eval_outer_top_list': function('iced#nrepl#eval#outer_top_list'),
       \ 'eval_at_mark': function('iced#repl#eval_at_mark'),
       \ 'eval_last_outer_top_list': function('iced#repl#eval_last_outer_top_list'),
