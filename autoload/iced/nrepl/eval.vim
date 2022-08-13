@@ -100,6 +100,7 @@ endfunction
 
 function! s:start_spinner__spinner(uniq_key, ...) abort
   let opt = get(a:, 1, {})
+  let buffer = get(opt, 'buffer', bufnr('%'))
   let line = get(opt, 'line', line('.'))
   let idx = get(opt, 'index', 0)
   let idx = idx >= len(g:iced#eval#popup_spinner_texts) ? 0 : idx
@@ -108,6 +109,7 @@ function! s:start_spinner__spinner(uniq_key, ...) abort
     call iced#system#get('virtual_text').set(g:iced#eval#popup_spinner_texts[idx], {
           \ 'highlight': g:iced#eval#popup_highlight,
           \ 'align': g:iced#eval#popup_align,
+          \ 'buffer': buffer,
           \ 'line': line,
           \ 'auto_clear': v:false,
           \ 'indent': 0,
@@ -115,7 +117,7 @@ function! s:start_spinner__spinner(uniq_key, ...) abort
 
     return iced#system#get('timer').start(
           \ g:iced#eval#popup_spinner_interval,
-          \ {-> s:start_spinner__spinner(a:uniq_key, {'index': idx + 1, 'line': line})})
+          \ {-> s:start_spinner__spinner(a:uniq_key, {'index': idx + 1, 'buffer': buffer, 'line': line})})
   endif
 endfunction
 
@@ -142,6 +144,7 @@ function! iced#nrepl#eval#out(resp, ...) abort
 
       let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
       let virtual_text_opt['highlight'] = g:iced#eval#popup_highlight
+      let virtual_text_opt['buffer'] = get(opt, 'buffer', bufnr('%'))
       let virtual_text_opt['line'] = get(opt, 'line', line('.'))
       let virtual_text_opt['align'] = g:iced#eval#popup_align
 
@@ -157,6 +160,13 @@ function! iced#nrepl#eval#out(resp, ...) abort
       let virtual_text_opt['indent'] = is_right_aligned ? 0 : 3 " len('=> ')
 
       call iced#system#get('virtual_text').set(text, virtual_text_opt)
+    endif
+  else
+    if get(opt, 'verbose', v:true)
+      call iced#system#get('virtual_text').clear({
+            \ 'buffer': get(opt, 'buffer', bufnr('%')),
+            \ 'line': get(opt, 'line', line('.')),
+            \ })
     endif
   endif
 
@@ -198,6 +208,7 @@ function! iced#nrepl#eval#code(code, ...) abort
   let code = iced#nrepl#eval#normalize_code(a:code)
   let out_opt = copy(opt)
   let out_opt['code'] = code
+  let out_opt['buffer'] = bufnr('%')
   let out_opt['line'] = line('.')
   let out_opt['spinner_key'] = spinner_key
 
