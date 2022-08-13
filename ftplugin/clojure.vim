@@ -216,7 +216,7 @@ nnoremap <silent> <Plug>(iced_jack_in)                  :<C-u>IcedJackIn<CR>
 nnoremap <silent> <Plug>(iced_start_cljs_repl)          :<C-u>IcedStartCljsRepl<CR>
 nnoremap <silent> <Plug>(iced_quit_cljs_repl)           :<C-u>IcedQuitCljsRepl<CR>
 
-nnoremap <silent> <Plug>(iced_eval)                     :<C-u>call iced#operation#setup_eval()<CR>g@
+nnoremap <silent> <Plug>(iced_eval)                     :<C-u>call iced#operation#setup('iced#operation#eval')<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_print)           :<C-u>set opfunc=iced#operation#eval_and_print<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_tap)             :<C-u>set opfunc=iced#operation#eval_and_tap<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_replace)         :<C-u>set opfunc=iced#operation#eval_and_replace<CR>g@
