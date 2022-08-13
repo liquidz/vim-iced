@@ -8,6 +8,7 @@ let s:vt = {
 
 function! s:vt.set(text, ...) abort
   let opt = get(a:, 1, {})
+  let bufnr = get(opt, 'buffer', line('.'))
   let line = get(opt, 'line', line('.'))
   let align = get(opt, 'align', 'after')
 
@@ -15,26 +16,28 @@ function! s:vt.set(text, ...) abort
     call prop_type_add(self.textprop_type, {'highlight': get(opt, 'highlight', 'Comment')})
   endif
 
-  call prop_clear(line)
+  call prop_clear(line, line, {'bufnr': bufnr})
   call prop_add(line, 0, {
         \ 'type': self.textprop_type,
+        \ 'bufnr': bufnr,
         \ 'text': printf(' %s', a:text),
         \ 'text_align': align,
         \ })
 
   if get(opt, 'auto_clear', v:false)
     let time = get(opt, 'clear_time', 3000)
-    call self.timer.start(time, {-> prop_clear(line)})
+    call self.timer.start(time, {-> prop_clear(line, line, {'bufnr': bufnr})})
   endif
 endfunction
 
 function! s:vt.clear(...) abort
   let opt = get(a:, 1, {})
+  let bufnr = get(opt, 'buffer', bufnr('%'))
   if empty(opt)
-    call prop_clear(1, line('$'))
+    call prop_clear(1, line('$'), {'bufnr': bufnr})
   else
     let line = get(opt, 'line', line('.'))
-    call prop_clear(line, line)
+    call prop_clear(line, line, {'bufnr': bufnr})
   endif
 endfunction
 
