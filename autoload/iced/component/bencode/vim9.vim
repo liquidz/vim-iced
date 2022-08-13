@@ -1,8 +1,8 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let script_path = printf('%s/bencode.vim9script', expand('<sfile>:h'))
-import script_path as that
+let s:script_path = printf('%s/bencode.vim9script', expand('<sfile>:h'))
+import s:script_path as that
 let s:bencode = {}
 
 function! s:bencode.encode(v) abort
