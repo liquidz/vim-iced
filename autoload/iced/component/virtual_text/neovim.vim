@@ -37,8 +37,8 @@ function! s:vt.clear(...) abort
   if empty(opt)
     call nvim_buf_clear_namespace(buf, self.ns, 1, line('$'))
   else
-    let line = get(opt, 'line', line('.') -1)
-    call nvim_buf_clear_namespace(buf, self.ns, line, line + 1)
+    let line = get(opt, 'line', line('.') - 1)
+    call nvim_buf_clear_namespace(buf, self.ns, line - 1, line)
   endif
 endfunction
 
