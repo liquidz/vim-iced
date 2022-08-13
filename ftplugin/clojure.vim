@@ -8,6 +8,9 @@ let s:iced_minor = 10
 let s:iced_patch = 3061
 let g:vim_iced_version = s:iced_major * 1000000 + s:iced_minor * 10000 + s:iced_patch
 
+let g:iced_nvim = has('nvim')
+let g:iced_vim9 = has('patch-9.0.181')
+
 let g:vim_iced_home = expand('<sfile>:p:h:h')
 " NOTE: https://github.com/vim/vim/commit/162b71479bd4dcdb3a2ef9198a1444f6f99e6843
 "       Add functions for defining and placing signs.
