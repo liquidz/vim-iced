@@ -36,8 +36,8 @@ function! iced#operation#eval(type) abort
   return s:eval({code -> iced#repl#execute('eval_code', code, opt)})
 endfunction
 
-function! iced#operation#setup_eval() abort
-  let &operatorfunc = 'iced#operation#eval'
+function! iced#operation#setup(func_name) abort
+  let &operatorfunc = a:func_name
   let s:register = v:register
 endfunction
 
