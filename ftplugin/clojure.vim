@@ -94,6 +94,7 @@ command!          IcedQuitCljsRepl          call iced#nrepl#cljs#stop_repl_via_e
 command!          IcedCycleSession          call iced#nrepl#cljs#cycle_session()
 
 command! -nargs=1 IcedEval                  call iced#repl#execute('eval_code', <q-args>, {'ignore_session_validity': v:true, 'ignore_ns': v:true})
+command! -nargs=1 IcedIsolatedEval          call iced#repl#execute('eval_code_isolatedy', <q-args>, {'ignore_session_validity': v:true, 'ignore_ns': v:true})
 command!          IcedEvalNs                call iced#nrepl#eval#ns()
 command! -range   IcedEvalVisual            call iced#nrepl#eval#visual()
 command!          IcedRequire               call iced#repl#execute('load_current_file')
@@ -209,6 +210,7 @@ nnoremap <silent> <Plug>(iced_start_cljs_repl)          :<C-u>IcedStartCljsRepl<
 nnoremap <silent> <Plug>(iced_quit_cljs_repl)           :<C-u>IcedQuitCljsRepl<CR>
 
 nnoremap <silent> <Plug>(iced_eval)                     :<C-u>call iced#operation#setup('iced#operation#eval')<CR>g@
+nnoremap <silent> <Plug>(iced_eval_isolatedly)          :<C-u>call iced#operation#setup('iced#operation#eval_isolatedly')<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_print)           :<C-u>set opfunc=iced#operation#eval_and_print<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_tap)             :<C-u>set opfunc=iced#operation#eval_and_tap<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_replace)         :<C-u>set opfunc=iced#operation#eval_and_replace<CR>g@
@@ -386,6 +388,11 @@ function! s:default_key_mappings() abort
     call s:define_mapping('nmap', '<Leader>ei', '<Plug>(iced_eval)<Plug>(sexp_inner_element)``')
     call s:define_mapping('nmap', '<Leader>ee', '<Plug>(iced_eval)<Plug>(sexp_outer_list)``')
     call s:define_mapping('nmap', '<Leader>et', '<Plug>(iced_eval_outer_top_list)')
+  endif
+
+  if !hasmapto('<Plug>(iced_eval_isolatedly)')
+    call s:define_mapping('nmap', '<Leader>eoi', '<Plug>(iced_eval_isolatedly)<Plug>(sexp_inner_element)``' )
+    call s:define_mapping('nmap', '<Leader>eoe', '<Plug>(iced_eval_isolatedly)<Plug>(sexp_outer_list)``' )
   endif
 
   call s:define_mapping('nmap', '<Leader>ea', '<Plug>(iced_eval_at_mark)')

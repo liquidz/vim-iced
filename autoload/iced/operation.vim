@@ -41,6 +41,14 @@ function! iced#operation#setup(func_name) abort
   let s:register = v:register
 endfunction
 
+function! iced#operation#eval_isolatedly(type) abort
+  let opt = {}
+  if s:register !=# '"'
+    let opt['callback'] = funcref('s:yank_and_out')
+  endif
+  return s:eval({code -> iced#repl#execute('eval_code_isolatedy', code, opt)})
+endfunction
+
 function! s:__eval_and_print(resp) abort
   call iced#nrepl#eval#out(a:resp)
   if has_key(a:resp, 'value')
