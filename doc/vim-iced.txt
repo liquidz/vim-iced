@@ -658,7 +658,6 @@ REFACTORING                                              *vim-iced-refactoring*
   - |:IcedCleanAll| (|<Plug>(iced_clean_all)|)
   - |:IcedAddMissing| (|<Plug>(iced_add_missing)|)
   - |:IcedAddArity| (|<Plug>(iced_add_arity)|)
-  - |:IcedMoveToLet| (|<Plug>(iced_move_to_let)|)
   - |:IcedRenameSymbol| (|<Plug>(iced_rename_symbol)|)
 
   See also:
@@ -1750,10 +1749,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_add_arity)
   Same as |:IcedAddArity|.
 
-                                                     *<Plug>(iced_move_to_let)*
-<Plug>(iced_move_to_let)
-  Same as |:IcedMoveToLet|.
-
                                                      *<Plug>(iced_rename_symbol)*
 <Plug>(iced_rename_symbol)
   Same as |:IcedRenameSymbol|.
@@ -2595,7 +2590,6 @@ g:iced_enable_default_key_mappings
   n       <Leader>raa  <Plug>(iced_add_arity)
   n       <Leader>ram  <Plug>(iced_add_missing)
   n       <Leader>ran  <Plug>(iced_add_ns)
-  n       <Leader>rml  <Plug>(iced_move_to_let)
   n       <Leader>rrs  <Plug>(iced_rename_symbol)
   n       K            <Plug>(iced_document_popup_open)
   n       <Leader>hb   <Plug>(iced_document_open)

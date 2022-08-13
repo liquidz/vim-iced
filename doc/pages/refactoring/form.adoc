@@ -1,28 +1,23 @@
 === Form [[refactoring_form]]
 
-Following commands are available.
+vim-iced is no longer providing refactoring form features. (https://github.com/liquidz/vim-iced/issues/419[#419]).
 
-[cols="30,20,50"]
-|===
-| Command | Default key mapping | Description
+This is because https://clojure-lsp.io/[clojure-lsp] is providing more rich refactoring features currently, and it is enough to use clojure-lsp.
 
-| {help_html}#%3AIcedMoveToLet[IcedMoveToLet]
-| {plug_iced_move_to_let}
-|  Move the form under cursor to nearest `let` binding. +
-If there is no `let` form in current top list, wrap the form with `let`.
-
-|===
-
-==== Examples
-
-.IcedMoveToLet (📍 means cursor position, and "bar" is inputed by user)
-[source,clojure]
+.Example for coc.nvim to reproduce the settings that vim-iced had
+[source,vim]
 ----
-;; before
-(let [foo 1]
-  (📍inc foo))
-;; after
-(let [foo 1
-      bar (inc foo)]
-  bar)
+function! MyCocExecuteCommand(command, extra_args) abort
+  let file = expand('%:p')
+  let uri = (file ==# '' ? '' : printf('file://%s', file))
+  let arguments = extend([uri, line('.') - 1, col('.') - 1], a:extra_args)
+  return CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': a:command, 'arguments': arguments})
+endfunction
+
+nnoremap <Leader>rtf :call MyCocExecuteCommand('thread-first-all', [])<CR>
+nnoremap <Leader>rtl :call MyCocExecuteCommand('thread-last-all', [])<CR>
+nnoremap <Leader>ref :call MyCocExecuteCommand('move-to-let', [input('name: ')])<CR>
+nnoremap <Leader>rml :call MyCocExecuteCommand('extract-function', [input('name: ')])<CR>
 ----
+
+vim-iced does not intend to compete with clojure-lsp, but to complement each other.

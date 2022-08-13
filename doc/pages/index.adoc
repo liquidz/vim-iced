@@ -43,7 +43,6 @@
 :plug_iced_jump_to_let: <Leader>jl
 :plug_iced_macroexpand_1_outer_list: <Leader>em
 :plug_iced_macroexpand_outer_list: <Leader>eM
-:plug_iced_move_to_let: <Leader>rml
 :plug_iced_rename_symbol: <Leader>rrs
 :plug_iced_require: <Leader>eb
 :plug_iced_refresh: <Leader>enr
