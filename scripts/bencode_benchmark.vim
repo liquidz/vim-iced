@@ -1,5 +1,5 @@
 let s:root_dir = expand('<sfile>:h:h')
-let &runtimepath = &runtimepath .. ',' .. s:root_dir
+let &runtimepath = printf('%s,%s', &runtimepath, s:root_dir)
 
 let s:vim8 = iced#component#bencode#vim#start({})
 let s:vim9 = iced#component#bencode#vim9#start({})
@@ -40,7 +40,7 @@ function! s:benchmark(label, f) abort
     call a:f()
   endfor
   let seconds = reltimefloat(reltime(start))
-  echo printf("%s: %f sec", a:label, seconds)
+  echo printf('%s: %f sec', a:label, seconds)
 endfunction
 
 call s:benchmark('Vim8 encode', { -> s:vim8.encode(s:data) })
