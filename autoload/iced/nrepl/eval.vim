@@ -225,7 +225,10 @@ function! iced#nrepl#eval#code(code, ...) abort
   endif
 
   try
-    call s:start_spinner(spinner_key)
+    " NOTE: Spinner is only supported by Vim9/Neovim
+    if g:iced_vim9 || g:iced_nvim
+      call s:start_spinner(spinner_key)
+    endif
     return iced#promise#call('iced#nrepl#eval', [code, opt])
           \.then(Callback)
   finally
