@@ -6,6 +6,7 @@ find . -name "*.vim" \
     | grep -v .vim-themis \
     | grep -v .vim-sexp \
     | grep -v .vimdoc \
+    | grep -v vim9.vim \
     | xargs vint
 if [ $? -ne 0 ]; then
     RESULT=1
