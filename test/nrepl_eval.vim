@@ -56,7 +56,7 @@ function! s:suite.code_test() abort
   let g:iced#eval#keep_inline_result = v:false
   let g:iced#eval#popup_highlight = 'Comment'
   let g:iced#eval#inside_comment = v:false
-  let p =  iced#nrepl#eval#code('(comment (+ 1 2 3))')
+  let p = iced#nrepl#eval#code('(comment (+ 1 2 3))')
   call iced#promise#wait(p)
 
   call s:assert.equals(s:last_evaluated_code, '(comment (+ 1 2 3))')
