@@ -4,6 +4,7 @@ let s:ch = themis#helper('iced_channel')
 let s:ex = themis#helper('iced_ex_cmd')
 let s:job = themis#helper('iced_job')
 let s:holder = themis#helper('iced_holder')
+let s:vt = themis#helper('iced_virtual_text')
 
 function! s:setup() abort
   call iced#nrepl#set_session('clj',  'clj-session')
@@ -11,6 +12,7 @@ function! s:setup() abort
   call s:ex.mock()
   call s:job.mock()
   call s:holder.clear()
+  call s:vt.mock()
   let g:iced#eval#inside_comment = v:true
 endfunction
 
