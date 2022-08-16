@@ -1,6 +1,8 @@
 let s:suite  = themis#suite('iced.di.bencode.vim9.vim')
 let s:assert = themis#helper('assert')
 
+if has('nvim') | finish | endif
+
 function! s:assert_parse_failure(f) abort
   try
     call a:f()
