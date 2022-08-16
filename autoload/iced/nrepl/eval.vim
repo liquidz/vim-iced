@@ -128,9 +128,10 @@ endfunction
 
 function! iced#nrepl#eval#out(resp, ...) abort
   let opt = get(a:, 1, {})
+  let spinner_key = get(opt, 'spinner_key', '')
 
-  if has_key(opt, 'spinner_key')
-    unlet s:working_spinners[opt['spinner_key']]
+  if has_key(opt, 'spinner_key') && has_key(s:working_spinners, spinner_key)
+    unlet s:working_spinners[spinner_key]
   endif
 
   if has_key(a:resp, 'value')
