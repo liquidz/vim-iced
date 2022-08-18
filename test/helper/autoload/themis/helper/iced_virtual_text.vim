@@ -2,6 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:helper = {
+      \ 'env': 'vim8',
       \ 'last_args': {},
       \ }
 
