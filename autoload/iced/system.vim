@@ -3,17 +3,20 @@ set cpoptions&vim
 
 let s:component_cache = {}
 
+let s:nvim = has('nvim')
+let s:vim9 = has('patch-9.0.181')
+
 let s:org_system_map = {
       \ 'vim_bencode':  {'start': 'iced#component#bencode#vim#start'},
-      \ 'bencode':      (g:iced_vim9 ? {'start': 'iced#component#bencode#vim9#start'}
-      \                              : {'start': 'iced#component#bencode#start',
-      \                                 'requires': ['vim_bencode']}),
-      \ 'channel':      {'start': (g:iced_nvim ? 'iced#component#channel#neovim#start'
-      \                                        : 'iced#component#channel#vim#start')},
+      \ 'bencode':      (s:vim9 ? {'start': 'iced#component#bencode#vim9#start'}
+      \                         : {'start': 'iced#component#bencode#start',
+      \                            'requires': ['vim_bencode']}),
+      \ 'channel':      {'start': (s:nvim ? 'iced#component#channel#neovim#start'
+      \                                   : 'iced#component#channel#vim#start')},
       \ 'ex_cmd':       {'start': 'iced#component#ex_cmd#start'},
       \ 'io':           {'start': 'iced#component#io#start'},
-      \ 'job':          {'start': (g:iced_nvim ? 'iced#component#job#neovim#start'
-      \                                        : 'iced#component#job#vim#start')},
+      \ 'job':          {'start': (s:nvim ? 'iced#component#job#neovim#start'
+      \                                   : 'iced#component#job#vim#start')},
       \ 'job_out':      {'start': 'iced#component#job#out#start',
       \                  'requires': ['job']},
       \ 'quickfix':     {'start': 'iced#component#quickfix#start'},
@@ -25,15 +28,15 @@ let s:org_system_map = {
       \ 'future':       {'start': 'iced#component#future#timer#start',
       \                  'requires': ['timer']},
       \ 'popup_config': {'start': 'iced#component#popup#config#start'},
-      \ 'popup':        {'start': (g:iced_nvim ? 'iced#component#popup#neovim#start'
-      \                                        : 'iced#component#popup#vim#start'),
+      \ 'popup':        {'start': (s:nvim ? 'iced#component#popup#neovim#start'
+      \                                   : 'iced#component#popup#vim#start'),
       \                  'requires': ['popup_config']},
-      \ 'virtual_text': (g:iced_nvim ? {'start': 'iced#component#virtual_text#neovim#start',
-      \                                 'requires': ['timer']}
-      \                              : (g:iced_vim9 ? {'start': 'iced#component#virtual_text#vim9#start',
-      \                                                'requires': ['timer']}
-      \                                             : {'start': 'iced#component#virtual_text#vim#start',
-      \                                                'requires': ['popup', 'ex_cmd']})),
+      \ 'virtual_text': (s:nvim ? {'start': 'iced#component#virtual_text#neovim#start',
+      \                            'requires': ['timer']}
+      \                         : (s:vim9 ? {'start': 'iced#component#virtual_text#vim9#start',
+      \                                      'requires': ['timer']}
+      \                                   : {'start': 'iced#component#virtual_text#vim#start',
+      \                                      'requires': ['popup', 'ex_cmd']})),
       \ 'notify':       {'start': 'iced#component#notify#start',
       \                  'requires': ['popup', 'timer']},
       \ 'installer':    {'start': 'iced#component#installer#start',
