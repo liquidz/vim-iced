@@ -2,6 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:vt = {
+      \ 'env': 'neovim',
       \ 'timer': '',
       \ 'ns': nvim_create_namespace('iced_virtual_text_namespace'),
       \ }

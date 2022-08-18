@@ -2,6 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:vt = {
+      \ 'env': 'vim8',
       \ 'popup': '',
       \ 'ex_cmd': '',
       \ 'textprop_id': 0,

@@ -2,6 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:vt = {
+      \ 'env': 'vim9',
       \ 'timer': '',
       \ 'textprop_type': 'iced_virtual_text',
       \ }
