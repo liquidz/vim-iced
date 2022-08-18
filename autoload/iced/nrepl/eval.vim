@@ -1,8 +1,6 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-let s:working_spinners = {}
-
 function! s:parse_error(err) abort
   " Clojure 1.9 or above
   let err = matchstr(a:err, ', compiling:(.\+:\d\+:\d\+)')
@@ -98,40 +96,12 @@ function! s:line_uniq_key() abort
   return printf('%d-%d', bufnr('%'), line('.'))
 endfunction
 
-function! s:start_spinner__spinner(uniq_key, ...) abort
-  let opt = get(a:, 1, {})
-  let buffer = get(opt, 'buffer', bufnr('%'))
-  let line = get(opt, 'line', line('.'))
-  let idx = get(opt, 'index', 0)
-  let idx = idx >= len(g:iced#eval#popup_spinner_texts) ? 0 : idx
-
-  if has_key(s:working_spinners, a:uniq_key)
-    call iced#system#get('virtual_text').set(g:iced#eval#popup_spinner_texts[idx], {
-          \ 'highlight': g:iced#eval#popup_highlight,
-          \ 'align': g:iced#eval#popup_align,
-          \ 'buffer': buffer,
-          \ 'line': line,
-          \ 'auto_clear': v:false,
-          \ 'indent': 0,
-          \ })
-
-    return iced#system#get('timer').start(
-          \ g:iced#eval#popup_spinner_interval,
-          \ {-> s:start_spinner__spinner(a:uniq_key, {'index': idx + 1, 'buffer': buffer, 'line': line})})
-  endif
-endfunction
-
-function! s:start_spinner(uniq_key) abort
-  let s:working_spinners[a:uniq_key] = v:true
-  return iced#system#get('timer').start(200, {-> s:start_spinner__spinner(a:uniq_key)})
-endfunction
-
 function! iced#nrepl#eval#out(resp, ...) abort
   let opt = get(a:, 1, {})
-  let spinner_key = get(opt, 'spinner_key', '')
 
-  if has_key(opt, 'spinner_key') && has_key(s:working_spinners, spinner_key)
-    unlet s:working_spinners[spinner_key]
+  let spinner_key = get(opt, 'spinner_key', '')
+  if ! empty(spinner_key)
+    call iced#system#get('spinner').stop(spinner_key)
   endif
 
   if has_key(a:resp, 'value')
@@ -143,24 +113,28 @@ function! iced#nrepl#eval#out(resp, ...) abort
         call iced#util#store_and_slide_registers(value)
       endif
 
-      let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
-      let virtual_text_opt['highlight'] = g:iced#eval#popup_highlight
-      let virtual_text_opt['buffer'] = get(opt, 'buffer', bufnr('%'))
-      let virtual_text_opt['line'] = get(opt, 'line', line('.'))
-      let virtual_text_opt['align'] = g:iced#eval#popup_align
+      " Ignoring session validity means that this evaluation does not related to current buffer.
+      " Thus the evaluation result does not related to current cursor position.
+      if !  get(opt, 'ignore_session_validity', v:false)
+        let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
+        let virtual_text_opt['highlight'] = g:iced#eval#popup_highlight
+        let virtual_text_opt['buffer'] = get(opt, 'buffer', bufnr('%'))
+        let virtual_text_opt['line'] = get(opt, 'line', line('.'))
+        let virtual_text_opt['align'] = g:iced#eval#popup_align
 
-      let is_right_aligned = (g:iced#eval#popup_align ==# 'right')
+        let is_right_aligned = (g:iced#eval#popup_align ==# 'right')
 
-      if g:iced#eval#keep_inline_result
-        let virtual_text_opt['auto_clear'] = v:false
-      else
-        let virtual_text_opt['auto_clear'] = v:true
+        if g:iced#eval#keep_inline_result
+          let virtual_text_opt['auto_clear'] = v:false
+        else
+          let virtual_text_opt['auto_clear'] = v:true
+        endif
+
+        let text = is_right_aligned ? value : printf('=> %s', value)
+        let virtual_text_opt['indent'] = is_right_aligned ? 0 : 3 " len('=> ')
+
+        call iced#system#get('virtual_text').set(text, virtual_text_opt)
       endif
-
-      let text = is_right_aligned ? value : printf('=> %s', value)
-      let virtual_text_opt['indent'] = is_right_aligned ? 0 : 3 " len('=> ')
-
-      call iced#system#get('virtual_text').set(text, virtual_text_opt)
     endif
   else
     if get(opt, 'verbose', v:true)
@@ -199,7 +173,8 @@ endfunction
 
 function! iced#nrepl#eval#code(code, ...) abort
   let opt = get(a:, 1, {})
-  if ! get(opt, 'ignore_session_validity', v:false) && ! iced#nrepl#check_session_validity()
+  let does_ignore_session_validity = get(opt, 'ignore_session_validity', v:false)
+  if ! does_ignore_session_validity && ! iced#nrepl#check_session_validity()
     return
   endif
   let view = winsaveview()
@@ -226,9 +201,15 @@ function! iced#nrepl#eval#code(code, ...) abort
   endif
 
   try
-    " NOTE: Spinner is only supported by Vim9/Neovim
-    if g:iced_vim9 || g:iced_nvim
-      call s:start_spinner(spinner_key)
+    " Ignoring session validity means that this evaluation does not related to current buffer.
+    " Thus the evaluation result does not related to current cursor position.
+    if ! does_ignore_session_validity
+      call iced#system#get('spinner').start(spinner_key, {
+            \ 'texts': g:iced#eval#popup_spinner_texts,
+            \ 'highlight': g:iced#eval#popup_highlight,
+            \ 'align': g:iced#eval#popup_align,
+            \ 'interval': g:iced#eval#popup_spinner_interval,
+            \ })
     endif
     return iced#promise#call('iced#nrepl#eval', [code, opt])
           \.then(Callback)
