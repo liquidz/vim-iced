@@ -66,6 +66,12 @@ function! s:suite.name_by_buf_in_ns_test() abort
   call s:buf.stop_dummy()
 endfunction
 
+function! s:suite.name_by_buf_camel_case_test() abort
+  call s:buf.start_dummy(['(ns fooBar.core)', '|'])
+  call s:assert.equals(iced#nrepl#ns#name_by_buf(), 'fooBar.core')
+  call s:buf.stop_dummy()
+endfunction
+
 function! s:suite.name_test() abort
   call s:ch.mock({
         \ 'status_value': 'open',
