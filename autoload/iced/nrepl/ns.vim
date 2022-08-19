@@ -92,7 +92,7 @@ function! iced#nrepl#ns#name_by_buf() abort
       call sexp#move_to_adjacent_element('n', 0, 1, 0, 0)
     endif
 
-    return matchstr(getline('.'), '[a-z0-9.\-]\+', col('.') - 1)
+    return matchstr(getline('.'), '[a-zA-Z0-9.\-]\+', col('.') - 1)
   finally
     let @@ = reg_save
     call winrestview(view)
