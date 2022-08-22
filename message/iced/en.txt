@@ -29,6 +29,7 @@
   'delete-error':              'Failed to delete.',
   'deleted':                   'Deleted ''%s''.',
   'disconnected':              'Disconnected.',
+  'evaluation_context':        'Evaluation context (let-style): ',
   'failed_to_install':         'Failed to install: %s.',
   'failed_to_refresh':         'Failed to refresh %s: %s.',
   'fetching':                  'Fetching...',

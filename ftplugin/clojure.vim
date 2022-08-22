@@ -214,6 +214,7 @@ nnoremap <silent> <Plug>(iced_eval_and_print)           :<C-u>set opfunc=iced#op
 nnoremap <silent> <Plug>(iced_eval_and_tap)             :<C-u>set opfunc=iced#operation#eval_and_tap<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_replace)         :<C-u>set opfunc=iced#operation#eval_and_replace<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_comment)         :<C-u>set opfunc=iced#operation#eval_and_comment<CR>g@
+nnoremap <silent> <Plug>(iced_eval_in_context)          :<C-u>set opfunc=iced#operation#eval_in_context<CR>g@
 nnoremap <silent> <Plug>(iced_eval_ns)                  :<C-u>IcedEvalNs<CR>
 vnoremap <silent> <Plug>(iced_eval_visual)              :<C-u>IcedEvalVisual<CR>
 nnoremap <silent> <Plug>(iced_macroexpand)              :<C-u>set opfunc=iced#operation#macroexpand<CR>g@
