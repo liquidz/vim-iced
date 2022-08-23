@@ -641,11 +641,8 @@ function! iced#nrepl#eval(code, ...) abort
     let Callback = get(a:, 2, '')
   endif
 
-  let session = get(option, 'custom_session', '')
-  if empty(session)
-    let session_key  = get(option, 'session', iced#nrepl#current_session_key())
-    let session = get(s:nrepl['sessions'], session_key, iced#nrepl#current_session())
-  endif
+  let session_key  = get(option, 'session', iced#nrepl#current_session_key())
+  let session = get(s:nrepl['sessions'], session_key, iced#nrepl#current_session())
 
   let pos = getcurpos()
   let msg = {
@@ -660,6 +657,10 @@ function! iced#nrepl#eval(code, ...) abort
         \ 'verbose': get(option, 'verbose', v:true),
         \ 'callback': Callback,
         \ }
+
+  if get(option, 'no_session', v:false)
+    unlet msg['session']
+  endif
 
   let ns_name = get(option, 'ns', '')
   if !empty(ns_name)
