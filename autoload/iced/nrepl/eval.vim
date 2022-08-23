@@ -219,24 +219,12 @@ function! iced#nrepl#eval#code(code, ...) abort
   endtry
 endfunction
 
-function! s:eval_code_isolatedly(clone_resp, code, opt) abort
-  let new_session = get(a:clone_resp, 'new-session', '')
-  if empty(new_session) | return | endif
-
-  let opt = copy(a:opt)
-  let Callback = get(opt, 'callback', {resp -> iced#nrepl#eval#out(resp, out_opt)})
-
-  let opt['custom_session'] = new_session
-
-  return iced#nrepl#eval#code(a:code, opt)
-        \.then({_ -> iced#promise#call('iced#nrepl#close', [new_session])})
-endfunction
-
 " Evaluate code in one-shot session
+" cf. https://nrepl.org/nrepl/design/middleware.html#sessions
 function! iced#nrepl#eval#code_isolatedly(code, ...) abort
-  let opt = get(a:, 1, {})
-  return iced#promise#call('iced#nrepl#clone', [iced#nrepl#current_session()])
-        \.then({resp -> s:eval_code_isolatedly(resp, a:code, opt)})
+  let opt = copy(get(a:, 1, {}))
+  let opt['no_session'] = v:true
+  return iced#nrepl#eval#code(a:code, opt)
 endfunction
 
 function! s:undefined(resp, symbol) abort
