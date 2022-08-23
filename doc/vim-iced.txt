@@ -896,6 +896,12 @@ COMMANDS                                                    *vim-iced-commands*
   Evaluate selected form in current session.
   Key is mapped to |<Plug>(iced_eval_visual)|
 
+                                                          *:IcedEvalIsolatedly*
+:IcedEvalIsolatedly {form}
+  Evaluate {form} in a isolated(ephemeral) session.
+  cf. https://nrepl.org/nrepl/design/middleware.html#sessions
+  This is useful if you wouldn't like to block other evaluations.
+
                                                                  *:IcedRequire*
 :IcedRequire
   Load current file in current session.
@@ -1492,6 +1498,15 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   This operator supports yanking.
   See |vim-iced-yank-the-result| for more information.
 
+                                                 *<Plug>(iced_eval_isolatedly)*
+<Plug>(iced_eval_isolatedly)
+  Evaluate codes in a isolated(ephemeral) session.
+  Followings are examples for working with {vim-sexp}.
+>
+  <Plug>(iced_eval_isolatedly)<Plug>(sexp_inner_element)``
+  <Plug>(iced_eval_isolatedly)<Plug>(sexp_outer_list)``
+  <Plug>(iced_eval_isolatedly)<Plug>(sexp_outer_top_list)``
+<
                                                   *<Plug>(iced_eval_and_print)*
 <Plug>(iced_eval_and_print)
   Evaluate code and print result to stdout buffer.
