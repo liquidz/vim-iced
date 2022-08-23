@@ -91,7 +91,7 @@ command!          IcedQuitCljsRepl          call iced#nrepl#cljs#stop_repl_via_e
 command!          IcedCycleSession          call iced#nrepl#cljs#cycle_session()
 
 command! -nargs=1 IcedEval                  call iced#repl#execute('eval_code', <q-args>, {'ignore_session_validity': v:true, 'ignore_ns': v:true})
-command! -nargs=1 IcedIsolatedEval          call iced#repl#execute('eval_code_isolatedy', <q-args>, {'ignore_session_validity': v:true, 'ignore_ns': v:true})
+command! -nargs=1 IcedEvalIsolatedly        call iced#repl#execute('eval_code_isolatedy', <q-args>, {'ignore_session_validity': v:true, 'ignore_ns': v:true})
 command!          IcedEvalNs                call iced#nrepl#eval#ns()
 command! -range   IcedEvalVisual            call iced#nrepl#eval#visual()
 command!          IcedRequire               call iced#repl#execute('load_current_file')
