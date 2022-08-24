@@ -76,5 +76,9 @@ function! iced#message#error(k, ...) abort
   call iced#message#error_str(msg)
 endfunction
 
+function! iced#message#capture(command) abort
+  return s:M.capture(a:command)
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

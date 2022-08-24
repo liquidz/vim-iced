@@ -254,5 +254,10 @@ function! iced#util#add_curpos_to_jumplist() abort
   silent normal! m'
 endfunction
 
+function! iced#util#input_history_list() abort
+  let history = split(iced#message#capture(':history i'),  '\r\?\n')[1:]
+  return map(history, {_, v -> substitute(trim(v), '^\(>\s\+\)\?\d\+\s\+', '', 'g')})
+endfunction
+
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
