@@ -1275,6 +1275,11 @@ COMMANDS                                                    *vim-iced-commands*
   `ctrlp.vim` is required.
   Key is mapped to |<Plug>(iced_clear_ctrlp_cache)|.
 
+                                                       *:IcedClearInlineResult*
+:IcedClearInlineResult
+  Clear all inline evaluated results.
+  Key is mapped to |<Plug>(iced_clear_inline_result)|.
+
                                                                  *:IcedCleanNs*
 :IcedCleanNs
   Cleanup ns form.
@@ -1816,6 +1821,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                *<Plug>(iced_clear_ctrlp_cache)*
 <Plug>(iced_clear_ctrlp_cache)
   Same as |:IcedClearCtrlpCache|.
+
+                                             *<Plug>(iced_clear_inline_result)*
+<Plug>(iced_clear_inline_result)
+  Same as |:IcedClearInlineResult|.
 
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
