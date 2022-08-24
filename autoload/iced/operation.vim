@@ -100,7 +100,9 @@ endfunction
 
 let s:last_context = ''
 function! iced#operation#eval_in_context(type) abort
+  call inputsave()
   let s:last_context = iced#system#get('io').input(iced#message#get('evaluation_context'), s:last_context)
+  call inputrestore()
   return s:eval({code -> iced#repl#execute('eval_code', printf('(clojure.core/let [%s] %s)', s:last_context, code))})
 endfunction
 
