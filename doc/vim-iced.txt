@@ -318,7 +318,7 @@ REPL CONNECTION                                      *vim-iced-repl-connection*
       - `bb --socket-repl 5555`
 
   If you don't want to launch REPL externally,
-  vim-iced provides following ways to lancun REPL internally.
+  vim-iced provides following ways to launch REPL internally.
   - |:IcedJackIn| to launch `iced repl` internally
   - |:IcedInstantConnect| to launch a REPL internally.
 
