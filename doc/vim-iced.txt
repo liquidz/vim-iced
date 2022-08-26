@@ -445,7 +445,7 @@ YANK THE RESULT                                      *vim-iced-yank-the-result*
 
   Like vim's behavior, iced shifts the previous result of register 1 into
   register 2, 2 into 3, and so forth.
-  
+
   If you have values you don't want to store,
   See |g:iced#eval#values_to_skip_storing_register|.
 
@@ -1177,7 +1177,7 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedFormatSync
   Same as |:IcedFormat|, but it's done synchronously.
   Key is mapped to |<Plug>(iced_format_sync)|.
-  
+
                                                            *:IcedFormatSyncAll*
 :IcedFormatSyncAll
   Same as |:IcedFormatAll|, but it's done synchronously.
@@ -1492,6 +1492,15 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_top_list)``
 <
+                                                 *<Plug>(iced_eval_in_context)*
+<Plug>(iced_eval_in_context)
+  Evaluate code in the user specified context.
+  The context is `clojure.core/let` style.
+  For example, the context `foo "bar" num 10` will be expanded to
+  `(clojure.core/let [foo "bar" num 10] ...)`.
+
+  The input context is saved and will be expanded at the next evaluation.
+
                                                          *<Plug>(iced_eval_ns)*
 <Plug>(iced_eval_ns)
   Same as |:IcedEvalNs|.
@@ -1907,7 +1916,7 @@ g:iced#eval#mark_at_last
 g:iced#eval#values_to_skip_storing_register
   Evaluated values not to store to numbered registers.
   Default value is `['nil', 'true', 'false']`.
-  
+
                                                   *g:iced#eval#popup_highlight*
 g:iced#eval#popup_highlight
   The highlight setting for popup to display evaluated result.
@@ -2601,6 +2610,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>"    <Plug>(iced_jack_in)
   n       <Leader>ei   <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   n       <Leader>ee   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
+  n       <Leader>ece  <Plug>(iced_eval_in_context)<Plug>(sexp_outer_list)``
   n       <Leader>et   <Plug>(iced_eval_outer_top_list)
   n       <Leader>ea   <Plug>(iced_eval_at_mark)
   n       <Leader>el   <Plug>(iced_eval_last_outer_top_list)
