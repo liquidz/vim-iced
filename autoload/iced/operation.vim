@@ -109,22 +109,6 @@ function! iced#operation#eval_in_context(type) abort
   return s:eval({code -> iced#repl#execute('eval_code', printf('(clojure.core/let [%s] %s)', s:last_context, code))})
 endfunction
 
-function! iced#operation#eval_in_selected_context(type) abort
-  return s:eval(funcref(  's:__eval_in_selected_context'))
-endfunction
-
-function! s:__eval_in_selected_context(code) abort
-  call iced#selector({
-        \ 'candidates': reverse(iced#util#input_history_list()),
-        \ 'accept': {_, context -> s:__eval_in_selected_context_accept(a:code, context)}
-        \ })
-endfunction
-
-function! s:__eval_in_selected_context_accept(code, context) abort
-  let s:last_context = a:context
-  call iced#repl#execute('eval_code', printf('(clojure.core/let [%s] %s)', s:last_context, a:code))
-endfunction
-
 function! iced#operation#macroexpand(type) abort
   let view = winsaveview()
   let reg_save = @@
