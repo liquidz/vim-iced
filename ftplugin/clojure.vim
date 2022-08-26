@@ -394,6 +394,10 @@ function! s:default_key_mappings() abort
     call s:define_mapping('nmap', '<Leader>et', '<Plug>(iced_eval_outer_top_list)')
   endif
 
+  if !hasmapto('<Plug>(iced_eval_in_context)')
+    call s:define_mapping('nmap', '<Leader>ece', '<Plug>(iced_eval_in_context)<Plug>(sexp_outer_list)``')
+  endif
+
   call s:define_mapping('nmap', '<Leader>ea', '<Plug>(iced_eval_at_mark)')
   call s:define_mapping('nmap', '<Leader>el', '<Plug>(iced_eval_last_outer_top_list)')
   call s:define_mapping('vmap', '<Leader>ee', '<Plug>(iced_eval_visual)')
