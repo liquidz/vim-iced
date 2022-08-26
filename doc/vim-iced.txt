@@ -1903,6 +1903,32 @@ g:iced#eval#popup_highlight
   The highlight setting for popup to display evaluated result.
   Default value is `'Comment'`.
 
+                                                      *g:iced#eval#popup_align*
+g:iced#eval#popup_align
+  The alignment setting for popup to display evaluated result.
+  The value must be one of `'after'` or `'right'`.
+  
+  - `'after'`
+    Place the result after the end of the line.
+  - `'right'`
+    Place on the right edge of the window.
+    NOTE: 
+  
+  Default value is `'after'`.
+
+g:iced#eval#popup_spinner_texts 
+    FIXME
+    = get(g:, 'iced#eval#popup_spinner_texts', [' ⠋', ' ⠙', ' ⠹', ' ⠸', ' ⠼', ' ⠴', ' ⠦', ' ⠧', ' ⠇', ' ⠏'])
+
+g:iced#eval#popup_spinner_interval
+    FIXME
+    = get(g:, 'iced#eval#popup_spinner_interval', 100)
+
+g:iced#eval#keep_inline_result
+    FIXME
+    = get(g:, 'iced#eval#keep_inline_result', v:false)
+    cf. IcedClearInlineResult
+
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
