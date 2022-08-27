@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file. This change
 === Added
 * https://github.com/liquidz/vim-iced/issues/434[#434]: Added a feature to evaluate codes in a user specified context.
 ** See https://liquidz.github.io/vim-iced/#evaluate_in_context for details.
+
+=== Changed
+* Bumped nrepl to 1.0.0.
+* Bumped refactor-nrepl to 3.5.5.
+* Bumped iced-nrepl to 1.2.462.
 // }}}
 
 == 3.10.3061 (2022-08-19)
