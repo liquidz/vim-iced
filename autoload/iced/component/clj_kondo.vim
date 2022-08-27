@@ -68,6 +68,7 @@ function! s:kondo.analyze(callback) abort
         \ s:temp_name(self.cache_name()),
         \ )]
 
+  call iced#util#debug('clj-kondo', printf('analyze %s', command))
   call self.job_out.redir(command, funcref('s:analyze__analyzed', [a:callback], self))
 endfunction
 
