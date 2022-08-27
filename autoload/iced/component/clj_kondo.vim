@@ -8,6 +8,7 @@ let s:kondo = {
       \ 'job_out': '',
       \ 'option': '',
       \ 'user_dir': '',
+      \ 'lint_opts': '',
       \ 'cache_dir': '',
       \ '__is_analyzing': v:false,
       \ }
@@ -59,12 +60,14 @@ function! s:kondo.analyze(callback) abort
   let config = g:iced_enable_clj_kondo_local_analysis
        \ ? '{:output {:analysis {:protocol-impls true :locals true :keywords true} :format :json}}'
        \ : '{:output {:analysis {:protocol-impls true} :format :json}}'
+
   " NOTE: Using `writefile` will freeze vim/nvim just a little
-  let command = ['sh', '-c', printf('clj-kondo --parallel --lint %s --config ''%s'' > %s',
-        \ self.user_dir,
+  let command = ['sh', '-c', printf('clj-kondo --parallel %s --config ''%s'' > %s',
+        \ self.lint_opts,
         \ config,
         \ s:temp_name(self.cache_name()),
         \ )]
+
   call self.job_out.redir(command, funcref('s:analyze__analyzed', [a:callback], self))
 endfunction
 
@@ -430,6 +433,11 @@ function! iced#component#clj_kondo#start(this) abort
 
   let user_dir = iced#nrepl#system#user_dir()
   let s:kondo.user_dir = empty(user_dir) ? expand('%:p:h') : user_dir
+
+  let analysis_dirs = (len(g:iced_clj_kondo_analysis_dirs) > 0)
+        \ ? g:iced_clj_kondo_analysis_dirs
+        \ : [user_dir]
+  let s:kondo.lint_opts = join(map(copy(analysis_dirs), {_, dir -> printf('--lint %s', dir)}), ' ')
 
   return s:kondo
 endfunction
