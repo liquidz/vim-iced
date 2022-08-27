@@ -1,8 +1,17 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/issues/434[#434]: Added a feature to evaluate codes in a user specified context.
+** See https://liquidz.github.io/vim-iced/#evaluate_in_context for details.
+// }}}
 
 == 3.10.3061 (2022-08-19)
+// {{{
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/432[#432]: Fixed to ignore case on detecting namespaces.
+// }}}
 
 == 3.10.3057 (2022-08-12)
 // {{{
