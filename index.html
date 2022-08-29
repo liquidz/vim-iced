@@ -671,6 +671,7 @@ pre.rouge {
 <li><a href="#evaluation_results">3.2. Results</a></li>
 <li><a href="#evaluation_marks">3.3. Marks</a></li>
 <li><a href="#evaluation_yank">3.4. Yank</a></li>
+<li><a href="#evaluate_in_context">3.5. Context</a></li>
 </ul>
 </li>
 <li><a href="#completion">4. Completion</a>
@@ -1192,6 +1193,65 @@ Yanking to <code>"</code> register is skipped for now.
 <pre class="rouge highlight"><code data-lang="vim"><span class="c">" mapping for "xee</span>
 nmap <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> ee <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>iced_eval<span class="p">)&lt;</span>Plug<span class="p">&gt;(</span>sexp_outer_list<span class="p">)</span>``</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="evaluate_in_context">3.5. Context</h3>
+<div class="paragraph">
+<p>There are times when you want to evaluate the contents of a function for confirmation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="clojure"><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">greet</span><span class="w"> </span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="w">
+  </span><span class="c1">;; We'd like to evaluate the following code!</span><span class="w">
+  </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="s">"hello "</span><span class="w"> </span><span class="n">s</span><span class="p">))</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is tired to bind arguments separately,
+or to write function calls in the comment form every time.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="clojure"><span class="p">(</span><span class="nb">comment</span><span class="w"> </span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="s">"iced"</span><span class="p">))</span><span class="w">
+</span><span class="c1">;; or</span><span class="w">
+</span><span class="p">(</span><span class="nb">comment</span><span class="w"> </span><span class="p">(</span><span class="nf">greet</span><span class="w"> </span><span class="s">"iced"</span><span class="p">))</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is where evaluating codes in context help you.
+There is a default key bindings to evaluate code in a context.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Default key mappings</caption>
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 70%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div id="evaluate_outer_list" class="paragraph">
+<p>outer list</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;Leader&gt;ece</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>With this mapping, the context input will be required.</p>
+</div>
+<div class="paragraph">
+<p>The context is <code>clojure.core/let</code> style.
+For example, the context <code>s "iced"</code> will be expanded to the following code.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="clojure"><span class="p">(</span><span class="nf">clojure.core/let</span><span class="w"> </span><span class="p">[</span><span class="n">s</span><span class="w"> </span><span class="s">"iced"</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="s">"hello "</span><span class="w"> </span><span class="n">s</span><span class="p">))</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#%3CPlug%3E%28iced_eval_in_context%29">&lt;Plug&gt;(iced_eval_in_context)</a> for more information.</p>
 </div>
 <div class="paragraph text-right">
 <p><span class="small"><a href="#top">Back to top</a></span></p>
@@ -3811,7 +3871,7 @@ This option is enabled when <code>g:iced#buffer#stdout#max_line</code> is a posi
 <div class="sect3">
 <h4 id="configuration_advanced_document">22.6.2. Document</h4>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Document buffer</caption>
+<caption class="title">Table 3. Document buffer</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 20%;">
@@ -3875,7 +3935,7 @@ Following values are supported.</p>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Auto document</caption>
+<caption class="title">Table 4. Auto document</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 20%;">
@@ -4263,7 +4323,7 @@ aug END</code></pre>
 <p>vim-iced targets <a href="https://nrepl.org/">nREPL</a> mainly, but now will also support minimal operations on socket REPL.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Socket REPL supports</caption>
+<caption class="title">Table 5. Socket REPL supports</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 10%;">
@@ -4339,7 +4399,7 @@ This connection is based on socket repl connection.</p></td>
 <p>You can try socket REPL connection as follows.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Launch socket REPL via babashka</caption>
+<caption class="title">Table 6. Launch socket REPL via babashka</caption>
 <colgroup>
 <col style="width: 30%;">
 <col style="width: 70%;">
@@ -4821,7 +4881,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-25 20:56:44 UTC
+Last updated 2022-08-29 21:15:58 UTC
 </div>
 </div>
 </body>
