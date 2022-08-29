@@ -601,7 +601,8 @@ JUMP TO DEFINITION                    *vim-iced-tag-jump*  *vim-iced-jump-to-def
   |:IcedDefJump| to jump to definition.
   It is also supported to jump to qualified keywords and local vars.
 
-  If the jump destination for keyword is inaccurate or the jump is slow, enabling clj-kondo feature may improve the result.
+  If the jump destination for keyword is inaccurate or the jump is slow,
+  enabling clj-kondo feature may improve the result.
   - |vim-iced-static-analysis-clj-kondo|
 
   To jump back, you can use default key mapping(<C-t>).
@@ -735,6 +736,11 @@ CLJ-KONDO                                  *vim-iced-static-analysis-clj-kondo*
   From clj-kondo v2021.01.20, local analysis is supported.
   This can be used to support jumping to local vars.
   To enable, see |g:iced_enable_clj_kondo_local_analysis|.
+
+  ANALYSIS DIRECTORIES
+  vim-iced uses the project root directory for analysis by default.
+  If you want to analyze files only in specific directories,
+  see |g:iced_clj_kondo_analysis_dirs|.
 
   TIPS
   - Cached files will be separated to var definition/usage and
@@ -2088,6 +2094,13 @@ g:iced_enable_clj_kondo_local_analysis
   If `clj-kondo` is not installed, will install automatically.
   Default value is `v:false`.
   See also |vim-iced-static-analysis-clj-kondo|.
+
+                                               *g:iced_clj_kondo_analysis_dirs*
+g:iced_clj_kondo_analysis_dirs
+  If some values are set, vim-iced uses these directories for analysis
+  by clj-kondo.
+  If this option is empty, vim-iced uses the project root directory.
+  Default value is `[]`.
 
                                             *g:iced#navigate#prefer_local_jump*
 g:iced#navigate#prefer_local_jump
