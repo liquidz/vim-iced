@@ -1,8 +1,23 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* https://github.com/liquidz/vim-iced/issues/434[#434]: Added a feature to evaluate codes in a user specified context.
+** See https://liquidz.github.io/vim-iced/#evaluate_in_context for details.
+* https://github.com/liquidz/vim-iced/issues/437[#437] Added `g:iced_clj_kondo_analysis_dirs` option.
+
+=== Changed
+* Bumped nrepl to 1.0.0.
+* Bumped refactor-nrepl to 3.5.5.
+* Bumped iced-nrepl to 1.2.462.
+// }}}
 
 == 3.10.3061 (2022-08-19)
+// {{{
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/432[#432]: Fixed to ignore case on detecting namespaces.
+// }}}
 
 == 3.10.3057 (2022-08-12)
 // {{{

@@ -8,6 +8,7 @@ function! s:setup() abort
   let g:iced_cache_directory = '/tmp'
   let g:iced_enable_clj_kondo_analysis = v:true
   let g:iced_enable_clj_kondo_local_analysis = v:true
+  let g:iced_clj_kondo_analysis_dirs = []
 
   call s:job_out.mock({'outs': ['']})
   " DO NOT USE clj_kondo_option

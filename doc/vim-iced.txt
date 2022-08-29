@@ -25,6 +25,7 @@ CONTENTS                                                    *vim-iced-contents*
   Evaluating                   |vim-iced-evaluating|
     Stdout Buffer              |vim-iced-stdout-buffer|
     Yank the result            |vim-iced-yank-the-result|
+    Evaluating in context      |vim-iced-eval-in-context|
   Testing                      |vim-iced-testing|
     Plain nREPL                |vim-iced-testing-plain-nrepl|
   Debugging                    |vim-iced-debugging|
@@ -138,8 +139,8 @@ LEININGEN~
   $HOME/.lein/profile.clj
 >
   {:user
-   {:dependencies [[nrepl "0.9.0"]
-                   [com.github.liquidz/iced-nrepl "1.2.458"]
+   {:dependencies [[nrepl "1.0.0"]
+                   [com.github.liquidz/iced-nrepl "1.2.462"]
                    [cider/cider-nrepl "0.28.5"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -158,7 +159,7 @@ LEININGEN~
                                       cider.nrepl/wrap-undef
                                       cider.nrepl/wrap-xref
                                       iced.nrepl/wrap-iced]}
-    :plugins [[refactor-nrepl "3.5.4"]]}}
+    :plugins [[refactor-nrepl "3.5.5"]]}}
 <
 
                                                          *vim-iced-manual-boot*
@@ -169,9 +170,9 @@ BOOT~
   (require (quote boot.repl))
 
   (swap! boot.repl/*default-dependencies* concat
-    '[[refactor-nrepl "3.5.4"]
+    '[[refactor-nrepl "3.5.5"]
       [cider/cider-nrepl "0.28.5"]
-      [com.github.liquidz/iced-nrepl "1.2.458"]])
+      [com.github.liquidz/iced-nrepl "1.2.462"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -199,9 +200,9 @@ SHADOW-CLJS~
   shadow-cljs.edn
 >
   {
-   :dependencies [[refactor-nrepl "3.5.4"]
+   :dependencies [[refactor-nrepl "3.5.5"]
                   [cider/cider-nrepl "0.28.5"]
-                  [com.github.liquidz/iced-nrepl "1.2.458"]]
+                  [com.github.liquidz/iced-nrepl "1.2.462"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -402,7 +403,7 @@ EVALUATING                                                *vim-iced-evaluating*
   - `<Leader>ei` : Evaluate inner element
   - `<Leader>ee` : Evaluate outer list
   - `<Leader>et` : Evaluate outer top list
-  c.f. |vim-iced-customizing-default-keys|
+  cf. |vim-iced-customizing-default-keys|
 
   Specific evaluation range(`|` means cursor position): >
   ;; <------------et----------->
@@ -445,7 +446,7 @@ YANK THE RESULT                                      *vim-iced-yank-the-result*
 
   Like vim's behavior, iced shifts the previous result of register 1 into
   register 2, 2 into 3, and so forth.
-  
+
   If you have values you don't want to store,
   See |g:iced#eval#values_to_skip_storing_register|.
 
@@ -461,6 +462,27 @@ YANK THE RESULT                                      *vim-iced-yank-the-result*
   " mapping for "xee
   nmap <silent> ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
 <
+------------------------------------------------------------------------------
+EVALUATING IN CONTEXT                                *vim-iced-eval-in-context*
+
+  There are times when you want to evaluate the contents of a function
+  for confirmation.
+>
+  (defn greet [s]
+    (str "hello " s))
+<
+  It is tired to bind arguments separately, (e.g. `(def s "iced")`)
+  or to write function calls in the comment form every time.
+  (e.g. `(comment (greet "iced"))`)
+
+  This is where evaluating codes in context help you.
+
+  There is a default key bindings to evaluate code in a context.
+  - `<Leader>ece` : Evaluate outer list in a context
+  cf. |vim-iced-customizing-default-keys|
+
+  See |<Plug>(iced_eval_in_context)| for more information.
+
 ==============================================================================
 TESTING                                                      *vim-iced-testing*
 
@@ -579,7 +601,8 @@ JUMP TO DEFINITION                    *vim-iced-tag-jump*  *vim-iced-jump-to-def
   |:IcedDefJump| to jump to definition.
   It is also supported to jump to qualified keywords and local vars.
 
-  If the jump destination for keyword is inaccurate or the jump is slow, enabling clj-kondo feature may improve the result.
+  If the jump destination for keyword is inaccurate or the jump is slow,
+  enabling clj-kondo feature may improve the result.
   - |vim-iced-static-analysis-clj-kondo|
 
   To jump back, you can use default key mapping(<C-t>).
@@ -713,6 +736,11 @@ CLJ-KONDO                                  *vim-iced-static-analysis-clj-kondo*
   From clj-kondo v2021.01.20, local analysis is supported.
   This can be used to support jumping to local vars.
   To enable, see |g:iced_enable_clj_kondo_local_analysis|.
+
+  ANALYSIS DIRECTORIES
+  vim-iced uses the project root directory for analysis by default.
+  If you want to analyze files only in specific directories,
+  see |g:iced_clj_kondo_analysis_dirs|.
 
   TIPS
   - Cached files will be separated to var definition/usage and
@@ -1086,7 +1114,7 @@ COMMANDS                                                    *vim-iced-commands*
                                                             *:IcedJavaDocument*
 :IcedJavaDocument [{class_name}]
   Opens a browser window displaying the javadoc for {class_name}.
-  c.f. https://clojuredocs.org/clojure.java.javadoc/javadoc
+  cf. https://clojuredocs.org/clojure.java.javadoc/javadoc
 
   If {class_name} is not passed,
   the result of `clojure.core/class` for the form under cursor is used.
@@ -1177,7 +1205,7 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedFormatSync
   Same as |:IcedFormat|, but it's done synchronously.
   Key is mapped to |<Plug>(iced_format_sync)|.
-  
+
                                                            *:IcedFormatSyncAll*
 :IcedFormatSyncAll
   Same as |:IcedFormatAll|, but it's done synchronously.
@@ -1492,6 +1520,17 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_list)``
   <Plug>(iced_eval_and_comment)<Plug>(sexp_outer_top_list)``
 <
+                                                 *<Plug>(iced_eval_in_context)*
+<Plug>(iced_eval_in_context)
+  Evaluate code in the user specified context.
+  The context is `clojure.core/let` style.
+  For example, the context `foo "bar" num 10` will be expanded to
+  `(clojure.core/let [foo "bar" num 10] ...)`.
+
+  The input context is saved and will be expanded at the next evaluation.
+
+  See also |vim-iced-eval-in-context|.
+
                                                          *<Plug>(iced_eval_ns)*
 <Plug>(iced_eval_ns)
   Same as |:IcedEvalNs|.
@@ -1907,7 +1946,7 @@ g:iced#eval#mark_at_last
 g:iced#eval#values_to_skip_storing_register
   Evaluated values not to store to numbered registers.
   Default value is `['nil', 'true', 'false']`.
-  
+
                                                   *g:iced#eval#popup_highlight*
 g:iced#eval#popup_highlight
   The highlight setting for popup to display evaluated result.
@@ -1961,7 +2000,7 @@ g:iced#grep#format
                                              *g:iced#refactor#prefix_rewriting*
 g:iced#refactor#prefix_rewriting
   Should `clean-ns` favor prefix forms in the ns macro?
-  c.f. https://github.com/clojure-emacs/refactor-nrepl#available-features
+  cf. https://github.com/clojure-emacs/refactor-nrepl#available-features
   Default value is `v:false`.
 
                                  *g:iced#refactor#insert_newline_after_require*
@@ -2055,6 +2094,13 @@ g:iced_enable_clj_kondo_local_analysis
   If `clj-kondo` is not installed, will install automatically.
   Default value is `v:false`.
   See also |vim-iced-static-analysis-clj-kondo|.
+
+                                               *g:iced_clj_kondo_analysis_dirs*
+g:iced_clj_kondo_analysis_dirs
+  If some values are set, vim-iced uses these directories for analysis
+  by clj-kondo.
+  If this option is empty, vim-iced uses the project root directory.
+  Default value is `[]`.
 
                                             *g:iced#navigate#prefer_local_jump*
 g:iced#navigate#prefer_local_jump
@@ -2438,7 +2484,7 @@ CONNECT PREPARED                                  *hook_event_connect_prepared*
 
   Hooked before the start of connection.
   This hook only allows `function` hook type.
-  c.f. |hook_report_function|
+  cf. |hook_report_function|
 
   Following list is passed to reporter.
   e.g. `[{'label': 'nREPL', 'type': 'nrepl', 'port': 12345}]`
@@ -2601,6 +2647,7 @@ g:iced_enable_default_key_mappings
   n       <Leader>"    <Plug>(iced_jack_in)
   n       <Leader>ei   <Plug>(iced_eval)<Plug>(sexp_inner_element)``
   n       <Leader>ee   <Plug>(iced_eval)<Plug>(sexp_outer_list)``
+  n       <Leader>ece  <Plug>(iced_eval_in_context)<Plug>(sexp_outer_list)``
   n       <Leader>et   <Plug>(iced_eval_outer_top_list)
   n       <Leader>ea   <Plug>(iced_eval_at_mark)
   n       <Leader>el   <Plug>(iced_eval_last_outer_top_list)

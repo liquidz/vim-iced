@@ -36,6 +36,7 @@
 :plug_iced_eval_outer_top_list: <Leader>et
 :plug_iced_eval_at_mark: <Leader>ea
 :plug_iced_eval_last_outer_top_list: <Leader>el
+:plug_iced_eval_in_context: <Leader>ece
 :plug_iced_extract_function: <Leader>ref
 :plug_iced_format: ==
 :plug_iced_format_all: =G

@@ -63,6 +63,10 @@ if !exists('g:iced_enable_clj_kondo_local_analysis')
   let g:iced_enable_clj_kondo_local_analysis = v:false
 endif
 
+if !exists('g:iced_clj_kondo_analysis_dirs')
+  let g:iced_clj_kondo_analysis_dirs = []
+endif
+
 if !exists('g:iced_default_key_mapping_leader')
   let g:iced_default_key_mapping_leader = '<Leader>'
 endif
@@ -214,6 +218,7 @@ nnoremap <silent> <Plug>(iced_eval_and_print)           :<C-u>set opfunc=iced#op
 nnoremap <silent> <Plug>(iced_eval_and_tap)             :<C-u>set opfunc=iced#operation#eval_and_tap<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_replace)         :<C-u>set opfunc=iced#operation#eval_and_replace<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_comment)         :<C-u>set opfunc=iced#operation#eval_and_comment<CR>g@
+nnoremap <silent> <Plug>(iced_eval_in_context)          :<C-u>set opfunc=iced#operation#eval_in_context<CR>g@
 nnoremap <silent> <Plug>(iced_eval_ns)                  :<C-u>IcedEvalNs<CR>
 vnoremap <silent> <Plug>(iced_eval_visual)              :<C-u>IcedEvalVisual<CR>
 nnoremap <silent> <Plug>(iced_macroexpand)              :<C-u>set opfunc=iced#operation#macroexpand<CR>g@
@@ -391,6 +396,10 @@ function! s:default_key_mappings() abort
     call s:define_mapping('nmap', '<Leader>ei', '<Plug>(iced_eval)<Plug>(sexp_inner_element)``')
     call s:define_mapping('nmap', '<Leader>ee', '<Plug>(iced_eval)<Plug>(sexp_outer_list)``')
     call s:define_mapping('nmap', '<Leader>et', '<Plug>(iced_eval_outer_top_list)')
+  endif
+
+  if !hasmapto('<Plug>(iced_eval_in_context)')
+    call s:define_mapping('nmap', '<Leader>ece', '<Plug>(iced_eval_in_context)<Plug>(sexp_outer_list)``')
   endif
 
   call s:define_mapping('nmap', '<Leader>ea', '<Plug>(iced_eval_at_mark)')

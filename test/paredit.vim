@@ -7,6 +7,7 @@ let s:funcs = s:scope.funcs('autoload/iced/nrepl.vim')
 
 let g:iced_enable_clj_kondo_analysis = v:false
 let g:iced_enable_clj_kondo_local_analysis = v:false
+let g:iced_clj_kondo_analysis_dirs = []
 let g:iced_cache_directory = ''
 
 function! s:format_code_relay(msg) abort

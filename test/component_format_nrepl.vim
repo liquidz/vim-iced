@@ -7,6 +7,7 @@ let s:fmt = iced#system#get('format_default')
 
 let g:iced_enable_clj_kondo_analysis = v:false
 let g:iced_enable_clj_kondo_local_analysis = v:false
+let g:iced_clj_kondo_analysis_dirs = []
 let g:iced_cache_directory = ''
 
 function! GetClojureIndent() abort

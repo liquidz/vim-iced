@@ -98,6 +98,7 @@ function! s:suite.find_existing_alias_nrepl_test() abort
   let g:iced_cache_directory = ''
   let g:iced_enable_clj_kondo_analysis = v:false
   let g:iced_enable_clj_kondo_local_analysis = v:false
+  let g:iced_clj_kondo_analysis_dirs = []
   call s:ch.mock({'status_value': 'open', 'relay': funcref('s:__find_existing_alias_relay')})
 
   call iced#nrepl#change_current_session('clj')
@@ -119,6 +120,7 @@ function! s:suite.find_existing_alias_clj_kondo_test() abort
   let g:iced_cache_directory = ''
   let g:iced_enable_clj_kondo_analysis = v:true
   let g:iced_enable_clj_kondo_local_analysis = v:false
+  let g:iced_clj_kondo_analysis_dirs = []
   call s:kondo.mock({'namespace-usages': [
         \ {'to': 'ns1', 'alias': 'kondo-alias1'},
         \ {'to': 'ns2', 'alias': 'kondo-alias1'},
