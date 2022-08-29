@@ -4,7 +4,8 @@ set cpoptions&vim
 let s:component_cache = {}
 
 let s:nvim = has('nvim')
-let s:vim9 = has('patch-9.0.181')
+" cf. https://github.com/vim/vim/commit/c8bf59e9b27f9d621818ffc61468abef45cedf37
+let s:vim9 = has('patch-9.0.297')
 
 let s:org_system_map = {
       \ 'vim_bencode':  {'start': 'iced#component#bencode#vim#start'},
