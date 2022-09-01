@@ -106,15 +106,10 @@ function! s:__eval_and_comment(resp) abort
   endif
 endfunction
 
-let s:last_context = ''
 function! iced#operation#eval_in_context(type) abort
-  call inputsave()
-  let context = iced#system#get('io').input(iced#message#get('evaluation_context'), s:last_context)
-  call inputrestore()
+	let context = iced#context#input()
   if empty(context) | return | endif
-
-  let s:last_context = context
-  return s:eval({code -> iced#repl#execute('eval_code', printf('(clojure.core/let [%s] %s)', s:last_context, code))})
+  return s:eval({code -> iced#repl#execute('eval_code', iced#context#wrap_code(context, code))})
 endfunction
 
 function! iced#operation#macroexpand(type) abort
