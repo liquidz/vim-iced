@@ -27,6 +27,7 @@ CONTENTS                                                    *vim-iced-contents*
     Stdout Buffer              |vim-iced-stdout-buffer|
     Yank the result            |vim-iced-yank-the-result|
     Evaluating in context      |vim-iced-eval-in-context|
+    Evaluating spinner         |vim-iced-evaluating-spinner|
   Testing                      |vim-iced-testing|
     Plain nREPL                |vim-iced-testing-plain-nrepl|
   Debugging                    |vim-iced-debugging|
@@ -490,6 +491,18 @@ EVALUATING IN CONTEXT                                *vim-iced-eval-in-context*
   cf. |vim-iced-customizing-default-keys|
 
   See |<Plug>(iced_eval_in_context)| for more information.
+
+------------------------------------------------------------------------------
+EVALUATING SPINNER                                 *vim-iced-evaluating-spinner*
+
+  vim-iced supports to display spinners while code is evaluating.
+  Evaluating spinner requires:
+  - Vim 9.0.297 or later
+  - Neovim
+    
+  See also:
+  - |g:iced#eval#popup_spinner_texts| 
+  - |g:iced#eval#popup_spinner_interval|
 
 ==============================================================================
 TESTING                                                      *vim-iced-testing*
