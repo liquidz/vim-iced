@@ -2009,6 +2009,12 @@ g:iced#eval#popup_spinner_interval
   Default value is `100`.
   See also |vim-iced-evaluating-spinner|.
 
+                                               *g:iced#eval#keep_inline_result*
+g:iced#eval#keep_inline_result
+  If {v:true}, evaluation results displayed as popup are kept.
+  Default value is `v:false`.
+  See |:IcedClearInlineResult| to clear results.
+
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
