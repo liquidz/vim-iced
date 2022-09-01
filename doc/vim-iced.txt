@@ -2002,6 +2002,13 @@ g:iced#eval#popup_spinner_texts
   Default value is `[' ⠋',' ⠙',' ⠹',' ⠸',' ⠼',' ⠴',' ⠦',' ⠧',' ⠇',' ⠏']` .
   See also |vim-iced-evaluating-spinner|.
 
+                                           *g:iced#eval#popup_spinner_interval*
+g:iced#eval#popup_spinner_interval
+  Interval time for spinners while code is evaluating.
+  Unit is milli sec.
+  Default value is `100`.
+  See also |vim-iced-evaluating-spinner|.
+
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
