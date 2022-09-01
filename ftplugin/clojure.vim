@@ -105,6 +105,7 @@ command! -nargs=? IcedUndefAllInNs          call iced#nrepl#eval#undef_all_in_ns
 command! -nargs=? IcedUnaliasNs             call iced#nrepl#ns#unalias(<q-args>)
 command!          IcedEvalOuterTopList      call iced#repl#execute('eval_outer_top_list')
 command!          IcedEvalAtMark            call iced#repl#execute('eval_at_mark', nr2char(getchar()))
+command!          IcedEvalInContextAtMark   call iced#repl#execute('eval_in_context_at_mark', nr2char(getchar()))
 command!          IcedEvalLastOuterTopList  call iced#repl#execute('eval_last_outer_top_list')
 command!          IcedPrintLast             call iced#nrepl#eval#print_last()
 command!          IcedMacroExpandOuterList  call iced#nrepl#macro#expand_outer_list()
@@ -232,6 +233,7 @@ nnoremap <silent> <Plug>(iced_undef_all_in_ns)          :<C-u>IcedUndefAllInNs<C
 nnoremap <silent> <Plug>(iced_unalias_ns)               :<C-u>IcedUnaliasNs<CR>
 nnoremap <silent> <Plug>(iced_eval_outer_top_list)      :<C-u>IcedEvalOuterTopList<CR>
 nnoremap <silent> <Plug>(iced_eval_at_mark)             :<C-u>IcedEvalAtMark<CR>
+nnoremap <silent> <Plug>(iced_eval_in_context_at_mark)  :<C-u>IcedEvalInContextAtMark<CR>
 nnoremap <silent> <Plug>(iced_eval_last_outer_top_list) :<C-u>IcedEvalLastOuterTopList<CR>
 nnoremap <silent> <Plug>(iced_print_last)               :<C-u>IcedPrintLast<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_outer_list)   :<C-u>IcedMacroExpandOuterList<CR>
@@ -410,6 +412,7 @@ function! s:default_key_mappings() abort
   endif
 
   call s:define_mapping('nmap', '<Leader>ea', '<Plug>(iced_eval_at_mark)')
+  call s:define_mapping('nmap', '<Leader>eca', '<Plug>(iced_eval_in_context_at_mark)')
   call s:define_mapping('nmap', '<Leader>el', '<Plug>(iced_eval_last_outer_top_list)')
   call s:define_mapping('vmap', '<Leader>ee', '<Plug>(iced_eval_visual)')
   call s:define_mapping('nmap', '<Leader>en', '<Plug>(iced_eval_ns)')
