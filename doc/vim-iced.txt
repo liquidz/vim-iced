@@ -1996,6 +1996,12 @@ g:iced#eval#popup_align
   
   Default value is `'after'`.
 
+                                              *g:iced#eval#popup_spinner_texts* 
+g:iced#eval#popup_spinner_texts 
+  Texts for spinners while code is evaluating.
+  Default value is `[' ⠋',' ⠙',' ⠹',' ⠸',' ⠼',' ⠴',' ⠦',' ⠧',' ⠇',' ⠏']` .
+  See also |vim-iced-evaluating-spinner|.
+
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height
   Error window height.
