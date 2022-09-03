@@ -1,0 +1,20 @@
+=== Yank [[evaluation_yank]]
+
+The evaluated result is yanked to https://vim-jp.org/vimdoc-en/change.html#quote_number[numbered registers].
+Like vim's behavior, iced shifts the previous result of register 1 into register 2, 2 into 3, and so forth.
+
+If you have values you don't want to store, See {help_html}#g%3Aiced%23eval%23values_to_skip_storing_register[g:iced#eval#values_to_skip_storing_register].
+
+When you specify a `register` like https://vim-jp.org/vimdoc-en/change.html#y[yank],
+{help_html}#%3CPlug%3E%28iced_eval%29[<Plug>(iced_eval)] operator will yank the result.
+
+E.g. `"x<Leader>ee` will yank a result to register `x`.
+
+WARNING: Yanking to `"` register is skipped for now.
+
+If you'd like to define a custom mapping, try below.
+[source,vim]
+----
+" mapping for "xee
+nmap <silent> ee <Plug>(iced_eval)<Plug>(sexp_outer_list)``
+----
