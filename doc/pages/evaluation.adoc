@@ -12,3 +12,5 @@ include::evaluation/yank.adoc[]
 
 include::evaluation/context.adoc[]
 
+include::evaluation/spinner.adoc[]
+
