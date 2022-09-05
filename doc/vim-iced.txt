@@ -292,9 +292,12 @@ BOOST BY PYTHON                                       *vim-iced-install-python*
 ==============================================================================
 BOOST BY VIM9 SCRIPT                                     *vim-iced-vim9-script*
 
-  With Vim8, all communication with nrepl is done by pure vim script, and it is slow.
+  With Vim8, all communication with nrepl is done by pure vim script,
+  and it is slow.
   With Vim9, vim-iced uses |vim9script| automatically,
   and it leads to boost communication between nREPL.
+
+  vim-iced requires Vim 9.0.297 or later to boost.
 
 ==============================================================================
 DOCKER                                                *vim-iced-install-docker*
