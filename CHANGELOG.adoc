@@ -1,6 +1,31 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+// {{{
+=== Added
+
+* Added support for virtual text in Vim9.
+** Requires Vim 9.0.297 or later.
+* Added bencode component using Vim9 script.
+* Added `g:iced#eval#popup_align` option.
+* Added spinner while code is evaluating.
+** Added `g:iced#eval#popup_spinner_texts` option.
+** Added `g:iced#eval#popup_spinner_interval` option.
+* Added `IcedIsolatedEval` command.
+* Added `IcedEvalInContextAtMark` command.
+
+=== Changed
+* Bumped iced-nrepl to 1.2.465.
+
+=== Fixed
+* Fixed neovim virtual text component to use `nvim_buf_set_extmark`.
+* Fixed neovim virtual text component to clear a virtual text on the same line.
+* Fixed neovim virtual text component to set virtual text on correct line.
+* Fixed to clear virtual texts when code evaluation is interrupted
+// }}}
+
+== 3.11.3086 (2022-08-29)
 // {{{
 === Added
 * https://github.com/liquidz/vim-iced/issues/434[#434]: Added a feature to evaluate codes in a user specified context.

@@ -1,0 +1,47 @@
+=== Context [[evaluate_in_context]]
+
+There are times when you want to evaluate the contents of a function for confirmation.
+
+[source,clojure]
+----
+(defn greet [s]
+  ;; We'd like to evaluate the following code!
+  (str "hello " s))
+----
+
+It is tired to bind arguments separately,
+or to write function calls in the comment form every time.
+
+[source,clojure]
+----
+(comment (def s "iced"))
+;; or
+(comment (greet "iced"))
+----
+
+This is where evaluating codes in context help you.
+There is a default key bindings to evaluate code in a context.
+
+.Default key mappings
+[cols="30a,70"]
+|===
+
+| [reftext="evaluating outer list"]
+[[evaluate_outer_list]]
+outer list
+| `{plug_iced_eval_in_context}`
+
+|===
+
+With this mapping, the context input will be required.
+
+The context is `clojure.core/let` style.
+For example, the context `s "iced"` will be expanded to the following code.
+
+[source,clojure]
+----
+(clojure.core/let [s "iced"]
+  (str "hello " s))
+----
+
+See {help_html}#%3CPlug%3E%28iced_eval_in_context%29[<Plug>(iced_eval_in_context)] for more information.

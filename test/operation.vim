@@ -7,7 +7,7 @@ let s:ch = themis#helper('iced_channel')
 let s:repl = themis#helper('iced_repl')
 
 function! s:setup() abort
-  nnoremap <Plug>(iced_eval) :<C-u>call iced#operation#setup_eval()<CR>g@
+  nnoremap <Plug>(iced_eval) :<C-u>call iced#operation#setup('iced#operation#eval')<CR>g@
   nmap <Plug>(iced_eval_test) <Plug>(iced_eval)<Plug>(sexp_outer_list)``
 endfunction
 

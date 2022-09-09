@@ -643,6 +643,7 @@ function! iced#nrepl#eval(code, ...) abort
 
   let session_key  = get(option, 'session', iced#nrepl#current_session_key())
   let session = get(s:nrepl['sessions'], session_key, iced#nrepl#current_session())
+
   let pos = getcurpos()
   let msg = {
         \ 'id': get(option, 'id', iced#nrepl#id()),
@@ -656,6 +657,10 @@ function! iced#nrepl#eval(code, ...) abort
         \ 'verbose': get(option, 'verbose', v:true),
         \ 'callback': Callback,
         \ }
+
+  if get(option, 'no_session', v:false)
+    unlet msg['session']
+  endif
 
   let ns_name = get(option, 'ns', '')
   if !empty(ns_name)

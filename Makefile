@@ -121,3 +121,7 @@ outdated:
 .PHONY: repl
 repl:
 	clojure -R:jackin:dev -m iced-repl
+
+.PHONY: benchmark
+benchmark:
+	vim -u NONE -i NONE -n -N --cmd 'source scripts/bencode_benchmark.vim'
