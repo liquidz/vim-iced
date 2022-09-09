@@ -16,6 +16,7 @@ CONTENTS                                                    *vim-iced-contents*
       shadow-cljs              |vim-iced-manual-shadow-cljs|
       Rebel Readline           |vim-iced-manual-rebel-readline|
     Boost by Python            |vim-iced-install-python|
+    Boost by Vim9 script       |vim-iced-vim9-script|
     Docker                     |vim-iced-install-docker|
   REPL Connection              |vim-iced-repl-connection|
   ClojureScript                |vim-iced-clojurescript|
@@ -26,6 +27,7 @@ CONTENTS                                                    *vim-iced-contents*
     Stdout Buffer              |vim-iced-stdout-buffer|
     Yank the result            |vim-iced-yank-the-result|
     Evaluating in context      |vim-iced-eval-in-context|
+    Evaluating spinner         |vim-iced-evaluating-spinner|
   Testing                      |vim-iced-testing|
     Plain nREPL                |vim-iced-testing-plain-nrepl|
   Debugging                    |vim-iced-debugging|
@@ -140,7 +142,7 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "1.0.0"]
-                   [com.github.liquidz/iced-nrepl "1.2.462"]
+                   [com.github.liquidz/iced-nrepl "1.2.465"]
                    [cider/cider-nrepl "0.28.5"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
@@ -172,7 +174,7 @@ BOOT~
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "3.5.5"]
       [cider/cider-nrepl "0.28.5"]
-      [com.github.liquidz/iced-nrepl "1.2.462"]])
+      [com.github.liquidz/iced-nrepl "1.2.465"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -202,7 +204,7 @@ SHADOW-CLJS~
   {
    :dependencies [[refactor-nrepl "3.5.5"]
                   [cider/cider-nrepl "0.28.5"]
-                  [com.github.liquidz/iced-nrepl "1.2.462"]]
+                  [com.github.liquidz/iced-nrepl "1.2.465"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -286,6 +288,16 @@ BOOST BY PYTHON                                       *vim-iced-install-python*
 
   But pure vim script is slow.
   So vim-iced uses `if_python3` to boost process if it is enabled.
+
+==============================================================================
+BOOST BY VIM9 SCRIPT                                     *vim-iced-vim9-script*
+
+  With Vim8, all communication with nrepl is done by pure vim script,
+  and it is slow.
+  With Vim9, vim-iced uses |vim9script| automatically,
+  and it leads to boost communication between nREPL.
+
+  vim-iced requires Vim 9.0.297 or later to boost.
 
 ==============================================================================
 DOCKER                                                *vim-iced-install-docker*
@@ -482,6 +494,18 @@ EVALUATING IN CONTEXT                                *vim-iced-eval-in-context*
   cf. |vim-iced-customizing-default-keys|
 
   See |<Plug>(iced_eval_in_context)| for more information.
+
+------------------------------------------------------------------------------
+EVALUATING SPINNER                                 *vim-iced-evaluating-spinner*
+
+  vim-iced supports to display spinners while code is evaluating.
+  Evaluating spinner requires:
+  - Vim 9.0.297 or later
+  - Neovim
+    
+  See also:
+  - |g:iced#eval#popup_spinner_texts| 
+  - |g:iced#eval#popup_spinner_interval|
 
 ==============================================================================
 TESTING                                                      *vim-iced-testing*
@@ -888,6 +912,12 @@ COMMANDS                                                    *vim-iced-commands*
   Evaluate selected form in current session.
   Key is mapped to |<Plug>(iced_eval_visual)|
 
+                                                          *:IcedEvalIsolatedly*
+:IcedEvalIsolatedly {form}
+  Evaluate {form} in a isolated(ephemeral) session.
+  cf. https://nrepl.org/nrepl/design/middleware.html#sessions
+  This is useful if you wouldn't like to block other evaluations.
+
                                                                  *:IcedRequire*
 :IcedRequire
   Load current file in current session.
@@ -1261,6 +1291,11 @@ COMMANDS                                                    *vim-iced-commands*
   `ctrlp.vim` is required.
   Key is mapped to |<Plug>(iced_clear_ctrlp_cache)|.
 
+                                                       *:IcedClearInlineResult*
+:IcedClearInlineResult
+  Clear all inline evaluated results.
+  Key is mapped to |<Plug>(iced_clear_inline_result)|.
+
                                                                  *:IcedCleanNs*
 :IcedCleanNs
   Cleanup ns form.
@@ -1484,6 +1519,15 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
   This operator supports yanking.
   See |vim-iced-yank-the-result| for more information.
 
+                                                 *<Plug>(iced_eval_isolatedly)*
+<Plug>(iced_eval_isolatedly)
+  Evaluate codes in a isolated(ephemeral) session.
+  Followings are examples for working with {vim-sexp}.
+>
+  <Plug>(iced_eval_isolatedly)<Plug>(sexp_inner_element)``
+  <Plug>(iced_eval_isolatedly)<Plug>(sexp_outer_list)``
+  <Plug>(iced_eval_isolatedly)<Plug>(sexp_outer_top_list)``
+<
                                                   *<Plug>(iced_eval_and_print)*
 <Plug>(iced_eval_and_print)
   Evaluate code and print result to stdout buffer.
@@ -1794,6 +1838,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
 <Plug>(iced_clear_ctrlp_cache)
   Same as |:IcedClearCtrlpCache|.
 
+                                             *<Plug>(iced_clear_inline_result)*
+<Plug>(iced_clear_inline_result)
+  Same as |:IcedClearInlineResult|.
+
                                                         *<Plug>(iced_clean_ns)*
 <Plug>(iced_clean_ns)
   Same as |:IcedCleanNs|.
@@ -1951,6 +1999,37 @@ g:iced#eval#values_to_skip_storing_register
 g:iced#eval#popup_highlight
   The highlight setting for popup to display evaluated result.
   Default value is `'Comment'`.
+
+                                                      *g:iced#eval#popup_align*
+g:iced#eval#popup_align
+  The alignment setting for popup to display evaluated result.
+  The value must be one of `'after'` or `'right'`.
+  
+  - `'after'`
+    Place the result after the end of the line.
+  - `'right'`
+    Place on the right edge of the window.
+  
+  Default value is `'after'`.
+
+                                              *g:iced#eval#popup_spinner_texts* 
+g:iced#eval#popup_spinner_texts 
+  Texts for spinners while code is evaluating.
+  Default value is `[' ⠋',' ⠙',' ⠹',' ⠸',' ⠼',' ⠴',' ⠦',' ⠧',' ⠇',' ⠏']` .
+  See also |vim-iced-evaluating-spinner|.
+
+                                           *g:iced#eval#popup_spinner_interval*
+g:iced#eval#popup_spinner_interval
+  Interval time for spinners while code is evaluating.
+  Unit is milli sec.
+  Default value is `100`.
+  See also |vim-iced-evaluating-spinner|.
+
+                                               *g:iced#eval#keep_inline_result*
+g:iced#eval#keep_inline_result
+  If {v:true}, evaluation results displayed as popup are kept.
+  Default value is `v:false`.
+  See |:IcedClearInlineResult| to clear results.
 
                                                    *g:iced#buffer#error#height*
 g:iced#buffer#error#height

@@ -1,3 +1,4 @@
+scriptencoding utf-8
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -6,6 +7,9 @@ let g:iced#eval#mark_at_last = get(g:, 'iced#eval#mark_at_last', '1')
 let g:iced#eval#keep_inline_result = get(g:, 'iced#eval#keep_inline_result', v:false)
 let g:iced#eval#values_to_skip_storing_register = get(g:, 'iced#eval#values_to_skip_storing_register', ['nil', 'true', 'false'])
 let g:iced#eval#popup_highlight = get(g:, 'iced#eval#popup_highlight', 'Comment')
+let g:iced#eval#popup_align = get(g:, 'iced#eval#popup_align', 'after')
+let g:iced#eval#popup_spinner_texts = get(g:, 'iced#eval#popup_spinner_texts', [' ⠋', ' ⠙', ' ⠹', ' ⠸', ' ⠼', ' ⠴', ' ⠦', ' ⠧', ' ⠇', ' ⠏'])
+let g:iced#eval#popup_spinner_interval = get(g:, 'iced#eval#popup_spinner_interval', 100)
 let g:iced#repl#babashka_repl_type = get(g:, 'iced#repl#babashka_repl_type', 'nrepl')
 let g:iced#repl#ignore_connected = get(g:, 'iced#repl#ignore_connected', v:false)
 
@@ -67,11 +71,12 @@ function! iced#repl#execute(feature_name, ...) abort
   endif
 endfunction
 
-function! iced#repl#eval_at_mark(mark) abort
+function! iced#repl#eval_at_mark(mark, ...) abort
   if getpos(printf("'%s", a:mark)) == [0, 0, 0, 0]
     return
   endif
 
+  let CodeWrapFn = get(a:, 1, {v -> v})
   let context = iced#util#save_context()
   " To show virtual text at current line
   let opt = {'virtual_text': {
@@ -86,6 +91,9 @@ function! iced#repl#eval_at_mark(mark) abort
 
     let code = iced#paredit#get_outer_list_raw()
     let code = iced#nrepl#eval#normalize_code(code)
+    if type(CodeWrapFn) == v:t_func
+      let code = CodeWrapFn(code)
+    endif
 
     let p = iced#repl#execute('eval_code', code, opt)
     if iced#promise#is_promise(p)
@@ -94,6 +102,12 @@ function! iced#repl#eval_at_mark(mark) abort
   finally
     call iced#util#restore_context(context)
   endtry
+endfunction
+
+function! iced#repl#eval_in_context_at_mark(mark) abort
+  let context = iced#context#input()
+  if empty(context) | return | endif
+  return iced#repl#eval_at_mark(a:mark, function('iced#context#wrap_code', [context]))
 endfunction
 
 function! iced#repl#eval_last_outer_top_list() abort

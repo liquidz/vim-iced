@@ -2,12 +2,16 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:component_cache = {}
+
 let s:nvim = has('nvim')
+" cf. https://github.com/vim/vim/commit/c8bf59e9b27f9d621818ffc61468abef45cedf37
+let s:vim9 = has('patch-9.0.297')
 
 let s:org_system_map = {
       \ 'vim_bencode':  {'start': 'iced#component#bencode#vim#start'},
-      \ 'bencode':      {'start': 'iced#component#bencode#start',
-      \                  'requires': ['vim_bencode']},
+      \ 'bencode':      (s:vim9 ? {'start': 'iced#component#bencode#vim9#start'}
+      \                         : {'start': 'iced#component#bencode#start',
+      \                            'requires': ['vim_bencode']}),
       \ 'channel':      {'start': (s:nvim ? 'iced#component#channel#neovim#start'
       \                                   : 'iced#component#channel#vim#start')},
       \ 'ex_cmd':       {'start': 'iced#component#ex_cmd#start'},
@@ -30,8 +34,12 @@ let s:org_system_map = {
       \                  'requires': ['popup_config']},
       \ 'virtual_text': (s:nvim ? {'start': 'iced#component#virtual_text#neovim#start',
       \                            'requires': ['timer']}
-      \                         : {'start': 'iced#component#virtual_text#vim#start',
-      \                            'requires': ['popup', 'ex_cmd']}),
+      \                         : (s:vim9 ? {'start': 'iced#component#virtual_text#vim9#start',
+      \                                      'requires': ['timer']}
+      \                                   : {'start': 'iced#component#virtual_text#vim#start',
+      \                                      'requires': ['popup', 'ex_cmd']})),
+      \ 'spinner':      {'start': 'iced#component#spinner#start',
+      \                  'requires': ['virtual_text', 'timer']},
       \ 'notify':       {'start': 'iced#component#notify#start',
       \                  'requires': ['popup', 'timer']},
       \ 'installer':    {'start': 'iced#component#installer#start',

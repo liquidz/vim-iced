@@ -1,0 +1,38 @@
+=== Ranges [[evaluation_ranges]]
+
+There are 3 main ranges to evaluation in vim-iced.
+
+- inner element
+- outer list
+- outer top list
+
+See the following figure for the concrete ranges.
+
+image::assets/evaluation_range.png[Evaluation range]
+
+If you enable default key mappings, following key mappings are available.
+
+.Default key mappings
+[cols="30a,70"]
+|===
+
+| [reftext="evaluating inner element"]
+[[evaluate_inner_element]]
+inner element
+| `{plug_iced_eval_inner_element}`
+
+| [reftext="evaluating outer list"]
+[[evaluate_outer_list]]
+outer list
+| `{plug_iced_eval_outer_list}`
+
+| [reftext="evaluating outer top list"]
+[[evaluate_outer_top_list]]
+outer top list
+| `{plug_iced_eval_outer_top_list}`
+
+|===
+
+See {help_html}#vim-iced-customizing-default-keys[help file] for other default key mappings.
+
+TIP: See also <<eval_inside_comment>>

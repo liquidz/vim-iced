@@ -92,8 +92,18 @@ function! s:print_stack_trace(resp) abort
   endif
 endfunction
 
+function! s:line_uniq_key() abort
+  return printf('%d-%d', bufnr('%'), line('.'))
+endfunction
+
 function! iced#nrepl#eval#out(resp, ...) abort
   let opt = get(a:, 1, {})
+
+  let spinner_key = get(opt, 'spinner_key', '')
+  if ! empty(spinner_key)
+    call iced#system#get('spinner').stop(spinner_key)
+  endif
+
   if has_key(a:resp, 'value')
     if get(opt, 'verbose', v:true)
       let value = a:resp['value']
@@ -103,18 +113,35 @@ function! iced#nrepl#eval#out(resp, ...) abort
         call iced#util#store_and_slide_registers(value)
       endif
 
-      let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
-      let virtual_text_opt['highlight'] = g:iced#eval#popup_highlight
-      if g:iced#eval#keep_inline_result
-        let virtual_text_opt['auto_clear'] = v:false
-      else
-        let virtual_text_opt['auto_clear'] = v:true
-      endif
-      let virtual_text_opt['indent'] = 3 " len('=> ')
+      " Ignoring session validity means that this evaluation does not related to current buffer.
+      " Thus the evaluation result does not related to current cursor position.
+      if !  get(opt, 'ignore_session_validity', v:false)
+        let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
+        let virtual_text_opt['highlight'] = g:iced#eval#popup_highlight
+        let virtual_text_opt['buffer'] = get(opt, 'buffer', bufnr('%'))
+        let virtual_text_opt['line'] = get(opt, 'line', line('.'))
+        let virtual_text_opt['align'] = g:iced#eval#popup_align
 
-      call iced#system#get('virtual_text').set(
-            \ printf('=> %s', value),
-            \ virtual_text_opt)
+        let is_right_aligned = (g:iced#eval#popup_align ==# 'right')
+
+        if g:iced#eval#keep_inline_result
+          let virtual_text_opt['auto_clear'] = v:false
+        else
+          let virtual_text_opt['auto_clear'] = v:true
+        endif
+
+        let text = is_right_aligned ? value : printf('=> %s', value)
+        let virtual_text_opt['indent'] = is_right_aligned ? 0 : 3 " len('=> ')
+
+        call iced#system#get('virtual_text').set(text, virtual_text_opt)
+      endif
+    endif
+  else
+    if get(opt, 'verbose', v:true)
+      call iced#system#get('virtual_text').clear({
+            \ 'buffer': get(opt, 'buffer', bufnr('%')),
+            \ 'line': get(opt, 'line', line('.')),
+            \ })
     endif
   endif
 
@@ -146,15 +173,20 @@ endfunction
 
 function! iced#nrepl#eval#code(code, ...) abort
   let opt = get(a:, 1, {})
-  if ! get(opt, 'ignore_session_validity', v:false) && ! iced#nrepl#check_session_validity()
+  let does_ignore_session_validity = get(opt, 'ignore_session_validity', v:false)
+  if ! does_ignore_session_validity && ! iced#nrepl#check_session_validity()
     return
   endif
   let view = winsaveview()
   let reg_save = @@
 
+  let spinner_key = s:line_uniq_key()
   let code = iced#nrepl#eval#normalize_code(a:code)
   let out_opt = copy(opt)
   let out_opt['code'] = code
+  let out_opt['buffer'] = bufnr('%')
+  let out_opt['line'] = line('.')
+  let out_opt['spinner_key'] = spinner_key
 
   let Callback = get(opt, 'callback', {resp -> iced#nrepl#eval#out(resp, out_opt)})
   if has_key(opt, 'callback')
@@ -169,12 +201,30 @@ function! iced#nrepl#eval#code(code, ...) abort
   endif
 
   try
+    " Ignoring session validity means that this evaluation does not related to current buffer.
+    " Thus the evaluation result does not related to current cursor position.
+    if ! does_ignore_session_validity
+      call iced#system#get('spinner').start(spinner_key, {
+            \ 'texts': g:iced#eval#popup_spinner_texts,
+            \ 'highlight': g:iced#eval#popup_highlight,
+            \ 'align': g:iced#eval#popup_align,
+            \ 'interval': g:iced#eval#popup_spinner_interval,
+            \ })
+    endif
     return iced#promise#call('iced#nrepl#eval', [code, opt])
           \.then(Callback)
   finally
     let @@ = reg_save
     call winrestview(view)
   endtry
+endfunction
+
+" Evaluate code in one-shot session
+" cf. https://nrepl.org/nrepl/design/middleware.html#sessions
+function! iced#nrepl#eval#code_isolatedly(code, ...) abort
+  let opt = copy(get(a:, 1, {}))
+  let opt['no_session'] = v:true
+  return iced#nrepl#eval#code(a:code, opt)
 endfunction
 
 function! s:undefined(resp, symbol) abort

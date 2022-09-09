@@ -36,9 +36,17 @@ function! iced#operation#eval(type) abort
   return s:eval({code -> iced#repl#execute('eval_code', code, opt)})
 endfunction
 
-function! iced#operation#setup_eval() abort
-  let &operatorfunc = 'iced#operation#eval'
+function! iced#operation#setup(func_name) abort
+  let &operatorfunc = a:func_name
   let s:register = v:register
+endfunction
+
+function! iced#operation#eval_isolatedly(type) abort
+  let opt = {}
+  if s:register !=# '"'
+    let opt['callback'] = funcref('s:yank_and_out')
+  endif
+  return s:eval({code -> iced#repl#execute('eval_code_isolatedy', code, opt)})
 endfunction
 
 function! s:__eval_and_print(resp) abort
@@ -98,15 +106,10 @@ function! s:__eval_and_comment(resp) abort
   endif
 endfunction
 
-let s:last_context = ''
 function! iced#operation#eval_in_context(type) abort
-  call inputsave()
-  let context = iced#system#get('io').input(iced#message#get('evaluation_context'), s:last_context)
-  call inputrestore()
+	let context = iced#context#input()
   if empty(context) | return | endif
-
-  let s:last_context = context
-  return s:eval({code -> iced#repl#execute('eval_code', printf('(clojure.core/let [%s] %s)', s:last_context, code))})
+  return s:eval({code -> iced#repl#execute('eval_code', iced#context#wrap_code(context, code))})
 endfunction
 
 function! iced#operation#macroexpand(type) abort

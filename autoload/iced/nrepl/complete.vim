@@ -27,7 +27,7 @@ function! s:format_arglist(arglist) abort
 endfunction
 
 function! s:candidate(c) abort
-  let arglists = get(a:c, 'arglists', [])
+  let arglists = copy(get(a:c, 'arglists', []))
   let arglists = map(arglists, {_, v -> s:format_arglist(v)})
   let doc = get(a:c, 'doc')
   if empty(doc)
@@ -43,12 +43,10 @@ function! s:candidate(c) abort
       \}
 endfunction
 
-
 function! s:candidates(resp) abort
   let candidates = (type(a:resp) == v:t_dict && has_key(a:resp, 'completions'))
-        \ ? a:resp['completions']
+        \ ? copy(a:resp['completions'])
         \ : []
-
   return sort(map(candidates, {_, v -> s:candidate(v)}),
         \ {a, b -> a['word'] > b['word']})
 endfunction

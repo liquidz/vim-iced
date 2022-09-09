@@ -95,6 +95,7 @@ command!          IcedQuitCljsRepl          call iced#nrepl#cljs#stop_repl_via_e
 command!          IcedCycleSession          call iced#nrepl#cljs#cycle_session()
 
 command! -nargs=1 IcedEval                  call iced#repl#execute('eval_code', <q-args>, {'ignore_session_validity': v:true, 'ignore_ns': v:true})
+command! -nargs=1 IcedEvalIsolatedly        call iced#repl#execute('eval_code_isolatedy', <q-args>, {'ignore_session_validity': v:true, 'ignore_ns': v:true})
 command!          IcedEvalNs                call iced#nrepl#eval#ns()
 command! -range   IcedEvalVisual            call iced#nrepl#eval#visual()
 command!          IcedRequire               call iced#repl#execute('load_current_file')
@@ -104,6 +105,7 @@ command! -nargs=? IcedUndefAllInNs          call iced#nrepl#eval#undef_all_in_ns
 command! -nargs=? IcedUnaliasNs             call iced#nrepl#ns#unalias(<q-args>)
 command!          IcedEvalOuterTopList      call iced#repl#execute('eval_outer_top_list')
 command!          IcedEvalAtMark            call iced#repl#execute('eval_at_mark', nr2char(getchar()))
+command!          IcedEvalInContextAtMark   call iced#repl#execute('eval_in_context_at_mark', nr2char(getchar()))
 command!          IcedEvalLastOuterTopList  call iced#repl#execute('eval_last_outer_top_list')
 command!          IcedPrintLast             call iced#nrepl#eval#print_last()
 command!          IcedMacroExpandOuterList  call iced#nrepl#macro#expand_outer_list()
@@ -213,7 +215,8 @@ nnoremap <silent> <Plug>(iced_jack_in)                  :<C-u>IcedJackIn<CR>
 nnoremap <silent> <Plug>(iced_start_cljs_repl)          :<C-u>IcedStartCljsRepl<CR>
 nnoremap <silent> <Plug>(iced_quit_cljs_repl)           :<C-u>IcedQuitCljsRepl<CR>
 
-nnoremap <silent> <Plug>(iced_eval)                     :<C-u>call iced#operation#setup_eval()<CR>g@
+nnoremap <silent> <Plug>(iced_eval)                     :<C-u>call iced#operation#setup('iced#operation#eval')<CR>g@
+nnoremap <silent> <Plug>(iced_eval_isolatedly)          :<C-u>call iced#operation#setup('iced#operation#eval_isolatedly')<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_print)           :<C-u>set opfunc=iced#operation#eval_and_print<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_tap)             :<C-u>set opfunc=iced#operation#eval_and_tap<CR>g@
 nnoremap <silent> <Plug>(iced_eval_and_replace)         :<C-u>set opfunc=iced#operation#eval_and_replace<CR>g@
@@ -230,6 +233,7 @@ nnoremap <silent> <Plug>(iced_undef_all_in_ns)          :<C-u>IcedUndefAllInNs<C
 nnoremap <silent> <Plug>(iced_unalias_ns)               :<C-u>IcedUnaliasNs<CR>
 nnoremap <silent> <Plug>(iced_eval_outer_top_list)      :<C-u>IcedEvalOuterTopList<CR>
 nnoremap <silent> <Plug>(iced_eval_at_mark)             :<C-u>IcedEvalAtMark<CR>
+nnoremap <silent> <Plug>(iced_eval_in_context_at_mark)  :<C-u>IcedEvalInContextAtMark<CR>
 nnoremap <silent> <Plug>(iced_eval_last_outer_top_list) :<C-u>IcedEvalLastOuterTopList<CR>
 nnoremap <silent> <Plug>(iced_print_last)               :<C-u>IcedPrintLast<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_outer_list)   :<C-u>IcedMacroExpandOuterList<CR>
@@ -402,7 +406,13 @@ function! s:default_key_mappings() abort
     call s:define_mapping('nmap', '<Leader>ece', '<Plug>(iced_eval_in_context)<Plug>(sexp_outer_list)``')
   endif
 
+  if !hasmapto('<Plug>(iced_eval_isolatedly)')
+    call s:define_mapping('nmap', '<Leader>eoi', '<Plug>(iced_eval_isolatedly)<Plug>(sexp_inner_element)``' )
+    call s:define_mapping('nmap', '<Leader>eoe', '<Plug>(iced_eval_isolatedly)<Plug>(sexp_outer_list)``' )
+  endif
+
   call s:define_mapping('nmap', '<Leader>ea', '<Plug>(iced_eval_at_mark)')
+  call s:define_mapping('nmap', '<Leader>eca', '<Plug>(iced_eval_in_context_at_mark)')
   call s:define_mapping('nmap', '<Leader>el', '<Plug>(iced_eval_last_outer_top_list)')
   call s:define_mapping('vmap', '<Leader>ee', '<Plug>(iced_eval_visual)')
   call s:define_mapping('nmap', '<Leader>en', '<Plug>(iced_eval_ns)')

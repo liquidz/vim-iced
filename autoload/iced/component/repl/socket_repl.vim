@@ -1,13 +1,19 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+function! s:not_supported(...) abort
+  return iced#message#error('not_supported')
+endfunction
+
 let s:socket_repl = {
       \ 'connect': function('iced#socket_repl#connect'),
       \ 'disconnect': function('iced#socket_repl#disconnect'),
       \ 'env': 'socket_repl',
       \ 'eval_code': function('iced#socket_repl#eval'),
+      \ 'eval_code_isolatedy': funcref('s:not_supported'),
       \ 'eval_outer_top_list': function('iced#socket_repl#eval_outer_top_list'),
       \ 'eval_at_mark': function('iced#repl#eval_at_mark'),
+      \ 'eval_in_context_at_mark': function('iced#repl#eval_in_context_at_mark'),
       \ 'eval_last_outer_top_list': function('iced#repl#eval_last_outer_top_list'),
       \ 'is_connected': function('iced#socket_repl#is_connected'),
       \ 'status': function('iced#socket_repl#status'),
