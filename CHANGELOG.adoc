@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file. This change
 
 === Changed
 * Bumped iced-nrepl to 1.2.465.
+* Bumped joker to 1.0.1.
 
 === Fixed
 * Fixed neovim virtual text component to use `nvim_buf_set_extmark`.
