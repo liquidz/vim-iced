@@ -1,12 +1,14 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Bumped iced-nrepl to 1.2.468.
+// }}}
 
 == 3.12.3144 (2022-09-09)
-
 // {{{
 === Added
-
 * Added support for virtual text in Vim9.
 ** Requires Vim 9.0.297 or later.
 * Added bencode component using Vim9 script.
