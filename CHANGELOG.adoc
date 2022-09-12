@@ -1,6 +1,10 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/443[#443]: Fixed evaluation spinners not to remain when codes are evaluated with `<Plug>(iced_eval)`.
+// }}}
 
 == 3.12.3148 (2022-09-10)
 // {{{

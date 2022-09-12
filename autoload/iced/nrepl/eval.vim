@@ -96,8 +96,8 @@ function! s:line_uniq_key() abort
   return printf('%d-%d', bufnr('%'), line('.'))
 endfunction
 
-function! iced#nrepl#eval#out(resp, ...) abort
-  let opt = get(a:, 1, {})
+function! iced#nrepl#eval#out(resp) abort
+  let opt = get(a:resp, 'iced_out_opt', {})
 
   let spinner_key = get(opt, 'spinner_key', '')
   if ! empty(spinner_key)
@@ -115,7 +115,7 @@ function! iced#nrepl#eval#out(resp, ...) abort
 
       " Ignoring session validity means that this evaluation does not related to current buffer.
       " Thus the evaluation result does not related to current cursor position.
-      if !  get(opt, 'ignore_session_validity', v:false)
+      if ! get(opt, 'ignore_session_validity', v:false)
         let virtual_text_opt = copy(get(opt, 'virtual_text', {}))
         let virtual_text_opt['highlight'] = g:iced#eval#popup_highlight
         let virtual_text_opt['buffer'] = get(opt, 'buffer', bufnr('%'))
@@ -188,7 +188,7 @@ function! iced#nrepl#eval#code(code, ...) abort
   let out_opt['line'] = line('.')
   let out_opt['spinner_key'] = spinner_key
 
-  let Callback = get(opt, 'callback', {resp -> iced#nrepl#eval#out(resp, out_opt)})
+  let Callback = get(opt, 'callback', function('iced#nrepl#eval#out'))
   if has_key(opt, 'callback')
     unlet opt['callback']
   endif
@@ -212,6 +212,7 @@ function! iced#nrepl#eval#code(code, ...) abort
             \ })
     endif
     return iced#promise#call('iced#nrepl#eval', [code, opt])
+          \.then({resp -> iced#util#assoc(resp, 'iced_out_opt', out_opt)})
           \.then(Callback)
   finally
     let @@ = reg_save

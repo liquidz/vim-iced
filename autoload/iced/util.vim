@@ -140,6 +140,12 @@ function! iced#util#partition(arr, n, is_all) abort
   return result
 endfunction
 
+function! iced#util#assoc(dict, k, v) abort
+  let d = copy(a:dict)
+  let d[a:k] = a:v
+  return d
+endfunction
+
 function! iced#util#save_var(v, filename) abort
   let serialized = string(a:v)
   call writefile([serialized], a:filename)
