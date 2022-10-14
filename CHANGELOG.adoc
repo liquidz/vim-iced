@@ -1,6 +1,10 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/447[#447]: Fixed popup window to work with neovim 0.8.0.
+// }}}
 
 == 3.12.3158 (2022-09-22)
 // {{{
