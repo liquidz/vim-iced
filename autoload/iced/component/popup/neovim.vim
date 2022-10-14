@@ -26,7 +26,12 @@ function! s:init_win(winid, opts) abort
 
   let bufnr = winbufnr(a:winid)
   " HACK: To avoid vim-lsp activation
-  call setbufvar(bufnr, '&buftype', 'terminal')
+  try
+    " Neovim 0.8.0 throws 'Invalid argument' error
+    " Most meovim users uses built-in LSP, so this hack may be unnecessary
+    call setbufvar(bufnr, '&buftype', 'terminal')
+  catch
+  endtry
 
   call setbufvar(bufnr, '&filetype', get(a:opts, 'filetype', s:default_filetype))
   call setbufvar(bufnr, '&swapfile', 0)
