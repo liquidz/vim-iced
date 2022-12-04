@@ -143,7 +143,7 @@ LEININGEN~
   {:user
    {:dependencies [[nrepl "1.0.0"]
                    [com.github.liquidz/iced-nrepl "1.2.468"]
-                   [cider/cider-nrepl "0.28.6"]]
+                   [cider/cider-nrepl "0.28.7"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -161,7 +161,7 @@ LEININGEN~
                                       cider.nrepl/wrap-undef
                                       cider.nrepl/wrap-xref
                                       iced.nrepl/wrap-iced]}
-    :plugins [[refactor-nrepl "3.5.5"]]}}
+    :plugins [[refactor-nrepl "3.6.0"]]}}
 <
 
                                                          *vim-iced-manual-boot*
@@ -172,8 +172,8 @@ BOOT~
   (require (quote boot.repl))
 
   (swap! boot.repl/*default-dependencies* concat
-    '[[refactor-nrepl "3.5.5"]
-      [cider/cider-nrepl "0.28.6"]
+    '[[refactor-nrepl "3.6.0"]
+      [cider/cider-nrepl "0.28.7"]
       [com.github.liquidz/iced-nrepl "1.2.468"]])
 
   (swap! boot.repl/*default-middleware* concat
@@ -202,8 +202,8 @@ SHADOW-CLJS~
   shadow-cljs.edn
 >
   {
-   :dependencies [[refactor-nrepl "3.5.5"]
-                  [cider/cider-nrepl "0.28.6"]
+   :dependencies [[refactor-nrepl "3.6.0"]
+                  [cider/cider-nrepl "0.28.7"]
                   [com.github.liquidz/iced-nrepl "1.2.468"]]
   }
 <
@@ -1024,6 +1024,11 @@ COMMANDS                                                    *vim-iced-commands*
   Open test result buffer.
   Key is mapped to |<Plug>(iced_test_buffer_open)|.
 
+                                                         *:IcedTestBufferClose*
+:IcedTestBufferClose
+  Close test result buffer.
+  Key is mapped to |<Plug>(iced_test_buffer_close)|.
+
                                                                   *:IcedTestNs*
 :IcedTestNs
   Run tests in current namespace.
@@ -1677,6 +1682,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                 *<Plug>(iced_test_buffer_open)*
 <Plug>(iced_test_buffer_open)
   Same as |:IcedTestBufferOpen|.
+
+                                               *<Plug>(iced_test_buffer_close)*
+<Plug>(iced_test_buffer_close)
+  Same as |:IcedTestBufferClose|.
 
                                               *<Plug>(iced_stdout_buffer_open)*
 <Plug>(iced_stdout_buffer_open)

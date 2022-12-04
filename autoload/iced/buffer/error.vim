@@ -36,5 +36,9 @@ function! iced#buffer#error#show(text) abort
   call iced#buffer#error#open()
 endfunction
 
+function! iced#buffer#error#close() abort
+  call iced#buffer#close(s:bufname)
+endfunction
+
 let &cpo = s:save_cpo
 unlet s:save_cpo

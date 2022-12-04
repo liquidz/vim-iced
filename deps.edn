@@ -1,7 +1,7 @@
 {:paths ["clj/repl"]
  :deps {nrepl/nrepl {:mvn/version "1.0.0"}
-        refactor-nrepl/refactor-nrepl {:mvn/version "3.5.5"}
-        cider/cider-nrepl {:mvn/version "0.28.6"}
+        refactor-nrepl/refactor-nrepl {:mvn/version "3.6.0"}
+        cider/cider-nrepl {:mvn/version "0.28.7"}
         com.github.liquidz/iced-nrepl {:mvn/version "1.2.468"}}
  :__middlewares__
  ["cider.nrepl/wrap-classpath"
@@ -39,6 +39,6 @@
   :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}
                           org.slf4j/slf4j-nop {:mvn/version "RELEASE"}}
              :main-opts ["-m" "antq.core"]}
-  :build {:deps {com.github.liquidz/build.edn {:git/tag "0.7.145" :git/sha "776501e"}}
+  :build {:deps {com.github.liquidz/build.edn {:git/tag "0.9.188" :git/sha "d2d25b0"}}
           :ns-default build-edn.main}
   :dev {}}}
