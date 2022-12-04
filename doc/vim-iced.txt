@@ -1024,6 +1024,11 @@ COMMANDS                                                    *vim-iced-commands*
   Open test result buffer.
   Key is mapped to |<Plug>(iced_test_buffer_open)|.
 
+                                                         *:IcedTestBufferClose*
+:IcedTestBufferClose
+  Close test result buffer.
+  Key is mapped to |<Plug>(iced_test_buffer_close)|.
+
                                                                   *:IcedTestNs*
 :IcedTestNs
   Run tests in current namespace.
@@ -1677,6 +1682,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                 *<Plug>(iced_test_buffer_open)*
 <Plug>(iced_test_buffer_open)
   Same as |:IcedTestBufferOpen|.
+
+                                               *<Plug>(iced_test_buffer_close)*
+<Plug>(iced_test_buffer_close)
+  Same as |:IcedTestBufferClose|.
 
                                               *<Plug>(iced_stdout_buffer_open)*
 <Plug>(iced_stdout_buffer_open)
