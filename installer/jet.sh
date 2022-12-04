@@ -2,7 +2,7 @@
 
 set -e
 
-version='0.2.18'
+version='0.3.21'
 file='jet.tar.gz'
 if [ "$(uname)" == 'Darwin' ]; then
     os='macos'
