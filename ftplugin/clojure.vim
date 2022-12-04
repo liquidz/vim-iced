@@ -122,6 +122,7 @@ command!          IcedTestUnderCursor       call iced#nrepl#test#under_cursor()
 command!          IcedTestRerunLast         call iced#nrepl#test#rerun_last()
 command! -nargs=? IcedTestSpecCheck         call iced#nrepl#test#spec_check(<q-args>)
 command!          IcedTestBufferOpen        call iced#buffer#error#open()
+command!          IcedTestBufferClose       call iced#buffer#error#close()
 
 command!          IcedStdoutBufferOpen      call iced#buffer#stdout#open()
 command!          IcedStdoutBufferClear     call iced#buffer#stdout#clear()
@@ -250,6 +251,7 @@ nnoremap <silent> <Plug>(iced_test_under_cursor)        :<C-u>IcedTestUnderCurso
 nnoremap <silent> <Plug>(iced_test_rerun_last)          :<C-u>IcedTestRerunLast<CR>
 nnoremap <silent> <Plug>(iced_test_spec_check)          :<C-u>IcedTestSpecCheck<CR>
 nnoremap <silent> <Plug>(iced_test_buffer_open)         :<C-u>IcedTestBufferOpen<CR>
+nnoremap <silent> <Plug>(iced_test_buffer_close)        :<C-u>IcedTestBufferClose<CR>
 
 nnoremap <silent> <Plug>(iced_stdout_buffer_open)       :<C-u>IcedStdoutBufferOpen<CR>
 nnoremap <silent> <Plug>(iced_stdout_buffer_clear)      :<C-u>IcedStdoutBufferClear<CR>
