@@ -18,6 +18,7 @@
   'clj_kondo_analyzing':       'Analyzing yet. Do you want to proceed? (Y/n): ',
   'clojuredocs_cljs_error':    'Tried searching for "%s", but ClojureDocs does not have docs for ClojureScript.',
   'clojuredocs_not_found':     'Cannot find "%s" in ClojureDocs.',
+  'command_not_found':         'Command not found: %s.',
   'component_error':           'Failed to start component: %s.',
   'confirm_installation':      'Do you want to install `%s` to %s? (Y/n): ',
   'confirm_opening_file':      'Open this file?',
