@@ -632,7 +632,8 @@ JUMP TO DEFINITION                    *vim-iced-tag-jump*  *vim-iced-jump-to-def
   To jump back, you can use default key mapping(<C-t>).
 
   See also:
-  - |g:iced#navigate#prefer_local_jump|.
+  - |g:iced#navigate#prefer_local_jump|
+  - |g:iced#navigate#jump_fallback_command|
   - |vim-iced-protocol-jump|
 
 ------------------------------------------------------------------------------
@@ -2194,6 +2195,15 @@ g:iced_clj_kondo_analysis_dirs
 g:iced#navigate#prefer_local_jump
   If {v:true}, change the behavior of |:IcedDefJump| to prefer local jumping.
   Default value is `v:false`.
+
+                                        *g:iced#navigate#jump_fallback_command*
+g:iced#navigate#jump_fallback_command
+  A fallback command when jumping definition is failed.
+  E.g. >
+  let g:iced#navigate#jump_fallback_command = 
+      \ ':call CocAction("jumpDefinition")'
+<
+  Default value is `''`.
 
                                                           *g:iced#ns#class_map*
 g:iced#ns#class_map
