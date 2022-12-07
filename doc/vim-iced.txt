@@ -853,12 +853,15 @@ COMMANDS                                                    *vim-iced-commands*
 
   Supports follows {target}:
   - `nrepl` or empty
-    Launch `iced repl --instant`
+    Launch `iced repl --instant`.
   - `babashka`
-    Launch babashka REPL
+    Launch babashka REPL.
+    `bb` command is required.
     See also |g:iced#repl#babashka_repl_type| option.
   - `nbb`
-    Launch nbb REPL
+    Launch nbb REPL.
+    `nbb` or `deno` is required.
+    `deno` must be 1.28 or later.
 
   Key is mapped to |<Plug>(iced_instant_connect)|.
 
