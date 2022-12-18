@@ -273,11 +273,11 @@ function! iced#nrepl#op#cider#clojuredocs_refresh_cache(export_edn_url, callback
 endfunction " }}}
 
 """ stacktrace {{{
-function! iced#nrepl#op#cider#stacktrace(callback) abort
+function! iced#nrepl#op#cider#analyze_last_stacktrace(callback) abort
   if !iced#nrepl#is_connected() | return iced#message#error('not_connected') | endif
   call iced#nrepl#send({
         \ 'id': iced#nrepl#id(),
-        \ 'op': 'stacktrace',
+        \ 'op': 'analyze-last-stacktrace',
         \ 'session': iced#nrepl#current_session(),
         \ 'callback': a:callback,
         \ })
@@ -324,6 +324,7 @@ call iced#nrepl#register_handler('test-var-query', function('iced#nrepl#extend_r
 call iced#nrepl#register_handler('retest', function('iced#nrepl#extend_responses_handler'))
 call iced#nrepl#register_handler('ns-path', function('iced#nrepl#path_translation_handler', [['path']]))
 call iced#nrepl#register_handler('stacktrace', function('iced#nrepl#extend_responses_handler'))
+call iced#nrepl#register_handler('analyze-last-stacktrace', function('iced#nrepl#extend_responses_handler'))
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

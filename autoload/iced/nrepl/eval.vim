@@ -42,18 +42,22 @@ function! iced#nrepl#eval#err(err, ...) abort
   endif
 endfunction
 
-" NOTE: Each stacktrace format is like below
-"       {'file': 'form-init11159443384990986285.clj',
-"        'flags': ['project', 'repl', 'clj'],
-"        'ns': 'foo.core',
-"        'name': 'foo.core$boom/invokeStatic',
-"        'method': 'invokeStatic',
-"        'line': 9,
-"        'fn': 'boom',
-"        'class': 'foo.core$boom',
-"        'file-url': 'file:/private/tmp/foo/ src/foo/core.clj',
-"        'type': 'clj',
-"        'var': 'foo.core/boom'}
+" NOTE: Response format
+" {'data': '{:foo :bar}',
+"  'message': 'foo',
+"  'class': 'clojure.lang.ExceptionInfo',
+"  'stacktace': [
+"    {'file': 'form-init11159443384990986285.clj',
+"     'flags': ['project', 'repl', 'clj'],
+"     'ns': 'foo.core',
+"     'name': 'foo.core$boom/invokeStatic',
+"     'method': 'invokeStatic',
+"     'line': 9,
+"     'fn': 'boom',
+"     'class': 'foo.core$boom',
+"     'file-url': 'file:/private/tmp/foo/ src/foo/core.clj',
+"     'type': 'clj',
+"     'var': 'foo.core/boom'}]}
 function! s:print_stack_trace(resp) abort
   let errors = []
 
@@ -63,23 +67,34 @@ function! s:print_stack_trace(resp) abort
       if empty(class) | continue | endif
       let stacktrace = get(resp, 'stacktrace', [])
       if empty(stacktrace) | continue | endif
+      let data = get(resp, 'data')
+      let message = get(resp, 'message')
 
       call iced#buffer#stdout#append(class)
+      if !empty(data)
+        call iced#buffer#stdout#append(printf('  data %s', data))
+      endif
+
       for item in stacktrace
         let name = get(item, 'name')
         let file = get(item, 'file')
-        let line = get(item, 'line')
-        let text = printf('  at %s(%s:%d)', name, file, line)
-        call iced#buffer#stdout#append(text)
-
-        let file_url = get(item, 'file-url')
         let var = get(item, 'var')
-        if ! empty(file_url)
+        let file_url = get(item, 'file-url')
+        let line = get(item, 'line')
+        let normalized_file_url = (empty(file_url) ? '' : iced#util#normalize_path(file_url))
+
+        let name = (empty(var) ? name : var)
+        call iced#buffer#stdout#append(printf("  at %s (%s:%d)",
+              \ name,
+              \ empty(normalized_file_url) ? file : normalized_file_url,
+              \ line))
+
+        if ! empty(normalized_file_url)
           call add(errors, {
-                \ 'filename': iced#util#normalize_path(file_url),
+                \ 'filename': normalized_file_url,
                 \ 'lnum': line,
                 \ 'end_lnum': line,
-                \ 'text': (empty(var) ? name : var),
+                \ 'text': name,
                 \ 'type': 'E',
                 \ })
         endif
@@ -146,7 +161,7 @@ function! iced#nrepl#eval#out(resp) abort
   endif
 
   if has_key(a:resp, 'ex') && !empty(a:resp['ex'])
-    call iced#nrepl#op#cider#stacktrace(funcref('s:print_stack_trace'))
+    call iced#nrepl#op#cider#analyze_last_stacktrace(funcref('s:print_stack_trace'))
   endif
 
   call iced#nrepl#eval#err(get(a:resp, 'err', ''), opt)
