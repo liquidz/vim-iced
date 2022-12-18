@@ -8,7 +8,7 @@ let s:default_palette = [
       \ 'QuitCljsRepl', 'CycleSession',
       \ 'EvalNs', 'Undef', 'UndefAllInNs', 'UnaliasNs',
       \ 'Require', 'RequireAll', 'Refresh', 'RefreshAll', 'RefreshClear',
-      \ 'PrintLast',
+      \ 'PrintLast', 'PrintLastStackTrace',
       \ 'TestNs', 'TestAll', 'TestRedo', 'TestSpecCheck', 'TestRerunLast',
       \ 'TestBufferOpen',
       \ 'StdoutBufferOpen', 'StdoutBufferClear', 'StdoutBufferClose', 'StdoutBufferToggle',

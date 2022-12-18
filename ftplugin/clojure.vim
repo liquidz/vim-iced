@@ -108,6 +108,7 @@ command!          IcedEvalAtMark            call iced#repl#execute('eval_at_mark
 command!          IcedEvalInContextAtMark   call iced#repl#execute('eval_in_context_at_mark', nr2char(getchar()))
 command!          IcedEvalLastOuterTopList  call iced#repl#execute('eval_last_outer_top_list')
 command!          IcedPrintLast             call iced#nrepl#eval#print_last()
+command!          IcedPrintLastStackTrace   call iced#nrepl#eval#print_last_stacktrace()
 command!          IcedMacroExpandOuterList  call iced#nrepl#macro#expand_outer_list()
 command!          IcedMacroExpand1OuterList call iced#nrepl#macro#expand_1_outer_list()
 
@@ -237,6 +238,7 @@ nnoremap <silent> <Plug>(iced_eval_at_mark)             :<C-u>IcedEvalAtMark<CR>
 nnoremap <silent> <Plug>(iced_eval_in_context_at_mark)  :<C-u>IcedEvalInContextAtMark<CR>
 nnoremap <silent> <Plug>(iced_eval_last_outer_top_list) :<C-u>IcedEvalLastOuterTopList<CR>
 nnoremap <silent> <Plug>(iced_print_last)               :<C-u>IcedPrintLast<CR>
+nnoremap <silent> <Plug>(iced_print_last_stacktrace)    :<C-u>IcedPrintLastStackTrace<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_outer_list)   :<C-u>IcedMacroExpandOuterList<CR>
 nnoremap <silent> <Plug>(iced_macroexpand_1_outer_list) :<C-u>IcedMacroExpand1OuterList<CR>
 

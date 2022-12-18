@@ -61,7 +61,7 @@ endfunction
 "     'file-url': 'file:/private/tmp/foo/ src/foo/core.clj',
 "     'type': 'clj',
 "     'var': 'foo.core/boom'}]}
-function! s:print_stack_trace(resp) abort
+function! s:print_stack_trace(resp, ignores) abort
   let errors = []
 
   if type(a:resp) == v:t_list
@@ -87,7 +87,7 @@ function! s:print_stack_trace(resp) abort
         let normalized_file_url = (empty(file_url) ? '' : iced#util#normalize_path(file_url))
 
         let name = (empty(var) ? name : var)
-        if index(g:iced#nrepl#eval#ignoring_vars_in_stacktrace, name) != -1
+        if index(a:ignores, name) != -1
           continue
         endif
 
@@ -168,7 +168,9 @@ function! iced#nrepl#eval#out(resp) abort
   endif
 
   if has_key(a:resp, 'ex') && !empty(a:resp['ex'])
-    call iced#nrepl#op#cider#analyze_last_stacktrace(funcref('s:print_stack_trace'))
+    call iced#nrepl#op#cider#analyze_last_stacktrace({resp ->
+          \ s:print_stack_trace(resp, g:iced#nrepl#eval#ignoring_vars_in_stacktrace)
+          \ })
   endif
 
   call iced#nrepl#eval#err(get(a:resp, 'err', ''), opt)
@@ -343,6 +345,12 @@ endfunction
 
 function! iced#nrepl#eval#clear_inline_result() abort
   call iced#system#get('virtual_text').clear()
+endfunction
+
+function! iced#nrepl#eval#print_last_stacktrace() abort
+  return iced#nrepl#op#cider#analyze_last_stacktrace({resp ->
+        \ s:print_stack_trace(resp, [])
+        \ })
 endfunction
 
 let &cpoptions = s:save_cpo
