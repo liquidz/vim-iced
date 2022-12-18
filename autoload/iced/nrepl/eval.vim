@@ -1,6 +1,9 @@
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
+let g:iced#nrepl#eval#ignoring_vars_in_stacktrace =
+      \ get(g:, 'iced#nrepl#eval#ignoring_vars_in_stacktrace', [])
+
 function! s:parse_error(err) abort
   " Clojure 1.9 or above
   let err = matchstr(a:err, ', compiling:(.\+:\d\+:\d\+)')
@@ -84,6 +87,10 @@ function! s:print_stack_trace(resp) abort
         let normalized_file_url = (empty(file_url) ? '' : iced#util#normalize_path(file_url))
 
         let name = (empty(var) ? name : var)
+        if index(g:iced#nrepl#eval#ignoring_vars_in_stacktrace, name) != -1
+          continue
+        endif
+
         call iced#buffer#stdout#append(printf("  at %s (%s:%d)",
               \ name,
               \ empty(normalized_file_url) ? file : normalized_file_url,
