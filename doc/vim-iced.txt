@@ -967,6 +967,11 @@ COMMANDS                                                    *vim-iced-commands*
   Open a window, and show last evaluated value.
   Key is mapped to |<Plug>(iced_print_last)|.
 
+                                                     *:IcedPrintLastStackTrace*
+:IcedPrintLastStackTrace
+  Print the last full stacktraces in |vim-iced-stdout-buffer|.
+  Key is mapped to |<Plug>(iced_print_last_stacktrace)|.
+
                                                     *:IcedMacroExpandOuterList*
 :IcedMacroExpandOuterList
   Work same as `<Plug>(iced_macroexpand)<Plug>(sexp_outer_list)`,
@@ -1638,6 +1643,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                       *<Plug>(iced_print_last)*
 <Plug>(iced_print_last)
   Same as |:IcedPrintLast|.
+  
+                                           *<Plug>(iced_print_last_stacktrace)*
+<Plug>(iced_print_last_stacktrace)
+  Same as |:IcedPrintLastStackTrace|.
 
                                           *<Plug>(iced_macroexpand_outer_list)*
 <Plug>(iced_macroexpand_outer_list)
