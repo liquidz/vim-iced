@@ -1,5 +1,5 @@
 {:lib com.github.liquidz/vim-iced
- :version "3.13.{{git/commit-count}}"
+ :version "3.14.{{git/commit-count}}"
  :documents [{:file "doc/vim-iced.txt"
               :match "^Version: "
               :action :replace
