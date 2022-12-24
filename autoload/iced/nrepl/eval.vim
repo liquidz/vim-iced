@@ -91,7 +91,7 @@ function! s:print_stack_trace(resp, ignores) abort
           continue
         endif
 
-        call iced#buffer#stdout#append(printf("  at %s (%s:%d)",
+        call iced#buffer#stdout#append(printf('  at %s (%s:%d)',
               \ name,
               \ empty(normalized_file_url) ? file : normalized_file_url,
               \ line))
