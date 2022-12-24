@@ -28,6 +28,7 @@ CONTENTS                                                    *vim-iced-contents*
     Yank the result            |vim-iced-yank-the-result|
     Evaluating in context      |vim-iced-eval-in-context|
     Evaluating spinner         |vim-iced-evaluating-spinner|
+    Stacktrace                 |vim-iced-stacktrace|
   Testing                      |vim-iced-testing|
     Plain nREPL                |vim-iced-testing-plain-nrepl|
   Debugging                    |vim-iced-debugging|
@@ -142,8 +143,8 @@ LEININGEN~
 >
   {:user
    {:dependencies [[nrepl "1.0.0"]
-                   [com.github.liquidz/iced-nrepl "1.2.468"]
-                   [cider/cider-nrepl "0.28.7"]]
+                   [com.github.liquidz/iced-nrepl "1.2.474"]
+                   [cider/cider-nrepl "0.29.0"]]
     :repl-options {:nrepl-middleware [cider.nrepl/wrap-classpath
                                       cider.nrepl/wrap-clojuredocs
                                       cider.nrepl/wrap-complete
@@ -173,8 +174,8 @@ BOOT~
 
   (swap! boot.repl/*default-dependencies* concat
     '[[refactor-nrepl "3.6.0"]
-      [cider/cider-nrepl "0.28.7"]
-      [com.github.liquidz/iced-nrepl "1.2.468"]])
+      [cider/cider-nrepl "0.29.0"]
+      [com.github.liquidz/iced-nrepl "1.2.474"]])
 
   (swap! boot.repl/*default-middleware* concat
     '[cider.nrepl/wrap-classpath
@@ -203,8 +204,8 @@ SHADOW-CLJS~
 >
   {
    :dependencies [[refactor-nrepl "3.6.0"]
-                  [cider/cider-nrepl "0.28.7"]
-                  [com.github.liquidz/iced-nrepl "1.2.468"]]
+                  [cider/cider-nrepl "0.29.0"]
+                  [com.github.liquidz/iced-nrepl "1.2.474"]]
   }
 <
   .nrepl.edn (local config) or $HOME/.nrepl/nrepl.edn (global config)
@@ -507,6 +508,16 @@ EVALUATING SPINNER                                 *vim-iced-evaluating-spinner*
   - |g:iced#eval#popup_spinner_texts| 
   - |g:iced#eval#popup_spinner_interval|
 
+------------------------------------------------------------------------------
+STACKTRACE                                                 *vim-iced-stacktrace*
+
+  When exceptions are thrown, vim-iced will show stacktraces in stdout buffer.
+  - |vim-iced-stdout-buffer|
+
+  See also:
+  - |:IcedPrintLastStackTrace|
+  - |g:iced#nrepl#eval#ignoring_vars_in_stacktrace|
+
 ==============================================================================
 TESTING                                                      *vim-iced-testing*
 
@@ -632,7 +643,8 @@ JUMP TO DEFINITION                    *vim-iced-tag-jump*  *vim-iced-jump-to-def
   To jump back, you can use default key mapping(<C-t>).
 
   See also:
-  - |g:iced#navigate#prefer_local_jump|.
+  - |g:iced#navigate#prefer_local_jump|
+  - |g:iced#navigate#jump_fallback_command|
   - |vim-iced-protocol-jump|
 
 ------------------------------------------------------------------------------
@@ -852,12 +864,15 @@ COMMANDS                                                    *vim-iced-commands*
 
   Supports follows {target}:
   - `nrepl` or empty
-    Launch `iced repl --instant`
+    Launch `iced repl --instant`.
   - `babashka`
-    Launch babashka REPL
+    Launch babashka REPL.
+    `bb` command is required.
     See also |g:iced#repl#babashka_repl_type| option.
   - `nbb`
-    Launch nbb REPL
+    Launch nbb REPL.
+    `nbb` or `deno` is required.
+    `deno` must be 1.28 or later.
 
   Key is mapped to |<Plug>(iced_instant_connect)|.
 
@@ -962,6 +977,11 @@ COMMANDS                                                    *vim-iced-commands*
 :IcedPrintLast
   Open a window, and show last evaluated value.
   Key is mapped to |<Plug>(iced_print_last)|.
+
+                                                     *:IcedPrintLastStackTrace*
+:IcedPrintLastStackTrace
+  Print the last full stacktraces in |vim-iced-stdout-buffer|.
+  Key is mapped to |<Plug>(iced_print_last_stacktrace)|.
 
                                                     *:IcedMacroExpandOuterList*
 :IcedMacroExpandOuterList
@@ -1634,6 +1654,10 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                       *<Plug>(iced_print_last)*
 <Plug>(iced_print_last)
   Same as |:IcedPrintLast|.
+  
+                                           *<Plug>(iced_print_last_stacktrace)*
+<Plug>(iced_print_last_stacktrace)
+  Same as |:IcedPrintLastStackTrace|.
 
                                           *<Plug>(iced_macroexpand_outer_list)*
 <Plug>(iced_macroexpand_outer_list)
@@ -1977,7 +2001,24 @@ g:iced#nrepl#connect#auto_connect_timeout_ms
   When you set `-1`, vim-iced will wait forever.
   Default value is `5000`.
 
-                                                *g:iced#paredit#slurp_max_depth*
+                                *g:iced#nrepl#eval#ignoring_vars_in_stacktrace*
+g:iced#nrepl#eval#ignoring_vars_in_stacktrace
+  A list of fully qualified symbols to except from stacktraces.
+  E.g. >
+    g:iced#nrepl#eval#ignoring_vars_in_stacktrace = {
+          \ 'clojure.lang.AFn/applyTo',
+          \ 'clojure.lang.AFn/applyToHelper',
+          \ 'clojure.lang.AFn/run',
+          \ 'clojure.lang.Compiler/eval',
+          \ 'clojure.lang.RestFn/invoke',
+          \ 'clojure.lang.Var/applyTo',
+          \ 'clojure.main/repl',
+          \ }
+<
+  Default value is `[]`.
+  See also |vim-iced-stacktrace|.
+
+                                               *g:iced#paredit#slurp_max_depth*
 g:iced#paredit#slurp_max_depth
   Maximum depth for slurping.
   Default value is `5`.
@@ -2194,6 +2235,15 @@ g:iced_clj_kondo_analysis_dirs
 g:iced#navigate#prefer_local_jump
   If {v:true}, change the behavior of |:IcedDefJump| to prefer local jumping.
   Default value is `v:false`.
+
+                                        *g:iced#navigate#jump_fallback_command*
+g:iced#navigate#jump_fallback_command
+  A fallback command when jumping definition is failed.
+  E.g. >
+  let g:iced#navigate#jump_fallback_command = 
+      \ ':call CocAction("jumpDefinition")'
+<
+  Default value is `''`.
 
                                                           *g:iced#ns#class_map*
 g:iced#ns#class_map

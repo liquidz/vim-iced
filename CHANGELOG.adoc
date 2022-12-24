@@ -1,6 +1,18 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* Added `g:iced#navigate#jump_fallback_command` option.
+** This option allows you to fallback another command when jumping to definition is failed.
+* Added `IcedPrintLastStackTrace` command.
+
+=== Changed
+* Update instant connecting for nbb to use `deno` command if you don't have `nbb` command.
+** Deno must be v1.28 or later. (npm support is required)
+* Bumped cider-nrepl to 0.29.0.
+* Bumped iced-nrepl to 1.2.474.
+// }}}
 
 == 3.13.3174 (2022-12-04)
 // {{{

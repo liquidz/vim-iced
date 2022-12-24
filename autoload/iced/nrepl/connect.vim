@@ -227,7 +227,14 @@ endfunction
 function! s:__instant_nbb(port) abort
   " NOTE: A job in vim may terminate when outputting long texts such as stack traces.
   "       So ignoring the standard output etc.
-  let cmd = ['sh', '-c', printf('nbb nrepl-server :port %s > /dev/null 2>&1', a:port)]
+  if executable('nbb')
+    let nbb_cmd = 'nbb'
+  elseif executable('deno')
+    let nbb_cmd = 'deno run -A npm:nbb@latest'
+  else
+    return iced#message#error('command_not_found', 'nbb or deno')
+  endif
+  let cmd = ['sh', '-c', printf('%s nrepl-server :port %s > /dev/null 2>&1', nbb_cmd, a:port)]
   let s:running_job = iced#job_start(cmd)
 
   let s:is_auto_connecting = v:true

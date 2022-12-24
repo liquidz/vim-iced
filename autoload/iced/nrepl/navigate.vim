@@ -27,6 +27,8 @@ let s:qualified_key_def_prefix_regex = printf('\(%s\)',
       \          {_, v -> printf('%s\s\+', v)}),
       \      '\|'))
 
+let g:iced#navigate#jump_fallback_command = get(g:, 'iced#navigate#jump_fallback_command', '')
+
 function! s:raw_jump(jump_cmd, path, line, column) abort
   call iced#util#add_curpos_to_jumplist()
   if expand('%:p') !=# a:path
@@ -195,7 +197,7 @@ function! s:jump_to_qualified_keyword_by_clj_kondo(keyword) abort
   let definition = kondo.keyword_definition(expand('%:p'), a:keyword)
 
   if empty(definition)
-    return iced#message#error('jump_not_found')
+    return s:jump_fallback()
   endif
 
   let path = get(definition, 'filename', '')
@@ -239,7 +241,7 @@ function! s:jump_to_qualified_keyword(keyword) abort
     endif
 
     if empty(path)
-      return iced#message#error('jump_not_found')
+      return s:jump_fallback()
     endif
   endif
 
@@ -287,7 +289,7 @@ function! s:jump(base_symbol, jump_cmd, resp) abort
         return s:jump_to_local_definition(local_def)
       endif
     else
-      return iced#message#error('jump_not_found')
+      return s:jump_fallback()
     endif
   endif
 
@@ -333,7 +335,7 @@ function! s:jump(base_symbol, jump_cmd, resp) abort
         let line = d['row']
         let column = d['col']
       else
-        return iced#message#error('jump_not_found')
+        return s:jump_fallback()
       endif
     else
       let path = a:resp['file']
@@ -344,6 +346,16 @@ function! s:jump(base_symbol, jump_cmd, resp) abort
 
   call s:raw_jump(a:jump_cmd, path, line, column)
 endfunction
+
+function! s:jump_fallback() abort
+  if g:iced#navigate#jump_fallback_command ==# ''
+    return iced#message#error('jump_not_found')
+  else
+    call iced#message#info('jump_fallback', g:iced#navigate#jump_fallback_command)
+    execute g:iced#navigate#jump_fallback_command
+  endif
+endfunction
+
 " }}}
 
 " iced#nrepl#navigate#test {{{
