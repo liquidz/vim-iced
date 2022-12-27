@@ -93,13 +93,56 @@ function! iced#nrepl#refactor#extract_function() abort
 endfunction " }}}
 
 " iced#nrepl#refactor#clean_ns {{{
+function! s:unify_ns_form() abort
+  " NOTE:
+  " When g:iced#refactor#insert_newline_after_require is true,
+  " refactor-nrepl's clean-ns op returns ns form including newline after require.
+  " But if there are no changes in ns form, clean-ns op returns empty string as ns.
+  " Thus, when there is no newline after require and there are no changes in ns form,
+  " the newline after require won't be added.
+  "
+  " To unify these behaviors, even if there are no changes in ns form,
+  " vim-iced will add a newline after require while
+  " g:iced#refactor#insert_newline_after_require is true.
+  "
+  " cf. https://github.com/liquidz/vim-iced/issues/453
+  if ! g:iced#refactor#insert_newline_after_require
+    return v:false
+  endif
+
+  let ns_form = iced#nrepl#ns#get()
+  let idx = stridx(ns_form, ':require')
+  if idx == -1
+    return v:false
+  endif
+
+  let idx = idx + len(':require')
+  if ns_form[idx] !=# ' '
+    return v:false
+  endif
+
+  let new_ns_form = printf("%s\n%s", trim(strpart(ns_form, 0, idx)), trim(strpart(ns_form, idx)))
+  let context = iced#util#save_context()
+  try
+    call iced#nrepl#ns#util#replace(new_ns_form)
+  finally
+    call iced#util#restore_context(context)
+  endtry
+
+  return v:true
+endfunction
+
 function! s:clean_ns(resp) abort
   if has_key(a:resp, 'error')
     return iced#nrepl#eval#err(a:resp['error'])
   endif
   if has_key(a:resp, 'ns')
     if empty(a:resp['ns'])
-      return iced#message#info('already_clean')
+      if s:unify_ns_form()
+        return iced#message#info('already_clean_but_reform')
+      else
+        return iced#message#info('already_clean')
+      endif
     endif
 
     let context = iced#util#save_context()

@@ -4,6 +4,7 @@
   'all_ns_loading':            'Loading all namespaces...',
   'all_reloaded':              'All reloaded.',
   'already_clean':             'Already clean.',
+  'already_clean_but_reform':  'Already clean, but ns form is reformed.',
   'already_connected':         'Already connected.',
   'already_in_test_ns':        'Already in test namespace.',
   'already_running':           'Already running.',
