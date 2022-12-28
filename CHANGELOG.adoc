@@ -1,6 +1,10 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/453[#453]: Fixed `IcedCleanNs` command to reform `ns` form even if there are no changes.
+// }}}
 
 == 3.14.3192 (2022-12-24)
 // {{{
