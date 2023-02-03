@@ -222,6 +222,11 @@ function! s:one_line_doc(resp) abort
     if popup.is_supported()
           \ && s:enable_popup_one_line_document
       let popup_args = trim(get(a:resp, 'arglists-str', ''))
+      if empty(popup_args)
+        call iced#nrepl#document#close()
+        return
+      endif
+
       let popup_args = substitute(popup_args, '\r\?\n', " \n ", 'g')
       let popup_args = printf(' %s ', popup_args)
       let popup_args = split(popup_args, '\n')
