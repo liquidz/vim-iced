@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file. This change
 === Changed
 * Changed default popup border for Neovim.
 * Bumped cider-nrepl to 0.30.0.
+* Bumped jet to 0.4.23.
+* Bumped zprint to 1.2.5.
 
 === Fixed
 * Fixed not to show auto documents for empty docstrings.
