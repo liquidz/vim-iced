@@ -248,9 +248,11 @@ endfunction
 
 function! s:popup.close(window_id) abort
   if !s:is_supported() | return | endif
-  if win_gotoid(a:window_id)
-    silent execute ':q'
-  endif
+  try
+    call nvim_win_close(a:window_id, 0)
+  catch
+  endtry
+
   let s:last_winid = -1
 endfunction
 
