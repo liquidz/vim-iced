@@ -2,7 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:default_filetype = 'clojure'
-let s:default_border = [' ', '=' , ' ', ' ', ' ', '=', ' ', ' ']
+let s:default_border = 'double'
 let s:last_winid = -1
 
 let s:popup = {
