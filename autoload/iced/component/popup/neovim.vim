@@ -2,7 +2,7 @@ let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:default_filetype = 'clojure'
-let s:default_border = [' ', '=' , ' ', ' ', ' ', '=', ' ', ' ']
+let s:default_border = 'double'
 let s:last_winid = -1
 
 let s:popup = {
@@ -248,9 +248,11 @@ endfunction
 
 function! s:popup.close(window_id) abort
   if !s:is_supported() | return | endif
-  if win_gotoid(a:window_id)
-    silent execute ':q'
-  endif
+  try
+    call nvim_win_close(a:window_id, 0)
+  catch
+  endtry
+
   let s:last_winid = -1
 endfunction
 
