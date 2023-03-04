@@ -392,6 +392,11 @@ function! s:define_mapping(map_type, default_keys, plug_name) abort
 endfunction
 
 function! s:default_key_mappings() abort
+  if exists('b:iced_default_key_mappings_applied')
+    return
+  endif
+  let b:iced_default_key_mappings_applied = v:true
+
   call s:define_mapping('nmap', "<Leader>'", '<Plug>(iced_connect)')
 
   "" Evaluating (<Leader>e)
