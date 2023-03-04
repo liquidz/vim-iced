@@ -39,6 +39,6 @@
   :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}
                           org.slf4j/slf4j-nop {:mvn/version "RELEASE"}}
              :main-opts ["-m" "antq.core"]}
-  :build {:deps {com.github.liquidz/build.edn {:git/tag "0.9.188" :git/sha "d2d25b0"}}
+  :build {:deps {com.github.liquidz/build.edn {:mvn/version "0.9.203"}}
           :ns-default build-edn.main}
   :dev {}}}

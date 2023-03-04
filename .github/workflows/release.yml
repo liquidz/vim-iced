@@ -39,12 +39,8 @@ jobs:
       - uses: actions/checkout@v3
       - run: git pull origin main
 
-      - uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ needs.change-version.outputs.version }}
-          release_name: ${{ needs.change-version.outputs.version }}
-          body: released
-          draft: false
-          prerelease: false
+          tag: ${{ needs.change-version.outputs.version }}
+          skipIfReleaseExists: true
+          generateReleaseNotes: true

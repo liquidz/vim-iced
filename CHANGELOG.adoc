@@ -1,6 +1,14 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Bumped build.edn to 0.9.203.
+* Updateed release workflow to use https://github.com/ncipollo/release-action[ncipollo/release-action].
+
+=== Fixed
+* Fixed `s:default_key_mappings` not to work twice.
+// }}}
 
 == 3.14.3207 (2023-02-03)
 // {{{
