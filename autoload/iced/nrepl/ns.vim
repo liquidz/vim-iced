@@ -206,6 +206,11 @@ function! iced#nrepl#ns#alias_dict(ns_name) abort
 
   if kondo.is_analyzed()
     let aliases = kondo.ns_aliases(a:ns_name)
+
+    if !aliases
+      return {}
+    endif
+
     for k in keys(aliases)
       if len(aliases[k]) > 0
         let aliases[k] = aliases[k][0]
