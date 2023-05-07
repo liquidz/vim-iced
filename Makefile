@@ -103,7 +103,7 @@ coverage: target/bin/vint themis
 
 .PHONY: clean
 clean:
-	\rm -rf target .vim-sexp .vim-themis
+	\rm -rf target .cpcache .vim-sexp .vim-themis
 
 .PHONY: clean-all
 clan-all: clean
