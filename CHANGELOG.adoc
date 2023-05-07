@@ -1,6 +1,11 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Bumped iced-nrepl to 1.2.480.
+* Bumped build.edn to 0.9.216.
+// }}}
 
 == 3.14.3213 (2023-03-04)
 // {{{
