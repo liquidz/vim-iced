@@ -2,7 +2,7 @@
  :deps {nrepl/nrepl {:mvn/version "1.0.0"}
         refactor-nrepl/refactor-nrepl {:mvn/version "3.6.0"}
         cider/cider-nrepl {:mvn/version "0.30.0"}
-        com.github.liquidz/iced-nrepl {:mvn/version "1.2.474"}}
+        com.github.liquidz/iced-nrepl {:mvn/version "1.2.480"}}
  :__middlewares__
  ["cider.nrepl/wrap-classpath"
   "cider.nrepl/wrap-clojuredocs"
