@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 3.14.3225 (2023-05-08)
 // {{{
 === Changed
 * Bumped iced-nrepl to 1.2.480.
