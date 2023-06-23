@@ -2491,6 +2491,7 @@ AUTO DOCUMENT~
 g:iced_enable_auto_document
   Enable automatic displaying one-line document.
   This will be done by |CursorMoved| / |CursorMovedI| auto command and |timer|.
+  NOTE: This feature won't work when popup menu is visible.
 
   The value should be one of `'normal'`, `'insert'` or `'any'`.
   Otherwise, this option will be disabled.
@@ -2503,6 +2504,7 @@ g:iced_enable_auto_document
   See also:
   - |g:iced_enable_popup_document|
   - |g:iced#nrepl#auto#document_delay|
+  - |g:iced#util#pumvisible_fn|
 
                                                  *g:iced_enable_popup_document*
 g:iced_enable_popup_document
@@ -2529,6 +2531,11 @@ g:iced#nrepl#auto#document_delay
   Delay time for displaying one-line document.
   Unit is milli sec.
   Default value is `500`.
+
+                                                    *g:iced#util#pumvisible_fn*
+g:iced#util#pumvisible_fn
+  The function to check whether popup menu is visible or not.
+  Default value is `function('pumvisible')`.
 
 ------------------------------------------------------------------------------
 AUTO INDENT                                  *vim-iced-customizing-auto-indent*
