@@ -62,11 +62,13 @@ function! iced#nrepl#auto#enable_bufenter(bool) abort
 endfunction
 
 function! iced#nrepl#auto#cursor_moved() abort
-  let timer = iced#system#get('timer')
-  call timer.start_lazily(
-        \ 'document_current_form',
-        \ g:iced#nrepl#auto#document_delay,
-        \ {-> iced#nrepl#document#current_form()})
+  if ! iced#util#pumvisible()
+    let timer = iced#system#get('timer')
+    call timer.start_lazily(
+          \ 'document_current_form',
+          \ g:iced#nrepl#auto#document_delay,
+          \ {-> iced#nrepl#document#current_form()})
+  endif
 endfunction
 
 let &cpoptions = s:save_cpo
