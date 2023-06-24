@@ -4,6 +4,8 @@ set cpoptions&vim
 
 let g:iced#debug = get(g:, 'iced#debug', v:false)
 
+let g:iced#util#pumvisible_fn = get(g:, 'iced#util#pumvisible_fn', function('pumvisible'))
+
 function! iced#util#wait(pred, timeout_ms) abort
   if a:timeout_ms == -1
     " wait forever
@@ -258,6 +260,10 @@ function! iced#util#add_curpos_to_jumplist() abort
   " :h jumplist
   " > You can explicitly add a jump by setting the ' mark with "m'".
   silent normal! m'
+endfunction
+
+function! iced#util#pumvisible() abort
+  return g:iced#util#pumvisible_fn()
 endfunction
 
 let &cpoptions = s:save_cpo
