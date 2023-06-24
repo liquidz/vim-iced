@@ -12,7 +12,11 @@ function! s:__extract_source(resp) abort
   let code = ''
   let reg_save = @@
   try
-    call iced#buffer#temporary#begin()
+    if stridx(path, 'zipfile') == 0
+      call iced#buffer#temporary#begin({'buftype': 'nowrite'})
+    else
+      call iced#buffer#temporary#begin({'buftype': 'nofile'})
+    endif
     call iced#system#get('ex_cmd').silent_exe(printf(':read %s', path))
     call cursor(a:resp['line']+1, get(a:resp, 'column', 0))
     silent normal! vaby
