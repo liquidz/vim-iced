@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 3.14.3233 (2023-06-24)
 // {{{
 === Changed
 * Bumped cider-nrepl to 0.31.0.

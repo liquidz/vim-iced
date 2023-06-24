@@ -5,7 +5,7 @@ let g:loaded_vim_iced = 1
 
 let s:iced_major = 3
 let s:iced_minor = 14
-let s:iced_patch = 3225
+let s:iced_patch = 3233
 let g:vim_iced_version = s:iced_major * 1000000 + s:iced_minor * 10000 + s:iced_patch
 
 let g:vim_iced_home = expand('<sfile>:p:h:h')
