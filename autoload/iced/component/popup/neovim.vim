@@ -185,6 +185,8 @@ function! s:popup.open(texts, ...) abort
         \ 'width': width,
         \ 'height': height,
         \ 'style': g:iced#popup#neovim#style,
+        \ 'focusable': v:false,
+        \ 'noautocmd': v:false,
         \ }
 
   if has_key(opts, 'border') && has('nvim-0.5')
