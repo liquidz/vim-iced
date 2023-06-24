@@ -1,6 +1,10 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/461[#461]: Fixed `IcedSourceShow` and `IcedSourcePopupShow` to work correctly on Neovim.
+// }}}
 
 == 3.14.3233 (2023-06-24)
 // {{{
