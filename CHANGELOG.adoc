@@ -1,6 +1,15 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Bumped cider-nrepl to 0.31.0.
+* Updated zprint installer to 1.2.7.
+
+=== Fixed
+* Fixed auto documentation not to work when popup menu is visible.
+** Added `g:iced#util#pumvisible_fn` option.
+// }}}
 
 == 3.14.3225 (2023-05-08)
 // {{{
