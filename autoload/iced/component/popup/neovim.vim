@@ -19,6 +19,7 @@ function! s:init_win(winid, opts) abort
   let context['__lnum'] = line('.')
   if has_key(a:opts, 'moved')
     let context['__moved'] = a:opts['moved']
+    let context['__reltime'] = reltime()
   endif
 
   call setwinvar(a:winid, 'iced_context', context)
@@ -265,13 +266,14 @@ function! iced#component#popup#neovim#moved() abort
   let base_line = get(context, '__lnum', 0)
   let line = line('.')
   let col = col('.')
+  let elapsed = reltimefloat(reltime(get(context, '__reltime', reltime())))
 
   " WARN: only supports 'any' and column list
   if empty(moved)
     return
-  elseif type(moved) == v:t_string && moved ==# 'any'
+  elseif type(moved) == v:t_string && moved ==# 'any' && elapsed > 0.1
     return s:popup.close(s:last_winid)
-  elseif type(moved) == v:t_list && (line != base_line || col < moved[0] || col > moved[1])
+  elseif type(moved) == v:t_list && (line != base_line || col < moved[0] || col > moved[1]) && elapsed > 0.1
     return s:popup.close(s:last_winid)
   endif
 endfunction
