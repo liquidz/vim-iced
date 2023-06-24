@@ -15,7 +15,12 @@ function! iced#buffer#temporary#init() abort
   return iced#buffer#init(s:bufname, funcref('s:initialize'))
 endfunction
 
-function! iced#buffer#temporary#begin() abort
+function! iced#buffer#temporary#begin(...) abort
+  let opts = get(a:, 1, {})
+  let buftype = get(opts, 'buftype', 'nofile')
+  let nr = iced#buffer#nr(s:bufname)
+  call setbufvar(nr, '&buftype', buftype)
+
   let s:current_window = winnr()
   call iced#buffer#open(s:bufname, {'opener': 'split'})
   call iced#buffer#clear(s:bufname)
