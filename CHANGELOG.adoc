@@ -2,6 +2,8 @@ All notable changes to this project will be documented in this file. This change
 
 == Unreleased (dev)
 
+== 3.14.3255 (2023-09-29)
+
 // {{{
 === Fixed
 * Fixed `IcedInstantConnect` to work correctly with the latest babashka.
