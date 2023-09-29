@@ -9,14 +9,14 @@ jobs:
         neovim: [false, true]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Clone themis.vim
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: thinca/vim-themis
           path: .vim-themis
       - name: Clone vim-sexp
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: guns/vim-sexp
           path: .vim-sexp

@@ -7,7 +7,7 @@ jobs:
     outputs:
       version: ${{ steps.document.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-java@v3
@@ -36,7 +36,7 @@ jobs:
     needs: [change-version]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: git pull origin main
 
       - uses: ncipollo/release-action@v1
