@@ -1,7 +1,7 @@
 {:paths ["clj/repl"]
  :deps {nrepl/nrepl {:mvn/version "1.0.0"}
-        cider/cider-nrepl {:mvn/version "0.31.0"}
         refactor-nrepl/refactor-nrepl {:mvn/version "3.9.0"}
+        cider/cider-nrepl {:mvn/version "0.38.1"}
         com.github.liquidz/iced-nrepl {:mvn/version "1.2.480"}}
  :__middlewares__
  ["cider.nrepl/wrap-classpath"
