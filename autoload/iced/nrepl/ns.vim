@@ -207,7 +207,7 @@ function! iced#nrepl#ns#alias_dict(ns_name) abort
   if kondo.is_analyzed()
     let aliases = kondo.ns_aliases(a:ns_name)
 
-    if !aliases
+    if empty(aliases)
       return {}
     endif
 
