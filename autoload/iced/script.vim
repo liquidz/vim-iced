@@ -9,7 +9,7 @@ endfunction
 
 function! iced#script#empty_port(callback) abort
   call s:setup()
-  let command = printf('bb %s/clj/script/empty_port.clj', g:vim_iced_home)
+  let command = printf('bb --prn %s/clj/script/empty_port.clj', g:vim_iced_home)
   return iced#system#get('job_out').redir(command, a:callback)
 endfunction
 
