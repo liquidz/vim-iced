@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file. This change
 === Fixed
 * Fixed `IcedInstantConnect` to work correctly with the latest babashka.
 * Fixed a bug on auto documentation.
+
+=== Changed
+* Bumped cider-nrepl to 0.38.1.
+* Bumped refactor-nrepl to 3.9.0.
+* Bumped build.edn to 0.10.227.
+* Updated zprint installer to install v1.2.8.
+* Updated joker installer to install v1.3.0.
+* Updated jet installer to install v0.7.27.
 // }}}
 
 == 3.14.3240 (2023-06-24)
