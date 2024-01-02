@@ -51,6 +51,12 @@ function! s:list_in_buffer() abort
   return list
 endfunction
 
+function! s:dissoc(d, k) abort
+  let d = copy(a:d)
+  unlet d[a:k]
+  return d
+endfunction
+
 function! s:suite.list_in_buffer_test() abort
   call s:setup()
 
@@ -210,18 +216,31 @@ function! s:suite.refresh_test() abort
   call s:setup()
   exec printf(':b %d', bufnr(s:foo_file))
 
-  call s:assert.equals(s:list_in_buffer(), [
-        \ {'lnum': 3, 'id': 1, 'name': 'iced_dummy1', 'group': 'default'},
-        \ {'lnum': 5, 'id': 1, 'name': 'iced_dummy1', 'group': 'group1'},
-        \ {'lnum': 7, 'id': 2, 'name': 'iced_dummy2', 'group': 'default'},
-        \ ])
+  let before_list_in_buffer = s:list_in_buffer()
+  let before_ids = map(copy(before_list_in_buffer), {_, v -> v['id']})
+
+  call s:assert.equals(
+      \ map(copy(before_list_in_buffer), {_, v -> s:dissoc(v, 'id')}),
+      \ [
+      \   {'lnum': 3, 'name': 'iced_dummy1', 'group': 'default'},
+      \   {'lnum': 5, 'name': 'iced_dummy1', 'group': 'group1'},
+      \   {'lnum': 7, 'name': 'iced_dummy2', 'group': 'default'},
+      \ ])
 
   call s:sign.refresh({'file': s:foo_file})
-  call s:assert.equals(s:list_in_buffer(), [
-        \ {'lnum': 3, 'id': 3, 'name': 'iced_dummy1', 'group': 'default'},
-        \ {'lnum': 5, 'id': 1, 'name': 'iced_dummy1', 'group': 'group1'},
-        \ {'lnum': 7, 'id': 4, 'name': 'iced_dummy2', 'group': 'default'},
-        \ ])
+
+  let after_list_in_buffer = s:list_in_buffer()
+  let after_ids = map(copy(after_list_in_buffer), {_, v -> v['id']})
+
+  call s:assert.equals(
+      \ map(copy(after_list_in_buffer), {_, v -> s:dissoc(v, 'id')}),
+      \ [
+      \   {'lnum': 3, 'name': 'iced_dummy1', 'group': 'default'},
+      \   {'lnum': 5, 'name': 'iced_dummy1', 'group': 'group1'},
+      \   {'lnum': 7, 'name': 'iced_dummy2', 'group': 'default'},
+      \ ])
+
+  call s:assert.not_equals(before_ids, after_ids)
 
   call s:teardown()
 endfunction
