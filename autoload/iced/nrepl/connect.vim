@@ -257,7 +257,7 @@ function! iced#nrepl#connect#instant(program) abort
   endif
 
   if a:program ==# 'babashka'
-    return iced#script#empty_port({port -> s:__instant_babashka(port)})
+    return iced#script#bb_empty_port({port -> s:__instant_babashka(port)})
   elseif a:program ==# 'nbb'
     return iced#script#empty_port({port -> s:__instant_nbb(port)})
   else

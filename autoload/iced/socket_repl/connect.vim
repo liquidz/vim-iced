@@ -32,7 +32,7 @@ function! iced#socket_repl#connect#instant(program) abort
     return
   endif
 
-  return iced#script#empty_port({port -> s:start_and_connect(port, cmd)})
+  return iced#script#bb_empty_port({port -> s:start_and_connect(port, cmd)})
 endfunction
 
 let &cpoptions = s:save_cpo
