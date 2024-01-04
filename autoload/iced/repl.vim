@@ -43,7 +43,7 @@ endfunction
 
 " c.f. :h :command-completion-custom
 function! iced#repl#instant_connect_complete(arg_lead, cmd_line, cursor_pos) abort
-  let res = ['nrepl', 'babashka', 'nbb']
+  let res = ['nrepl', 'babashka', 'nbb', 'squint']
   call extend(res, iced#socket_repl#connect#supported_programs())
   return join(res, "\n")
 endfunction
@@ -52,6 +52,7 @@ function! iced#repl#instant_connect(target) abort
   if a:target ==# ''
         \ || (g:iced#repl#babashka_repl_type ==# 'nrepl' && a:target ==# 'babashka')
         \ || a:target ==# 'nbb'
+        \ || a:target ==# 'squint'
     call iced#nrepl#connect#instant(a:target)
   elseif a:target ==# 'prepl'
     call iced#prepl#connect#instant()

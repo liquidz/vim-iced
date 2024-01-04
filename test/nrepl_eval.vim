@@ -56,6 +56,9 @@ function! s:suite.code_test() abort
   let g:iced#eval#keep_inline_result = v:false
   let g:iced#eval#popup_highlight = 'Comment'
   let g:iced#eval#inside_comment = v:false
+  let g:iced#eval#popup_spinner_texts = ['']
+  let g:iced#eval#popup_align = 'after'
+  let g:iced#eval#popup_spinner_interval = 100
   let p = iced#nrepl#eval#code('(comment (+ 1 2 3))')
   call iced#promise#wait(p)
 

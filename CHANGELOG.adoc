@@ -1,9 +1,19 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Added
+* Added instant connection support for https://github.com/squint-cljs/squint[Squint].
+** `:IcedInstantConnect squint`
+
+=== Changed
+* Bumped build.edn to 0.11.241.
+* Bumped cider-nrepl to 0.44.0.
+* Bumped refactor-nrepl to 3.9.1.
+* Bumped nrepl to 1.1.0.
+// }}}
 
 == 3.14.3255 (2023-09-29)
-
 // {{{
 === Fixed
 * Fixed `IcedInstantConnect` to work correctly with the latest babashka.
