@@ -24,47 +24,49 @@ function! s:validate_config() abort
   return warn
 endfunction
 
-function! iced#nrepl#cljs#shadow_cljs#get_env(options) abort
+function! iced#nrepl#cljs#shadow_cljs#get_env(callback, options) abort
   if len(a:options) > 0
-    let s:build_id = trim(a:options[0], ' :')
-  else
-    " fetch running build ids
-    " `v:null` means to wait for ever
-    call iced#message#info('wait_a_minute')
-    let build_ids = get(iced#eval_and_read(s:get_build_ids_code, '', v:null), 'value', [])
-    if empty(build_ids) && len(a:options) <= 0
-      return iced#message#get('argument_missing', 'build-id is required.')
-    endif
-
-    let build_id_count = len(build_ids)
-    if build_id_count == 0
-      return iced#message#get('argument_missing', 'build-id is required.')
-    elseif build_id_count == 1
-      let s:build_id = trim(build_ids[0], ' :')
-    else
-      " select build id
-      let p = iced#promise#new({resolve -> iced#selector({'accept': {_, v -> resolve(v)},
-            \                                             'candidates': build_ids})})
-      let [result, error] = iced#promise#wait(p)
-      if !empty(error)
-        return iced#message#get('argument_missing', 'build-id is required.')
-      endif
-
-      let s:build_id = trim(result, ' :')
-    endif
+    return s:__select_build_id(a:callback, '', trim(a:options[0], ' :'))
   endif
 
+  " fetch running build ids
+  " `v:null` means to wait for ever
+  call iced#message#info('wait_a_minute')
+  let build_ids = get(iced#eval_and_read(s:get_build_ids_code, '', v:null), 'value', [])
+  if empty(build_ids) && len(a:options) <= 0
+    return iced#message#get('argument_missing', 'build-id is required.')
+  endif
+
+  let build_id_count = len(build_ids)
+  if build_id_count == 0
+    return iced#message#get('argument_missing', 'build-id is required.')
+  endif
+
+  if build_id_count == 1
+    return s:__select_build_id(a:callback, '', trim(build_ids[0], ' :'))
+  endif
+
+  " select build id
+  return iced#selector({
+        \ 'accept': funcref('s:__select_build_id', [a:callback]),
+        \ 'candidates': build_ids,
+        \ })
+endfunction
+
+function! s:__select_build_id(callback, _, v) abort
+  let s:build_id = trim(a:v, ' :')
   " HACK: For shadow-cljs, vim-iced ignores quit detecting
   "       because shadow-cljs returns exact current ns instead of 'cljs.user'
-  return {
+  return a:callback({
         \ 'name': 'shadow-cljs',
         \ 'does_use_piggieback': v:false,
         \ 'pre-code': {-> '(require ''shadow.cljs.devtools.api)'},
         \ 'env-code': {-> {'raw': printf('(do (shadow.cljs.devtools.api/watch :%s) (shadow.cljs.devtools.api/nrepl-select :%s))', s:build_id, s:build_id) }},
         \ 'ignore-quit-detecting': v:true,
         \ 'warning': s:validate_config(),
-        \ }
+        \ })
 endfunction
+
 
 let &cpoptions = s:save_cpo
 unlet s:save_cpo
