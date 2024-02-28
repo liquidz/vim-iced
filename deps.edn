@@ -1,5 +1,5 @@
 {:paths ["clj/repl"]
- :deps {nrepl/nrepl {:mvn/version "1.1.0"}
+ :deps {nrepl/nrepl {:mvn/version "1.1.1"}
         refactor-nrepl/refactor-nrepl {:mvn/version "3.9.1"}
         cider/cider-nrepl {:mvn/version "0.44.0"}
         com.github.liquidz/iced-nrepl {:mvn/version "1.2.480"}}
