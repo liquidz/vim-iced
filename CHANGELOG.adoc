@@ -1,6 +1,14 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* Bumped cider-nrepl to 0.45.0.
+* Bumped nrepl to 1.1.1.
+
+=== Fixed
+* https://github.com/liquidz/vim-iced/issues/472[#472]: Fixed timeout error on connecting shadow-cljs REPL which has multiple builds.
+// }}}
 
 == 3.15.3271 (2024-01-04)
 // {{{

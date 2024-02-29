@@ -138,33 +138,36 @@ function! iced#nrepl#cljs#start_repl_via_env(env_key, ...) abort
   endif
 
   if empty(iced#nrepl#get_cljs_env())
-    let env = s:env[env_key](a:000)
-    if type(env) != v:t_dict | return iced#message#error_str(env) | endif
+    call s:env[env_key](funcref('s:__start_repl_via_env'), a:000)
+  endif
+endfunction
 
-    let warning = get(env, 'warning', '')
-    if !empty(warning)
-      call iced#message#warning_str(warning)
-      let res = iced#system#get('io').input(iced#message#get('confirm_proceeding'))
-      if res !=# '' && res !=# 'y' && res !=# 'Y'
-        return iced#message#error('canceled_cljs_repl')
-      endif
+function! s:__start_repl_via_env(env) abort
+  if type(a:env) != v:t_dict | return iced#message#error_str(a:env) | endif
+
+  let warning = get(a:env, 'warning', '')
+  if !empty(warning)
+    call iced#message#warning_str(warning)
+    let res = iced#system#get('io').input(iced#message#get('confirm_proceeding'))
+    if res !=# '' && res !=# 'y' && res !=# 'Y'
+      return iced#message#error('canceled_cljs_repl')
     endif
+  endif
 
-    let Pre_code_f = get(env, 'pre-code', '')
-    let Env_code_f = get(env, 'env-code', '')
+  let Pre_code_f = get(a:env, 'pre-code', '')
+  let Env_code_f = get(a:env, 'env-code', '')
 
-    if type(Env_code_f) != v:t_func
-      return iced#message#error('invalid_cljs_env')
-    endif
+  if type(Env_code_f) != v:t_func
+    return iced#message#error('invalid_cljs_env')
+  endif
 
-    let pre_code = type(Pre_code_f) == v:t_func ? Pre_code_f() : ''
-    let env_code = Env_code_f()
+  let pre_code = type(Pre_code_f) == v:t_func ? Pre_code_f() : ''
+  let env_code = Env_code_f()
 
-    let opt = copy(env)
-    call extend(opt, {'pre': pre_code})
-    if iced#nrepl#cljs#start_repl(env_code, opt)
-      call iced#nrepl#set_cljs_env(env)
-    endif
+  let opt = copy(a:env)
+  call extend(opt, {'pre': pre_code})
+  if iced#nrepl#cljs#start_repl(env_code, opt)
+    call iced#nrepl#set_cljs_env(a:env)
   endif
 endfunction
 

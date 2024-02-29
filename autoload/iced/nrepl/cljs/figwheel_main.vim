@@ -25,17 +25,18 @@ function! s:post_code() abort
   return code
 endfunction
 
-function! iced#nrepl#cljs#figwheel_main#get_env(options) abort
+function! iced#nrepl#cljs#figwheel_main#get_env(callback, options) abort
   if len(a:options) <= 0
     return iced#message#get('argument_missing', 'build-id is required.')
   endif
 
   let s:build_id = a:options[0]
-  return {
+  return a:callback({
         \ 'name': 'figwheel-main',
         \ 'pre-code': funcref('s:pre_code'),
         \ 'env-code': funcref('s:env_code'),
-        \ 'post-code': funcref('s:post_code')}
+        \ 'post-code': funcref('s:post_code'),
+        \ })
 endfunction
 
 let &cpo = s:save_cpo
