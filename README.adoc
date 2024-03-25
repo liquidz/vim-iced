@@ -68,7 +68,7 @@ Rename symbol
 Provided by following external plugins.
 - https://github.com/liquidz/vim-iced-coc-source[vim-iced-coc-source] for https://github.com/neoclide/coc.nvim[coc.nvim]
 - https://github.com/liquidz/vim-iced-asyncomplete[vim-iced-asyncomplete] for https://github.com/prabirshrestha/asyncomplete.vim[asyncomplete.vim]
-- https://github.com/tami5/vim-iced-compe[vim-iced-compe] for https://github.com/hrsh7th/nvim-compe[nvim-compe]
+- https://github.com/lamp/cmp-iced[cmp-iced] for https://github.com/hrsh7th/nvim-cmp[nvim-cmp]
 Omni completion is provided by default.
 
 |:triangular_ruler:

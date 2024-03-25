@@ -55,17 +55,7 @@ Plug 'liquidz/vim-iced-coc-source', {'for': 'clojure'}
 }
 ----
 
-==== compe-nvim 
+==== cmp-iced
 
-https://github.com/hrsh7th/nvim-compe[nvim-compe] is next generation completion plugin for written in lua and vim script for Vim8 and Neovim and
-https://github.com/tami5/vim-iced-compe[vim-iced-compe] is a vim-iced plugin to
-work with this plugin
-
-To use `vim-iced-compe` add followings to `vim-plug` section in your `~/.vimrc` (or `~/.config/nvim/init.vim` for Neovim)
-
-[source,vim]
-----
-Plug 'hrsh7th/nvim-compe'
-Plug 'liquidz/vim-iced', {'for': 'clojure'}
-Plug 'tami5/vim-iced-compe', {'for': 'clojure'}
-----
+https://github.com/hrsh7th/nvim-cmp[nvim-cmp] is a completion plugin for neovim coded in Lua,
+and https://github.com/lamp/cmp-iced[cmp-iced] is a vim-iced plugin to work with this plugin.
