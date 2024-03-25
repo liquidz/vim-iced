@@ -28,6 +28,14 @@
 </p>
 +++
 
+[WARNING]
+====
+This project is in maintenance mode.
+New features will not be added.
+
+Now I'm developing https://github.com/liquidz/vim-elin[vim-elin] as the main project, so please look forward to it.
+====
+
 == Requirements
 
  * Vim 8.1.0614 or later, Neovim 0.4.0 or later.
