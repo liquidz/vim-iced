@@ -1,7 +1,7 @@
 == Formatting [[formatting]]
 
 vim-iced's code formatting is powered by https://github.com/weavejester/cljfmt[cljfmt].
-There are following two commands to format codes.
+vim-iced proivdes the following two commands to format code.
 
 [cols="30,20,50"]
 |===
@@ -19,7 +19,7 @@ There are following two commands to format codes.
 |===
 
 
-https://github.com/guns/vim-sexp[vim-sexp] also provides formatting codes function.
+https://github.com/guns/vim-sexp[vim-sexp] also provides a code formatting function.
 If you want to use vim-iced's formatting function, you should define `g:sexp_mappings` as follows.
 
 [source,vim]
@@ -36,16 +36,24 @@ vim-iced also provides following sync commands.
 - {help_html}#%3AIcedFormatSync[IcedFormatSync]
 - {help_html}#%3AIcedFormatSyncAll[IcedFormatSyncAll]
 
-These commands are useful to format on writing files.
+These commands are useful for formatting on writing files. 
+For example, add this to your confirguration to format the current file on write.
 [source,vim]
 ----
 aug VimIcedAutoFormatOnWriting
   au!
   " Format whole buffer on writing files
   au BufWritePre *.clj,*.cljs,*.cljc,*.edn execute ':IcedFormatSyncAll'
+aug END
+----
 
+Add this to your confirguration to format the current form on write.
+[source,vim]
+----
+aug VimIcedAutoFormatOnWriting
+  au!
   " Format only current form on writing files
-  " au BufWritePre *.clj,*.cljs,*.cljc,*.edn execute ':IcedFormatSync'
+  au BufWritePre *.clj,*.cljs,*.cljc,*.edn execute ':IcedFormatSync'
 aug END
 ----
 
@@ -58,7 +66,7 @@ vim-iced also supports following (GraalVM powered) code formatting tools.
 - https://github.com/candid82/joker[joker]
 
 If you change {help_html}#g%3Aiced_formatter[g:iced_formatter] option,
-vim-iced will use the tool to format codes and calculate indent level.
+vim-iced will use the tool to format code and calculate indent level.
 
 [NOTE]
 ====
@@ -67,13 +75,13 @@ These tools can be downloaded automatically if you want.
 
 === Auto indenting [[auto_indenting]]
 
-vim-iced provides auto indentation feature, and it is enabled by default.
+vim-iced provides auto indentation, enabled by default.
 
-Indent level is calculated by the set formatter,
+The indent level is calculated by the set formatter,
 so `cljfmt` formatter which is used by default may lead slow down vim/nvim.
 
 If you don't use vim-iced's auto indentation,
-you can disable it by {help_html}#g%3Aiced_enable_auto_indent[g:iced_enable_auto_indent] variable.
+you can disable it through the {help_html}#g%3Aiced_enable_auto_indent[g:iced_enable_auto_indent] variable.
 
 [source,vim]
 ----
