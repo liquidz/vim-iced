@@ -1831,7 +1831,7 @@ So it&#8217;s still not really the whole test.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>vim-iced&#8217;s code formatting is powered by <a href="https://github.com/weavejester/cljfmt">cljfmt</a>.
-There are following two commands to format codes.</p>
+vim-iced proivdes the following two commands to format code.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1860,7 +1860,7 @@ There are following two commands to format codes.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p><a href="https://github.com/guns/vim-sexp">vim-sexp</a> also provides formatting codes function.
+<p><a href="https://github.com/guns/vim-sexp">vim-sexp</a> also provides a code formatting function.
 If you want to use vim-iced&#8217;s formatting function, you should define <code>g:sexp_mappings</code> as follows.</p>
 </div>
 <div class="listingblock">
@@ -1896,7 +1896,8 @@ See also <a href="#customizing_indent_rules">Customizing indent rules</a>
 </ul>
 </div>
 <div class="paragraph">
-<p>These commands are useful to format on writing files.</p>
+<p>These commands are useful for formatting on writing files.
+For example, add this to your confirguration to format the current file on write.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1904,9 +1905,18 @@ See also <a href="#customizing_indent_rules">Customizing indent rules</a>
   <span class="k">au</span><span class="p">!</span>
   <span class="c">" Format whole buffer on writing files</span>
   <span class="k">au</span> <span class="nb">BufWritePre</span> *<span class="p">.</span>clj<span class="p">,</span>*<span class="p">.</span>cljs<span class="p">,</span>*<span class="p">.</span>cljc<span class="p">,</span>*<span class="p">.</span>edn <span class="nb">execute</span> <span class="s1">':IcedFormatSyncAll'</span>
-
+aug END</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add this to your confirguration to format the current form on write.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="vim">aug VimIcedAutoFormatOnWriting
+  <span class="k">au</span><span class="p">!</span>
   <span class="c">" Format only current form on writing files</span>
-  <span class="c">" au BufWritePre *.clj,*.cljs,*.cljc,*.edn execute ':IcedFormatSync'</span>
+  <span class="k">au</span> <span class="nb">BufWritePre</span> *<span class="p">.</span>clj<span class="p">,</span>*<span class="p">.</span>cljs<span class="p">,</span>*<span class="p">.</span>cljc<span class="p">,</span>*<span class="p">.</span>edn <span class="nb">execute</span> <span class="s1">':IcedFormatSync'</span>
 aug END</code></pre>
 </div>
 </div>
@@ -1931,7 +1941,7 @@ aug END</code></pre>
 </div>
 <div class="paragraph">
 <p>If you change <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_formatter">g:iced_formatter</a> option,
-vim-iced will use the tool to format codes and calculate indent level.</p>
+vim-iced will use the tool to format code and calculate indent level.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1951,15 +1961,15 @@ vim-iced will use the tool to format codes and calculate indent level.</p>
 <div class="sect2">
 <h3 id="auto_indenting">9.3. Auto indenting</h3>
 <div class="paragraph">
-<p>vim-iced provides auto indentation feature, and it is enabled by default.</p>
+<p>vim-iced provides auto indentation, enabled by default.</p>
 </div>
 <div class="paragraph">
-<p>Indent level is calculated by the set formatter,
+<p>The indent level is calculated by the set formatter,
 so <code>cljfmt</code> formatter which is used by default may lead slow down vim/nvim.</p>
 </div>
 <div class="paragraph">
 <p>If you don&#8217;t use vim-iced&#8217;s auto indentation,
-you can disable it by <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_auto_indent">g:iced_enable_auto_indent</a> variable.</p>
+you can disable it through the <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_auto_indent">g:iced_enable_auto_indent</a> variable.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4770,7 +4780,7 @@ See <a href="https://liquidz.github.io/vim-iced/vim-iced.html#g%3Aiced_enable_de
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-03-25 15:07:19 UTC
+Last updated 2024-04-05 20:52:46 UTC
 </div>
 </div>
 </body>
