@@ -117,8 +117,6 @@ def iced_vim_repr(x):
     '"\\\\"foo\\\\""'
     >>> iced_vim_repr('foo\\n')
     '"foo\\\\n"'
-    >>> iced_vim_repr('foo\d')
-    '"foo\\\\\\\\d"'
     >>> iced_vim_repr('foo\\d')
     '"foo\\\\\\\\d"'
     >>> iced_vim_repr(123)
