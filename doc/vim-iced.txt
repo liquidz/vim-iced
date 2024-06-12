@@ -42,7 +42,6 @@ CONTENTS                                                    *vim-iced-contents*
       Format on writing files  |vim-iced-formatting-on-writing-files|
     Indenting                  |vim-iced-indenting|
     Refactoring                |vim-iced-refactoring|
-  Sideloader                   |vim-iced-sideloader|
   Static analysis              |vim-iced-static-analysis|
     clj-kondo                  |vim-iced-static-analysis-clj-kondo|
   Notification                 |vim-iced-notification|
@@ -62,7 +61,6 @@ CONTENTS                                                    *vim-iced-contents*
     Command palettes           |vim-iced-customizing-palette|
     Hooks                      |vim-iced-customizing-hooks|
     Popup window               |vim-iced-customizing-popup-window|
-    Sideloader                 |vim-iced-customizing-sideloader|
     Notification               |vim-iced-customizing-notification|
     Default keys               |vim-iced-customizing-default-keys|
   Changelog                    |vim-iced-changelog|
@@ -725,28 +723,6 @@ REFACTORING                                              *vim-iced-refactoring*
 
   See also:
   - |g:iced#refactor#insert_newline_after_require|
-
-==============================================================================
-SIDELOADER                                                *vim-iced-sideloader*
-
-  WARNING: `base64` command is required to use sideloader.
-
-  Sideloader is a new feature from nREPL 0.7, and enables injecting code
-  remotely in a running server on demand.
-
-  vim-iced provides following commands for sideloader:
-  - |:IcedStartSideloader|.
-  - |:IcedStoptSideloader|.
-
-  When nREPL requires to look up some codes,
-  vim-iced will search in |g:iced#source_root|.
-
-  It is assumed that sources under |g:iced#source_root| is managed by
-  tools such as `ghq`.
-  - https://github.com/x-motemen/ghq
-
-  vim-iced will use `find` or `fd` as a searching file program.
-  - https://github.com/sharkdp/fd
 
 ==============================================================================
 STATIC ANALYSIS                                      *vim-iced-static-analysis*
@@ -1461,22 +1437,6 @@ COMMANDS                                                    *vim-iced-commands*
   If `let` form is not found in current top list, cursor is not moved.
   Key is mapped to |<Plug>(iced_jump_to_let)|.
 
-                                                         *:IcedStartSideloader*
-:IcedStartSideloader
-  Start side-loading.
-  Key is mapped to |<Plug>(iced_start_sideloader)|.
-  See also |vim-iced-sideloader|.
-
-                                                          *:IcedStopSideloader*
-:IcedStopSideloader
-  Stop side-loading.
-  NOTE: nREPL does not provide the way to stop sideloader officially.
-        But sideloader is a session specific mode, so we can stop
-        sideloading by stopping to use current session.
-
-  Key is mapped to |<Plug>(iced_start_sideloader)|.
-  See also |vim-iced-sideloader|.
-
                                                               *:IcedYankNsName*
 :IcedYankNsName
   Yank the current namespace name into `"` register.
@@ -1946,14 +1906,6 @@ KEY MAPPINGS                                            *vim-iced-key-mappings*
                                                      *<Plug>(iced_jump_to_let)*
 <Plug>(iced_jump_to_let)
   Same as |:IcedJumpToLet|.
-
-                                                *<Plug>(iced_start_sideloader)*
-<Plug>(iced_start_sideloader)
-  Same as |:IcedStartSideloader|.
-
-                                                 *<Plug>(iced_stop_sideloader)*
-<Plug>(iced_stop_sideloader)
-  Same as |:IcedStopSideloader|.
 
                                                     *<Plug>(iced_yank_ns_name)*
 <Plug>(iced_yank_ns_name)
@@ -2732,20 +2684,6 @@ g:iced#popup#neovim#style
   `style` option for floating window in Neovim.
   - https://neovim.io/doc/user/api.html#nvim_open_win()
   Default value is `'minimal'`.
-
-------------------------------------------------------------------------------
-SIDELOADER                                    *vim-iced-customizing-sideloader*
-
-
-                                               *g:iced#nrepl#enable_sideloader*
-g:iced#nrepl#enable_sideloader
-  If `v:true`, vim-iced starts sideloader on startup automatically.
-  Default value is `v:false`.
-
-                                                          *g:iced#source_root*
-g:iced#source_root
-  If you have `ghq`, `git config ghq.root` will be the value automatically.
-  - https://github.com/x-motemen/ghq
 
 ------------------------------------------------------------------------------
 NOTIFICATION                                *vim-iced-customizing-notification*
