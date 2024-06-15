@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+
+== 4.0.3295 (2024-06-15)
 // {{{
 === Changed
 * (Breaking) Removed support for nREPL's sideloader functionality.
