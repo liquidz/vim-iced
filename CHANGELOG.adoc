@@ -1,6 +1,12 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of http://keepachangelog.com/[keepachangelog.com].
 
 == Unreleased (dev)
+// {{{
+=== Changed
+* (Breaking) Removed support for nREPL's sideloader functionality.
+** nREPL will remove support for sideloader and wrap-sideloader middleware
+*** https://github.com/nrepl/nrepl/pull/335
+// }}}
 
 == 3.15.3283 (2024-02-29)
 // {{{

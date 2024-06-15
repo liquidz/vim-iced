@@ -197,9 +197,6 @@ command!          IcedJumpToNextError       call iced#system#get('sign').jump_to
 command!          IcedJumpToPrevError       call iced#system#get('sign').jump_to_next({'name': iced#nrepl#test#sign_name()})
 command!          IcedJumpToLet             call iced#let#jump_to_let()
 
-command!          IcedStartSideloader        call iced#nrepl#sideloader#start()
-command!          IcedStopSideloader         call iced#nrepl#sideloader#stop()
-
 command! -nargs=? -complete=custom,iced#component#installer#complete
       \ IcedUpdateTool call iced#system#get('installer').reinstall(<q-args>)
 
@@ -321,9 +318,6 @@ nnoremap <silent> <Plug>(iced_toggle_trace_var)         :<C-u>IcedToggleTraceVar
 nnoremap <silent> <Plug>(iced_jump_to_next_sign)        :<C-u>IcedJumpToNextSign<CR>
 nnoremap <silent> <Plug>(iced_jump_to_prev_sign)        :<C-u>IcedJumpToPrevSign<CR>
 nnoremap <silent> <Plug>(iced_jump_to_let)              :<C-u>IcedJumpToLet<CR>
-
-nnoremap <silent> <Plug>(iced_start_sideloader)         :<C-u>IcedStartSideloader<CR>
-nnoremap <silent> <Plug>(iced_stop_sideloader)          :<C-u>IcedStopSideloader<CR>
 
 nnoremap <silent> <Plug>(iced_update_tool) :<C-u>IcedUpdateTool<CR>
 

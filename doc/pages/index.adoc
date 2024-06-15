@@ -147,12 +147,6 @@ include::refactoring.adoc[]
 [small]#<<top>>#
 // }}}
 
-include::sideloader.adoc[]
-// back to top {{{
-[.text-right]
-[small]#<<top>>#
-// }}}
-
 include::static_analysis.adoc[]
 // back to top {{{
 [.text-right]
