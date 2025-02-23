@@ -1,3 +1,11 @@
+[WARNING]
+====
+Now I'm developing https://github.com/liquidz/elin[elin] as the main project.
+
+Elin is a Clojure development environment for Vim/Neovim, primarily written in https://babashka.org[Babashka], and being developed as the successor to vim-iced.
+Please look forward to it.
+====
+
 = vim-iced
 
 +++
@@ -27,14 +35,6 @@
   </a>
 </p>
 +++
-
-[WARNING]
-====
-This project is in maintenance mode.
-New features will not be added.
-
-Now I'm developing https://github.com/liquidz/vim-elin[vim-elin] as the main project, so please look forward to it.
-====
 
 == Requirements
 
